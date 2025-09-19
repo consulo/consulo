@@ -22,12 +22,10 @@ import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.internal.EditorEventMulticasterImpl;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.internal.pom.PomAspectGuard;
-import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.internal.InjectedLanguageManagerInternal;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -44,6 +42,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 //todo listen & notifyListeners readonly events?
 @Singleton
@@ -141,13 +140,16 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     @RequiredUIAccess
     protected boolean finishCommitInWriteAction(
         @Nonnull Document document,
-        @Nonnull List<? extends BooleanRunnable> finishProcessors,
-        @Nonnull List<? extends BooleanRunnable> reparseInjectedProcessors,
+        @Nonnull List<? extends BooleanSupplier> finishProcessors,
+        @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors,
         boolean synchronously,
         boolean forceNoPsiCommit
     ) {
         if (Application.get().isWriteAccessAllowed()) { // can be false for non-physical PSI
-            InjectedLanguageManagerImpl.disposeInvalidEditors();
+            InjectedLanguageManagerInternal injectedLanguageManager =
+                (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
+
+            injectedLanguageManager.disposeInvalidEditors();
         }
         return super.finishCommitInWriteAction(document, finishProcessors, reparseInjectedProcessors, synchronously, forceNoPsiCommit);
     }
@@ -175,7 +177,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     @Nonnull
     @Override
     @RequiredReadAction
-    public List<BooleanRunnable> reparseChangedInjectedFragments(
+    public List<BooleanSupplier> reparseChangedInjectedFragments(
         @Nonnull Document hostDocument,
         @Nonnull PsiFile hostPsiFile,
         @Nonnull TextRange hostChangedRange,
@@ -183,8 +185,9 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         @Nonnull ASTNode oldRoot,
         @Nonnull ASTNode newRoot
     ) {
+        InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
         List<DocumentWindow> changedInjected =
-            InjectedLanguageManager.getInstance(myProject).getCachedInjectedDocumentsInRange(hostPsiFile, hostChangedRange);
+            injectedLanguageManager.getCachedInjectedDocumentsInRange(hostPsiFile, hostChangedRange);
         if (changedInjected.isEmpty()) {
             return Collections.emptyList();
         }
@@ -194,7 +197,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         fromLast.sort(Collections.reverseOrder(Comparator.comparingInt(
             doc -> ArrayUtil.getLastElement(doc.getHostRanges()).getEndOffset()
         )));
-        List<BooleanRunnable> result = new ArrayList<>(changedInjected.size());
+        List<BooleanSupplier> result = new ArrayList<>(changedInjected.size());
         for (DocumentWindow document : fromLast) {
             Segment[] ranges = document.getHostRanges();
             if (ranges.length != 0) {
@@ -204,7 +207,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
                     continue;
                 }
 
-                BooleanRunnable runnable = InjectedLanguageUtil.reparse(
+                BooleanSupplier runnable = injectedLanguageManager.reparse(
                     injectedPsiFile,
                     document,
                     hostPsiFile,
@@ -212,8 +215,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
                     hostViewProvider,
                     indicator,
                     oldRoot,
-                    newRoot,
-                    this
+                    newRoot
                 );
                 ContainerUtil.addIfNotNull(result, runnable);
             }

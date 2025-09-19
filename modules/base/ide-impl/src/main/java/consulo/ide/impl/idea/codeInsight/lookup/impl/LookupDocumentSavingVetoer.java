@@ -16,15 +16,15 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.FileDocumentSynchronizationVetoer;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,7 +44,7 @@ public class LookupDocumentSavingVetoer extends FileDocumentSynchronizationVetoe
       }
       LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
       if (lookup != null) {
-        Editor editor = InjectedLanguageUtil.getTopLevelEditor(lookup.getEditor());
+        Editor editor = EditorWindow.getTopLevelEditor(lookup.getEditor());
         if (editor.getDocument() == document) {
           return false;
         }

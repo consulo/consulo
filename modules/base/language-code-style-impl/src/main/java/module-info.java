@@ -8,7 +8,6 @@ module consulo.language.code.style.impl {
 
     requires consulo.language.editor.api;
 
-    requires consulo.language.inject.impl;
     requires consulo.language.impl;
 
     requires consulo.code.editor.api;

@@ -45,8 +45,7 @@ import consulo.language.editor.impl.intention.QuickEditAction;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.inject.impl.internal.PlaceImpl;
+import consulo.language.internal.InjectedLanguageManagerInternal;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -102,12 +101,13 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     private final RangeMarker myAltFullRange;
     private static final Key<String> REPLACEMENT_KEY = Key.create("REPLACEMENT_KEY");
 
+    @RequiredReadAction
     public QuickEditHandler(Project project, @Nonnull PsiFile injectedFile, PsiFile origFile, Editor editor, QuickEditAction action) {
         myProject = project;
         myEditor = editor;
         myAction = action;
         myOrigDocument = editor.getDocument();
-        PlaceImpl shreds = InjectedLanguageUtil.getShreds(injectedFile);
+        PsiLanguageInjectionHost.Place shreds = InjectedLanguageManager.getInstance(project).getShreds(injectedFile);
         FileType fileType = injectedFile.getFileType();
         Language language = injectedFile.getLanguage();
         PsiLanguageInjectionHost.Shred firstShred = ContainerUtil.getFirstItem(shreds);
@@ -135,8 +135,8 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         myNewVirtualFile.setOriginalFile(origFile.getVirtualFile());
         // suppress possible errors as in injected mode
         myNewFile.putUserData(
-            InjectedLanguageUtil.FRANKENSTEIN_INJECTION,
-            injectedFile.getUserData(InjectedLanguageUtil.FRANKENSTEIN_INJECTION)
+            InjectedLanguageManager.FRANKENSTEIN_INJECTION,
+            injectedFile.getUserData(InjectedLanguageManager.FRANKENSTEIN_INJECTION)
         );
         myNewFile.putUserData(FileContextUtil.INJECTED_IN_ELEMENT, shreds.getHostPointer());
         myNewDocument = PsiDocumentManager.getInstance(project).getDocument(myNewFile);
@@ -338,7 +338,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     }
 
     @RequiredReadAction
-    public void initMarkers(PlaceImpl shreds) {
+    public void initMarkers(PsiLanguageInjectionHost.Place shreds) {
         SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(myProject);
         int curOffset = -1;
         for (PsiLanguageInjectionHost.Shred shred : shreds) {
@@ -365,7 +365,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         initGuardedBlocks(shreds);
     }
 
-    private void initGuardedBlocks(PlaceImpl shreds) {
+    private void initGuardedBlocks(PsiLanguageInjectionHost.Place shreds) {
         int origOffset = -1;
         int curOffset = 0;
         for (PsiLanguageInjectionHost.Shred shred : shreds) {
@@ -494,8 +494,9 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         };
         DocumentUtil.executeInBulk(myOrigDocument, true, task);
 
-        PsiElement newInjected = InjectedLanguageManager.getInstance(myProject).findInjectedElementAt(origPsiFile, hostStartOffset);
-        DocumentWindow documentWindow = newInjected == null ? null : InjectedLanguageUtil.getDocumentWindow(newInjected);
+        InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
+        PsiElement newInjected = injectedLanguageManager.findInjectedElementAt(origPsiFile, hostStartOffset);
+        DocumentWindow documentWindow = newInjected == null ? null : injectedLanguageManager.getDocumentWindow(newInjected);
         if (documentWindow != null) {
             myEditor.getCaretModel().moveToOffset(documentWindow.injectedToHost(e.getOffset()));
             myEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);

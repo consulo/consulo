@@ -27,11 +27,9 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Comparing;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -43,6 +41,8 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Provider;
@@ -128,7 +128,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
       return editor;
     }
 
-    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile);
+    return InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, psiFile);
   }
 
   /**

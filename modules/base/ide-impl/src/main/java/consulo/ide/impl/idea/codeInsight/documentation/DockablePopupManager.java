@@ -8,18 +8,18 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.project.ui.internal.ToolWindowManagerEx;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -232,7 +232,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
             }
 
             PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, myProject);
-            Editor injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file);
+            Editor injectedEditor = InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, file);
             PsiFile injectedFile = injectedEditor != null ? PsiUtilBase.getPsiFileInEditor(injectedEditor, myProject) : null;
             if (injectedFile != null) {
                 doUpdateComponent(injectedEditor, injectedFile, requestFocus);

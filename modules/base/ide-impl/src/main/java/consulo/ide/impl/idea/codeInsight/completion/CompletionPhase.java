@@ -21,25 +21,26 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
-import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionConfidence;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
-import consulo.ui.ex.awt.hint.HintListener;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.hint.HintListener;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.util.EventObject;
@@ -112,7 +113,7 @@ public abstract class CompletionPhase implements Disposable {
                                                @Nullable Predicate<? super PsiFile> condition,
                                                @Nonnull Project project,
                                                @Nullable CompletionProgressIndicator prevIndicator) {
-      Editor topLevelEditor = InjectedLanguageUtil.getTopLevelEditor(_editor);
+      Editor topLevelEditor = EditorWindow.getTopLevelEditor(_editor);
       int offset = topLevelEditor.getCaretModel().getOffset();
 
       CommittingDocuments phase = new CommittingDocuments(prevIndicator, topLevelEditor);
@@ -124,7 +125,7 @@ public abstract class CompletionPhase implements Disposable {
       ReadAction.nonBlocking(() -> {
         // retrieve the injected file from scratch since our typing might have destroyed the old one completely
         PsiFile topLevelFile = PsiDocumentManager.getInstance(project).getPsiFile(topLevelEditor.getDocument());
-        Editor completionEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(topLevelEditor, topLevelFile, offset);
+        Editor completionEditor = InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(topLevelEditor, topLevelFile, offset);
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(completionEditor.getDocument());
         if (file == null || autopopup && shouldSkipAutoPopup(completionEditor, file) || condition != null && !condition.test(file)) {
           return null;

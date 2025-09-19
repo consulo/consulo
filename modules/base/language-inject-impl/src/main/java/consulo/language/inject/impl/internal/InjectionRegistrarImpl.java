@@ -10,6 +10,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.FileDocumentManagerEx;
@@ -24,14 +25,11 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.psi.BooleanRunnable;
-import consulo.language.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
@@ -42,6 +40,7 @@ import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.inject.ReferenceInjector;
+import consulo.language.internal.InjectedHighlightTokenInfo;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -58,13 +57,14 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 @SuppressWarnings("deprecation")
 class InjectionRegistrarImpl implements MultiHostRegistrar {
@@ -308,7 +308,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     assert place.isValid();
     assert viewProvider.isValid();
 
-    List<InjectedLanguageUtil.TokenInfo> newTokens = InjectedLanguageUtil.getHighlightTokens(psiFile);
+    List<InjectedHighlightTokenInfo> newTokens = InjectedLanguageUtil.getHighlightTokens(psiFile);
     PsiFile newFile = registerDocument(documentWindow, psiFile, place, hostPsiFile, documentManager);
     boolean mergeHappened = newFile != psiFile;
     PlaceImpl mergedPlace = place;
@@ -565,7 +565,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
    *   {@code null} means we failed to reparse and will have to kill the injection.
    * </pre>
    */
-  static BooleanRunnable reparse(@Nonnull LanguageVersion languageVersion,
+  static BooleanSupplier reparse(@Nonnull LanguageVersion languageVersion,
                                  @Nonnull DocumentWindowImpl oldDocumentWindow,
                                  @Nonnull PsiFile oldInjectedPsi,
                                  @Nonnull VirtualFileWindow oldInjectedVirtualFile,
@@ -727,7 +727,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       virtualFile.setWritable(virtualFile.getDelegate().isWritable());
 
       try {
-        List<InjectedLanguageUtil.TokenInfo> tokens = obtainHighlightTokensFromLexer(languageVersion, decodedChars, virtualFile, project, placeInfos);
+        List<InjectedHighlightTokenInfo> tokens = obtainHighlightTokensFromLexer(languageVersion, decodedChars, virtualFile, project, placeInfos);
         InjectedLanguageUtil.setHighlightTokens(psiFile, tokens);
       }
       catch (ProcessCanceledException e) {
@@ -803,11 +803,11 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
 
   // returns lexer element types with corresponding ranges in encoded (injection host based) PSI
   @Nonnull
-  private static List<InjectedLanguageUtil.TokenInfo> obtainHighlightTokensFromLexer(@Nonnull LanguageVersion languageVersion,
-                                                                                     @Nonnull CharSequence outChars,
-                                                                                     @Nonnull VirtualFileWindow virtualFile,
-                                                                                     @Nonnull Project project,
-                                                                                     @Nonnull List<? extends PlaceInfo> placeInfos) {
+  private static List<InjectedHighlightTokenInfo> obtainHighlightTokensFromLexer(@Nonnull LanguageVersion languageVersion,
+                                                                                 @Nonnull CharSequence outChars,
+                                                                                 @Nonnull VirtualFileWindow virtualFile,
+                                                                                 @Nonnull Project project,
+                                                                                 @Nonnull List<? extends PlaceInfo> placeInfos) {
     VirtualFile file = (VirtualFile)virtualFile;
     FileType fileType = file.getFileType();
     EditorHighlighterProvider provider = EditorHighlighterProvider.forFileType(fileType);
@@ -822,7 +822,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     int suffixLength = 0;
     TextRange rangeInsideHost = null;
     int shredEndOffset = -1;
-    List<InjectedLanguageUtil.TokenInfo> tokens = new ArrayList<>(outChars.length() / 5); // avg. token per 5 chars
+    List<InjectedHighlightTokenInfo> tokens = new ArrayList<>(outChars.length() / 5); // avg. token per 5 chars
     while (!iterator.atEnd()) {
       IElementType tokenType = (IElementType)iterator.getTokenType();
       TextRange range = new ProperTextRange(iterator.getStart(), iterator.getEnd());
@@ -855,7 +855,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
             prevHostEndOffset = shredEndOffset;
           }
           ProperTextRange rangeInHost = new ProperTextRange(start, end);
-          tokens.add(new InjectedLanguageUtil.TokenInfo(tokenType, rangeInHost, hostNum, iterator.getTextAttributes()));
+          tokens.add(new InjectedHighlightTokenInfo(tokenType, rangeInHost, hostNum, iterator.getTextAttributes()));
         }
         range = spilled;
       }

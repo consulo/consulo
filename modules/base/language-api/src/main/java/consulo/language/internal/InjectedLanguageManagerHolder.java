@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.inject;
+package consulo.language.internal;
 
-import consulo.language.psi.PsiLanguageInjectionHost;
-import jakarta.annotation.Nullable;
+import consulo.component.util.ComponentUtil;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.project.Project;
+
+import java.util.function.Function;
 
 /**
- * Marker interface that suppresses injection background.
- *
- * @author ignatov
+ * @author VISTALL
+ * @since 2025-09-19
  */
-public interface InjectionBackgroundSuppressor {
-    static boolean isHighlightInjectionBackground(@Nullable PsiLanguageInjectionHost host) {
-        return !(host instanceof InjectionBackgroundSuppressor);
-    }
+public class InjectedLanguageManagerHolder {
+    public static final Function<Project, InjectedLanguageManager> LAZY_INJECT =
+        ComponentUtil.createLazyInject(InjectedLanguageManager.class);
 }

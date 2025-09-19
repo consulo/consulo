@@ -22,10 +22,10 @@ import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
@@ -153,14 +153,15 @@ public class FoldingUpdate {
             if (!injectedDocument.isValid()) {
                 continue;
             }
-            InjectedLanguageUtil.enumerate(
+            
+            InjectedLanguageManager.getInstance(project).enumerate(
                 injectedDocument,
                 file,
                 (injectedFile, places) -> {
                     if (!injectedFile.isValid()) {
                         return;
                     }
-                    Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injectedFile);
+                    Editor injectedEditor = InjectedEditorManager.getInstance(project).getInjectedEditorForInjectedFile(editor, injectedFile);
                     if (!(injectedEditor instanceof EditorWindow editorWindow)) {
                         return;
                     }

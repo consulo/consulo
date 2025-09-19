@@ -12,8 +12,8 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.template.LiveTemplateLookupElement;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
@@ -483,7 +483,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
     private List<LookupElement> getExactMatches(List<? extends LookupElement> items) {
         String selectedText =
-            InjectedLanguageUtil.getTopLevelEditor(myProcess.getParameters().getEditor()).getSelectionModel().getSelectedText();
+            EditorWindow.getTopLevelEditor(myProcess.getParameters().getEditor()).getSelectionModel().getSelectedText();
         List<LookupElement> exactMatches = new SmartList<>();
         for (int i = 0; i < items.size(); i++) {
             LookupElement item = items.get(i);

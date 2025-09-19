@@ -56,4 +56,6 @@ public interface InjectedEditorManager {
     Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file);
 
     Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile);
+
+    Caret getCaretForInjectedLanguageNoCommit(@Nullable Caret caret, @Nullable PsiFile file);
 }

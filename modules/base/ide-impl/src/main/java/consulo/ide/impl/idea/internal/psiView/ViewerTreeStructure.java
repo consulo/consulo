@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.idea.internal.psiView;
 
-import consulo.application.Application;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -77,7 +75,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
         }
         Object[][] children = new Object[1][];
         children[0] = ArrayUtil.EMPTY_OBJECT_ARRAY;
-        Application.get().runReadAction(() -> {
+        myProject.getApplication().runReadAction(() -> {
             Object[] result;
             if (myShowTreeNodes) {
                 List<Object> list = new ArrayList<>();
@@ -99,7 +97,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
                     }
                     PsiElement psi = root.getPsi();
                     if (psi instanceof PsiLanguageInjectionHost) {
-                        InjectedLanguageUtil.enumerate(
+                        InjectedLanguageManager.getInstance(myProject).enumerate(
                             psi,
                             (injectedPsi, places) -> list.add(new Inject(psi, injectedPsi))
                         );

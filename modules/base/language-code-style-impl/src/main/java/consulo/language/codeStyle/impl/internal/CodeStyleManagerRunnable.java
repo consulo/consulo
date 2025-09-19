@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
 import consulo.document.util.TextRange;
@@ -23,7 +24,6 @@ import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.util.lang.CharArrayUtil;
 import jakarta.annotation.Nonnull;
@@ -137,13 +137,15 @@ abstract class CodeStyleManagerRunnable<T> {
       return false;
     }
 
-    if (element instanceof PsiLanguageInjectionHost && InjectedLanguageUtil.hasInjections((PsiLanguageInjectionHost)element)) {
+    if (element instanceof PsiLanguageInjectionHost
+        && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
       return false;
     }
 
     return true;
   }
 
+  @RequiredReadAction
   private static TextRange getSignificantRange(PsiFile file, int offset) {
     ASTNode elementAtOffset = SourceTreeToPsiMap.psiElementToTree(CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file,
                                                                                                                                 offset));

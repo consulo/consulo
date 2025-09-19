@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.codeInsight.generation.AutoIndentLinesHandler;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.file.LanguageFileType;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
@@ -61,7 +61,7 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
             documentManager.commitDocument(document);
         }
         int startLineOffset = DocumentUtil.getLineStartOffset(editor.getSelectionModel().getSelectionStart(), document);
-        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile, startLineOffset);
+        return InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, psiFile, startLineOffset);
     }
 
     @Nonnull

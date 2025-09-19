@@ -6,7 +6,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
@@ -29,7 +28,6 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -319,7 +317,7 @@ public class CodeFormatterFacade {
                 int startHostOffset = injectedFileRange.getStartOffset();
                 int endHostOffset = injectedFileRange.getEndOffset();
                 if (startHostOffset >= range.getStartOffset() && endHostOffset <= range.getEndOffset()) {
-                    PsiFile injected = InjectedLanguageUtil.findInjectedPsiNoCommit(file, startHostOffset);
+                    PsiFile injected = InjectedLanguageManager.getInstance(psi.getProject()).findInjectedPsiNoCommit(file, startHostOffset);
                     if (injected != null) {
                         TextRange initialInjectedRange = TextRange.create(0, injected.getTextLength());
                         TextRange injectedRange = initialInjectedRange;
@@ -511,7 +509,7 @@ public class CodeFormatterFacade {
         int startLine = document.getLineNumber(startOffsetToUse);
         int endLine = document.getLineNumber(Math.max(0, endOffsetToUse - 1));
         int maxLine = Math.min(document.getLineCount(), endLine + 1);
-        int tabSize = EditorUtil.getTabSize(editor);
+        int tabSize = consulo.codeEditor.util.EditorUtil.getTabSize(editor);
         if (tabSize <= 0) {
             tabSize = 1;
         }

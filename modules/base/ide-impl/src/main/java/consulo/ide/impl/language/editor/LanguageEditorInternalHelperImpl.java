@@ -43,7 +43,6 @@ import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -86,11 +85,6 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
         CodeFormatterFacade codeFormatter = new CodeFormatterFacade(CodeStyleSettingsManager.getSettings(project), language);
 
         codeFormatter.doWrapLongLinesIfNecessary(editor, project, document, startOffset, endOffset, enabledRanges);
-    }
-
-    @Override
-    public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
-        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
     }
 
     @Override

@@ -9,10 +9,9 @@ import consulo.application.util.CachedValueProvider;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
-import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.internal.DocumentEx;
-import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
@@ -20,17 +19,18 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.inject.*;
+import consulo.language.internal.InjectedHighlightTokenInfo;
+import consulo.language.internal.InjectedReferenceVisitor;
 import consulo.language.psi.*;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -51,18 +51,19 @@ import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use {@link InjectedLanguageManager} instead or {@link consulo.language.editor.inject.InjectedEditorManager}
+ * @deprecated Use {@link InjectedLanguageManager} instead or {@link InjectedEditorManager}
  */
 @Deprecated
 public class InjectedLanguageUtil {
@@ -88,29 +89,13 @@ public class InjectedLanguageUtil {
     return host;
   }
 
-  private static final Key<List<TokenInfo>> HIGHLIGHT_TOKENS = Key.create("HIGHLIGHT_TOKENS");
+  private static final Key<List<InjectedHighlightTokenInfo>> HIGHLIGHT_TOKENS = Key.create("HIGHLIGHT_TOKENS");
 
-  public static List<TokenInfo> getHighlightTokens(@Nonnull PsiFile file) {
+  public static List<InjectedHighlightTokenInfo> getHighlightTokens(@Nonnull PsiFile file) {
     return file.getUserData(HIGHLIGHT_TOKENS);
   }
 
-  public static class TokenInfo {
-    @Nonnull
-    public final IElementType type;
-    @Nonnull
-    public final ProperTextRange rangeInsideInjectionHost;
-    public final int shredIndex;
-    public final TextAttributes attributes;
-
-    public TokenInfo(@Nonnull IElementType type, @Nonnull ProperTextRange rangeInsideInjectionHost, int shredIndex, @Nonnull TextAttributes attributes) {
-      this.type = type;
-      this.rangeInsideInjectionHost = rangeInsideInjectionHost;
-      this.shredIndex = shredIndex;
-      this.attributes = attributes;
-    }
-  }
-
-  static void setHighlightTokens(@Nonnull PsiFile file, @Nonnull List<TokenInfo> tokens) {
+    static void setHighlightTokens(@Nonnull PsiFile file, @Nonnull List<InjectedHighlightTokenInfo> tokens) {
     file.putUserData(HIGHLIGHT_TOKENS, tokens);
   }
 
@@ -678,14 +663,6 @@ public class InjectedLanguageUtil {
     return null;
   }
 
-  @Nullable
-  public static DocumentWindow getDocumentWindow(@Nonnull PsiElement element) {
-    PsiFile file = element.getContainingFile();
-    if (file == null) return null;
-    VirtualFile virtualFile = file.getVirtualFile();
-    return virtualFile instanceof VirtualFileWindow virtualFileWindow ? virtualFileWindow.getDocumentWindow() : null;
-  }
-
   public static boolean isHighlightInjectionBackground(@Nullable PsiLanguageInjectionHost host) {
     return !(host instanceof InjectionBackgroundSuppressor);
   }
@@ -750,7 +727,7 @@ public class InjectedLanguageUtil {
   }
 
   // null means failed to reparse
-  public static BooleanRunnable reparse(@Nonnull PsiFile injectedPsiFile,
+  public static BooleanSupplier reparse(@Nonnull PsiFile injectedPsiFile,
                                         @Nonnull DocumentWindow injectedDocument,
                                         @Nonnull PsiFile hostPsiFile,
                                         @Nonnull Document hostDocument,
@@ -763,7 +740,7 @@ public class InjectedLanguageUtil {
     InjectedFileViewProvider provider = (InjectedFileViewProvider)injectedPsiFile.getViewProvider();
     VirtualFile oldInjectedVFile = provider.getVirtualFile();
     VirtualFile hostVirtualFile = hostViewProvider.getVirtualFile();
-    BooleanRunnable runnable = InjectionRegistrarImpl
+      BooleanSupplier runnable = InjectionRegistrarImpl
             .reparse(languageVersion, (DocumentWindowImpl)injectedDocument, injectedPsiFile, (VirtualFileWindow)oldInjectedVFile, hostVirtualFile, hostPsiFile, (DocumentEx)hostDocument, indicator,
                      oldRoot, newRoot, documentManager);
     if (runnable == null) {

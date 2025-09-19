@@ -34,36 +34,27 @@ import consulo.ide.impl.idea.codeInspection.InspectionEngine;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.LocalDescriptorsUtil;
 import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
-import consulo.language.editor.intention.QuickFixWrapper;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
-import consulo.language.editor.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.Divider;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.TransferToEDTQueue;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.intention.EmptyIntentionAction;
-import consulo.language.editor.intention.HintAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.QuickFixAction;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.intention.*;
 import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -71,7 +62,6 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -448,7 +438,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     ) {
         Set<PsiFile> injected = new HashSet<>();
         for (PsiElement element : elements) {
-            InjectedLanguageUtil.enumerate(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
+            InjectedLanguageManager.getInstance(myProject).enumerateEx(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
         }
         if (injected.isEmpty()) {
             return;

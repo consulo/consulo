@@ -26,7 +26,6 @@ import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.advanced.LanguageInjectionSupport;
 import consulo.language.inject.advanced.impl.internal.InjectionsSettingsUI;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.util.IncorrectOperationException;
@@ -51,7 +50,7 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
-        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
+        PsiFile psiFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, offset);
         if (psiFile == null) {
             return false;
         }
@@ -65,7 +64,7 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
     }
 
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
-        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
+        PsiFile psiFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
         if (psiFile == null) {
             return;
         }

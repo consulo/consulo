@@ -11,7 +11,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
-import consulo.language.editor.internal.intention.*;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EnableDisableIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
@@ -21,10 +20,12 @@ import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.internal.intention.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -70,6 +71,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static List<IntentionActionDescriptor> getAvailableFixes(
         @Nonnull Editor editor,
         @Nonnull PsiFile file,
@@ -92,6 +94,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         return result;
     }
 
+    @RequiredReadAction
     public static boolean markActionInvoked(@Nonnull Project project, @Nonnull Editor editor, @Nonnull IntentionAction action) {
         int offset = editor.getExpectedCaretOffset();
 
@@ -159,8 +162,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
             PsiFile fileToUse;
             if (info.isFromInjection()) {
                 if (injectedEditor == null) {
-                    injectedFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
-                    injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injectedFile);
+                    injectedFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, offset);
+                    injectedEditor = InjectedEditorManager.getInstance(project).getInjectedEditorForInjectedFile(editor, injectedFile);
                 }
                 editorToUse = injectedFile == null ? editor : injectedEditor;
                 fileToUse = injectedFile == null ? file : injectedFile;
@@ -292,7 +295,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         }
 
         if (queryIntentionActions) {
-            PsiFile injectedFile = InjectedLanguageUtil.findInjectedPsiNoCommit(hostFile, offset);
+            PsiFile injectedFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(hostFile, offset);
             for (IntentionAction action : IntentionManager.getInstance().getAvailableIntentionActions()) {
                 Pair<PsiFile, Editor> place =
                     ShowIntentionActionsHandler.chooseBetweenHostAndInjected(

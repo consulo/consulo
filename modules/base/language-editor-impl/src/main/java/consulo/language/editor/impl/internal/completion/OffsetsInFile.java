@@ -28,7 +28,7 @@ import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
 import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.internal.InjectedLanguageManagerInternal;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
@@ -40,88 +40,91 @@ import jakarta.annotation.Nonnull;
  * from kotlin platform\lang-impl\src\com\intellij\codeInsight\completion\OffsetsInFile.kt
  */
 public class OffsetsInFile {
-  private PsiFile file;
-  private OffsetMap offsets;
+    private PsiFile file;
+    private OffsetMap offsets;
 
-  public OffsetsInFile(PsiFile file) {
-    this(file, new OffsetMap(file.getViewProvider().getDocument()));
-  }
-
-  public OffsetsInFile(PsiFile file, OffsetMap offsets) {
-    this.file = file;
-    this.offsets = offsets;
-  }
-
-  public OffsetMap getOffsets() {
-    return offsets;
-  }
-
-  public PsiFile getFile() {
-    return file;
-  }
-
-  @Nonnull
-  public OffsetsInFile toTopLevelFile() {
-    InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
-    PsiFile hostFile = manager.getTopLevelFile(file);
-    if (hostFile == file) {
-      return this;
-    }
-    else {
-      return new OffsetsInFile(hostFile, offsets.mapOffsets(hostFile.getViewProvider().getDocument(), it -> manager.injectedToHost(file, it)));
-    }
-  }
-
-  @Nonnull
-  public OffsetsInFile toInjectedIfAny(int offset) {
-    PsiFile injected = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
-    if (injected == null) {
-      return this;
-    }
-    DocumentWindow documentWindow = InjectedLanguageUtil.getDocumentWindow(injected);
-    assert documentWindow != null;
-    return new OffsetsInFile(injected, offsets.mapOffsets(documentWindow, documentWindow::hostToInjected));
-  }
-
-  @Nonnull
-  public OffsetsInFile copyWithReplacement(int startOffset, int endOffset, String replacement) {
-    return replaceInCopy((PsiFile)file.copy(), startOffset, endOffset, replacement);
-  }
-
-  @Nonnull
-  public OffsetsInFile replaceInCopy(PsiFile fileCopy, int startOffset, int endOffset, String replacement) {
-    DocumentFactory documentFactory = DocumentFactory.getInstance();
-
-    Document tempDocument = documentFactory.createDocument(offsets.getDocument().getImmutableCharSequence(), true);
-
-    OffsetMap tempMap = offsets.copyOffsets(tempDocument);
-
-    tempDocument.replaceString(startOffset, endOffset, replacement);
-
-    reparseFile(fileCopy, tempDocument.getImmutableCharSequence());
-
-    OffsetMap copyOffsets = tempMap.copyOffsets(fileCopy.getViewProvider().getDocument());
-    return new OffsetsInFile(fileCopy, copyOffsets);
-  }
-
-  private void reparseFile(PsiFile file, CharSequence newText) {
-    FileElement node = ObjectUtil.tryCast(file.getNode(), FileElement.class);
-    if(node == null) {
-      throw new IllegalArgumentException(file.getClass() + " " + file.getFileType());
+    public OffsetsInFile(PsiFile file) {
+        this(file, new OffsetMap(file.getViewProvider().getDocument()));
     }
 
-    TextRange range = ChangedPsiRangeUtil.getChangedPsiRange(file, node, newText);
-    if(range == null) {
-      return;
+    public OffsetsInFile(PsiFile file, OffsetMap offsets) {
+        this.file = file;
+        this.offsets = offsets;
     }
 
-    ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
-    if(indicator == null) {
-      indicator = new EmptyProgressIndicator();
+    public OffsetMap getOffsets() {
+        return offsets;
     }
 
-    DiffLog log = BlockSupport.getInstance(file.getProject()).reparseRange(file, node, range, newText, indicator, file.getViewProvider().getContents());
+    public PsiFile getFile() {
+        return file;
+    }
 
-    ProgressManager.getInstance().executeNonCancelableSection(() -> log.doActualPsiChange(file));
-  }
+    @Nonnull
+    public OffsetsInFile toTopLevelFile() {
+        InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
+        PsiFile hostFile = manager.getTopLevelFile(file);
+        if (hostFile == file) {
+            return this;
+        }
+        else {
+            return new OffsetsInFile(hostFile, offsets.mapOffsets(hostFile.getViewProvider().getDocument(), it -> manager.injectedToHost(file, it)));
+        }
+    }
+
+    @Nonnull
+    public OffsetsInFile toInjectedIfAny(int offset) {
+        InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(file.getProject());
+
+        PsiFile injected = injectedLanguageManager.findInjectedPsiNoCommit(file, offset);
+        if (injected == null) {
+            return this;
+        }
+
+        DocumentWindow documentWindow = injectedLanguageManager.getDocumentWindow(injected);
+        assert documentWindow != null;
+        return new OffsetsInFile(injected, offsets.mapOffsets(documentWindow, documentWindow::hostToInjected));
+    }
+
+    @Nonnull
+    public OffsetsInFile copyWithReplacement(int startOffset, int endOffset, String replacement) {
+        return replaceInCopy((PsiFile) file.copy(), startOffset, endOffset, replacement);
+    }
+
+    @Nonnull
+    public OffsetsInFile replaceInCopy(PsiFile fileCopy, int startOffset, int endOffset, String replacement) {
+        DocumentFactory documentFactory = DocumentFactory.getInstance();
+
+        Document tempDocument = documentFactory.createDocument(offsets.getDocument().getImmutableCharSequence(), true);
+
+        OffsetMap tempMap = offsets.copyOffsets(tempDocument);
+
+        tempDocument.replaceString(startOffset, endOffset, replacement);
+
+        reparseFile(fileCopy, tempDocument.getImmutableCharSequence());
+
+        OffsetMap copyOffsets = tempMap.copyOffsets(fileCopy.getViewProvider().getDocument());
+        return new OffsetsInFile(fileCopy, copyOffsets);
+    }
+
+    private void reparseFile(PsiFile file, CharSequence newText) {
+        FileElement node = ObjectUtil.tryCast(file.getNode(), FileElement.class);
+        if (node == null) {
+            throw new IllegalArgumentException(file.getClass() + " " + file.getFileType());
+        }
+
+        TextRange range = ChangedPsiRangeUtil.getChangedPsiRange(file, node, newText);
+        if (range == null) {
+            return;
+        }
+
+        ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
+        if (indicator == null) {
+            indicator = new EmptyProgressIndicator();
+        }
+
+        DiffLog log = BlockSupport.getInstance(file.getProject()).reparseRange(file, node, range, newText, indicator, file.getViewProvider().getContents());
+
+        ProgressManager.getInstance().executeNonCancelableSection(() -> log.doActualPsiChange(file));
+    }
 }

@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * In order to do the injection, you have to
  * <ul>
- * <li>Implement {@link com.intellij.psi.LanguageInjector} to describe exact place where injection should occur.</li>
+ * <li>Implement {@link consulo.language.inject.LanguageInjector} to describe exact place where injection should occur.</li>
  * <li>Register injection in {@link com.intellij.psi.LanguageInjector#EXTENSION_POINT_NAME} extension point.</li>
  * </ul>
  * Currently, language can be injected into string literals, XML tag contents and XML attributes.

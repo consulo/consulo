@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -93,7 +92,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
                 if (commit) {
                     documentManager.commitAllDocuments();
                 }
-                injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile);
+                injectedEditor = InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, psiFile);
             }
         }
         return injectedEditor;

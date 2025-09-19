@@ -15,10 +15,10 @@
  */
 package consulo.language.inject;
 
+import consulo.language.internal.InjectedLanguageManagerInternal;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -26,17 +26,20 @@ import jakarta.annotation.Nonnull;
  * @since 08/12/2022
  */
 public abstract class BaseConcatenation2InjectorAdapter implements MultiHostInjector {
-  private final Project myProject;
+    private final Project myProject;
 
-  public BaseConcatenation2InjectorAdapter(Project project) {
-    myProject = project;
-  }
+    public BaseConcatenation2InjectorAdapter(Project project) {
+        myProject = project;
+    }
 
-  @Override
-  public final void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
-    InjectedLanguageManager.getInstance(myProject).injectLanguagesFromConcatenationAdapter(registrar, context, this::computeAnchorAndOperands);
-  }
+    @Override
+    public final void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
+        InjectedLanguageManagerInternal injectedLanguageManager =
+            (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
 
-  @Nonnull
-  protected abstract Pair<PsiElement, PsiElement[]> computeAnchorAndOperands(@Nonnull PsiElement context);
+        injectedLanguageManager.injectLanguagesFromConcatenationAdapter(registrar, context, this::computeAnchorAndOperands);
+    }
+
+    @Nonnull
+    protected abstract Pair<PsiElement, PsiElement[]> computeAnchorAndOperands(@Nonnull PsiElement context);
 }

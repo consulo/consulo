@@ -9,7 +9,7 @@ module consulo.language.editor.impl {
 
   requires transitive consulo.language.editor.api;
   requires transitive consulo.file.template.api;
-  requires consulo.language.inject.impl;
+
   requires consulo.external.service.api;
   requires consulo.application.impl;
   requires consulo.project.impl;

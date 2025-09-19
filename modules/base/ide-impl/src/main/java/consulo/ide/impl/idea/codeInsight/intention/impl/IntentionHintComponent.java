@@ -25,15 +25,16 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
-import consulo.language.editor.internal.intention.IntentionManagerSettings;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
+import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
 import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -494,9 +495,10 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
             }
         }
 
-        boolean committed = PsiDocumentManager.getInstance(myFile.getProject()).isCommitted(myEditor.getDocument());
-        PsiFile injectedFile = committed ? InjectedLanguageUtil.findInjectedPsiNoCommit(myFile, myEditor.getCaretModel().getOffset()) : null;
-        Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(myEditor, injectedFile);
+        Project project = myFile.getProject();
+        boolean committed = PsiDocumentManager.getInstance(project).isCommitted(myEditor.getDocument());
+        PsiFile injectedFile = committed ? InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(myFile, myEditor.getCaretModel().getOffset()) : null;
+        Editor injectedEditor = InjectedEditorManager.getInstance(project).getInjectedEditorForInjectedFile(myEditor, injectedFile);
 
         final ScopeHighlighter highlighter = new ScopeHighlighter(myEditor);
         final ScopeHighlighter injectionHighlighter = new ScopeHighlighter(injectedEditor);

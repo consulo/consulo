@@ -38,10 +38,10 @@ import consulo.language.editor.documentation.DocumentationManagerProtocol;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.internal.HintManagerEx;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.util.EditSourceUtil;
@@ -772,7 +772,7 @@ public final class CtrlMouseHandler {
             Document document = myHostEditor.getDocument();
             if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
                 PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-                return (EditorEx) InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(myHostEditor, psiFile, myHostOffset);
+                return (EditorEx) InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(myHostEditor, psiFile, myHostOffset);
             }
             return myHostEditor;
         }

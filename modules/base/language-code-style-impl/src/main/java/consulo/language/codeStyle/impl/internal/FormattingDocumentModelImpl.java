@@ -16,6 +16,7 @@
 
 package consulo.language.codeStyle.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.internal.DocumentFactory;
 import consulo.document.util.TextRange;
@@ -24,7 +25,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -132,12 +133,13 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     }
 
     @Override
+    @RequiredReadAction
     public boolean containsWhiteSpaceSymbolsOnly(int startOffset, int endOffset) {
         WhiteSpaceFormattingStrategy strategy = myWhiteSpaceStrategy;
         if (strategy.check(myDocument.getCharsSequence(), startOffset, endOffset) >= endOffset) {
             return true;
         }
-        PsiElement injectedElement = myFile != null ? InjectedLanguageUtil.findElementAtNoCommit(myFile, startOffset) : null;
+        PsiElement injectedElement = myFile != null ? InjectedLanguageManager.getInstance(myFile.getProject()).findElementAtNoCommit(myFile, startOffset) : null;
         if (injectedElement != null) {
             Language injectedLanguage = injectedElement.getLanguage();
             if (!injectedLanguage.equals(myFile.getLanguage())) {
@@ -172,8 +174,11 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     //  return myWhiteSpaceStrategy.check(myBuffer, 0, 1) > 0;
     //}
 
+    @RequiredReadAction
     public static boolean canUseDocumentModel(@Nonnull Document document, @Nonnull PsiFile file) {
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(file.getProject());
-        return !psiDocumentManager.isUncommited(document) && !psiDocumentManager.isDocumentBlockedByPsi(document) && file.getText().equals(document.getText());
+        return !psiDocumentManager.isUncommited(document)
+            && !psiDocumentManager.isDocumentBlockedByPsi(document)
+            && file.getText().equals(document.getText());
     }
 }

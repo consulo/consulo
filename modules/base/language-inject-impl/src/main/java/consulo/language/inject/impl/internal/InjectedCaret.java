@@ -9,7 +9,7 @@ import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public class InjectedCaret implements Caret {
+public class InjectedCaret implements CaretDelegate {
   private final EditorWindow myEditorWindow;
   final Caret myDelegate;
 
@@ -30,6 +30,7 @@ public class InjectedCaret implements Caret {
     return myEditorWindow.getCaretModel();
   }
 
+  @Override
   public Caret getDelegate() {
     return myDelegate;
   }

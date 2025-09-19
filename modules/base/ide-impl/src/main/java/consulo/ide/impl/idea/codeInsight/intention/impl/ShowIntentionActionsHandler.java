@@ -20,6 +20,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
@@ -32,7 +33,6 @@ import consulo.language.editor.template.TemplateState;
 import consulo.language.editor.ui.internal.HintManagerEx;
 import consulo.language.impl.internal.psi.stub.StubTextInconsistencyException;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -173,7 +173,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
 
         Editor injectedEditor = null;
         if (injectedFile != null) {
-            injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, injectedFile);
+            injectedEditor = InjectedEditorManager.getInstance(hostFile.getProject()).getInjectedEditorForInjectedFile(hostEditor, injectedFile);
             if (predicate.test(injectedFile, injectedEditor)) {
                 editorToApply = injectedEditor;
                 fileToApply = injectedFile;
@@ -210,7 +210,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         @Nonnull Project project
     ) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickFix");
-        
+
         FeatureUsageTracker.getInstance().getFixesStats().registerInvocation();
 
         PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -266,7 +266,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
             return Pair.create(hostFile, null);
         }
 
-        PsiFile injectedFile = InjectedLanguageUtil.findInjectedPsiNoCommit(hostFile, hostEditor.getCaretModel().getOffset());
+        PsiFile injectedFile = InjectedLanguageManager.getInstance(hostEditor.getProject()).findInjectedPsiNoCommit(hostFile, hostEditor.getCaretModel().getOffset());
         return chooseBetweenHostAndInjected(hostFile, hostEditor, injectedFile, (psiFile, editor) -> availableFor(psiFile, editor, action));
     }
 }

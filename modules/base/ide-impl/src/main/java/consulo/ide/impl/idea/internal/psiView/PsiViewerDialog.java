@@ -49,7 +49,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -777,7 +776,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             }
         }
         if (currentElem == null) {
-            currentElem = InjectedLanguageUtil.findElementAtNoCommit(
+            currentElem = InjectedLanguageManager.getInstance(myProject).findElementAtNoCommit(
                 psiEl.getContainingFile(),
                 rootBlockNode.getBlock().getTextRange().getStartOffset()
             );
@@ -952,7 +951,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             BlockTreeNode descriptor = (BlockTreeNode)blockElementsSet.iterator().next();
             PsiElement rootPsi = ((ViewerTreeStructure)myPsiTreeBuilder.getTreeStructure()).getRootPsiElement();
             int blockStart = descriptor.getBlock().getTextRange().getStartOffset();
-            PsiElement currentPsiEl = InjectedLanguageUtil.findElementAtNoCommit(rootPsi.getContainingFile(), blockStart);
+            PsiElement currentPsiEl = InjectedLanguageManager.getInstance(myProject).findElementAtNoCommit(rootPsi.getContainingFile(), blockStart);
             int blockLength = descriptor.getBlock().getTextRange().getLength();
             while (currentPsiEl.getParent() != null
                 && currentPsiEl.getTextRange().getStartOffset() == blockStart
@@ -1238,7 +1237,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             PsiElement rootElement = ((ViewerTreeStructure)myPsiTreeBuilder.getTreeStructure()).getRootPsiElement();
             int baseOffset = rootPsiElement.getTextRange().getStartOffset();
             int offset = myEditor.getCaretModel().getOffset() + baseOffset;
-            PsiElement element = InjectedLanguageUtil.findElementAtNoCommit(rootElement.getContainingFile(), offset);
+            PsiElement element = InjectedLanguageManager.getInstance(myProject).findElementAtNoCommit(rootElement.getContainingFile(), offset);
             if (element != null && myBlockTreeBuilder != null) {
                 TextRange rangeInHostFile = InjectedLanguageManager.getInstance(myProject).injectedToHost(element, element.getTextRange());
                 selectBlockNode(findBlockNode(rangeInHostFile, true));
@@ -1276,8 +1275,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             int start = selection.getSelectionStart() + baseOffset;
             int end = selection.getSelectionEnd() + baseOffset - 1;
             PsiElement element = findCommonParent(
-                InjectedLanguageUtil.findElementAtNoCommit(rootElement.getContainingFile(), start),
-                InjectedLanguageUtil.findElementAtNoCommit(rootElement.getContainingFile(), end)
+                InjectedLanguageManager.getInstance(myProject).findElementAtNoCommit(rootElement.getContainingFile(), start),
+                InjectedLanguageManager.getInstance(myProject).findElementAtNoCommit(rootElement.getContainingFile(), end)
             );
             if (element != null && myBlockTreeBuilder != null && myEditor.getContentComponent().hasFocus()) {
                 TextRange rangeInHostFile = InjectedLanguageManager.getInstance(myProject).injectedToHost(element, element.getTextRange());

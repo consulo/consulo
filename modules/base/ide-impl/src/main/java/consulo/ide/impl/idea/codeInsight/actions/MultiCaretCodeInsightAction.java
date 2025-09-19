@@ -19,8 +19,8 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.document.DocCommandGroupId;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -112,7 +112,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
         hostEditor.getCaretModel().runForEachCaret(caret -> {
             Editor editor = hostEditor;
             if (psiFile != null) {
-                Caret injectedCaret = InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, psiFile);
+                Caret injectedCaret = InjectedEditorManager.getInstance(project).getCaretForInjectedLanguageNoCommit(caret, psiFile);
                 if (injectedCaret != null) {
                     caret = injectedCaret;
                     editor = caret.getEditor();

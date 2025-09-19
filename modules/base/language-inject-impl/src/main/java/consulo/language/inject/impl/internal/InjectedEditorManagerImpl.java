@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.language.editor;
+package consulo.language.inject.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.inject.InjectedEditorManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -65,5 +64,10 @@ public class InjectedEditorManagerImpl implements InjectedEditorManager {
     @Override
     public Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile) {
         return InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, injectedFile);
+    }
+
+    @Override
+    public Caret getCaretForInjectedLanguageNoCommit(@Nullable Caret caret, @Nullable PsiFile file) {
+        return InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, file);
     }
 }

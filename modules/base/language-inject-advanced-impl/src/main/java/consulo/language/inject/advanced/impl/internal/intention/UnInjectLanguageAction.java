@@ -28,7 +28,6 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.advanced.Configuration;
 import consulo.language.inject.advanced.LanguageInjectionSupport;
 import consulo.language.inject.advanced.TemporaryPlacesRegistry;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
@@ -59,7 +58,7 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
-        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
+        PsiFile psiFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, offset);
         if (psiFile == null) {
             return false;
         }
@@ -73,11 +72,12 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
     }
 
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
-        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
+        InjectedLanguageManager manager = InjectedLanguageManager.getInstance(project);
+        PsiFile psiFile = manager.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
         if (psiFile == null) {
             return;
         }
-        PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
+        PsiLanguageInjectionHost host = manager.getInjectionHost(psiFile);
         if (host == null) {
             return;
         }
@@ -89,7 +89,7 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
             if (psiFile.getUserData(LanguageInjectionSupport.TEMPORARY_INJECTED_LANGUAGE) != null) {
                 // temporary injection
                 TemporaryPlacesRegistry temporaryPlacesRegistry = TemporaryPlacesRegistry.getInstance(project);
-                for (PsiLanguageInjectionHost.Shred shred : InjectedLanguageUtil.getShreds(psiFile)) {
+                for (PsiLanguageInjectionHost.Shred shred : manager.getShreds(psiFile)) {
                     if (temporaryPlacesRegistry.removeHostWithUndo(project, shred.getHost())) {
                         break;
                     }

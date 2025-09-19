@@ -18,10 +18,10 @@ package consulo.language.inject.advanced.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.ReferenceInjector;
 import consulo.language.inject.advanced.*;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.inject.impl.internal.InjectedReferenceVisitor;
+import consulo.language.internal.InjectedReferenceVisitor;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
@@ -91,7 +91,7 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
             }
           }
           else {
-            InjectedLanguageUtil.enumerate(element, element.getContainingFile(), false, new InjectedReferenceVisitor() {
+            InjectedLanguageManager.getInstance(element.getProject()).enumerateEx(element, element.getContainingFile(), false, new InjectedReferenceVisitor() {
               @Override
               public void visitInjectedReference(@Nonnull ReferenceInjector injector, @Nonnull List<? extends PsiLanguageInjectionHost.Shred> places) {
                 injected.set(Boolean.TRUE);

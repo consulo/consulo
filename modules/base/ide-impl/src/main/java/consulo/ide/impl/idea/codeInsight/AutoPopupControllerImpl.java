@@ -15,11 +15,10 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionType;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -31,6 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -135,7 +135,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
       if (file == null) return;
 
       if (!documentManager.isUncommited(editor.getDocument())) {
-        file = documentManager.getPsiFile(InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file).getDocument());
+        file = documentManager.getPsiFile(InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, file).getDocument());
         if (file == null) return;
       }
 

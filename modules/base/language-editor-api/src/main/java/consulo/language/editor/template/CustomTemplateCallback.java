@@ -5,7 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
-import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
@@ -52,7 +52,7 @@ public class CustomTemplateCallback {
     myFile = element != null ? element.getContainingFile() : file;
 
     myInInjectedFragment = InjectedLanguageManager.getInstance(myProject).isInjectedFragment(myFile);
-    myEditor = myInInjectedFragment ? LanguageEditorInternalHelper.getInstance().getEditorForInjectedLanguageNoCommit(editor, file, parentEditorOffset) : editor;
+    myEditor = myInInjectedFragment ? InjectedEditorManager.getInstance(file.getProject()).getEditorForInjectedLanguageNoCommit(editor, file, parentEditorOffset) : editor;
     myOffset = myInInjectedFragment ? getOffset(myEditor) : parentEditorOffset;
   }
 

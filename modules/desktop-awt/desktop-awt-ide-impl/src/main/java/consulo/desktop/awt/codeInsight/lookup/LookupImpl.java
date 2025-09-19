@@ -33,7 +33,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
-import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileModificationService;
@@ -44,8 +43,8 @@ import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -68,6 +67,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
@@ -1257,7 +1257,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         DocumentWindow documentWindow = getInjectedDocument(myProject, myEditor, myEditor.getCaretModel().getOffset());
         if (documentWindow != null) {
             PsiFile injectedFile = PsiDocumentManager.getInstance(myProject).getPsiFile(documentWindow);
-            return InjectedLanguageUtil.getInjectedEditorForInjectedFile(myEditor, injectedFile);
+            return InjectedEditorManager.getInstance(myProject).getInjectedEditorForInjectedFile(myEditor, injectedFile);
         }
         return myEditor;
     }

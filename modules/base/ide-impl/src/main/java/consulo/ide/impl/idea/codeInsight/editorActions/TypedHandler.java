@@ -12,6 +12,8 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.action.TypedAction;
+import consulo.codeEditor.impl.internal.DefaultRawTypedHandler;
+import consulo.codeEditor.impl.internal.TypedActionImpl;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
@@ -22,8 +24,6 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.codeEditor.impl.internal.DefaultRawTypedHandler;
-import consulo.codeEditor.impl.internal.TypedActionImpl;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -36,10 +36,10 @@ import consulo.language.editor.action.*;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
@@ -341,13 +341,15 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         // even for uncommitted document try to retrieve injected fragment that has been there recently
         // we are assuming here that when user is (even furiously) typing, injected language would not change
         // and thus we can use its lexer to insert closing braces etc
-        List<DocumentWindow> injected = InjectedLanguageManager.getInstance(oldFile.getProject())
+        Project project = oldFile.getProject();
+        List<DocumentWindow> injected = InjectedLanguageManager.getInstance(project)
             .getCachedInjectedDocumentsInRange(oldFile, ProperTextRange.create(offset, offset));
         for (DocumentWindow documentWindow : injected) {
             if (documentWindow.isValid() && documentWindow.containsRange(offset, offset)) {
-                PsiFile injectedFile = PsiDocumentManager.getInstance(oldFile.getProject()).getPsiFile(documentWindow);
+                PsiFile injectedFile = PsiDocumentManager.getInstance(project).getPsiFile(documentWindow);
                 if (injectedFile != null) {
-                    Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injectedFile);
+                    InjectedEditorManager injectedEditorManager = InjectedEditorManager.getInstance(project);
+                    Editor injectedEditor = injectedEditorManager.getInjectedEditorForInjectedFile(editor, injectedFile);
                     // IDEA-52375/WEB-9105 fix: last quote in editable fragment should be handled by outer language quote handler
                     TextRange hostRange = documentWindow.getHostRange(offset);
                     CharSequence sequence = editor.getDocument().getCharsSequence();

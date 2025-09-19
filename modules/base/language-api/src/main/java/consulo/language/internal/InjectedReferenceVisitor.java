@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.inject.impl.internal;
+package consulo.language.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
@@ -26,6 +27,7 @@ import java.util.List;
  * @author Dmitry Avdeev
  */
 public abstract class InjectedReferenceVisitor implements PsiLanguageInjectionHost.InjectedPsiVisitor {
+  @RequiredReadAction
   @Override
   public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
   }

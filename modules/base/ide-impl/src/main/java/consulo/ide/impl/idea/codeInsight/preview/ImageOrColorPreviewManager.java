@@ -29,8 +29,7 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -39,6 +38,7 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -178,7 +178,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
         Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
         int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
         if (documentManager.isCommitted(document)) {
-            ContainerUtil.addIfNotNull(elements, InjectedLanguageUtil.findElementAtNoCommit(psiFile, offset));
+            ContainerUtil.addIfNotNull(elements, InjectedLanguageManager.getInstance(project).findElementAtNoCommit(psiFile, offset));
         }
         for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
             ContainerUtil.addIfNotNull(elements, file.findElementAt(offset));

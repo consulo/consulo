@@ -34,13 +34,13 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
-import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
@@ -97,7 +97,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     if (myTarget == null) {
       if (!PsiDocumentManager.getInstance(myProject).isUncommited(myEditor.getDocument())) {
         // when document is committed, try to check injected stuff - it's fast
-        Editor injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(myEditor, myFile, myCaretOffset);
+        Editor injectedEditor = InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(myEditor, myFile, myCaretOffset);
         myTarget = TargetElementUtil.findTargetElement(injectedEditor, flags, injectedEditor.getCaretModel().getOffset());
       }
     }

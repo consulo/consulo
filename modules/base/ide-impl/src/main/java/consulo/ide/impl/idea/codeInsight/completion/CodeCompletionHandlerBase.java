@@ -31,10 +31,11 @@ import consulo.language.editor.impl.internal.completion.CompletionAssertions;
 import consulo.language.editor.impl.internal.completion.CompletionAssertions.WatchingInsertionContext;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.impl.internal.psi.stub.StubTextInconsistencyException;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -299,7 +300,7 @@ public class CodeCompletionHandlerBase {
             indicator.makeSureLookupIsShown(0);
         }
         else {
-            phase = new CompletionPhase.CommittingDocuments(indicator, InjectedLanguageUtil.getTopLevelEditor(indicator.getEditor()));
+            phase = new CompletionPhase.CommittingDocuments(indicator, EditorWindow.getTopLevelEditor(indicator.getEditor()));
         }
         CompletionServiceImpl.setCompletionPhase(phase);
 
@@ -563,14 +564,15 @@ public class CodeCompletionHandlerBase {
 
         WatchingInsertionContext context;
         if (editor.getCaretModel().supportsMultipleCarets()) {
+            InjectedEditorManager injectedEditorManager = InjectedEditorManager.getInstance(indicator.getProject());
             SimpleReference<WatchingInsertionContext> lastContext = SimpleReference.create();
-            Editor hostEditor = InjectedLanguageUtil.getTopLevelEditor(editor);
+            Editor hostEditor = EditorWindow.getTopLevelEditor(editor);
             boolean wasInjected = hostEditor != editor;
             OffsetsInFile topLevelOffsets = indicator.getHostOffsets();
             hostEditor.getCaretModel().runForEachCaret(caret -> {
                 OffsetsInFile targetOffsets = findInjectedOffsetsIfAny(caret, wasInjected, topLevelOffsets, hostEditor);
                 PsiFile targetFile = targetOffsets.getFile();
-                Editor targetEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, targetFile);
+                Editor targetEditor = injectedEditorManager.getInjectedEditorForInjectedFile(hostEditor, targetFile);
                 int targetCaretOffset = targetEditor.getCaretModel().getOffset();
                 int idEnd = targetCaretOffset + idEndOffsetDelta;
                 if (idEnd > targetEditor.getDocument().getTextLength()) {
@@ -635,7 +637,7 @@ public class CodeCompletionHandlerBase {
 
     private static void checkPsiTextConsistency(CompletionProcessEx indicator) {
         PsiFile psiFile =
-            PsiUtilBase.getPsiFileInEditor(InjectedLanguageUtil.getTopLevelEditor(indicator.getEditor()), indicator.getProject());
+            PsiUtilBase.getPsiFileInEditor(EditorWindow.getTopLevelEditor(indicator.getEditor()), indicator.getProject());
         if (psiFile != null) {
             if (Registry.is("ide.check.stub.text.consistency")
                 || Application.get().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
@@ -811,7 +813,7 @@ public class CodeCompletionHandlerBase {
     }
 
     private static Runnable rememberDocumentState(Editor _editor) {
-        Editor editor = InjectedLanguageUtil.getTopLevelEditor(_editor);
+        Editor editor = EditorWindow.getTopLevelEditor(_editor);
         String documentText = editor.getDocument().getText();
         int caret = editor.getCaretModel().getOffset();
         int selStart = editor.getSelectionModel().getSelectionStart();

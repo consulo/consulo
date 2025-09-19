@@ -67,6 +67,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public abstract class PsiDocumentManagerBase extends PsiDocumentManager implements DocumentListener, Disposable {
@@ -378,8 +379,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     @RequiredUIAccess
     public boolean finishCommit(
         @Nonnull final Document document,
-        @Nonnull List<? extends BooleanRunnable> finishProcessors,
-        @Nonnull List<? extends BooleanRunnable> reparseInjectedProcessors,
+        @Nonnull List<? extends BooleanSupplier> finishProcessors,
+        @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors,
         final boolean synchronously,
         @Nonnull Object reason
     ) {
@@ -412,8 +413,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     @RequiredUIAccess
     protected boolean finishCommitInWriteAction(
         @Nonnull Document document,
-        @Nonnull List<? extends BooleanRunnable> finishProcessors,
-        @Nonnull List<? extends BooleanRunnable> reparseInjectedProcessors,
+        @Nonnull List<? extends BooleanSupplier> finishProcessors,
+        @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors,
         boolean synchronously,
         boolean forceNoPsiCommit
     ) {
@@ -463,13 +464,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     @RequiredReadAction
     private boolean commitToExistingPsi(
         @Nonnull Document document,
-        @Nonnull List<? extends BooleanRunnable> finishProcessors,
-        @Nonnull List<? extends BooleanRunnable> reparseInjectedProcessors,
+        @Nonnull List<? extends BooleanSupplier> finishProcessors,
+        @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors,
         boolean synchronously,
         @Nullable VirtualFile virtualFile
     ) {
-        for (BooleanRunnable finishRunnable : finishProcessors) {
-            boolean success = finishRunnable.run();
+        for (BooleanSupplier finishRunnable : finishProcessors) {
+            boolean success = finishRunnable.getAsBoolean();
             if (synchronously) {
                 assert success : finishRunnable + " in " + finishProcessors;
             }
@@ -485,8 +486,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         if (viewProvider != null) {
             viewProvider.contentsSynchronized();
         }
-        for (BooleanRunnable runnable : reparseInjectedProcessors) {
-            if (!runnable.run()) {
+        for (BooleanSupplier runnable : reparseInjectedProcessors) {
+            if (!runnable.getAsBoolean()) {
                 return false;
             }
         }
@@ -1220,7 +1221,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     @Nonnull
-    public List<BooleanRunnable> reparseChangedInjectedFragments(
+    public List<BooleanSupplier> reparseChangedInjectedFragments(
         @Nonnull Document hostDocument,
         @Nonnull PsiFile hostPsiFile,
         @Nonnull TextRange range,

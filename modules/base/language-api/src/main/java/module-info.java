@@ -66,17 +66,23 @@ module consulo.language.api {
         consulo.ide.impl,
         consulo.file.editor.impl,
         consulo.language.impl;
+
     exports consulo.language.internal.psi.stub to
         consulo.ide.impl,
         consulo.language.impl,
         consulo.language.index.impl;
+
     exports consulo.language.internal to
         consulo.find.api,
         consulo.ide.impl,
         consulo.language.editor.api,
+        consulo.language.editor.impl,
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.language.impl,
+        consulo.language.inject.impl,
+        consulo.language.inject.advanced.api,
+        consulo.language.inject.advanced.impl,
         consulo.language.index.impl,
         consulo.usage.api;
 

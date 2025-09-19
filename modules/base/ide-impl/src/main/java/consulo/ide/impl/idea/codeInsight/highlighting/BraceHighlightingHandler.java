@@ -42,10 +42,10 @@ import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
@@ -150,7 +150,7 @@ public class BraceHighlightingHandler {
                     () -> {
                         try {
                             if (isValidEditor(editor) && isValidFile(injected)) {
-                                Editor newEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injected);
+                                Editor newEditor = InjectedEditorManager.getInstance(project).getInjectedEditorForInjectedFile(editor, injected);
                                 BraceHighlightingHandler handler = new BraceHighlightingHandler(project, newEditor, alarm, injected);
                                 processor.accept(handler);
                             }

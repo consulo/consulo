@@ -64,11 +64,6 @@ public interface LanguageEditorInternalHelper {
                                     int endOffset,
                                     List<? extends TextRange> enabledRanges);
 
-    @Contract("null,_,_->null;!null,_,_->!null")
-    default Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
-        return editor;
-    }
-
     default void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
                                                @Nonnull String text,
                                                @Nonnull SimpleTextAttributes attributes,

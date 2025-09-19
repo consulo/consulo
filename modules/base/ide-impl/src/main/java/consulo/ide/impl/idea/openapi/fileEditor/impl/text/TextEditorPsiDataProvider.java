@@ -17,33 +17,28 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeEditor.EditorKeys;
-import consulo.ide.IdeView;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.util.EditorHelper;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.Language;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.fileEditor.EditorDataProvider;
-import consulo.language.psi.*;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.*;
+import consulo.fileEditor.EditorDataProvider;
+import consulo.ide.IdeView;
+import consulo.language.Language;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
+import consulo.language.editor.util.EditorHelper;
+import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.language.inject.impl.internal.InjectedCaret;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.editor.TargetElementUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.LinkedHashSet;
 
-import static consulo.ui.ex.action.AnActionEvent.injectedId;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
+import static consulo.ui.ex.action.AnActionEvent.injectedId;
 
 public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Override
@@ -62,7 +57,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
         return e;
       }
       else {
-        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(e, caret, getPsiFile(e, file));
+        return InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(e, caret, getPsiFile(e, file));
       }
     }
     if (EditorKeys.HOST_EDITOR == dataId) {
@@ -150,11 +145,12 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
 
   @Nonnull
   private static Caret getInjectedCaret(@Nonnull Editor editor, @Nonnull Caret hostCaret) {
-    if (!(editor instanceof EditorWindow) || hostCaret instanceof InjectedCaret) {
+    if (!(editor instanceof EditorWindow) || hostCaret instanceof CaretDelegate) {
       return hostCaret;
     }
+
     for (Caret caret : editor.getCaretModel().getAllCarets()) {
-      if (((InjectedCaret)caret).getDelegate() == hostCaret) {
+      if (((CaretDelegate)caret).getDelegate() == hostCaret) {
         return caret;
       }
     }
