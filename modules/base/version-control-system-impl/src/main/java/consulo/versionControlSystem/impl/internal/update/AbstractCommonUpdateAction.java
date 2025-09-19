@@ -330,7 +330,13 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private LocalHistoryAction myLocalHistoryAction;
 
         public Updater(@Nonnull Project project, FilePath[] roots, Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
-            super(project, getTemplatePresentation().getTextValue(), true, VcsConfiguration.getInstance(project).getUpdateOption());
+            super(
+                project,
+                // FIXME better make correct message, instead using action text
+                getTemplatePresentation().getTextValue().map(Presentation.NO_MNEMONIC),
+                true,
+                VcsConfiguration.getInstance(project).getUpdateOption()
+            );
             myProject = project;
             myProjectLevelVcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManagerEx.getInstanceEx(project);
             myDirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
