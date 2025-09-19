@@ -20,11 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.disposer.Disposable;
@@ -42,7 +38,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -58,9 +53,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotionListener {
+public class ImageOrColorPreviewManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
 
     private static final Key<KeyListener> EDITOR_LISTENER_ADDED = Key.create("previewManagerListenerAdded");
@@ -75,37 +70,64 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     @Nullable
     private Collection<PsiElement> myElements;
 
-    @Inject
-    public ImageOrColorPreviewManager(Application application, EditorFactory editorFactory) {
-        if (!application.isSwingApplication()) {
+    private final EditorMouseMotionListener myEditorMouseMotionListener = new EditorMouseMotionListener() {
+        @Override
+        @RequiredUIAccess
+        public void mouseMoved(@Nonnull EditorMouseEvent event) {
+            Editor editor = event.getEditor();
+            if (editor.isOneLineMode()) {
+                return;
+            }
+
+            Project project = editor.getProject();
+            if (project == null) {
+                return;
+            }
+
+            executeFuture.cancel(false);
+            Point point = event.getMouseEvent().getPoint();
+            if (myElements == null && event.getMouseEvent().isShiftDown()) {
+                executeFuture =
+                    project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
+            }
+            else {
+                Collection<PsiElement> elements = myElements;
+                if (!getPsiElementsAt(point, editor).equals(elements)) {
+                    myElements = null;
+                    for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
+                        try {
+                            if (elements != null) {
+                                for (PsiElement element : elements) {
+                                    provider.hide(element, editor);
+                                }
+                            }
+                            else {
+                                provider.hide(null, editor);
+                            }
+                        }
+                        catch (Exception e) {
+                            LOG.error(e);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    public void unregisterEditor(Editor editor) {
+        if (editor.isOneLineMode()) {
             return;
         }
 
-        // we don't use multicaster because we don't want to serve all editors - only supported
-        editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
-            @Override
-            public void editorCreated(@Nonnull EditorFactoryEvent event) {
-                registerListeners(event.getEditor());
-            }
-
-            @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
-                Editor editor = event.getEditor();
-                if (editor.isOneLineMode()) {
-                    return;
-                }
-
-                KeyListener keyListener = EDITOR_LISTENER_ADDED.get(editor);
-                if (keyListener != null) {
-                    EDITOR_LISTENER_ADDED.set(editor, null);
-                    editor.getContentComponent().removeKeyListener(keyListener);
-                    editor.removeEditorMouseMotionListener(ImageOrColorPreviewManager.this);
-                }
-            }
-        }, this);
+        KeyListener keyListener = EDITOR_LISTENER_ADDED.get(editor);
+        if (keyListener != null) {
+            EDITOR_LISTENER_ADDED.set(editor, null);
+            editor.getContentComponent().removeKeyListener(keyListener);
+            editor.removeEditorMouseMotionListener(myEditorMouseMotionListener);
+        }
     }
 
-    private void registerListeners(Editor editor) {
+    public void registerListeners(Editor editor) {
         if (editor.isOneLineMode()) {
             return;
         }
@@ -120,7 +142,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
             return;
         }
 
-        editor.addEditorMouseMotionListener(this);
+        editor.addEditorMouseMotionListener(myEditorMouseMotionListener);
 
         KeyListener keyListener = new KeyAdapter() {
             @Override
@@ -191,48 +213,6 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     public void dispose() {
         executeFuture.cancel(false);
         myElements = null;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void mouseMoved(@Nonnull EditorMouseEvent event) {
-        Editor editor = event.getEditor();
-        if (editor.isOneLineMode()) {
-            return;
-        }
-
-        Project project = editor.getProject();
-        if (project == null) {
-            return;
-        }
-
-        executeFuture.cancel(false);
-        Point point = event.getMouseEvent().getPoint();
-        if (myElements == null && event.getMouseEvent().isShiftDown()) {
-            executeFuture =
-                project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
-        }
-        else {
-            Collection<PsiElement> elements = myElements;
-            if (!getPsiElementsAt(point, editor).equals(elements)) {
-                myElements = null;
-                for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
-                    try {
-                        if (elements != null) {
-                            for (PsiElement element : elements) {
-                                provider.hide(element, editor);
-                            }
-                        }
-                        else {
-                            provider.hide(null, editor);
-                        }
-                    }
-                    catch (Exception e) {
-                        LOG.error(e);
-                    }
-                }
-            }
-        }
     }
 
     private final class PreviewRequest implements Runnable {
