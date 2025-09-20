@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find;
+package consulo.fileEditor.impl.internal.largeFileEditor.action;
 
-import consulo.find.FindModel;
-import consulo.util.dataholder.Key;
-
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
-public interface SearchSession {
-  Key<SearchSession> KEY = Key.create("search.replace.session");
-  String INCORRECT_REGEX_MESSAGE = "Incorrect regular expression";
-
-  @Nonnull
-  FindModel getFindModel();
-
-  @Nonnull
-  SearchReplaceComponent getComponent();
-
-  boolean hasMatches();
-
-  void searchForward();
-
-  void searchBackward();
-
-  void close();
-
-  default boolean isSearchInProgress() {
-    return false;
-  }
+/**
+ * @author VISTALL
+ * @since 2025-09-20
+ */
+@ExtensionImpl
+public class LfeEditorActionHandlerFindWordAtCaret extends LfeEditorActionHandlerDisabled {
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_FIND_WORD_AT_CARET;
+    }
 }

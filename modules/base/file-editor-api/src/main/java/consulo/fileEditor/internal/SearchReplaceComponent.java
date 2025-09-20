@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find;
+package consulo.fileEditor.internal;
 
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -22,6 +22,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.EventListener;
 import java.util.concurrent.CompletableFuture;
@@ -33,11 +34,14 @@ import java.util.function.Supplier;
  */
 public interface SearchReplaceComponent extends DataProvider {
     public interface Listener extends EventListener {
-        void searchFieldDocumentChanged();
+        default void searchFieldDocumentChanged() {
+        }
 
-        void replaceFieldDocumentChanged();
+        default void replaceFieldDocumentChanged() {
+        }
 
-        void multilineStateChanged();
+        default void multilineStateChanged() {
+        }
     }
 
     @Nonnull
@@ -50,6 +54,9 @@ public interface SearchReplaceComponent extends DataProvider {
     void setNotFoundBackground();
 
     JComponent getComponent();
+
+    @Nonnull
+    JTextComponent getSearchTextComponent();
 
     void setStatusText(@Nonnull String status);
 

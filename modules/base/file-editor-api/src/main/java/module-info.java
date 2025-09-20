@@ -29,6 +29,7 @@ module consulo.file.editor.api {
 
     exports consulo.fileEditor.internal to
         consulo.ide.impl,
+        consulo.proxy,
         consulo.file.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
@@ -36,4 +37,6 @@ module consulo.file.editor.api {
         consulo.configuration.editor.api,
         consulo.version.control.system.impl,
         consulo.execution.coverage.impl;
+
+    exports consulo.fileEditor.internal.largeFileEditor to consulo.file.editor.impl, consulo.ide.impl;
 }

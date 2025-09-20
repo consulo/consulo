@@ -15,7 +15,9 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.fileEditor.localize.FileEditorLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
@@ -24,6 +26,8 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 19-Feb-22
  */
+@Deprecated
+@MigratedExtensionsTo(FileEditorLocalize.class)
 public class FileEditorBundle extends AbstractBundle {
   private static final String BUNDLE = "consulo.fileEditor.FileEditorBundle";
 

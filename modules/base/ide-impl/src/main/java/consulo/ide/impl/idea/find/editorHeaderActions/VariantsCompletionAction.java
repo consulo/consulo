@@ -19,27 +19,22 @@ import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
-import consulo.colorScheme.EditorFontType;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.language.psi.stub.IdTableBuilding;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
-import java.util.List;
 
 public class VariantsCompletionAction extends AnAction {
     private final JTextComponent myTextField;
@@ -64,25 +59,17 @@ public class VariantsCompletionAction extends AnAction {
             return;
         }
 
-        final String[] array = calcWords(prefix, editor);
+        String[] array = calcWords(prefix, editor);
         if (array.length == 0) {
             return;
         }
 
         FeatureUsageTracker.getInstance().triggerFeatureUsed("find.completion");
-        JList list = new JBList(array) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                GraphicsUtil.setupAntialiasing(g);
-                super.paintComponent(g);
-            }
-        };
-        list.setBackground(new JBColor(new Color(235, 244, 254), new Color(0x4C4F51)));
-        list.setFont(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
 
-        Utils.showCompletionPopup(
+        SearchUtils.showCompletionPopup(
+            e.getData(Project.KEY),
             e.getInputEvent() instanceof MouseEvent ? myTextField : null,
-            list, null, myTextField, null
+            array, null, myTextField, null
         );
     }
 

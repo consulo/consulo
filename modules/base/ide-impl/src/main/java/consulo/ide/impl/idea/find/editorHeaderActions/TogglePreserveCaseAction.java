@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.find.FindModel;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.ide.impl.idea.find.SearchSession;
+import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 

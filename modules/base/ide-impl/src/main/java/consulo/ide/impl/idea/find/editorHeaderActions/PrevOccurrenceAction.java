@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.find.SearchSession;
+import consulo.fileEditor.impl.internal.search.SearchSession;
+import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
@@ -46,17 +47,17 @@ public class PrevOccurrenceAction extends PrevNextOccurrenceAction {
   @Nonnull
   @Override
   protected List<Shortcut> getDefaultShortcuts() {
-    return Utils.shortcutsOf(IdeActions.ACTION_FIND_PREVIOUS);
+    return SearchUtils.shortcutsOf(IdeActions.ACTION_FIND_PREVIOUS);
   }
 
   @Nonnull
   @Override
   protected List<Shortcut> getSingleLineShortcuts() {
     if (mySearch) {
-      return ContainerUtil.append(Utils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP),
+      return ContainerUtil.append(SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP),
                                   new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), null));
     } else {
-      return Utils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP);
+      return SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP);
     }
   }
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
+import consulo.fileEditor.internal.largeFileEditor.LargeEditorActionUtil;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -28,10 +29,11 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "HighlightUsagesInFile")
+@ActionImpl(id = IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE)
 public class HighlightUsagesAction extends AnAction implements DumbAware {
     public HighlightUsagesAction() {
         super(ActionLocalize.actionHighlightusagesinfileText(), ActionLocalize.actionHighlightusagesinfileDescription());
@@ -40,7 +42,11 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(Editor.KEY));
+        e.getPresentation().setEnabled(
+            e.hasData(Project.KEY)
+                && e.hasData(Editor.KEY)
+                && LargeEditorActionUtil.tryGetLargeFileEditorManager(e) == null
+        );
     }
 
     @Override

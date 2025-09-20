@@ -5,9 +5,9 @@ import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.ide.impl.idea.find.editorHeaderActions.Utils;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
@@ -16,7 +16,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -260,8 +259,15 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
             FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getRequiredData(Project.KEY));
             String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
-            JBList<String> historyList = new JBList<>(ArrayUtil.reverseArray(recent));
-            Utils.showCompletionPopup(SearchTextArea.this, historyList, null, myTextArea, null);
+
+            SearchUtils.showCompletionPopup(
+                e.getData(Project.KEY),
+                SearchTextArea.this,
+                ArrayUtil.reverseArray(recent),
+                null,
+                myTextArea,
+                null
+            );
         }
     }
 

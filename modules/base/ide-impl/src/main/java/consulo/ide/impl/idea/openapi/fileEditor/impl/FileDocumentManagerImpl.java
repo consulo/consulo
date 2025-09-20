@@ -84,8 +84,6 @@ import java.util.function.Predicate;
 public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWriteRequestor {
     private static final Logger LOG = Logger.getInstance(FileDocumentManagerImpl.class);
 
-    public static final Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
-
     private static final Key<String> LINE_SEPARATOR_KEY = Key.create("LINE_SEPARATOR_KEY");
     private static final Key<VirtualFile> FILE_KEY = Key.create("FILE_KEY");
     protected static final Key<Boolean> MUST_RECOMPUTE_FILE_TYPE = Key.create("Must recompute file type");
@@ -738,7 +736,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static boolean isReloadable(@Nonnull VirtualFile file, @Nonnull Document document, @Nullable Project project) {
         PsiFile cachedPsiFile = project == null ? null : PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
         return !(RawFileLoader.getInstance().isTooLarge(file.getLength()) && file.getFileType().isBinary())
-            && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file));
+            && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file))
+            && document.getUserData(NOT_RELOADABLE_DOCUMENT_KEY) == null;
     }
 
     @TestOnly

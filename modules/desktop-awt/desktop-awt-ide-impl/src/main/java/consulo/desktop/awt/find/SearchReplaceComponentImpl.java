@@ -5,13 +5,13 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.fileEditor.impl.internal.search.ContextAwareShortcutProvider;
+import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.ide.impl.idea.find.SearchReplaceComponent;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.platform.Platform;
@@ -38,6 +38,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
@@ -84,7 +85,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         @Nullable Project project,
         @Nonnull JComponent targetComponent,
         @Nonnull DefaultActionGroup searchToolbar1Actions,
-        @Nonnull BooleanGetter searchToolbar1ModifiedFlagGetter,
+        @Nonnull BooleanSupplier searchToolbar1ModifiedFlagGetter,
         @Nonnull DefaultActionGroup searchToolbar2Actions,
         @Nonnull DefaultActionGroup searchFieldActions,
         @Nonnull DefaultActionGroup replaceToolbar1Actions,

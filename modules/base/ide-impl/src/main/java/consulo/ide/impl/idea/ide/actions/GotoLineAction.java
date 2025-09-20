@@ -6,6 +6,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.internal.largeFileEditor.LargeEditorActionUtil;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
 import consulo.ide.localize.IdeLocalize;
@@ -48,6 +49,10 @@ public class GotoLineAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        event.getPresentation().setEnabledAndVisible(event.hasData(Project.KEY) && event.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
+        event.getPresentation().setEnabledAndVisible(
+            event.hasData(Project.KEY)
+                && event.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE)
+                && LargeEditorActionUtil.tryGetLargeFileEditorManager(event) == null
+        );
     }
 }

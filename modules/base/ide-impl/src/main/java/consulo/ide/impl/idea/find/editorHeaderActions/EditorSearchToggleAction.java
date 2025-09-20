@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.find.SearchSession;
+import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;

@@ -18,8 +18,8 @@ package consulo.document.internal;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -27,17 +27,20 @@ import jakarta.annotation.Nonnull;
  * @since 23-Mar-22
  */
 public interface FileDocumentManagerEx extends FileDocumentManager {
-  void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
+    Key<Object> NOT_RELOADABLE_DOCUMENT_KEY = new Key<>("NOT_RELOADABLE_DOCUMENT_KEY");
+    Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
 
-  @Override
-  @RequiredUIAccess
-  default void saveAllDocuments() {
-    saveAllDocuments(true);
-  }
+    void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
 
-  /**
-   * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
-   */
-  @RequiredUIAccess
-   void saveAllDocuments(boolean isExplicit);
+    @Override
+    @RequiredUIAccess
+    default void saveAllDocuments() {
+        saveAllDocuments(true);
+    }
+
+    /**
+     * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
+     */
+    @RequiredUIAccess
+    void saveAllDocuments(boolean isExplicit);
 }

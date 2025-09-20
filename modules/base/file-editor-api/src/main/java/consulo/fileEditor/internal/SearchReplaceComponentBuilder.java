@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find;
+package consulo.fileEditor.internal;
 
 import consulo.application.Application;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -25,6 +24,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.util.function.BooleanSupplier;
 
 public class SearchReplaceComponentBuilder {
   private final Project myProject;
@@ -38,7 +38,7 @@ public class SearchReplaceComponentBuilder {
   private final DefaultActionGroup mySearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 1");
   private final DefaultActionGroup myExtraSearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 2");
   private final DefaultActionGroup mySearchFieldActions = DefaultActionGroup.createFlatGroup(() -> "search field actions");
-  private BooleanGetter mySearchToolbarModifiedFlagGetter = BooleanGetter.FALSE;
+  private BooleanSupplier mySearchToolbarModifiedFlagGetter = () -> false;
 
   private final DefaultActionGroup myReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
   private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
@@ -94,7 +94,7 @@ public class SearchReplaceComponentBuilder {
   }
 
   @Nonnull
-  public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(@Nonnull BooleanGetter getter) {
+  public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(@Nonnull BooleanSupplier getter) {
     mySearchToolbarModifiedFlagGetter = getter;
     return this;
   }

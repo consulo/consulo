@@ -70,6 +70,10 @@ public interface IdeActions {
 
     String ACTION_EDITOR_MOVE_CARET_PAGE_DOWN = "EditorPageDown";
 
+    String ACTION_EDITOR_TEXT_START = "EditorTextStart";
+
+    String ACTION_EDITOR_TEXT_END = "EditorTextEnd";
+
     String ACTION_EDITOR_NEXT_WORD = "EditorNextWord";
 
     String ACTION_EDITOR_PREVIOUS_WORD = "EditorPreviousWord";
@@ -233,6 +237,10 @@ public interface IdeActions {
     String ACTION_FIND_NEXT = "FindNext";
 
     String ACTION_FIND_PREVIOUS = "FindPrevious";
+
+    String ACTION_FIND_WORD_AT_CARET = "FindWordAtCaret";
+
+    String ACTION_FIND_PREV_WORD_AT_CARET = "FindPrevWordAtCaret";
 
     String ACTION_SELECT_NEXT_OCCURENCE = "SelectNextOccurrence";
 

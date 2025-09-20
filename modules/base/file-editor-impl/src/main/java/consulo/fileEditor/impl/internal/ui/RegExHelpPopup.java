@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.impl;
+package consulo.fileEditor.impl.internal.ui;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.webBrowser.BrowserUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
@@ -328,7 +328,7 @@ public class RegExHelpPopup extends JPanel {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (HyperlinkEvent.EventType.ACTIVATED == e.getEventType()) {
-                    BrowserUtil.browse(e.getURL());
+                    Platform.current().openInBrowser(e.getURL());
                 }
             }
         });
@@ -359,7 +359,12 @@ public class RegExHelpPopup extends JPanel {
                             destroyPopup();
                         }
                     });
-                    helpPopup.showInCenterOf(owner);
+
+                    if (owner != null) {
+                        helpPopup.showInCenterOf(owner);
+                    } else {
+                        helpPopup.showInFocusCenter();
+                    }
                 }
                 catch (BadLocationException e) {
                     if (logger != null) {

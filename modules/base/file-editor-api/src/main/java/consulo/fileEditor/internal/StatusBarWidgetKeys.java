@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.editorHeaderActions;
+package consulo.fileEditor.internal;
 
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.ShortcutSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.util.dataholder.Key;
 
-public interface ContextAwareShortcutProvider {
-  @Nullable
-  ShortcutSet getShortcut(@Nonnull DataContext context);
+/**
+ * @author VISTALL
+ * @since 2025-09-20
+ */
+public class StatusBarWidgetKeys {
+    public static final Key<Object> POSITION_DISABLER = Key.create("positionPanel.disableForEditor");
 }

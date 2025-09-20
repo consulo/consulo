@@ -10,6 +10,7 @@ import consulo.document.Document;
 import consulo.document.event.BulkAwareDocumentListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.internal.StatusBarWidgetKeys;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
@@ -22,7 +23,6 @@ import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,8 +32,6 @@ import java.util.function.Consumer;
 
 public final class PositionPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation,
     CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
-
-    public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 
     public static final String SEPARATOR = ":";
 
@@ -166,7 +164,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     private void updatePosition(Editor editor) {
-        if (editor == null || DISABLE_FOR_EDITOR.isIn(editor)) {
+        if (editor == null || StatusBarWidgetKeys.POSITION_DISABLER.isIn(editor)) {
             myText = "";
         }
         else {

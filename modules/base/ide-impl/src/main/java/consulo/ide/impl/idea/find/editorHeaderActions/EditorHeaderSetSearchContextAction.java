@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.find.FindSearchContext;
-import consulo.ide.impl.idea.find.SearchSession;
+import consulo.fileEditor.impl.internal.search.SearchSession;
 import jakarta.annotation.Nonnull;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {

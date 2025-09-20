@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find;
+package consulo.fileEditor.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -35,7 +35,7 @@ public interface SearchReplaceComponentFactory {
     SearchReplaceComponent create(@Nullable Project project,
                                   @Nonnull JComponent targetComponent,
                                   @Nonnull DefaultActionGroup searchToolbar1Actions,
-                                  @Nonnull BooleanGetter searchToolbar1ModifiedFlagGetter,
+                                  @Nonnull BooleanSupplier searchToolbar1ModifiedFlagGetter,
                                   @Nonnull DefaultActionGroup searchToolbar2Actions,
                                   @Nonnull DefaultActionGroup searchFieldActions,
                                   @Nonnull DefaultActionGroup replaceToolbar1Actions,

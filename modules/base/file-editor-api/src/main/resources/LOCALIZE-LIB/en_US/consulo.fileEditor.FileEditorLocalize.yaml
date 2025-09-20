@@ -1,8 +1,108 @@
 action.sort.alphabetically:
-  text: Sort Alphabetically
-file.structure.toggle.show.inherited:
-  text: '&Show inherited members'
+    text: Sort Alphabetically
 action.structureview.show.inherited:
-  text: Show Inherited
+    text: Show Inherited
 command.close.active.editor:
-  text: Close Active Editor
+    text: Close Active Editor
+file.structure.toggle.show.inherited:
+    text: '&Show inherited members'
+large.file.action.presentation.FindAllAction.text:
+    text: Search All
+large.file.editor.action.description.search.entire.file.and.show.toolwindow:
+    text: Search the whole file from the beginning and show matching strings in the tool window
+large.file.editor.cant.launch.searching.because.of.unexpected.error:
+    text: Can't launch searching because of unexpected error.
+large.file.editor.encoding.widget.name:
+    text: Large File Encoding
+large.file.editor.find.backward.action.description:
+    text: Search from the current position to the beginning and show matching strings in the tool window
+large.file.editor.find.backward.action.text:
+    text: Search Backward
+large.file.editor.find.forward.action.description:
+    text: Search from the current position to the end and show matching strings in the tool window
+large.file.editor.find.forward.action.text:
+    text: Search Forward
+large.file.editor.find.further.backward.action.description:
+    text: Search for matches toward the beginning of the file and add them to existing results
+large.file.editor.find.further.backward.action.text:
+    text: Find and Add Previous Matches
+large.file.editor.find.further.forward.action.description:
+    text: Search for matches toward the end of the file and add them to existing results
+large.file.editor.find.further.forward.action.text:
+    text: Find and Add Next Matches
+large.file.editor.match.case.action.mnemonic.text:
+    text: Match &сase
+large.file.editor.message.cant.change.encoding.because.it.has.bom.byte.order.mark:
+    text: The file has a BOM (Byte order mark).
+large.file.editor.message.cant.change.encoding.because.search.is.working.now:
+    text: Search is in progress.
+large.file.editor.message.cant.open.file.because.file.not.found:
+    text: File not found.
+large.file.editor.message.cant.open.large.file.editor.for.target.file:
+    text: Can't open Large File Editor for target file.
+large.file.editor.message.cant.show.file.in.the.editor:
+    text: Can't show file in the editor
+large.file.editor.message.error.while.searching:
+    text: Error while searching.
+large.file.editor.message.error.while.working.with.file.try.to.reopen.it:
+    text: Error while working with file. Try to reopen it.
+large.file.editor.message.found.some.matches:
+    text: Found {0} matches so far.
+large.file.editor.message.found.some.matches.in.some.bounds.of.file:
+    text: Found {0} matches within {1}% to {2}% of file.
+large.file.editor.message.found.some.matches.in.the.whole.file:
+    text: Found {0} matches in the whole file.
+large.file.editor.message.search.complete:
+    text: Search complete.
+large.file.editor.message.search.is.completed.and.no.more.matches:
+    text: Search complete. No more matches.
+large.file.editor.message.search.stopped.because.something.went.wrong:
+    text: Search stopped because something went wrong.
+large.file.editor.message.search.stopped.because.too.many.results.were.found:
+    text: Search stopped because too many results were found.
+large.file.editor.message.searching.at.some.percent.of.file:
+    text: Searched through {0}% of file …
+large.file.editor.message.some.string.not.found:
+    text: '"{0}" not found'
+large.file.editor.message.stopped.by.user:
+    text: Stopped by user.
+large.file.editor.message.working.with.file.error:
+    text: Working with file error.
+large.file.editor.notification.text.the.file.is.too.large.so.showing.in.read.only.mode:
+    text: 'The file is too large: {0}. Read-only mode.'
+large.file.editor.regex.action.mnemonic.text:
+    text: Rege&x
+large.file.editor.some.string.not.found.perform.some.action.again.to.search.from.end:
+    text: '"{0}" not found. Perform "{1}" action again to search from the end.'
+large.file.editor.some.string.not.found.perform.some.action.again.to.search.from.start:
+    text: '"{0}" not found. Perform "{1}" action again to search from the start.'
+large.file.editor.some.string.not.found.press.some.shortcut.to.search.from.the.end:
+    text: '"{0}" not found. Press {1} to search from the end.'
+large.file.editor.some.string.not.found.press.some.shortcut.to.search.from.the.start:
+    text: '"{0}" not found. Press {1} to search from the start.'
+large.file.editor.stop.searching.action.text:
+    text: Stop Searching
+large.file.editor.tab.name.some.string.in.some.file:
+    text: '"{0}" in {1}'
+large.file.editor.text.find.next.matches:
+    text: find next matches
+large.file.editor.text.find.previous.matches:
+    text: find previous matches
+large.file.editor.title:
+    text: Large File Editor
+large.file.editor.title.cant.change.encoding:
+    text: Can't Change Encoding
+large.file.editor.title.search.error:
+    text: Search Error
+large.file.editor.title.searching.for.some.string.in.some.file:
+    text: Searching for "{0}" in file "{1}"
+large.file.editor.title.show.match.problem:
+    text: Show Match Problem
+large.file.editor.title.warning:
+    text: Warning
+large.file.editor.tooltip.file.encoding.is.some:
+    text: 'File Encoding: {0}'
+large.file.editor.words.action.mnemonic.text:
+    text: W&ords
+message.warning.about.regex.search.limitations:
+    text: Regex search can''t find matches with length longer then {0} Kb

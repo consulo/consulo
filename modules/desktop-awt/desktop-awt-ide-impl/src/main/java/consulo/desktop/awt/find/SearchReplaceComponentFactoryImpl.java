@@ -17,9 +17,8 @@ package consulo.desktop.awt.find;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.find.SearchReplaceComponent;
-import consulo.ide.impl.idea.find.SearchReplaceComponentFactory;
-import consulo.ide.impl.idea.openapi.util.BooleanGetter;
+import consulo.fileEditor.internal.SearchReplaceComponent;
+import consulo.fileEditor.internal.SearchReplaceComponentFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import jakarta.annotation.Nonnull;
@@ -27,6 +26,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ public class SearchReplaceComponentFactoryImpl implements SearchReplaceComponent
   public SearchReplaceComponent create(@Nullable Project project,
                                        @Nonnull JComponent targetComponent,
                                        @Nonnull DefaultActionGroup searchToolbar1Actions,
-                                       @Nonnull BooleanGetter searchToolbar1ModifiedFlagGetter,
+                                       @Nonnull BooleanSupplier searchToolbar1ModifiedFlagGetter,
                                        @Nonnull DefaultActionGroup searchToolbar2Actions,
                                        @Nonnull DefaultActionGroup searchFieldActions,
                                        @Nonnull DefaultActionGroup replaceToolbar1Actions,

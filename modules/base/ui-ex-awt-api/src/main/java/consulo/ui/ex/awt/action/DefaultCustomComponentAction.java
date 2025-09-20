@@ -1,11 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.awt.action;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -19,6 +18,7 @@ public class DefaultCustomComponentAction extends AnAction implements CustomComp
         myProducer = producer;
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         //do nothing

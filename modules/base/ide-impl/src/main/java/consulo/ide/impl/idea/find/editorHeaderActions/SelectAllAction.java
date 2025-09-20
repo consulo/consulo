@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
+import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -48,6 +49,6 @@ public class SelectAllAction extends OccurrenceAction {
       ContainerUtil.addAll(shortcuts, selectAllOccurrences.getShortcutSet().getShortcuts());
     }
     ContainerUtil.addAll(shortcuts, CommonShortcuts.ALT_ENTER.getShortcuts());
-    return Utils.shortcutSetOf(shortcuts);
+    return SearchUtils.shortcutSetOf(shortcuts);
   }
 }

@@ -16,6 +16,7 @@ module consulo.document.api {
 
     exports consulo.document.internal to
         consulo.document.impl,
+        consulo.file.editor.impl,
         consulo.ide.impl,
         consulo.language.editor.api,
         consulo.language.editor.impl,

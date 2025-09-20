@@ -15,18 +15,17 @@
  */
 package consulo.fileEditor;
 
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
 
 /**
  * @author Anton Katilin
@@ -34,151 +33,153 @@ import jakarta.annotation.Nullable;
  * @see TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
-  Key<FileEditor> KEY = Key.create(FileEditor.class);
+    Key<FileEditor> KEY = Key.create(FileEditor.class);
 
-  /**
-   * @see #isModified()
-   */
-  String PROP_MODIFIED = "modified";
-  /**
-   * @see #isValid()
-   */
-  String PROP_VALID = "valid";
+    /**
+     * @see #isModified()
+     */
+    String PROP_MODIFIED = "modified";
+    /**
+     * @see #isValid()
+     */
+    String PROP_VALID = "valid";
 
-  @Nullable
-  default Component getUIComponent() {
-    return null;
-  }
-
-  /**
-   * Returns component to be focused when editor is opened.
-   */
-  @Nullable
-  default Component getPreferredFocusedUIComponent() {
-    return null;
-  }
-
-  /**
-   * @return editor's name, a string that identifies editor among
-   * other editors. For example, UI form might have two editor: "GUI Designer"
-   * and "Text". So "GUI Designer" can be a name of one editor and "Text"
-   * can be a name of other editor. The method should never return <code>null</code>.
-   */
-  @Nonnull
-  String getName();
-
-  /**
-   * @return editor's internal state. Method should never return <code>null</code>.
-   */
-  @Nonnull
-  default FileEditorState getState(@Nonnull FileEditorStateLevel level) {
-    return FileEditorState.INSTANCE;
-  }
-
-  /**
-   * Applies given state to the editor.
-   *
-   * @param state cannot be null
-   */
-  default void setState(@Nonnull FileEditorState state) {
-  }
-
-  /**
-   * @return whether the editor's content is modified in comparison with its file.
-   */
-  boolean isModified();
-
-  /**
-   * @return whether the editor is valid or not. For some reasons
-   * editor can become invalid. For example, text editor becomes invalid when its file is deleted.
-   */
-  default boolean isValid() {
-    return true;
-  }
-
-  /**
-   * This method is invoked each time when the editor is selected.
-   * This can happen in two cases: editor is selected because the selected file
-   * has been changed or editor for the selected file has been changed.
-   */
-  void selectNotify();
-
-  /**
-   * This method is invoked each time when the editor is deselected.
-   */
-  void deselectNotify();
-
-  /**
-   * Removes specified listener
-   *
-   * @param listener to be added
-   */
-  void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
-
-  /**
-   * Adds specified listener
-   *
-   * @param listener to be removed
-   */
-  void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
-
-  /**
-   * @return highlighter object to perform background analysis and highlighting activities.
-   * Return <code>null</code> if no background highlighting activity necessary for this file editor.
-   */
-  @Nullable
-  default BackgroundEditorHighlighter getBackgroundHighlighter() {
-    return null;
-  }
-
-  /**
-   * The method is optional. Currently is used only by find usages subsystem
-   *
-   * @return the location of user focus. Typically it's a caret or any other form of selection start.
-   */
-  @Nullable
-  default FileEditorLocation getCurrentLocation() {
-    return null;
-  }
-
-  @Nullable
-  default StructureViewBuilder getStructureViewBuilder() {
-    return null;
-  }
-
-  @Nullable
-  default VirtualFile getFile() {
-    return null;
-  }
-
-  // TODO [VISTALL] AWT & Swing dependency
-
-  // region AWT & Swing dependency
-
-  /**
-   * @return component which represents editor in the UI.
-   * The method should never return <code>null</code>.
-   */
-  @Nonnull
-  default javax.swing.JComponent getComponent() {
-    Component uiComponent = getUIComponent();
-    if (uiComponent != null) {
-      return (javax.swing.JComponent)TargetAWT.to(uiComponent);
+    @Nullable
+    default Component getUIComponent() {
+        return null;
     }
-    throw new AbstractMethodError(getClass().getName());
-  }
 
-  /**
-   * Returns component to be focused when editor is opened.
-   */
-  @Nullable
-  default javax.swing.JComponent getPreferredFocusedComponent() {
-    Component component = getPreferredFocusedUIComponent();
-    if (component != null) {
-      return (javax.swing.JComponent) TargetAWT.to(component);
+    /**
+     * Returns component to be focused when editor is opened.
+     */
+    @Nullable
+    default Component getPreferredFocusedUIComponent() {
+        return null;
     }
-    return null;
-  }
 
-  // endregion
+    /**
+     * @return editor's name, a string that identifies editor among
+     * other editors. For example, UI form might have two editor: "GUI Designer"
+     * and "Text". So "GUI Designer" can be a name of one editor and "Text"
+     * can be a name of other editor. The method should never return <code>null</code>.
+     */
+    @Nonnull
+    String getName();
+
+    /**
+     * @return editor's internal state. Method should never return <code>null</code>.
+     */
+    @Nonnull
+    default FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+        return FileEditorState.INSTANCE;
+    }
+
+    /**
+     * Applies given state to the editor.
+     *
+     * @param state cannot be null
+     */
+    default void setState(@Nonnull FileEditorState state) {
+    }
+
+    /**
+     * @return whether the editor's content is modified in comparison with its file.
+     */
+    boolean isModified();
+
+    /**
+     * @return whether the editor is valid or not. For some reasons
+     * editor can become invalid. For example, text editor becomes invalid when its file is deleted.
+     */
+    default boolean isValid() {
+        return true;
+    }
+
+    /**
+     * This method is invoked each time when the editor is selected.
+     * This can happen in two cases: editor is selected because the selected file
+     * has been changed or editor for the selected file has been changed.
+     */
+    default void selectNotify() {
+    }
+
+    /**
+     * This method is invoked each time when the editor is deselected.
+     */
+    default void deselectNotify() {
+    }
+
+    /**
+     * Removes specified listener
+     *
+     * @param listener to be added
+     */
+    void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+
+    /**
+     * Adds specified listener
+     *
+     * @param listener to be removed
+     */
+    void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
+
+    /**
+     * @return highlighter object to perform background analysis and highlighting activities.
+     * Return <code>null</code> if no background highlighting activity necessary for this file editor.
+     */
+    @Nullable
+    default BackgroundEditorHighlighter getBackgroundHighlighter() {
+        return null;
+    }
+
+    /**
+     * The method is optional. Currently is used only by find usages subsystem
+     *
+     * @return the location of user focus. Typically it's a caret or any other form of selection start.
+     */
+    @Nullable
+    default FileEditorLocation getCurrentLocation() {
+        return null;
+    }
+
+    @Nullable
+    default StructureViewBuilder getStructureViewBuilder() {
+        return null;
+    }
+
+    @Nullable
+    default VirtualFile getFile() {
+        return null;
+    }
+
+    // TODO [VISTALL] AWT & Swing dependency
+
+    // region AWT & Swing dependency
+
+    /**
+     * @return component which represents editor in the UI.
+     * The method should never return <code>null</code>.
+     */
+    @Nonnull
+    default javax.swing.JComponent getComponent() {
+        Component uiComponent = getUIComponent();
+        if (uiComponent != null) {
+            return (javax.swing.JComponent) TargetAWT.to(uiComponent);
+        }
+        throw new AbstractMethodError(getClass().getName());
+    }
+
+    /**
+     * Returns component to be focused when editor is opened.
+     */
+    @Nullable
+    default javax.swing.JComponent getPreferredFocusedComponent() {
+        Component component = getPreferredFocusedUIComponent();
+        if (component != null) {
+            return (javax.swing.JComponent) TargetAWT.to(component);
+        }
+        return null;
+    }
+
+    // endregion
 }
