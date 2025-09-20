@@ -17,10 +17,9 @@ package consulo.ide.impl.actions;
 
 import consulo.application.Application;
 import consulo.application.CachesInvalidator;
-import consulo.application.internal.ApplicationEx;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.gist.GistManager;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -43,99 +42,97 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 20/03/2021
+ * @since 2021-03-20
  */
 public class InvalidateCacheDialog extends DialogWrapper {
+    @Nonnull
+    private final Application myApplication;
+    private Map<CachesInvalidator, Boolean> myStates = new LinkedHashMap<>();
 
-  @Nonnull
-  private final Application myApplication;
-  private Map<CachesInvalidator, Boolean> myStates = new LinkedHashMap<>();
+    private Action myJustRestartAction;
 
-  private Action myJustRestartAction;
+    public InvalidateCacheDialog(@Nonnull Application application, @Nullable Project project) {
+        super(project);
+        myApplication = application;
 
-  public InvalidateCacheDialog(@Nonnull Application application, @Nullable Project project) {
-    super(project);
-    myApplication = application;
+        boolean restartCapable = application.isRestartCapable();
 
-    boolean restartCapable = application.isRestartCapable();
+        setTitle(restartCapable ? ApplicationLocalize.dialogTitleInvalidateCachesAndRestart() : ApplicationLocalize.dialogTitleInvalidateCaches());
 
-    setTitle(restartCapable ? "Invalidate Caches and Restart" : "Invalidate Caches");
+        setOKButtonText(restartCapable ? ApplicationLocalize.buttonInvalidateAndRestart() : ApplicationLocalize.buttonInvalidate());
+        setOKButtonIcon(TargetAWT.to(PlatformIconGroup.generalWarning()));
 
-    setOKButtonText(restartCapable ? "Invalidate and Restart" : "Invalidate");
-    setOKButtonIcon(TargetAWT.to(PlatformIconGroup.generalWarning()));
+        if (restartCapable) {
+            myJustRestartAction = new DialogWrapperAction(ApplicationLocalize.buttonJustRestart()) {
+                @Override
+                protected void doAction(ActionEvent e) {
+                    close(OK_EXIT_CODE);
 
-    if (restartCapable) {
-      myJustRestartAction = new DialogWrapperAction(LocalizeValue.localizeTODO("Just Restart")) {
-        @Override
-        protected void doAction(ActionEvent e) {
-          close(OK_EXIT_CODE);
-
-          myApplication.restart(true);
+                    myApplication.restart(true);
+                }
+            };
         }
-      };
+
+        init();
     }
 
-    init();
-  }
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    protected JComponent createCenterPanel() {
+        VerticalLayout root = VerticalLayout.create();
+        root.add(HorizontalLayout.create().add(Label.create(ApplicationLocalize.dialogMessageCachesWillBeInvalidated())));
 
-  @Nullable
-  @Override
-  @RequiredUIAccess
-  protected JComponent createCenterPanel() {
-    VerticalLayout root = VerticalLayout.create();
-    root.add(HorizontalLayout.create()
-                             .add(Label.create(LocalizeValue.localizeTODO("The caches will be invalidated and rebuilt on the next startup"))));
+        VerticalLayout optionalLayout = VerticalLayout.create();
+        root.add(LabeledLayout.create(ApplicationLocalize.dialogMessageTheFollowingItems(), optionalLayout));
 
-    VerticalLayout optionalLayout = VerticalLayout.create();
-    root.add(LabeledLayout.create(LocalizeValue.localizeTODO("Optional:"), optionalLayout));
+        myApplication.getExtensionPoint(CachesInvalidator.class).forEachExtensionSafe(invalidator -> {
+            CheckBox checkBox = CheckBox.create(invalidator.getDescription());
+            checkBox.setValue(invalidator.isEnabledByDefault());
+            checkBox.addValueListener(event -> myStates.put(invalidator, event.getValue()));
 
-    myApplication.getExtensionPoint(CachesInvalidator.class).forEachExtensionSafe(invalidator -> {
-      CheckBox checkBox = CheckBox.create(invalidator.getDescription());
-      checkBox.setValue(invalidator.isEnabledByDefault());
-      checkBox.addValueListener(event -> myStates.put(invalidator, event.getValue()));
+            myStates.put(invalidator, checkBox.getValueOrError());
 
-      myStates.put(invalidator, checkBox.getValueOrError());
-
-      optionalLayout.add(checkBox);
-    });
-    return (JComponent)TargetAWT.to(root);
-  }
-
-  @Override
-  protected void doOKAction() {
-    super.doOKAction();
-
-    FileBasedIndex.getInstance().invalidateCaches();
-    GistManager.getInstance().invalidateData();
-
-    for (Map.Entry<CachesInvalidator, Boolean> entry : myStates.entrySet()) {
-      if (entry.getValue()) {
-        entry.getKey().invalidateCaches();
-      }
+            optionalLayout.add(checkBox);
+        });
+        return (JComponent) TargetAWT.to(root);
     }
 
-    myApplication.restart(true);
-  }
+    @Override
+    protected void doOKAction() {
+        super.doOKAction();
 
-  @Nonnull
-  @Override
-  protected Action[] createActions() {
-    Action[] actions = super.createActions();
-    if (myJustRestartAction == null) {
-      return actions;
+        FileBasedIndex.getInstance().invalidateCaches();
+        myApplication.getInstance(GistManager.class).invalidateData();
+
+        for (Map.Entry<CachesInvalidator, Boolean> entry : myStates.entrySet()) {
+            if (entry.getValue()) {
+                entry.getKey().invalidateCaches();
+            }
+        }
+
+        myApplication.restart(true);
     }
 
-    if (Platform.current().os().isMac()) {
-      return ArrayUtil.prepend(myJustRestartAction, actions);
-    }
-    else {
-      return ArrayUtil.append(actions, myJustRestartAction);
-    }
-  }
+    @Nonnull
+    @Override
+    protected Action[] createActions() {
+        Action[] actions = super.createActions();
+        if (myJustRestartAction == null) {
+            return actions;
+        }
 
-  @Nullable
-  @Override
-  protected String getHelpId() {
-    return "platform/dialogs/invalidate_caches/";
-  }
+        if (Platform.current().os().isMac()) {
+            return ArrayUtil.prepend(myJustRestartAction, actions);
+        }
+        else {
+            return ArrayUtil.append(actions, myJustRestartAction);
+        }
+    }
+
+    @Nullable
+    @Override
+    protected String getHelpId() {
+        return "platform/dialogs/invalidate_caches/";
+    }
 }
