@@ -16,7 +16,6 @@ import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
@@ -30,9 +29,11 @@ import consulo.language.psi.*;
 import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -336,7 +337,7 @@ public class FoldingUpdate {
         LOG.error(
             message,
             ApplicationManager.getApplication().isInternal() ? new Attachment[]{AttachmentFactoryUtil.createAttachment(document),
-                consulo.logging.attachment.AttachmentFactory.get().create(
+                AttachmentFactory.get().create(
                     "psiTree.txt",
                     DebugUtil.psiToString(file, false, true)
                 )} : Attachment.EMPTY_ARRAY

@@ -31,6 +31,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -92,6 +93,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
   }
 
   @Override
+  @RequiredUIAccess
   public void processTransferableData(final Project project,
                                       final Editor editor,
                                       final RangeMarker bounds,

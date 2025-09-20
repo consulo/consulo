@@ -1,8 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.document.impl;
+package consulo.document.internal;
 
 import consulo.application.util.LineTokenizer;
-import consulo.document.internal.LineIterator;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.CharArrayUtil;
@@ -206,13 +205,13 @@ public final class LineSet {
         }
     }
 
-    boolean isModified(int index) {
+    public boolean isModified(int index) {
         checkLineIndex(index);
         return !isLastEmptyLine(index) && BitUtil.isSet(myFlags[index], MODIFIED_MASK);
     }
 
     @Nonnull
-    LineSet setModified(@Nonnull IntList indices) {
+    public LineSet setModified(@Nonnull IntList indices) {
         if (indices.isEmpty()) {
             return this;
         }
@@ -232,7 +231,7 @@ public final class LineSet {
     }
 
     @Nonnull
-    LineSet clearModificationFlags(int startLine, int endLine) {
+    public LineSet clearModificationFlags(int startLine, int endLine) {
         if (startLine > endLine) {
             throw new IllegalArgumentException("endLine < startLine: " + endLine + " < " + startLine + "; lineCount: " + getLineCount());
         }
@@ -254,7 +253,7 @@ public final class LineSet {
     }
 
     @Nonnull
-    LineSet clearModificationFlags() {
+    public LineSet clearModificationFlags() {
         return getLineCount() == 0 ? this : clearModificationFlags(0, getLineCount());
     }
 

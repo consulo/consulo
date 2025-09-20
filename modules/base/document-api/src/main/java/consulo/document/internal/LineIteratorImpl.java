@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.document.impl;
-
-import consulo.document.internal.LineIterator;
+package consulo.document.internal;
 
 public class LineIteratorImpl implements LineIterator {
   private int myLineIndex = 0;

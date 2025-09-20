@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.document.RangeMarker;
-import consulo.document.impl.LineSet;
+import consulo.document.internal.LineSet;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.LineIterator;

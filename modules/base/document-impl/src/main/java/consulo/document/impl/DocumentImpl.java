@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
@@ -260,6 +261,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
+    @Override
     public boolean acceptsSlashR() {
         return myAcceptSlashR;
     }
@@ -303,7 +305,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     /**
      * @return true if stripping was completed successfully, false if the document prevented stripping by e.g. caret(s) being in the way
      */
-    public boolean stripTrailingSpaces(@Nullable final Project project, boolean inChangedLinesOnly, @Nullable int[] caretOffsets) {
+    @Override
+    public boolean stripTrailingSpaces(@Nullable ComponentManager project, boolean inChangedLinesOnly, @Nullable int[] caretOffsets) {
         if (!isStripTrailingSpacesEnabled) {
             return true;
         }
@@ -423,10 +426,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
+    @Override
     public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler() {
         return myReadonlyFragmentModificationHandler;
     }
 
+    @Override
     public void setReadonlyFragmentModificationHandler(ReadonlyFragmentModificationHandler readonlyFragmentModificationHandler) {
         myReadonlyFragmentModificationHandler = readonlyFragmentModificationHandler;
     }
@@ -841,11 +846,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         myFrozen = null;
     }
 
+    @Override
     public void clearLineModificationFlags(int startLine, int endLine) {
         myLineSet = getLineSet().clearModificationFlags(startLine, endLine);
         myFrozen = null;
     }
 
+    @Override
     public void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
         IntList modifiedLines = new IntArrayList(caretLines.length);
         LineSet lineSet = getLineSet();

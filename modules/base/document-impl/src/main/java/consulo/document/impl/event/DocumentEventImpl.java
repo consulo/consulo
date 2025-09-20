@@ -5,7 +5,7 @@ import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.LineSet;
+import consulo.document.internal.LineSet;
 import consulo.document.internal.LineIterator;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.MergingCharSequence;

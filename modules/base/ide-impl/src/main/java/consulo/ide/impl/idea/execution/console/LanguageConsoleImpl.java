@@ -14,7 +14,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.impl.DocumentImpUtil;
 import consulo.document.util.TextRange;
 import consulo.execution.internal.LanguageConsoleViewEx;
 import consulo.execution.ui.console.ConsoleRootType;
@@ -302,7 +301,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
         String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
         if (erase) {
-            DocumentImpUtil.writeInRunUndoTransparentAction(() -> editor.getDocument().deleteString(textRange.getStartOffset(), textRange.getEndOffset()));
+            UndoUtil.writeInRunUndoTransparentAction(() -> editor.getDocument().deleteString(textRange.getStartOffset(), textRange.getEndOffset()));
         }
         // always scroll to end on user input
         scrollToEnd();

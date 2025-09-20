@@ -10,18 +10,18 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.document.impl.DocumentImpUtil;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -216,6 +216,6 @@ public class ConsoleExecutionEditor implements Disposable {
   }
 
   public void setInputText(@Nonnull String query) {
-    DocumentImpUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
+    UndoUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
   }
 }

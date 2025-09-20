@@ -8,7 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
-import consulo.document.impl.DocumentImpl;
+import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.language.editor.completion.*;
@@ -203,11 +203,11 @@ public class CompletionInitializationUtil {
     }
 
     private static void syncAcceptSlashR(Document originalDocument, Document documentCopy) {
-        if (!(originalDocument instanceof DocumentImpl) || !(documentCopy instanceof DocumentImpl)) {
+        if (!(originalDocument instanceof DocumentEx) || !(documentCopy instanceof DocumentEx)) {
             return;
         }
 
-        ((DocumentImpl) documentCopy).setAcceptSlashR(((DocumentImpl) originalDocument).acceptsSlashR());
+        ((DocumentEx) documentCopy).setAcceptSlashR(((DocumentEx) originalDocument).acceptsSlashR());
     }
 
 }

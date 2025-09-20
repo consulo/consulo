@@ -20,12 +20,12 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
-import consulo.document.impl.DocumentImpl;
+import consulo.document.internal.DocumentEx;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.project.ui.wm.WindowManager;
@@ -147,7 +147,7 @@ public class ExportToFileUtil {
     @Override
     protected JComponent createCenterPanel() {
       Document document = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
-      ((DocumentImpl)document).setAcceptSlashR(true);
+      ((DocumentEx)document).setAcceptSlashR(true);
 
       myTextArea = EditorFactory.getInstance().createEditor(document, myProject, PlainTextFileType.INSTANCE, true);
       EditorSettings settings = myTextArea.getSettings();

@@ -8,6 +8,8 @@ module consulo.document.api {
 
     requires transitive kava.beans;
 
+    requires static it.unimi.dsi.fastutil;
+
     exports consulo.document;
     exports consulo.document.event;
     exports consulo.document.util;

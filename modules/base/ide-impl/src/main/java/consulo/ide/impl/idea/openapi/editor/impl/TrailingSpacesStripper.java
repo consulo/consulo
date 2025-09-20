@@ -26,16 +26,16 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.DocumentRunnable;
+import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.document.impl.DocumentImpl;
+import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.document.DocumentWindow;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
@@ -124,7 +124,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         if (document instanceof DocumentWindow) {
             document = ((DocumentWindow)document).getDelegate();
         }
-        if (!(document instanceof DocumentImpl)) {
+        if (!(document instanceof DocumentEx documentEx)) {
             return;
         }
 
@@ -134,9 +134,6 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         boolean isVirtualSpaceEnabled = activeEditor == null || activeEditor.getSettings().isVirtualSpace();
 
         EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
-        if (settings == null) {
-            return;
-        }
 
         boolean enabled = !Boolean.TRUE.equals(DISABLE_FOR_FILE_KEY.get(FileDocumentManager.getInstance().getFile(document)));
         if (!enabled) {
@@ -158,7 +155,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         else {
             caretLines = ArrayUtil.EMPTY_INT_ARRAY;
         }
-        ((DocumentImpl)document).clearLineModificationFlagsExcept(caretLines);
+        documentEx.clearLineModificationFlagsExcept(caretLines);
     }
 
     private static Editor getActiveEditor(@Nonnull Document document) {
@@ -176,7 +173,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         if (document instanceof DocumentWindow) {
             document = ((DocumentWindow)document).getDelegate();
         }
-        if (!(document instanceof DocumentImpl)) {
+        if (!(document instanceof DocumentEx documentEx)) {
             return true;
         }
         Editor activeEditor = getActiveEditor(document);
@@ -190,7 +187,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
             caretOffsets[i] = caret.getOffset();
         }
 
-        boolean markAsNeedsStrippingLater = ((DocumentImpl)document).stripTrailingSpaces(
+        boolean markAsNeedsStrippingLater = documentEx.stripTrailingSpaces(
             getProject(document, activeEditor),
             inChangedLinesOnly,
             skipCaretLines ? caretOffsets : null

@@ -3,10 +3,7 @@ package consulo.document.impl;
 
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.DocumentEx;
-import consulo.document.internal.EditReadOnlyListener;
-import consulo.document.internal.LineIterator;
-import consulo.document.internal.RangeMarkerEx;
+import consulo.document.internal.*;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;

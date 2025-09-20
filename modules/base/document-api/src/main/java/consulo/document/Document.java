@@ -8,11 +8,10 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Represents the contents of a text file loaded into memory, and possibly opened in an IDE
@@ -23,7 +22,7 @@ import jakarta.annotation.Nullable;
  * for high-level overview.
  *
  * @see Editor#getDocument()
- * @see com.intellij.psi.PsiDocumentManager
+ * @see PsiDocumentManager
  * @see FileDocumentManager
  * @see EditorFactory#createDocument(CharSequence)
  */
@@ -66,7 +65,7 @@ public interface Document extends UserDataHolder {
 
     /**
      * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
-     * @see consulo.ide.impl.idea.util.text.ImmutableCharSequence
+     * @see consulo.util.lang.ImmutableCharSequence
      */
     @Nonnull
     @Contract(pure = true)

@@ -15,10 +15,13 @@
  */
 package consulo.document.internal;
 
+import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -86,7 +89,28 @@ public interface DocumentEx extends Document {
         return false;
     }
 
+    default boolean acceptsSlashR() {
+        return false;
+    }
+
     default void clearLineModificationFlags(int startLine, int endLine) {
+    }
+
+    default void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
+    }
+
+    default void setReadonlyFragmentModificationHandler(ReadonlyFragmentModificationHandler readonlyFragmentModificationHandler) {
+    }
+
+    default ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler() {
+        return null;
+    }
+
+    /**
+     * @return true if stripping was completed successfully, false if the document prevented stripping by e.g. caret(s) being in the way
+     */
+    default boolean stripTrailingSpaces(@Nullable ComponentManager project, boolean inChangedLinesOnly, @Nullable int[] caretOffsets) {
+        return false;
     }
 }
 

@@ -17,21 +17,20 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
-import consulo.codeEditor.action.EditorAction;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.ReadonlyFragmentModificationHandler;
-import consulo.document.impl.DocumentImpl;
-import consulo.document.DocumentWindow;
+import consulo.document.internal.DocumentEx;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.Messages;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl
@@ -70,15 +69,15 @@ public class EditorActionManagerImpl extends EditorActionManager {
   public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull Document document) {
     Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     ReadonlyFragmentModificationHandler docHandler =
-            doc instanceof DocumentImpl ? ((DocumentImpl)doc).getReadonlyFragmentModificationHandler() : null;
+            doc instanceof DocumentEx ? ((DocumentEx)doc).getReadonlyFragmentModificationHandler() : null;
     return docHandler == null ? myReadonlyFragmentsHandler : docHandler;
   }
 
   @Override
   public void setReadonlyFragmentModificationHandler(@Nonnull Document document, ReadonlyFragmentModificationHandler handler) {
     Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
-    if (doc instanceof DocumentImpl) {
-      ((DocumentImpl)document).setReadonlyFragmentModificationHandler(handler);
+    if (doc instanceof DocumentEx) {
+      ((DocumentEx)document).setReadonlyFragmentModificationHandler(handler);
     }
   }
 
