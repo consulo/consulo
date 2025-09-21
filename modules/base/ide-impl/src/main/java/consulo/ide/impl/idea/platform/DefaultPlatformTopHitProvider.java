@@ -27,7 +27,7 @@ public class DefaultPlatformTopHitProvider extends ActionsTopHitProvider {
   private static final String[][] ACTION_MATRIX = {
           {"op", "open ", "OpenFile"},
           {"reo", "reopen ", "$LRU"},
-          {"new", "new ", "NewGroup"},
+          {"new", "new ", IdeActions.GROUP_NEW},
           {"new c", "new class ", "NewClass"},
           {"new i", "new interface ", "NewClass"},
           {"new e", "new enum ", "NewClass"},

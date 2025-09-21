@@ -24,13 +24,14 @@ import consulo.language.psi.PsiDirectory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandFileType;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2022-07-31
  */
-@ActionImpl(id = "CreateSandFile", parents = @ActionParentRef(@ActionRef(id = "NewGroup")))
+@ActionImpl(id = "CreateSandFile", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_NEW)))
 public class CreateSandFileAction extends CreateFileFromTemplateAction {
     public CreateSandFileAction() {
         super("Sand File", "", SandFileType.INSTANCE.getIcon());

@@ -59,12 +59,14 @@ public class RepositoryHelper {
     }
 
     @Nonnull
-    public static String buildUrlForDownload(@Nonnull UpdateChannel channel,
-                                             @Nonnull String pluginId,
-                                             @Nullable String platformVersion,
-                                             boolean noTracking,
-                                             boolean viaUpdate,
-                                             boolean noRedirect) {
+    public static String buildUrlForDownload(
+        @Nonnull UpdateChannel channel,
+        @Nonnull String pluginId,
+        @Nullable String platformVersion,
+        boolean noTracking,
+        boolean viaUpdate,
+        boolean noRedirect
+    ) {
         if (platformVersion == null) {
             platformVersion = ApplicationInfo.getInstance().getBuild().asString();
         }
@@ -98,9 +100,11 @@ public class RepositoryHelper {
      * Load & return only plugins from repository
      */
     @Nonnull
-    public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                       @Nonnull UpdateChannel channel,
-                                                                       @Nonnull EarlyAccessProgramManager eapManager)
+    public static List<PluginDescriptor> loadOnlyPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel,
+        @Nonnull EarlyAccessProgramManager eapManager
+    )
         throws Exception {
         List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
         return ContainerUtil.filter(ideaPluginDescriptors, it -> isPluginAllowed(it, eapManager));
@@ -115,16 +119,20 @@ public class RepositoryHelper {
     }
 
     @Nonnull
-    public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                   @Nonnull UpdateChannel channel) throws Exception {
+    public static List<PluginDescriptor> loadPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel
+    ) throws Exception {
         return loadPluginsFromRepository(indicator, channel, null, false);
     }
 
     @Nonnull
-    public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                   @Nonnull UpdateChannel channel,
-                                                                   @Nullable String buildNumber,
-                                                                   boolean withObsoletePlatforms) throws Exception {
+    public static List<PluginDescriptor> loadPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel,
+        @Nullable String buildNumber,
+        boolean withObsoletePlatforms
+    ) throws Exception {
         if (buildNumber == null) {
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
             buildNumber = appInfo.getBuild().asString();
@@ -136,22 +144,20 @@ public class RepositoryHelper {
             indicator.setText2Value(ExternalServiceLocalize.progressConnectingToPluginManager(WebServiceApi.REPOSITORY_API.buildUrl()));
         }
 
-        byte[] bytes;
         try {
-            bytes = HttpRequests.request(url)
-                .connect(request -> {
-                    if (indicator != null) {
-                        indicator.setText2Value(ExternalServiceLocalize.progressDownloadingListOfPlugins());
-                    }
+            byte[] bytes = HttpRequests.request(url).connect(request -> {
+                if (indicator != null) {
+                    indicator.setText2Value(ExternalServiceLocalize.progressDownloadingListOfPlugins());
+                }
 
-                    return request.readBytes(indicator);
-                });
+                return request.readBytes(indicator);
+            });
+
+            return readPluginsStream(new UnsyncByteArrayInputStream(bytes));
         }
         catch (IOException e) {
-            throw new IOException("Failed to read data from url: " + url + " view logs for details.", e);
+            throw new IOException("Failed to read data from URL: " + url + "\nView logs for details.", e);
         }
-
-        return readPluginsStream(new UnsyncByteArrayInputStream(bytes));
     }
 
     private static List<PluginDescriptor> readPluginsStream(InputStream is) throws Exception {
