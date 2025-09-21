@@ -544,15 +544,6 @@
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
-        <!-- View -->
-        <group id="QuickActions">
-            <separator/>
-            <action id="QuickImplementations" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowImplementationsAction"/>
-            <action id="QuickJavaDoc" class="consulo.ide.impl.idea.codeInsight.documentation.actions.ShowQuickDocInfoAction"/>
-
-            <add-to-group group-id="ViewMenu" anchor="after" relative-to-action="ToolWindowsGroup"/>
-        </group>
-
         <group id="CodeEditorBaseGroup">
             <group id="CodeEditorViewGroup">
                 <action id="ExternalJavaDoc" class="consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction"/>

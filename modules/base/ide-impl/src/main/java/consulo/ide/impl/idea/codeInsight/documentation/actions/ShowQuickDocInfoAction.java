@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
@@ -28,6 +29,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.*;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,6 +37,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "QuickJavaDoc")
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
@@ -44,6 +47,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     public static final String CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE = "codeassists.quickjavadoc.ctrln";
 
     public ShowQuickDocInfoAction() {
+        super(ActionLocalize.actionQuickjavadocText(), ActionLocalize.actionQuickjavadocDescription());
         setEnabledInModalContext(true);
         setInjectedContext(true);
     }

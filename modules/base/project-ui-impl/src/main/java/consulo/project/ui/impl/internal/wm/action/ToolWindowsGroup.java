@@ -17,6 +17,7 @@ package consulo.project.ui.impl.internal.wm.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.ActionGroup;
@@ -55,9 +56,8 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
         }
     };
 
-    @Override
-    public boolean isPopup() {
-        return true;
+    public ToolWindowsGroup() {
+        super(ActionLocalize.groupToolwindowsgroupText(), true);
     }
 
     @Override
