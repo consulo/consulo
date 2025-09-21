@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
-import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
@@ -50,10 +49,12 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -62,6 +63,7 @@ import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -72,6 +74,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.function.Supplier;
 
+@ActionImpl(id = IdeActions.ACTION_QUICK_IMPLEMENTATIONS)
 public class ShowImplementationsAction extends AnAction implements PopupAction {
     public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
     public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
@@ -82,6 +85,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     private Reference<ImplementationsUpdaterTask> myTaskRef;
 
     public ShowImplementationsAction() {
+        super(ActionLocalize.actionQuickimplementationsText(), ActionLocalize.actionQuickimplementationsDescription());
         setEnabledInModalContext(true);
         setInjectedContext(true);
     }
@@ -178,8 +182,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             text = SymbolPresentationUtil.getSymbolPresentableText(element);
         }
 
-        if (impls.length == 0 && ref instanceof PsiPolyVariantReference) {
-            PsiPolyVariantReference polyReference = (PsiPolyVariantReference)ref;
+        if (impls.length == 0 && ref instanceof PsiPolyVariantReference polyReference) {
             PsiElement refElement = polyReference.getElement();
             TextRange rangeInElement = polyReference.getRangeInElement();
             String refElementText = refElement.getText();
@@ -203,7 +206,6 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
                 impls = implsList.toArray(new PsiElement[implsList.size()]);
             }
         }
-
 
         showImplementations(impls, project, text, editor, file, element, isInvokedFromEditor, invokedByShortcut);
     }
@@ -299,13 +301,13 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         SimpleReference<UsageView> usageView = new SimpleReference<>();
         LocalizeValue title = CodeInsightLocalize.implementationViewTitle(text);
         JBPopup popup = SoftReference.dereference(myPopupRef);
-        if (popup != null && popup.isVisible() && popup instanceof AbstractPopup) {
-            ImplementationViewComponentImpl component = (ImplementationViewComponentImpl)((AbstractPopup)popup).getComponent();
+        if (popup != null && popup.isVisible() && popup instanceof AbstractPopup abstractPopup) {
+            ImplementationViewComponentImpl component = (ImplementationViewComponentImpl) abstractPopup.getComponent();
             popup.setCaption(title.get());
             component.update(impls, index);
-            updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
+            updateInBackground(editor, element, component, title, abstractPopup, usageView);
             if (invokedByShortcut) {
-                ((AbstractPopup)popup).focusPreferredComponent();
+                abstractPopup.focusPreferredComponent();
             }
             return;
         }
@@ -314,9 +316,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         if (component.hasElementsToShow()) {
             PopupUpdateProcessor updateProcessor = new PopupUpdateProcessor(project) {
                 @Override
+                @RequiredUIAccess
                 public void updatePopup(Object lookupItemObject) {
-                    PsiElement element = lookupItemObject instanceof PsiElement
-                        ? (PsiElement)lookupItemObject
+                    PsiElement element = lookupItemObject instanceof PsiElement psiElement
+                        ? psiElement
                         : DocumentationManager.getInstance(project).getElementFromLookup(editor, file);
                     updateElementImplementations(element, editor, project, file);
                 }
@@ -421,7 +424,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             }
             return PsiElement.EMPTY_ARRAY;
         };
-        return AccessRule.read(action);
+        return ReadAction.compute(action);
     }
 
     @Nonnull
@@ -441,9 +444,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         // if the definition is the tree parent of the target element, filter out the target element
         for (int i = 1; i < targetElements.length; i++) {
             PsiElement targetElement = targetElements[i];
-            if (Application.get().runReadAction(
-                (Supplier<Boolean>)() -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))
-            ) {
+            if (Application.get().runReadAction((Supplier<Boolean>)() -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))) {
                 unique.remove(targetElements[0]);
                 break;
             }
@@ -519,6 +520,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
         @Nullable
         @Override
+        @RequiredReadAction
         protected Usage createUsage(PsiElement element) {
             return new UsageInfo2UsageAdapter(new UsageInfo(element));
         }
