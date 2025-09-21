@@ -2,16 +2,18 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
-import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.language.localize.LanguageLocalize;
-import consulo.language.psi.PsiElement;
-import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
@@ -21,7 +23,6 @@ import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.collection.ArrayUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -29,9 +30,32 @@ import java.awt.*;
 
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 
+@ActionImpl(
+    id = "CopyReferencePopupGroup",
+    children = {
+        @ActionRef(type = CopyFileReferenceGroup.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = CopyExternalReferenceGroup.class)
+    },
+    parents = {
+        @ActionParentRef(
+            value = @ActionRef(type = CutCopyPasteGroup.class),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(type = CopyPathsAction.class)
+        ),
+        @ActionParentRef(
+            value = @ActionRef(type = EditorTabPopupMenuGroup.class),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(type = CopyPathsAction.class)
+        )
+    }
+)
 public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysPerformingActionGroup {
-    private static final Logger LOG = Logger.getInstance(CopyReferencePopup.class);
     private static final int DEFAULT_WIDTH = JBUIScale.scale(500);
+
+    public CopyReferencePopup() {
+        super(ActionLocalize.groupCopyreferencepopupgroupText(), true);
+    }
 
     @Override
     public boolean canBePerformed(@Nonnull DataContext context) {
@@ -39,15 +63,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = DataContext.builder().addAll(
-            e.getDataContext(),
-            PsiElement.KEY,
-            Project.KEY,
-            PsiElement.KEY_OF_ARRAY,
-            VirtualFile.KEY_OF_ARRAY,
-            Editor.KEY
-        ).build();
         BasePresentationFactory factory = new BasePresentationFactory();
         ListPopup popup = new PopupFactoryImpl.ActionGroupPopup(
             LanguageLocalize.popupTitleCopy().get(),

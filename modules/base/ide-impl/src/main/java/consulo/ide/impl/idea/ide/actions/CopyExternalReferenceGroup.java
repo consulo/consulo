@@ -16,27 +16,17 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
- * @since 2025-07-27
+ * @since 2025-09-20
  */
-@ActionImpl(
-    id = IdeActions.GROUP_CUT_COPY_PASTE,
-    children = {
-        @ActionRef(type = CutAction.class),
-        @ActionRef(type = CopyAction.class),
-        @ActionRef(type = CopyPathsAction.class),
-        @ActionRef(type = PopupInMainMenuActionGroup.class)
-    }
-)
-public class CutCopyPasteGroup extends DefaultActionGroup implements DumbAware {
-    public CutCopyPasteGroup() {
+@ActionImpl(id = "CopyExternalReferenceGroup")
+public class CopyExternalReferenceGroup extends DefaultActionGroup implements DumbAware {
+    public CopyExternalReferenceGroup() {
         super(LocalizeValue.empty(), false);
     }
 }

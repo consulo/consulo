@@ -17,6 +17,7 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -29,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "EditorPasteSimple")
 public class SimplePasteAction extends EditorAction {
     public SimplePasteAction() {
-        super(new BasePasteHandler());
+        super(ActionLocalize.actionEditorpastesimpleText(), ActionLocalize.actionEditorpastesimpleDescription(), new BasePasteHandler());
     }
 
     @Override

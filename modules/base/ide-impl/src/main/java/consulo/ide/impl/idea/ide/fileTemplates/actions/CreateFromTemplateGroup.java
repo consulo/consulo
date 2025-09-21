@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -38,7 +39,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+@ActionImpl(id = "NewFromTemplate")
 public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
+    public CreateFromTemplateGroup() {
+        super(ActionLocalize.actionNewfromtemplateText());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
@@ -80,16 +86,19 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
             }
         }
 
-        Arrays.sort(templates, (template1, template2) -> {
-            // group by type
-            int i = template1.getExtension().compareTo(template2.getExtension());
-            if (i != 0) {
-                return i;
-            }
+        Arrays.sort(
+            templates,
+            (template1, template2) -> {
+                // group by type
+                int i = template1.getExtension().compareTo(template2.getExtension());
+                if (i != 0) {
+                    return i;
+                }
 
-            // group by name if same type
-            return template1.getName().compareTo(template2.getName());
-        });
+                // group by name if same type
+                return template1.getName().compareTo(template2.getName());
+            }
+        );
         List<AnAction> result = new ArrayList<>();
 
         for (FileTemplate template : templates) {
@@ -127,6 +136,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
         }
 
         @Override
+        @RequiredUIAccess
         protected FileTemplate getTemplate(Project project, PsiDirectory dir) {
             SelectTemplateDialog dialog = new SelectTemplateDialog(project, dir);
             dialog.show();

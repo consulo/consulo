@@ -18,25 +18,31 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.localize.LocalizeValue;
+import consulo.ide.action.CreateFileAction;
+import consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateGroup;
+import consulo.ide.impl.idea.ide.scratch.NewScratchFileAction;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
- * @since 2025-07-27
+ * @since 2025-09-20
  */
 @ActionImpl(
-    id = IdeActions.GROUP_CUT_COPY_PASTE,
+    id = IdeActions.GROUP_NEW,
     children = {
-        @ActionRef(type = CutAction.class),
-        @ActionRef(type = CopyAction.class),
-        @ActionRef(type = CopyPathsAction.class),
-        @ActionRef(type = PopupInMainMenuActionGroup.class)
+        @ActionRef(type = NewGroup1.class),
+        @ActionRef(type = CreateFileAction.class),
+        @ActionRef(type = NewScratchFileAction.class),
+        @ActionRef(type = CreateDirectoryOrPackageAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = CreateFromTemplateGroup.class)
     }
 )
-public class CutCopyPasteGroup extends DefaultActionGroup implements DumbAware {
-    public CutCopyPasteGroup() {
-        super(LocalizeValue.empty(), false);
+public class NewGroup extends DefaultActionGroup implements DumbAware {
+    public NewGroup() {
+        super(ActionLocalize.groupNewgroupText(), true);
     }
 }

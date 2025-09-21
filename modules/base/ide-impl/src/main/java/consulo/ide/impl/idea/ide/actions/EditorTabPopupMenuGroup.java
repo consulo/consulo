@@ -23,17 +23,19 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.ReopenClosedTabAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
  * @since 2025-09-14
  */
 @ActionImpl(
-    id = "EditorTabPopupMenu",
+    id = IdeActions.GROUP_EDITOR_TAB_POPUP,
     children = {
         @ActionRef(type = CloseEditorsGroup.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CopyPathsAction.class),
+        @ActionRef(type = CopyReferenceAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = SplitVerticallyAction.class),
         @ActionRef(type = SplitHorizontallyAction.class),
