@@ -22,6 +22,7 @@ module consulo.task.impl {
     opens consulo.task.impl.internal to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
     opens consulo.task.impl.internal.action to consulo.component.impl, consulo.ui.ex.awt.api;
     opens consulo.task.impl.internal.timeTracking to consulo.util.xml.serializer;
+    opens consulo.task.impl.internal.setting to consulo.ui.ex.awt.api;
 
     // TODO remove in future
     requires java.desktop;
