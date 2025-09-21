@@ -103,7 +103,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
         super.doOKAction();
 
         FileBasedIndex.getInstance().invalidateCaches();
-        myApplication.getInstance(GistManager.class).invalidateData();
+        GistManager.getInstance().invalidateData();
 
         for (Map.Entry<CachesInvalidator, Boolean> entry : myStates.entrySet()) {
             if (entry.getValue()) {
