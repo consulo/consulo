@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.application.AllIcons;
+import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.fileEditor.impl.internal.search.SearchSession;
+import consulo.platform.base.icon.PlatformIconGroup;
 import jakarta.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorSearchToggleAction implements Embeddable {
     public ToggleMatchCase() {
         super(
             FindLocalize.findCaseSensitive(),
-            AllIcons.Actions.MatchCase,
-            AllIcons.Actions.MatchCaseHovered,
-            AllIcons.Actions.MatchCaseSelected
+            PlatformIconGroup.actionsMatchcase(),
+            PlatformIconGroup.actionsMatchcasehovered(),
+            PlatformIconGroup.actionsMatchcaseselected()
         );
     }
 

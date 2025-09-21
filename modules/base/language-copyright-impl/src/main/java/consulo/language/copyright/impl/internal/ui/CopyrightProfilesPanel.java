@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.copyright.impl.internal.ui;
 
 import consulo.configurable.Configurable;
@@ -49,7 +48,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -57,7 +55,8 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
+public class CopyrightProfilesPanel extends MasterDetailsComponent
+    implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
     private final Project myProject;
     private final CopyrightManager myManager;
     private final AtomicBoolean myInitialized = new AtomicBoolean(false);
@@ -116,8 +115,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     public void apply() throws ConfigurationException {
         Set<String> profiles = new HashSet<>();
         for (int i = 0; i < myRoot.getChildCount(); i++) {
-            MyNode node = (MyNode)myRoot.getChildAt(i);
-            String profileName = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject().getName();
+            MyNode node = (MyNode) myRoot.getChildAt(i);
+            String profileName = ((CopyrightConfigurable) node.getConfigurable()).getEditableObject().getName();
             if (profiles.contains(profileName)) {
                 selectNodeInTree(profileName);
                 throw new ConfigurationException("Duplicate copyright profile name: \'" + profileName + "\'");
@@ -136,8 +135,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         }
         else {
             for (int i = 0; i < myRoot.getChildCount(); i++) {
-                MyNode node = (MyNode)myRoot.getChildAt(i);
-                CopyrightProfile copyrightProfile = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject();
+                MyNode node = (MyNode) myRoot.getChildAt(i);
+                CopyrightProfile copyrightProfile = ((CopyrightConfigurable) node.getConfigurable()).getEditableObject();
                 profiles.put(copyrightProfile.getName(), copyrightProfile);
             }
         }
@@ -153,8 +152,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
 
     @Nullable
     @Override
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = new ArrayList<AnAction>();
+    protected List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> result = new ArrayList<>();
         result.add(new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
             {
                 registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
@@ -185,7 +184,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                     return;
                 }
                 CopyrightProfile clone = new CopyrightProfile();
-                clone.copyFrom((CopyrightProfile)getSelectedObject());
+                clone.copyFrom((CopyrightProfile) getSelectedObject());
                 clone.setName(profileName);
                 addProfileNode(clone);
             }
@@ -229,7 +228,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                                 public String getTextFor(CopyrightProfile value) {
                                     return value.getName();
                                 }
-                            }).showUnderneathOf(myNorthPanel);
+                            })
+                            .showUnderneathOf(myNorthPanel);
                     }
                 }
                 else {

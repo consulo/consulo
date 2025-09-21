@@ -1,9 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
@@ -18,6 +17,8 @@ import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
@@ -82,12 +83,14 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     public void onBulkDocumentUpdateStarted() {
     }
 
+    @RequiredUIAccess
     public void onBulkDocumentUpdateFinished() {
         doWithCaretMerging(() -> {
         }); // do caret merging if it's not scheduled for later
     }
 
     @Override
+    @RequiredUIAccess
     public void documentChanged(@Nonnull DocumentEvent e) {
         myIsInUpdate = false;
         myDocumentUpdateCounter++;
@@ -101,6 +104,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredReadAction
     public void beforeDocumentChange(@Nonnull DocumentEvent e) {
         if (!myEditor.getDocument().isInBulkUpdate() && e.isWholeTextReplaced()) {
             for (CARET caret : myCarets) {
@@ -125,6 +129,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         myPositionMarkerTree.dispose(myEditor.getDocument());
     }
 
+    @RequiredReadAction
     public void updateVisualPosition() {
         for (CARET caret : myCarets) {
             caret.updateVisualPosition();
@@ -132,26 +137,31 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret) {
         getCurrentCaret().moveCaretRelatively(columnShift, lineShift, withSelection, scrollToCaret);
     }
 
     @Override
+    @RequiredUIAccess
     public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
         getCurrentCaret().moveToLogicalPosition(pos);
     }
 
     @Override
+    @RequiredUIAccess
     public void moveToVisualPosition(@Nonnull VisualPosition pos) {
         getCurrentCaret().moveToVisualPosition(pos);
     }
 
     @Override
+    @RequiredUIAccess
     public void moveToOffset(int offset) {
         getCurrentCaret().moveToOffset(offset);
     }
 
     @Override
+    @RequiredUIAccess
     public void moveToOffset(int offset, boolean locateBeforeSoftWrap) {
         getCurrentCaret().moveToOffset(offset, locateBeforeSoftWrap);
     }
@@ -163,35 +173,42 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public LogicalPosition getLogicalPosition() {
         return getCurrentCaret().getLogicalPosition();
     }
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public VisualPosition getVisualPosition() {
         return getCurrentCaret().getVisualPosition();
     }
 
     @Override
+    @RequiredReadAction
     public int getOffset() {
         return getCurrentCaret().getOffset();
     }
 
     @Override
+    @RequiredReadAction
     public int getVisualLineStart() {
         return getCurrentCaret().getVisualLineStart();
     }
 
     @Override
+    @RequiredReadAction
     public int getVisualLineEnd() {
         return getCurrentCaret().getVisualLineEnd();
     }
 
+    @RequiredReadAction
     public int getWordAtCaretStart() {
         return getCurrentCaret().getWordAtCaretStart();
     }
 
+    @RequiredReadAction
     public int getWordAtCaretEnd() {
         return getCurrentCaret().getWordAtCaretEnd();
     }
@@ -234,15 +251,15 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return MAX_CARET_COUNT;
     }
 
-    @Override
     @Nonnull
+    @Override
     public CodeEditorCaretBase getCurrentCaret() {
         CodeEditorCaretBase currentCaret = myCurrentCaret.get();
-        return ApplicationManager.getApplication().isDispatchThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
+        return UIAccess.isUIThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
     }
 
-    @Override
     @Nonnull
+    @Override
     public CARET getPrimaryCaret() {
         return myPrimaryCaret;
     }
@@ -254,8 +271,8 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public List<Caret> getAllCarets() {
         List<Caret> carets;
         synchronized (myCarets) {
@@ -267,6 +284,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Nullable
     @Override
+    @RequiredReadAction
     public Caret getCaretAt(@Nonnull VisualPosition pos) {
         synchronized (myCarets) {
             for (CodeEditorCaretBase caret : myCarets) {
@@ -280,14 +298,16 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Nullable
     @Override
+    @RequiredUIAccess
     public Caret addCaret(@Nonnull VisualPosition pos) {
         return addCaret(pos, true);
     }
 
     @Nullable
     @Override
+    @RequiredUIAccess
     public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         CARET caret = createCaret(myEditor, this);
         caret.doMoveToVisualPosition(pos, false);
         if (addCaret(caret, makePrimary)) {
@@ -297,8 +317,9 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return null;
     }
 
+    @RequiredUIAccess
     boolean addCaret(@Nonnull CARET caretToAdd, boolean makePrimary) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         for (CARET caret : myCarets) {
             if (caretsOverlap(caret, caretToAdd)) {
                 return false;
@@ -318,8 +339,9 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public boolean removeCaret(@Nonnull Caret caret) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myCarets.size() <= 1 || !(caret instanceof CodeEditorCaretBase)) {
             return false;
         }
@@ -335,8 +357,9 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void removeSecondaryCarets() {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         ListIterator<CARET> caretIterator = myCarets.listIterator(myCarets.size() - 1);
         while (caretIterator.hasPrevious()) {
             CARET caret = caretIterator.previous();
@@ -349,13 +372,15 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void runForEachCaret(@Nonnull CaretAction action) {
         runForEachCaret(action, false);
     }
 
     @Override
+    @RequiredUIAccess
     public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myCurrentCaret.get() != null) {
             throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
         }
@@ -384,13 +409,15 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void runBatchCaretOperation(@Nonnull Runnable runnable) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         doWithCaretMerging(runnable);
     }
 
+    @RequiredUIAccess
     private void mergeOverlappingCaretsAndSelections() {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myCarets.size() > 1) {
             LinkedList<CARET> carets = new LinkedList<>(myCarets);
             Collections.sort(carets, CARET_POSITION_COMPARATOR);
@@ -444,6 +471,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
+    @RequiredReadAction
     private boolean caretsOverlap(@Nonnull CARET firstCaret, @Nonnull CARET secondCaret) {
         if (firstCaret.getVisualPosition().equals(secondCaret.getVisualPosition())) {
             return true;
@@ -452,17 +480,20 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         int secondStart = secondCaret.getSelectionStart();
         int firstEnd = firstCaret.getSelectionEnd();
         int secondEnd = secondCaret.getSelectionEnd();
-        return firstStart < secondStart && firstEnd > secondStart ||
-            firstStart > secondStart && firstStart < secondEnd ||
-            firstStart == secondStart && secondEnd != secondStart && firstEnd > firstStart ||
-            (hasPureVirtualSelection(firstCaret) || hasPureVirtualSelection(secondCaret)) && (firstStart == secondStart || firstEnd == secondEnd);
+        return firstStart < secondStart && firstEnd > secondStart
+            || firstStart > secondStart && firstStart < secondEnd
+            || firstStart == secondStart && secondEnd != secondStart && firstEnd > firstStart
+            || (hasPureVirtualSelection(firstCaret) || hasPureVirtualSelection(secondCaret))
+                && (firstStart == secondStart || firstEnd == secondEnd);
     }
 
+    @RequiredReadAction
     private boolean hasPureVirtualSelection(@Nonnull CARET firstCaret) {
         return firstCaret.getSelectionStart() == firstCaret.getSelectionEnd() && firstCaret.hasVirtualSelection();
     }
 
-    public void doWithCaretMerging(@Nonnull Runnable runnable) {
+    @RequiredUIAccess
+    public void doWithCaretMerging(@Nonnull @RequiredUIAccess Runnable runnable) {
         CodeEditorBase.assertIsDispatchThread();
         if (myPerformCaretMergingAfterCurrentOperation) {
             runnable.run();
@@ -480,13 +511,15 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
         setCaretsAndSelections(caretStates, true);
     }
 
     @Override
+    @RequiredUIAccess
     public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
-        CodeEditorBase.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (caretStates.isEmpty()) {
             throw new IllegalArgumentException("At least one caret should exist");
         }
@@ -559,11 +592,17 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public List<CaretState> getCaretsAndSelections() {
         synchronized (myCarets) {
             List<CaretState> states = new ArrayList<>(myCarets.size());
             for (CARET caret : myCarets) {
-                states.add(new CaretState(caret.getLogicalPosition(), caret.myVisualColumnAdjustment, caret.getSelectionStartLogicalPosition(), caret.getSelectionEndLogicalPosition()));
+                states.add(new CaretState(
+                    caret.getLogicalPosition(),
+                    caret.myVisualColumnAdjustment,
+                    caret.getSelectionStartLogicalPosition(),
+                    caret.getSelectionEndLogicalPosition()
+                ));
             }
             return states;
         }
@@ -625,6 +664,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void onAdded(@Nonnull Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
@@ -642,6 +682,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredUIAccess
     public void onRemoved(@Nonnull Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
@@ -666,6 +707,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
+    @RequiredReadAction
     public void onUpdated(@Nonnull Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
@@ -680,6 +722,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @TestOnly
+    @RequiredReadAction
     public void validateState() {
         for (CARET caret : myCarets) {
             caret.validateState();

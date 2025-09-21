@@ -17,44 +17,50 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.fileEditor.impl.internal.search.SearchUtils;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class NextOccurrenceAction extends PrevNextOccurrenceAction {
-  public NextOccurrenceAction() {
-    this(true);
-  }
-
-  public NextOccurrenceAction(boolean search) {
-    super(IdeActions.ACTION_NEXT_OCCURENCE, search);
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    SearchSession session = e.getRequiredData(SearchSession.KEY);
-    if (session.hasMatches()) session.searchForward();
-  }
-
-  @Nonnull
-  @Override
-  protected List<Shortcut> getDefaultShortcuts() {
-    return SearchUtils.shortcutsOf(IdeActions.ACTION_FIND_NEXT);
-  }
-
-  @Nonnull
-  @Override
-  protected List<Shortcut> getSingleLineShortcuts() {
-    if (mySearch) {
-      return ContainerUtil.append(SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN), CommonShortcuts.ENTER.getShortcuts());
+    public NextOccurrenceAction() {
+        this(true);
     }
-    else {
-      return SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN);
+
+    public NextOccurrenceAction(boolean search) {
+        super(IdeActions.ACTION_NEXT_OCCURENCE, search);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        SearchSession session = e.getRequiredData(SearchSession.KEY);
+        if (session.hasMatches()) {
+            session.searchForward();
+        }
+    }
+
+    @Nonnull
+    @Override
+    protected List<Shortcut> getDefaultShortcuts() {
+        return SearchUtils.shortcutsOf(IdeActions.ACTION_FIND_NEXT);
+    }
+
+    @Nonnull
+    @Override
+    protected List<Shortcut> getSingleLineShortcuts() {
+        List<Shortcut> shortcuts = SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN);
+        if (mySearch) {
+            return ContainerUtil.concat(shortcuts, Arrays.asList(CommonShortcuts.ENTER.getShortcuts()));
+        }
+        else {
+            return shortcuts;
+        }
+    }
 }

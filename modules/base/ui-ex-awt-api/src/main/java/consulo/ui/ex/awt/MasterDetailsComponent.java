@@ -484,7 +484,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     @Nullable
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+    protected List<AnAction> createActions(boolean fromPopup) {
         return null;
     }
 

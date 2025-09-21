@@ -201,8 +201,8 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
     @Override
     @Nonnull
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = new ArrayList<>();
+    protected List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> result = new ArrayList<>();
         AbstractAddGroup addAction = createAddAction();
         if (addAction != null) {
             result.add(addAction);

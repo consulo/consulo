@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -161,8 +160,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
     @Override
     @Nonnull
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = super.createActions(fromPopup);
+    protected List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> result = super.createActions(fromPopup);
         result.add(AnSeparator.getInstance());
         result.add(new MyGroupAction());
         return result;
@@ -572,6 +571,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myPlainMode = state;
             DefaultMutableTreeNode selection = null;
