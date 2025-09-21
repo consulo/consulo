@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 30/01/2022
+ * @since 2022-01-30
  */
 public class ShortcutUtil {
     private static void fillModifiersTexts(int modifiers, List<LocalizeValue> modifierTexts, boolean useUnicodeShortcuts) {
@@ -111,13 +111,9 @@ public class ShortcutUtil {
     @Nullable
     public static KeyStroke getKeyStroke(@Nonnull ShortcutSet shortcutSet) {
         Shortcut[] shortcuts = shortcutSet.getShortcuts();
-        if (shortcuts.length == 0 || !(shortcuts[0] instanceof KeyboardShortcut)) {
-            return null;
+        if (shortcuts.length != 0 && shortcuts[0] instanceof KeyboardShortcut shortcut && shortcut.getSecondKeyStroke() == null) {
+            return shortcut.getFirstKeyStroke();
         }
-        KeyboardShortcut shortcut = (KeyboardShortcut) shortcuts[0];
-        if (shortcut.getSecondKeyStroke() != null) {
-            return null;
-        }
-        return shortcut.getFirstKeyStroke();
+        return null;
     }
 }

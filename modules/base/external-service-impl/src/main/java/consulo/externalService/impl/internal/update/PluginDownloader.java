@@ -237,8 +237,7 @@ public class PluginDownloader {
             String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
             File oldBuild = new File(platformDirectory, "build" + buildNumber);
             if (oldBuild.exists()) {
-                StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(oldBuild);
-                StartupActionScriptManager.addActionCommand(deleteTemp);
+                StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldBuild));
             }
 
             FileUtil.delete(myFile);
@@ -284,12 +283,11 @@ public class PluginDownloader {
         File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
         indicator.checkCanceled();
-        if (myIsPlatform) {
-            indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlatform());
-        }
-        else {
-            indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlugin(getPluginName()));
-        }
+        indicator.setText2Value(
+            myIsPlatform
+                ? ExternalServiceLocalize.progressDownloadingPlatform()
+                : ExternalServiceLocalize.progressDownloadingPlugin(getPluginName())
+        );
 
         LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
 
@@ -315,7 +313,7 @@ public class PluginDownloader {
             });
         }
         catch (IOException e) {
-            throw new IOException("Failed to read data from url: " + downloadUrl + " view logs for details.", e);
+            throw new IOException("Failed to read data from URL: " + downloadUrl + "\nView logs for details.", e);
         }
     }
 
@@ -326,14 +324,7 @@ public class PluginDownloader {
 
     @Nonnull
     private String getFileName() {
-        String fileName = myPluginId + "_" + myDescriptor.getVersion();
-        if (myIsPlatform) {
-            fileName += ".tar.gz";
-        }
-        else {
-            fileName += ".zip";
-        }
-        return fileName;
+        return myPluginId + "_" + myDescriptor.getVersion() + (myIsPlatform ? ".tar.gz" : ".zip");
     }
 
     @Nonnull

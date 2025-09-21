@@ -110,6 +110,12 @@ button.export:
     text: Export...
 button.import:
     text: Import...
+button.invalidate:
+    text: Invalidate
+button.invalidate.and.restart:
+    text: Invalidate and Restart
+button.just.restart:
+    text: Just Restart
 button.move.down:
     text: Move &Down
 button.move.up:
@@ -718,6 +724,14 @@ desktop.entry.sudo.prompt:
     text: Please enter your password to create a desktop entry
 desktop.entry.xdg.missing:
     text: Unfortunately, xdg-utils seem to be unavailable on your system.
+dialog.message.caches.will.be.invalidated:
+    text: Remove caches and indexes for all projects. New caches will be built when you reopen the projects.
+dialog.message.the.following.items:
+    text: 'Optional:'
+dialog.title.invalidate.caches:
+    text: Invalidate Caches
+dialog.title.invalidate.caches.and.restart:
+    text: Invalidate Caches and Restart
 don.t.break.if.inline.content:
     text: 'Don''t break if inline content:'
 edit.code.folding.options:
