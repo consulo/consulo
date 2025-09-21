@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
@@ -25,17 +26,19 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
+@ActionImpl(id = "ShowErrorDescription")
 public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements DumbAware {
     private static int width;
     private static boolean shouldShowDescription = false;
@@ -43,6 +46,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
     private boolean myRequestFocus = false;
 
     public ShowErrorDescriptionAction() {
+        super(ActionLocalize.actionShowerrordescriptionText(), ActionLocalize.actionShowerrordescriptionDescription());
         setEnabledInModalContext(true);
     }
 
@@ -53,10 +57,12 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file) && isEnabledForFile(project, editor, file);
     }
 
+    @RequiredReadAction
     private static boolean isEnabledForFile(Project project, Editor editor, PsiFile file) {
         DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
         HighlightInfoImpl info =
@@ -76,7 +82,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
     }
 
     private static void changeState() {
-        if (Comparing.strEqual(ActionManagerEx.getInstanceEx().getPrevPreformedActionId(), IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) {
+        if (Objects.equals(ActionManagerEx.getInstanceEx().getPrevPreformedActionId(), IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) {
             shouldShowDescription = descriptionShown;
         }
         else {

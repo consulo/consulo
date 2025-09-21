@@ -13,39 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ParameterInfo")
 public class ShowParameterInfoAction extends BaseCodeInsightAction implements DumbAware {
-  public ShowParameterInfoAction() {
-    setEnabledInModalContext(true);
-  }
+    public ShowParameterInfoAction() {
+        super(ActionLocalize.actionParameterinfoText(), ActionLocalize.actionParameterinfoText());
+        setEnabledInModalContext(true);
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new ShowParameterInfoHandler();
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new ShowParameterInfoHandler();
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
-    return ShowParameterInfoHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()) != null;
-  }
+    @Override
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
+        return ShowParameterInfoHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()) != null;
+    }
 
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
 }
