@@ -13,30 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
- * @since 2025-07-27
+ * @since 2025-09-20
  */
 @ActionImpl(
-    id = IdeActions.GROUP_CUT_COPY_PASTE,
+    id = "Copy.Paste.Special",
     children = {
-        @ActionRef(type = CutAction.class),
-        @ActionRef(type = CopyAction.class),
-        @ActionRef(type = CopyPathsAction.class),
-        @ActionRef(type = PopupInMainMenuActionGroup.class)
+        @ActionRef(id = "CopyReference"),
+        @ActionRef(type = SimplePasteAction.class),
+        @ActionRef(id = "PasteMultiple")
     }
 )
-public class CutCopyPasteGroup extends DefaultActionGroup implements DumbAware {
-    public CutCopyPasteGroup() {
-        super(LocalizeValue.empty(), false);
+public class CopyPasteSpecialGroup extends DefaultActionGroup implements DumbAware {
+    public CopyPasteSpecialGroup() {
+        super(ActionLocalize.groupCopyPasteSpecialText(), ActionLocalize.groupCopyPasteSpecialDescription(), true);
     }
 }

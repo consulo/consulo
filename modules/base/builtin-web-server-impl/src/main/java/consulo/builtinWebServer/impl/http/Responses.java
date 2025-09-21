@@ -30,6 +30,7 @@ import io.netty.util.CharsetUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.CharBuffer;
 import java.util.Calendar;
 
@@ -41,154 +42,163 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * from kotlin platform\platform-impl\src\org\jetbrains\io\Responses.kt
  */
 public final class Responses {
-  private static String SERVER_HEADER_VALUE;
+    private static String SERVER_HEADER_VALUE;
 
-  private static String getServerHeaderValue() {
-    if (SERVER_HEADER_VALUE == null) {
-      Application app = ApplicationManager.getApplication();
-      if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = Application.get().getName().get();
-      }
-    }
-    return SERVER_HEADER_VALUE;
-  }
-
-  public static void setDate(HttpResponse response) {
-    if (!response.headers().contains(HttpHeaderNames.DATE)) {
-      response.headers().set(HttpHeaderNames.DATE, Calendar.getInstance().getTime());
-    }
-  }
-
-  public static void addServer(HttpResponse response) {
-    if (SERVER_HEADER_VALUE == null) {
-      Application app = ApplicationManager.getApplication();
-      if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = Application.get().getName().get();
-      }
-    }
-    if (SERVER_HEADER_VALUE != null) {
-      response.headers().set("Server", SERVER_HEADER_VALUE);
-    }
-  }
-
-  public static void send(HttpResponseStatus status, Channel channel, HttpRequest request, String description) {
-    send(status, channel, request, description, null);
-  }
-
-  public static void send(HttpResponseStatus status, Channel channel, String description) {
-    send(status, channel, null, description, null);
-  }
-
-  public static void send(HttpResponseStatus status, Channel channel, HttpRequest request) {
-    send(status, channel, request, null, null);
-  }
-
-  public static void send(HttpResponseStatus status, Channel channel, @Nullable HttpRequest request, @Nullable String description, @Nullable HttpHeaders extraHeaders) {
-    HttpResponse response = createStatusResponse(status, request, description);
-    send(response, channel, request, extraHeaders);
-  }
-
-  private static HttpResponse createStatusResponse(HttpResponseStatus responseStatus, HttpRequest request, String description) {
-    if (request != null && request.method() == HttpMethod.HEAD) {
-      return new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, Unpooled.EMPTY_BUFFER);
+    private static String getServerHeaderValue() {
+        if (SERVER_HEADER_VALUE == null) {
+            Application app = ApplicationManager.getApplication();
+            if (app != null && !app.isDisposed()) {
+                SERVER_HEADER_VALUE = app.getName().get();
+            }
+        }
+        return SERVER_HEADER_VALUE;
     }
 
-    StringBuilder builder = new StringBuilder();
-    String message = responseStatus.toString();
-    builder.append("<!doctype html><title>").append(message).append("</title>").append("<h1 style=\"text-align: center\">").append(message).append("</h1>");
-    if (description != null) {
-      builder.append("<p>").append(description).append("</p>");
-    }
-    builder.append("<hr/><p style=\"text-align: center\">").append(StringUtil.notNullize(getServerHeaderValue())).append("</p>");
-
-    DefaultFullHttpResponse response =
-            new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, ByteBufUtil.encodeString(ByteBufAllocator.DEFAULT, CharBuffer.wrap(builder), CharsetUtil.UTF_8));
-    response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
-    return response;
-  }
-
-  public static void send(HttpResponse response, Channel channel, HttpRequest request) {
-    send(response, channel, request, null);
-  }
-
-  public static void send(HttpResponse response, Channel channel, HttpRequest request, HttpHeaders extraHeaders) {
-    if (response.status() != HttpResponseStatus.NOT_MODIFIED && !HttpUtil.isContentLengthSet(response)) {
-      long toLong = (response instanceof FullHttpResponse) ? ((FullHttpResponse)response).content().readableBytes() : 0;
-      HttpUtil.setContentLength(response, toLong);
+    public static void setDate(HttpResponse response) {
+        if (!response.headers().contains(HttpHeaderNames.DATE)) {
+            response.headers().set(HttpHeaderNames.DATE, Calendar.getInstance().getTime());
+        }
     }
 
-    addCommonHeaders(response);
-
-    if (extraHeaders != null) {
-      response.headers().add(extraHeaders);
+    public static void addServer(HttpResponse response) {
+        if (SERVER_HEADER_VALUE == null) {
+            Application app = ApplicationManager.getApplication();
+            if (app != null && !app.isDisposed()) {
+                SERVER_HEADER_VALUE = app.getName().get();
+            }
+        }
+        if (SERVER_HEADER_VALUE != null) {
+            response.headers().set("Server", SERVER_HEADER_VALUE);
+        }
     }
 
-    send(response, channel, request != null && !addKeepAliveIfNeed(response, request));
-  }
-
-  static void send(HttpResponse response, Channel channel, boolean close) {
-    if (!channel.isActive()) {
-      return;
+    public static void send(HttpResponseStatus status, Channel channel, HttpRequest request, String description) {
+        send(status, channel, request, description, null);
     }
 
-    ChannelFuture future = channel.write(response);
-    if (!(response instanceof FullHttpResponse)) {
-      channel.write(LastHttpContent.EMPTY_LAST_CONTENT);
-    }
-    channel.flush();
-    if (close) {
-      future.addListener(ChannelFutureListener.CLOSE);
-    }
-  }
-
-  private static boolean addKeepAliveIfNeed(HttpResponse response, HttpRequest request) {
-    if (HttpUtil.isKeepAlive(request)) {
-      HttpUtil.setKeepAlive(response, true);
-      return true;
-    }
-    return false;
-  }
-
-  public static FullHttpResponse response(@Nonnull HttpResponseStatus status, String contentType, ByteBuf content) {
-    FullHttpResponse response = null;
-    if (content == null) {
-      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status);
-    }
-    else {
-
-      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
-    }
-    if (contentType != null) {
-      response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+    public static void send(HttpResponseStatus status, Channel channel, String description) {
+        send(status, channel, null, description, null);
     }
 
-    addNoCache(response);
-    return response;
-  }
-
-  public static FullHttpResponse response(String contentType, ByteBuf content) {
-    return response(OK, contentType, content);
-  }
-
-  public static HttpResponse addNoCache(HttpResponse response) {
-    response.headers().add(HttpHeaderNames.CACHE_CONTROL, "no-cache, no-store, must-revalidate, max-age=0");
-    response.headers().add(HttpHeaderNames.PRAGMA, "no-cache");
-    return response;
-  }
-
-  public static FullHttpResponse create(String contentType) {
-    FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
-    response.headers().set(CONTENT_TYPE, contentType);
-    return response;
-  }
-
-  private static void addCommonHeaders(HttpResponse response) {
-    addServer(response);
-    setDate(response);
-    if (!response.headers().contains("X-Frame-Options")) {
-      response.headers().set("X-Frame-Options", "SameOrigin");
+    public static void send(HttpResponseStatus status, Channel channel, HttpRequest request) {
+        send(status, channel, request, null, null);
     }
-    response.headers().set("x-xss-protection", "1; mode=block");
-    response.headers().set("X-Content-Type-Options", "nosniff");
-  }
+
+    public static void send(
+        HttpResponseStatus status,
+        Channel channel,
+        @Nullable HttpRequest request,
+        @Nullable String description,
+        @Nullable HttpHeaders extraHeaders
+    ) {
+        HttpResponse response = createStatusResponse(status, request, description);
+        send(response, channel, request, extraHeaders);
+    }
+
+    private static HttpResponse createStatusResponse(HttpResponseStatus responseStatus, HttpRequest request, String description) {
+        if (request != null && request.method() == HttpMethod.HEAD) {
+            return new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, Unpooled.EMPTY_BUFFER);
+        }
+
+        StringBuilder builder = new StringBuilder();
+        String message = responseStatus.toString();
+        builder.append("<!doctype html><title>")
+            .append(message)
+            .append("</title>")
+            .append("<h1 style=\"text-align: center\">")
+            .append(message)
+            .append("</h1>");
+        if (description != null) {
+            builder.append("<p>").append(description).append("</p>");
+        }
+        builder.append("<hr/><p style=\"text-align: center\">").append(StringUtil.notNullize(getServerHeaderValue())).append("</p>");
+
+        DefaultFullHttpResponse response = new DefaultFullHttpResponse(
+            HttpVersion.HTTP_1_1,
+            responseStatus,
+            ByteBufUtil.encodeString(ByteBufAllocator.DEFAULT, CharBuffer.wrap(builder), CharsetUtil.UTF_8)
+        );
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        return response;
+    }
+
+    public static void send(HttpResponse response, Channel channel, HttpRequest request) {
+        send(response, channel, request, null);
+    }
+
+    public static void send(HttpResponse response, Channel channel, HttpRequest request, HttpHeaders extraHeaders) {
+        if (response.status() != HttpResponseStatus.NOT_MODIFIED && !HttpUtil.isContentLengthSet(response)) {
+            long toLong = response instanceof FullHttpResponse fullHttpResponse ? fullHttpResponse.content().readableBytes() : 0;
+            HttpUtil.setContentLength(response, toLong);
+        }
+
+        addCommonHeaders(response);
+
+        if (extraHeaders != null) {
+            response.headers().add(extraHeaders);
+        }
+
+        send(response, channel, request != null && !addKeepAliveIfNeed(response, request));
+    }
+
+    static void send(HttpResponse response, Channel channel, boolean close) {
+        if (!channel.isActive()) {
+            return;
+        }
+
+        ChannelFuture future = channel.write(response);
+        if (!(response instanceof FullHttpResponse)) {
+            channel.write(LastHttpContent.EMPTY_LAST_CONTENT);
+        }
+        channel.flush();
+        if (close) {
+            future.addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+    private static boolean addKeepAliveIfNeed(HttpResponse response, HttpRequest request) {
+        if (HttpUtil.isKeepAlive(request)) {
+            HttpUtil.setKeepAlive(response, true);
+            return true;
+        }
+        return false;
+    }
+
+    public static FullHttpResponse response(@Nonnull HttpResponseStatus status, String contentType, ByteBuf content) {
+        FullHttpResponse response = content == null
+            ? new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status)
+            : new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
+        if (contentType != null) {
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+        }
+
+        addNoCache(response);
+        return response;
+    }
+
+    public static FullHttpResponse response(String contentType, ByteBuf content) {
+        return response(OK, contentType, content);
+    }
+
+    public static HttpResponse addNoCache(HttpResponse response) {
+        response.headers().add(HttpHeaderNames.CACHE_CONTROL, "no-cache, no-store, must-revalidate, max-age=0");
+        response.headers().add(HttpHeaderNames.PRAGMA, "no-cache");
+        return response;
+    }
+
+    public static FullHttpResponse create(String contentType) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
+        response.headers().set(CONTENT_TYPE, contentType);
+        return response;
+    }
+
+    private static void addCommonHeaders(HttpResponse response) {
+        addServer(response);
+        setDate(response);
+        if (!response.headers().contains(HttpHeaderNames.X_FRAME_OPTIONS)) {
+            response.headers().set(HttpHeaderNames.X_FRAME_OPTIONS, "SameOrigin");
+        }
+        response.headers().set("x-xss-protection", "1; mode=block");
+        response.headers().set("X-Content-Type-Options", "nosniff");
+    }
 }

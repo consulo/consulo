@@ -426,10 +426,7 @@
             <reference ref="$Cut"/>
             <reference ref="$Copy"/>
             <reference ref="$Paste"/>
-            <group id="Copy.Paste.Special" popup="true">
-                <reference ref="EditorPasteSimple"/>
-                <reference ref="PasteMultiple"/>
-            </group>
+            <reference ref="Copy.Paste.Special"/>
             <reference ref="EditorToggleColumnMode"/>
             <reference ref="$SearchWeb"/>
             <separator/>
@@ -547,31 +544,6 @@
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
-        <!-- File -->
-
-        <group id="CopyReferencePopupGroup" class="consulo.ide.impl.idea.ide.actions.CopyReferencePopup" popup="true">
-            <group id="CopyFileReference">
-                <reference ref="CopyAbsolutePath"/>
-                <reference ref="CopyFileName"/>
-                <separator/>
-                <reference ref="CopyPathWithLineNumber"/>
-                <reference ref="CopyContentRootPath"/>
-                <reference ref="CopySourceRootPath"/>
-            </group>
-            <separator/>
-            <group id="CopyExternalReferenceGroup">
-            </group>
-            <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="CopyPaths"/>
-            <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
-        </group>
-
-        <!-- Edit -->
-        <action id="CopyReference" class="consulo.ide.impl.idea.ide.actions.CopyReferenceAction">
-            <add-to-group group-id="CopyReferencePopupGroup" anchor="after" relative-to-action="CopyExternalReferenceGroup"/>
-            <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
-            <add-to-group group-id="Copy.Paste.Special" anchor="first"/>
-        </action>
-
         <!-- View -->
         <group id="QuickActions">
             <separator/>
@@ -610,18 +582,6 @@
         <action id="Scratch.ChangeLanguage" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$LanguageAction">
             <add-to-group group-id="EditorPopupMenu"/>
         </action>
-
-        <group id="NewGroup" popup="true">
-            <reference id="NewFile"/>
-            <reference id="NewScratchFile"/>
-            <reference id="NewDir"/>
-            <separator/>
-            <action id="NewFromTemplate" class="consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateGroup"/>
-        </group>
-
-        <group id="NewGroup1">
-            <add-to-group group-id="NewGroup" anchor="first"/>
-        </group>
 
         <group id="ToolbarFindGroup">
             <separator/>

@@ -2,10 +2,15 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.QualifiedNameProviderUtil;
@@ -32,11 +37,26 @@ import static consulo.ide.impl.idea.ide.actions.CopyReferenceUtil.*;
 /**
  * @author Alexey
  */
+@ActionImpl(
+    id = "CopyReference",
+    parents = {
+        @ActionParentRef(
+            value = @ActionRef(type = CopyReferencePopup.class),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(type = CopyExternalReferenceGroup.class)
+        ),
+        @ActionParentRef(
+            value = @ActionRef(type = EditorTabPopupMenuGroup.class),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(type = CopyPathsAction.class)
+        )
+    }
+)
 public class CopyReferenceAction extends DumbAwareAction {
     public static final DataFlavor ourFlavor = FileCopyPasteUtil.createJvmDataFlavor(CopyReferenceFQNTransferable.class);
 
     public CopyReferenceAction() {
-        super();
+        super(ActionLocalize.actionCopyreferenceText(), ActionLocalize.actionCopyreferenceDescription());
         setEnabledInModalContext(true);
         setInjectedContext(true);
     }
