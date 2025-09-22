@@ -176,14 +176,11 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
     @Override
     @Nullable
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = new ArrayList<>();
+    protected List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> result = new ArrayList<>();
         result.add(new AddAction());
-
         result.add(new MyDeleteAction(forAll(o -> canDelete((T)((MyNode)o).getConfigurable().getEditableObject()))));
-
         result.add(new CopyAction());
-
         return result;
     }
 

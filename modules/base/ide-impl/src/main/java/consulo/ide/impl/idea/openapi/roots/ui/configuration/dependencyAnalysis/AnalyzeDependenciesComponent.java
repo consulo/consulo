@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import consulo.application.AllIcons;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
@@ -47,8 +47,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
@@ -60,6 +58,7 @@ import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -152,9 +151,9 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+    protected List<AnAction> createActions(boolean fromPopup) {
         if (!fromPopup) {
-            ArrayList<AnAction> rc = new ArrayList<>();
+            List<AnAction> rc = new ArrayList<>();
             rc.add(new ClasspathTypeAction());
             rc.add(new SdkFilterAction());
             rc.add(new UrlModeAction());
@@ -185,7 +184,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
-    @Nls
+    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Classpath Details");
@@ -336,7 +335,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public Object getData(@Nonnull @NonNls Key<?> dataId) {
+        public Object getData(@Nonnull Key<?> dataId) {
             if (Project.KEY == dataId) {
                 return myModule.getProject();
             }
@@ -550,6 +549,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
+        @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.url());
@@ -579,7 +579,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             if (myExplanation.entry() instanceof ModuleSourceOrderEntry e) {
                 if (e.getOwnerModule() == myModule) {
                     return component -> {
-                        component.setIcon(AllIcons.Nodes.Module);
+                        component.setIcon(PlatformIconGroup.nodesModule());
                         component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
                     };
                 }
@@ -608,6 +608,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
+        @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.entry().getPresentableName());
@@ -623,7 +624,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * The constructor
          */
         public SdkFilterAction() {
-            super("Include SDK", "If selected, the SDK classes are included", AllIcons.General.Jdk);
+            super("Include SDK", "If selected, the SDK classes are included", PlatformIconGroup.generalJdk());
         }
 
         /**
@@ -638,6 +639,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             mySettings.setIncludeSdk(state);
             updateTree();
@@ -652,7 +654,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * The constructor
          */
         public UrlModeAction() {
-            super("Use URL mode", "If selected, the URLs are displayed, otherwise order entries", AllIcons.Nodes.PpFile);
+            super("Use URL mode", "If selected, the URLs are displayed, otherwise order entries", PlatformIconGroup.nodesFolder());
         }
 
         /**
@@ -667,6 +669,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             mySettings.setUrlMode(state);
             updateTree();

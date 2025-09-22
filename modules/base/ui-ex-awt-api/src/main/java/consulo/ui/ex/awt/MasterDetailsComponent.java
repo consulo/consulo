@@ -247,7 +247,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     private void initToolbar() {
-        ArrayList<AnAction> actions = createActions(false);
+        List<AnAction> actions = createActions(false);
         if (actions != null) {
             DefaultActionGroup group = new DefaultActionGroup();
             for (AnAction action : actions) {
@@ -484,7 +484,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     @Nullable
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+    protected List<AnAction> createActions(boolean fromPopup) {
         return null;
     }
 
@@ -522,7 +522,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             }
         });
         initToolbar();
-        ArrayList<AnAction> actions = createActions(true);
+        List<AnAction> actions = createActions(true);
         if (actions != null) {
             DefaultActionGroup group = new DefaultActionGroup();
             for (AnAction action : actions) {

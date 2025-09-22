@@ -47,15 +47,19 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         this(manager, application.getExtensionList(ServerType.class), null);
     }
 
-    private RemoteServerListConfigurable(@Nonnull RemoteServersManager manager,
-                                         @Nonnull ServerType<?> type,
-                                         @Nullable String initialSelectedName) {
+    private RemoteServerListConfigurable(
+        @Nonnull RemoteServersManager manager,
+        @Nonnull ServerType<?> type,
+        @Nullable String initialSelectedName
+    ) {
         this(manager, Collections.singletonList(type), initialSelectedName);
     }
 
-    protected RemoteServerListConfigurable(@Nonnull RemoteServersManager manager,
-                                           @Nonnull List<ServerType> displayedServerTypes,
-                                           @Nullable String initialSelectedName) {
+    protected RemoteServerListConfigurable(
+        @Nonnull RemoteServersManager manager,
+        @Nonnull List<ServerType> displayedServerTypes,
+        @Nullable String initialSelectedName
+    ) {
         super(() -> null);
         myServersManager = manager;
         myDisplayedServerTypes = displayedServerTypes;
@@ -69,9 +73,9 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @RequiredUIAccess
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     public JComponent createComponent(@Nonnull Disposable uiDisposable) {
         if (!isTreeInitialized) {
             initTree();
@@ -191,8 +195,8 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     }
 
     @Override
-    protected @Nullable ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> actions = new ArrayList<>();
+    protected @Nullable List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> actions = new ArrayList<>();
         ServerType<?> singleServerType = getSingleServerType();
         if (singleServerType == null) {
             actions.add(new AddRemoteServerGroup());
@@ -281,17 +285,20 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
             myServerType = serverType;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            String name = UniqueNameGenerator.generateUniqueName(myServerType.getPresentableName().get(), s -> {
-                for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
-                    if (configurable.getDisplayName().equals(s)) {
-                        return false;
+            String name = UniqueNameGenerator.generateUniqueName(
+                myServerType.getPresentableName().get(),
+                s -> {
+                    for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
+                        if (configurable.getDisplayName().equals(s)) {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                return true;
-            });
+            );
             MyNode node = addServerNode(myServersManager.createServer(myServerType, name), true);
             selectNodeInTree(node);
         }

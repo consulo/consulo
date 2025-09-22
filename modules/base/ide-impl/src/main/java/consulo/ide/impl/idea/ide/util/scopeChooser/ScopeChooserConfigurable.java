@@ -89,8 +89,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
     @Override
-    protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = new ArrayList<>();
+    protected List<AnAction> createActions(boolean fromPopup) {
+        List<AnAction> result = new ArrayList<>();
         result.add(new MyAddAction(fromPopup));
         result.add(new MyDeleteAction(forAll(o -> {
             if (o instanceof MyNode) {
@@ -114,8 +114,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         Set<MyNode> roots = new HashSet<>();
         roots.add(myRoot);
