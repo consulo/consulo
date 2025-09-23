@@ -34,6 +34,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ViewToolbarAction.class),
         @ActionRef(type = ViewToolWindowButtonsAction.class),
         @ActionRef(type = ViewStatusBarAction.class),
+        @ActionRef(type = ViewNavigationBarAction.class),
         @ActionRef(type = StatusBarWidgetsActionGroup.class)
     }
 )

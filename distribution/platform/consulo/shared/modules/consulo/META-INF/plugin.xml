@@ -544,10 +544,6 @@
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
-        <action id="ViewNavigationBar" class="consulo.ide.impl.idea.ide.actions.ViewNavigationBarAction">
-            <add-to-group group-id="UIToggleActions" relative-to-action="ViewStatusBar" anchor="after"/>
-        </action>
-
         <action id="ViewImportPopups" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowImportPopupsAction">
             <add-to-group group-id="EditorToggleActions"/>
         </action>
