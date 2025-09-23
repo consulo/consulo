@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.hint.actions;
+package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.codeInsight.hint.PrevNextParameterHandler;
-import consulo.codeEditor.action.EditorAction;
+import consulo.language.editor.completion.lookup.Lookup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 
 /**
- * @author ven
+ * @author UNV
+ * @since 2025-09-23
  */
-@ActionImpl(id = "NextParameter")
-public class NextParameterAction extends EditorAction {
-    public NextParameterAction() {
-        super(ActionLocalize.actionNextparameterText(), new PrevNextParameterHandler(true));
-        setInjectedContext(true);
+@ActionImpl(id = IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT)
+public class ChooseItemCompleteStatementAction extends ChooseItemAction {
+    public ChooseItemCompleteStatementAction() {
+        super(
+            ActionLocalize.actionEditorchooselookupitemcompletestatementText(),
+            new Handler(true, Lookup.COMPLETE_STATEMENT_SELECT_CHAR)
+        );
     }
 }

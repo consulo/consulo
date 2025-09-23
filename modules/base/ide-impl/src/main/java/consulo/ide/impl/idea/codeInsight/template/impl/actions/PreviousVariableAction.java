@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
@@ -23,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
@@ -32,13 +34,9 @@ import jakarta.annotation.Nullable;
  * @author max
  * @since 2002-05-16
  */
+@ActionImpl(id = "PreviousTemplateVariable")
 public class PreviousVariableAction extends EditorAction {
-    public PreviousVariableAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
-    private static class Handler extends EditorActionHandler {
+    private static class MyHandler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
         protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -53,5 +51,10 @@ public class PreviousVariableAction extends EditorAction {
             TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             return templateState != null && !templateState.isFinished();
         }
+    }
+
+    public PreviousVariableAction() {
+        super(ActionLocalize.actionPrevioustemplatevariableText(), new MyHandler());
+        setInjectedContext(true);
     }
 }

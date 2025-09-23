@@ -26,6 +26,7 @@ import consulo.language.editor.template.TemplateSettings;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,11 +34,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public abstract class ChooseItemAction extends EditorAction implements HintManagerImpl.ActionToIgnore, LatencyAwareEditorAction {
-    public ChooseItemAction(Handler handler) {
-        super(handler);
-    }
-
-    public static class Handler extends EditorActionHandler {
+    protected static class Handler extends EditorActionHandler {
         final boolean focusedOnly;
         final char finishingChar;
 
@@ -102,6 +99,10 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
     }
 
+    protected ChooseItemAction(@Nonnull LocalizeValue text, Handler handler) {
+        super(text, handler);
+    }
+
     public static boolean hasTemplatePrefix(LookupEx lookup, char shortcutChar) {
         lookup.refreshUi(false, false); // to bring the list model up to date
 
@@ -127,38 +128,21 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         if (liveTemplateLookup == null || !liveTemplateLookup.sudden) {
             // Lookup doesn't contain sudden live templates. It means that
             // - there are no live template with given key:
-            //    in this case we should find live template with appropriate prefix (custom live templates doesn't participate in this action).
+            //    in this case we should find live template with appropriate prefix
+            //    (custom live templates doesn't participate in this action).
             // - completion provider worked too long:
             //    in this case we should check custom templates that provides completion lookup.
             if (LiveTemplateCompletionContributor.customTemplateAvailableAndHasCompletionItem(shortcutChar, editor, file, offset)) {
                 return true;
             }
 
-            List<? extends Template> templates = SlowOperations
-                .allowSlowOperations(() -> TemplateManager.getInstance(file.getProject())
+            List<? extends Template> templates =
+                SlowOperations.allowSlowOperations(() -> TemplateManager.getInstance(file.getProject())
                     .listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
             Template template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
             return template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template);
         }
 
         return liveTemplateLookup.getTemplateShortcut() == shortcutChar;
-    }
-
-    public static class Replacing extends ChooseItemAction {
-        public Replacing() {
-            super(new Handler(false, Lookup.REPLACE_SELECT_CHAR));
-        }
-    }
-
-    public static class CompletingStatement extends ChooseItemAction {
-        public CompletingStatement() {
-            super(new Handler(true, Lookup.COMPLETE_STATEMENT_SELECT_CHAR));
-        }
-    }
-
-    public static class ChooseWithDot extends ChooseItemAction {
-        public ChooseWithDot() {
-            super(new Handler(false, '.'));
-        }
     }
 }

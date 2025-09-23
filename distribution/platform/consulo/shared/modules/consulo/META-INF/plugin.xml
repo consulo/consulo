@@ -34,8 +34,8 @@
                         serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
 
         <applicationService
-                serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
-                serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
+            serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
+            serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
 
         <applicationService serviceInterface="consulo.language.editor.impl.internal.template.ExportableTemplateSettings"
@@ -43,7 +43,7 @@
 
 
         <search.optionContributor
-                implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
+            implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
         <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
@@ -211,26 +211,6 @@
         <group id="Diff.ViewerPopupMenu"/>
         <group id="Diff.ViewerToolbar"/>
         <group id="Diff.EditorGutterPopupMenu"/>
-
-        <group id="LookupActions">
-            <reference id="EditorChooseLookupItem" />
-            <action id="EditorChooseLookupItemReplace"
-                    class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$Replacing"/>
-            <action id="EditorChooseLookupItemCompleteStatement"
-                    class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$CompletingStatement"/>
-            <action id="EditorChooseLookupItemDot"
-                    class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$ChooseWithDot"/>
-
-            <action id="ExpandLiveTemplateByTab"
-                    class="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateByTabAction"
-                    use-shortcut-of="EditorTab"/>
-
-            <reference id="NextTemplateVariable"/>
-            <action id="PreviousTemplateVariable" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.PreviousVariableAction"/>
-
-            <action id="NextParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.NextParameterAction"/>
-            <action id="PrevParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction"/>
-        </group>
 
         <group id="EditorActions">
             <reference id="EditorPageUp"/>
@@ -527,21 +507,6 @@
             <reference ref="ShowIntentionActions"/>
             <separator/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </group>
-
-        <group id="CodeInsightEditorActions">
-            <reference ref="LookupActions"/>
-            <action id="EmacsStyleIndent" class="consulo.ide.impl.idea.codeInsight.editorActions.EmacsStyleIndentAction"/>
-            <action id="EditorCodeBlockStart" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockStartAction"/>
-            <action id="EditorCodeBlockEnd" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockEndAction"/>
-            <action id="EditorMatchBrace" class="consulo.ide.impl.idea.codeInsight.editorActions.MatchBraceAction"/>
-            <action id="EditorCodeBlockStartWithSelection"
-                    class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockStartWithSelectionAction"/>
-            <action id="EditorCodeBlockEndWithSelection"
-                    class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockEndWithSelectionAction"/>
-            <reference ref="EditorCompleteStatement"/>
-
-            <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
         <action id="ViewImportPopups" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowImportPopupsAction">

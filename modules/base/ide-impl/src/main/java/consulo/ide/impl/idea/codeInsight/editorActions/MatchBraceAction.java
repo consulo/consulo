@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
@@ -28,15 +30,12 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2012-10-24
  */
+@ActionImpl(id = "EditorMatchBrace")
 public class MatchBraceAction extends EditorAction {
-    private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[]{'(', '[', '{', '<'});
-    private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[]{')', ']', '}', '>'});
-
-    public MatchBraceAction() {
-        super(new MyHandler());
-    }
-
     private static class MyHandler extends EditorActionHandler {
+        private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[]{'(', '[', '{', '<'});
+        private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[]{')', ']', '}', '>'});
+
         public MyHandler() {
             super(true);
         }
@@ -74,5 +73,9 @@ public class MatchBraceAction extends EditorAction {
                 CodeBlockUtil.moveCaretToCodeBlockStart(project, editor, false);
             }
         }
+    }
+
+    public MatchBraceAction() {
+        super(ActionLocalize.actionEditormatchbraceText(), new MyHandler());
     }
 }

@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupA
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.*;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemReplaceAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.FocusedOnlyChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
@@ -863,7 +864,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
                 AnActionEvent.createFromDataContext(ActionPlaces.EDITOR_POPUP, null, myEditor.getDataContext());
             delegateActionToEditor(IdeActions.ACTION_EDITOR_BACKSPACE, null, actionEvent);
             delegateActionToEditor(IdeActions.ACTION_EDITOR_ESCAPE, null, actionEvent);
-            delegateActionToEditor(IdeActions.ACTION_EDITOR_TAB, ChooseItemAction.Replacing::new, actionEvent);
+            delegateActionToEditor(IdeActions.ACTION_EDITOR_TAB, ChooseItemReplaceAction::new, actionEvent);
             delegateActionToEditor(
                 IdeActions.ACTION_EDITOR_ENTER,
                 /* e.g. rename popup comes initially unfocused */
