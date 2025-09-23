@@ -15,19 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ViewNavigationBar")
 public class ViewNavigationBarAction extends ToggleAction implements DumbAware {
+    public ViewNavigationBarAction() {
+        super(ActionLocalize.actionViewnavigationbarText(), ActionLocalize.actionViewnavigationbarDescription());
+    }
+
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         return UISettings.getInstance().SHOW_NAVIGATION_BAR;
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.SHOW_NAVIGATION_BAR = state;
