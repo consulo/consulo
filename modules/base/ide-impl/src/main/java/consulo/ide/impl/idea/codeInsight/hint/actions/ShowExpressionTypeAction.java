@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.hint.ShowExpressionTypeHandler;
@@ -24,6 +24,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,10 +33,12 @@ import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 
+@ActionImpl(id = "ExpressionTypeInfo")
 public class ShowExpressionTypeAction extends BaseCodeInsightAction implements DumbAware {
     private boolean myRequestFocus = false;
 
     public ShowExpressionTypeAction() {
+        super(ActionLocalize.actionExpressiontypeinfoText(), ActionLocalize.actionExpressiontypeinfoDescription());
         setEnabledInModalContext(true);
     }
 

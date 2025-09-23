@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
@@ -33,6 +33,7 @@ import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -56,8 +57,10 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
+@ActionImpl(id = "ExternalJavaDoc")
 public class ExternalJavaDocAction extends AnAction {
     public ExternalJavaDocAction() {
+        super(ActionLocalize.actionExternaljavadocText(), ActionLocalize.actionExternaljavadocDescription());
         setInjectedContext(true);
     }
 
@@ -93,7 +96,7 @@ public class ExternalJavaDocAction extends AnAction {
         PsiElement element,
         PsiElement originalElement,
         String docUrl,
-        DataContext dataContext
+        @Nonnull DataContext dataContext
     ) {
         DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         if (provider instanceof ExternalDocumentationHandler externalDocumentationHandler
@@ -102,11 +105,12 @@ public class ExternalJavaDocAction extends AnAction {
         }
         Project project = dataContext.getData(Project.KEY);
         Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        Application.get().executeOnPooledThread(() -> {
+        Application application = Application.get();
+        application.executeOnPooledThread(() -> {
             List<String> urls;
             if (StringUtil.isEmptyOrSpaces(docUrl)) {
                 ThrowableComputable<List<String>, RuntimeException> action = () -> provider.getUrlFor(element, originalElement);
-                urls = AccessRule.read(action);
+                urls = ReadAction.compute(action);
             }
             else {
                 urls = Collections.singletonList(docUrl);
@@ -122,7 +126,7 @@ public class ExternalJavaDocAction extends AnAction {
                 }
             }
             List<String> finalUrls = urls;
-            Application.get().invokeLater(
+            application.invokeLater(
                 () -> {
                     if (ContainerUtil.isEmpty(finalUrls)) {
                         if (element != null && provider instanceof ExternalDocumentationProvider externalDocumentationProvider

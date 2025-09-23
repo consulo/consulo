@@ -544,19 +544,6 @@
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
-        <group id="CodeEditorBaseGroup">
-            <group id="CodeEditorViewGroup">
-                <action id="ExternalJavaDoc" class="consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction"/>
-                <action id="ParameterInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowParameterInfoAction"/>
-                <action id="ExpressionTypeInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowExpressionTypeAction"/>
-                <action id="EditorContextInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowContainerInfoAction"/>
-                <action id="ShowErrorDescription" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction"/>
-            </group>
-            <separator/>
-
-            <add-to-group group-id="ViewMenu" relative-to-action="QuickActions" anchor="after"/>
-        </group>
-
         <action id="ViewNavigationBar" class="consulo.ide.impl.idea.ide.actions.ViewNavigationBarAction">
             <add-to-group group-id="UIToggleActions" relative-to-action="ViewStatusBar" anchor="after"/>
         </action>
