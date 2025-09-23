@@ -606,6 +606,8 @@ action.EditorChooseLookupItem.text:
     text: Choose Lookup Item
 action.EditorChooseLookupItemCompleteStatement.text:
     text: Choose Lookup Item and Invoke Complete Statement
+action.EditorChooseLookupItemDot.text:
+    text: Choose Lookup Item and Insert Dot
 action.EditorChooseLookupItemReplace.text:
     text: Choose Lookup Item Replace
 action.EditorCloneCaretAbove.text:

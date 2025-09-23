@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -32,29 +33,17 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "EmacsStyleIndent")
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
-    private static final Logger LOG = Logger.getInstance(EmacsStyleIndentAction.class);
-
-    @Nonnull
-    @Override
-    protected CodeInsightActionHandler getHandler() {
-        return new Handler();
-    }
-
-    @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-        PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
-        return context != null && FormattingModelBuilder.forContext(context) != null;
-    }
-
-    //----------------------------------------------------------------------
-    private static class Handler implements CodeInsightActionHandler {
+    private static class MyHandler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
         public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
@@ -100,5 +89,24 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
         public boolean startInWriteAction() {
             return true;
         }
+    }
+
+    private static final Logger LOG = Logger.getInstance(EmacsStyleIndentAction.class);
+
+    public EmacsStyleIndentAction() {
+        super(ActionLocalize.actionEmacsstyleindentText(), LocalizeValue.empty());
+    }
+
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new MyHandler();
+    }
+
+    @Override
+    @RequiredReadAction
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
+        return context != null && FormattingModelBuilder.forContext(context) != null;
     }
 }

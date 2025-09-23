@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -28,14 +30,10 @@ import jakarta.annotation.Nullable;
  * @author max
  * @since 2002-05-14
  */
+@ActionImpl(id = "EditorCodeBlockStart")
 public class CodeBlockStartAction extends EditorAction {
-    public CodeBlockStartAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
-    private static class Handler extends EditorActionHandler {
-        public Handler() {
+    private static class MyHandler extends EditorActionHandler {
+        public MyHandler() {
             super(true);
         }
 
@@ -46,5 +44,10 @@ public class CodeBlockStartAction extends EditorAction {
                 CodeBlockUtil.moveCaretToCodeBlockStart(project, editor, false);
             }
         }
+    }
+
+    public CodeBlockStartAction() {
+        super(ActionLocalize.actionEditorcodeblockstartText(), new MyHandler());
+        setInjectedContext(true);
     }
 }
