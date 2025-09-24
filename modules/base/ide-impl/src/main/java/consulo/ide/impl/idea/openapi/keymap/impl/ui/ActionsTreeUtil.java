@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
@@ -163,7 +164,7 @@ public class ActionsTreeUtil {
     private static KeymapGroupImpl createEditorActionsGroup(Predicate<AnAction> filtered) {
         ActionManager actionManager = ActionManager.getInstance();
         DefaultActionGroup editorGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_EDITOR);
-        ArrayList<String> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
 
         addEditorActions(filtered, editorGroup, ids);
 
@@ -188,7 +189,7 @@ public class ActionsTreeUtil {
         return ((KeymapImpl)keymap).isActionBound(id) || (parent != null && ((KeymapImpl)parent).isActionBound(id));
     }
 
-    private static void addEditorActions(Predicate<AnAction> filtered, DefaultActionGroup editorGroup, ArrayList<String> ids) {
+    private static void addEditorActions(Predicate<AnAction> filtered, DefaultActionGroup editorGroup, List<String> ids) {
         AnAction[] editorActions = editorGroup.getChildActionsOrStubs();
         ActionManager actionManager = ActionManager.getInstance();
         for (AnAction editorAction : editorActions) {
@@ -256,7 +257,7 @@ public class ActionsTreeUtil {
 
     private static KeymapGroupImpl createOtherGroup(Predicate<AnAction> filtered, KeymapGroupImpl addedActions, Keymap keymap) {
         addedActions.initIds();
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
         if (keymap != null) {
             String[] actionIds = keymap.getActionIds();
@@ -315,13 +316,13 @@ public class ActionsTreeUtil {
         return text != null ? text : id;
     }
 
-    private static void filterOtherActionsGroup(ArrayList<String> actions) {
+    private static void filterOtherActionsGroup(List<String> actions) {
         filterOutGroup(actions, IdeActions.GROUP_GENERATE);
         filterOutGroup(actions, IdeActions.GROUP_NEW);
         filterOutGroup(actions, IdeActions.GROUP_CHANGE_SCHEME);
     }
 
-    private static void filterOutGroup(ArrayList<String> actions, String groupId) {
+    private static void filterOutGroup(List<String> actions, String groupId) {
         if (groupId == null) {
             throw new IllegalArgumentException();
         }
@@ -330,7 +331,7 @@ public class ActionsTreeUtil {
         if (action instanceof DefaultActionGroup group) {
             AnAction[] children = group.getChildActionsOrStubs();
             for (AnAction child : children) {
-                String childId = child instanceof ActionStubBase actionStubBase ? actionStubBase.getId() : actionManager.getId(child);
+                String childId = child instanceof ActionStubBase stub ? stub.getId() : actionManager.getId(child);
                 if (childId == null) {
                     // SCR 35149
                     continue;
@@ -375,18 +376,18 @@ public class ActionsTreeUtil {
         KeymapGroupImpl mainGroup = new KeymapGroupImpl(KeyMapLocalize.allActionsGroupTitle());
         mainGroup.addGroup(createEditorActionsGroup(wrappedFilter));
         mainGroup.addGroup(createMainMenuGroup(wrappedFilter));
-        for (KeymapExtension extension : KeymapExtension.EXTENSION_POINT_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(KeymapExtension.class).forEach(extension -> {
             KeymapGroupImpl group = createExtensionGroup(wrappedFilter, project, extension);
             if (group != null) {
                 mainGroup.addGroup(group);
             }
-        }
+        });
         mainGroup.addGroup(createMacrosGroup(wrappedFilter));
         mainGroup.addGroup(createQuickListsGroup(wrappedFilter, filter, forceFiltering, quickLists));
         mainGroup.addGroup(createPluginsActionsGroup(wrappedFilter));
         mainGroup.addGroup(createOtherGroup(wrappedFilter, mainGroup, keymap));
         if (!StringUtil.isEmpty(filter) || filtered != null) {
-            ArrayList list = mainGroup.getChildren();
+            List list = mainGroup.getChildren();
             for (Iterator i = list.iterator(); i.hasNext(); ) {
                 if (i.next() instanceof KeymapGroupImpl group && group.getSize() == 0
                     && !SearchUtil.isComponentHighlighted(group.getName(), filter, forceFiltering, null)) {
@@ -417,14 +418,12 @@ public class ActionsTreeUtil {
                 }
             }
             String description = action.getTemplatePresentation().getDescription();
-            if (description != null) {
-                String insensitiveDescription = description.toLowerCase();
-                if (SearchUtil.isComponentHighlighted(insensitiveDescription, insensitiveFilter, force, null)) {
-                    return true;
-                }
-                else if (insensitiveDescription.contains(insensitiveFilter)) {
-                    return true;
-                }
+            String insensitiveDescription = description.toLowerCase();
+            if (SearchUtil.isComponentHighlighted(insensitiveDescription, insensitiveFilter, force, null)) {
+                return true;
+            }
+            else if (insensitiveDescription.contains(insensitiveFilter)) {
+                return true;
             }
             return false;
         };
@@ -439,7 +438,7 @@ public class ActionsTreeUtil {
                 return false;
             }
             Shortcut[] actionShortcuts = keymap.getShortcuts(
-                action instanceof ActionStubBase actionStubBase ? actionStubBase.getId() : actionManager.getId(action)
+                action instanceof ActionStubBase stub ? stub.getId() : actionManager.getId(action)
             );
             for (Shortcut shortcut : actionShortcuts) {
                 if (shortcut instanceof KeyboardShortcut keyboardActionShortcut
@@ -461,7 +460,7 @@ public class ActionsTreeUtil {
                 return false;
             }
             Shortcut[] actionShortcuts = keymap.getShortcuts(
-                action instanceof ActionStubBase actionStubBase ? actionStubBase.getId() : actionManager.getId(action)
+                action instanceof ActionStubBase stub ? stub.getId() : actionManager.getId(action)
             );
             for (Shortcut actionShortcut : actionShortcuts) {
                 if (predicate.test(actionShortcut)) {

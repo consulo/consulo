@@ -26,6 +26,7 @@ import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -69,11 +70,10 @@ public class ActionImplUtil {
             if (condition.test(child)) {
                 return true;
             }
-            if (child instanceof ActionGroup childGroup) {
-                if ((processPopupSubGroups || !childGroup.isPopup())
-                    && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
-                    return true;
-                }
+            if (child instanceof ActionGroup childGroup
+                && (processPopupSubGroups || !childGroup.isPopup())
+                && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
+                return true;
             }
         }
         return false;
@@ -195,7 +195,6 @@ public class ActionImplUtil {
      */
     public static boolean isDumbMode(@Nullable Project project) {
         return DumbInternalUtil.isDumbMode(project);
-
     }
 
     public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
@@ -224,13 +223,19 @@ public class ActionImplUtil {
         return true;
     }
 
-    public static void performActionDumbAwareWithCallbacks(@Nonnull AnAction action, @Nonnull AnActionEvent e, @Nonnull DataContext context) {
+    @RequiredUIAccess
+    public static void performActionDumbAwareWithCallbacks(
+        @Nonnull AnAction action,
+        @Nonnull AnActionEvent e,
+        @Nonnull DataContext context
+    ) {
         ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         manager.fireBeforeActionPerformed(action, context, e);
         performActionDumbAware(action, e);
         manager.fireAfterActionPerformed(action, context, e);
     }
 
+    @RequiredUIAccess
     public static void performActionDumbAware(AnAction action, AnActionEvent e) {
         try {
             action.actionPerformed(e);
@@ -253,7 +258,11 @@ public class ActionImplUtil {
         ActionUtil.copyRegisteredShortcuts(to, from);
     }
 
-    public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
+    public static void registerForEveryKeyboardShortcut(
+        @Nonnull JComponent component,
+        @Nonnull ActionListener action,
+        @Nonnull ShortcutSet shortcuts
+    ) {
         ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
     }
 
@@ -276,7 +285,14 @@ public class ActionImplUtil {
         return ActionUtil.mergeFrom(action, actionId);
     }
 
-    public static void invokeAction(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
+    @RequiredUIAccess
+    public static void invokeAction(
+        @Nonnull AnAction action,
+        @Nonnull DataContext dataContext,
+        @Nonnull String place,
+        @Nullable InputEvent inputEvent,
+        @Nullable Runnable onDone
+    ) {
         Presentation presentation = action.getTemplatePresentation().clone();
         AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
         performDumbAwareUpdate(action, event, true);
@@ -291,7 +307,14 @@ public class ActionImplUtil {
         }
     }
 
-    public static void invokeAction(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
+    @RequiredUIAccess
+    public static void invokeAction(
+        @Nonnull AnAction action,
+        @Nonnull Component component,
+        @Nonnull String place,
+        @Nullable InputEvent inputEvent,
+        @Nullable Runnable onDone
+    ) {
         invokeAction(action, DataManager.getInstance().getDataContext(component), place, inputEvent, onDone);
     }
 
@@ -319,7 +342,12 @@ public class ActionImplUtil {
     /**
      * Tries to find an 'action' and 'target action' by text and put the 'action' just before of after the 'target action'
      */
-    public static void moveActionTo(@Nonnull List<AnAction> list, @Nonnull String actionText, @Nonnull String targetActionText, boolean before) {
+    public static void moveActionTo(
+        @Nonnull List<AnAction> list,
+        @Nonnull String actionText,
+        @Nonnull String targetActionText,
+        boolean before
+    ) {
         if (Comparing.equal(actionText, targetActionText)) {
             return;
         }

@@ -62,24 +62,17 @@ public class GenerateAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        if (ActionPlaces.isPopupPlace(event.getPlace())) {
-            presentation.setEnabledAndVisible(isEnabled(event) && event.hasData(Editor.KEY));
+    public void update(@Nonnull AnActionEvent e) {
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            e.getPresentation().setEnabledAndVisible(isEnabled(e));
         }
         else {
-            presentation.setEnabled(isEnabled(event));
+            e.getPresentation().setEnabled(isEnabled(e));
         }
     }
 
-    private static boolean isEnabled(@Nonnull AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            return false;
-        }
-
-        Editor editor = event.getData(Editor.KEY);
-        return editor != null && !ActionGroupUtil.isGroupEmpty(getGroup(), event);
+    private static boolean isEnabled(@Nonnull AnActionEvent e) {
+        return e.hasData(Project.KEY) && e.hasData(Editor.KEY) && !ActionGroupUtil.isGroupEmpty(getGroup(), e);
     }
 
     private static DefaultActionGroup getGroup() {
@@ -87,14 +80,15 @@ public class GenerateAction extends DumbAwareAction {
     }
 
     private static ActionGroup wrapGroup(ActionGroup actionGroup, DataContext dataContext, @Nonnull Project project) {
+        boolean dumbMode = DumbService.isDumb(project);
         ActionGroup.Builder copy = ActionGroup.newImmutableBuilder();
         for (AnAction action : actionGroup.getChildren(null)) {
-            if (DumbService.isDumb(project) && !action.isDumbAware()) {
+            if (dumbMode && !action.isDumbAware()) {
                 continue;
             }
 
-            if (action instanceof GenerateActionPopupTemplateInjector) {
-                AnAction editTemplateAction = ((GenerateActionPopupTemplateInjector) action).createEditTemplateAction(dataContext);
+            if (action instanceof GenerateActionPopupTemplateInjector templateInjector) {
+                AnAction editTemplateAction = templateInjector.createEditTemplateAction(dataContext);
                 if (editTemplateAction != null) {
                     copy.add(new GenerateWrappingGroup(action, editTemplateAction));
                     continue;
