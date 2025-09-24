@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -37,6 +36,7 @@ import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
@@ -118,7 +118,7 @@ public class ActionsTreeUtil {
             IdeActions.GROUP_MAIN_MENU,
             PlatformIconGroup.nodesKeymapmainmenu()
         );
-        ActionGroup mainMenuGroup = (ActionGroup)ActionManager.getInstance().getActionOrStub(IdeActions.GROUP_MAIN_MENU);
+        ActionGroup mainMenuGroup = (ActionGroup) ActionManager.getInstance().getActionOrStub(IdeActions.GROUP_MAIN_MENU);
         fillGroupIgnorePopupFlag(mainMenuGroup, group, filtered);
         return group;
     }
@@ -163,7 +163,7 @@ public class ActionsTreeUtil {
 
     private static KeymapGroupImpl createEditorActionsGroup(Predicate<AnAction> filtered) {
         ActionManager actionManager = ActionManager.getInstance();
-        DefaultActionGroup editorGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_EDITOR);
+        DefaultActionGroup editorGroup = (DefaultActionGroup) actionManager.getActionOrStub(IdeActions.GROUP_EDITOR);
         List<String> ids = new ArrayList<>();
 
         addEditorActions(filtered, editorGroup, ids);
@@ -186,7 +186,7 @@ public class ActionsTreeUtil {
             return false;
         }
         Keymap parent = keymap.getParent();
-        return ((KeymapImpl)keymap).isActionBound(id) || (parent != null && ((KeymapImpl)parent).isActionBound(id));
+        return ((KeymapImpl) keymap).isActionBound(id) || (parent != null && ((KeymapImpl) parent).isActionBound(id));
     }
 
     private static void addEditorActions(Predicate<AnAction> filtered, DefaultActionGroup editorGroup, List<String> ids) {
@@ -216,7 +216,7 @@ public class ActionsTreeUtil {
     }
 
     private static KeymapGroupImpl createExtensionGroup(Predicate<AnAction> filtered, Project project, KeymapExtension provider) {
-        return (KeymapGroupImpl)provider.createGroup(filtered, project);
+        return (KeymapGroupImpl) provider.createGroup(filtered, project);
     }
 
     private static KeymapGroupImpl createMacrosGroup(Predicate<AnAction> filtered) {
@@ -296,7 +296,7 @@ public class ActionsTreeUtil {
 
         filterOtherActionsGroup(result);
 
-        ContainerUtil.quickSort(result, (id1, id2) -> getTextToCompare(id1).compareToIgnoreCase(getTextToCompare(id2)));
+        Lists.quickSort(result, (id1, id2) -> getTextToCompare(id1).compareToIgnoreCase(getTextToCompare(id2)));
 
         KeymapGroupImpl group = new KeymapGroupImpl(KeyMapLocalize.otherGroupTitle(), PlatformIconGroup.nodesKeymapother());
         for (String id : result) {
