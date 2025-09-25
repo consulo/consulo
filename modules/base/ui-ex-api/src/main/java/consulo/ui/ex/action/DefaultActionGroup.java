@@ -215,7 +215,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
 
     private void actionAdded(@Nonnull AnAction addedAction, @Nonnull ActionManager actionManager) {
-        String addedActionId = addedAction instanceof ActionStubBase ? ((ActionStubBase) addedAction).getId() : actionManager.getId(addedAction);
+        String addedActionId = addedAction instanceof ActionStubBase stub ? stub.getId() : actionManager.getId(addedAction);
         if (addedActionId == null) {
             return;
         }
@@ -253,8 +253,8 @@ public class DefaultActionGroup extends ActionGroup {
     private static int findIndex(String actionId, @Nonnull List<? extends AnAction> actions, @Nonnull ActionManager actionManager) {
         for (int i = 0; i < actions.size(); i++) {
             AnAction action = actions.get(i);
-            if (action instanceof ActionStubBase) {
-                if (((ActionStubBase) action).getId().equals(actionId)) {
+            if (action instanceof ActionStubBase stub) {
+                if (stub.getId().equals(actionId)) {
                     return i;
                 }
             }
@@ -282,10 +282,11 @@ public class DefaultActionGroup extends ActionGroup {
     }
 
     public final void remove(@Nonnull AnAction action, @Nullable String id) {
-        if (!mySortedChildren.remove(action) && !mySortedChildren.removeIf(oldAction -> oldAction instanceof ActionStubBase && ((ActionStubBase) oldAction).getId().equals(id))) {
+        if (!mySortedChildren.remove(action)
+            && !mySortedChildren.removeIf(oldAction -> oldAction instanceof ActionStubBase stub && stub.getId().equals(id))) {
             for (int i = 0; i < myPairs.size(); i++) {
                 Pair<AnAction, Constraints> pair = myPairs.get(i);
-                if (pair.first.equals(action) || (pair.first instanceof ActionStubBase && ((ActionStubBase) pair.first).getId().equals(id))) {
+                if (pair.first.equals(action) || (pair.first instanceof ActionStubBase stub && stub.getId().equals(id))) {
                     myPairs.remove(i);
                     break;
                 }
@@ -363,8 +364,8 @@ public class DefaultActionGroup extends ActionGroup {
             if (action == null) {
                 LOG.error("Empty sorted child: " + this + ", " + getClass() + "; index=" + i);
             }
-            if (action instanceof ActionStubBase) {
-                action = unStub(actionManager, (ActionStubBase) action);
+            if (action instanceof ActionStubBase stub) {
+                action = unStub(actionManager, stub);
                 if (action == null) {
                     LOG.error("Can't unstub " + mySortedChildren.get(i));
                 }

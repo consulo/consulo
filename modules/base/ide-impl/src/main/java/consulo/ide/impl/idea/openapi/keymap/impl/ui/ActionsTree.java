@@ -48,6 +48,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class ActionsTree {
@@ -65,7 +66,15 @@ public class ActionsTree {
         }
 
         @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        public Component getTreeCellRendererComponent(
+            JTree tree,
+            Object value,
+            boolean selected,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus
+        ) {
             setFont(tree.getFont());
 
             myNodeRender.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
@@ -134,9 +143,11 @@ public class ActionsTree {
 
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        myComponent = ScrollPaneFactory.createScrollPane(myTree,
+        myComponent = ScrollPaneFactory.createScrollPane(
+            myTree,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
     }
 
     public void updateTree() {
@@ -204,13 +215,27 @@ public class ActionsTree {
 
         ActionManager actionManager = ActionManager.getInstance();
         Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
-        KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
-            ActionsTreeUtil.isActionFiltered(filter, true) :
-            (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));
+        KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(
+            project,
+            myKeymap,
+            allQuickLists,
+            filter,
+            true,
+            filter != null && filter.length() > 0
+                ? ActionsTreeUtil.isActionFiltered(filter, true)
+                : shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null
+        );
         if ((filter != null && filter.length() > 0 || shortcut != null) && mainGroup.initIds().isEmpty()) {
-            mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, false, filter != null && filter.length() > 0 ?
-                ActionsTreeUtil.isActionFiltered(filter, false) :
-                ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut));
+            mainGroup = ActionsTreeUtil.createMainGroup(
+                project,
+                myKeymap,
+                allQuickLists,
+                filter,
+                false,
+                filter != null && filter.length() > 0
+                    ? ActionsTreeUtil.isActionFiltered(filter, false)
+                    : ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut)
+            );
         }
         myRoot = ActionsTreeUtil.createNode(mainGroup);
         myMainGroup = mainGroup;
@@ -239,7 +264,7 @@ public class ActionsTree {
             return false;
         }
 
-        ArrayList children = group.getChildren();
+        List children = group.getChildren();
         for (Object child : children) {
             if (child instanceof KeymapGroupImpl keymapGroup) {
                 if (isGroupChanged(keymapGroup, oldKeymap, newKeymap)) {
@@ -288,8 +313,8 @@ public class ActionsTree {
         return null;
     }
 
-    private ArrayList<DefaultMutableTreeNode> getNodesByPaths(ArrayList<String> paths) {
-        ArrayList<DefaultMutableTreeNode> result = new ArrayList<>();
+    private List<DefaultMutableTreeNode> getNodesByPaths(List<String> paths) {
+        List<DefaultMutableTreeNode> result = new ArrayList<>();
         Enumeration enumeration = ((DefaultMutableTreeNode) myTree.getModel().getRoot()).preorderEnumeration();
         while (enumeration.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
@@ -329,8 +354,8 @@ public class ActionsTree {
     }
 
     private class PathsKeeper {
-        private ArrayList<String> myPathsToExpand;
-        private ArrayList<String> mySelectionPaths;
+        private List<String> myPathsToExpand;
+        private List<String> mySelectionPaths;
 
         public void storePaths() {
             myPathsToExpand = new ArrayList<>();
@@ -348,7 +373,7 @@ public class ActionsTree {
             }
         }
 
-        private void addPathToList(DefaultMutableTreeNode root, ArrayList<String> list) {
+        private void addPathToList(DefaultMutableTreeNode root, List<String> list) {
             String path = getPath(root);
             if (!StringUtil.isEmpty(path)) {
                 list.add(path);
@@ -356,7 +381,7 @@ public class ActionsTree {
         }
 
         private void _storePaths(DefaultMutableTreeNode root) {
-            ArrayList<TreeNode> childNodes = childrenToArray(root);
+            List<TreeNode> childNodes = childrenToArray(root);
             for (Object childNode1 : childNodes) {
                 DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) childNode1;
                 TreePath path = new TreePath(childNode.getPath());
@@ -371,13 +396,13 @@ public class ActionsTree {
         }
 
         public void restorePaths() {
-            ArrayList<DefaultMutableTreeNode> nodesToExpand = getNodesByPaths(myPathsToExpand);
+            List<DefaultMutableTreeNode> nodesToExpand = getNodesByPaths(myPathsToExpand);
             for (DefaultMutableTreeNode node : nodesToExpand) {
                 myTree.expandPath(new TreePath(node.getPath()));
             }
 
             if (myTree.getSelectionModel().getSelectionCount() == 0) {
-                ArrayList<DefaultMutableTreeNode> nodesToSelect = getNodesByPaths(mySelectionPaths);
+                List<DefaultMutableTreeNode> nodesToSelect = getNodesByPaths(mySelectionPaths);
                 if (!nodesToSelect.isEmpty()) {
                     for (DefaultMutableTreeNode node : nodesToSelect) {
                         TreeUtil.selectInTree(node, false, myTree);
@@ -389,19 +414,26 @@ public class ActionsTree {
             }
         }
 
-
-        private ArrayList<TreeNode> childrenToArray(DefaultMutableTreeNode node) {
-            ArrayList<TreeNode> arrayList = new ArrayList<>();
+        private List<TreeNode> childrenToArray(DefaultMutableTreeNode node) {
+            List<TreeNode> list = new ArrayList<>();
             for (int i = 0; i < node.getChildCount(); i++) {
-                arrayList.add(node.getChildAt(i));
+                list.add(node.getChildAt(i));
             }
-            return arrayList;
+            return list;
         }
     }
 
     private class KeymapsRenderer extends ColoredTreeCellRenderer {
         @Override
-        public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        public void customizeCellRenderer(
+            @Nonnull JTree tree,
+            Object value,
+            boolean selected,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus
+        ) {
             boolean showIcons = UISettings.getInstance().SHOW_ICONS_IN_MENUS;
             Keymap originalKeymap = myKeymap != null ? myKeymap.getParent() : null;
             Image icon = null;
@@ -462,19 +494,20 @@ public class ActionsTree {
                     foreground = UIUtil.getTreeSelectionForeground(true);
                 }
                 else {
-                    if (changed) {
-                        foreground = JBColor.BLUE;
-                    }
-                    else {
-                        foreground = UIUtil.getTreeForeground();
-                    }
+                    foreground = changed ? JBColor.BLUE : UIUtil.getTreeForeground();
 
                     if (bound) {
                         foreground = JBColor.MAGENTA;
                     }
                 }
-                SearchUtil.appendFragments(myFilter, text, Font.PLAIN, foreground,
-                    selected ? UIUtil.getTreeSelectionBackground(true) : UIUtil.getTreeTextBackground(), this);
+                SearchUtil.appendFragments(
+                    myFilter,
+                    text,
+                    Font.PLAIN,
+                    foreground,
+                    selected ? UIUtil.getTreeSelectionBackground(true) : UIUtil.getTreeTextBackground(),
+                    this
+                );
             }
         }
     }
