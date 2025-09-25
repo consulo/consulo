@@ -1018,8 +1018,6 @@ action.GenerateAntBuild.description:
     text: Generate Ant Build File from the Project
 action.GenerateAntBuild.text:
     text: _Generate Ant Build…
-action.GenerateDTD.text:
-    text: Generate DTD from _XML File
 action.GenerateSuperMethodCall.text:
     text: Super Method Call
 action.GoToLinkTarget.description:
@@ -2172,10 +2170,6 @@ action.UsageView.ShowRecentFindUsages.description:
     text: Choose and re-run recent find usages
 action.UsageView.ShowRecentFindUsages.text:
     text: R_ecent Find Usages
-action.ValidateXml.description:
-    text: Validate the current XML file
-action.ValidateXml.text:
-    text: _Validate
 action.Vcs.ChangesView.description:
     text: Show window for managing changes and changelists
 action.Vcs.ChangesView.text:
