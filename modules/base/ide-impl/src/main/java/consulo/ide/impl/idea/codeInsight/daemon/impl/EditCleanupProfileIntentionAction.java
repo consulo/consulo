@@ -17,20 +17,20 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInspection.actions.CodeCleanupAction;
-import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by anna on 5/13/2014.
+ * @author anna
+ * @since 2014-05-13
  */
 public class EditCleanupProfileIntentionAction implements IntentionAction {
   public static final EditCleanupProfileIntentionAction INSTANCE = new EditCleanupProfileIntentionAction();

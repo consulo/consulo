@@ -16,14 +16,15 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.quickfix;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.LocalQuickFixAndIntentionActionOnPsiElement;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.NamesValidator;
 import consulo.language.editor.refactoring.rename.RenameProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,32 +39,32 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   private static final Logger LOG = Logger.getInstance(RenameElementFix.class);
 
   private final String myNewName;
-  private final String myText;
+  private final LocalizeValue myText;
 
   public RenameElementFix(@Nonnull PsiNamedElement element) {
     super(element);
     VirtualFile vFile = element.getContainingFile().getVirtualFile();
     assert vFile != null : element;
     myNewName = vFile.getNameWithoutExtension();
-    myText =  CodeInsightBundle.message("rename.public.class.text", element.getName(), myNewName);
+    myText = CodeInsightLocalize.renamePublicClassText(element.getName(), myNewName);
   }
 
   public RenameElementFix(@Nonnull PsiNamedElement element, @Nonnull String newName) {
     super(element);
     myNewName = newName;
-    myText = CodeInsightBundle.message("rename.named.element.text", element.getName(), myNewName);
+    myText = CodeInsightLocalize.renameNamedElementText(element.getName(), myNewName);
   }
 
   @Override
   @Nonnull
   public String getText() {
-    return myText;
+    return myText.get();
   }
 
   @Override
   @Nonnull
   public String getFamilyName() {
-    return CodeInsightBundle.message("rename.element.family");
+    return CodeInsightLocalize.renameElementFamily().get();
   }
 
   @Override

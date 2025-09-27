@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
 import consulo.language.editor.intention.SyntheticIntentionAction;
@@ -11,11 +10,13 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
+import java.util.function.Supplier;
+
 public class CustomEditInspectionToolsSettingsAction implements SyntheticIntentionAction, Iconable {
   private final EditInspectionToolsSettingsAction myEditInspectionToolsSettingsAction;   // we delegate due to priority
-  private final Computable<String> myText;
+  private final Supplier<String> myText;
 
-  public CustomEditInspectionToolsSettingsAction(HighlightDisplayKey displayKey, Computable<String> text) {
+  public CustomEditInspectionToolsSettingsAction(HighlightDisplayKey displayKey, Supplier<String> text) {
     myEditInspectionToolsSettingsAction = new EditInspectionToolsSettingsAction(displayKey);
     myText = text;
   }
@@ -23,7 +24,7 @@ public class CustomEditInspectionToolsSettingsAction implements SyntheticIntenti
   @Nonnull
   @Override
   public String getText() {
-    return myText.compute();
+    return myText.get();
   }
 
   @Override

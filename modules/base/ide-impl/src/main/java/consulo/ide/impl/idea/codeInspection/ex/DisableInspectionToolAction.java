@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
-import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.language.editor.intention.IntentionAction;
@@ -31,11 +28,14 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 public class DisableInspectionToolAction implements IntentionAction, SyntheticIntentionAction, Iconable {
@@ -49,13 +49,14 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
     myToolId = key.toString();
   }
 
-  @Override
   @Nonnull
+  @Override
   public String getText() {
-    return InspectionsBundle.message("disable.inspection.action.name");
+    return InspectionLocalize.disableInspectionActionName().get();
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = profileManager.getInspectionProfile();
@@ -65,7 +66,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
       model.commit();
     }
     catch (IOException e) {
-      Messages.showErrorDialog(project, e.getMessage(), CommonBundle.getErrorTitle());
+      Messages.showErrorDialog(project, e.getMessage(), CommonLocalize.titleError().get());
     }
     DaemonCodeAnalyzer.getInstance(project).restart();
   }
@@ -77,6 +78,6 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
 
   @Override
   public Image getIcon(int flags) {
-    return AllIcons.Actions.Cancel;
+    return PlatformIconGroup.actionsCancel();
   }
 }

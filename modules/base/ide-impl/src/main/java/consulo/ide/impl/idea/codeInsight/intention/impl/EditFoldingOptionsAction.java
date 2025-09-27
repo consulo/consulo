@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.application.options.editor.CodeFoldingConfigurable;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.application.options.editor.CodeFoldingConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -36,10 +34,10 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "platform.edit.code.folding.settings", fileExtensions = "txt", categories = "Code Folding")
 public class EditFoldingOptionsAction implements IntentionAction {
-  @Override
   @Nonnull
+  @Override
   public String getText() {
-    return ApplicationBundle.message("edit.code.folding.options");
+    return ApplicationLocalize.editCodeFoldingOptions().get();
   }
 
   @Override
