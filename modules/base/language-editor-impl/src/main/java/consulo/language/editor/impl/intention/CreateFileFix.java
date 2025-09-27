@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.impl.intention;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -23,13 +23,14 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.inspection.LocalQuickFixAndIntentionActionOnPsiElement;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.psi.PsiDirectoryImpl;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
@@ -37,10 +38,11 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
+import java.util.function.Function;
 
 /**
  * @author peter
@@ -50,28 +52,40 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   private final String myNewFileName;
   private final String myText;
   @Nonnull
-  private final String myKey;
+  private final Function<String, LocalizeValue> myTextTemplate;
   private boolean myIsAvailable;
   private long myIsAvailableTimeStamp;
   private static final int REFRESH_INTERVAL = 1000;
 
-  public CreateFileFix(boolean isDirectory, @Nonnull String newFileName, @Nonnull PsiDirectory directory, @Nullable String text, @Nonnull String key) {
+  public CreateFileFix(
+    boolean isDirectory,
+    @Nonnull String newFileName,
+    @Nonnull PsiDirectory directory,
+    @Nullable String text,
+    @Nonnull Function<String, LocalizeValue> textTemplate
+  ) {
     super(directory);
 
     myIsDirectory = isDirectory;
     myNewFileName = newFileName;
     myText = text;
-    myKey = key;
+    myTextTemplate = textTemplate;
     myIsAvailable = isDirectory || !FileTypeManager.getInstance().getFileTypeByFileName(newFileName).isBinary();
     myIsAvailableTimeStamp = System.currentTimeMillis();
   }
 
   public CreateFileFix(@Nonnull String newFileName, @Nonnull PsiDirectory directory, String text) {
-    this(false, newFileName, directory, text, "create.file.text");
+    this(false, newFileName, directory, text, CodeInsightLocalize::createFileText);
   }
 
   public CreateFileFix(boolean isDirectory, @Nonnull String newFileName, @Nonnull PsiDirectory directory) {
-    this(isDirectory, newFileName, directory, null, isDirectory ? "create.directory.text" : "create.file.text");
+    this(
+        isDirectory,
+        newFileName,
+        directory,
+        null,
+        isDirectory ? CodeInsightLocalize::createDirectoryText : CodeInsightLocalize::createFileText
+    );
   }
 
   @Nullable
@@ -82,13 +96,13 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   @Override
   @Nonnull
   public String getText() {
-    return CodeInsightBundle.message(myKey, myNewFileName);
+    return myTextTemplate.apply(myNewFileName).get();
   }
 
   @Override
   @Nonnull
   public String getFamilyName() {
-    return CodeInsightBundle.message("create.file.family");
+    return CodeInsightLocalize.createFileFamily().get();
   }
 
   @Override
@@ -108,7 +122,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     PsiDirectory myDirectory = (PsiDirectory)startElement;
     long current = System.currentTimeMillis();
 
-    if (ApplicationManager.getApplication().isUnitTestMode() || current - myIsAvailableTimeStamp > REFRESH_INTERVAL) {
+    if (Application.get().isUnitTestMode() || current - myIsAvailableTimeStamp > REFRESH_INTERVAL) {
       myIsAvailable &= myDirectory.getVirtualFile().findChild(myNewFileName) == null;
       myIsAvailableTimeStamp = current;
     }
@@ -166,11 +180,11 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
 
     if (text != null) {
       for (FileEditor fileEditor : fileEditors) {
-        if (fileEditor instanceof TextEditor) { // JSP is not safe to edit via Psi
-          Document document = ((TextEditor)fileEditor).getEditor().getDocument();
+        if (fileEditor instanceof TextEditor textEditor) { // JSP is not safe to edit via Psi
+          Document document = textEditor.getEditor().getDocument();
           document.setText(text);
 
-          if (ApplicationManager.getApplication().isUnitTestMode()) {
+          if (Application.get().isUnitTestMode()) {
             FileDocumentManager.getInstance().saveDocument(document);
           }
           PsiDocumentManager.getInstance(project).commitDocument(document);

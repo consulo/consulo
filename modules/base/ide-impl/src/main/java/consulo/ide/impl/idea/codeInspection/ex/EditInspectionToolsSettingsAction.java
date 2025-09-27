@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.application.AllIcons;
@@ -23,8 +22,8 @@ import consulo.language.editor.impl.internal.inspection.InspectionProjectProfile
 import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -58,7 +57,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   @Override
   @Nonnull
   public String getText() {
-    return InspectionsBundle.message("edit.options.of.reporter.inspection.text");
+    return InspectionLocalize.editOptionsOfReporterInspectionText().get();
   }
 
   @Override
@@ -67,6 +66,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = projectProfileManager.getInspectionProfile();
@@ -75,6 +75,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
                      myShortName);
   }
 
+  @RequiredUIAccess
   public AsyncResult<Void> editToolSettings(Project project,
                                             InspectionProfileImpl inspectionProfile,
                                             boolean canChooseDifferentProfiles) {

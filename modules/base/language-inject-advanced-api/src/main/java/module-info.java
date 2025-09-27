@@ -15,8 +15,9 @@ module consulo.language.inject.advanced.api {
     requires forms.rt;
 
     exports consulo.language.inject.advanced;
-    exports consulo.language.inject.advanced.ui;
+    exports consulo.language.inject.advanced.localize;
     exports consulo.language.inject.advanced.pattern;
+    exports consulo.language.inject.advanced.ui;
 
     exports consulo.language.inject.advanced.internal to consulo.language.inject.advanced.impl;
 }

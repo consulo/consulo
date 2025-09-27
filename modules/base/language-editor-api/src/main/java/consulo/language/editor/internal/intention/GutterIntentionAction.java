@@ -2,7 +2,6 @@
 package consulo.language.editor.internal.intention;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataContext;
@@ -12,6 +11,7 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
@@ -35,20 +35,28 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     }
 
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         RelativePoint relativePoint = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
-        myAction.actionPerformed(new AnActionEvent(relativePoint.toMouseEvent(), ((EditorEx) editor).getDataContext(), ActionPlaces.INTENTION_MENU, new Presentation(), ActionManager.getInstance(), 0));
+        myAction.actionPerformed(new AnActionEvent(
+            relativePoint.toMouseEvent(),
+            editor.getDataContext(),
+            ActionPlaces.INTENTION_MENU,
+            new Presentation(),
+            ActionManager.getInstance(),
+            0
+        ));
     }
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        return myText != null ? StringUtil.isNotEmpty(myText) : isAvailable(((EditorEx) editor).getDataContext());
+        return myText != null ? StringUtil.isNotEmpty(myText) : isAvailable(editor.getDataContext());
     }
 
     @Nonnull
     @Override
     public Priority getPriority() {
-        return myAction instanceof PriorityAction ? ((PriorityAction) myAction).getPriority() : Priority.NORMAL;
+        return myAction instanceof PriorityAction priorityAction ? priorityAction.getPriority() : Priority.NORMAL;
     }
 
     @Nonnull
@@ -79,8 +87,8 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
 
     @Override
     public int compareTo(@Nonnull IntentionAction o) {
-        if (o instanceof GutterIntentionAction) {
-            return myOrder - ((GutterIntentionAction) o).myOrder;
+        if (o instanceof GutterIntentionAction gutterIntentionAction) {
+            return myOrder - gutterIntentionAction.myOrder;
         }
         return 0;
     }

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CleanupAllIntention extends CleanupIntention {
-
   public static final CleanupAllIntention INSTANCE = new CleanupAllIntention();
 
   private CleanupAllIntention() {}
@@ -32,7 +30,7 @@ public class CleanupAllIntention extends CleanupIntention {
   @Nonnull
   @Override
   public String getText() {
-    return InspectionsBundle.message("cleanup.in.file");
+    return InspectionLocalize.cleanupInFile().get();
   }
 
   @Nullable

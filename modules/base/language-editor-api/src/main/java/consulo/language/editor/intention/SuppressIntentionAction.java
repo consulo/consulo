@@ -41,8 +41,8 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
     return null;
   }
 
-  @Override
   @Nonnull
+  @Override
   public String getText() {
     return myText;
   }

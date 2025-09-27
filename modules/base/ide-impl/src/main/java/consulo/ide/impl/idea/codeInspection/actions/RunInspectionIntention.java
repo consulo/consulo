@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -62,8 +61,8 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     myShortName = key.toString();
   }
 
-  @Override
   @Nonnull
+  @Override
   public String getText() {
     return InspectionLocalize.runInspectionOnFileIntentionText().get();
   }
