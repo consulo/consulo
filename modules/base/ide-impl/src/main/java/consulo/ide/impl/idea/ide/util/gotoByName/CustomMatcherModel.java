@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
- * @date Mar 11, 2009
+ * @since 2009-03-11
  */
 public interface CustomMatcherModel {
   /**

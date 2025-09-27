@@ -16,7 +16,8 @@
 package consulo.desktop.awt.uiOld.win;
 
 /**
- * Created by denis on 9/10/13.
+ * @author denis
+ * @since 2013-09-10
  */
 class Task {
   final String path;
