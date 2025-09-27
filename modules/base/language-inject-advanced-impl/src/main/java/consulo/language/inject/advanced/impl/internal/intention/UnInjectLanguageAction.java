@@ -16,6 +16,7 @@
 package consulo.language.inject.advanced.impl.internal.intention;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
@@ -28,11 +29,13 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.advanced.Configuration;
 import consulo.language.inject.advanced.LanguageInjectionSupport;
 import consulo.language.inject.advanced.TemporaryPlacesRegistry;
+import consulo.language.inject.advanced.localize.LanguageInjectAdvancedLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -48,11 +51,10 @@ import java.util.Set;
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class UnInjectLanguageAction implements IntentionAction, LowPriorityAction {
-
-    @Override
     @Nonnull
+    @Override
     public String getText() {
-        return "Un-inject Language";
+        return LanguageInjectAdvancedLocalize.intentionUninjectLanguageActionText().get();
     }
 
     @Override
@@ -68,9 +70,10 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
 
     @Override
     public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ApplicationManager.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
+        Application.get().runReadAction(() -> invokeImpl(project, editor, file));
     }
 
+    @RequiredUIAccess
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
         InjectedLanguageManager manager = InjectedLanguageManager.getInstance(project);
         PsiFile psiFile = manager.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
@@ -104,8 +107,9 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
         }
     }
 
+    @RequiredUIAccess
     private static boolean defaultFunctionalityWorked(PsiLanguageInjectionHost host) {
-        Set<String> languages = new HashSet<String>();
+        Set<String> languages = new HashSet<>();
         List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
         if (files == null) {
             return false;

@@ -15,7 +15,9 @@
  */
 package consulo.language.inject.advanced.impl.internal.intention;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Editor;
@@ -32,9 +34,11 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.ReferenceInjector;
 import consulo.language.inject.advanced.*;
 import consulo.language.inject.advanced.impl.internal.InjectedReferencesContributor;
+import consulo.language.inject.advanced.localize.LanguageInjectAdvancedLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -70,18 +74,19 @@ public class InjectLanguageAction implements IntentionAction {
         for (Language language : languages) {
             list.add(Injectable.fromLanguage(language));
         }
-        list.addAll(ReferenceInjector.EXTENSION_POINT_NAME.getExtensionList());
+        list.addAll(Application.get().getExtensionList(ReferenceInjector.class));
         Collections.sort(list);
         return list;
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getText() {
-        return "Inject Language/Reference";
+        return LanguageInjectAdvancedLocalize.intentionInjectLanguageActionText().get();
     }
 
     @Override
+    @RequiredReadAction
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         PsiLanguageInjectionHost host = findInjectionHost(editor, file);
         if (host == null) {
@@ -95,6 +100,7 @@ public class InjectLanguageAction implements IntentionAction {
     }
 
     @Nullable
+    @RequiredReadAction
     protected static PsiLanguageInjectionHost findInjectionHost(Editor editor, PsiFile file) {
         if (editor instanceof EditorWindow) {
             return null;
@@ -109,13 +115,11 @@ public class InjectLanguageAction implements IntentionAction {
 
     @Override
     public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        doChooseLanguageToInject(editor, injectable -> {
-            project.getApplication().runReadAction(() -> {
-                if (!project.isDisposed()) {
-                    invokeImpl(project, editor, file, injectable);
-                }
-            });
-        });
+        doChooseLanguageToInject(editor, injectable -> project.getApplication().runReadAction(() -> {
+            if (!project.isDisposed()) {
+                invokeImpl(project, editor, file, injectable);
+            }
+        }));
     }
 
     @RequiredUIAccess
@@ -138,14 +142,23 @@ public class InjectLanguageAction implements IntentionAction {
             }
             if (TemporaryPlacesRegistry.getInstance(project).getLanguageInjectionSupport().addInjectionInPlace(language, host)) {
                 Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
-                String text = StringUtil.escapeXml(language.getDisplayName().get()) + " was temporarily injected.";
+                LocalizeValue text = LanguageInjectAdvancedLocalize.temporarilyInjected(
+                    language.getDisplayName().map((localizeManager, string) -> StringUtil.escapeXml(string))
+                );
                 if (data != null) {
-                    SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
+                    SmartPsiElementPointer<PsiLanguageInjectionHost> pointer =
+                        SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
                     TextRange range = host.getTextRange();
-                    HintManager.getInstance().showQuestionHint(editor, text +
-                            "<br>Do you want to insert annotation? " +
-                            KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)),
-                        range.getStartOffset(), range.getEndOffset(), () -> data.test(pointer.getElement()));
+                    HintManager.getInstance().showQuestionHint(
+                        editor,
+                        text + "<br>" + LanguageInjectAdvancedLocalize.suggestInsertAnnotation() + " " +
+                            KeymapUtil.getFirstKeyboardShortcutText(
+                                ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)
+                            ),
+                        range.getStartOffset(),
+                        range.getEndOffset(),
+                        () -> data.test(pointer.getElement())
+                    );
                 }
                 else {
                     HintManager.getInstance().showInformationHint(editor, text);
@@ -163,6 +176,7 @@ public class InjectLanguageAction implements IntentionAction {
         }
     }
 
+    @RequiredUIAccess
     private static boolean defaultFunctionalityWorked(PsiLanguageInjectionHost host, String id) {
         return Configuration.getProjectInstance(host.getProject()).setHostInjectionEnabled(host, Collections.singleton(id), true);
     }
