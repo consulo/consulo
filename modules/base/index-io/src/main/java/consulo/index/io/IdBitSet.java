@@ -18,7 +18,8 @@ package consulo.index.io;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Maxim.Mossienko on 5/27/2014.
+ * @author Maxim.Mossienko
+ * @since 2014-05-27
  */
 class IdBitSet implements Cloneable, RandomAccessIntContainer {
   private static final int SHIFT = 6;

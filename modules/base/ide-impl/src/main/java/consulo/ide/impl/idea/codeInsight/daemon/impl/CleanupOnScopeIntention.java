@@ -29,7 +29,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by anna on 5/13/2014.
+ * @author anna
+ * @since 2014-05-13
  */
 public class CleanupOnScopeIntention extends CleanupIntention {
   public static final CleanupOnScopeIntention INSTANCE = new CleanupOnScopeIntention();

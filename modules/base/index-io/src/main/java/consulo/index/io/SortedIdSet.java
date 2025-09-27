@@ -18,7 +18,8 @@ package consulo.index.io;
 import java.util.function.IntPredicate;
 
 /**
- * Created by Maxim.Mossienko on 5/27/2014.
+ * @author Maxim.Mossienko
+ * @since 2014-05-27
  */
 public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
   private int[] mySet;
