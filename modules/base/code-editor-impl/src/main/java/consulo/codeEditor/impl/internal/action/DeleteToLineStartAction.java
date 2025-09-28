@@ -17,10 +17,11 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 @ActionImpl(id = "EditorDeleteToLineStart")
 public class DeleteToLineStartAction extends EditorAction {
     public DeleteToLineStartAction() {
-        super(new CutLineActionHandler(true, false, false));
+        super(CodeEditorLocalize.actionDeleteToLineStartText(), new CutLineActionHandler(true, false, false));
     }
 }

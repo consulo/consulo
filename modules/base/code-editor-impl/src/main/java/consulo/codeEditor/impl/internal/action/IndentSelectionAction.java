@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
@@ -40,10 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IndentSelectionAction extends EditorAction {
-    public IndentSelectionAction(@Nonnull LocalizeValue text) {
-        super(text, new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -57,6 +52,10 @@ public class IndentSelectionAction extends EditorAction {
                 indentSelection(editor, project);
             }
         }
+    }
+
+    public IndentSelectionAction(@Nonnull LocalizeValue text) {
+        super(text, new Handler());
     }
 
     @Override

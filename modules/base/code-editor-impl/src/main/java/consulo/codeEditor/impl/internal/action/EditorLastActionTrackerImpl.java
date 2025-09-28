@@ -107,12 +107,10 @@ public class EditorLastActionTrackerImpl implements EditorLastActionTracker, Dis
 
     @Override
     public void mouseEntered(@Nonnull EditorMouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(@Nonnull EditorMouseEvent e) {
-
     }
 
     private String getActionId(AnAction action) {
@@ -125,19 +123,18 @@ public class EditorLastActionTrackerImpl implements EditorLastActionTracker, Dis
     }
 
     private void registerDisposeHandler(Editor editor) {
-        if (!(editor instanceof CodeEditorBase)) {
-            return;
-        }
-        CodeEditorBase editorImpl = (CodeEditorBase) editor;
-        if (editorImpl.replace(DISPOSABLE_SET, null, Boolean.TRUE)) {
-            Disposer.register(editorImpl.getDisposable(), () -> {
-                if (myCurrentEditor == editor) {
-                    myCurrentEditor = null;
+        if (editor instanceof CodeEditorBase editorImpl && editorImpl.replace(DISPOSABLE_SET, null, Boolean.TRUE)) {
+            Disposer.register(
+                editorImpl.getDisposable(),
+                () -> {
+                    if (myCurrentEditor == editor) {
+                        myCurrentEditor = null;
+                    }
+                    if (myLastEditor == editor) {
+                        myLastEditor = null;
+                    }
                 }
-                if (myLastEditor == editor) {
-                    myLastEditor = null;
-                }
-            });
+            );
         }
     }
 }

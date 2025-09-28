@@ -24,47 +24,51 @@ import consulo.dataContext.DataContext;
  * @author max
  */
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
-  enum Direction {LEFT, RIGHT}
+    enum Direction {
+        LEFT,
+        RIGHT
+    }
 
-  private final Direction myDirection;
+    private final Direction myDirection;
 
-  MoveCaretLeftOrRightHandler(Direction direction) {
-    super(true);
-    myDirection = direction;
-  }
+    MoveCaretLeftOrRightHandler(Direction direction) {
+        super(true);
+        myDirection = direction;
+    }
 
-  @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
-    SelectionModel selectionModel = editor.getSelectionModel();
-    CaretModel caretModel = editor.getCaretModel();
-    ScrollingModel scrollingModel = editor.getScrollingModel();
+    @Override
+    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+        SelectionModel selectionModel = editor.getSelectionModel();
+        CaretModel caretModel = editor.getCaretModel();
+        ScrollingModel scrollingModel = editor.getScrollingModel();
 
-    if (selectionModel.hasSelection() && (!(editor instanceof EditorEx) || !((EditorEx)editor).isStickySelection())) {
-      int start = selectionModel.getSelectionStart();
-      int end = selectionModel.getSelectionEnd();
-      int caretOffset = caretModel.getOffset();
+        if (selectionModel.hasSelection() && !(editor instanceof EditorEx editorEx && editorEx.isStickySelection())) {
+            int start = selectionModel.getSelectionStart();
+            int end = selectionModel.getSelectionEnd();
+            int caretOffset = caretModel.getOffset();
 
-      if (start <= caretOffset && end >= caretOffset) { // See IDEADEV-36957
+            if (start <= caretOffset && end >= caretOffset) { // See IDEADEV-36957
 
-        VisualPosition targetPosition = myDirection == Direction.RIGHT ? caret.getSelectionEndPosition()
-                                                                       : caret.getSelectionStartPosition();
+                VisualPosition targetPosition = myDirection == Direction.RIGHT
+                    ? caret.getSelectionEndPosition()
+                    : caret.getSelectionStartPosition();
 
-        selectionModel.removeSelection();
-        caretModel.moveToVisualPosition(targetPosition);
-        if (caret == editor.getCaretModel().getPrimaryCaret()) {
-          scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+                selectionModel.removeSelection();
+                caretModel.moveToVisualPosition(targetPosition);
+                if (caret == editor.getCaretModel().getPrimaryCaret()) {
+                    scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+                }
+                return;
+            }
         }
-        return;
-      }
+        VisualPosition currentPosition = caret.getVisualPosition();
+        if (caret.isAtBidiRunBoundary() && (myDirection == Direction.RIGHT ^ currentPosition.leansRight)) {
+            caret.moveToVisualPosition(currentPosition.leanRight(!currentPosition.leansRight));
+        }
+        else {
+            boolean scrollToCaret = (!(editor instanceof RealEditor) || ((RealEditor) editor).isScrollToCaret())
+                && caret == editor.getCaretModel().getPrimaryCaret();
+            caretModel.moveCaretRelatively(myDirection == Direction.RIGHT ? 1 : -1, 0, false, false, scrollToCaret);
+        }
     }
-    VisualPosition currentPosition = caret.getVisualPosition();
-    if (caret.isAtBidiRunBoundary() && (myDirection == Direction.RIGHT ^ currentPosition.leansRight)) {
-      caret.moveToVisualPosition(currentPosition.leanRight(!currentPosition.leansRight));
-    }
-    else {
-      boolean scrollToCaret = (!(editor instanceof RealEditor) || ((RealEditor)editor).isScrollToCaret())
-                                    && caret == editor.getCaretModel().getPrimaryCaret();
-      caretModel.moveCaretRelatively(myDirection == Direction.RIGHT ? 1 : -1, 0, false, false, scrollToCaret);
-    }
-  }
 }

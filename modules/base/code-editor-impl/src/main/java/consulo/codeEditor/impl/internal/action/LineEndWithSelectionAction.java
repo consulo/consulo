@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
@@ -42,6 +42,6 @@ public class LineEndWithSelectionAction extends TextComponentEditorAction {
     }
 
     public LineEndWithSelectionAction() {
-        super(ActionLocalize.actionEditorlineendwithselectionText(), new Handler());
+        super(CodeEditorLocalize.actionLineEndWithSelectionText(), new Handler());
     }
 }

@@ -16,13 +16,11 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
+import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.*;
-
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -64,7 +62,7 @@ public class EscapeAction extends EditorAction {
     }
 
     public EscapeAction() {
-        super(ActionLocalize.actionEditorescapeText(), new Handler());
+        super(CodeEditorLocalize.actionEscapeText(), new Handler());
         setInjectedContext(true);
     }
 

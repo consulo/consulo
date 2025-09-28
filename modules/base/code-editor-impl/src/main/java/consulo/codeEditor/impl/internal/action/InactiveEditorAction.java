@@ -20,15 +20,20 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
-public class InactiveEditorAction extends EditorAction {
+public abstract class InactiveEditorAction extends EditorAction {
     protected InactiveEditorAction(EditorActionHandler defaultHandler) {
         super(defaultHandler);
+    }
+
+    protected InactiveEditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+        super(text, defaultHandler);
     }
 
     @Nullable

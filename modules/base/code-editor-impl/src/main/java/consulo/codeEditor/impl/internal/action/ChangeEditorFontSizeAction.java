@@ -15,17 +15,14 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
-import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
-import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.colorScheme.EditorFontsConstants;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,34 +30,34 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public abstract class ChangeEditorFontSizeAction extends AnAction implements DumbAware {
-  private final int myStep;
+    private final int myStep;
 
-  protected ChangeEditorFontSizeAction(@Nonnull LocalizeValue text, int increaseStep) {
-    super(text);
-    myStep = increaseStep;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    RealEditor editor = getEditor(e);
-    if (editor != null) {
-      int size = editor.getFontSize() + myStep;
-      if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
-        editor.setFontSize(size);
-      }
+    protected ChangeEditorFontSizeAction(@Nonnull LocalizeValue text, int increaseStep) {
+        super(text);
+        myStep = increaseStep;
     }
-  }
 
-  @Nullable
-  private static RealEditor getEditor(@Nonnull AnActionEvent e) {
-    Editor editor = e.getData(Editor.KEY);
-    return editor instanceof RealEditor realEditor ? realEditor : null;
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        RealEditor editor = getEditor(e);
+        if (editor != null) {
+            int size = editor.getFontSize() + myStep;
+            if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
+                editor.setFontSize(size);
+            }
+        }
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(getEditor(e) != null);
-  }
+    @Nullable
+    private static RealEditor getEditor(@Nonnull AnActionEvent e) {
+        Editor editor = e.getData(Editor.KEY);
+        return editor instanceof RealEditor realEditor ? realEditor : null;
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(getEditor(e) != null);
+    }
 
 }

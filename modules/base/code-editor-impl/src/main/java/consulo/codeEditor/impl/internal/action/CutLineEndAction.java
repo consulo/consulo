@@ -17,6 +17,7 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 /**
  * @author max
@@ -25,6 +26,6 @@ import consulo.codeEditor.action.EditorAction;
 @ActionImpl(id = "EditorCutLineEnd")
 public class CutLineEndAction extends EditorAction {
     public CutLineEndAction() {
-        super(new CutLineActionHandler(false, true, true));
+        super(CodeEditorLocalize.actionCutLineEndText(), new CutLineActionHandler(false, true, true));
     }
 }

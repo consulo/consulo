@@ -22,10 +22,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_JOIN_LINES)
@@ -88,6 +88,6 @@ public class JoinLinesAction extends TextComponentEditorAction {
     }
 
     public JoinLinesAction() {
-        super(ActionLocalize.actionEditorjoinlinesText(), new Handler());
+        super(CodeEditorLocalize.actionJoinLinesText(), new Handler());
     }
 }
