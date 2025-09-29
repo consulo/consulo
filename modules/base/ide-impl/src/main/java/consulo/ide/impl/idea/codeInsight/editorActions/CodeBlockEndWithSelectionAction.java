@@ -16,14 +16,13 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,8 +32,8 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorCodeBlockEndWithSelection")
 public class CodeBlockEndWithSelectionAction extends EditorAction {
-    private static class MyHandler extends EditorActionHandler {
-        public MyHandler() {
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
             super(true);
         }
 
@@ -48,7 +47,7 @@ public class CodeBlockEndWithSelectionAction extends EditorAction {
     }
 
     public CodeBlockEndWithSelectionAction() {
-        super(ActionLocalize.actionEditorcodeblockendwithselectionText(), new MyHandler());
+        super(CodeEditorLocalize.actionCodeBlockEndWithSelectionText(), new Handler());
         setInjectedContext(true);
     }
 }

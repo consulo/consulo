@@ -20,8 +20,8 @@ import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
@@ -32,11 +32,11 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorMatchBrace")
 public class MatchBraceAction extends EditorAction {
-    private static class MyHandler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[]{'(', '[', '{', '<'});
         private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[]{')', ']', '}', '>'});
 
-        public MyHandler() {
+        public Handler() {
             super(true);
         }
 
@@ -76,6 +76,6 @@ public class MatchBraceAction extends EditorAction {
     }
 
     public MatchBraceAction() {
-        super(ActionLocalize.actionEditormatchbraceText(), new MyHandler());
+        super(CodeEditorLocalize.actionMatchBraceText(), new Handler());
     }
 }

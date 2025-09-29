@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
@@ -32,7 +33,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = IdeActions.ACTION_EDITOR_UNSELECT_WORD_AT_CARET)
 public class UnselectWordAtCaretAction extends EditorAction implements DumbAware {
     public UnselectWordAtCaretAction() {
-        super(ActionLocalize.actionEditorunselectwordText(), new Handler());
+        super(CodeEditorLocalize.actionUnselectWordText(), new Handler());
         setInjectedContext(true);
     }
 
