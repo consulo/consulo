@@ -15,10 +15,8 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -26,9 +24,11 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.annotation.Nonnull;
-import consulo.annotation.access.RequiredWriteAction;
 
 /**
  * @author max
@@ -65,6 +65,6 @@ public class StartNewLineAction extends EditorAction {
     }
 
     public StartNewLineAction() {
-        super(ActionLocalize.actionEditorstartnewlineText(), new Handler());
+        super(CodeEditorLocalize.actionStartNewLineText(), new Handler());
     }
 }

@@ -34,6 +34,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -43,18 +44,8 @@ import jakarta.annotation.Nullable;
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorTab")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_TAB)
 public class TabAction extends EditorAction {
-    public TabAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -76,6 +67,16 @@ public class TabAction extends EditorAction {
         public boolean isEnabled(Editor editor, DataContext dataContext) {
             return !editor.isOneLineMode() && !((EditorEx) editor).isEmbeddedIntoDialogWrapper() && !editor.isViewer();
         }
+    }
+
+    public TabAction() {
+        super(CodeEditorLocalize.actionTabText(), new Handler());
+        setInjectedContext(true);
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 
     private static void insertTabAtCaret(Editor editor, @Nonnull Caret caret, @Nullable Project project) {

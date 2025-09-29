@@ -16,13 +16,14 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,10 +35,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorSwapSelectionBoundaries")
 public class SwapSelectionBoundariesAction extends EditorAction {
-    public SwapSelectionBoundariesAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -45,7 +42,7 @@ public class SwapSelectionBoundariesAction extends EditorAction {
 
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
-            if (!(editor instanceof EditorEx)) {
+            if (!(editor instanceof EditorEx editorEx)) {
                 return;
             }
             SelectionModel selectionModel = editor.getSelectionModel();
@@ -53,7 +50,6 @@ public class SwapSelectionBoundariesAction extends EditorAction {
                 return;
             }
 
-            EditorEx editorEx = (EditorEx) editor;
             int start = selectionModel.getSelectionStart();
             int end = selectionModel.getSelectionEnd();
             CaretModel caretModel = editor.getCaretModel();
@@ -67,5 +63,9 @@ public class SwapSelectionBoundariesAction extends EditorAction {
                 caretModel.moveToOffset(start);
             }
         }
+    }
+
+    public SwapSelectionBoundariesAction() {
+        super(CodeEditorLocalize.actionSwapSelectionBoundariesText(), new Handler());
     }
 }

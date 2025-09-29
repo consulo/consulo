@@ -5,6 +5,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -12,10 +13,6 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "EditorTextEnd")
 public class TextEndAction extends TextComponentEditorAction {
-    public TextEndAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -39,5 +36,9 @@ public class TextEndAction extends TextComponentEditorAction {
                 CodeEditorInternalHelper.getInstance().includeCurrentCommandAsNavigation(project);
             }
         }
+    }
+
+    public TextEndAction() {
+        super(CodeEditorLocalize.actionTextEndText(), new Handler());
     }
 }

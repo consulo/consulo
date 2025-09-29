@@ -21,6 +21,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 
@@ -30,10 +31,6 @@ import consulo.project.Project;
  */
 @ActionImpl(id = "EditorTextStart")
 public class TextStartAction extends TextComponentEditorAction {
-    public TextStartAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void execute(Editor editor, DataContext dataContext) {
@@ -51,5 +48,9 @@ public class TextStartAction extends TextComponentEditorAction {
                 CodeEditorInternalHelper.getInstance().includeCurrentCommandAsNavigation(project);
             }
         }
+    }
+
+    public TextStartAction() {
+        super(CodeEditorLocalize.actionTextStartText(), new Handler());
     }
 }

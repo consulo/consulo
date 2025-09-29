@@ -21,6 +21,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.dataContext.DataContext;
@@ -31,19 +32,21 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorResetFontSize")
 public class ResetFontSizeAction extends EditorAction {
-    public ResetFontSizeAction() {
-        super(new MyHandler());
-    }
-
-    private static class MyHandler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             if (!(editor instanceof EditorEx editorEx)) {
                 return;
             }
             EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-            int fontSize = editor.getEditorKind() == EditorKind.CONSOLE ? globalScheme.getConsoleFontSize() : globalScheme.getEditorFontSize();
+            int fontSize = editor.getEditorKind() == EditorKind.CONSOLE
+                ? globalScheme.getConsoleFontSize()
+                : globalScheme.getEditorFontSize();
             editorEx.setFontSize(fontSize);
         }
+    }
+
+    public ResetFontSizeAction() {
+        super(CodeEditorLocalize.actionResetFontSizeText(), new Handler());
     }
 }

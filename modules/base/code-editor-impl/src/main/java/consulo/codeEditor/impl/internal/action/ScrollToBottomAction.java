@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -30,14 +31,14 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorScrollBottom")
 public class ScrollToBottomAction extends InactiveEditorAction {
-    public ScrollToBottomAction() {
-        super(new MyHandler());
-    }
-
-    private static class MyHandler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             editor.getScrollingModel().scrollTo(editor.offsetToLogicalPosition(editor.getDocument().getTextLength()), ScrollType.CENTER);
         }
+    }
+
+    public ScrollToBottomAction() {
+        super(CodeEditorLocalize.actionScrollBottomText(), new Handler());
     }
 }

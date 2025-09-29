@@ -23,9 +23,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 
@@ -56,6 +56,6 @@ public class PasteAction extends EditorAction {
     public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
 
     public PasteAction() {
-        super(ActionLocalize.actionEditorpasteText(), new Handler());
+        super(CodeEditorLocalize.actionPasteText(), new Handler());
     }
 }
