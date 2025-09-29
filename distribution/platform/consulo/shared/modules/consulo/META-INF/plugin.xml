@@ -194,8 +194,6 @@
 
         <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.language.editor.refactoring.impl.internal.changeSignature.EscapeHandler" id="changeSignatureEscape"-->
         <!--order="before hide-search"/>-->
-
-
     </extensions>
 
     <actions>
@@ -211,99 +209,6 @@
         <group id="Diff.ViewerPopupMenu"/>
         <group id="Diff.ViewerToolbar"/>
         <group id="Diff.EditorGutterPopupMenu"/>
-
-        <group id="EditorActions">
-            <reference id="EditorPageUp"/>
-            <reference id="EditorPageDown"/>
-            <reference id="EditorPageUpWithSelection"/>
-            <reference id="EditorPageDownWithSelection"/>
-            <reference id="EditorCopy"/>
-            <reference id="EditorCut" />
-            <reference id="EditorPaste" />
-            <reference id="EditorPasteSimple"/>
-            <reference id="EditorPasteFromX11" />
-            <reference id="EditorDelete" />
-            <reference id="EditorBackSpace"/>
-            <reference id="EditorHungryBackSpace"/>
-            <reference id="EditorMoveToPageTop"/>
-            <reference id="EditorMoveToPageBottom"/>
-            <reference id="EditorMoveToPageTopWithSelection"/>
-            <reference id="EditorMoveToPageBottomWithSelection"/>
-            <reference id="EditorEnter"/>
-            <reference id="EditorEscape"/>
-            <reference id="EditorUp"/>
-            <reference id="EditorDown"/>
-            <reference id="EditorLeft"/>
-            <reference id="EditorRight"/>
-            <reference id="EditorUpWithSelection"/>
-            <reference id="EditorDownWithSelection"/>
-            <reference id="EditorLeftWithSelection"/>
-            <reference id="EditorRightWithSelection"/>
-            <reference id="EditorUnindentSelection"/>
-            <reference id="EditorTab"/>
-            <reference id="EditorResetFontSize" />
-            <reference id="EditorScrollUp"/>
-            <reference id="EditorScrollDown"/>
-            <reference id="EditorScrollUpAndMove"/>
-            <reference id="EditorScrollDownAndMove"/>
-            <reference id="EditorScrollRight"/>
-            <reference id="EditorScrollLeft"/>
-            <reference id="EditorScrollTop"/>
-            <reference id="EditorScrollBottom"/>
-            <reference id="EditorMoveUpAndScroll"/>
-            <reference id="EditorMoveDownAndScroll"/>
-            <reference id="EditorMoveUpAndScrollWithSelection"/>
-            <reference id="EditorMoveDownAndScrollWithSelection"/>
-            <reference id="EditorAddOrRemoveCaret"/>
-            <reference id="EditorCloneCaretBelow"/>
-            <reference id="EditorCloneCaretAbove"/>
-            <reference id="EditorToggleStickySelection"/>
-            <reference id="EditorSwapSelectionBoundaries"/>
-            <reference id="EditorLineStart"/>
-            <reference id="EditorLineEnd"/>
-            <reference id="EditorCutLineBackward"/>
-            <reference id="EditorCutLineEnd"/>
-            <reference id="EditorDeleteToLineStart"/>
-            <reference id="EditorDeleteToLineEnd"/>
-            <reference id="EditorTextStart"/>
-            <reference id="EditorTextEnd"/>
-            <reference id="EditorLineStartWithSelection"/>
-            <reference id="EditorLineEndWithSelection"/>
-            <reference id="EditorTextStartWithSelection"/>
-            <reference id="EditorTextEndWithSelection"/>
-            <reference id="EditorNextWord"/>
-            <reference id="EditorNextWordInDifferentHumpsMode"/>
-            <reference id="EditorNextWordWithSelection"/>
-            <reference id="EditorNextWordInDifferentHumpsModeWithSelection"/>
-            <reference id="EditorPreviousWord"/>
-            <reference id="EditorPreviousWordInDifferentHumpsMode"/>
-            <reference id="EditorPreviousWordWithSelection"/>
-            <reference id="EditorPreviousWordInDifferentHumpsModeWithSelection"/>
-            <reference id="EditorDeleteToWordStart"/>
-            <reference id="EditorDeleteToWordStartInDifferentHumpsMode"/>
-            <reference id="EditorDeleteToWordEnd"/>
-            <reference id="EditorDeleteToWordEndInDifferentHumpsMode"/>
-            <reference id="EditorDeleteLine"/>
-            <reference id="EditorKillToWordStart"/>
-            <reference id="EditorKillToWordEnd"/>
-            <reference id="EditorKillRegion"/>
-            <reference id="EditorKillRingSave"/>
-            <reference id="EditorDuplicate"/>
-            <reference id="EditorDuplicateLines"/>
-            <reference id="EditorToggleInsertState"/>
-            <reference id="EditorToggleColumnMode"/>
-            <reference id="EditorIncreaseFontSize"/>
-            <reference id="EditorDecreaseFontSize"/>
-
-            <reference id="EditorScrollToCenter"/>
-            <reference id="EditorToggleCase"/>
-            <reference id="EditorJoinLines"/>
-            <reference id="FillParagraph"/>
-            <reference id="EditorSelectLine"/>
-            <reference id="EditorSplitLine"/>
-            <reference id="EditorStartNewLine"/>
-            <reference id="EditorStartNewLineBefore"/>
-        </group>
 
         <!-- grouping for Settings -> Keymap -> Version Control Systems -->
         <group id="Diff.KeymapGroup" text="Diff &amp;&amp; Merge">
