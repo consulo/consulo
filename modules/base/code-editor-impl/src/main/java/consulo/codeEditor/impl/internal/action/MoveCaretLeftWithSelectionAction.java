@@ -16,12 +16,12 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -45,6 +45,6 @@ public class MoveCaretLeftWithSelectionAction extends EditorAction {
     }
 
     public MoveCaretLeftWithSelectionAction() {
-        super(ActionLocalize.actionEditorleftwithselectionText(), new Handler());
+        super(CodeEditorLocalize.actionLeftWithSelectionText(), new Handler());
     }
 }

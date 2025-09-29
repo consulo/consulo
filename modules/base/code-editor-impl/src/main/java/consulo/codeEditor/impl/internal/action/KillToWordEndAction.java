@@ -22,6 +22,7 @@ import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 
@@ -38,10 +39,6 @@ import consulo.document.Document;
  */
 @ActionImpl(id = "EditorKillToWordEnd")
 public class KillToWordEndAction extends TextComponentEditorAction {
-    public KillToWordEndAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
@@ -74,5 +71,9 @@ public class KillToWordEndAction extends TextComponentEditorAction {
                 KillRingUtil.cut(editor, caretOffset, end);
             }
         }
+    }
+
+    public KillToWordEndAction() {
+        super(CodeEditorLocalize.actionKillToWordEndText(), new Handler());
     }
 }

@@ -17,6 +17,7 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
@@ -31,12 +32,6 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorDownWithSelection")
 public class MoveCaretDownWithSelectionAction extends EditorAction {
-    private static final CaretAction OUR_CARET_ACTION = eachCaret -> eachCaret.moveCaretRelatively(0, 1, true, true);
-
-    public MoveCaretDownWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -54,5 +49,11 @@ public class MoveCaretDownWithSelectionAction extends EditorAction {
                 OUR_CARET_ACTION.perform(caret);
             }
         }
+    }
+
+    private static final CaretAction OUR_CARET_ACTION = eachCaret -> eachCaret.moveCaretRelatively(0, 1, true, true);
+
+    public MoveCaretDownWithSelectionAction() {
+        super(CodeEditorLocalize.actionDownWithSelectionText(), new Handler());
     }
 }

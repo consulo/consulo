@@ -25,12 +25,12 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
@@ -59,7 +59,7 @@ public class DeleteAction extends EditorAction {
     }
 
     public DeleteAction() {
-        super(ActionLocalize.actionEditordeleteText(), new Handler());
+        super(CodeEditorLocalize.actionDeleteText(), new Handler());
     }
 
     @Override

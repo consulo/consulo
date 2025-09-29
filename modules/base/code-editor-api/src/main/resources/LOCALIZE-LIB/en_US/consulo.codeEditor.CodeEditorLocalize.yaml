@@ -16,10 +16,258 @@ action.EditorStickyLinesDisableForLang.for.lang.text:
     text: Disable for {0}
 action.EditorStickyLinesDisableForLang.text:
     text: Disable for Language
-action.duplicate.line:
+action.add.or.remove.caret.text:
+    text: Add or Remove Caret
+action.backspace.text:
+    text: Backspace
+action.choose.lookup.item.complete.statement.text:
+    text: Choose Lookup Item and Invoke Complete Statement
+action.choose.lookup.item.dot.text:
+    text: Choose Lookup Item and Insert Dot
+action.choose.lookup.item.replace.text:
+    text: Choose Lookup Item Replace
+action.choose.lookup.item.text:
+    text: Choose Lookup Item
+action.clone.caret.above.text:
+    text: Clone Caret Above
+action.clone.caret.below.text:
+    text: Clone Caret Below
+action.code.block.end.text:
+    text: Move Caret to Code Block End
+action.code.block.end.with.selection.text:
+    text: Move Caret to Code Block End with Selection
+action.code.block.start.text:
+    text: Move Caret to Code Block Start
+action.code.block.start.with.selection.text:
+    text: Move Caret to Code Block Start with Selection
+action.complete.statement.text:
+    text: Complete Current Statement
+action.context.info.description:
+    text: Show the current method or class declaration when it is not visible
+action.context.info.text:
+    text: _Context Info
+action.copy.text:
+    text: Copy
+action.cut.line.backward.text:
+    text: Cut Line Backward
+action.cut.line.end.text:
+    text: Cut up to Line End
+action.cut.text:
+    text: Cut
+action.decrease.font.size.text:
+    text: Decrease Font Size
+action.delete.line.text:
+    text: Delete Line
+action.delete.text:
+    text: Delete
+action.delete.to.line.end.text:
+    text: Delete to Line End
+action.delete.to.line.start.text:
+    text: Delete to Line Start
+action.delete.to.word.end.in.different.humps.mode.text:
+    text: Delete to Word End in Different "CamelHumps" Mode
+action.delete.to.word.end.text:
+    text: Delete to Word End
+action.delete.to.word.start.in.different.humps.mode.text:
+    text: Delete to Word Start in Different "CamelHumps" Mode
+action.delete.to.word.start.text:
+    text: Delete to Word Start
+action.down.text:
+    text: Down
+action.down.with.selection.text:
+    text: Down with Selection
+action.duplicate.line.text:
     text: '&Duplicate Line'
-action.duplicate.selection:
+action.duplicate.lines.text:
+    text: Duplicate Lines
+action.duplicate.selection.text:
     text: '&Duplicate Selection'
+action.duplicate.text:
+    text: Duplicate Line or Block
+action.enter.text:
+    text: Enter
+action.escape.text:
+    text: Escape
+action.fill.paragraph.description:
+    text: Reformat string literal or comment to fit maximum width (usually 80)
+action.fill.paragraph.text:
+    text: Fill Paragraph
+action.hungry.backspace.description:
+    text: Acts as the Backspace except that removes all whitespace symbols before the caret (if any)
+action.hungry.backspace.text:
+    text: Hungry Backspace
+action.increase.font.size.text:
+    text: Increase Font Size
+action.indent.selection.text:
+    text: Indent Selection
+action.join.lines.text:
+    text: Join Lines
+action.kill.region.text:
+    text: Kill Selected Region
+action.kill.ring.save.text:
+    text: Save to Kill Ring
+action.kill.to.word.end.text:
+    text: Kill to Word End
+action.kill.to.word.start.text:
+    text: Kill to Word Start
+action.left.text:
+    text: Left
+action.left.with.selection.text:
+    text: Left with Selection
+action.line.end.text:
+    text: Move Caret to Line End
+action.line.end.with.selection.text:
+    text: Move Caret to Line End with Selection
+action.line.start.text:
+    text: Move Caret to Line Start
+action.line.start.with.selection.text:
+    text: Move Caret to Line Start with Selection
+action.lookup.down.text:
+    text: Lookup _Down
+action.lookup.up.text:
+    text: Lookup _Up
+action.match.brace.text:
+    text: Move Caret to Matched Brace
+action.move.down.and.scroll.text:
+    text: Move Down and Scroll
+action.move.down.and.scroll.with.selection.text:
+    text: Move Down and Scroll with Selection
+action.move.to.page.bottom.text:
+    text: Move Caret to Page Bottom
+action.move.to.page.bottom.with.selection.text:
+    text: Move Caret to Page Bottom with Selection
+action.move.to.page.top.text:
+    text: Move Caret to Page Top
+action.move.to.page.top.with.selection.text:
+    text: Move Caret to Page Top with Selection
+action.move.up.and.scroll.text:
+    text: Move Up and Scroll
+action.move.up.and.scroll.with.selection.text:
+    text: Move Up and Scroll with Selection
+action.next.word.in.different.humps.mode.text:
+    text: Move Caret to Next Word in Different "CamelHumps" Mode
+action.next.word.in.different.humps.mode.with.selection.text:
+    text: Move Caret to Next Word with Selection in Different "CamelHumps" Mode
+action.next.word.text:
+    text: Move Caret to Next Word
+action.next.word.with.selection.text:
+    text: Move Caret to Next Word with Selection
+action.page.down.text:
+    text: Page Down
+action.page.down.with.selection.text:
+    text: Page Down with Selection
+action.page.up.text:
+    text: Page Up
+action.page.up.with.selection.text:
+    text: Page Up with Selection
+action.paste.from.x11.text:
+    text: Paste from X clipboard
+action.paste.simple.description:
+    text: Paste without formatting, autoimport, literal escaping etc.
+action.paste.simple.text:
+    text: Paste as P_lain Text
+action.paste.text:
+    text: Paste
+action.previous.word.in.different.humps.mode.text:
+    text: Move Caret to Previous Word in Different "CamelHumps" Mode
+action.previous.word.in.different.humps.mode.with.selection.text:
+    text: Move Caret to Previous Word with Selection in Different "CamelHumps" Mode
+action.previous.word.text:
+    text: Move Caret to Previous Word
+action.previous.word.with.selection.text:
+    text: Move Caret to Previous Word with Selection
+action.reset.font.size.text:
+    text: Reset Font Size
+action.right.text:
+    text: Right
+action.right.with.selection.text:
+    text: Right with Selection
+action.scroll.bottom.text:
+    text: Scroll to Bottom
+action.scroll.down.and.move.text:
+    text: Scroll Down and Move if Necessary
+action.scroll.down.text:
+    text: Scroll Down
+action.scroll.left.text:
+    text: Scroll Left
+action.scroll.right.text:
+    text: Scroll Right
+action.scroll.to.center.text:
+    text: Scroll to Center
+action.scroll.top.text:
+    text: Scroll to Top
+action.scroll.up.and.move.text:
+    text: Scroll Up and Move if Necessary
+action.scroll.up.text:
+    text: Scroll Up
+action.select.line.text:
+    text: Select Line at Caret
+action.select.word.text:
+    text: Select Word at Caret
+action.set.content.based.bidi.text.direction.description:
+    text: Direction is determined by initial character(s)
+action.set.content.based.bidi.text.direction.text:
+    text: Content-based
+action.set.ltr.bidi.text.direction.text:
+    text: Left-to-Right
+action.set.rtl.bidi.text.direction.text:
+    text: Right-to-Left
+action.split.line.text:
+    text: Split Line
+action.start.new.line.before.text:
+    text: Start New Line Before Current
+action.start.new.line.text:
+    text: Start New Line
+action.swap.selection.boundaries.text:
+    text: Swap selection boundaries
+action.tab.text:
+    text: Tab
+action.text.end.text:
+    text: Move Caret to Text End
+action.text.end.with.selection.text:
+    text: Move Caret to Text End with Selection
+action.text.start.text:
+    text: Move Caret to Text Start
+action.text.start.with.selection.text:
+    text: Move Caret to Text Start with Selection
+action.toggle.case.text:
+    text: Toggle Case
+action.toggle.column.mode.description:
+    text: Toggle column selection mode in current editor
+action.toggle.column.mode.text:
+    text: Column Selection _Mode
+action.toggle.insert.state.text:
+    text: Toggle Insert/Overwrite
+action.toggle.show.indent.lines.description:
+    text: Toggle display indent guides in current editor
+action.toggle.show.indent.lines.text:
+    text: Sh_ow Indent Guides
+action.toggle.show.line.numbers.description:
+    text: Toggle display line numbers in current editor
+action.toggle.show.line.numbers.text:
+    text: Show L_ine Numbers
+action.toggle.show.whitespaces.description:
+    text: Toggle display whitespaces in current editor
+action.toggle.show.whitespaces.text:
+    text: Sh_ow Whitespaces
+action.toggle.sticky.selection.text:
+    text: Toggle Sticky Selection
+action.toggle.use.soft.wraps.description:
+    text: Toggle using soft wraps in current editor
+action.toggle.use.soft.wraps.in.preview.description:
+    text: Toggle using soft wraps in preview editors
+action.toggle.use.soft.wraps.in.preview.text:
+    text: Soft-Wrap Preview Editor
+action.toggle.use.soft.wraps.text:
+    text: Use Soft Wraps
+action.unindent.selection.text:
+    text: Unindent Selection
+action.unselect.word.text:
+    text: Unselect Word at Caret
+action.up.text:
+    text: Up
+action.up.with.selection.text:
+    text: Up with Selection
 attempt.to.modify.read.only.document.error.message:
     text: Attempt to modify read-only document
 checkbox.show.editor.preview.popup:
@@ -28,8 +276,6 @@ close.editor.annotations.action.name:
     text: Close Annotations
 customize.highlighting.level.menu.item:
     text: Customize Highlighting Level
-decrease.editor.font:
-    text: Decrease Font Size
 editing.read.only.file.hint:
     text: File is read-only
 editing.viewer.hint:
@@ -72,8 +318,6 @@ hector.none.slider.label:
     text: None
 hector.syntax.slider.label:
     text: Syntax
-increase.editor.font:
-    text: Increase Font Size
 inlay.hints.declarative.disable.action.no.provider.text:
     text: Disable Inlay Hints
 inlay.hints.declarative.disable.action.text:

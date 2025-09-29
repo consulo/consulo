@@ -17,12 +17,12 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_CLONE_CARET_BELOW)
 public class CloneCaretBelow extends EditorAction {
     public CloneCaretBelow() {
-        super(ActionLocalize.actionEditorclonecaretbelowText(), new CloneCaretActionHandler(false));
+        super(CodeEditorLocalize.actionCloneCaretBelowText(), new CloneCaretActionHandler(false));
     }
 }

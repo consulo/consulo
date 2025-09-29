@@ -21,6 +21,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 @ActionImpl(id = "EditorIncreaseFontSize")
 public class IncreaseEditorFontSizeAction extends ChangeEditorFontSizeAction {
     public IncreaseEditorFontSizeAction() {
-        super(CodeEditorLocalize.increaseEditorFont(), 1);
+        super(CodeEditorLocalize.actionIncreaseFontSizeText(), 1);
     }
 }

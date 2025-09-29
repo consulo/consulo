@@ -27,7 +27,6 @@ import jakarta.annotation.Nonnull;
  * Holds utility methods for {@link KillRingTransferable kill ring}-aware processing.
  */
 public class KillRingUtil {
-
     private KillRingUtil() {
     }
 

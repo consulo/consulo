@@ -51,8 +51,8 @@ public class BasePasteHandler extends EditorWriteActionHandler {
         }
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (myTransferable != null) {
             EditorCopyPasteHelper.getInstance().pasteTransferable(editor, myTransferable);

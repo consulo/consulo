@@ -22,8 +22,8 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nullable;
 
@@ -52,6 +52,6 @@ public class CopyAction extends TextComponentEditorAction {
     public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
 
     public CopyAction() {
-        super(ActionLocalize.actionEditorcopyText(), new Handler());
+        super(CodeEditorLocalize.actionCopyText(), new Handler());
     }
 }

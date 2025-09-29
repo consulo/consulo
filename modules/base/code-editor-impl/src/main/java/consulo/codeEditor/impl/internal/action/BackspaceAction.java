@@ -24,10 +24,10 @@ import consulo.codeEditor.InjectedEditor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.undoRedo.CommandProcessor;
@@ -59,7 +59,7 @@ public class BackspaceAction extends EditorAction {
     }
 
     public BackspaceAction() {
-        super(ActionLocalize.actionEditorbackspaceText(), new Handler());
+        super(CodeEditorLocalize.actionBackspaceText(), new Handler());
     }
 
     @Override

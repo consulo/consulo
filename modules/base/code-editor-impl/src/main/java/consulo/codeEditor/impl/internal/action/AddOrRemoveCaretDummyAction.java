@@ -16,7 +16,7 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = IdeActions.ACTION_EDITOR_ADD_OR_REMOVE_CARET)
 public class AddOrRemoveCaretDummyAction extends AnAction {
     public AddOrRemoveCaretDummyAction() {
-        super(ActionLocalize.actionEditoraddorremovecaretText());
+        super(CodeEditorLocalize.actionAddOrRemoveCaretText());
     }
 
     @Override

@@ -16,6 +16,7 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 /**
  * @author Denis Zhdanov
@@ -23,6 +24,6 @@ import consulo.annotation.component.ActionImpl;
 @ActionImpl(id = "EditorDeleteToWordStartInDifferentHumpsMode")
 public class DeleteToWordStartInDifferentHumpsModeAction extends TextComponentEditorAction {
     public DeleteToWordStartInDifferentHumpsModeAction() {
-        super(new DeleteToWordBoundaryHandler(true, true));
+        super(CodeEditorLocalize.actionDeleteToWordStartInDifferentHumpsModeText(), new DeleteToWordBoundaryHandler(true, true));
     }
 }

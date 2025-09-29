@@ -17,7 +17,7 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -27,6 +27,6 @@ import consulo.ui.ex.action.IdeActions;
 @ActionImpl(id = IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN)
 public final class MoveCaretDownAction extends EditorAction {
     public MoveCaretDownAction() {
-        super(ActionLocalize.actionEditordownText(), new MoveCaretUpOrDownHandler(MoveCaretUpOrDownHandler.Direction.DOWN));
+        super(CodeEditorLocalize.actionDownText(), new MoveCaretUpOrDownHandler(MoveCaretUpOrDownHandler.Direction.DOWN));
     }
 }
