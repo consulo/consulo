@@ -17,9 +17,10 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -29,10 +30,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorMoveToPageBottomWithSelection")
 public class PageBottomWithSelectionAction extends EditorAction {
-    public PageBottomWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -42,5 +39,9 @@ public class PageBottomWithSelectionAction extends EditorAction {
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretPageBottom(editor, true);
         }
+    }
+
+    public PageBottomWithSelectionAction() {
+        super(CodeEditorLocalize.actionMoveToPageBottomWithSelectionText(), new Handler());
     }
 }

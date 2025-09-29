@@ -16,14 +16,15 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.Platform;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.Presentation;
-import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public class PasteFromX11Action extends EditorAction {
     private static final Logger LOG = Logger.getInstance(PasteFromX11Action.class);
 
     public PasteFromX11Action() {
-        super(new Handler());
+        super(CodeEditorLocalize.actionPasteFromX11Text(), new Handler());
     }
 
     @Override

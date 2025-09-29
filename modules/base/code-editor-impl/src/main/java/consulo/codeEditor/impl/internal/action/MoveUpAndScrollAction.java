@@ -20,6 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -29,14 +30,14 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorMoveUpAndScroll")
 public class MoveUpAndScrollAction extends EditorAction {
-    public MoveUpAndScrollAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretRelativelyAndScroll(editor, 0, -1, false);
         }
+    }
+
+    public MoveUpAndScrollAction() {
+        super(CodeEditorLocalize.actionMoveUpAndScrollText(), new Handler());
     }
 }

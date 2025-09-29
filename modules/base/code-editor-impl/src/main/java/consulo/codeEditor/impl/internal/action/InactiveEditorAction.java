@@ -28,10 +28,6 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class InactiveEditorAction extends EditorAction {
-    protected InactiveEditorAction(EditorActionHandler defaultHandler) {
-        super(defaultHandler);
-    }
-
     protected InactiveEditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
         super(text, defaultHandler);
     }

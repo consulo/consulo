@@ -19,9 +19,9 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nullable;
 
@@ -35,10 +35,6 @@ import static consulo.language.ast.StringEscapesTokenTypes.VALID_STRING_ESCAPE_T
  */
 @ActionImpl(id = "EditorToggleCase")
 public class ToggleCaseAction extends TextComponentEditorAction {
-    public ToggleCaseAction() {
-        super(ActionLocalize.actionEditortogglecaseText(), new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         @RequiredWriteAction
         @Override
@@ -116,5 +112,9 @@ public class ToggleCaseAction extends TextComponentEditorAction {
         private static int trim(int value, int lowerLimit, int upperLimit) {
             return Math.min(upperLimit, Math.max(lowerLimit, value));
         }
+    }
+
+    public ToggleCaseAction() {
+        super(CodeEditorLocalize.actionToggleCaseText(), new Handler());
     }
 }

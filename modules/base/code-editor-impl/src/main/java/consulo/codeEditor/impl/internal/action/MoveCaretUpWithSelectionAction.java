@@ -16,14 +16,14 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
-
+import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
 /**
@@ -32,10 +32,6 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorUpWithSelection")
 public class MoveCaretUpWithSelectionAction extends EditorAction {
-    public MoveCaretUpWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -47,12 +43,7 @@ public class MoveCaretUpWithSelectionAction extends EditorAction {
                 EditorActionUtil.cloneOrRemoveCaret(editor, caret == null ? editor.getCaretModel().getPrimaryCaret() : caret, true);
             }
             else {
-                CaretAction caretAction = new CaretAction() {
-                    @Override
-                    public void perform(Caret caret) {
-                        caret.moveCaretRelatively(0, -1, true, true);
-                    }
-                };
+                CaretAction caretAction = thisCaret -> thisCaret.moveCaretRelatively(0, -1, true, true);
                 if (caret == null) {
                     editor.getCaretModel().runForEachCaret(caretAction);
                 }
@@ -61,5 +52,9 @@ public class MoveCaretUpWithSelectionAction extends EditorAction {
                 }
             }
         }
+    }
+
+    public MoveCaretUpWithSelectionAction() {
+        super(CodeEditorLocalize.actionUpWithSelectionText(), new Handler());
     }
 }

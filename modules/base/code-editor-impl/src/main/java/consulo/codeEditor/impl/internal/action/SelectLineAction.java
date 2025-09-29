@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 
 /**
@@ -27,10 +28,6 @@ import consulo.dataContext.DataContext;
  */
 @ActionImpl(id = "EditorSelectLine")
 public class SelectLineAction extends TextComponentEditorAction {
-    public SelectLineAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -41,5 +38,9 @@ public class SelectLineAction extends TextComponentEditorAction {
             editor.getSelectionModel().selectLineAtCaret();
             EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
         }
+    }
+
+    public SelectLineAction() {
+        super(CodeEditorLocalize.actionSelectLineText(), new Handler());
     }
 }

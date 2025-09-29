@@ -17,11 +17,11 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
@@ -40,6 +40,6 @@ public class ToggleInsertStateAction extends EditorAction {
     }
 
     public ToggleInsertStateAction() {
-        super(ActionLocalize.actionEditortoggleinsertstateText(), new Handler());
+        super(CodeEditorLocalize.actionToggleInsertStateText(), new Handler());
     }
 }
