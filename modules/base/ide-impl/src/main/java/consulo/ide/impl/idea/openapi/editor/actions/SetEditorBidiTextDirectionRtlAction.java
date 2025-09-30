@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.BidiTextDirection;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ActionLocalize;
 
 @ActionImpl(id = "EditorSetRtlBidiTextDirection")
 public class SetEditorBidiTextDirectionRtlAction extends SetEditorBidiTextDirectionAction {
     public SetEditorBidiTextDirectionRtlAction() {
-        super(ActionLocalize.actionEditorsetrtlbiditextdirectionText(), LocalizeValue.empty(), BidiTextDirection.RTL);
+        super(CodeEditorLocalize.actionSetRtlBidiTextDirectionText(), LocalizeValue.empty(), BidiTextDirection.RTL);
     }
 }

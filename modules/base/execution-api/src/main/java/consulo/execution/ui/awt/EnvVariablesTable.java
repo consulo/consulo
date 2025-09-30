@@ -16,10 +16,10 @@
 package consulo.execution.ui.awt;
 
 import consulo.application.Application;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.execution.configuration.EnvironmentVariable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -142,7 +142,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     @Nonnull
     @Override
     protected AnAction[] createExtraActions() {
-        AnAction copyButton = new AnAction(ActionLocalize.actionEditorcopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -168,7 +168,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
             }
         };
         AnAction pasteButton = new AnAction(
-            ActionLocalize.actionEditorpasteText(),
+            CodeEditorLocalize.actionPasteText(),
             LocalizeValue.empty(),
             PlatformIconGroup.actionsMenu_paste()
         ) {

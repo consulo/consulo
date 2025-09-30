@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.editor.completion.lookup.Lookup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -28,7 +28,7 @@ import consulo.ui.ex.action.IdeActions;
 public class ChooseItemCompleteStatementAction extends ChooseItemAction {
     public ChooseItemCompleteStatementAction() {
         super(
-            ActionLocalize.actionEditorchooselookupitemcompletestatementText(),
+            CodeEditorLocalize.actionChooseLookupItemCompleteStatementText(),
             new Handler(true, Lookup.COMPLETE_STATEMENT_SELECT_CHAR)
         );
     }

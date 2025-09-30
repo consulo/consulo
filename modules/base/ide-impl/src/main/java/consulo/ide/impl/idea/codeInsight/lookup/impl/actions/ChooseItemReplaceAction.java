@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.editor.completion.lookup.Lookup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -27,6 +27,6 @@ import consulo.ui.ex.action.IdeActions;
 @ActionImpl(id = IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_REPLACE)
 public class ChooseItemReplaceAction extends ChooseItemAction {
     public ChooseItemReplaceAction() {
-        super(ActionLocalize.actionEditorchooselookupitemreplaceText(), new Handler(false, Lookup.REPLACE_SELECT_CHAR));
+        super(CodeEditorLocalize.actionChooseLookupItemReplaceText(), new Handler(false, Lookup.REPLACE_SELECT_CHAR));
     }
 }

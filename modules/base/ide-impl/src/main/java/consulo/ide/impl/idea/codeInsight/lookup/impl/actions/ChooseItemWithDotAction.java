@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 /**
@@ -26,6 +26,6 @@ import consulo.ui.ex.action.IdeActions;
 @ActionImpl(id = IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_DOT)
 public class ChooseItemWithDotAction extends ChooseItemAction {
     public ChooseItemWithDotAction() {
-        super(ActionLocalize.actionEditorchooselookupitemdotText(), new Handler(false, '.'));
+        super(CodeEditorLocalize.actionChooseLookupItemDotText(), new Handler(false, '.'));
     }
 }

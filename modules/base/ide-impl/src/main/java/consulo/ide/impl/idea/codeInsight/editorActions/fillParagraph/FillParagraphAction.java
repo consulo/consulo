@@ -3,15 +3,14 @@ package consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.ParagraphFillHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,7 +43,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
     }
 
     public FillParagraphAction() {
-        super(ActionLocalize.actionFillparagraphText(), ActionLocalize.actionFillparagraphDescription());
+        super(CodeEditorLocalize.actionFillParagraphText(), CodeEditorLocalize.actionFillParagraphDescription());
     }
 
     @Nonnull

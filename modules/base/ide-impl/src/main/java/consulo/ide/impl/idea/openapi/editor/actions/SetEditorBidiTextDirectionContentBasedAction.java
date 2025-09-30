@@ -17,14 +17,14 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.BidiTextDirection;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 @ActionImpl(id = "EditorSetContentBasedBidiTextDirection")
 public class SetEditorBidiTextDirectionContentBasedAction extends SetEditorBidiTextDirectionAction {
     public SetEditorBidiTextDirectionContentBasedAction() {
         super(
-            ActionLocalize.actionEditorsetcontentbasedbiditextdirectionText(),
-            ActionLocalize.actionEditorsetcontentbasedbiditextdirectionDescription(),
+            CodeEditorLocalize.actionSetContentBasedBidiTextDirectionText(),
+            CodeEditorLocalize.actionSetContentBasedBidiTextDirectionDescription(),
             BidiTextDirection.CONTENT_BASED
         );
     }

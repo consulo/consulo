@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -27,7 +28,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.SelectWordUtil;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
@@ -41,11 +41,6 @@ import java.util.List;
  */
 @ActionImpl(id = IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET)
 public class SelectWordAtCaretAction extends TextComponentEditorAction implements DumbAware {
-    public SelectWordAtCaretAction() {
-        super(ActionLocalize.actionEditorselectwordText(), new DefaultHandler());
-        setInjectedContext(true);
-    }
-
     private static class DefaultHandler extends EditorActionHandler {
         private DefaultHandler() {
             super(true);
@@ -157,5 +152,10 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
 
             editor.getSelectionModel().setSelection(startOffset, endOffset);
         }
+    }
+
+    public SelectWordAtCaretAction() {
+        super(CodeEditorLocalize.actionSelectWordText(), new DefaultHandler());
+        setInjectedContext(true);
     }
 }

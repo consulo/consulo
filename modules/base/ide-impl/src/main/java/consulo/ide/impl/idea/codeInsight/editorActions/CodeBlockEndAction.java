@@ -20,8 +20,8 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,7 +47,7 @@ public class CodeBlockEndAction extends EditorAction {
     }
 
     public CodeBlockEndAction() {
-        super(ActionLocalize.actionEditorcodeblockendText(), new MyHandler());
+        super(CodeEditorLocalize.actionCodeBlockEndText(), new MyHandler());
         setInjectedContext(true);
     }
 }

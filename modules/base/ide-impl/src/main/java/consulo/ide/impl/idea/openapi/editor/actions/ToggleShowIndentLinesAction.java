@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 @ActionImpl(id = "EditorToggleShowIndentLines")
 public class ToggleShowIndentLinesAction extends EditorToggleDecorationAction {
     public ToggleShowIndentLinesAction() {
-        super(ActionLocalize.actionEditortoggleshowindentlinesText(), ActionLocalize.actionEditortoggleshowindentlinesDescription());
+        super(CodeEditorLocalize.actionToggleShowIndentLinesText(), CodeEditorLocalize.actionToggleShowIndentLinesDescription());
     }
 
     @Override
