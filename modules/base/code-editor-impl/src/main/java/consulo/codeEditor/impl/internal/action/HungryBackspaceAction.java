@@ -23,6 +23,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ui.ex.action.IdeActions;
@@ -39,10 +40,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorHungryBackSpace")
 public class HungryBackspaceAction extends TextComponentEditorAction {
-    public HungryBackspaceAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -69,5 +66,9 @@ public class HungryBackspaceAction extends TextComponentEditorAction {
                 handler.execute(editor, caret, dataContext);
             }
         }
+    }
+
+    public HungryBackspaceAction() {
+        super(CodeEditorLocalize.actionHungryBackspaceText(), CodeEditorLocalize.actionHungryBackspaceDescription(), new Handler());
     }
 }

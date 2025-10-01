@@ -22,11 +22,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.*;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
@@ -92,7 +92,7 @@ public class SplitLineActionImpl extends EditorAction {
     }
 
     public SplitLineActionImpl() {
-        super(ActionLocalize.actionEditorsplitlineText(), new Handler());
+        super(CodeEditorLocalize.actionSplitLineText(), new Handler());
         setEnabledInModalContext(false);
     }
 }

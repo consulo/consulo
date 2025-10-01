@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 
@@ -33,11 +34,6 @@ import consulo.document.Document;
  */
 @ActionImpl(id = "EditorCutLineBackward")
 public class CutLineBackwardAction extends EditorAction {
-
-    public CutLineBackwardAction() {
-        super(new Handler());
-    }
-
     static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
@@ -61,5 +57,9 @@ public class CutLineBackwardAction extends EditorAction {
             }
             KillRingUtil.cut(editor, start, caretOffset);
         }
+    }
+
+    public CutLineBackwardAction() {
+        super(CodeEditorLocalize.actionCutLineBackwardText(), new Handler());
     }
 }

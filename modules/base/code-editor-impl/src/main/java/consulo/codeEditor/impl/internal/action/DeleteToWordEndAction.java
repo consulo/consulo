@@ -21,9 +21,9 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
@@ -42,8 +42,8 @@ public class DeleteToWordEndAction extends TextComponentEditorAction {
             myNegateCamelMode = negateCamelMode;
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();
@@ -63,7 +63,7 @@ public class DeleteToWordEndAction extends TextComponentEditorAction {
     }
 
     public DeleteToWordEndAction() {
-        super(ActionLocalize.actionEditordeletetowordendText(), new Handler(false));
+        super(CodeEditorLocalize.actionDeleteToWordEndText(), new Handler(false));
     }
 
     private static void deleteToWordEnd(Editor editor, boolean camelMode) {

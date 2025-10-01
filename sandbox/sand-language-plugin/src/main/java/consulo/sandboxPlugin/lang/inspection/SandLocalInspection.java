@@ -24,32 +24,29 @@ import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
-import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 04/03/2023
+ * @since 2023-04-03
  */
 @ExtensionImpl
 public class SandLocalInspection extends LocalInspectionTool {
   private static final String SHORT_NAME = getShortName(SandLocalInspection.class);
 
   private static final class SandClassDisableFix implements LocalQuickFix {
-
-    @Nls
     @Nonnull
     @Override
     public String getName() {
       return "Disable class check";
     }
 
-    @Nls
     @Nonnull
     @Override
     public String getFamilyName() {
@@ -59,10 +56,11 @@ public class SandLocalInspection extends LocalInspectionTool {
     @Override
     public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
       InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-      profile.<SandLocalInspection, SandLocalInspectionState>modifyToolSettings(SHORT_NAME,
-                                                                                descriptor.getPsiElement(), (tool, state) -> {
-          state.setCheckClass(false);
-        });
+      profile.<SandLocalInspection, SandLocalInspectionState>modifyToolSettings(
+        SHORT_NAME,
+        descriptor.getPsiElement(),
+        (tool, state) -> state.setCheckClass(false)
+      );
     }
   }
 
@@ -112,17 +110,17 @@ public class SandLocalInspection extends LocalInspectionTool {
     return new PsiElementVisitor() {
       @Override
       public void visitElement(PsiElement element) {
-        if (element instanceof SandClass) {
+        if (element instanceof SandClass sandClass) {
           boolean checkClass = sandState.isCheckClass();
 
           if (checkClass) {
-            PsiElement nameIdentifier = ((SandClass)element).getNameIdentifier();
+            PsiElement nameIdentifier = sandClass.getNameIdentifier();
             if (nameIdentifier != null) {
-              holder.registerProblem(nameIdentifier,
-                                     "Test Error",
-                                     ProblemHighlightType.ERROR,
-                                     new TextRange(0, nameIdentifier.getTextLength()),
-                                     new SandClassDisableFix());
+              holder.newProblem(LocalizeValue.of("Test Error"))
+                .range(nameIdentifier, new TextRange(0, nameIdentifier.getTextLength()))
+                .withFixes(new SandClassDisableFix())
+                .highlightType(ProblemHighlightType.ERROR)
+                .create();
             }
           }
         }

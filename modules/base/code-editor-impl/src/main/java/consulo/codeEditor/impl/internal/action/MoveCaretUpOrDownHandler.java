@@ -25,9 +25,10 @@ final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
     @Override
     public void doExecute(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
         Runnable runnable = () -> {
-            if (caret.hasSelection() && (!(editor instanceof EditorEx) || !((EditorEx) editor).isStickySelection()) &&
-                !Registry.is("editor.action.caretMovement.UpDownIgnoreSelectionBoundaries", false)) {
-                int targetOffset = myDirection == Direction.DOWN ? caret.getSelectionEnd()
+            if (caret.hasSelection() && !(editor instanceof EditorEx editorEx && editorEx.isStickySelection())
+                && !Registry.is("editor.action.caretMovement.UpDownIgnoreSelectionBoundaries", false)) {
+                int targetOffset = myDirection == Direction.DOWN
+                    ? caret.getSelectionEnd()
                     : caret.getSelectionStart();
                 caret.moveToOffset(targetOffset);
             }

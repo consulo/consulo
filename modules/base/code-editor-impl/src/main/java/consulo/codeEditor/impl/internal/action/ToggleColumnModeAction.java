@@ -18,7 +18,7 @@ package consulo.codeEditor.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.*;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -33,7 +33,7 @@ import java.util.List;
 @ActionImpl(id = "EditorToggleColumnMode")
 public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
     public ToggleColumnModeAction() {
-        super(ActionLocalize.actionEditortogglecolumnmodeText(), ActionLocalize.actionEditortogglecolumnmodeDescription());
+        super(CodeEditorLocalize.actionToggleColumnModeText(), CodeEditorLocalize.actionToggleColumnModeDescription());
         setEnabledInModalContext(true);
     }
 

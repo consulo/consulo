@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -28,14 +29,14 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorScrollLeft")
 public class ScrollLeftAction extends InactiveEditorAction {
-    public ScrollLeftAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.scrollRelatively(editor, 0, -1, false);
         }
+    }
+
+    public ScrollLeftAction() {
+        super(CodeEditorLocalize.actionScrollLeftText(), new Handler());
     }
 }

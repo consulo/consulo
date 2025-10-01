@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Maxim.Mossienko on 7/4/2014.
+ * @author Maxim.Mossienko
+ * @since 2014-07-04
  */
 public class FileId2ValueMapping<Value> {
   private IntObjectMap<Value> id2ValueMap;

@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.DocumentRunnable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,12 +37,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  */
 @ActionImpl(id = "EditorKillRingSave")
 public class KillRingSaveAction extends TextComponentEditorAction {
-    public KillRingSaveAction() {
-        super(new Handler(false));
-    }
-
     static class Handler extends EditorActionHandler {
-
         private final boolean myRemove;
 
         Handler(boolean remove) {
@@ -71,5 +67,9 @@ public class KillRingSaveAction extends TextComponentEditorAction {
                 });
             }
         }
+    }
+
+    public KillRingSaveAction() {
+        super(CodeEditorLocalize.actionKillRingSaveText(), new Handler(false));
     }
 }

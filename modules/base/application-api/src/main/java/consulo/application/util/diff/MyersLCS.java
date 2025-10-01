@@ -21,8 +21,8 @@ import java.util.BitSet;
  * Algorithm for finding the longest common subsequence of two strings
  * Based on E.W. Myers / An O(ND) Difference Algorithm and Its Variations / 1986
  * O(ND) runtime, O(N) memory
- * <p/>
- * Created by Anton Bannykh
+ *
+ * @author Anton Bannykh
  */
 class MyersLCS {
   private final int[] myFirst;

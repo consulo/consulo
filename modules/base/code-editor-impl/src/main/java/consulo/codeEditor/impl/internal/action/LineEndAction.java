@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -28,10 +29,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorLineEnd")
 public class LineEndAction extends TextComponentEditorAction {
-    public LineEndAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -41,5 +38,9 @@ public class LineEndAction extends TextComponentEditorAction {
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToLineEnd(editor, false);
         }
+    }
+
+    public LineEndAction() {
+        super(CodeEditorLocalize.actionLineEndText(), new Handler());
     }
 }

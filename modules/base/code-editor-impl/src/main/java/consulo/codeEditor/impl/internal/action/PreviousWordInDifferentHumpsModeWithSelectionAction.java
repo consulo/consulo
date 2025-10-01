@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -28,10 +29,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorPreviousWordInDifferentHumpsModeWithSelection")
 public class PreviousWordInDifferentHumpsModeWithSelectionAction extends TextComponentEditorAction {
-    public PreviousWordInDifferentHumpsModeWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -41,5 +38,9 @@ public class PreviousWordInDifferentHumpsModeWithSelectionAction extends TextCom
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToPreviousWord(editor, true, !editor.getSettings().isCamelWords());
         }
+    }
+
+    public PreviousWordInDifferentHumpsModeWithSelectionAction() {
+        super(CodeEditorLocalize.actionPreviousWordInDifferentHumpsModeWithSelectionText(), new Handler());
     }
 }

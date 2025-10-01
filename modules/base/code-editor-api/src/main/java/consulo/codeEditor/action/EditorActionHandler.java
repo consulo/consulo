@@ -89,12 +89,14 @@ public abstract class EditorActionHandler {
     }
 
     private void doIfEnabled(@Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
-        DataContext caretContext = context == null ? null : CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
+        DataContext caretContext =
+            context == null ? null : CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
         Editor editor = hostCaret.getEditor();
         if (myWorksInInjected && caretContext != null) {
             DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
             Caret injectedCaret = injectedCaretContext.getData(Caret.KEY);
-            if (injectedCaret != null && injectedCaret != hostCaret && isEnabledForCaret(injectedCaret.getEditor(), injectedCaret, injectedCaretContext)) {
+            if (injectedCaret != null && injectedCaret != hostCaret
+                && isEnabledForCaret(injectedCaret.getEditor(), injectedCaret, injectedCaretContext)) {
                 task.perform(injectedCaret, injectedCaretContext);
                 return;
             }
@@ -105,8 +107,6 @@ public abstract class EditorActionHandler {
     }
 
     static boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
-        Editor editor = hostCaret.getEditor();
-        Project project = editor.getProject();
         return CodeEditorInternalHelper.getInstance().ensureInjectionUpToDate(hostCaret);
     }
 
@@ -206,16 +206,18 @@ public abstract class EditorActionHandler {
                 doIfEnabled(caret, dataContext, (caret1, dc) -> doExecute(caret1.getEditor(), caret1, dc));
             });
         }
+        else if (contextCaret == null) {
+            if (myWorksInInjected) {
+                ensureInjectionUpToDate(hostEditor.getCaretModel().getCurrentCaret());
+            }
+            doIfEnabled(
+                hostEditor.getCaretModel().getCurrentCaret(),
+                dataContext,
+                (caret, dc) -> doExecute(caret.getEditor(), null, dc)
+            );
+        }
         else {
-            if (contextCaret == null) {
-                if (myWorksInInjected) {
-                    ensureInjectionUpToDate(hostEditor.getCaretModel().getCurrentCaret());
-                }
-                doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, dc) -> doExecute(caret.getEditor(), null, dc));
-            }
-            else {
-                doExecute(editor, contextCaret, dataContext);
-            }
+            doExecute(editor, contextCaret, dataContext);
         }
     }
 
@@ -234,9 +236,11 @@ public abstract class EditorActionHandler {
         }
 
         @Override
-        protected abstract void doExecute(@Nonnull Editor editor,
-                                          @SuppressWarnings("NullableProblems") @Nonnull Caret caret,
-                                          DataContext dataContext);
+        protected abstract void doExecute(
+            @Nonnull Editor editor,
+            @SuppressWarnings("NullableProblems") @Nonnull Caret caret,
+            DataContext dataContext
+        );
     }
 
     @FunctionalInterface

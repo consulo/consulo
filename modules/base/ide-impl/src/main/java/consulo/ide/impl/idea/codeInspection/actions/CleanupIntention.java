@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.intention.LowPriorityAction;
@@ -33,13 +32,12 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class CleanupIntention implements SyntheticIntentionAction, LowPriorityAction {
-
   protected CleanupIntention() {}
 
-  @Override
   @Nonnull
+  @Override
   public String getText() {
-    return InspectionsBundle.message("cleanup.in.scope");
+    return InspectionLocalize.cleanupInScope().get();
   }
 
   @Override

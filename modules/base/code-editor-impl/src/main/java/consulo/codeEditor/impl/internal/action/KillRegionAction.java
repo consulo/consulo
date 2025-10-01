@@ -16,6 +16,7 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Kill-Commands.html">kill-region</a> command.
@@ -30,6 +31,6 @@ import consulo.annotation.component.ActionImpl;
 @ActionImpl(id = "EditorKillRegion")
 public class KillRegionAction extends TextComponentEditorAction {
     public KillRegionAction() {
-        super(new KillRingSaveAction.Handler(true));
+        super(CodeEditorLocalize.actionKillRegionText(), new KillRingSaveAction.Handler(true));
     }
 }

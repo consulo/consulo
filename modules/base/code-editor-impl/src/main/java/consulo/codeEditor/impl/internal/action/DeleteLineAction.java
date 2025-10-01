@@ -22,11 +22,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
@@ -79,7 +79,7 @@ public class DeleteLineAction extends TextComponentEditorAction {
     }
 
     public DeleteLineAction() {
-        super(ActionLocalize.actionEditordeletelineText(), new Handler());
+        super(CodeEditorLocalize.actionDeleteLineText(), new Handler());
     }
 
     private static TextRange getRangeToDelete(Editor editor, Caret caret) {

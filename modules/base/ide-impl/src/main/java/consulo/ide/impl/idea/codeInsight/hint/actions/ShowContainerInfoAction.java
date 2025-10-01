@@ -17,24 +17,24 @@ package consulo.ide.impl.idea.codeInsight.hint.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.ide.impl.idea.codeInsight.hint.ShowContainerInfoHandler;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.hint.ShowContainerInfoHandler;
-import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.codeEditor.Editor;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "EditorContextInfo")
 public class ShowContainerInfoAction extends BaseCodeInsightAction {
     public ShowContainerInfoAction() {
-        super(ActionLocalize.actionEditorcontextinfoText(), ActionLocalize.actionEditorcontextinfoDescription());
+        super(CodeEditorLocalize.actionContextInfoText(), CodeEditorLocalize.actionContextInfoDescription());
     }
 
     @Nonnull

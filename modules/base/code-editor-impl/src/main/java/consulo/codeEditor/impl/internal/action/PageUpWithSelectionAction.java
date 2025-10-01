@@ -19,11 +19,11 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorPageUpWithSelection")
 public class PageUpWithSelectionAction extends EditorAction {
-    public static class Handler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getCaretModel().supportsMultipleCarets()) {
@@ -67,6 +67,6 @@ public class PageUpWithSelectionAction extends EditorAction {
     }
 
     public PageUpWithSelectionAction() {
-        super(new Handler());
+        super(CodeEditorLocalize.actionPageUpWithSelectionText(), new Handler());
     }
 }

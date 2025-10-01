@@ -18,6 +18,7 @@ package consulo.codeEditor.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
@@ -29,10 +30,6 @@ import java.util.List;
  */
 @ActionImpl(id = "EditorTextEndWithSelection")
 public class TextEndWithSelectionAction extends TextComponentEditorAction {
-    public TextEndWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -64,5 +61,9 @@ public class TextEndWithSelectionAction extends TextComponentEditorAction {
             scrollingModel.scrollToCaret(ScrollType.CENTER);
             scrollingModel.enableAnimation();
         }
+    }
+
+    public TextEndWithSelectionAction() {
+        super(CodeEditorLocalize.actionTextEndWithSelectionText(), new Handler());
     }
 }

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.intention;
 
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -35,10 +34,10 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
     myName = name;
   }
 
-  @Override
   @Nonnull
+  @Override
   public String getText() {
-    return InspectionsBundle.message("inspection.options.action.text", myName);
+    return InspectionLocalize.inspectionOptionsActionText(myName).get();
   }
 
   @Override

@@ -20,8 +20,8 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -32,8 +32,8 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorCodeBlockStart")
 public class CodeBlockStartAction extends EditorAction {
-    private static class MyHandler extends EditorActionHandler {
-        public MyHandler() {
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
             super(true);
         }
 
@@ -47,7 +47,7 @@ public class CodeBlockStartAction extends EditorAction {
     }
 
     public CodeBlockStartAction() {
-        super(ActionLocalize.actionEditorcodeblockstartText(), new MyHandler());
+        super(CodeEditorLocalize.actionCodeBlockStartText(), new Handler());
         setInjectedContext(true);
     }
 }

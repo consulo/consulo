@@ -26,10 +26,12 @@ import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.advanced.LanguageInjectionSupport;
 import consulo.language.inject.advanced.impl.internal.InjectionsSettingsUI;
+import consulo.language.inject.advanced.localize.LanguageInjectAdvancedLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -41,10 +43,10 @@ import java.util.Collections;
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class EditInjectionSettingsAction implements IntentionAction, LowPriorityAction {
-    @Override
     @Nonnull
+    @Override
     public String getText() {
-        return "Edit Injection Settings";
+        return LanguageInjectAdvancedLocalize.intentionEditInjectionSettingsActionText().get();
     }
 
     @Override
@@ -63,12 +65,14 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
         project.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
     }
 
+    @RequiredUIAccess
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
-        PsiFile psiFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
+        InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(project);
+        PsiFile psiFile = injectedLanguageManager.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
         if (psiFile == null) {
             return;
         }
-        PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
+        PsiLanguageInjectionHost host = injectedLanguageManager.getInjectionHost(psiFile);
         if (host == null) {
             return;
         }

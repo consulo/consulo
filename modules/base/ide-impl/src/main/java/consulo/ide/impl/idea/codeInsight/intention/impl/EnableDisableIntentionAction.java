@@ -1,13 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.CodeInsightBundle;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.IntentionManagerSettings;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsAction {
@@ -21,8 +21,9 @@ public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsA
   @Override
   @Nonnull
   public String getText() {
-    IntentionManagerSettings mySettings = IntentionManagerSettings.getInstance();
-    return CodeInsightBundle.message(mySettings.isEnabled(myAction) ? "disable.intention.action" : "enable.intention.action", myText);
+    return IntentionManagerSettings.getInstance().isEnabled(myAction)
+        ? CodeInsightLocalize.disableIntentionAction(myText).get()
+        : CodeInsightLocalize.enableIntentionAction(myText).get();
   }
 
   @Override

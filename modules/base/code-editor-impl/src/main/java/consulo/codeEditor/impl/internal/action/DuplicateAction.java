@@ -24,7 +24,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
@@ -37,15 +36,6 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorDuplicate")
 public class DuplicateAction extends EditorAction {
-    public DuplicateAction() {
-        super(ActionLocalize.actionEditorduplicateText(), new Handler());
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return 2_000_000;
-    }
-    
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -61,6 +51,15 @@ public class DuplicateAction extends EditorAction {
         public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
             return !editor.isOneLineMode() || editor.getSelectionModel().hasSelection();
         }
+    }
+
+    public DuplicateAction() {
+        super(CodeEditorLocalize.actionDuplicateText(), new Handler());
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return 2_000_000;
     }
 
     private static void duplicateLineOrSelectedBlockAtCaret(Editor editor) {
@@ -121,8 +120,8 @@ public class DuplicateAction extends EditorAction {
         super.update(editor, presentation, dataContext);
         presentation.setTextValue(
             editor.getSelectionModel().hasSelection()
-                ? CodeEditorLocalize.actionDuplicateSelection()
-                : CodeEditorLocalize.actionDuplicateLine()
+                ? CodeEditorLocalize.actionDuplicateSelectionText()
+                : CodeEditorLocalize.actionDuplicateLineText()
         );
     }
 }

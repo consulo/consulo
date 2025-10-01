@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.inspection;
 
-import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.language.Language;
 import consulo.language.editor.FileModificationService;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
@@ -27,6 +26,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  * @author Roman.Chernyatchik
- * @date Aug 13, 2009
+ * @since 2009-08-13
  */
 public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements ContainerBasedSuppressQuickFix, InjectionAwareSuppressQuickFix, Iconable {
   @Nonnull
@@ -79,7 +79,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   @Override
   public Image getIcon(int flags) {
-    return AllIcons.General.InspectionsTrafficOff;
+    return PlatformIconGroup.generalInspectionstrafficoff();
   }
 
   private String myText = "";
@@ -169,9 +169,9 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
 
-  @Override
   @Nonnull
+  @Override
   public String getFamilyName() {
-    return InspectionsBundle.message("suppress.inspection.family");
+    return InspectionLocalize.suppressInspectionFamily().get();
   }
 }

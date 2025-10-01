@@ -16,6 +16,7 @@
 package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 /**
  * @author Denis Zhdanov
@@ -23,7 +24,7 @@ import consulo.annotation.component.ActionImpl;
  */
 @ActionImpl(id = "EditorDeleteToWordEndInDifferentHumpsMode")
 public class DeleteToWordEndInDifferentHumpsModeAction extends TextComponentEditorAction {
-  public DeleteToWordEndInDifferentHumpsModeAction() {
-    super(new DeleteToWordEndAction.Handler(true));
-  }
+    public DeleteToWordEndInDifferentHumpsModeAction() {
+        super(CodeEditorLocalize.actionDeleteToWordEndInDifferentHumpsModeText(), new DeleteToWordEndAction.Handler(true));
+    }
 }

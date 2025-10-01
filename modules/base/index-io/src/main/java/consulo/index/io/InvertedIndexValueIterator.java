@@ -18,7 +18,8 @@ package consulo.index.io;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by Maxim.Mossienko on 11/22/2016.
+ * @author Maxim.Mossienko
+ * @since 2016-11-22
  */
 public interface InvertedIndexValueIterator<Value> extends ValueContainer.ValueIterator<Value> {
   @Override

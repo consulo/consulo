@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.ex.action.IdeActions;
 
 @ActionImpl(id = IdeActions.ACTION_LOOKUP_DOWN)
 public class LookupHandlerDownAction extends EditorAction {
     public LookupHandlerDownAction() {
-        super(ActionLocalize.actionEditorlookupdownText(), new LookupActionHandler.UpDownInEditorHandler(false));
+        super(CodeEditorLocalize.actionLookupDownText(), new LookupActionHandler.UpDownInEditorHandler(false));
     }
 }

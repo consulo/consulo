@@ -15,14 +15,15 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
 import consulo.util.lang.Pair;
 
 /**
@@ -30,17 +31,13 @@ import consulo.util.lang.Pair;
  */
 @ActionImpl(id = "EditorDuplicateLines")
 public class DuplicateLinesAction extends EditorAction {
-    public DuplicateLinesAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             if (editor.getSelectionModel().hasSelection()) {
                 int selStart = editor.getSelectionModel().getSelectionStart();
@@ -58,5 +55,9 @@ public class DuplicateLinesAction extends EditorAction {
                 DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), caretPos, caretPos);
             }
         }
+    }
+
+    public DuplicateLinesAction() {
+        super(CodeEditorLocalize.actionDuplicateLinesText(), new Handler());
     }
 }

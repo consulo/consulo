@@ -1,0 +1,10 @@
+intention.edit.injection.settings.action.text:
+    text: Edit injection settings
+intention.inject.language.action.text:
+    text: Inject language or reference
+intention.uninject.language.action.text:
+    text: Uninject language or reference
+suggest.insert.annotation:
+    text: Do you want to insert annotation?
+temporarily.injected:
+    text: '{0} was temporarily injected.'

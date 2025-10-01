@@ -15,9 +15,8 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -25,8 +24,10 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
-import consulo.annotation.access.RequiredWriteAction;
 
 /**
  * @author Denis Zhdanov
@@ -34,10 +35,6 @@ import consulo.annotation.access.RequiredWriteAction;
  */
 @ActionImpl(id = "EditorStartNewLineBefore")
 public class StartNewLineBeforeAction extends EditorAction {
-    public StartNewLineBeforeAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -64,5 +61,9 @@ public class StartNewLineBeforeAction extends EditorAction {
         private static EditorActionHandler getHandler(@Nonnull String actionId) {
             return EditorActionManager.getInstance().getActionHandler(actionId);
         }
+    }
+
+    public StartNewLineBeforeAction() {
+        super(CodeEditorLocalize.actionStartNewLineBeforeText(), new Handler());
     }
 }

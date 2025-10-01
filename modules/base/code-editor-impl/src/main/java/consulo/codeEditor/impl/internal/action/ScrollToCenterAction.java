@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 
 /**
@@ -27,14 +28,14 @@ import consulo.dataContext.DataContext;
  */
 @ActionImpl(id = "EditorScrollToCenter")
 public class ScrollToCenterAction extends InactiveEditorAction {
-    public ScrollToCenterAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void execute(Editor editor, DataContext dataContext) {
             editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
         }
+    }
+
+    public ScrollToCenterAction() {
+        super(CodeEditorLocalize.actionScrollToCenterText(), new Handler());
     }
 }

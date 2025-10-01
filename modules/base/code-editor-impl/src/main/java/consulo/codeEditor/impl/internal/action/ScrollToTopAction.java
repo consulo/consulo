@@ -18,6 +18,7 @@ package consulo.codeEditor.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -29,14 +30,14 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "EditorScrollTop")
 public class ScrollToTopAction extends InactiveEditorAction {
-    public ScrollToTopAction() {
-        super(new MyHandler());
-    }
-
-    private static class MyHandler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             editor.getScrollingModel().scrollVertically(0);
         }
+    }
+
+    public ScrollToTopAction() {
+        super(CodeEditorLocalize.actionScrollTopText(), new Handler());
     }
 }

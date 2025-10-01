@@ -21,6 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
@@ -30,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "EditorPageDownWithSelection")
 public class PageDownWithSelectionAction extends EditorAction {
-    public static class Handler extends EditorActionHandler {
+    private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getCaretModel().supportsMultipleCarets()) {
@@ -58,6 +59,6 @@ public class PageDownWithSelectionAction extends EditorAction {
     }
 
     public PageDownWithSelectionAction() {
-        super(new Handler());
+        super(CodeEditorLocalize.actionPageDownWithSelectionText(), new Handler());
     }
 }

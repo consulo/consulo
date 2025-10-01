@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
-import consulo.ui.ex.awt.Messages;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiComment;
@@ -31,15 +30,16 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
+import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Roman.Chernyatchik
- * @date Aug 13, 2009
+ * @since 2009-08-13
  */
 public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressIntentionAction {
   @Nonnull
@@ -128,7 +128,8 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   }
 
   @Nonnull
+  @Override
   public String getText() {
-    return InspectionsBundle.message("suppress.inspection.family");
+    return InspectionLocalize.suppressInspectionFamily().get();
   }
 }

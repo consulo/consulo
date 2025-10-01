@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
@@ -42,6 +42,6 @@ public class PreviousWordWithSelectionAction extends TextComponentEditorAction {
     }
 
     public PreviousWordWithSelectionAction() {
-        super(ActionLocalize.actionEditorpreviouswordwithselectionText(), new Handler());
+        super(CodeEditorLocalize.actionPreviousWordWithSelectionText(), new Handler());
     }
 }

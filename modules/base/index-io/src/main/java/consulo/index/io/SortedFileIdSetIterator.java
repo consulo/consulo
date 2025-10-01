@@ -18,7 +18,8 @@ package consulo.index.io;
 import consulo.util.lang.ThreadLocalCachedIntArray;
 
 /**
- * Created by Maxim.Mossienko on 6/12/2014.
+ * @author Maxim.Mossienko
+ * @since 2014-06-12
  */
 public class SortedFileIdSetIterator implements IntIdsIterator {
   private final int[] myBits;

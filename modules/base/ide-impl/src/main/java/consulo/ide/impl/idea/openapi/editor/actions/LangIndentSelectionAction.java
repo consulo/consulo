@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.internal.action.IndentSelectionAction;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.psi.PsiFile;
-import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author peter
@@ -30,7 +30,7 @@ import consulo.platform.base.localize.ActionLocalize;
 @ActionImpl(id = "EditorIndentSelection")
 public class LangIndentSelectionAction extends IndentSelectionAction {
     public LangIndentSelectionAction() {
-        super(ActionLocalize.actionEditorindentselectionText());
+        super(CodeEditorLocalize.actionIndentSelectionText());
     }
 
     @Override

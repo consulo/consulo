@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 @ActionImpl(id = "EditorToggleShowLineNumbers")
 public class ToggleShowLineNumbersAction extends EditorToggleDecorationAction {
     public ToggleShowLineNumbersAction() {
-        super(ActionLocalize.actionEditortoggleshowlinenumbersText(), ActionLocalize.actionEditortoggleshowlinenumbersDescription());
+        super(CodeEditorLocalize.actionToggleShowLineNumbersText(), CodeEditorLocalize.actionToggleShowLineNumbersDescription());
     }
 
     @Override

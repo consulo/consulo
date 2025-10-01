@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.progress.SequentialModalProgressTask;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInspection.InspectionEngine;
 import consulo.ide.impl.idea.codeInspection.ex.PerformFixesModalTask;
-import consulo.application.progress.SequentialModalProgressTask;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptorBase;
@@ -32,6 +30,7 @@ import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

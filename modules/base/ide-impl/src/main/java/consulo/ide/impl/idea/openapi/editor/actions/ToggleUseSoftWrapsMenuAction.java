@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
@@ -33,8 +33,8 @@ import jakarta.annotation.Nonnull;
 public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsAction {
     public ToggleUseSoftWrapsMenuAction() {
         super(
-            ActionLocalize.actionEditortoggleusesoftwrapsText(),
-            ActionLocalize.actionEditortoggleusesoftwrapsDescription(),
+            CodeEditorLocalize.actionToggleUseSoftWrapsText(),
+            CodeEditorLocalize.actionToggleUseSoftWrapsDescription(),
             PlatformIconGroup.actionsTogglesoftwrap(),
             SoftWrapAppliancePlaces.MAIN_EDITOR,
             false

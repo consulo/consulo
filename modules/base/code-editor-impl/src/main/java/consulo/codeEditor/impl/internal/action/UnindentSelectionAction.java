@@ -15,19 +15,19 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.Project;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.project.Project;
 
 /**
  * @author max
@@ -35,10 +35,6 @@ import consulo.annotation.access.RequiredWriteAction;
  */
 @ActionImpl(id = "EditorUnindentSelection")
 public class UnindentSelectionAction extends EditorAction {
-    public UnindentSelectionAction() {
-        super(ActionLocalize.actionEditorunindentselectionText(), new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -55,6 +51,10 @@ public class UnindentSelectionAction extends EditorAction {
         public boolean isEnabled(Editor editor, DataContext dataContext) {
             return !editor.isOneLineMode() && !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
         }
+    }
+
+    public UnindentSelectionAction() {
+        super(CodeEditorLocalize.actionUnindentSelectionText(), new Handler());
     }
 
     private static void unindentSelection(Editor editor, Project project) {

@@ -179,7 +179,9 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         @Override
         public String getText() {
             String text = myLabel.getText();
-            return StringUtil.isEmpty(text) ? EditorBundle.message("editor.notification.default.action.name") : StringUtil.shortenTextWithEllipsis(text, 50, 0);
+            return StringUtil.isEmpty(text)
+                ? CodeEditorLocalize.editorNotificationDefaultActionName().get()
+                : StringUtil.shortenTextWithEllipsis(text, 50, 0);
         }
 
         @Override

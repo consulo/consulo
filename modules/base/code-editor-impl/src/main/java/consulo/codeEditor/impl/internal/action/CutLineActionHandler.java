@@ -32,7 +32,8 @@ class CutLineActionHandler extends EditorWriteActionHandler {
     private final boolean myCopyToClipboard;
 
     CutLineActionHandler(boolean toLineStart, boolean ignoreSelection, boolean copyToClipboard) {
-        super(!copyToClipboard); // as CutLineEndAction interacts with clipboard, multi-caret support for it needs to be implemented explicitly (todo)
+        // as CutLineEndAction interacts with clipboard, multi-caret support for it needs to be implemented explicitly (todo)
+        super(!copyToClipboard);
         myToLineStart = toLineStart;
         myIgnoreSelection = ignoreSelection;
         myCopyToClipboard = copyToClipboard;
@@ -77,7 +78,8 @@ class CutLineActionHandler extends EditorWriteActionHandler {
             else {
                 start = caretOffset;
                 end = lineEndOffset;
-                if (lineEndOffset < doc.getTextLength() && CharArrayUtil.isEmptyOrSpaces(doc.getCharsSequence(), caretOffset, lineEndOffset)) {
+                if (lineEndOffset < doc.getTextLength()
+                    && CharArrayUtil.isEmptyOrSpaces(doc.getCharsSequence(), caretOffset, lineEndOffset)) {
                     end++;
                 }
             }

@@ -23,9 +23,9 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nullable;
 
@@ -51,6 +51,6 @@ public class CutAction extends EditorAction {
     }
 
     public CutAction() {
-        super(ActionLocalize.action$cutText(), ActionLocalize.action$cutDescription(), new Handler());
+        super(CodeEditorLocalize.actionCutText(), new Handler());
     }
 }

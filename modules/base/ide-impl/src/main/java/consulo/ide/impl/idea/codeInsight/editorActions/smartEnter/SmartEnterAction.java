@@ -19,23 +19,22 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.Language;
 import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -45,11 +44,6 @@ import java.util.List;
  */
 @ActionImpl(id = IdeActions.ACTION_EDITOR_COMPLETE_STATEMENT)
 public class SmartEnterAction extends EditorAction {
-    public SmartEnterAction() {
-        super(ActionLocalize.actionEditorcompletestatementText(), new Handler());
-        setInjectedContext(true);
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -107,6 +101,11 @@ public class SmartEnterAction extends EditorAction {
                 plainEnter(editor, caret, dataContext);
             }
         }
+    }
+
+    public SmartEnterAction() {
+        super(CodeEditorLocalize.actionCompleteStatementText(), new Handler());
+        setInjectedContext(true);
     }
 
     public static void plainEnter(Editor editor, Caret caret, DataContext dataContext) {

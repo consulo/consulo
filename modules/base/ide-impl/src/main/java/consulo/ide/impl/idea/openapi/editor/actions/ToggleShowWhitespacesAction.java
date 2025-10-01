@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 
 /**
  * @author max
@@ -26,7 +26,7 @@ import consulo.platform.base.localize.ActionLocalize;
 @ActionImpl(id = "EditorToggleShowWhitespaces")
 public class ToggleShowWhitespacesAction extends EditorToggleDecorationAction {
     public ToggleShowWhitespacesAction() {
-        super(ActionLocalize.actionEditortoggleshowwhitespacesText(), ActionLocalize.actionEditortoggleshowwhitespacesText());
+        super(CodeEditorLocalize.actionToggleShowWhitespacesText(), CodeEditorLocalize.actionToggleShowWhitespacesText());
     }
 
     @Override

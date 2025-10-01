@@ -21,7 +21,6 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.localize.CodeEditorLocalize;
@@ -39,16 +38,6 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = IdeActions.ACTION_EDITOR_ENTER)
 public class EnterAction extends EditorAction {
-    public EnterAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -65,6 +54,16 @@ public class EnterAction extends EditorAction {
         public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
             return !editor.isOneLineMode();
         }
+    }
+
+    public EnterAction() {
+        super(CodeEditorLocalize.actionEnterText(), new Handler());
+        setInjectedContext(true);
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 
     public static void insertNewLineAtCaret(Editor editor) {
