@@ -99,9 +99,12 @@ module consulo.language.api {
         consulo.language.editor.api,
         consulo.language.editor.impl;
 
+    opens consulo.language.psi to consulo.application.impl;
+
     // cache value impl visitor
     opens consulo.language.psi.stub to
         consulo.application.impl;
+
     opens consulo.language.psi.util to
         consulo.application.impl,
         consulo.ide.impl,
