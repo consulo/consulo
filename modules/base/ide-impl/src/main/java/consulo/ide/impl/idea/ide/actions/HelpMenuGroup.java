@@ -23,6 +23,7 @@ import consulo.ide.impl.wm.impl.welcomeScreen.JoinDiscordChannelAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
@@ -45,7 +46,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = JoinDiscordChannelAction.class),
         @ActionRef(id = "TechnicalSupport"),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(id = "CheckForUpdate"),
+        @ActionRef(id = IdeActions.ACTION_CHECK_FOR_UPDATE),
         @ActionRef(type = AboutAction.class),
     }
 )

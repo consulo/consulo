@@ -113,7 +113,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
                 PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();
                 return switch (type) {
-                    case NO_UPDATE -> myActionManagerProvider.get().getAction("CheckForUpdate");
+                    case NO_UPDATE -> myActionManagerProvider.get().getAction(IdeActions.ACTION_CHECK_FOR_UPDATE);
                     case RESTART_REQUIRED -> new RestartConsuloAction(updateSettings);
                     case PLATFORM_UPDATE, PLUGIN_UPDATE -> new IconifiedCheckForUpdateAction(
                         myUpdateSettingsProvider,
