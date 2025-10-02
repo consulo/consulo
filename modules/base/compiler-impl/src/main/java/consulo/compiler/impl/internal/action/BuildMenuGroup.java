@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
@@ -48,6 +48,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class BuildMenuGroup extends DefaultActionGroup implements DumbAware {
     public BuildMenuGroup() {
-        super(ActionLocalize.groupBuildmenuText(), true);
+        super(CompilerLocalize.groupBuildMenuText(), true);
     }
 }

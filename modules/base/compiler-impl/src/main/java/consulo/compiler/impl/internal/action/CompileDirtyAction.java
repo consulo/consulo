@@ -19,10 +19,10 @@ import consulo.annotation.component.ActionImpl;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerRunner;
 import consulo.compiler.action.CompileActionBase;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "CompileDirty")
 public class CompileDirtyAction extends CompileActionBase {
     public CompileDirtyAction() {
-        super(ActionLocalize.actionCompiledirtyText(), ActionLocalize.actionCompiledirtyDescription(), PlatformIconGroup.actionsCompile());
+        super(CompilerLocalize.actionCompileDirtyText(), CompilerLocalize.actionCompileDirtyDescription(), PlatformIconGroup.actionsCompile());
     }
 
     @Override

@@ -29,7 +29,6 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -50,6 +49,10 @@ import static consulo.ui.ex.action.Presentation.NO_MNEMONIC;
 
 @ActionImpl(id = IdeActions.ACTION_COMPILE)
 public class CompileAction extends CompileActionBase {
+    public CompileAction() {
+        super(CompilerLocalize.actionCompileText(), CompilerLocalize.actionCompileDescription(), null);
+    }
+
     @Override
     @RequiredUIAccess
     protected void doAction(DataContext dataContext, Project project) {
@@ -75,7 +78,7 @@ public class CompileAction extends CompileActionBase {
         }
         DataContext dataContext = event.getDataContext();
 
-        presentation.setTextValue(ActionLocalize.actionCompileText().map(NO_MNEMONIC));
+        presentation.setTextValue(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
         presentation.setEnabledAndVisible(true);
 
         Project project = dataContext.getData(Project.KEY);
