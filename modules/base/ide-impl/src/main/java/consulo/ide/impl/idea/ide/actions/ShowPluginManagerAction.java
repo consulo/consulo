@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.externalService.plugin.PluginContants;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -29,6 +30,7 @@ import jakarta.inject.Provider;
 /**
  * @author max
  */
+@ActionImpl(id = "WelcomeScreen.Plugins")
 public class ShowPluginManagerAction extends DumbAwareAction {
     private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 

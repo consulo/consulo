@@ -553,4 +553,6 @@ public interface IdeActions {
     String TOOLS_MENU = "ToolsMenu";
 
     String GROUP_TOUCHBAR = "TouchBar";
+
+    String ACTION_CHECK_FOR_UPDATE = "CheckForUpdate";
 }

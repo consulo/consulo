@@ -27,16 +27,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-@ActionImpl(id = "CheckForUpdate")
+@ActionImpl(id = IdeActions.ACTION_CHECK_FOR_UPDATE)
 public class CheckForUpdateAction extends DumbAwareAction {
     private final Provider<UpdateSettings> myUpdateSettingsProvider;
 
