@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -23,10 +24,10 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.impl.internal.ArtifactsWorkspaceSettings;
 import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.scope.CompileScope;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
@@ -62,13 +63,14 @@ import java.util.*;
  */
 @ActionImpl(id = "BuildArtifact")
 public class BuildArtifactAction extends DumbAwareAction {
-    public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
+    public static final NotificationGroup NOTIFICATION_GROUP =
+        NotificationGroup.balloonGroup("cleanArtifact", CompilerLocalize.notificationGroupCleanArtifactDisplayName());
 
     private final NotificationService myNotificationService;
 
     @Inject
     public BuildArtifactAction(NotificationService notificationService) {
-        super(ActionLocalize.actionBuildartifactText(), ActionLocalize.actionBuildartifactDescription());
+        super(CompilerLocalize.actionBuildArtifactText(), CompilerLocalize.actionBuildArtifactDescription());
         myNotificationService = notificationService;
     }
 
@@ -90,7 +92,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
         List<ArtifactPopupItem> items = new ArrayList<>();
         if (artifacts.size() > 1) {
-            items.add(0, new ArtifactPopupItem(null, "All Artifacts", Image.empty(16)));
+            items.add(0, new ArtifactPopupItem(null, CompilerLocalize.artifactsMenuItemAll(), Image.empty(16)));
         }
         Set<Artifact> selectedArtifacts = new HashSet<>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
         IntList selectedIndices = IntLists.newArrayList();
@@ -100,7 +102,8 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
 
         for (Artifact artifact : artifacts) {
-            ArtifactPopupItem item = new ArtifactPopupItem(artifact, artifact.getName(), artifact.getArtifactType().getIcon());
+            ArtifactPopupItem item =
+                new ArtifactPopupItem(artifact, LocalizeValue.of(artifact.getName()), artifact.getArtifactType().getIcon());
             if (selectedArtifacts.contains(artifact)) {
                 selectedIndices.add(items.size());
             }
@@ -124,7 +127,7 @@ public class BuildArtifactAction extends DumbAwareAction {
                         popup.cancel();
 
                         Artifact artifact = values.length > 0 ? ((ArtifactPopupItem) values[0]).getArtifact() : null;
-                        
+
                         ProjectSettingsService.getInstance(project).openArtifact(artifact);
                     }
                 }
@@ -133,6 +136,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         popup.showCenteredInCurrentWindow(project);
     }
 
+    @RequiredReadAction
     private static void doBuild(@Nonnull Project project, @Nonnull List<ArtifactPopupItem> items, boolean rebuild) {
         Set<Artifact> artifacts = getArtifacts(items, project);
         CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
@@ -157,10 +161,11 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     private static class BuildArtifactItem extends ArtifactActionItem {
         private BuildArtifactItem(List<ArtifactPopupItem> item, Project project) {
-            super(item, project, "Build");
+            super(item, project, CompilerLocalize.artifactsMenuItemBuild());
         }
 
         @Override
+        @RequiredReadAction
         public void run() {
             doBuild(myProject, myArtifactPopupItems, false);
         }
@@ -174,7 +179,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             @Nonnull Project project,
             @Nonnull NotificationService notificationService
         ) {
-            super(item, project, "Clean");
+            super(item, project, CompilerLocalize.artifactsMenuItemClean());
             myNotificationService = notificationService;
         }
 
@@ -206,32 +211,26 @@ public class BuildArtifactAction extends DumbAwareAction {
             }
 
             if (!outputPathContainingSourceRoots.isEmpty()) {
-                String message;
+                LocalizeValue message;
                 if (outputPathContainingSourceRoots.size() == 1 && outputPathContainingSourceRoots.values().size() == 1) {
                     String name = ContainerUtil.getFirstItem(outputPathContainingSourceRoots.keySet());
                     String output = outputPathContainingSourceRoots.get(name);
-                    message = "The output directory '" + output + "' of '" + name + "' artifact " +
-                        "contains source roots of the project. Do you want to continue and clear it?";
+                    message = CompilerLocalize.dialogMessageOutputDirContainsSourceRoots(output, name);
                 }
                 else {
                     StringBuilder info = new StringBuilder();
                     for (String name : outputPathContainingSourceRoots.keySet()) {
-                        info.append(" '")
-                            .append(name)
-                            .append("' artifact ('")
-                            .append(outputPathContainingSourceRoots.get(name))
-                            .append("')\n");
+                        info.append(CompilerLocalize.dialogMessageOutputDirArtifact(name, outputPathContainingSourceRoots.get(name)));
                     }
-                    message = "The output directories of the following artifacts contains source roots:\n" + info +
-                        "Do you want to continue and clear these directories?";
+                    message = CompilerLocalize.dialogMessageOutputDirsContainSourceRoots(info);
                 }
-                int answer = Messages.showYesNoDialog(myProject, message, "Clean Artifacts", null);
+                int answer = Messages.showYesNoDialog(myProject, message.get(), CompilerLocalize.dialogTitleCleanArtifacts().get(), null);
                 if (answer != Messages.YES) {
                     return;
                 }
             }
 
-            new Task.Backgroundable(myProject, LocalizeValue.localizeTODO("Cleaning artifacts..."), true) {
+            new Task.Backgroundable(myProject, CompilerLocalize.taskCleaningArtifactsTitle(), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     List<File> deleted = new ArrayList<>();
@@ -240,8 +239,8 @@ public class BuildArtifactAction extends DumbAwareAction {
                         File file = pair.getFirst();
                         if (!FileUtil.delete(file)) {
                             myNotificationService.newError(NOTIFICATION_GROUP)
-                                .title(LocalizeValue.localizeTODO("Cannot clean '" + pair.getSecond().getName() + "' artifact"))
-                                .content(LocalizeValue.localizeTODO("cannot delete '" + file.getAbsolutePath() + "'"))
+                                .title(CompilerLocalize.messageTitleCannotClean0Artifact(pair.getSecond().getName()))
+                                .content(CompilerLocalize.messageTextCannotDelete0(file.getAbsolutePath()))
                                 .notify((Project) myProject);
                         }
                         else {
@@ -256,10 +255,11 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     private static class RebuildArtifactItem extends ArtifactActionItem {
         private RebuildArtifactItem(List<ArtifactPopupItem> item, Project project) {
-            super(item, project, "Rebuild");
+            super(item, project, CompilerLocalize.artifactsMenuItemRebuild());
         }
 
         @Override
+        @RequiredReadAction
         public void run() {
             doBuild(myProject, myArtifactPopupItems, true);
         }
@@ -267,7 +267,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     private static class EditArtifactItem extends ArtifactActionItem {
         private EditArtifactItem(List<ArtifactPopupItem> item, Project project) {
-            super(item, project, "Edit...");
+            super(item, project, CompilerLocalize.artifactsMenuItemEdit());
         }
 
         @Override
@@ -278,17 +278,21 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     private static abstract class ArtifactActionItem implements Runnable {
+        @Nonnull
         protected final List<ArtifactPopupItem> myArtifactPopupItems;
+        @Nonnull
         protected final Project myProject;
-        private String myActionName;
+        @Nonnull
+        private LocalizeValue myActionName;
 
-        protected ArtifactActionItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project, @Nonnull String name) {
+        protected ArtifactActionItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project, @Nonnull LocalizeValue name) {
             myArtifactPopupItems = item;
             myProject = project;
             myActionName = name;
         }
 
-        public String getActionName() {
+        @Nonnull
+        public LocalizeValue getActionName() {
             return myActionName;
         }
     }
@@ -296,10 +300,11 @@ public class BuildArtifactAction extends DumbAwareAction {
     private static class ArtifactPopupItem {
         @Nullable
         private final Artifact myArtifact;
-        private final String myText;
+        @Nonnull
+        private final LocalizeValue myText;
         private final Image myIcon;
 
-        private ArtifactPopupItem(@Nullable Artifact artifact, String text, Image icon) {
+        private ArtifactPopupItem(@Nullable Artifact artifact, @Nonnull LocalizeValue text, Image icon) {
             myArtifact = artifact;
             myText = text;
             myIcon = icon;
@@ -310,7 +315,8 @@ public class BuildArtifactAction extends DumbAwareAction {
             return myArtifact;
         }
 
-        public String getText() {
+        @Nonnull
+        public LocalizeValue getText() {
             return myText;
         }
 
@@ -335,7 +341,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             Project project,
             NotificationService notificationService
         ) {
-            super("Build Artifact", artifacts);
+            super(CompilerLocalize.groupBuildArtifactsGroupText().get(), artifacts);
             myFirst = first;
             myProject = project;
             myNotificationService = notificationService;
@@ -354,7 +360,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         @Nonnull
         @Override
         public String getTextFor(ArtifactPopupItem value) {
-            return value.getText();
+            return value.getText().get();
         }
 
         @Override
@@ -379,13 +385,13 @@ public class BuildArtifactAction extends DumbAwareAction {
             actions.add(new EditArtifactItem(selectedValues, myProject));
 
             return new BaseListPopupStep<ArtifactActionItem>(
-                selectedValues.size() == 1 ? "Action" : "Action for " + selectedValues.size() + " artifacts",
+                CompilerLocalize.popupTitleChosenArtifactAction(selectedValues.size()).get(),
                 actions
             ) {
                 @Nonnull
                 @Override
                 public String getTextFor(ArtifactActionItem value) {
-                    return value.getActionName();
+                    return value.getActionName().get();
                 }
 
                 @Override

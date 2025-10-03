@@ -66,10 +66,6 @@ action.Back.text:
     text: _Back
 action.BuildAllArtifacts.text:
     text: Build All Artifacts
-action.BuildArtifact.description:
-    text: Select and build artifacts configured in the project
-action.BuildArtifact.text:
-    text: Build Artifacts…
 action.CallHierarchy.BaseOnThisType.description:
     text: Show call hierarchy for selected method
 action.CallHierarchy.BaseOnThisType.text:
@@ -336,18 +332,6 @@ action.CompareTwoFiles.description:
     text: Compare two selected files
 action.CompareTwoFiles.text:
     text: Compare Two _Files
-action.Compile.description:
-    text: Compile the selected file or package
-action.Compile.text:
-    text: Compil_e
-action.CompileDirty.description:
-    text: Compile all modified and dependent files in the project
-action.CompileDirty.text:
-    text: Build _Project
-action.CompileProject.description:
-    text: Recompile all files in the project
-action.CompileProject.text:
-    text: _Rebuild Project
 action.ConfigureFileDefaultEncoding.description:
     text: Configure default encoding for files, files in directories or in the whole project
 action.ConfigureFileDefaultEncoding.text:
@@ -1082,10 +1066,6 @@ action.Lvcs.ShowLvcsDiffAction.description:
     text: Show changes
 action.Lvcs.ShowLvcsDiffAction.text:
     text: Compare Versions
-action.MakeModule.description:
-    text: Compile all modified and dependent files in the module
-action.MakeModule.text:
-    text: Build _Module
 action.ManageRecentProjects.text:
     text: Manage Projects…
 action.MarkAsOriginalTypeAction.text:
@@ -2162,10 +2142,6 @@ group.BackgroundTasks.text:
     text: Background Tasks
 group.Bookmarks.text:
     text: Bookmarks
-group.BuildArtifactsGroup.text:
-    text: Build Artifact
-group.BuildMenu.text:
-    text: _Build
 group.ChangeLineSeparators.text:
     text: Line Separators
 group.ChangesViewPopupMenu.text:
