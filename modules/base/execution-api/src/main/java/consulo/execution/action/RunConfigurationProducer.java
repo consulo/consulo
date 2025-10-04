@@ -15,6 +15,7 @@
  */
 package consulo.execution.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -161,6 +162,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
      * @return a configuration (new or existing) matching the context, or null if the context is not applicable to this producer.
      */
     @Nullable
+    @RequiredReadAction
     public ConfigurationFromContext findOrCreateConfigurationFromContext(ConfigurationContext context, boolean preferExisting) {
         Location location = context.getLocation();
         if (location == null) {

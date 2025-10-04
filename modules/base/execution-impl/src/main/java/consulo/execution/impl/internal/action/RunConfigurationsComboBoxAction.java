@@ -17,6 +17,7 @@ package consulo.execution.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.dataContext.DataManager;
@@ -71,7 +72,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
@@ -91,7 +91,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                     Set<Image> defaultRunImages = new SmartHashSet<>();
                     
                     for (Executor executor : myApplication.getExtensionPoint(Executor.class).getOrBuildCache(RunCurrentFileExecutor.CACHE_KEY)) {
-                        RunCurrentFileActionStatus status = myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false);
+                        RunCurrentFileActionStatus status = ReadAction.compute(() -> myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false));
 
                         for (RunnerAndConfigurationSettings runConfig : status.runConfigs()) {
                             defaultRunImages.add(runConfig.getConfiguration().getType().getIcon());
@@ -112,7 +112,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         }
     }
 
-    @RequiredUIAccess
     public static void updatePresentation(
         @Nullable ExecutionTarget target,
         @Nullable RunnerAndConfigurationSettings settings,

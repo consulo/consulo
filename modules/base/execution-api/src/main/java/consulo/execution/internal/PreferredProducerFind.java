@@ -15,6 +15,7 @@
  */
 package consulo.execution.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionException;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -105,6 +106,7 @@ public class PreferredProducerFind {
 
     }
 
+    @RequiredReadAction
     public static List<ConfigurationFromContext> getConfigurationsFromContext(
         Location location,
         ConfigurationContext context,

@@ -317,6 +317,7 @@ public class ConfigurationContext {
     /**
      * The same as {@link #getConfigurationsFromContext()} but this method doesn't search among existing run configurations
      */
+    @RequiredReadAction
     public @Nullable List<ConfigurationFromContext> createConfigurationsFromContext() {
         // At the moment of writing, caching is not needed here, the result is cached outside.
         return PreferredProducerFind.getConfigurationsFromContext(myLocation, this, true, false);
