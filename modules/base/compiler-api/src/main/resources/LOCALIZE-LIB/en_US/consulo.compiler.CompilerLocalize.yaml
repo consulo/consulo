@@ -1,15 +1,35 @@
+action.build.artifact.description:
+    text: Select and build artifacts configured in the project
+action.build.artifact.text:
+    text: Build Artifacts…
 action.compile.0.text:
     text: Compile ''{0}''
 action.compile.default.text:
     text: Compile <default>
+action.compile.description:
+    text: Compile the selected file or package
+action.compile.dirty.description:
+    text: Compile all modified and dependent files in the project
+action.compile.dirty.text:
+    text: Build _Project
 action.compile.module.text:
     text: Compile Module ''{0}''
+action.compile.project.description:
+    text: Recompile all files in the project
+action.compile.project.text:
+    text: _Rebuild Project
 action.compile.selected.files.text:
     text: Compile Selected Files
+action.compile.text:
+    text: Compil_e
 action.compiler.properties.text:
     text: Compiler Properties
 action.description.package.file:
     text: Update the file in the corresponding artifacts
+action.make.module.description:
+    text: Compile all modified and dependent files in the module
+action.make.module.text:
+    text: Build _Module
 action.make.selected.modules.text:
     text: Build Selected _Modules
 action.name.exclude.from.validation:
@@ -24,6 +44,16 @@ annotation.processing.compiler.description:
     text: Java Annotation Processing Compiler
 artifact.type.plain:
     text: Other
+artifacts.menu.item.all:
+    text: All Artifacts
+artifacts.menu.item.build:
+    text: Build
+artifacts.menu.item.clean:
+    text: Clean
+artifacts.menu.item.edit:
+    text: Edit...
+artifacts.menu.item.rebuild:
+    text: Rebuild
 bad.resource.patterns.dialog.title:
     text: Malformed Resource Patterns
 build.artifacts.before.run.description.empty:
@@ -64,8 +94,19 @@ compiler.results.export.text.prefix:
     text: line ({0})
 compiler.running.dialog.title:
     text: Compiler Running
+dialog.message.output.dir.artifact:
+    text: |4
+         ''{0}'' artifact (''{1}'')
+dialog.message.output.dir.contains.source.roots:
+    text: The output directory ''{0}'' of ''{1}'' artifact contains source roots of the project. Do you want to continue and clear it?
+dialog.message.output.dirs.contain.source.roots:
+    text: |-
+        The output directories of the following artifacts contains source roots:
+        {0}Do you want to continue and clear these directories?
 dialog.title.choose.artifacts:
     text: Choose Artifacts
+dialog.title.clean.artifacts:
+    text: Clean Artifacts
 dialog.title.output.directory.for.artifact:
     text: Output Directory for Artifact
 element.type.name.artifact:
@@ -219,6 +260,10 @@ generated.ant.build.modules.section.title:
     text: Modules
 generated.ant.build.project.libraries.comment:
     text: Project Libraries
+group.build.artifacts.group.text:
+    text: Build Artifact
+group.build.menu.text:
+    text: _Build
 java.compiler.description:
     text: Java Compiler
 java.compiler.option.additional.command.line.parameters:
@@ -331,10 +376,8 @@ message.resource.patterns.format.changed:
         Escape the "!" character with a backslash ("\").
         You might also need to modify template project settings.
         Press ''{2}'' to accept entered patterns, ''{3}'' to load default patterns in new format.
-message.tect.package.file.io.error:
-    text: |-
-        IO Error:
-        {0}
+message.text.cannot.delete.0:
+    text: cannot delete ''{0}''
 message.text.compiling.item.deployment.descriptor.could.not.be.found:
     text: 'Compiling {0}: Deployment item ''''{1}'''' could not be found'
 message.text.compiling.module.message:
@@ -345,8 +388,16 @@ message.text.destination.is.directory:
     text: '{0} Destination is a directory.'
 message.text.error.copying.file.to.file:
     text: Error copying ''{0}'' to ''{1}''.
+message.text.package.file.io.error:
+    text: |-
+        IO Error:
+        {0}
 message.text.xml.file.invalid:
     text: XML file ''{0}'' is invalid
+message.title.cannot.clean.0.artifact:
+    text: Cannot clean ''{0}'' artifact
+message.title.cannot.package.file:
+    text: Cannot package file
 no.excludes:
     text: No excludes
 no.validators:
@@ -357,6 +408,8 @@ node.text.0.directory.content:
     text: '''''{0}'''' directory content'
 node.text.0.with.dependencies:
     text: '''''{0}'''' with dependencies'
+notification.group.clean.artifact.display.name:
+    text: Clean artifact
 notification.group.compiler.display.name:
     text: Compiler
 option.use.compiler.text:
@@ -377,6 +430,8 @@ packaging.element.text.output.root:
     text: <output root>
 pattern.conversion.dialog.title:
     text: Pattern Conversion
+popup.title.chosen.artifact.action:
+    text: Action{0,choice,0# For {0} Artifacts|1#|2# For {0} Artifacts}
 progress.checking.dependencies:
     text: Checking dependencies...
 progress.clearing.output:
@@ -439,6 +494,10 @@ status.compilation.completed.successfully.with.warnings.and.errors:
     text: Compilation completed with {0} {0,choice, 0#errors|1#error|2#errors} and {1} {1,choice, 0#warnings|1#warning|2#warnings}
 status.text.file.has.been.packaged:
     text: '{0, choice, 1#File|2#Files} {1} {0, choice, 1#has|2#have} been packaged at {2}.'
+task.cleaning.artifacts.title:
+    text: Cleaning artifacts...
+task.packaging.files.title:
+    text: Packaging Files
 toolwindow.build.display.name:
     text: Build
 validation.display.name:

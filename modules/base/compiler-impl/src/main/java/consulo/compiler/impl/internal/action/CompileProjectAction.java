@@ -21,6 +21,7 @@ import consulo.compiler.action.CompileActionBase;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.dataContext.DataContext;
 import consulo.localHistory.LocalHistory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,6 +30,10 @@ import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CompileProject")
 public class CompileProjectAction extends CompileActionBase {
+    public CompileProjectAction() {
+        super(CompilerLocalize.actionCompileProjectText(), CompilerLocalize.actionCompileProjectText(), null);
+    }
+
     @Override
     @RequiredUIAccess
     protected void doAction(DataContext dataContext, Project project) {
@@ -37,7 +42,7 @@ public class CompileProjectAction extends CompileActionBase {
                 return;
             }
 
-            String text = getTemplatePresentation().getText();
+            LocalizeValue text = getTemplatePresentation().getTextValue();
             LocalHistory.getInstance().putSystemLabel(
                 project,
                 errors == 0

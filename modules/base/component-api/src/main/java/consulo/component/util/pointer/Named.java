@@ -19,9 +19,9 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17:24/15.06.13
+ * @since 2013-06-15
  */
 public interface Named {
-  @Nonnull
-  String getName();
+    @Nonnull
+    String getName();
 }

@@ -34,6 +34,10 @@ import jakarta.annotation.Nonnull;
 public class MakeModuleAction extends CompileActionBase {
     private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);
 
+    public MakeModuleAction() {
+        super(CompilerLocalize.actionMakeModuleText(), CompilerLocalize.actionMakeModuleDescription(), null);
+    }
+
     @Override
     @RequiredUIAccess
     protected void doAction(DataContext dataContext, Project project) {

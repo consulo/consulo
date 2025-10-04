@@ -20,6 +20,7 @@ import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.jna.JnaLoader;
 
 import javax.swing.*;
@@ -30,51 +31,57 @@ import java.awt.event.MouseEvent;
  * @since 2018-09-01
  */
 public class MacTopMenuInitializer {
-  private static final Logger LOG = Logger.getInstance(MacTopMenuInitializer.class);
+    private static final Logger LOG = Logger.getInstance(MacTopMenuInitializer.class);
 
-  private static final Callback IMPL = new Callback() {
-    @SuppressWarnings("unused")
-    public void callback(ID self, String selector) {
-      SwingUtilities.invokeLater(() -> {
-        ActionManager am = ActionManager.getInstance();
-        MouseEvent me = new MouseEvent(JOptionPane.getRootFrame(), MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false);
-        am.tryToExecute(am.getAction("CheckForUpdate"), me, null, null, false);
-      });
+    private static final Callback IMPL = new Callback() {
+        @SuppressWarnings("unused")
+        public void callback(ID self, String selector) {
+            SwingUtilities.invokeLater(() -> {
+                ActionManager am = ActionManager.getInstance();
+                MouseEvent me =
+                    new MouseEvent(JOptionPane.getRootFrame(), MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false);
+                am.tryToExecute(am.getAction(IdeActions.ACTION_CHECK_FOR_UPDATE), me, null, null, false);
+            });
+        }
+    };
+
+    public static void installAutoUpdateMenu() {
+        try {
+            if (JnaLoader.isLoaded()) {
+                Foundation.executeOnMainThread(false, false, MacTopMenuInitializer::installAutoUpdateMenu0);
+            }
+        }
+        catch (Throwable t) {
+            LOG.warn(t);
+        }
     }
-  };
 
-  public static void installAutoUpdateMenu() {
-    try {
-      if (JnaLoader.isLoaded()) {
-        Foundation.executeOnMainThread(false, false, MacTopMenuInitializer::installAutoUpdateMenu0);
-      }
+    private static void installAutoUpdateMenu0() {
+        ID pool = Foundation.invoke("NSAutoreleasePool", "new");
+
+        ID app = Foundation.invoke("NSApplication", "sharedApplication");
+        ID menu = Foundation.invoke(app, Foundation.createSelector("menu"));
+        ID item = Foundation.invoke(menu, Foundation.createSelector("itemAtIndex:"), 0);
+        ID appMenu = Foundation.invoke(item, Foundation.createSelector("submenu"));
+
+        ID checkForUpdatesClass = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSMenuItem"), "NSCheckForUpdates");
+        Foundation.addMethod(checkForUpdatesClass, Foundation.createSelector("checkForUpdates"), IMPL, "v");
+
+        Foundation.registerObjcClassPair(checkForUpdatesClass);
+
+        ID checkForUpdates = Foundation.invoke("NSCheckForUpdates", "alloc");
+        Foundation.invoke(
+            checkForUpdates,
+            Foundation.createSelector("initWithTitle:action:keyEquivalent:"),
+            Foundation.nsString("Check for Updates..."),
+            Foundation.createSelector("checkForUpdates"),
+            Foundation.nsString("")
+        );
+        Foundation.invoke(checkForUpdates, Foundation.createSelector("setTarget:"), checkForUpdates);
+
+        Foundation.invoke(appMenu, Foundation.createSelector("insertItem:atIndex:"), checkForUpdates, 1);
+        Foundation.invoke(checkForUpdates, Foundation.createSelector("release"));
+
+        Foundation.invoke(pool, Foundation.createSelector("release"));
     }
-    catch (Throwable t) {
-      LOG.warn(t);
-    }
-  }
-
-  private static void installAutoUpdateMenu0() {
-    ID pool = Foundation.invoke("NSAutoreleasePool", "new");
-
-    ID app = Foundation.invoke("NSApplication", "sharedApplication");
-    ID menu = Foundation.invoke(app, Foundation.createSelector("menu"));
-    ID item = Foundation.invoke(menu, Foundation.createSelector("itemAtIndex:"), 0);
-    ID appMenu = Foundation.invoke(item, Foundation.createSelector("submenu"));
-
-    ID checkForUpdatesClass = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSMenuItem"), "NSCheckForUpdates");
-    Foundation.addMethod(checkForUpdatesClass, Foundation.createSelector("checkForUpdates"), IMPL, "v");
-
-    Foundation.registerObjcClassPair(checkForUpdatesClass);
-
-    ID checkForUpdates = Foundation.invoke("NSCheckForUpdates", "alloc");
-    Foundation.invoke(checkForUpdates, Foundation.createSelector("initWithTitle:action:keyEquivalent:"), Foundation.nsString("Check for Updates..."), Foundation.createSelector("checkForUpdates"),
-                      Foundation.nsString(""));
-    Foundation.invoke(checkForUpdates, Foundation.createSelector("setTarget:"), checkForUpdates);
-
-    Foundation.invoke(appMenu, Foundation.createSelector("insertItem:atIndex:"), checkForUpdates, 1);
-    Foundation.invoke(checkForUpdates, Foundation.createSelector("release"));
-
-    Foundation.invoke(pool, Foundation.createSelector("release"));
-  }
 }

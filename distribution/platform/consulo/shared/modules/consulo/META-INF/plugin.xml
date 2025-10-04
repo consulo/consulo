@@ -326,19 +326,6 @@
             <reference ref="$SearchWeb"/>
         </group>
 
-        <group id="WelcomeScreen.Configure">
-            <action id="WelcomeScreen.Settings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
-            <action id="WelcomeScreen.Plugins" class="consulo.ide.impl.idea.ide.actions.ShowPluginManagerAction"/>
-
-            <action id="WelcomeScreen.Configure.Import" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
-            <action id="WelcomeScreen.Configure.Export" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
-
-            <reference id="CreateDesktopEntry"/>
-            <reference id="CheckForUpdate"/>
-            <reference id="ShowLog"/>
-            <reference id="About"/>
-        </group>
-
         <group id="DiffPanel.Toolbar">
             <reference ref="$Copy"/>
             <reference ref="PreviousDiff"/>

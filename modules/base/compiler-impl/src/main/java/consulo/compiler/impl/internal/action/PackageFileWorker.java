@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -78,21 +78,21 @@ public class PackageFileWorker {
 
     public static AsyncResult<Void> startPackagingFiles(final Project project, final List<VirtualFile> files, final Artifact[] artifacts) {
         final AsyncResult<Void> callback = new AsyncResult<>();
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, LocalizeValue.localizeTODO("Packaging Files")) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, CompilerLocalize.taskPackagingFilesTitle()) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 try {
                     for (VirtualFile file : files) {
                         indicator.checkCanceled();
-                        AccessRule.read(() -> {
+                        ReadAction.run(() -> {
                             try {
                                 packageFile(file, project, artifacts);
                             }
                             catch (IOException e) {
                                 NotificationService.getInstance()
                                     .newError(ARTIFACT_PACKAGING_GROUP)
-                                    .title(LocalizeValue.localizeTODO("Cannot package file"))
-                                    .content(CompilerLocalize.messageTectPackageFileIoError(e))
+                                    .title(CompilerLocalize.messageTitleCannotPackageFile())
+                                    .content(CompilerLocalize.messageTextPackageFileIoError(e))
                                     .notify(null);
                             }
                         });
