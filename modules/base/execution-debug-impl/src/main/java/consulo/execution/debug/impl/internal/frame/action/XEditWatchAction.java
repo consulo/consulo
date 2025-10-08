@@ -15,12 +15,13 @@
  */
 package consulo.execution.debug.impl.internal.frame.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNodeImpl;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchesRootNode;
-import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
@@ -29,23 +30,29 @@ import java.util.List;
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.XEDIT_WATCH)
 public class XEditWatchAction extends XWatchesTreeActionBase {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    XDebuggerTree tree = XDebuggerTree.getTree(e);
-    e.getPresentation().setVisible(tree != null && getSelectedNodes(tree, WatchNodeImpl.class).size() == 1);
-    super.update(e);
-  }
-
-  @Override
-  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
-    List<? extends WatchNodeImpl> watchNodes = getSelectedNodes(tree, WatchNodeImpl.class);
-    if (watchNodes.size() != 1) return;
-
-    WatchNodeImpl node = watchNodes.get(0);
-    XDebuggerTreeNode root = tree.getRoot();
-    if (root instanceof WatchesRootNode) {
-      ((WatchesRootNode)root).editWatch(node);
+    public XEditWatchAction() {
+        super(XDebuggerLocalize.actionEditWatchText());
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        XDebuggerTree tree = XDebuggerTree.getTree(e);
+        e.getPresentation().setVisible(tree != null && getSelectedNodes(tree, WatchNodeImpl.class).size() == 1);
+        super.update(e);
+    }
+
+    @Override
+    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+        List<? extends WatchNodeImpl> watchNodes = getSelectedNodes(tree, WatchNodeImpl.class);
+        if (watchNodes.size() != 1) {
+            return;
+        }
+
+        WatchNodeImpl node = watchNodes.get(0);
+        if (tree.getRoot() instanceof WatchesRootNode watchesRootNode) {
+            watchesRootNode.editWatch(node);
+        }
+    }
 }

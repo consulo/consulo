@@ -15,22 +15,32 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
  */
+@ActionImpl(id = "XDebugger.UnmuteOnStop")
 public class UnmuteOnStopAction extends ToggleAction implements DumbAware {
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isUnmuteOnStop();
-  }
+    public UnmuteOnStopAction() {
+        super(XDebuggerLocalize.actionUnmuteOnStopText(), XDebuggerLocalize.actionUnmuteOnStopDescription());
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().setUnmuteOnStop(state);
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isUnmuteOnStop();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().setUnmuteOnStop(state);
+    }
 }

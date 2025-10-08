@@ -15,9 +15,12 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.ui.tree.SetValueInplaceEditor;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
@@ -25,27 +28,32 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.SET_VALUE)
 public class XSetValueAction extends XDebuggerTreeActionBase {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    XValueNodeImpl node = getSelectedNode(e.getDataContext());
-    Presentation presentation = e.getPresentation();
-    if (node instanceof WatchNode) {
-      presentation.setEnabledAndVisible(false);
+    public XSetValueAction() {
+        super(XDebuggerLocalize.actionSetValueText(), XDebuggerLocalize.actionSetValueDescription());
     }
-    else {
-      presentation.setVisible(true);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        XValueNodeImpl node = getSelectedNode(e.getDataContext());
+        Presentation presentation = e.getPresentation();
+        if (node instanceof WatchNode) {
+            presentation.setEnabledAndVisible(false);
+        }
+        else {
+            presentation.setVisible(true);
+        }
     }
-  }
 
-  @Override
-  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
-    return super.isEnabled(node, e) && node.getValueContainer().getModifier() != null;
-  }
+    @Override
+    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+        return super.isEnabled(node, e) && node.getValueContainer().getModifier() != null;
+    }
 
-  @Override
-  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
-    SetValueInplaceEditor.show(node, nodeName);
-  }
+    @Override
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        SetValueInplaceEditor.show(node, nodeName);
+    }
 }

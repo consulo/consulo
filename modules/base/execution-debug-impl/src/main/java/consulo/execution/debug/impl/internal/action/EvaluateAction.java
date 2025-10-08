@@ -16,6 +16,7 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerEvaluateActionHandler;
@@ -25,7 +26,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-@ActionImpl(id = "EvaluateExpression")
+@ActionImpl(id = XDebuggerActions.EVALUATE_EXPRESSION)
 public class EvaluateAction extends XDebuggerActionBase {
     private final XDebuggerEvaluateActionHandler myHandler = new XDebuggerEvaluateActionHandler();
 

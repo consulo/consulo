@@ -1,16 +1,21 @@
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
-import consulo.execution.ui.console.ConsoleExecuteAction;
-import consulo.execution.ui.console.ConsoleView;
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.impl.internal.action.XEvaluateInConsoleFromEditorActionHandler;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.execution.ui.console.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "Debugger.Tree.EvaluateInConsole")
 public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
+    public EvaluateInConsoleFromTreeAction() {
+        super(XDebuggerLocalize.actionTreeEvaluateInConsoleText());
+    }
+
     @Override
     protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
         return super.isEnabled(node, e) && getConsoleExecuteAction(e) != null;

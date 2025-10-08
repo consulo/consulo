@@ -15,38 +15,40 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
-import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XNavigatable;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
-  protected void perform(final XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
-    XValue value = node.getValueContainer();
-    XNavigatable navigatable = new XNavigatable() {
-      public void setSourcePosition(@Nullable final XSourcePosition sourcePosition) {
-        if (sourcePosition != null) {
-          AppUIUtil.invokeOnEdt(new Runnable() {
-            public void run() {
-              Project project = node.getTree().getProject();
-              if (project.isDisposed()) return;
+    protected XJumpToSourceActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-              sourcePosition.createNavigatable(project).navigate(true);
+    @Override
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        XValue value = node.getValueContainer();
+        XNavigatable navigatable = sourcePosition -> {
+            if (sourcePosition != null) {
+                AppUIUtil.invokeOnEdt(() -> {
+                    Project project = node.getTree().getProject();
+                    if (project.isDisposed()) {
+                        return;
+                    }
+
+                    sourcePosition.createNavigatable(project).navigate(true);
+                });
             }
-          });
-        }
-      }
-    };
-    startComputingSourcePosition(value, navigatable);
-  }
+        };
+        startComputingSourcePosition(value, navigatable);
+    }
 
-  protected abstract void startComputingSourcePosition(XValue value, XNavigatable navigatable);
+    protected abstract void startComputingSourcePosition(XValue value, XNavigatable navigatable);
 }

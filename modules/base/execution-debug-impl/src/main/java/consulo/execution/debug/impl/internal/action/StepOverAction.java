@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
@@ -27,7 +28,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-@ActionImpl(id = "StepOver")
+@ActionImpl(id = XDebuggerActions.STEP_OVER)
 public class StepOverAction extends XDebuggerActionBase {
     private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
         @Override

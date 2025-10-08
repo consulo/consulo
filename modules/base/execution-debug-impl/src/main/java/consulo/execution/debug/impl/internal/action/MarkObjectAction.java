@@ -15,10 +15,11 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -27,31 +28,32 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.MARK_OBJECT)
 public class MarkObjectAction extends XDebuggerActionBase {
     private final XMarkObjectActionHandler myHandler = new XMarkObjectActionHandler();
 
     public MarkObjectAction() {
-        super();
+        super(XDebuggerLocalize.actionMarkObjectText(), XDebuggerLocalize.actionMarkObjectDescription(), null);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         boolean enabled = false;
-        Presentation presentation = event.getPresentation();
+        Presentation presentation = e.getPresentation();
         boolean hidden = true;
         if (project != null) {
-            hidden = myHandler.isHidden(project, event);
-            if (myHandler.isEnabled(project, event)) {
+            hidden = myHandler.isHidden(project, e);
+            if (myHandler.isEnabled(project, e)) {
                 enabled = true;
                 presentation.setTextValue(
-                    myHandler.isMarked(project, event)
-                        ? ActionLocalize.actionDebuggerMarkobjectUnmarkText()
-                        : ActionLocalize.actionDebuggerMarkobjectText()
+                    myHandler.isMarked(project, e)
+                        ? XDebuggerLocalize.actionMarkObjectUnmarkText()
+                        : XDebuggerLocalize.actionMarkObjectText()
                 );
             }
         }
-        presentation.setVisible(!hidden && (!ActionPlaces.isPopupPlace(event.getPlace()) || enabled));
+        presentation.setVisible(!hidden && (!ActionPlaces.isPopupPlace(e.getPlace()) || enabled));
         presentation.setEnabled(enabled);
     }
 

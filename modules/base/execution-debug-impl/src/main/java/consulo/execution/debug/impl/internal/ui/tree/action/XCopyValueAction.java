@@ -15,9 +15,12 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.frame.action.XWatchesTreeActionBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNode;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.collection.ContainerUtil;
@@ -28,17 +31,25 @@ import java.util.List;
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.COPY_VALUE)
 public class XCopyValueAction extends XFetchValueActionBase {
-  @Override
-  protected void handle(Project project, String value, XDebuggerTree tree) {
-    if (tree == null) return;
-    List<? extends WatchNode> watchNodes = XWatchesTreeActionBase.getSelectedNodes(tree, WatchNode.class);
-    if (watchNodes.isEmpty()) {
-      CopyPasteManager.getInstance().setContents(new StringSelection(value));
+    public XCopyValueAction() {
+        super(XDebuggerLocalize.actionCopyValueText(), XDebuggerLocalize.actionCopyValueDescription());
     }
-    else {
-      CopyPasteManager.getInstance().setContents(
-              new XWatchTransferable(value, ContainerUtil.map(watchNodes, WatchNode::getExpression)));
+
+    @Override
+    protected void handle(Project project, String value, XDebuggerTree tree) {
+        if (tree == null) {
+            return;
+        }
+        List<? extends WatchNode> watchNodes = XWatchesTreeActionBase.getSelectedNodes(tree, WatchNode.class);
+        if (watchNodes.isEmpty()) {
+            CopyPasteManager.getInstance().setContents(new StringSelection(value));
+        }
+        else {
+            CopyPasteManager.getInstance().setContents(
+                new XWatchTransferable(value, ContainerUtil.map(watchNodes, WatchNode::getExpression))
+            );
+        }
     }
-  }
 }

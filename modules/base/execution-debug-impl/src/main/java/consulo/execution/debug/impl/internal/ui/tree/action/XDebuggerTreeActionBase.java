@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -23,9 +24,11 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,64 +38,82 @@ import java.util.List;
  * @author nik
  */
 public abstract class XDebuggerTreeActionBase extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    XValueNodeImpl node = getSelectedNode(e.getDataContext());
-    if (node != null) {
-      String nodeName = node.getName();
-      if (nodeName != null) {
-        perform(node, nodeName, e);
-      }
+    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text) {
+        super(text);
     }
-  }
 
-  protected abstract void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e);
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    XValueNodeImpl node = getSelectedNode(e.getDataContext());
-    e.getPresentation().setEnabled(node != null && isEnabled(node, e));
-  }
-
-  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
-    return node.getName() != null;
-  }
-
-  @Nonnull
-  public static List<XValueNodeImpl> getSelectedNodes(DataContext dataContext) {
-    XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
-    if (tree == null) return Collections.emptyList();
-
-    TreePath[] paths = tree.getSelectionPaths();
-    if (paths == null || paths.length == 0) {
-      return Collections.emptyList();
+    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
     }
-    List<XValueNodeImpl> result = new ArrayList<>();
-    for (TreePath path : paths) {
-      Object lastPathComponent = path.getLastPathComponent();
-      if(lastPathComponent instanceof XValueNodeImpl) {
-        result.add((XValueNodeImpl)lastPathComponent);
-      }
+
+    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
     }
-    return result;
-  }
 
-  @Nullable
-  public static XValueNodeImpl getSelectedNode(DataContext dataContext) {
-    XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
-    if (tree == null) return null;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        XValueNodeImpl node = getSelectedNode(e.getDataContext());
+        if (node != null) {
+            String nodeName = node.getName();
+            if (nodeName != null) {
+                perform(node, nodeName, e);
+            }
+        }
+    }
 
-    TreePath path = tree.getSelectionPath();
-    if (path == null) return null;
+    protected abstract void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e);
 
-    Object node = path.getLastPathComponent();
-    return node instanceof XValueNodeImpl ? (XValueNodeImpl)node : null;
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        XValueNodeImpl node = getSelectedNode(e.getDataContext());
+        e.getPresentation().setEnabled(node != null && isEnabled(node, e));
+    }
 
-  @Nullable
-  public static XValue getSelectedValue(@Nonnull DataContext dataContext) {
-    XValueNodeImpl node = getSelectedNode(dataContext);
-    return node != null ? node.getValueContainer() : null;
-  }
+    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+        return node.getName() != null;
+    }
+
+    @Nonnull
+    public static List<XValueNodeImpl> getSelectedNodes(DataContext dataContext) {
+        XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
+        if (tree == null) {
+            return Collections.emptyList();
+        }
+
+        TreePath[] paths = tree.getSelectionPaths();
+        if (paths == null || paths.length == 0) {
+            return Collections.emptyList();
+        }
+        List<XValueNodeImpl> result = new ArrayList<>();
+        for (TreePath path : paths) {
+            Object lastPathComponent = path.getLastPathComponent();
+            if (lastPathComponent instanceof XValueNodeImpl) {
+                result.add((XValueNodeImpl) lastPathComponent);
+            }
+        }
+        return result;
+    }
+
+    @Nullable
+    public static XValueNodeImpl getSelectedNode(DataContext dataContext) {
+        XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
+        if (tree == null) {
+            return null;
+        }
+
+        TreePath path = tree.getSelectionPath();
+        if (path == null) {
+            return null;
+        }
+
+        Object node = path.getLastPathComponent();
+        return node instanceof XValueNodeImpl xValueNode ? xValueNode : null;
+    }
+
+    @Nullable
+    public static XValue getSelectedValue(@Nonnull DataContext dataContext) {
+        XValueNodeImpl node = getSelectedNode(dataContext);
+        return node != null ? node.getValueContainer() : null;
+    }
 }
