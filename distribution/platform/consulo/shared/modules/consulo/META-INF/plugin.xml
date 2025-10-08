@@ -500,13 +500,6 @@
             <reference ref="ProjectViewPopupMenuSettingsGroup"/>
         </group>
 
-        <group id="RevealGroup" popup="true">
-            <action id="RevealIn" class="consulo.ide.impl.idea.ide.actions.RevealFileAction"/>
-            <reference ref="ShowFilePath"/>
-
-            <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
-        </group>
-
         <group id="NavbarPopupMenu">
             <reference ref="WeighingNewGroup"/>
             <reference ref="AssociateWithFileType"/>
