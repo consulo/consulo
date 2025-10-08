@@ -32,7 +32,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     private record FixInfo(
         @Nonnull IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {
@@ -245,7 +244,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     public HighlightInfo.Builder registerFix(
         @Nonnull IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nls @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {

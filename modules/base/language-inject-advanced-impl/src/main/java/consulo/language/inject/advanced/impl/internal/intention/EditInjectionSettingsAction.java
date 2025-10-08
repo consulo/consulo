@@ -30,6 +30,7 @@ import consulo.language.inject.advanced.localize.LanguageInjectAdvancedLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,8 +46,8 @@ import java.util.Collections;
 public class EditInjectionSettingsAction implements IntentionAction, LowPriorityAction {
     @Nonnull
     @Override
-    public String getText() {
-        return LanguageInjectAdvancedLocalize.intentionEditInjectionSettingsActionText().get();
+    public LocalizeValue getText() {
+        return LanguageInjectAdvancedLocalize.intentionEditInjectionSettingsActionText();
     }
 
     @Override

@@ -15,12 +15,14 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
@@ -51,7 +53,7 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
 
   @Nonnull
   @Override
-  public final String getName() {
+  public final LocalizeValue getName() {
     return getText();
   }
 
@@ -62,6 +64,7 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     return true;
   }
 
+  @RequiredUIAccess
   protected boolean isAvailable() {
     if (myStartElement == null) return false;
     PsiElement startElement = myStartElement.getElement();
@@ -85,7 +88,7 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
   }
 
   @Nonnull
-  public abstract String getText();
+  public abstract LocalizeValue getText();
 
   @Override
   public final void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {

@@ -16,13 +16,14 @@
 package consulo.language.inject.advanced.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -61,13 +62,13 @@ public class InjectedReferencesInspection extends LocalInspectionTool {
 
   @Nonnull
   @Override
-  public String getGroupDisplayName() {
-    return InspectionsBundle.message("inspection.general.tools.group.name");
+  public LocalizeValue getGroupDisplayName() {
+    return InspectionLocalize.inspectionGeneralToolsGroupName();
   }
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Injected References";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Injected References");
   }
 }

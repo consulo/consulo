@@ -20,6 +20,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
@@ -74,7 +75,7 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myFix.getName();
   }
 }

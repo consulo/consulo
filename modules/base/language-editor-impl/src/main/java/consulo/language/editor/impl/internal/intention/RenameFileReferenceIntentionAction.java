@@ -24,6 +24,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.path.FileReference;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -43,20 +44,14 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
 
     @Override
     @Nonnull
-    public String getText() {
-        return CodeInsightLocalize.renameFileReferenceText(myExistingElementName).get();
+    public LocalizeValue getText() {
+        return CodeInsightLocalize.renameFileReferenceText(myExistingElementName);
     }
 
     @Override
     @Nonnull
-    public String getName() {
+    public LocalizeValue getName() {
         return getText();
-    }
-
-    @Override
-    @Nonnull
-    public String getFamilyName() {
-        return CodeInsightLocalize.renameFileReferenceFamily().get();
     }
 
     @Override

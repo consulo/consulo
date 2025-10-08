@@ -112,7 +112,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         }
         Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
         for (String word : words) {
-            myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
+            myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName().get(), InspectionToolsConfigurable.ID, "Inspections");
         }
     }
 
@@ -162,11 +162,11 @@ public class InspectionManagerImpl extends InspectionManagerBase {
                 public void run() {
                     List<InspectionToolWrapper> tools = toolRegistrar.createTools();
                     for (InspectionToolWrapper toolWrapper : tools) {
-                        processText(toolWrapper.getDisplayName().toLowerCase(), toolWrapper, myOptionsRegistrar);
+                        processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, myOptionsRegistrar);
 
                         String description = toolWrapper.loadDescription();
                         if (description != null) {
-                            @NonNls String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
+                            String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
                             processText(descriptionText, toolWrapper, myOptionsRegistrar);
                         }
                     }

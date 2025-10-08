@@ -25,6 +25,7 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,20 +50,14 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
 
     @Override
     @Nonnull
-    public String getText() {
-        return CodeInsightLocalize.renameFileFix().get();
+    public LocalizeValue getText() {
+        return CodeInsightLocalize.renameFileFix();
     }
 
     @Override
     @Nonnull
-    public String getName() {
+    public LocalizeValue getName() {
         return getText();
-    }
-
-    @Override
-    @Nonnull
-    public String getFamilyName() {
-        return CodeInsightLocalize.renameFileFix().get();
     }
 
     @Override

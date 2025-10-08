@@ -6,10 +6,10 @@ import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import org.jetbrains.annotations.Nls;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ public final class QuickFixAction {
    * @deprecated This is used by TeamCity plugin
    */
   @Deprecated
-  public static void registerQuickFixAction(@Nullable HighlightInfo info, @Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable @Nls String displayName) {
+  public static void registerQuickFixAction(@Nullable HighlightInfo info, @Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nonnull LocalizeValue displayName) {
     if (info == null) return;
     info.registerFix(action, options, displayName, null, null);
   }
@@ -45,7 +45,7 @@ public final class QuickFixAction {
 
   public static void registerQuickFixAction(@Nullable HighlightInfo info, @Nullable TextRange fixRange, @Nullable IntentionAction action) {
     if (info == null) return;
-    info.registerFix(action, null, null, fixRange, null);
+    info.registerFix(action, null, LocalizeValue.of(), fixRange, null);
   }
 
   public static void registerQuickFixActions(@Nullable HighlightInfo info, @Nullable TextRange fixRange, @Nonnull Iterable<? extends IntentionAction> actions) {

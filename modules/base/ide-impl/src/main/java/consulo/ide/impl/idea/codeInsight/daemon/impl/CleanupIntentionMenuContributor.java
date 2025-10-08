@@ -8,6 +8,7 @@ import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionMenuContributor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class CleanupIntentionMenuContributor implements IntentionMenuContributor
     for (IntentionActionDescriptor descriptor : actionDescriptors) {
       if (descriptor.canCleanup(file)) {
         IntentionManager manager = IntentionManager.getInstance();
-        actionDescriptors.add(new IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), "Code Cleanup Options"));
+        actionDescriptors.add(new IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), LocalizeValue.localizeTODO("Code Cleanup Options")));
         return true;
       }
     }

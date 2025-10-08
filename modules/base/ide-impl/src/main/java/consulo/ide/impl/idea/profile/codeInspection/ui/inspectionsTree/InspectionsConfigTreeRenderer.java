@@ -68,7 +68,7 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
       ToolDescriptors descriptors = node.getDescriptors();
       assert descriptors != null;
       Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
-      text = defaultDescriptor.getText();
+      text = defaultDescriptor.getText().get();
       hint = getHint(defaultDescriptor);
     }
 

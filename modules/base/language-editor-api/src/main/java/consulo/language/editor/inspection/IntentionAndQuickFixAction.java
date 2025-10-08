@@ -18,6 +18,7 @@ package consulo.language.editor.inspection;
 
 import consulo.language.editor.intention.IntentionAction;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -32,17 +33,13 @@ public abstract class IntentionAndQuickFixAction implements LocalQuickFix, Inten
 
   @Override
   @Nonnull
-  public abstract String getName();
-
-  @Override
-  @Nonnull
-  public abstract String getFamilyName();
+  public abstract LocalizeValue getName();
 
   public abstract void applyFix(Project project, PsiFile file, @Nullable Editor editor);
 
   @Override
   @Nonnull
-  public final String getText() {
+  public final LocalizeValue getText() {
     return getName();
   }
 

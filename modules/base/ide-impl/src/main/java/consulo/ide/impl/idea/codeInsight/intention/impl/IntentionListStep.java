@@ -15,6 +15,7 @@ import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -106,13 +107,13 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
                 return;
             }
 
-            ShowIntentionActionsHandler.chooseActionAndInvoke(file, myEditor, cachedAction.getAction(), cachedAction.getText(), myProject);
+            ShowIntentionActionsHandler.chooseActionAndInvoke(file, myEditor, cachedAction.getAction(), cachedAction.getText().get(), myProject);
         };
     }
 
 
     @Nonnull
-    IntentionListStep getSubStep(@Nonnull IntentionActionWithTextCaching action, final String title) {
+    IntentionListStep getSubStep(@Nonnull IntentionActionWithTextCaching action, final LocalizeValue title) {
         IntentionsInfo intentions = new IntentionsInfo();
         for (IntentionAction optionIntention : action.getOptionIntentions()) {
             intentions.intentionsToShow.add(new IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
@@ -127,7 +128,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         return new IntentionListStep(myIntentionHintComponent, myEditor, myFile, myProject, CachedIntentions.create(myProject, myFile, myEditor, intentions)) {
             @Override
             public String getTitle() {
-                return title;
+                return title.get();
             }
         };
     }
@@ -168,7 +169,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     @Override
     @Nonnull
     public String getTextFor(IntentionActionWithTextCaching action) {
-        String text = action.getText();
+        String text = action.getText().get();
         if (LOG.isDebugEnabled() && text.startsWith("<html>")) {
             LOG.info("IntentionAction.getText() returned HTML: action=" + action.getAction().getClass() + " text=" + text);
         }

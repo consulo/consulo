@@ -24,6 +24,7 @@ import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
@@ -56,7 +57,7 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
 
   @Override
   @Nonnull
-  public String getText() {
+  public LocalizeValue getText() {
     return myDescriptor.getFixes()[myFixNumber].getName();
   }
 
@@ -92,7 +93,8 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
     return (LocalQuickFix)myDescriptor.getFixes()[myFixNumber];
   }
 
+  @Override
   public String toString() {
-    return getText();
+    return getText().get();
   }
 }

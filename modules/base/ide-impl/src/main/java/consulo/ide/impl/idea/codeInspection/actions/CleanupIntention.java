@@ -27,6 +27,7 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -36,8 +37,8 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
 
   @Nonnull
   @Override
-  public String getText() {
-    return InspectionLocalize.cleanupInScope().get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.cleanupInScope();
   }
 
   @Override
@@ -48,7 +49,7 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
     AnalysisScope scope = getScope(project, file);
     if (scope != null) {
       InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-      globalContext.codeCleanup(project, scope, profile, getText(), null, false);
+      globalContext.codeCleanup(project, scope, profile, getText().get(), null, false);
     }
   }
 

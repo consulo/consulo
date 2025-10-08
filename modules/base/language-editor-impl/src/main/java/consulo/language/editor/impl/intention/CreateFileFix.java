@@ -95,14 +95,8 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
 
   @Override
   @Nonnull
-  public String getText() {
-    return myTextTemplate.apply(myNewFileName).get();
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return CodeInsightLocalize.createFileFamily().get();
+  public LocalizeValue getText() {
+    return myTextTemplate.apply(myNewFileName);
   }
 
   @Override

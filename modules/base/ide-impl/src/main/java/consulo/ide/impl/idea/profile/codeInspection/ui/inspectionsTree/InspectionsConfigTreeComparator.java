@@ -46,8 +46,8 @@ public class InspectionsConfigTreeComparator implements Comparator<InspectionCon
     ToolDescriptors descriptors1 = o1.getDescriptors();
     ToolDescriptors descriptors2 = o2.getDescriptors();
     if (descriptors1 != null && descriptors2 != null) {
-      s1 = descriptors1.getDefaultDescriptor().getText();
-      s2 = descriptors2.getDefaultDescriptor().getText();
+      s1 = descriptors1.getDefaultDescriptor().getText().get();
+      s2 = descriptors2.getDefaultDescriptor().getText().get();
     }
 
     if (s1 != null && s2 != null) {

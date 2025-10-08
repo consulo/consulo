@@ -90,10 +90,10 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
   @Override
   public String toString() {
     if (userObject instanceof ToolDescriptors) {
-      return ((ToolDescriptors)userObject).getDefaultDescriptor().getText();
+      return ((ToolDescriptors)userObject).getDefaultDescriptor().getText().get();
     }
     if (userObject instanceof Descriptor) {
-      return ((Descriptor)userObject).getText();
+      return ((Descriptor)userObject).getText().get();
     }
     return super.toString();
   }

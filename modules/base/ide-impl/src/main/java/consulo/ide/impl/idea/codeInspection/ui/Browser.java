@@ -39,7 +39,6 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
-import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -512,7 +511,7 @@ class Browser extends JPanel {
     private void performFix(RefEntity element, CommonProblemDescriptor descriptor, int idx, QuickFix fix) {
         CommandProcessor.getInstance().newCommand()
             .project(myView.getProject())
-            .name(LocalizeValue.ofNullable(fix.getName()))
+            .name(fix.getName())
             .inWriteAction()
             .inGlobalUndoAction()
             .run(() -> {

@@ -29,6 +29,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
@@ -129,7 +130,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
 
   @Nonnull
   @Override
-  public String getText() {
-    return InspectionLocalize.suppressInspectionFamily().get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.suppressInspectionFamily();
   }
 }

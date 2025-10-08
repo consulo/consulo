@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.codeStyle;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -47,14 +48,14 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return InspectionLocalize.groupNamesPortabilityIssues().get();
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.groupNamesPortabilityIssues();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return InspectionLocalize.inconsistentLineSeparators().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionLocalize.inconsistentLineSeparators();
     }
 
     @Nonnull
@@ -97,14 +98,8 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
     private static final LocalQuickFix SET_PROJECT_LINE_SEPARATORS = new LocalQuickFix() {
         @Nonnull
         @Override
-        public String getName() {
-            return getFamilyName();
-        }
-
-        @Nonnull
-        @Override
-        public String getFamilyName() {
-            return "Convert to project line separators";
+        public LocalizeValue getName() {
+            return LocalizeValue.localizeTODO("Convert to project line separators");
         }
 
         @Override

@@ -19,6 +19,7 @@ import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -34,14 +35,8 @@ public abstract class PriorityLocalQuickFixWrapper implements LocalQuickFix {
 
   @Nonnull
   @Override
-  public String getName() {
+  public LocalizeValue getName() {
     return fix.getName();
-  }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return fix.getFamilyName();
   }
 
   @Override

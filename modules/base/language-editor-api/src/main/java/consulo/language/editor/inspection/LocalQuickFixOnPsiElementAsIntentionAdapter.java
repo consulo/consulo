@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class LocalQuickFixOnPsiElementAsIntentionAdapter implements SyntheticInt
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myFix.getName();
   }
 

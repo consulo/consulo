@@ -24,6 +24,7 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
@@ -36,8 +37,8 @@ import jakarta.annotation.Nonnull;
 public class EditFoldingOptionsAction implements IntentionAction {
   @Nonnull
   @Override
-  public String getText() {
-    return ApplicationLocalize.editCodeFoldingOptions().get();
+  public LocalizeValue getText() {
+    return ApplicationLocalize.editCodeFoldingOptions();
   }
 
   @Override

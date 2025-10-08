@@ -29,6 +29,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
@@ -43,14 +44,14 @@ import java.util.List;
 @IntentionMetaData(ignoreId = "platform.edit.intention.options", fileExtensions = "txt", categories = "General")
 public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements IntentionAction {
     private String myId;
-    private String myDisplayName;
+    private LocalizeValue myDisplayName;
 
     @Override
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         return myDisplayName == null
-            ? InspectionLocalize.editOptionsOfReporterInspectionFamily().get()
-            : InspectionLocalize.editInspectionOptions(myDisplayName).get();
+            ? InspectionLocalize.editOptionsOfReporterInspectionFamily()
+            : InspectionLocalize.editInspectionOptions(myDisplayName);
     }
 
     @Nullable

@@ -34,7 +34,6 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -137,7 +136,7 @@ public interface HighlightInfo extends Segment {
         Builder registerFix(
             @Nonnull IntentionAction action,
             @Nullable List<IntentionAction> options,
-            @Nullable @Nls String displayName,
+            @Nonnull LocalizeValue displayName,
             @Nullable TextRange fixRange,
             @Nullable HighlightDisplayKey key
         );
@@ -226,7 +225,7 @@ public interface HighlightInfo extends Segment {
     void registerFix(
         @Nullable IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     );

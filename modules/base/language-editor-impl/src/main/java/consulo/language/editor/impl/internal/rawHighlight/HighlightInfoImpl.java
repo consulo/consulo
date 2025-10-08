@@ -565,7 +565,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     public void registerFix(
         @Nullable IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {

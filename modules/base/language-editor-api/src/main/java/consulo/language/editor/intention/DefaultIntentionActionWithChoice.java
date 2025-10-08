@@ -32,14 +32,9 @@ import java.util.List;
 public interface DefaultIntentionActionWithChoice extends IntentionActionWithChoice<ChoiceTitleIntentionAction, ChoiceVariantIntentionAction> {
   @Nonnull
   default List<LocalQuickFix> getAllAsFixes() {
-    List<LocalQuickFix> result = new ArrayList<LocalQuickFix>();
+    List<LocalQuickFix> result = new ArrayList<>();
     result.add(getTitle());
     result.addAll(getVariants());
-
-    if (ContainerUtil.map(result, QuickFix::getFamilyName).size() != 1) {
-      throw new IllegalArgumentException("All default intention actions with choice are expected to have same family");
-    }
-
     return result;
   }
 }

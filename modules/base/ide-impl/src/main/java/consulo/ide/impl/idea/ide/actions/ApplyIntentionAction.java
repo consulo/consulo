@@ -23,6 +23,7 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,11 +39,11 @@ public class ApplyIntentionAction extends AnAction {
     private final Editor myEditor;
     private final PsiFile myFile;
 
-    public ApplyIntentionAction(IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
+    public ApplyIntentionAction(IntentionActionDescriptor descriptor, LocalizeValue text, Editor editor, PsiFile file) {
         this(descriptor.getAction(), text, editor, file);
     }
 
-    public ApplyIntentionAction(IntentionAction action, String text, Editor editor, PsiFile file) {
+    public ApplyIntentionAction(IntentionAction action, LocalizeValue text, Editor editor, PsiFile file) {
         super(text);
         myAction = action;
         myEditor = editor;
@@ -52,11 +53,11 @@ public class ApplyIntentionAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        ShowIntentionActionsHandler.chooseActionAndInvoke(myFile, myEditor, myAction, myAction.getText());
+        ShowIntentionActionsHandler.chooseActionAndInvoke(myFile, myEditor, myAction, myAction.getText().get());
     }
 
-    public String getName() {
-        return Application.get().runReadAction((Supplier<String>)myAction::getText);
+    public LocalizeValue getName() {
+        return Application.get().runReadAction((Supplier<LocalizeValue>)myAction::getText);
     }
 
     @Nullable
@@ -75,7 +76,7 @@ public class ApplyIntentionAction extends AnAction {
         ApplyIntentionAction[] result = new ApplyIntentionAction[actions.size()];
         for (int i = 0; i < result.length; i++) {
             IntentionActionDescriptor descriptor = actions.get(i);
-            String actionText = Application.get().runReadAction((Supplier<String>)() -> descriptor.getAction().getText());
+            LocalizeValue actionText = Application.get().runReadAction((Supplier<LocalizeValue>)() -> descriptor.getAction().getText());
             result[i] = new ApplyIntentionAction(descriptor, actionText, editor, file);
         }
         return result;

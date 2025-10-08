@@ -144,6 +144,8 @@ public final class Presentation implements Cloneable {
   }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use #getTextValue()")
   public String getText() {
     if(myDisabledMnemonic) {
       return StringUtil.nullize(myTextValue.getValue());

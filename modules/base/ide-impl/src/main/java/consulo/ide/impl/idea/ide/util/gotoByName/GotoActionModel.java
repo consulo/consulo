@@ -132,7 +132,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             ApplyIntentionAction[] children = file == null ? null : ApplyIntentionAction.getAvailableIntentions(myEditor, file);
             if (children != null) {
                 for (ApplyIntentionAction action : children) {
-                    map.put(action.getName(), action);
+                    map.put(action.getName().get(), action);
                 }
             }
         }

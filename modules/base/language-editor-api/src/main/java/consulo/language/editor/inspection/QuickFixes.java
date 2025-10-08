@@ -4,6 +4,7 @@ package consulo.language.editor.inspection;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -18,13 +19,7 @@ public final class QuickFixes {
 
     @Nonnull
     @Override
-    public String getText() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public String getFamilyName() {
+    public LocalizeValue getText() {
       throw new UnsupportedOperationException();
     }
   };
@@ -32,13 +27,7 @@ public final class QuickFixes {
   public static final IntentionAndQuickFixAction EMPTY_ACTION = new IntentionAndQuickFixAction() {
     @Nonnull
     @Override
-    public String getName() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public String getFamilyName() {
+    public LocalizeValue getName() {
       throw new UnsupportedOperationException();
     }
 

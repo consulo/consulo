@@ -26,6 +26,7 @@ import consulo.language.editor.internal.intention.ActionClassHolder;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -49,20 +50,14 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
 
   @Nonnull
   @Override
-  public String getName() {
+  public LocalizeValue getName() {
     return myAction.getText();
   }
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myAction.getText();
-  }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return getText();
   }
 
   @Override

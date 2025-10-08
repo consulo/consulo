@@ -18,6 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -30,12 +31,6 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
   private PriorityActionWrapper(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
     super(element);
     this.fix = fix;
-  }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return fix.getFamilyName();
   }
 
   @Override
@@ -54,7 +49,7 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return fix.getName();
   }
 

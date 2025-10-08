@@ -58,9 +58,9 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
 
     private final InspectionToolWrapper myToolWrapper;
     private final Class myQuickfixClass;
-    private final String myText;
+    private final LocalizeValue myText;
 
-    public CleanupInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Class quickFixClass, String text) {
+    public CleanupInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Class quickFixClass, LocalizeValue text) {
         myToolWrapper = toolWrapper;
         myQuickfixClass = quickFixClass;
         myText = text;
@@ -68,8 +68,8 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
 
     @Override
     @Nonnull
-    public String getText() {
-        return InspectionLocalize.fixAllInspectionProblemsInFile(myToolWrapper.getDisplayName()).get();
+    public LocalizeValue getText() {
+        return InspectionLocalize.fixAllInspectionProblemsInFile(myToolWrapper.getDisplayName());
     }
 
     @Override

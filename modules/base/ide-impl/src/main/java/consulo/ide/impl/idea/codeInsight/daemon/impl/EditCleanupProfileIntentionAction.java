@@ -25,6 +25,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -40,8 +41,8 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
 
   @Override
   @Nonnull
-  public String getText() {
-    return "Edit cleanup profile settings";
+  public LocalizeValue getText() {
+    return LocalizeValue.localizeTODO("Edit cleanup profile settings");
   }
 
   @Override

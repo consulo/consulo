@@ -247,7 +247,7 @@ public abstract class IntentionSettingsTree {
             text = (String) userObject;
         }
         else if (userObject instanceof IntentionActionMetaData) {
-            text = ((IntentionActionMetaData) userObject).getActionText();
+            text = ((IntentionActionMetaData) userObject).getActionText().get();
         }
         else {
             text = "???";

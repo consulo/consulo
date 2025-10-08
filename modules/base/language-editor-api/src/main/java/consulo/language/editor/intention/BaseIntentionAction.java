@@ -16,26 +16,25 @@
 
 package consulo.language.editor.intention;
 
-import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import org.jetbrains.annotations.Nls;
-
+import consulo.language.scratch.ScratchFileService;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Mike
  */
 public abstract class BaseIntentionAction implements IntentionAction {
-  private String myText = "";
+  private LocalizeValue myText = LocalizeValue.of();
 
   @Override
   @Nonnull
-  public String getText() {
+  public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String text) {
+  protected void setText(@Nonnull LocalizeValue text) {
     myText = text;
   }
 
@@ -46,7 +45,7 @@ public abstract class BaseIntentionAction implements IntentionAction {
 
   @Override
   public String toString() {
-    return getText();
+    return myText.get();
   }
 
   /**

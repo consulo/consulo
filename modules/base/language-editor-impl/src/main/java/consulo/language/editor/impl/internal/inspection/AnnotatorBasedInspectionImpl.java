@@ -41,8 +41,8 @@ public class AnnotatorBasedInspectionImpl extends DefaultHighlightVisitorBasedIn
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return "Annotator";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Annotator");
     }
 
     @Override

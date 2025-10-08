@@ -31,6 +31,7 @@ import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
@@ -61,8 +62,8 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
 
       @Override
       @Nonnull
-      public String getText() {
-        return LanguageLocalize.quickfixChangeTemplateDataLanguageText(language.getDisplayName()).get();
+      public LocalizeValue getText() {
+        return LanguageLocalize.quickfixChangeTemplateDataLanguageText(language.getDisplayName());
       }
 
       @RequiredUIAccess

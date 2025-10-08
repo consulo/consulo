@@ -19,16 +19,16 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.internal.intention.TextDescriptor;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Set;
 
@@ -63,9 +63,9 @@ public class IntentionSearchableOptionContributor extends SearchableOptionContri
         String descriptionText = description.getText().toLowerCase();
         descriptionText = IntentionManagerSettings.HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
         Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
-        words.addAll(processor.getProcessedWords(data.getActionText()));
+        words.addAll(processor.getProcessedWords(data.getActionText().get()));
         for (String word : words) {
-          processor.addOption(word, data.getActionText(), data.getActionText(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));
+          processor.addOption(word, data.getActionText().get(), data.getActionText().get(), "editor.code.intentions", CodeInsightLocalize.intentionSettings().get());
         }
       }
       catch (IOException e) {

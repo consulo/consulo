@@ -16,22 +16,23 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.inspection.reference.RefManager;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.BatchQuickFix;
 import consulo.language.editor.intention.IntentionWrapper;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,7 +45,7 @@ import java.util.Set;
  */
 public class LocalQuickFixWrapper extends QuickFixAction {
   private final QuickFix myFix;
-  private String myText;
+  private LocalizeValue myText = LocalizeValue.empty();
 
   public LocalQuickFixWrapper(@Nonnull QuickFix fix, @Nonnull InspectionToolWrapper toolWrapper) {
     super(fix.getName(), toolWrapper);
@@ -55,19 +56,18 @@ public class LocalQuickFixWrapper extends QuickFixAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    getTemplatePresentation().setText(myText);
-    e.getPresentation().setText(myText);
+    getTemplatePresentation().setTextValue(myText);
+    e.getPresentation().setTextValue(myText);
   }
 
   @Override
-  public String getText(RefEntity where) {
+  public LocalizeValue getText(RefEntity where) {
     return myText;
   }
 
-  public void setText(@Nonnull String text) {
+  public void setText(@Nonnull LocalizeValue text) {
     myText = text;
   }
-
 
   @Override
   protected boolean isProblemDescriptorsAcceptable() {

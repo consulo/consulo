@@ -20,15 +20,15 @@ import consulo.container.plugin.PluginManager;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -234,10 +234,10 @@ public final class IntentionActionMetaData {
   }
 
   @Nonnull
-  public String getActionText() {
-    String text = myAction.getText();
-    if (StringUtil.isEmptyOrSpaces(text)) {
-      return myAction.getClass().getName();
+  public LocalizeValue getActionText() {
+    LocalizeValue text = myAction.getText();
+    if (text == LocalizeValue.of()) {
+      return LocalizeValue.of(myAction.getClass().getName());
     }
     return text;
   }

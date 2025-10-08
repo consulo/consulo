@@ -237,21 +237,21 @@ public class SingleInspectionProfilePanel extends JPanel {
         List<Set<String>> keySetList, Set<String> quoted
     ) {
         filter = filter.toLowerCase();
-        if (StringUtil.containsIgnoreCase(descriptor.getText(), filter)) {
+        if (StringUtil.containsIgnoreCase(descriptor.getText().get(), filter)) {
             return true;
         }
-        String[] groupPath = descriptor.getGroup();
-        for (String group : groupPath) {
-            if (StringUtil.containsIgnoreCase(group, filter)) {
+        LocalizeValue[] groupPath = descriptor.getGroup();
+        for (LocalizeValue group : groupPath) {
+            if (StringUtil.containsIgnoreCase(group.get(), filter)) {
                 return true;
             }
         }
         for (String stripped : quoted) {
-            if (StringUtil.containsIgnoreCase(descriptor.getText(), stripped)) {
+            if (StringUtil.containsIgnoreCase(descriptor.getText().get(), stripped)) {
                 return true;
             }
-            for (String group : groupPath) {
-                if (StringUtil.containsIgnoreCase(group, stripped)) {
+            for (LocalizeValue group : groupPath) {
+                if (StringUtil.containsIgnoreCase(group.get(), stripped)) {
                     return true;
                 }
             }
@@ -295,23 +295,25 @@ public class SingleInspectionProfilePanel extends JPanel {
         configPanelAnchor.add(TargetAWT.to(additionalConfigPanel));
     }
 
-    private static InspectionConfigTreeNode getGroupNode(InspectionConfigTreeNode root, String[] groupPath) {
+    private static InspectionConfigTreeNode getGroupNode(InspectionConfigTreeNode root, LocalizeValue[] groupPath) {
         InspectionConfigTreeNode currentRoot = root;
-        for (String group : groupPath) {
+        for (LocalizeValue group : groupPath) {
             currentRoot = getGroupNode(currentRoot, group);
         }
         return currentRoot;
     }
 
-    private static InspectionConfigTreeNode getGroupNode(InspectionConfigTreeNode root, String group) {
+    private static InspectionConfigTreeNode getGroupNode(InspectionConfigTreeNode root, LocalizeValue group) {
+        String groupText = group.get();
+
         int childCount = root.getChildCount();
         for (int i = 0; i < childCount; i++) {
             InspectionConfigTreeNode child = (InspectionConfigTreeNode) root.getChildAt(i);
-            if (group.equals(child.getUserObject())) {
+            if (groupText.equals(child.getUserObject())) {
                 return child;
             }
         }
-        InspectionConfigTreeNode child = new InspectionConfigTreeNode(group);
+        InspectionConfigTreeNode child = new InspectionConfigTreeNode(groupText);
         root.add(child);
         return child;
     }
@@ -697,7 +699,7 @@ public class SingleInspectionProfilePanel extends JPanel {
             InspectionConfigTreeNode node = (InspectionConfigTreeNode) o.getLastPathComponent();
             Descriptor descriptor = node.getDefaultDescriptor();
             return descriptor != null
-                ? InspectionsConfigTreeComparator.getDisplayTextToSort(descriptor.getText())
+                ? InspectionsConfigTreeComparator.getDisplayTextToSort(descriptor.getText().get())
                 : InspectionsConfigTreeComparator.getDisplayTextToSort(node.getGroupName());
         });
 

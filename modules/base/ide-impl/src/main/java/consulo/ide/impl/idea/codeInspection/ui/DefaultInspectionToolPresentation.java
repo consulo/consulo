@@ -39,6 +39,7 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -476,8 +477,8 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
       Element element = refEntity.getRefManager().export(refEntity, parentNode, line);
       if (element == null) return;
-      @NonNls Element problemClassElement = new Element(InspectionLocalize.inspectionExportResultsProblemElementTag().get());
-      problemClassElement.addContent(myToolWrapper.getDisplayName());
+       Element problemClassElement = new Element(InspectionLocalize.inspectionExportResultsProblemElementTag().get());
+      problemClassElement.addContent(myToolWrapper.getDisplayName().get());
       if (refEntity instanceof RefElement refElement) {
         HighlightSeverity severity = getSeverity(refElement);
         ProblemHighlightType problemHighlightType = descriptor instanceof ProblemDescriptor problemDescriptor
@@ -619,15 +620,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         Class klass = fix instanceof ActionClassHolder ? ((ActionClassHolder ) fix).getActionClass() : fix.getClass();
         QuickFixAction quickFixAction = result.get(klass);
         if (quickFixAction != null) {
-          try {
-            String familyName = fix.getFamilyName();
-            familyName = !familyName.isEmpty() ? "\'" + familyName + "\'" : familyName;
-            ((LocalQuickFixWrapper)quickFixAction).setText(InspectionLocalize.inspectionDescriptorProviderApplyFix(familyName).get());
-          }
-          catch (AbstractMethodError e) {
-            //for plugin compatibility
-            ((LocalQuickFixWrapper)quickFixAction).setText(InspectionLocalize.inspectionDescriptorProviderApplyFix("").get());
-          }
+          ((LocalQuickFixWrapper) quickFixAction).setText(InspectionLocalize.inspectionDescriptorProviderApplyFix(""));
         }
         else {
           LocalQuickFixWrapper quickFixWrapper = new LocalQuickFixWrapper(fix, myToolWrapper);
@@ -825,7 +818,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     return new IntentionAction() {
       @Override
       @Nonnull
-      public String getText() {
+      public LocalizeValue getText() {
         return fix.getName();
       }
 

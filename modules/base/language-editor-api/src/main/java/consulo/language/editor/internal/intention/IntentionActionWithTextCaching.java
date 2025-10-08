@@ -11,6 +11,7 @@ import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -31,9 +32,9 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     private final List<IntentionAction> myOptionIntentions = new ArrayList<>();
     private final List<IntentionAction> myOptionErrorFixes = new ArrayList<>();
     private final List<IntentionAction> myOptionInspectionFixes = new ArrayList<>();
-    private final String myText;
+    private final LocalizeValue myText;
     private final IntentionAction myAction;
-    private final String myDisplayName;
+    private final LocalizeValue myDisplayName;
     private final Image myIcon;
 
     IntentionActionWithTextCaching(@Nonnull IntentionAction action) {
@@ -46,7 +47,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     private IntentionActionWithTextCaching(@Nonnull IntentionAction action,
-                                           String displayName,
+                                           LocalizeValue displayName,
                                            @Nullable Image icon,
                                            @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
         myIcon = icon;
@@ -59,7 +60,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         return myText;
     }
 
@@ -100,14 +101,14 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         return ContainerUtil.concat(myOptionIntentions, myOptionErrorFixes, myOptionInspectionFixes);
     }
 
-    public String getToolName() {
+    public LocalizeValue getToolName() {
         return myDisplayName;
     }
 
     @Override
     @Nonnull
     public String toString() {
-        return getText();
+        return getText().get();
     }
 
     @Override
@@ -186,7 +187,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
 
         @Nonnull
         @Override
-        public String getText() {
+        public LocalizeValue getText() {
             return myText;
         }
 

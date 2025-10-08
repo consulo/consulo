@@ -16,6 +16,7 @@ import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionMenuContributor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
@@ -103,10 +104,10 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
         if (!gutterAction.isAvailable(dataContext)) {
             return;
         }
-        descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
+        descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), LocalizeValue.of(), icon) {
             @Nonnull
             @Override
-            public String getDisplayName() {
+            public LocalizeValue getDisplayName() {
                 return gutterAction.getText();
             }
         });

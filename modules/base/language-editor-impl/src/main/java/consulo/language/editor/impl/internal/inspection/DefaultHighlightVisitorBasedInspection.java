@@ -8,16 +8,16 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
-import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.DefaultHighlightVisitor;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
@@ -26,13 +26,13 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,10 +99,9 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
     return visitor.result;
   }
 
-  @Nls
   @Nonnull
   @Override
-  public String getGroupDisplayName() {
+  public LocalizeValue getGroupDisplayName() {
     return getGeneralGroupName();
   }
 

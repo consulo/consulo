@@ -81,8 +81,8 @@ public class InjectLanguageAction implements IntentionAction {
 
     @Nonnull
     @Override
-    public String getText() {
-        return LanguageInjectAdvancedLocalize.intentionInjectLanguageActionText().get();
+    public LocalizeValue getText() {
+        return LanguageInjectAdvancedLocalize.intentionInjectLanguageActionText();
     }
 
     @Override

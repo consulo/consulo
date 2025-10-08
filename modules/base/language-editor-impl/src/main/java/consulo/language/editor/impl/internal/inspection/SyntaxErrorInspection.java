@@ -16,6 +16,7 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
@@ -29,8 +30,8 @@ public class SyntaxErrorInspection extends DefaultHighlightVisitorBasedInspectio
   @Nls
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Syntax error";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Syntax error");
   }
 
   @Nonnull

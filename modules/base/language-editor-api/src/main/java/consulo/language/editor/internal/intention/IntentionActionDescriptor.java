@@ -33,6 +33,7 @@ import consulo.language.editor.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
@@ -49,22 +50,22 @@ public class IntentionActionDescriptor {
     private volatile HighlightDisplayKey myKey;
     private final ProblemGroup myProblemGroup;
     private final HighlightSeverity mySeverity;
-    private final String myDisplayName;
+    private final LocalizeValue myDisplayName;
     private final Image myIcon;
     private Boolean myCanCleanup;
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, List<IntentionAction> options, String displayName) {
+    public IntentionActionDescriptor(@Nonnull IntentionAction action, List<IntentionAction> options, @Nonnull LocalizeValue displayName) {
         this(action, options, displayName, null);
     }
 
     public IntentionActionDescriptor(@Nonnull IntentionAction action, Image icon) {
-        this(action, null, null, icon);
+        this(action, null, LocalizeValue.of(), icon);
     }
 
     public IntentionActionDescriptor(
         @Nonnull IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable Image icon
     ) {
         this(action, options, displayName, icon, null, null, null);
@@ -73,7 +74,7 @@ public class IntentionActionDescriptor {
     public IntentionActionDescriptor(
         @Nonnull IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nullable String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nullable Image icon,
         @Nullable HighlightDisplayKey key,
         @Nullable ProblemGroup problemGroup,
@@ -203,14 +204,14 @@ public class IntentionActionDescriptor {
     }
 
     @Nullable
-    public String getDisplayName() {
+    public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
     @Override
     public String toString() {
-        String text = getAction().getText();
-        return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
+        LocalizeValue text = getAction().getText();
+        return "descriptor: " + (text == LocalizeValue.of() ? getAction().getClass() : text);
     }
 
     @Nullable

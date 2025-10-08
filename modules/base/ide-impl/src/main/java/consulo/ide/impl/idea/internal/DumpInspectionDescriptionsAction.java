@@ -70,10 +70,11 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
         for (InspectionToolWrapper toolWrapper : tools) {
             classes.add(getInspectionClass(toolWrapper).getName());
 
-            String group = getGroupName(toolWrapper);
-            Collection<String> names = groups.get(group);
+            LocalizeValue group = getGroupName(toolWrapper);
+            String groupText = group.get();
+            Collection<String> names = groups.get(groupText);
             if (names == null) {
-                groups.put(group, (names = new TreeSet<>()));
+                groups.put(groupText, (names = new TreeSet<>()));
             }
             names.add(toolWrapper.getShortName());
 
@@ -121,7 +122,7 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
             ? localInspectionToolWrapper.getTool().getClass() : toolWrapper.getClass();
     }
 
-    private static String getGroupName(InspectionToolWrapper toolWrapper) {
+    private static LocalizeValue getGroupName(InspectionToolWrapper toolWrapper) {
         return toolWrapper.getJoinedGroupPath();
     }
 

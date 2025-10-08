@@ -17,6 +17,7 @@ package consulo.language.editor.intention;
 
 import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -35,7 +36,7 @@ public abstract class PriorityIntentionActionWrapper implements IntentionAction,
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return action.getText();
   }
 

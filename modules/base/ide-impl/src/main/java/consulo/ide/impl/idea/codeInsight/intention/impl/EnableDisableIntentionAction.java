@@ -7,6 +7,7 @@ import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -20,10 +21,10 @@ public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsA
 
   @Override
   @Nonnull
-  public String getText() {
+  public LocalizeValue getText() {
     return IntentionManagerSettings.getInstance().isEnabled(myAction)
-        ? CodeInsightLocalize.disableIntentionAction(myText).get()
-        : CodeInsightLocalize.enableIntentionAction(myText).get();
+        ? CodeInsightLocalize.disableIntentionAction(myText)
+        : CodeInsightLocalize.enableIntentionAction(myText);
   }
 
   @Override
@@ -34,6 +35,6 @@ public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsA
 
   @Override
   public String toString() {
-    return getText();
+    return getText().get();
   }
 }

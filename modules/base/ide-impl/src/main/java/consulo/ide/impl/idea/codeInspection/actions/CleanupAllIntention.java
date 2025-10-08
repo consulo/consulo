@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,8 +30,8 @@ public class CleanupAllIntention extends CleanupIntention {
 
   @Nonnull
   @Override
-  public String getText() {
-    return InspectionLocalize.cleanupInFile().get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.cleanupInFile();
   }
 
   @Nullable

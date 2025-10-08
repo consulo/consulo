@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
-import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.InputEvent;
 import java.util.List;
 import java.util.Objects;
@@ -34,17 +35,17 @@ import java.util.Objects;
  * from kotlin
  */
 public class DaemonTooltipAction implements TooltipAction {
-  private final String myFixText;
+  private final LocalizeValue myFixText;
   private final int myActualOffset;
 
-  public DaemonTooltipAction(String fixText, int actualOffset) {
+  public DaemonTooltipAction(LocalizeValue fixText, int actualOffset) {
     myFixText = fixText;
     myActualOffset = actualOffset;
   }
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myFixText;
   }
 
@@ -72,7 +73,7 @@ public class DaemonTooltipAction implements TooltipAction {
         //unfortunately it is very common case when quick fixes/refactorings use caret position
         editor.getCaretModel().moveToOffset(myActualOffset);
 
-        ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, myFixText);
+        ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, myFixText.get());
         return;
       }
     }

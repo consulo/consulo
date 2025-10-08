@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataManager;
@@ -177,11 +176,11 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         @Nls
         @Nonnull
         @Override
-        public String getText() {
+        public LocalizeValue getText() {
             String text = myLabel.getText();
             return StringUtil.isEmpty(text)
-                ? CodeEditorLocalize.editorNotificationDefaultActionName().get()
-                : StringUtil.shortenTextWithEllipsis(text, 50, 0);
+                ? CodeEditorLocalize.editorNotificationDefaultActionName()
+                : LocalizeValue.of(StringUtil.shortenTextWithEllipsis(text, 50, 0));
         }
 
         @Override
@@ -202,11 +201,10 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
             myLabel = label;
         }
 
-        @Nls
         @Nonnull
         @Override
-        public String getText() {
-            return myLabel.getText();
+        public LocalizeValue getText() {
+            return LocalizeValue.of(myLabel.getText());
         }
 
         @Override
@@ -235,8 +233,8 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         @Nls
         @Nonnull
         @Override
-        public String getText() {
-            return CodeEditorLocalize.editorNotificationSettingsOptionName().get();
+        public LocalizeValue getText() {
+            return CodeEditorLocalize.editorNotificationSettingsOptionName();
         }
 
         @Override

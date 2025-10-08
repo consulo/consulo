@@ -15,10 +15,8 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -36,22 +34,8 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
      *
      * @return the name of the quick fix.
      */
-    @Nls(capitalization = Nls.Capitalization.Sentence)
     @Nonnull
-    default String getName() {
-        return getFamilyName();
-    }
-
-    /**
-     * @return text to appear in "Apply Fix" popup when multiple Quick Fixes exist (in the results of batch code inspection). For example,
-     * if the name of the quickfix is "Create template &lt;filename&gt", the return value of getFamilyName() should be "Create template".
-     * If the name of the quickfix does not depend on a specific element, simply return getName().
-     */
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Will be removed in future")
-    String getFamilyName();
+    LocalizeValue getName();
 
     /**
      * Called to apply the fix.

@@ -16,29 +16,30 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.language.editor.intention.AbstractEmptyIntentionAction;
-import consulo.language.editor.intention.IntentionActionDelegate;
-import consulo.language.editor.internal.intention.CachedIntentions;
-import consulo.language.editor.internal.intention.IntentionActionDescriptor;
-import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
-import consulo.language.editor.impl.internal.hint.TooltipAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,9 +98,9 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
       IntentionAction action = IntentionActionDelegate.unwrap(it.getAction());
 
       if (!(action instanceof AbstractEmptyIntentionAction) && action.isAvailable(project, editor, psiFile)) {
-        String text = it.getText();
+        LocalizeValue text = it.getText();
         //we cannot properly render html inside the fix button fixes with html text
-        if (!XmlStringUtil.isWrappedInHtml(text)) {
+        if (!XmlStringUtil.isWrappedInHtml(text.get())) {
           return action;
         }
       }

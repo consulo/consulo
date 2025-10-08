@@ -16,6 +16,7 @@ import consulo.language.editor.internal.intention.IntentionActionWithTextCaching
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,10 +60,10 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                 if (action instanceof EmptyIntentionAction) {
                     continue;
                 }
-                String text = action.getText();
-                createActionLabel(text, () -> {
+                LocalizeValue text = action.getText();
+                createActionLabel(text.get(), () -> {
                     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                    ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text);
+                    ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text.get());
                 });
             }
         }

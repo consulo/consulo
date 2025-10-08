@@ -18,7 +18,6 @@ package consulo.language.editor.inspection;
 import consulo.component.util.Iconable;
 import consulo.language.Language;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
@@ -26,13 +25,14 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -73,7 +73,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   @Nonnull
   @Override
-  public String getName() {
+  public LocalizeValue getName() {
     return getText();
   }
 
@@ -82,13 +82,14 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return PlatformIconGroup.generalInspectionstrafficoff();
   }
 
-  private String myText = "";
+  private LocalizeValue myText = LocalizeValue.of();
+
   @Nonnull
-  public String getText() {
+  public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull String text) {
+  protected void setText(@Nonnull LocalizeValue text) {
     myText = text;
   }
 
@@ -98,7 +99,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   @Override
   public String toString() {
-    return getText();
+    return getText().get();
   }
 
   @Override
@@ -166,12 +167,5 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
       return null;
     }
     return Collections.singletonList(prev);
-  }
-
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return InspectionLocalize.suppressInspectionFamily().get();
   }
 }

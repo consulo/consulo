@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -28,7 +29,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,14 +43,8 @@ public class SandLocalInspection extends LocalInspectionTool {
   private static final class SandClassDisableFix implements LocalQuickFix {
     @Nonnull
     @Override
-    public String getName() {
-      return "Disable class check";
-    }
-
-    @Nonnull
-    @Override
-    public String getFamilyName() {
-      return "Disable class check";
+    public LocalizeValue getName() {
+      return LocalizeValue.localizeTODO("Disable class check");
     }
 
     @Override
@@ -72,8 +66,8 @@ public class SandLocalInspection extends LocalInspectionTool {
 
   @Nonnull
   @Override
-  public String getGroupDisplayName() {
-    return "General";
+  public LocalizeValue getGroupDisplayName() {
+    return InspectionLocalize.inspectionGeneralToolsGroupName();
   }
 
   @Nonnull
@@ -84,8 +78,8 @@ public class SandLocalInspection extends LocalInspectionTool {
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Test Sand Inspection with Settings";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Test Sand Inspection with Settings");
   }
 
   @Nonnull

@@ -17,7 +17,6 @@ package consulo.language.inject.advanced.impl.internal.intention;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.util.FileContentUtil;
@@ -34,6 +33,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
@@ -53,8 +53,8 @@ import java.util.Set;
 public class UnInjectLanguageAction implements IntentionAction, LowPriorityAction {
     @Nonnull
     @Override
-    public String getText() {
-        return LanguageInjectAdvancedLocalize.intentionUninjectLanguageActionText().get();
+    public LocalizeValue getText() {
+        return LanguageInjectAdvancedLocalize.intentionUninjectLanguageActionText();
     }
 
     @Override

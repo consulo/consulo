@@ -56,7 +56,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         }
         DataContext dataContext = e.getDataContext();
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-            getSelectedToolWrapper().getDisplayName(),
+            getSelectedToolWrapper().getDisplayName().get(),
             options,
             dataContext,
             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,

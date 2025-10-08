@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.rawHighlight;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
@@ -30,7 +32,7 @@ public class HighlightDisplayKey {
     // TODO [VISTALL] this registry unsafe, and plugins not remove data after uninstall(in runtime)
     private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new ConcurrentHashMap<>();
     private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new ConcurrentHashMap<>();
-    private static final Map<HighlightDisplayKey, Supplier<String>> ourKeyToDisplayNameMap = new ConcurrentHashMap<>();
+    private static final Map<HighlightDisplayKey, LocalizeValue> ourKeyToDisplayNameMap = new ConcurrentHashMap<>();
     private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new ConcurrentHashMap<>();
 
     private final String myName;
@@ -71,21 +73,23 @@ public class HighlightDisplayKey {
     }
 
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull Supplier<String> displayName) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName) {
         return register(name, displayName, name);
     }
 
 
     /**
-     * @see #register(String, Supplier, String)
+     * @see #register(String, LocalizeValue, String)
      */
     @Nullable
+    @Deprecated
+    @DeprecationInfo("Use with localize value")
     public static HighlightDisplayKey register(@Nonnull String name, @Nonnull String displayName, @Nonnull String id) {
-        return register(name, () -> displayName, id);
+        return register(name, LocalizeValue.of(displayName), id);
     }
 
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull Supplier<String> displayName, @Nonnull String id) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName, @Nonnull String id) {
         if (find(name) != null) {
             LOG.info("Key with name \'" + name + "\' already registered");
             return null;
@@ -98,7 +102,7 @@ public class HighlightDisplayKey {
     @Nullable
     public static HighlightDisplayKey register(
         @Nonnull String name,
-        @Nonnull Supplier<String> displayName,
+        @Nonnull LocalizeValue displayName,
         @Nonnull String id,
         @Nullable String alternativeID
     ) {
@@ -124,14 +128,14 @@ public class HighlightDisplayKey {
         return key;
     }
 
-    @Nullable
-    public static String getDisplayNameByKey(@Nullable HighlightDisplayKey key) {
+    @Nonnull
+    public static LocalizeValue getDisplayNameByKey(@Nullable HighlightDisplayKey key) {
         if (key == null) {
-            return null;
+            return LocalizeValue.of();
         }
         else {
-            Supplier<String> computable = ourKeyToDisplayNameMap.get(key);
-            return computable == null ? null : computable.get();
+            LocalizeValue computable = ourKeyToDisplayNameMap.get(key);
+            return computable == null ? LocalizeValue.of() : computable;
         }
     }
 

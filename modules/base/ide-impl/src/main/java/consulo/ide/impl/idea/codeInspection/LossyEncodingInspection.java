@@ -73,8 +73,8 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return InspectionLocalize.groupNamesInternationalizationIssues().get();
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.groupNamesInternationalizationIssues();
     }
 
     @Nonnull
@@ -85,8 +85,8 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return InspectionLocalize.lossyEncoding().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionLocalize.lossyEncoding();
     }
 
     @Override
@@ -242,8 +242,8 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     private static class ReloadInAnotherEncodingFix extends ChangeEncodingFix {
         @Nonnull
         @Override
-        public String getName() {
-            return "Reload in another encoding";
+        public LocalizeValue getName() {
+            return LocalizeValue.localizeTODO("Reload in another encoding");
         }
 
         @Override
@@ -259,14 +259,8 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     private static class ChangeEncodingFix implements LocalQuickFix {
         @Nonnull
         @Override
-        public String getName() {
-            return "Change file encoding";
-        }
-
-        @Nonnull
-        @Override
-        public String getFamilyName() {
-            return getName();
+        public LocalizeValue getName() {
+            return LocalizeValue.localizeTODO("Change file encoding");
         }
 
         @Override

@@ -87,26 +87,26 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     }
 
     @Nonnull
-    public abstract String getGroupDisplayName();
+    public abstract LocalizeValue getGroupDisplayName();
 
     @Nonnull
-    public String[] getGroupPath() {
-        String groupDisplayName = getGroupDisplayName();
-        if (groupDisplayName.isEmpty()) {
-            groupDisplayName = InspectionLocalize.inspectionGeneralToolsGroupName().get();
+    public LocalizeValue[] getGroupPath() {
+        LocalizeValue groupDisplayName = getGroupDisplayName();
+        if (groupDisplayName == LocalizeValue.of()) {
+            groupDisplayName = InspectionLocalize.inspectionGeneralToolsGroupName();
         }
 
         Language language = getLanguage();
         if (language != null) {
-            return new String[]{language.getDisplayName().get(), groupDisplayName};
+            return new LocalizeValue[]{language.getDisplayName(), groupDisplayName};
         }
         else {
-            return new String[]{groupDisplayName};
+            return new LocalizeValue[]{groupDisplayName};
         }
     }
 
     @Nonnull
-    public abstract String getDisplayName();
+    public abstract LocalizeValue getDisplayName();
 
     @Nonnull
     public String getShortName() {
@@ -138,8 +138,9 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return null;
     }
 
-    public static String getGeneralGroupName() {
-        return InspectionsBundle.message("inspection.general.tools.group.name");
+    @Nonnull
+    public static LocalizeValue getGeneralGroupName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull

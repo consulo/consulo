@@ -32,6 +32,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.DumbService;
@@ -142,7 +143,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             LocalInspectionTool localInspectionTool = toolWrapper.getTool();
             Object toolState = toolWrapper.getToolState().getState();
             final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
-            final String displayName = toolWrapper.getDisplayName();
+            final LocalizeValue displayName = toolWrapper.getDisplayName();
             ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
                 @Override
                 @RequiredReadAction

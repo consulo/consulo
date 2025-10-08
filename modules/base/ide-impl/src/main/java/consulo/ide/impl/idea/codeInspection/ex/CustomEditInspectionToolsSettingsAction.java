@@ -6,25 +6,24 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
-import java.util.function.Supplier;
-
 public class CustomEditInspectionToolsSettingsAction implements SyntheticIntentionAction, Iconable {
   private final EditInspectionToolsSettingsAction myEditInspectionToolsSettingsAction;   // we delegate due to priority
-  private final Supplier<String> myText;
+  private final LocalizeValue myText;
 
-  public CustomEditInspectionToolsSettingsAction(HighlightDisplayKey displayKey, Supplier<String> text) {
+  public CustomEditInspectionToolsSettingsAction(HighlightDisplayKey displayKey, LocalizeValue text) {
     myEditInspectionToolsSettingsAction = new EditInspectionToolsSettingsAction(displayKey);
     myText = text;
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return myText.get();
+  public LocalizeValue getText() {
+    return myText;
   }
 
   @Override

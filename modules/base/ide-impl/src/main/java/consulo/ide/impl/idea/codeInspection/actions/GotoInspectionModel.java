@@ -22,6 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.internal.inspection.ScopeToolState;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
@@ -57,12 +58,12 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
                         continue;
                     }
                 }
-                myToolNames.put(tool.getDisplayName(), workingTool);
-                String groupName = tool.getJoinedGroupPath();
-                Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName);
+                myToolNames.put(tool.getDisplayName().get(), workingTool);
+                LocalizeValue groupName = tool.getJoinedGroupPath();
+                Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName.get());
                 if (toolsInGroup == null) {
                     toolsInGroup = new HashSet<>();
-                    myGroupNames.put(groupName, toolsInGroup);
+                    myGroupNames.put(groupName.get(), toolsInGroup);
                 }
                 toolsInGroup.add(workingTool);
                 myToolShortNames.put(tool.getShortName(), workingTool);

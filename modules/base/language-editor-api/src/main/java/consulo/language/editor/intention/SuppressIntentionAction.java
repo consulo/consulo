@@ -15,14 +15,17 @@
  */
 package consulo.language.editor.intention;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -33,7 +36,7 @@ import jakarta.annotation.Nullable;
  * @since 2007-12-24
  */
 public abstract class SuppressIntentionAction implements Iconable, SyntheticIntentionAction {
-  private String myText = "";
+  private LocalizeValue myText = LocalizeValue.of();
   public static SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 
   @Override
@@ -43,11 +46,11 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull String text) {
+  protected void setText(@Nonnull LocalizeValue text) {
     myText = text;
   }
 
@@ -58,10 +61,11 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
 
   @Override
   public String toString() {
-    return getText();
+    return myText.get();
   }
 
   @Override
+  @RequiredUIAccess
   public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!file.getManager().isInProject(file)) return;
     PsiElement element = getElement(editor, file);
@@ -82,6 +86,7 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
   public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
 
   @Override
+  @RequiredReadAction
   public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (file == null) return false;
     PsiManager manager = file.getManager();
@@ -103,6 +108,7 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
   public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
 
   @Nullable
+  @RequiredReadAction
   private static PsiElement getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
     CaretModel caretModel = editor.getCaretModel();
     int position = caretModel.getOffset();

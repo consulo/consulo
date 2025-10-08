@@ -16,27 +16,28 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.content.scope.NamedScope;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.internal.inspection.ScopeToolState;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.content.scope.NamedScope;
-import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 /**
  * @author anna
  * @since 2004-12-08
  */
 public class Descriptor {
-  private final String myText;
-  private final String[] myGroup;
+  private final LocalizeValue myText;
+  private final LocalizeValue[] myGroup;
   private final HighlightDisplayKey myKey;
 
   private Element myConfig;
@@ -55,8 +56,8 @@ public class Descriptor {
     myInspectionProfile = inspectionProfile;
     InspectionToolWrapper tool = state.getTool();
     myText = tool.getDisplayName();
-    String[] groupPath = tool.getGroupPath();
-    myGroup = groupPath.length == 0 ? new String[]{InspectionsBundle.message("inspection.general.tools.group.name")} : groupPath;
+    LocalizeValue[] groupPath = tool.getGroupPath();
+    myGroup = groupPath.length == 0 ? new LocalizeValue[]{InspectionLocalize.inspectionGeneralToolsGroupName()} : groupPath;
     myKey = HighlightDisplayKey.find(tool.getShortName());
     myScopeName = state.getScopeId();
     myScope = state.getScope(project);
@@ -87,7 +88,7 @@ public class Descriptor {
     myEnabled = enabled;
   }
 
-  public String getText() {
+  public LocalizeValue getText() {
     return myText;
   }
 
@@ -138,7 +139,7 @@ public class Descriptor {
     return element;
   }
 
-  public String[] getGroup() {
+  public LocalizeValue[] getGroup() {
     return myGroup;
   }
 

@@ -42,6 +42,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
@@ -121,13 +122,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
         return new LocalQuickFix() {
             @Override
             @Nonnull
-            public String getName() {
-                return action.getText();
-            }
-
-            @Nonnull
-            @Override
-            public String getFamilyName() {
+            public LocalizeValue getName() {
                 return action.getText();
             }
 

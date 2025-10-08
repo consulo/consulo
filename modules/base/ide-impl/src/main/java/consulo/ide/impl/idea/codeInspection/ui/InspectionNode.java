@@ -32,8 +32,9 @@ public class InspectionNode extends InspectionTreeNode {
     super(toolWrapper);
   }
 
+  @Override
   public String toString() {
-    return getToolWrapper().getDisplayName();
+    return getToolWrapper().getDisplayName().get();
   }
 
   @Nonnull

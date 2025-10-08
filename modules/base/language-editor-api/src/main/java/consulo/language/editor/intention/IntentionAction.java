@@ -24,9 +24,8 @@ import consulo.component.util.Iconable;
 import consulo.language.editor.inspection.FileModifier;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -53,9 +52,8 @@ public interface IntentionAction extends FileModifier {
    * @return the text to show in the intention popup.
    * @see #isAvailable(Project, Editor, PsiFile)
    */
-  @Nls(capitalization = Nls.Capitalization.Sentence)
   @Nonnull
-  String getText();
+  LocalizeValue getText();
 
   /**
    * Checks whether this intention is available at a caret offset in file.

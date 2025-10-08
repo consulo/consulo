@@ -291,7 +291,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         };
 
 
-        buttons.add(createActionLabel("More actions...", showAllFixes, hintHint.getTextBackground()), gridBag.next().insets(topInset, 12, bottomInset, 4));
+        buttons.add(createActionLabel(LocalizeValue.localizeTODO("More actions..."), showAllFixes, hintHint.getTextBackground()), gridBag.next().insets(topInset, 12, bottomInset, 4));
         buttons.add(createKeymapHint(shortcutShowAllActionsText), gridBag.next().fillCellHorizontally().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 20));
 
         actions.add(new AnAction() {
@@ -330,8 +330,8 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return KeymapUtil.getShortcutsText(keymap.getShortcuts(key));
     }
 
-    private HyperlinkLabel createActionLabel(String text, Consumer<InputEvent> action, Color background) {
-        HyperlinkLabel label = new HyperlinkLabel(text, background) {
+    private HyperlinkLabel createActionLabel(LocalizeValue text, Consumer<InputEvent> action, Color background) {
+        HyperlinkLabel label = new HyperlinkLabel(text.get(), background) {
             @Override
             public int getTextOffset() {
                 return 0;

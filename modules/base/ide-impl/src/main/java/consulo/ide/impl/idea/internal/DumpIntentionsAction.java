@@ -61,7 +61,7 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
 
                 try {
                     Element metadataElement = new Element("intention");
-                    metadataElement.setAttribute("text", metaData.getActionText());
+                    metadataElement.setAttribute("text", metaData.getActionText().get());
                     metadataElement.setAttribute("description", metaData.getDescription().getText());
 
                     String key = StringUtil.join(metaData.myCategory, ".");

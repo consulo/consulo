@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -28,16 +29,16 @@ import jakarta.annotation.Nonnull;
  * @since 2005-05-11
  */
 public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements SyntheticIntentionAction, LowPriorityAction, Iconable {
-  private final String myName;
+  private final LocalizeValue myName;
 
-  public EmptyIntentionAction(@Nonnull String name) {
+  public EmptyIntentionAction(@Nonnull LocalizeValue name) {
     myName = name;
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return InspectionLocalize.inspectionOptionsActionText(myName).get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.inspectionOptionsActionText(myName);
   }
 
   @Override

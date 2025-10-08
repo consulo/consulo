@@ -5,6 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
@@ -14,14 +15,14 @@ abstract class AbstractEditIntentionSettingsAction implements SyntheticIntention
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
 
   @Nonnull
-  final String myText;
+  final LocalizeValue myText;
   private final boolean myEnabled;
 
   protected AbstractEditIntentionSettingsAction(@Nonnull IntentionAction action) {
     myText = action.getText();
     // needed for checking errors in user written actions
     //noinspection ConstantConditions
-    LOG.assertTrue(myText != null, "action " + action.getClass() + " text returned null");
+    LOG.assertTrue(myText != LocalizeValue.of(), "action " + action.getClass() + " text returned empty");
     myEnabled = true;
   }
 

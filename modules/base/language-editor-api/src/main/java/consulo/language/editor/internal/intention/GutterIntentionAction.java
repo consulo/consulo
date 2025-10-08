@@ -10,12 +10,12 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,7 +26,8 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     private final AnAction myAction;
     private final int myOrder;
     private final Image myIcon;
-    private String myText;
+
+    private LocalizeValue myTextValue = LocalizeValue.of();
 
     public GutterIntentionAction(AnAction action, int order, Image icon) {
         myAction = action;
@@ -50,7 +51,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        return myText != null ? StringUtil.isNotEmpty(myText) : isAvailable(editor.getDataContext());
+        return myTextValue != LocalizeValue.of() || isAvailable(editor.getDataContext());
     }
 
     @Nonnull
@@ -65,24 +66,24 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     }
 
     public boolean isAvailable(@Nonnull DataContext dataContext) {
-        if (myText == null) {
+        if (myTextValue == null) {
             AnActionEvent event = createActionEvent(dataContext);
             myAction.update(event);
             if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
-                String text = event.getPresentation().getText();
-                myText = text != null ? text : StringUtil.notNullize(myAction.getTemplatePresentation().getText());
+                LocalizeValue text = event.getPresentation().getTextValue();
+                myTextValue = text != LocalizeValue.of() ? text : myAction.getTemplatePresentation().getTextValue();
             }
             else {
-                myText = "";
+                myTextValue = LocalizeValue.of();
             }
         }
-        return StringUtil.isNotEmpty(myText);
+        return myTextValue != LocalizeValue.of();
     }
 
     @Override
     @Nonnull
-    public String getText() {
-        return StringUtil.notNullize(myText);
+    public LocalizeValue getText() {
+        return myTextValue;
     }
 
     @Override

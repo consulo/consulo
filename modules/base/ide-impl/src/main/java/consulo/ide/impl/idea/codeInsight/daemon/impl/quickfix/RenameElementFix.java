@@ -57,14 +57,8 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
 
   @Override
   @Nonnull
-  public String getText() {
-    return myText.get();
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return CodeInsightLocalize.renameElementFamily().get();
+  public LocalizeValue getText() {
+    return myText;
   }
 
   @Override

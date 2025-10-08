@@ -37,6 +37,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -63,12 +64,12 @@ public class QuickFixAction extends AnAction {
         return e.getData(InspectionResultsView.DATA_KEY);
     }
 
-    protected QuickFixAction(String text, @Nonnull InspectionToolWrapper toolWrapper) {
+    protected QuickFixAction(LocalizeValue text, @Nonnull InspectionToolWrapper toolWrapper) {
         this(text, PlatformIconGroup.actionsIntentionbulb(), null, toolWrapper);
     }
 
-    protected QuickFixAction(String text, Image icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {
-        super(text, null, icon);
+    protected QuickFixAction(LocalizeValue text, Image icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {
+        super(text, text, icon);
         myToolWrapper = toolWrapper;
         if (keyStroke != null) {
             registerCustomShortcutSet(new CustomShortcutSet(keyStroke), null);
@@ -101,8 +102,8 @@ public class QuickFixAction extends AnAction {
         return false;
     }
 
-    public String getText(RefEntity where) {
-        return getTemplatePresentation().getText();
+    public LocalizeValue getText(RefEntity where) {
+        return getTemplatePresentation().getTextValue();
     }
 
     @Override

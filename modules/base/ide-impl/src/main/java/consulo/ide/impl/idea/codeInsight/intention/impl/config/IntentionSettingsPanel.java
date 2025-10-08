@@ -17,15 +17,14 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.configurable.SearchableOptionsRegistrar;
-import consulo.language.editor.internal.intention.IntentionManagerSettings;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -131,8 +130,8 @@ public class IntentionSettingsPanel {
     myIntentionSettingsTree.selectIntention(familyName);
   }
 
-  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, @NonNls String filter, boolean forceInclude, List<Set<String>> keySetList, HashSet<String> quoted) {
-    if (StringUtil.containsIgnoreCase(metaData.getActionText(), filter)) {
+  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, String filter, boolean forceInclude, List<Set<String>> keySetList, HashSet<String> quoted) {
+    if (StringUtil.containsIgnoreCase(metaData.getActionText().get(), filter)) {
       return true;
     }
     for (String category : metaData.myCategory) {
@@ -141,7 +140,7 @@ public class IntentionSettingsPanel {
       }
     }
     for (String stripped : quoted) {
-      if (StringUtil.containsIgnoreCase(metaData.getActionText(), stripped)) {
+      if (StringUtil.containsIgnoreCase(metaData.getActionText().get(), stripped)) {
         return true;
       }
       for (String category : metaData.myCategory) {

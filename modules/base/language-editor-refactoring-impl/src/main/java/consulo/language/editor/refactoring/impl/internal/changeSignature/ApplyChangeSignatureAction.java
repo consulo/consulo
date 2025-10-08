@@ -25,6 +25,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,8 +39,8 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
 
   @Nonnull
   @Override
-  public String getText() {
-    return RefactoringLocalize.changingSignatureOf0(myMethodName).get();
+  public LocalizeValue getText() {
+    return RefactoringLocalize.changingSignatureOf0(myMethodName);
   }
 
   @Override

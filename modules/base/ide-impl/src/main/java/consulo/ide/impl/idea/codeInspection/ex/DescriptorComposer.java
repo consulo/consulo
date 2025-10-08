@@ -27,7 +27,9 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -83,11 +85,11 @@ public class DescriptorComposer extends HTMLComposerBase {
     }
     List<String> texts = new ArrayList<>();
     for (QuickFixAction quickFix : quickFixes) {
-      String text = quickFix.getText(where);
-      if (text == null) continue;
-      texts.add(text);
+      LocalizeValue text = quickFix.getText(where);
+      if (text == LocalizeValue.of()) continue;
+      texts.add(text.get());
     }
-    return texts.toArray(new String[texts.size()]);
+    return ArrayUtil.toStringArray(texts);
   }
 
   protected void composeAdditionalDescription(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity) {}

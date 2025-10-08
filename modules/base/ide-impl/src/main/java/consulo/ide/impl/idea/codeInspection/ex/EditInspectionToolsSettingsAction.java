@@ -31,6 +31,7 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -56,8 +57,8 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
 
   @Override
   @Nonnull
-  public String getText() {
-    return InspectionLocalize.editOptionsOfReporterInspectionText().get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.editOptionsOfReporterInspectionText();
   }
 
   @Override

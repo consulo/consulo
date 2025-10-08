@@ -16,10 +16,12 @@
 
 package consulo.language.editor.inspection;
 
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,8 +42,8 @@ public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCom
 
   @Override
   @Nonnull
-  public String getText() {
-    return InspectionsBundle.message("suppress.inspection.statement");
+  public LocalizeValue getText() {
+    return InspectionLocalize.suppressInspectionStatement();
   }
 
   @Override

@@ -34,6 +34,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.collection.ContainerUtil;
@@ -169,11 +170,11 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
 
     @Override
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         if (myLastLanguageName == null) {
-            return "Edit Injected Fragment";
+            return LocalizeValue.localizeTODO("Edit Injected Fragment");
         }
-        return "Edit " + StringUtil.notNullize(myLastLanguageName, "Injected") + " Fragment";
+        return LocalizeValue.localizeTODO("Edit " + StringUtil.notNullize(myLastLanguageName, "Injected") + " Fragment");
     }
 
     public static Balloon.Position getBalloonPosition(Editor editor) {

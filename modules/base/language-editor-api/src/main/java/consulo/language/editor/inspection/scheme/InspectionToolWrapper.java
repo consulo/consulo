@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.localize.LocalizeValue;
@@ -139,14 +140,14 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
     }
 
     @Nonnull
-    public String getDisplayName() {
+    public LocalizeValue getDisplayName() {
         return getTool().getDisplayName();
     }
 
     @Nonnull
     @Deprecated
     @DeprecationInfo("Use #getJoinedGroupPath()")
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return getTool().getGroupDisplayName();
     }
 
@@ -160,17 +161,17 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
     }
 
     @Nonnull
-    public String[] getGroupPath() {
+    public LocalizeValue[] getGroupPath() {
         return getTool().getGroupPath();
     }
 
     @Nonnull
-    public String getJoinedGroupPath() {
-        String[] groupPath = getGroupPath();
+    public LocalizeValue getJoinedGroupPath() {
+        LocalizeValue[] groupPath = getGroupPath();
         if (groupPath.length == 0) {
-            return InspectionsBundle.message("inspection.general.tools.group.name");
+            return InspectionLocalize.inspectionGeneralToolsGroupName();
         }
-        return String.join("/", groupPath);
+        return LocalizeValue.join("/", groupPath);
     }
 
     public String loadDescription() {

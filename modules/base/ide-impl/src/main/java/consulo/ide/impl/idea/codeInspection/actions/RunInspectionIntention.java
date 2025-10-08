@@ -36,6 +36,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -63,8 +64,8 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
 
   @Nonnull
   @Override
-  public String getText() {
-    return InspectionLocalize.runInspectionOnFileIntentionText().get();
+  public LocalizeValue getText() {
+    return InspectionLocalize.runInspectionOnFileIntentionText();
   }
 
   @Override
@@ -123,7 +124,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     rootProfile.collectDependentInspections(toolWrapper, allWrappers, managerEx.getProject());
     InspectionToolWrapper[] toolWrappers = allWrappers.toArray(new InspectionToolWrapper[allWrappers.size()]);
     InspectionProfileImpl model =
-      InspectionProfileImpl.createSimple(toolWrapper.getDisplayName(), managerEx.getProject(), toolWrappers);
+      InspectionProfileImpl.createSimple(toolWrapper.getDisplayName().get(), managerEx.getProject(), toolWrappers);
     try {
       Element element = new Element("toCopy");
       for (InspectionToolWrapper wrapper : toolWrappers) {
@@ -136,7 +137,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     }
     catch (WriteExternalException | InvalidDataException ignored) {
     }
-    model.setEditable(toolWrapper.getDisplayName());
+    model.setEditable(toolWrapper.getDisplayName().get());
     GlobalInspectionContextImpl inspectionContext = managerEx.createNewGlobalContext(false);
     inspectionContext.setExternalProfile(model);
     return inspectionContext;
