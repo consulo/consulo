@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
@@ -24,21 +25,36 @@ import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * This action works only in the variables view
  *
  * @see AddToWatchesAction
  */
+@ActionImpl(id = "Debugger.Tree.AddToWatches")
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
+    @Inject
+    public XAddToWatchesTreeAction() {
+        super(XDebuggerLocalize.actionTreeAddToWatchesText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionAddtowatch());
+    }
+
+    protected XAddToWatchesTreeAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
     @Override
     protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
-        return super.isEnabled(node, e) && DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
+        return super.isEnabled(node, e)
+            && DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer())
+            && getWatchesView(e) != null;
     }
 
     @Override

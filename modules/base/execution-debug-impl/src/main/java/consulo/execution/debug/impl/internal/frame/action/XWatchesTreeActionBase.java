@@ -15,12 +15,15 @@
  */
 package consulo.execution.debug.impl.internal.frame.action;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -31,42 +34,54 @@ import java.util.List;
  * @author nik
  */
 public abstract class XWatchesTreeActionBase extends AnAction {
-  @Nonnull
-  public static <T extends TreeNode> List<? extends T> getSelectedNodes(@Nonnull XDebuggerTree tree, Class<T> nodeClass) {
-    List<T> list = new ArrayList<T>();
-    TreePath[] selectionPaths = tree.getSelectionPaths();
-    if (selectionPaths != null) {
-      for (TreePath selectionPath : selectionPaths) {
-        Object element = selectionPath.getLastPathComponent();
-        if (nodeClass.isInstance(element)) {
-          list.add(nodeClass.cast(element));
+    protected XWatchesTreeActionBase(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    protected XWatchesTreeActionBase(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
+    @Nonnull
+    public static <T extends TreeNode> List<? extends T> getSelectedNodes(@Nonnull XDebuggerTree tree, Class<T> nodeClass) {
+        List<T> list = new ArrayList<>();
+        TreePath[] selectionPaths = tree.getSelectionPaths();
+        if (selectionPaths != null) {
+            for (TreePath selectionPath : selectionPaths) {
+                Object element = selectionPath.getLastPathComponent();
+                if (nodeClass.isInstance(element)) {
+                    list.add(nodeClass.cast(element));
+                }
+            }
         }
-      }
+        return list;
     }
-    return list;
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    XDebuggerTree tree = XDebuggerTree.getTree(e);
-    XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
-    boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
-    e.getPresentation().setEnabled(enabled);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    XDebuggerTree tree = XDebuggerTree.getTree(e);
-    XWatchesView watchesView = e.getRequiredData(XWatchesView.DATA_KEY);
-    if (tree != null) {
-      perform(e, tree, watchesView);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        XDebuggerTree tree = XDebuggerTree.getTree(e);
+        XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
+        boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
+        e.getPresentation().setEnabled(enabled);
     }
-  }
 
-  protected abstract void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        XDebuggerTree tree = XDebuggerTree.getTree(e);
+        XWatchesView watchesView = e.getRequiredData(XWatchesView.DATA_KEY);
+        if (tree != null) {
+            perform(e, tree, watchesView);
+        }
+    }
 
-  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
-    return true;
-  }
+    protected abstract void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView);
+
+    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+        return true;
+    }
 }

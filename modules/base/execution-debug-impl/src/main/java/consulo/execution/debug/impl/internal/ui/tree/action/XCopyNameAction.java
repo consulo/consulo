@@ -15,7 +15,9 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.annotation.Nonnull;
@@ -25,9 +27,14 @@ import java.awt.datatransfer.StringSelection;
 /**
  * @author nik
  */
+@ActionImpl(id = "XDebugger.CopyName")
 public class XCopyNameAction extends XDebuggerTreeActionBase {
-  @Override
-  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
-    CopyPasteManager.getInstance().setContents(new StringSelection(nodeName));
-  }
+    public XCopyNameAction() {
+        super(XDebuggerLocalize.actionCopyNameText(), XDebuggerLocalize.actionCopyNameDescription());
+    }
+
+    @Override
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        CopyPasteManager.getInstance().setContents(new StringSelection(nodeName));
+    }
 }

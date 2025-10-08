@@ -15,10 +15,17 @@
  */
 package consulo.execution.debug.impl.internal.frame.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -26,16 +33,20 @@ import java.util.List;
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.XREMOVE_WATCH, shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class XRemoveWatchAction extends XWatchesTreeActionBase {
+    public XRemoveWatchAction() {
+        super(XDebuggerLocalize.actionRemoveWatchText(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
+    }
 
-  @Override
-  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
-    return !getSelectedNodes(tree, WatchNodeImpl.class).isEmpty();
-  }
+    @Override
+    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+        return !getSelectedNodes(tree, WatchNodeImpl.class).isEmpty();
+    }
 
-  @Override
-  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
-    List<? extends WatchNodeImpl>nodes = getSelectedNodes(tree, WatchNodeImpl.class);
-    watchesView.removeWatches(nodes);
-  }
+    @Override
+    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+        List<? extends WatchNodeImpl> nodes = getSelectedNodes(tree, WatchNodeImpl.class);
+        watchesView.removeWatches(nodes);
+    }
 }

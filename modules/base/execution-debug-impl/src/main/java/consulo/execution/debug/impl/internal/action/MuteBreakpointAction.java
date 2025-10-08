@@ -16,8 +16,9 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,14 +28,14 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-@ActionImpl(id = "XDebugger.MuteBreakpoints")
+@ActionImpl(id = XDebuggerActions.MUTE_BREAKPOINTS)
 public class MuteBreakpointAction extends ToggleAction {
     private final XDebuggerMuteBreakpointsHandler myHandler = new XDebuggerMuteBreakpointsHandler();
 
     public MuteBreakpointAction() {
         super(
-            ActionLocalize.actionXdebuggerMutebreakpointsText(),
-            ActionLocalize.actionXdebuggerMutebreakpointsDescription(),
+            XDebuggerLocalize.actionMuteBreakpointsText(),
+            XDebuggerLocalize.actionMuteBreakpointsDescription(),
             ExecutionDebugIconGroup.actionMutebreakpoints()
         );
     }

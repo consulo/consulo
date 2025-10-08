@@ -15,37 +15,46 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.frame.XReferrersProvider;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XInspectDialog;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
  */
+@ActionImpl(id = "Debugger.ShowReferring")
 public class ShowReferringObjectsAction extends XDebuggerTreeActionBase {
-
-  @Override
-  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
-    return node.getValueContainer().getReferrersProvider() != null;
-  }
-
-  @Override
-  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
-    XReferrersProvider referrersProvider = node.getValueContainer().getReferrersProvider();
-    if (referrersProvider != null) {
-      XDebuggerTree tree = XDebuggerTree.getTree(e.getDataContext());
-      XInspectDialog dialog = new XInspectDialog(tree.getProject(),
-                                                 tree.getEditorsProvider(),
-                                                 tree.getSourcePosition(),
-                                                 nodeName,
-                                                 referrersProvider.getReferringObjectsValue(),
-                                                 tree.getValueMarkers());
-      dialog.setTitle(XDebuggerBundle.message("showReferring.dialog.title", nodeName));
-      dialog.show();
+    public ShowReferringObjectsAction() {
+        super(XDebuggerLocalize.actionShowReferringText());
     }
-  }
+
+    @Override
+    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+        return node.getValueContainer().getReferrersProvider() != null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        XReferrersProvider referrersProvider = node.getValueContainer().getReferrersProvider();
+        if (referrersProvider != null) {
+            XDebuggerTree tree = XDebuggerTree.getTree(e.getDataContext());
+            XInspectDialog dialog = new XInspectDialog(
+                tree.getProject(),
+                tree.getEditorsProvider(),
+                tree.getSourcePosition(),
+                nodeName,
+                referrersProvider.getReferringObjectsValue(),
+                tree.getValueMarkers()
+            );
+            dialog.setTitle(XDebuggerLocalize.showreferringDialogTitle(nodeName));
+            dialog.show();
+        }
+    }
 }

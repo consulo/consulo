@@ -410,74 +410,6 @@ action.CreateRunConfiguration.text:
     text: Create Run Configuration
 action.DebugListen.text:
     text: Throw Debug Exception
-action.Debugger.AdjustArrayRange.text:
-    text: Adjust Range…
-action.Debugger.AutoRenderer.text:
-    text: Auto
-action.Debugger.CompareValueWithClipboard.description:
-    text: Compare value of selected node with clipboard text
-action.Debugger.CompareValueWithClipboard.text:
-    text: Compare Value with Clipboard
-action.Debugger.CopyValue.text:
-    text: Copy Value
-action.Debugger.CustomizeContextView.text:
-    text: Customize Data Views…
-action.Debugger.CustomizeThreadsView.text:
-    text: Customize Threads View…
-action.Debugger.EditFrameSource.text:
-    text: EditFrameSource
-action.Debugger.EditNodeSource.text:
-    text: EditNodeSource
-action.Debugger.EditTypeSource.text:
-    text: Jump to Object Source
-action.Debugger.EditWatch.text:
-    text: Edit Watch
-action.Debugger.FocusOnBreakpoint.description:
-    text: Focus this view by default when breakpoint is reached
-action.Debugger.FocusOnBreakpoint.text:
-    text: Focus On Breakpoint
-action.Debugger.FreezeThread.text:
-    text: Freeze
-action.Debugger.Inspect.text:
-    text: Inspect
-action.Debugger.InterruptThread.text:
-    text: Interrupt
-action.Debugger.MarkObject.description:
-    text: Mark/unmark the object so that it can be visually distinguished in in debugger views
-action.Debugger.MarkObject.text:
-    text: Mark Object…
-action.Debugger.MarkObject.unmark.text:
-    text: Unmark Object
-action.Debugger.MuteBreakpoints.description:
-    text: Mute/unmute all breakpoints in a debug session.
-action.Debugger.MuteBreakpoints.text:
-    text: Mute Breakpoints
-action.Debugger.NewWatch.text:
-    text: New Watch…
-action.Debugger.RemoveAllWatches.text:
-    text: Remove All Watches
-action.Debugger.RemoveWatch.text:
-    text: Remove Watch
-action.Debugger.ResumeThread.text:
-    text: Resume
-action.Debugger.SetValue.text:
-    text: Set Value…
-action.Debugger.ShowFrame.text:
-    text: Show Frame
-action.Debugger.ShowReferring.text:
-    text: Show Referring Objects
-action.Debugger.Tree.AddToWatches.text:
-    text: Add to Watches
-action.Debugger.Tree.EvaluateInConsole.text:
-    text: Evaluate In Console
-action.Debugger.UnmuteOnStop.text:
-    text: Unmute breakpoints on session finish
-action.Debugger.ViewAsGroup.text:
-    text: View as
-action.Debugger.ViewText.description:
-    text: View text value of selected node in a separate pane
-action.Debugger.ViewText.text:
-    text: View Text
 action.DecodeBytesAction.text:
     text: Decode Bytes
 action.DecrementWindowHeight.text:
@@ -2040,64 +1972,6 @@ action.WhatsNewAction.description:
     text: Find out about the new features in this version of the IDE
 action.WhatsNewAction.text:
     text: What's _New
-action.XDebugger.AutoTooltip.description:
-    text: Toggles if value tooltip is shown automatically on mouse over
-action.XDebugger.AutoTooltip.text:
-    text: Value auto tooltip
-action.XDebugger.AutoTooltipOnSelection.description:
-    text: Toggles if value tooltip is shown automatically on selection change in editor
-action.XDebugger.AutoTooltipOnSelection.text:
-    text: Show value on selection change
-action.XDebugger.CompareValueWithClipboard.description:
-    text: Compare value of selected node with clipboard text
-action.XDebugger.CompareValueWithClipboard.text:
-    text: Compare Value with Clipboard
-action.XDebugger.CopyName.description:
-    text: Copy name of selected node to clipboard
-action.XDebugger.CopyName.text:
-    text: Copy Name
-action.XDebugger.CopyValue.description:
-    text: Copy value of selected node to clipboard
-action.XDebugger.CopyValue.text:
-    text: Copy Value
-action.XDebugger.EditWatch.text:
-    text: Edit…
-action.XDebugger.Inline.description:
-    text: Show available debugger session values inside editor
-action.XDebugger.Inline.text:
-    text: Show Values Inline
-action.XDebugger.Inspect.text:
-    text: Inspect…
-action.XDebugger.JumpToSource.description:
-    text: Open source of the selected item
-action.XDebugger.JumpToSource.text:
-    text: Jump To Source
-action.XDebugger.JumpToTypeSource.description:
-    text: Open source of the selected value's type
-action.XDebugger.JumpToTypeSource.text:
-    text: Jump To Type Source
-action.XDebugger.MuteBreakpoints.description:
-    text: Ignore all breakpoints
-action.XDebugger.MuteBreakpoints.text:
-    text: Mute Breakpoints
-action.XDebugger.NewWatch.text:
-    text: New Watch…
-action.XDebugger.RemoveAllWatches.text:
-    text: Remove All Watches
-action.XDebugger.RemoveWatch.text:
-    text: Remove Watch
-action.XDebugger.SetValue.description:
-    text: Modify value of selected node
-action.XDebugger.SetValue.text:
-    text: Set Value…
-action.XDebugger.ToggleSortValues.description:
-    text: Sort values alphabetically in debugger views
-action.XDebugger.ToggleSortValues.text:
-    text: Sort Values Alphabetically
-action.XDebugger.UnmuteOnStop.description:
-    text: Undo mute mreakpoints when debug session ends
-action.XDebugger.UnmuteOnStop.text:
-    text: Unmute Breakpoints on Session Finish
 action.editRunConfigurations.description:
     text: Open edit Run/Debug configurations dialog
 action.editRunConfigurations.text:
