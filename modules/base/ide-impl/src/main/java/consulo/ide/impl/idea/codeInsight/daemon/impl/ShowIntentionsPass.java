@@ -30,6 +30,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.HasFocus;
@@ -309,8 +310,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
                     List<IntentionAction> enableDisableIntentionAction = new ArrayList<>();
                     enableDisableIntentionAction.add(new EnableDisableIntentionAction(action));
                     enableDisableIntentionAction.add(new EditIntentionSettingsAction(action));
-                    IntentionActionDescriptor descriptor =
-                        new IntentionActionDescriptor(action, enableDisableIntentionAction, null);
+                    IntentionActionDescriptor descriptor = new IntentionActionDescriptor(action, enableDisableIntentionAction, LocalizeValue.of());
                     if (!fixes.contains(descriptor)) {
                         intentions.intentionsToShow.add(descriptor);
                     }
