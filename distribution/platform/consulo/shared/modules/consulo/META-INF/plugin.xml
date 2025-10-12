@@ -500,13 +500,6 @@
             <reference ref="ProjectViewPopupMenuSettingsGroup"/>
         </group>
 
-        <group id="RevealGroup" popup="true">
-            <action id="RevealIn" class="consulo.ide.impl.idea.ide.actions.RevealFileAction"/>
-            <reference ref="ShowFilePath"/>
-
-            <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
-        </group>
-
         <group id="NavbarPopupMenu">
             <reference ref="WeighingNewGroup"/>
             <reference ref="AssociateWithFileType"/>
@@ -666,47 +659,6 @@
             <separator/>
 
             <add-to-group group-id="EditorLangPopupMenu" relative-to-action="EditorPopupMenu.Run" anchor="before"/>
-        </group>
-
-        <group id="XDebugger.Actions">
-            <action id="XDebugger.SetValue" class="consulo.execution.debug.impl.internal.ui.tree.action.XSetValueAction"/>
-            <action id="XDebugger.CopyValue" class="consulo.execution.debug.impl.internal.ui.tree.action.XCopyValueAction"/>
-            <action id="XDebugger.CompareValueWithClipboard"
-                    class="consulo.execution.debug.impl.internal.ui.tree.action.XCompareWithClipboardAction"/>
-            <action id="XDebugger.CopyName" class="consulo.execution.debug.impl.internal.ui.tree.action.XCopyNameAction"/>
-            <action id="XDebugger.Inspect" class="consulo.execution.debug.impl.internal.ui.tree.action.XInspectAction"/>
-            <action id="XDebugger.JumpToSource" class="consulo.execution.debug.impl.internal.ui.tree.action.XJumpToSourceAction"/>
-            <action id="XDebugger.JumpToTypeSource" class="consulo.execution.debug.impl.internal.ui.tree.action.XJumpToTypeSourceAction"/>
-
-            <action id="Debugger.Tree.AddToWatches" class="consulo.execution.debug.impl.internal.ui.tree.action.XAddToWatchesTreeAction"/>
-            <action id="Debugger.Tree.EvaluateInConsole"
-                    class="consulo.execution.debug.impl.internal.ui.tree.action.EvaluateInConsoleFromTreeAction"/>
-
-            <action id="XDebugger.NewWatch" class="consulo.execution.debug.impl.internal.frame.action.XNewWatchAction"/>
-            <action id="XDebugger.EditWatch" class="consulo.execution.debug.impl.internal.frame.action.XEditWatchAction"/>
-            <action id="XDebugger.CopyWatch" class="consulo.execution.debug.impl.internal.frame.action.XCopyWatchAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
-            <action id="XDebugger.RemoveWatch" class="consulo.execution.debug.impl.internal.frame.action.XRemoveWatchAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel" use-shortcut-of="$Delete"/>
-            <action id="XDebugger.RemoveAllWatches" class="consulo.execution.debug.impl.internal.frame.action.XRemoveAllWatchesAction"/>
-            <reference id="XDebugger.MuteBreakpoints"/>
-            <action id="XDebugger.ToggleSortValues" class="consulo.execution.debug.impl.internal.ui.tree.action.SortValuesToggleAction"
-                    icon="consulo.platform.base.PlatformIconGroup@objectbrowser.sorted"/>
-            <action id="Debugger.MarkObject" class="consulo.execution.debug.impl.internal.action.MarkObjectAction"/>
-            <action id="Debugger.FocusOnBreakpoint" class="consulo.execution.debug.impl.internal.action.FocusOnBreakpointAction"/>
-            <action id="Debugger.ShowReferring" class="consulo.execution.debug.impl.internal.ui.tree.action.ShowReferringObjectsAction"/>
-        </group>
-
-        <group id="XDebugger.ToolWindow.TopToolbar">
-            <reference ref="ShowExecutionPoint"/>
-            <separator/>
-            <reference ref="StepOver"/>
-            <reference ref="StepInto"/>
-            <reference ref="ForceStepInto"/>
-            <reference ref="StepOut"/>
-            <reference ref="RunToCursor"/>
-            <separator/>
-            <reference ref="EvaluateExpression"/>
         </group>
 
         <group id="XDebugger.ToolWindow.LeftToolbar">

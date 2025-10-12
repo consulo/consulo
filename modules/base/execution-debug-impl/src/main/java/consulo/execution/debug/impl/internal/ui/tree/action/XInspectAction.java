@@ -15,23 +15,38 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XInspectDialog;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "XDebugger.Inspect")
 public class XInspectAction extends XDebuggerTreeActionBase {
-  @Override
-  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
-    XDebuggerTree tree = node.getTree();
-    XValue value = node.getValueContainer();
-    XInspectDialog dialog = new XInspectDialog(tree.getProject(), tree.getEditorsProvider(), tree.getSourcePosition(), nodeName, value,
-                                               tree.getValueMarkers());
-    dialog.show();
-  }
+    public XInspectAction() {
+        super(XDebuggerLocalize.actionInspectText());
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        XDebuggerTree tree = node.getTree();
+        XValue value = node.getValueContainer();
+        XInspectDialog dialog = new XInspectDialog(
+            tree.getProject(),
+            tree.getEditorsProvider(),
+            tree.getSourcePosition(),
+            nodeName,
+            value,
+            tree.getValueMarkers()
+        );
+        dialog.show();
+    }
 }

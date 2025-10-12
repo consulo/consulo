@@ -15,22 +15,29 @@
  */
 package consulo.execution.debug.impl.internal.frame.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "XDebugger.RemoveAllWatches")
 public class XRemoveAllWatchesAction extends XWatchesTreeActionBase {
-  @Override
-  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
-    return tree.getRoot().getChildCount() > 0;
-  }
+    public XRemoveAllWatchesAction() {
+        super(XDebuggerLocalize.actionRemoveAllWatchesText());
+    }
 
-  @Override
-  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
-    watchesView.removeAllWatches();
-  }
+    @Override
+    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+        return tree.getRoot().getChildCount() > 0;
+    }
+
+    @Override
+    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+        watchesView.removeAllWatches();
+    }
 }

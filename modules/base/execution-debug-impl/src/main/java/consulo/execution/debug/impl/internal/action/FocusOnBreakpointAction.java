@@ -15,11 +15,17 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.execution.impl.internal.ui.layout.action.AbstractFocusOnAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.execution.impl.internal.ui.layout.action.AbstractFocusOnAction;
 
+@ActionImpl(id = XDebuggerActions.FOCUS_ON_BREAKPOINT)
 public class FocusOnBreakpointAction extends AbstractFocusOnAction {
-  public FocusOnBreakpointAction() {
-    super(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
-  }
+    public FocusOnBreakpointAction() {
+        super(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
+        getTemplatePresentation().setTextValue(XDebuggerLocalize.actionFocusOnBreakpointText());
+        getTemplatePresentation().setDescriptionValue(XDebuggerLocalize.actionFocusOnBreakpointDescription());
+    }
 }

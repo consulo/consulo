@@ -1,17 +1,59 @@
 action.add.to.watch.text:
     text: Add to Watches
+action.adjust.array.range.text:
+    text: Adjust Range…
+action.auto.renderer.text:
+    text: Auto
+action.auto.tooltip.description:
+    text: Toggles if value tooltip is shown automatically on mouse over
+action.auto.tooltip.on.selection.description:
+    text: Toggles if value tooltip is shown automatically on selection change in editor
+action.auto.tooltip.on.selection.text:
+    text: Show value on selection change
+action.auto.tooltip.text:
+    text: Value auto tooltip
 action.choose.debug.configuration.popup.description:
     text: Choose and debug configuration
 action.choose.debug.configuration.popup.text:
     text: Debug...
+action.compare.value.with.clipboard.description:
+    text: Compare value of selected node with clipboard text
+action.compare.value.with.clipboard.text:
+    text: Compare Value with Clipboard
+action.copy.name.description:
+    text: Copy name of selected node to clipboard
+action.copy.name.text:
+    text: Copy Name
+action.copy.value.description:
+    text: Copy value of selected node to clipboard
+action.copy.value.text:
+    text: Copy Value
+action.copy.watch.text:
+    text: Copy Watch
+action.customize.context.view.text:
+    text: Customize Data Views…
+action.customize.threads.view.text:
+    text: Customize Threads View…
 action.edit.breakpoint.text:
     text: Edit
+action.edit.frame.source.text:
+    text: EditFrameSource
+action.edit.node.source.text:
+    text: EditNodeSource
+action.edit.type.source.text:
+    text: Jump to Object Source
+action.edit.watch.text:
+    text: Edit…
 action.evaluate.expression.description:
     text: Evaluate arbitrary expression
 action.evaluate.expression.text:
     text: _Evaluate Expression…
 action.evaluate.in.console.text:
     text: Evaluate in Console
+action.focus.on.breakpoint.description:
+    text: Focus this view by default when breakpoint is reached
+action.focus.on.breakpoint.text:
+    text: Focus On Breakpoint
 action.force.run.to.cursor.description:
     text: Run to the line where the caret is, ignoring any breakpoints
 action.force.run.to.cursor.text:
@@ -24,8 +66,38 @@ action.force.step.over.description:
     text: Step over, disable all breakpoints before stepping.
 action.force.step.over.text:
     text: Force Step O_ver
+action.freeze.thread.text:
+    text: Freeze
+action.inline.description:
+    text: Show available debugger session values inside editor
+action.inline.text:
+    text: Show Values Inline
+action.inspect.text:
+    text: Inspect…
+action.interrupt.thread.text:
+    text: Interrupt
+action.jump.to.source.description:
+    text: Open source of the selected item
+action.jump.to.source.text:
+    text: Jump To Source
+action.jump.to.type.source.description:
+    text: Open source of the selected value's type
+action.jump.to.type.source.text:
+    text: Jump To Type Source
+action.mark.object.description:
+    text: Mark/unmark the object so that it can be visually distinguished in in debugger views
+action.mark.object.text:
+    text: Mark Object…
+action.mark.object.unmark.text:
+    text: Unmark Object
 action.memory.view.settings.text:
     text: Memory View Settings
+action.mute.breakpoints.description:
+    text: Mute/unmute all breakpoints in a debug session.
+action.mute.breakpoints.text:
+    text: Mute Breakpoints
+action.new.watch.text:
+    text: New Watch…
 action.next.frame.text:
     text: Next Frame
 action.pause.description:
@@ -38,18 +110,32 @@ action.pop.frame.text:
     text: Reset _Frame
 action.previous.frame.text:
     text: Previous Frame
+action.remove.all.watches.text:
+    text: Remove All Watches
+action.remove.watch.text:
+    text: Remove Watch
 action.resume.description:
     text: Resume program execution
 action.resume.text:
     text: Resume Pro_gram
+action.resume.thread.text:
+    text: Resume
 action.run.to.cursor.description:
     text: Run to the line where the caret is
 action.run.to.cursor.text:
     text: Run to _Cursor
+action.set.value.description:
+    text: Modify value of selected node
+action.set.value.text:
+    text: Set Value…
 action.show.execution.point.description:
     text: Show the current program execution point
 action.show.execution.point.text:
     text: Show E_xecution Point
+action.show.frame.text:
+    text: Show Frame
+action.show.referring.text:
+    text: Show Referring Objects
 action.smart.step.into.description:
     text: Step into the particular method
 action.smart.step.into.text:
@@ -70,14 +156,32 @@ action.toggle.line.breakpoint.description:
     text: Toggle line breakpoint at caret
 action.toggle.line.breakpoint.text:
     text: Toggle _Line Breakpoint
+action.toggle.sort.values.description:
+    text: Sort values alphabetically in debugger views
+action.toggle.sort.values.text:
+    text: Sort Values Alphabetically
 action.toggle.temporary.line.breakpoint.description:
     text: Toggle temporary line breakpoint at caret
 action.toggle.temporary.line.breakpoint.text:
     text: Toggle Temporary Line Breakpoint
+action.tree.add.to.watches.text:
+    text: Add to Watches
+action.tree.evaluate.in.console.text:
+    text: Evaluate In Console
+action.unmute.on.stop.description:
+    text: Undo mute mreakpoints when debug session ends
+action.unmute.on.stop.text:
+    text: Unmute Breakpoints on Session Finish
+action.view.as.group.text:
+    text: View as
 action.view.breakpoints.description:
     text: View and manage all breakpoints and watchpoints
 action.view.breakpoints.text:
     text: View Brea_kpoints…
+action.view.text.description:
+    text: View text value of selected node in a separate pane
+action.view.text.text:
+    text: View Text
 ad.extra.selection.shortcut:
     text: 'You can also choose an item with: {0}'
 button.text.code.fragment.mode:

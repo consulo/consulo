@@ -15,23 +15,31 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.frame.XNavigatable;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
+@ActionImpl(id = XDebuggerActions.JUMP_TO_TYPE_SOURCE)
 public class XJumpToTypeSourceAction extends XJumpToSourceActionBase {
-  @Override
-  protected void startComputingSourcePosition(XValue value, XNavigatable navigatable) {
-    value.computeTypeSourcePosition(navigatable);
-  }
+    public XJumpToTypeSourceAction() {
+      super(XDebuggerLocalize.actionJumpToTypeSourceText(), XDebuggerLocalize.actionJumpToTypeSourceDescription());
+    }
 
-  @Override
-  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
-    return super.isEnabled(node, e) && node.getValueContainer().canNavigateToTypeSource();
-  }
+    @Override
+    protected void startComputingSourcePosition(XValue value, XNavigatable navigatable) {
+        value.computeTypeSourcePosition(navigatable);
+    }
+
+    @Override
+    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+        return super.isEnabled(node, e) && node.getValueContainer().canNavigateToTypeSource();
+    }
 }

@@ -15,16 +15,23 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestFactory;
 import consulo.diff.request.DiffRequest;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 
 /**
  * @author ksafonov
  */
+@ActionImpl(id = "XDebugger.CompareValueWithClipboard")
 public class XCompareWithClipboardAction extends XFetchValueActionBase {
+    public XCompareWithClipboardAction() {
+        super(XDebuggerLocalize.actionCompareValueWithClipboardText(), XDebuggerLocalize.actionCompareValueWithClipboardDescription());
+    }
+
     @Override
     protected void handle(Project project, String value, XDebuggerTree tree) {
         project.getUIAccess().give(() -> {
