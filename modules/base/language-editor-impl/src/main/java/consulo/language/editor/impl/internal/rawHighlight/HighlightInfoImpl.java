@@ -17,9 +17,12 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
-import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemHighlightTypeInspectionRuler;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.*;
 import consulo.language.editor.util.HighlightTypeUtil;
@@ -41,7 +44,8 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -477,11 +481,13 @@ public class HighlightInfoImpl implements HighlightInfo {
 
         List<? extends Annotation.QuickFixInfo> fixes = batchMode ? annotation.getBatchFixes() : annotation.getQuickFixes();
         if (fixes != null) {
+            InspectionCache cache = InspectionCacheService.getInstance().get();
+
             for (Annotation.QuickFixInfo quickFixInfo : fixes) {
                 TextRange range = quickFixInfo.textRange;
                 HighlightDisplayKey k =
-                    quickFixInfo.key != null ? quickFixInfo.key : HighlightDisplayKey.find(ANNOTATOR_INSPECTION_SHORT_NAME);
-                info.registerFix(quickFixInfo.quickFix, null, HighlightDisplayKey.getDisplayNameByKey(k), range, k);
+                    quickFixInfo.key != null ? quickFixInfo.key : cache.find(ANNOTATOR_INSPECTION_SHORT_NAME);
+                info.registerFix(quickFixInfo.quickFix, null, cache.getDisplayNameByKey(k), range, k);
             }
         }
 
@@ -493,19 +499,17 @@ public class HighlightInfoImpl implements HighlightInfo {
     @Nonnull
     private static HighlightInfoType convertType(@Nonnull Annotation annotation) {
         ProblemHighlightType type = annotation.getHighlightType();
-        if (type == ProblemHighlightType.LIKE_UNUSED_SYMBOL) {
-            return HighlightInfoType.UNUSED_SYMBOL;
+        switch (type) {
+            case LIKE_UNKNOWN_SYMBOL:
+                return HighlightInfoType.WRONG_REF;
+            default: {
+                if (ProblemHighlightTypeInspectionRuler.REGISTRY.containsKey(type)) {
+                    InspectionCache cache = InspectionCacheService.getInstance().get();
+                    return cache.getControlledHighlightType(annotation.getLanguage(), type);
+                }
+                return HighlightTypeUtil.convertSeverity(annotation.getSeverity());
+            }
         }
-        if (type == ProblemHighlightType.LIKE_UNKNOWN_SYMBOL) {
-            return HighlightInfoType.WRONG_REF;
-        }
-        if (type == ProblemHighlightType.LIKE_DEPRECATED) {
-            return HighlightInfoType.DEPRECATED;
-        }
-        if (type == ProblemHighlightType.LIKE_MARKED_FOR_REMOVAL) {
-            return HighlightInfoType.MARKED_FOR_REMOVAL;
-        }
-        return HighlightTypeUtil.convertSeverity(annotation.getSeverity());
     }
 
     public boolean hasHint() {

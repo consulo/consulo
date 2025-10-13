@@ -20,152 +20,161 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProblemDescriptorUtil {
-  public static final int NONE = 0x00000000;
-  public static final int APPEND_LINE_NUMBER = 0x00000001;
-  public static final int TRIM_AT_END = 0x00000002;
-  public static final int TRIM_AT_TREE_END = 0x00000004;
+    public static final int NONE = 0x00000000;
+    public static final int APPEND_LINE_NUMBER = 0x00000001;
+    public static final int TRIM_AT_END = 0x00000002;
+    public static final int TRIM_AT_TREE_END = 0x00000004;
 
-  @MagicConstant(flags = {NONE, APPEND_LINE_NUMBER, TRIM_AT_END, TRIM_AT_TREE_END})
-  @interface FlagConstant {
-  }
+    @MagicConstant(flags = {NONE, APPEND_LINE_NUMBER, TRIM_AT_END, TRIM_AT_TREE_END})
+    @interface FlagConstant {
+    }
 
-  public static Couple<String> XML_CODE_MARKER = Couple.of("<xml-code>", "</xml-code>");
+    public static Couple<String> XML_CODE_MARKER = Couple.of("<xml-code>", "</xml-code>");
 
-  public static String extractHighlightedText(@Nonnull CommonProblemDescriptor descriptor, PsiElement psiElement) {
-    if (psiElement == null || !psiElement.isValid()) return "";
-    String ref = psiElement.getText();
-    if (descriptor instanceof ProblemDescriptorBase) {
-      TextRange textRange = ((ProblemDescriptorBase)descriptor).getTextRange();
-      TextRange elementRange = psiElement.getTextRange();
-      if (textRange != null && elementRange != null) {
-        textRange = textRange.shiftRight(-elementRange.getStartOffset());
-        if (textRange.getStartOffset() >= 0 && textRange.getEndOffset() <= elementRange.getLength()) {
-          ref = textRange.substring(ref);
+    public static String extractHighlightedText(@Nonnull CommonProblemDescriptor descriptor, PsiElement psiElement) {
+        if (psiElement == null || !psiElement.isValid()) {
+            return "";
         }
-      }
-    }
-    ref = StringUtil.replaceChar(ref, '\n', ' ').trim();
-    ref = StringUtil.first(ref, 100, true);
-    return ref;
-  }
-
-  @Nonnull
-  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, boolean appendLineNumber) {
-    return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
-  }
-
-  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags) {
-    String message = descriptor.getDescriptionTemplate();
-
-    // no message. Should not be the case if inspection correctly implemented.
-    // noinspection ConstantConditions
-    if (message == null) return "";
-
-    if ((flags & APPEND_LINE_NUMBER) != 0 && descriptor instanceof ProblemDescriptor && !message.contains("#ref") && message.contains("#loc")) {
-      int lineNumber = ((ProblemDescriptor)descriptor).getLineNumber();
-      if (lineNumber >= 0) {
-        message = StringUtil.replace(message, "#loc", "(" + InspectionsBundle.message("inspection.export.results.at.line") + " " + lineNumber + ")");
-      }
-    }
-    message = StringUtil.replace(message, "<code>", "'");
-    message = StringUtil.replace(message, "</code>", "'");
-    message = StringUtil.replace(message, "#loc ", "");
-    message = StringUtil.replace(message, " #loc", "");
-    message = StringUtil.replace(message, "#loc", "");
-    if (message.contains("#ref")) {
-      String ref = extractHighlightedText(descriptor, element);
-      message = StringUtil.replace(message, "#ref", ref);
-    }
-
-    int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
-    if (endIndex > 0) {
-      message = message.substring(0, endIndex);
-    }
-    message = StringUtil.replace(message, "#end", "");
-    message = StringUtil.replace(message, "#treeend", "");
-
-    if (message.contains(XML_CODE_MARKER.first)) {
-      message = unescapeXmlCode(message);
-    }
-    else {
-      message = StringUtil.unescapeXml(message).trim();
-    }
-    return message;
-  }
-
-  private static String unescapeXmlCode(String message) {
-    List<String> strings = new ArrayList<String>();
-    for (String string : StringUtil.split(message, XML_CODE_MARKER.first)) {
-      if (string.contains(XML_CODE_MARKER.second)) {
-        strings.addAll(StringUtil.split(string, XML_CODE_MARKER.second, false));
-      }
-      else {
-        strings.add(string);
-      }
-    }
-    StringBuilder builder = new StringBuilder();
-    for (String string : strings) {
-      if (string.contains(XML_CODE_MARKER.second)) {
-        builder.append(string.replace(XML_CODE_MARKER.second, ""));
-      }
-      else {
-        builder.append(StringUtil.unescapeXml(string));
-      }
-    }
-    return builder.toString();
-  }
-
-  @Nonnull
-  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element) {
-    return renderDescriptionMessage(descriptor, element, false);
-  }
-
-  @Nonnull
-  public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor, @Nonnull HighlightSeverity severity, @Nonnull SeverityRegistrar severityRegistrar) {
-    ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
-    switch (highlightType) {
-      case GENERIC_ERROR_OR_WARNING:
-        return severityRegistrar.getHighlightInfoTypeBySeverity(severity);
-      case LIKE_DEPRECATED:
-        return new HighlightInfoType.HighlightInfoTypeImpl(severity, HighlightInfoType.DEPRECATED.getAttributesKey());
-      case LIKE_UNKNOWN_SYMBOL:
-        if (severity == HighlightSeverity.ERROR) {
-          return new HighlightInfoType.HighlightInfoTypeImpl(severity, HighlightInfoType.WRONG_REF.getAttributesKey());
+        String ref = psiElement.getText();
+        if (descriptor instanceof ProblemDescriptorBase) {
+            TextRange textRange = ((ProblemDescriptorBase) descriptor).getTextRange();
+            TextRange elementRange = psiElement.getTextRange();
+            if (textRange != null && elementRange != null) {
+                textRange = textRange.shiftRight(-elementRange.getStartOffset());
+                if (textRange.getStartOffset() >= 0 && textRange.getEndOffset() <= elementRange.getLength()) {
+                    ref = textRange.substring(ref);
+                }
+            }
         }
-        if (severity == HighlightSeverity.WARNING) {
-          return new HighlightInfoType.HighlightInfoTypeImpl(severity, CodeInsightColors.WEAK_WARNING_ATTRIBUTES);
-        }
-        return severityRegistrar.getHighlightInfoTypeBySeverity(severity);
-      case LIKE_UNUSED_SYMBOL:
-        return new HighlightInfoType.HighlightInfoTypeImpl(severity, HighlightInfoType.UNUSED_SYMBOL.getAttributesKey());
-      case INFO:
-        return HighlightInfoType.INFO;
-      case WEAK_WARNING:
-        return HighlightInfoType.WEAK_WARNING;
-      case ERROR:
-        return HighlightInfoType.WRONG_REF;
-      case GENERIC_ERROR:
-        return HighlightInfoType.ERROR;
-      case WARNING:
-        return HighlightInfoType.WARNING;
-      case INFORMATION:
-        TextAttributesKey attributes = ((ProblemDescriptorBase)problemDescriptor).getEnforcedTextAttributes();
-        if (attributes != null) {
-          return new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, attributes);
-        }
-        return HighlightInfoType.INFORMATION;
+        ref = StringUtil.replaceChar(ref, '\n', ' ').trim();
+        ref = StringUtil.first(ref, 100, true);
+        return ref;
     }
-    throw new RuntimeException("Cannot map " + highlightType);
-  }
+
+    @Nonnull
+    public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, boolean appendLineNumber) {
+        return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
+    }
+
+    public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags) {
+        String message = descriptor.getDescriptionTemplate();
+
+        // no message. Should not be the case if inspection correctly implemented.
+        // noinspection ConstantConditions
+        if (message == null) {
+            return "";
+        }
+
+        if ((flags & APPEND_LINE_NUMBER) != 0 && descriptor instanceof ProblemDescriptor && !message.contains("#ref") && message.contains("#loc")) {
+            int lineNumber = ((ProblemDescriptor) descriptor).getLineNumber();
+            if (lineNumber >= 0) {
+                message = StringUtil.replace(message, "#loc", "(" + InspectionsBundle.message("inspection.export.results.at.line") + " " + lineNumber + ")");
+            }
+        }
+        message = StringUtil.replace(message, "<code>", "'");
+        message = StringUtil.replace(message, "</code>", "'");
+        message = StringUtil.replace(message, "#loc ", "");
+        message = StringUtil.replace(message, " #loc", "");
+        message = StringUtil.replace(message, "#loc", "");
+        if (message.contains("#ref")) {
+            String ref = extractHighlightedText(descriptor, element);
+            message = StringUtil.replace(message, "#ref", ref);
+        }
+
+        int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
+        if (endIndex > 0) {
+            message = message.substring(0, endIndex);
+        }
+        message = StringUtil.replace(message, "#end", "");
+        message = StringUtil.replace(message, "#treeend", "");
+
+        if (message.contains(XML_CODE_MARKER.first)) {
+            message = unescapeXmlCode(message);
+        }
+        else {
+            message = StringUtil.unescapeXml(message).trim();
+        }
+        return message;
+    }
+
+    private static String unescapeXmlCode(String message) {
+        List<String> strings = new ArrayList<String>();
+        for (String string : StringUtil.split(message, XML_CODE_MARKER.first)) {
+            if (string.contains(XML_CODE_MARKER.second)) {
+                strings.addAll(StringUtil.split(string, XML_CODE_MARKER.second, false));
+            }
+            else {
+                strings.add(string);
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            if (string.contains(XML_CODE_MARKER.second)) {
+                builder.append(string.replace(XML_CODE_MARKER.second, ""));
+            }
+            else {
+                builder.append(StringUtil.unescapeXml(string));
+            }
+        }
+        return builder.toString();
+    }
+
+    @Nonnull
+    public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element) {
+        return renderDescriptionMessage(descriptor, element, false);
+    }
+
+    @Nonnull
+    public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor,
+                                                                @Nonnull HighlightSeverity severity,
+                                                                @Nonnull SeverityRegistrar severityRegistrar) {
+        ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
+        switch (highlightType) {
+            case GENERIC_ERROR_OR_WARNING:
+                return severityRegistrar.getHighlightInfoTypeBySeverity(severity);
+            case LIKE_UNKNOWN_SYMBOL:
+                if (severity == HighlightSeverity.ERROR) {
+                    return new HighlightInfoTypeImpl(severity, HighlightInfoType.WRONG_REF.getAttributesKey());
+                }
+                if (severity == HighlightSeverity.WARNING) {
+                    return new HighlightInfoTypeImpl(severity, CodeInsightColors.WEAK_WARNING_ATTRIBUTES);
+                }
+                return severityRegistrar.getHighlightInfoTypeBySeverity(severity);
+            case INFO:
+                return HighlightInfoType.INFO;
+            case WEAK_WARNING:
+                return HighlightInfoType.WEAK_WARNING;
+            case ERROR:
+                return HighlightInfoType.WRONG_REF;
+            case GENERIC_ERROR:
+                return HighlightInfoType.ERROR;
+            case WARNING:
+                return HighlightInfoType.WARNING;
+            case INFORMATION:
+                TextAttributesKey attributes = ((ProblemDescriptorBase) problemDescriptor).getEnforcedTextAttributes();
+                if (attributes != null) {
+                    return new HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, attributes);
+                }
+                return HighlightInfoType.INFORMATION;
+            default: {
+                HighlightInfoType type = ProblemHighlightTypeInspectionRuler.REGISTRY.get(highlightType);
+                if (type != null) {
+                    return new HighlightInfoTypeImpl(severity, type.getAttributesKey());
+                }
+                throw new RuntimeException("Cannot map " + highlightType);
+            }
+        }
+    }
 }

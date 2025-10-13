@@ -78,7 +78,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         }
         InspectionToolWrapper toolWrapper = getSelectedToolWrapper();
         assert toolWrapper != null;
-        HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+        HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
         if (key == null) {
             e.getPresentation().setEnabled(false);
         }
@@ -100,7 +100,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         if (toolWrapper == null) {
             return result;
         }
-        HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+        HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
         if (key == null) {
             return result;
         }

@@ -115,8 +115,8 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
 
     @Override
     @Nonnull
-    public List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
-        AnnotationHolderImpl holder = new AnnotationHolderImpl(new AnnotationSession(file), batchMode);
+    public List<Annotation> runAnnotator(@Nonnull Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+        AnnotationHolderImpl holder = new AnnotationHolderImpl(language, new AnnotationSession(file), batchMode);
         holder.runAnnotatorWithContext(context, annotator);
         return holder;
     }

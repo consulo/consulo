@@ -16,11 +16,12 @@
 package consulo.language.editor.annotation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,25 +30,27 @@ import java.util.List;
  * @since 02/01/2023
  */
 public final class AnnotatorUtil {
-  private AnnotatorUtil() {
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  public static List<Annotation> runAnnotators(@Nonnull PsiFile psiFile, @Nonnull PsiElement contextElement) {
-    List<AnnotatorFactory> annotatorFactories = AnnotatorFactory.forLanguage(psiFile.getProject(), psiFile.getLanguage());
-
-    LanguageEditorInternalHelper helper = LanguageEditorInternalHelper.getInstance();
-    List<Annotation> result = new ArrayList<>();
-    for (AnnotatorFactory factory : annotatorFactories) {
-      Annotator annotator = factory.createAnnotator();
-      if (annotator == null) {
-        continue;
-      }
-
-      result.addAll(helper.runAnnotator(annotator, psiFile, contextElement, false));
+    private AnnotatorUtil() {
     }
 
-    return result;
-  }
+    @Nonnull
+    @RequiredReadAction
+    public static List<Annotation> runAnnotators(@Nonnull PsiFile psiFile, @Nonnull PsiElement contextElement) {
+        List<AnnotatorFactory> annotatorFactories = AnnotatorFactory.forLanguage(psiFile.getProject(), psiFile.getLanguage());
+
+        LanguageEditorInternalHelper helper = LanguageEditorInternalHelper.getInstance();
+        List<Annotation> result = new ArrayList<>();
+        for (AnnotatorFactory factory : annotatorFactories) {
+            Annotator annotator = factory.createAnnotator();
+            if (annotator == null) {
+                continue;
+            }
+
+            Language language = factory.getLanguage();
+
+            result.addAll(helper.runAnnotator(language, annotator, psiFile, contextElement, false));
+        }
+
+        return result;
+    }
 }

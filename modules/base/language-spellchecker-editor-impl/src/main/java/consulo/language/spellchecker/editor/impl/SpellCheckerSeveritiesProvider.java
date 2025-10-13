@@ -21,6 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.spellchecker.editor.SpellcheckerSeverities;
 import consulo.ui.color.ColorValue;
@@ -37,7 +38,7 @@ import java.util.List;
 public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
   private static final TextAttributesKey TYPO_KEY = TextAttributesKey.createTextAttributesKey("TYPO");
 
-  static class TYPO extends HighlightInfoType.HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
+  static class TYPO extends HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
     public TYPO() {
       super(SpellcheckerSeverities.TYPO, TYPO_KEY);
     }

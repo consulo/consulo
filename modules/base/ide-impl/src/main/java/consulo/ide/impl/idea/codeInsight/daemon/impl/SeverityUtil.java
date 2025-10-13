@@ -21,6 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 
+import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -48,13 +49,13 @@ public class SeverityUtil {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {
-      return new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes, (HighlightInfoType.HighlightInfoTypeImpl)type);
+      return new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes, (HighlightInfoTypeImpl)type);
     }
     
     TextAttributes severity = registrar.getTextAttributesBySeverity(type.getSeverity(null));
     if (severity == null) {
       return null;
     }
-    return new SeverityRegistrarImpl.SeverityBasedTextAttributes(severity, (HighlightInfoType.HighlightInfoTypeImpl)type);
+    return new SeverityRegistrarImpl.SeverityBasedTextAttributes(severity, (HighlightInfoTypeImpl)type);
   }
 }

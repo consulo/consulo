@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.Language;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
@@ -35,6 +37,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 04/03/2023
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionTool implements BatchSuppressableTool {
     @Nonnull
     public InspectionToolState<?> createStateProvider() {

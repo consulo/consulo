@@ -17,8 +17,6 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.*;
@@ -33,7 +31,6 @@ import java.util.Objects;
 /**
  * @author max
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LocalInspectionTool extends InspectionTool {
   public static final LocalInspectionTool[] EMPTY_ARRAY = new LocalInspectionTool[0];
 

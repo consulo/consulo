@@ -19,10 +19,7 @@ package consulo.language.editor.impl.internal.rawHighlight;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBus;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeveritiesProvider;
-import consulo.language.editor.rawHighlight.SeverityRegistrar;
+import consulo.language.editor.rawHighlight.*;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -104,18 +101,18 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
 
     @Override
     @Nonnull
-    public HighlightInfoType.HighlightInfoTypeImpl getHighlightInfoTypeBySeverity(@Nonnull HighlightSeverity severity) {
+    public HighlightInfoTypeImpl getHighlightInfoTypeBySeverity(@Nonnull HighlightSeverity severity) {
         HighlightInfoType infoType = STANDARD_SEVERITIES.get(severity.getName());
         if (infoType != null) {
-            return (HighlightInfoType.HighlightInfoTypeImpl)infoType;
+            return (HighlightInfoTypeImpl)infoType;
         }
 
         if (severity == HighlightSeverity.INFORMATION) {
-            return (HighlightInfoType.HighlightInfoTypeImpl)HighlightInfoType.INFORMATION;
+            return (HighlightInfoTypeImpl)HighlightInfoType.INFORMATION;
         }
 
         SeverityBasedTextAttributes type = getAttributesBySeverity(severity);
-        return (HighlightInfoType.HighlightInfoTypeImpl)(type == null ? HighlightInfoType.WARNING : type.getType());
+        return (HighlightInfoTypeImpl)(type == null ? HighlightInfoType.WARNING : type.getType());
     }
 
     private SeverityBasedTextAttributes getAttributesBySeverity(@Nonnull HighlightSeverity severity) {
@@ -382,14 +379,14 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
 
     public static class SeverityBasedTextAttributes {
         private final TextAttributes myAttributes;
-        private final HighlightInfoType.HighlightInfoTypeImpl myType;
+        private final HighlightInfoTypeImpl myType;
 
         //read external
         public SeverityBasedTextAttributes(@Nonnull Element element) throws InvalidDataException {
-            this(new TextAttributes(element), new HighlightInfoType.HighlightInfoTypeImpl(element));
+            this(new TextAttributes(element), new HighlightInfoTypeImpl(element));
         }
 
-        public SeverityBasedTextAttributes(@Nonnull TextAttributes attributes, @Nonnull HighlightInfoType.HighlightInfoTypeImpl type) {
+        public SeverityBasedTextAttributes(@Nonnull TextAttributes attributes, @Nonnull HighlightInfoTypeImpl type) {
             myAttributes = attributes;
             myType = type;
         }
@@ -400,7 +397,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         }
 
         @Nonnull
-        public HighlightInfoType.HighlightInfoTypeImpl getType() {
+        public HighlightInfoTypeImpl getType() {
             return myType;
         }
 

@@ -58,11 +58,12 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     }
 
     @Override
+    @RequiredReadAction
     public boolean analyze(@Nonnull PsiFile file, boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action) {
         myDumb = myDumbService.isDumb();
         myHolder = holder;
 
-        myAnnotationHolder = new AnnotationHolderImpl(holder.getAnnotationSession(), myBatchMode) {
+        myAnnotationHolder = new AnnotationHolderImpl(null, holder.getAnnotationSession(), myBatchMode) {
             @Override
             public void queueToUpdateIncrementally() {
                 if (!isEmpty()) {
@@ -103,10 +104,13 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
 
     @RequiredReadAction
     private void runAnnotators(@Nonnull PsiElement element) {
-        List<Annotator> annotators = myAnnotators.get(element.getLanguage());
+        Language language = element.getLanguage();
+        List<Annotator> annotators = myAnnotators.get(language);
         if (!annotators.isEmpty()) {
             AnnotationHolderImpl holder = myAnnotationHolder;
             holder.myCurrentElement = element;
+            holder.myCurrentLanguage = language;
+
             for (Annotator annotator : annotators) {
                 if (!myDumb || DumbService.isDumbAware(annotator)) {
                     ProgressManager.checkCanceled();

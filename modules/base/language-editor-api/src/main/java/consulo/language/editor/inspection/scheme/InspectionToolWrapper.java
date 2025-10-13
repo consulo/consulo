@@ -18,9 +18,13 @@ package consulo.language.editor.inspection.scheme;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.language.Language;
-import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.CleanupLocalInspectionTool;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.InspectionTool;
+import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -47,16 +51,26 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
 
     @Nonnull
     protected final T myTool;
+    @Nonnull
+    private final HighlightDisplayKey myHighlightDisplayKey;
     protected InspectionToolState<Object> myStateProvider;
 
-    protected InspectionToolWrapper(@Nonnull T tool) {
+    protected InspectionToolWrapper(@Nonnull T tool, @Nonnull HighlightDisplayKey highlightDisplayKey) {
         myTool = tool;
+        myHighlightDisplayKey = highlightDisplayKey;
     }
 
     protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T> other) {
         myTool = other.myTool;
+        myHighlightDisplayKey = other.myHighlightDisplayKey;
+
         // reset state - it will inited again and loaded
         myStateProvider = null;
+    }
+
+    @Nonnull
+    public HighlightDisplayKey getHighlightDisplayKey() {
+        return myHighlightDisplayKey;
     }
 
     public void readExternal(Element element) {

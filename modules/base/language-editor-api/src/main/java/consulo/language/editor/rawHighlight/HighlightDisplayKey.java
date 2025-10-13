@@ -15,155 +15,40 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.util.lang.Comparing;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 public class HighlightDisplayKey {
-    private static final Logger LOG = Logger.getInstance(HighlightDisplayKey.class);
-
-    // TODO [VISTALL] this registry unsafe, and plugins not remove data after uninstall(in runtime)
-    private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new ConcurrentHashMap<>();
-    private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new ConcurrentHashMap<>();
-    private static final Map<HighlightDisplayKey, LocalizeValue> ourKeyToDisplayNameMap = new ConcurrentHashMap<>();
-    private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new ConcurrentHashMap<>();
-
-    private final String myName;
-    private final String myID;
-
-    public static HighlightDisplayKey find(@Nonnull String name) {
-        return ourNameToKeyMap.get(name);
-    }
-
     @Nullable
     public static HighlightDisplayKey findById(@Nonnull String id) {
-        HighlightDisplayKey key = ourIdToKeyMap.get(id);
-        if (key != null) {
-            return key;
-        }
-        key = ourNameToKeyMap.get(id);
-        if (key != null && key.getID().equals(id)) {
-            return key;
-        }
-        return null;
+        InspectionCache cache = InspectionCacheService.getInstance().get();
+        return cache.findById(id);
     }
 
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name) {
-        if (find(name) != null) {
-            LOG.info("Key with name \'" + name + "\' already registered");
-            return null;
-        }
-        return new HighlightDisplayKey(name);
+    public static HighlightDisplayKey find(@Nonnull String name) {
+        InspectionCache cache = InspectionCacheService.getInstance().get();
+        return cache.find(name);
     }
 
-    /**
-     * @see #register(String, Supplier)
-     */
-    @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull String displayName) {
-        return register(name, displayName, name);
-    }
+    private final String myName;
 
-    @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName) {
-        return register(name, displayName, name);
-    }
+    private final String myID;
 
-
-    /**
-     * @see #register(String, LocalizeValue, String)
-     */
-    @Nullable
-    @Deprecated
-    @DeprecationInfo("Use with localize value")
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull String displayName, @Nonnull String id) {
-        return register(name, LocalizeValue.of(displayName), id);
-    }
-
-    @Nullable
-    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName, @Nonnull String id) {
-        if (find(name) != null) {
-            LOG.info("Key with name \'" + name + "\' already registered");
-            return null;
-        }
-        HighlightDisplayKey highlightDisplayKey = new HighlightDisplayKey(name, id);
-        ourKeyToDisplayNameMap.put(highlightDisplayKey, displayName);
-        return highlightDisplayKey;
-    }
-
-    @Nullable
-    public static HighlightDisplayKey register(
-        @Nonnull String name,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull String id,
-        @Nullable String alternativeID
-    ) {
-        HighlightDisplayKey key = register(name, displayName, id);
-        if (alternativeID != null) {
-            ourKeyToAlternativeIDMap.put(key, alternativeID);
-        }
-        return key;
-    }
-
-    @Nonnull
-    public static HighlightDisplayKey findOrRegister(@Nonnull String name, @Nonnull String displayName) {
-        return findOrRegister(name, displayName, null);
-    }
-
-    @Nonnull
-    public static HighlightDisplayKey findOrRegister(@Nonnull String name, @Nonnull String displayName, @Nullable String id) {
-        HighlightDisplayKey key = find(name);
-        if (key == null) {
-            key = register(name, displayName, id != null ? id : name);
-            assert key != null : name;
-        }
-        return key;
-    }
-
-    @Nonnull
-    public static LocalizeValue getDisplayNameByKey(@Nullable HighlightDisplayKey key) {
-        if (key == null) {
-            return LocalizeValue.of();
-        }
-        else {
-            LocalizeValue computable = ourKeyToDisplayNameMap.get(key);
-            return computable == null ? LocalizeValue.of() : computable;
-        }
-    }
-
-    public static String getAlternativeID(@Nonnull HighlightDisplayKey key) {
-        return ourKeyToAlternativeIDMap.get(key);
-    }
-
-
-    private HighlightDisplayKey(@Nonnull String name) {
-        this(name, name);
-    }
-
-    public HighlightDisplayKey(@Nonnull String name, @Nonnull String ID) {
+    public HighlightDisplayKey(@Nonnull String name, @Nonnull String id) {
         myName = name;
-        myID = ID;
-        ourNameToKeyMap.put(myName, this);
-        if (!Comparing.equal(ID, name)) {
-            ourIdToKeyMap.put(ID, this);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return myName;
+        myID = id;
     }
 
     @Nonnull
     public String getID() {
         return myID;
+    }
+
+    @Override
+    public String toString() {
+        return myName;
     }
 }

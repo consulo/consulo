@@ -16,7 +16,7 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileManager;
 import consulo.util.io.FileUtil;
@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 public class InspectionProfileLoadUtil {
   private static final String PROFILE_NAME_TAG = "profile_name";
@@ -59,7 +61,7 @@ public class InspectionProfileLoadUtil {
   @Nonnull
   public static Profile load(
     @Nonnull File file,
-    @Nonnull InspectionToolRegistrar registrar,
+    @Nonnull Supplier<Collection<InspectionToolWrapper<?>>> registrar,
     @Nonnull ProfileManager profileManager
   ) throws JDOMException, IOException, InvalidDataException {
     Element element = JDOMUtil.loadDocument(file).getRootElement();

@@ -17,7 +17,7 @@ package consulo.language.spellchecker.editor.impl;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
-import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.spellchecker.editor.inspection.SpellcheckerInspection;
 import consulo.util.collection.MultiMap;
 
@@ -26,7 +26,7 @@ import consulo.util.collection.MultiMap;
  * @since 26/03/2023
  */
 public class SpellcheckerInspections {
-  public static final ExtensionPointCacheKey<LocalInspectionTool, MultiMap<String, String>> MAPPING =
+  public static final ExtensionPointCacheKey<InspectionTool, MultiMap<String, String>> MAPPING =
     ExtensionPointCacheKey.create("TOOLS_MAPPING", walker -> {
       MultiMap<String, String> multiMap = new MultiMap<>();
 
@@ -39,7 +39,7 @@ public class SpellcheckerInspections {
     });
 
   public static boolean isOwneedSpellcheckerInspection(String spellcheckerEngineId, String toolId) {
-    MultiMap<String, String> map = Application.get().getExtensionPoint(LocalInspectionTool.class).getOrBuildCache(MAPPING);
+    MultiMap<String, String> map = Application.get().getExtensionPoint(InspectionTool.class).getOrBuildCache(MAPPING);
     return map.get(spellcheckerEngineId).contains(toolId);
   }
 }

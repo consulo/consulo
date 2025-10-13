@@ -9,6 +9,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationBuilder;
@@ -28,6 +29,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 class AnnotationBuilderImpl implements AnnotationBuilder {
@@ -58,6 +60,8 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     private boolean created;
     private final Throwable myDebugCreationPlace;
 
+    private Language myLanguage;
+
     AnnotationBuilderImpl(
         @Nonnull AnnotationHolderImpl holder,
         @Nonnull HighlightSeverity severity,
@@ -70,6 +74,8 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         myMessage = message;
         myCurrentElement = currentElement;
         myCurrentAnnotator = currentAnnotator;
+        myLanguage = Objects.requireNonNull(holder.myCurrentLanguage);
+
         holder.annotationBuilderCreated(this);
 
         myDebugCreationPlace = ApplicationProperties.isInSandbox() ? new Exception() : null;
@@ -304,7 +310,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         }
 
         //noinspection deprecation
-        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip);
+        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip, myLanguage);
         if (needsUpdateOnTyping != null) {
             annotation.setNeedsUpdateOnTyping(needsUpdateOnTyping);
         }
@@ -410,7 +416,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         }
 
         //noinspection deprecation
-        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip);
+        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip, myLanguage);
         if (needsUpdateOnTyping != null) {
             annotation.setNeedsUpdateOnTyping(needsUpdateOnTyping);
         }

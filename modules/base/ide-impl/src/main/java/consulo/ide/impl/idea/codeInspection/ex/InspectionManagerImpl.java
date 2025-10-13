@@ -23,10 +23,11 @@ import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.SuppressIntentionAction;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -40,7 +41,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -150,8 +150,6 @@ public class InspectionManagerImpl extends InspectionManagerBase {
 
     public void buildInspectionSearchIndexIfNecessary() {
         if (!myToolsAreInitialized.getAndSet(true)) {
-            final SearchableOptionsRegistrar myOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
-            final InspectionToolRegistrar toolRegistrar = InspectionToolRegistrar.getInstance();
             Application app = ApplicationManager.getApplication();
             if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
                 return;
@@ -160,14 +158,16 @@ public class InspectionManagerImpl extends InspectionManagerBase {
             app.executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
-                    List<InspectionToolWrapper> tools = toolRegistrar.createTools();
-                    for (InspectionToolWrapper toolWrapper : tools) {
-                        processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, myOptionsRegistrar);
+                    SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+
+                    InspectionCache cache = app.getInstance(InspectionCacheService.class).get();
+                    for (InspectionToolWrapper toolWrapper : cache.getToolWrappers()) {
+                        processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
 
                         String description = toolWrapper.loadDescription();
                         if (description != null) {
                             String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
-                            processText(descriptionText, toolWrapper, myOptionsRegistrar);
+                            processText(descriptionText, toolWrapper, optionsRegistrar);
                         }
                     }
                 }

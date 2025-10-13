@@ -375,33 +375,31 @@ class Browser extends JPanel {
     private void appendSuppressSection(StringBuffer buf) {
         InspectionToolWrapper toolWrapper = getToolWrapper();
         if (toolWrapper != null) {
-            HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
-            if (key != null) {//dummy entry points
-                SuppressActionWrapper.SuppressTreeAction[] suppressActions =
-                    new SuppressActionWrapper(myView.getProject(), toolWrapper, myView.getTree().getSelectionPaths()).getChildren(null);
-                if (suppressActions.length > 0) {
-                    List<AnAction> activeSuppressActions = new ArrayList<>();
-                    for (SuppressActionWrapper.SuppressTreeAction suppressAction : suppressActions) {
-                        if (suppressAction.isAvailable()) {
-                            activeSuppressActions.add(suppressAction);
-                        }
+            HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
+            SuppressActionWrapper.SuppressTreeAction[] suppressActions =
+                new SuppressActionWrapper(myView.getProject(), toolWrapper, myView.getTree().getSelectionPaths()).getChildren(null);
+            if (suppressActions.length > 0) {
+                List<AnAction> activeSuppressActions = new ArrayList<>();
+                for (SuppressActionWrapper.SuppressTreeAction suppressAction : suppressActions) {
+                    if (suppressAction.isAvailable()) {
+                        activeSuppressActions.add(suppressAction);
                     }
-                    if (!activeSuppressActions.isEmpty()) {
-                        int idx = 0;
-                        @NonNls String br = "<br>";
+                }
+                if (!activeSuppressActions.isEmpty()) {
+                    int idx = 0;
+                    @NonNls String br = "<br>";
+                    buf.append(br);
+                    HTMLComposerBase.appendHeading(buf, InspectionLocalize.inspectionExportResultsSuppress());
+                    for (AnAction suppressAction : activeSuppressActions) {
                         buf.append(br);
-                        HTMLComposerBase.appendHeading(buf, InspectionLocalize.inspectionExportResultsSuppress());
-                        for (AnAction suppressAction : activeSuppressActions) {
+                        if (idx == activeSuppressActions.size() - 1) {
                             buf.append(br);
-                            if (idx == activeSuppressActions.size() - 1) {
-                                buf.append(br);
-                            }
-                            HTMLComposer.appendAfterHeaderIndention(buf);
-                            @NonNls String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
-                                suppressAction.getTemplatePresentation().getText() + "</a>";
-                            buf.append(href);
-                            idx++;
                         }
+                        HTMLComposer.appendAfterHeaderIndention(buf);
+                        @NonNls String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
+                            suppressAction.getTemplatePresentation().getText() + "</a>";
+                        buf.append(href);
+                        idx++;
                     }
                 }
             }

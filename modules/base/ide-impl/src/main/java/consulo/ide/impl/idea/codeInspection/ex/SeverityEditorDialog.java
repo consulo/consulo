@@ -35,6 +35,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -135,7 +136,7 @@ public class SeverityEditorDialog extends DialogWrapper {
           );
         if (name == null) return;
         TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
-        HighlightInfoType.HighlightInfoTypeImpl info = new HighlightInfoType.HighlightInfoTypeImpl(
+        HighlightInfoTypeImpl info = new HighlightInfoTypeImpl(
           new HighlightSeverity(name, 50),
           TextAttributesKey.createTextAttributesKey(name)
         );

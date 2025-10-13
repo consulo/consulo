@@ -38,7 +38,6 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -81,7 +80,11 @@ public interface LanguageEditorInternalHelper {
     }
 
     @Nonnull
-    default List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+    default List<Annotation> runAnnotator(@Nonnull Language language,
+                                          @Nonnull Annotator annotator,
+                                          PsiFile file,
+                                          PsiElement context,
+                                          boolean batchMode) {
         return List.of();
     }
 

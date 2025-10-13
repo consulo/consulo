@@ -18,10 +18,8 @@ package consulo.language.editor.annotation;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 /**
  * Defines a highlighting severity level for an annotation.
@@ -75,7 +73,7 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
    *             if two annotations with different severity levels cover the same text range, only
    *             the annotation with a higher severity level is displayed.
    */
-  public HighlightSeverity(@NonNls @Nonnull String name, int val) {
+  public HighlightSeverity(@Nonnull String name, int val) {
     myName = name;
     myVal = val;
   }

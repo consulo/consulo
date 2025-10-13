@@ -58,7 +58,7 @@ public class Descriptor {
     myText = tool.getDisplayName();
     LocalizeValue[] groupPath = tool.getGroupPath();
     myGroup = groupPath.length == 0 ? new LocalizeValue[]{InspectionLocalize.inspectionGeneralToolsGroupName()} : groupPath;
-    myKey = HighlightDisplayKey.find(tool.getShortName());
+    myKey = tool.getHighlightDisplayKey();
     myScopeName = state.getScopeId();
     myScope = state.getScope(project);
     myLevel = inspectionProfile.getErrorLevel(myKey, myScope, project);

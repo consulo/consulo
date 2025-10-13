@@ -167,8 +167,8 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
-    public static InspectionResultsView showOfflineView(
+    @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
+    public InspectionResultsView showOfflineView(
         @Nonnull Project project,
         @Nullable final String profileName,
         @Nonnull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
@@ -191,7 +191,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         else {
             inspectionProfile = new InspectionProfileImpl(
                 profileName != null ? profileName : "Server Side",
-                InspectionToolRegistrar.getInstance(),
+                InspectionToolRegistrar.fromApplication(myApplication),
                 InspectionProfileManager.getInstance()
             ) {
                 @Override

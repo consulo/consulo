@@ -17,6 +17,8 @@
 package consulo.language.editor.intention;
 
 import consulo.document.util.TextRange;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.internal.QuickFixActionRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -26,20 +28,24 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface QuickFixActionRegistrar {
-  @Nonnull
-  @Deprecated
-  static QuickFixActionRegistrar create(@Nonnull HighlightInfo highlightInfo) {
-    return new QuickFixActionRegistrarImpl(highlightInfo);
-  }
+    @Nonnull
+    @Deprecated
+    static QuickFixActionRegistrar create(@Nonnull HighlightInfo highlightInfo) {
+        return new QuickFixActionRegistrarImpl(highlightInfo);
+    }
 
-  @Nonnull
-  static QuickFixActionRegistrar create(@Nonnull HighlightInfo.Builder builder) {
-    return (fixRange, action, key) -> builder.registerFix(action, List.of(), HighlightDisplayKey.getDisplayNameByKey(key), fixRange, key);
-  }
+    @Nonnull
+    static QuickFixActionRegistrar create(@Nonnull HighlightInfo.Builder builder) {
+        return (fixRange, action, key) -> {
+            InspectionCache cache = InspectionCacheService.getInstance().get();
 
-  default void register(@Nullable IntentionAction action) {
-    register(null, action, null);
-  }
+            builder.registerFix(action, List.of(), cache.getDisplayNameByKey(key), fixRange, key);
+        };
+    }
 
-  void register(@Nullable TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
+    default void register(@Nullable IntentionAction action) {
+        register(null, action, null);
+    }
+
+    void register(@Nullable TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
 }

@@ -16,60 +16,26 @@
 
 package consulo.language.editor.impl.internal.inspection.scheme;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.language.editor.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.inspection.GlobalInspectionTool;
-import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 
-import jakarta.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * @author max
  */
-@Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
-@ServiceImpl
-public class InspectionToolRegistrar {
-  @Deprecated
-  public static InspectionToolRegistrar getInstance() {
-    return Application.get().getInstance(InspectionToolRegistrar.class);
-  }
-
-  private final Application myApplication;
-
-  @Inject
-  public InspectionToolRegistrar(Application application) {
-    myApplication = application;
-  }
-
-  @Nonnull
-  public List<InspectionToolWrapper> createTools() {
-    List<InspectionToolWrapper> tools = new ArrayList<>();
-    walkWrappers(tools::add);
-    return tools;
-  }
-
-  private void walkWrappers(Consumer<InspectionToolWrapper<?>> consumer) {
-    List<LocalInspectionToolWrapper> localInspectionToolWrappers =
-      myApplication.getExtensionPoint(LocalInspectionTool.class).getOrBuildCache(InspectionToolWrappers.LOCAL_WRAPPERS);
-    for (LocalInspectionToolWrapper wrapper : localInspectionToolWrappers) {
-      consumer.accept(wrapper.createCopy());
+public interface InspectionToolRegistrar {
+    static Supplier<Collection<InspectionToolWrapper<?>>> fromApplication(Application application) {
+        return () -> {
+            InspectionCache cache = application.getInstance(InspectionCacheService.class).get();
+            return cache.getToolWrappers();
+        };
     }
 
-    List<GlobalInspectionToolWrapper> globalInspectionToolWrappers =
-      myApplication.getExtensionPoint(GlobalInspectionTool.class).getOrBuildCache(InspectionToolWrappers.GLOBAL_WRAPPERS);
-    for (GlobalInspectionToolWrapper globalInspectionToolWrapper : globalInspectionToolWrappers) {
-      consumer.accept(globalInspectionToolWrapper.createCopy());
+    static Supplier<Collection<InspectionToolWrapper<?>>> fromService(InspectionCacheService cacheService) {
+        return () -> cacheService.get().getToolWrappers();
     }
-  }
 }

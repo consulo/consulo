@@ -594,6 +594,12 @@
                 <option name="EFFECT_TYPE" value="3"/>
             </value>
         </option>
+        <option name="MARKED_FOR_REMOVAL_ATTRIBUTES">
+            <value>
+                <option name="EFFECT_COLOR" value="ff0000"/>
+                <option name="EFFECT_TYPE" value="3"/>
+            </value>
+        </option>
         <option name="XML_PROLOGUE">
             <value>
                 <option name="FONT_TYPE" value="2"/>

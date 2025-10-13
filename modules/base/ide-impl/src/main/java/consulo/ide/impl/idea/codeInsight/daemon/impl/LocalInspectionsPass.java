@@ -56,10 +56,7 @@ import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.*;
 import consulo.language.editor.localize.DaemonLocalize;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.rawHighlight.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
@@ -527,7 +524,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                     Document thisDocument = documentManager.getDocument(file);
 
                     HighlightSeverity severity =
-                        inspectionProfile.getErrorLevel(HighlightDisplayKey.find(tool.getShortName()), file).getSeverity();
+                        inspectionProfile.getErrorLevel(tool.getHighlightDisplayKey(), file).getSeverity();
 
                     infos.clear();
                     createHighlightsForDescriptor(
@@ -638,7 +635,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                     indicator.checkCanceled();
                     LocalInspectionToolWrapper tool = inspectionResult.tool;
                     HighlightSeverity severity =
-                        inspectionProfile.getErrorLevel(HighlightDisplayKey.find(tool.getShortName()), file).getSeverity();
+                        inspectionProfile.getErrorLevel(tool.getHighlightDisplayKey(), file).getSeverity();
                     for (ProblemDescriptor descriptor : inspectionResult.foundProblems) {
                         indicator.checkCanceled();
                         PsiElement element = descriptor.getPsiElement();
@@ -744,13 +741,13 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     ) {
         String message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
 
-        HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
+        HighlightDisplayKey key = tool.getHighlightDisplayKey();
         InspectionProfile inspectionProfile = myProfileWrapper.getInspectionProfile();
         if (!inspectionProfile.isToolEnabled(key, getFile())) {
             return null;
         }
 
-        HighlightInfoType type = new HighlightInfoType.HighlightInfoTypeImpl(level.getSeverity(element), level.getAttributesKey());
+        HighlightInfoType type = new HighlightInfoTypeImpl(level.getSeverity(element), level.getAttributesKey());
         String plainMessage = message.startsWith("<html>")
             ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(message).replaceAll("<[^>]*>", ""))
             : message;
@@ -780,7 +777,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull HighlightInfoImpl highlightInfo,
         @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered
     ) {
-        HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
+        HighlightDisplayKey key = tool.getHighlightDisplayKey();
         boolean needEmptyAction = true;
         QuickFix[] fixes = descriptor.getFixes();
         if (fixes != null && fixes.length > 0) {
@@ -848,7 +845,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         List<LocalInspectionToolWrapper> enabled = new ArrayList<>();
         for (InspectionToolWrapper toolWrapper : toolWrappers) {
             ProgressManager.checkCanceled();
-            if (!profile.isToolEnabled(HighlightDisplayKey.find(toolWrapper.getShortName()), getFile())) {
+            if (!profile.isToolEnabled(toolWrapper.getHighlightDisplayKey(), getFile())) {
                 continue;
             }
 

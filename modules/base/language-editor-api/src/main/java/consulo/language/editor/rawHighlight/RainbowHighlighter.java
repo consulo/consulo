@@ -84,7 +84,7 @@ public class RainbowHighlighter {
     }
 
     public static final HighlightInfoType RAINBOW_ELEMENT =
-        new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, DefaultLanguageHighlighterColors.CONSTANT);
+        new HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, DefaultLanguageHighlighterColors.CONSTANT);
 
     @Nullable
     @Contract("_, null -> !null")

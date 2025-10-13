@@ -15,8 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.inspection.reference.RefManager;
@@ -25,7 +23,6 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,7 +40,6 @@ import jakarta.annotation.Nullable;
  * @see LocalInspectionTool
  * @since 6.0
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class GlobalInspectionTool extends InspectionTool {
   @Nonnull
   @Override

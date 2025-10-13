@@ -33,6 +33,7 @@ import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
@@ -68,7 +69,7 @@ import java.util.Collection;
 )
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
-    private final InspectionToolRegistrar myRegistrar;
+    private final InspectionCacheService myCacheService;
     private final SchemeManager<InspectionProfile, InspectionProfileImpl> mySchemeManager;
     private final SeverityRegistrarImpl mySeverityRegistrar;
 
@@ -81,10 +82,10 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     @Inject
     public InspectionProfileManagerImpl(
         @Nonnull Application application,
-        @Nonnull InspectionToolRegistrar registrar,
+        @Nonnull InspectionCacheService cacheService,
         @Nonnull SchemeManagerFactory schemeManagerFactory
     ) {
-        myRegistrar = registrar;
+        myCacheService = cacheService;
         registerProvidedSeverities();
 
         mySchemeManager =
@@ -94,7 +95,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                 public InspectionProfileImpl readScheme(@Nonnull Element element) {
                     InspectionProfileImpl profile = new InspectionProfileImpl(
                         InspectionProfileLoadUtil.getProfileName(element),
-                        myRegistrar,
+                        InspectionToolRegistrar.fromService(myCacheService),
                         InspectionProfileManagerImpl.this
                     );
                     try {
@@ -156,7 +157,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
     @Nonnull
     private InspectionProfileImpl createSampleProfile() {
-        return new InspectionProfileImpl("Default", myRegistrar, this, false);
+        return new InspectionProfileImpl("Default", InspectionToolRegistrar.fromService(myCacheService), this, false);
     }
 
     public static void registerProvidedSeverities() {
@@ -193,7 +194,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
     private void createDefaultProfile() {
         InspectionProfileImpl defaultProfile = (InspectionProfileImpl)createProfile();
-        defaultProfile.setBaseProfile(InspectionProfileImpl.getDefaultProfile(myRegistrar, this));
+        defaultProfile.setBaseProfile(InspectionProfileImpl.getDefaultProfile(InspectionToolRegistrar.fromService(myCacheService), this));
         addProfile(defaultProfile);
     }
 
@@ -202,7 +203,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         File file = new File(path);
         if (file.exists()) {
             try {
-                return InspectionProfileLoadUtil.load(file, myRegistrar, this);
+                return InspectionProfileLoadUtil.load(file, InspectionToolRegistrar.fromService(myCacheService), this);
             }
             catch (IOException | JDOMException e) {
                 throw e;

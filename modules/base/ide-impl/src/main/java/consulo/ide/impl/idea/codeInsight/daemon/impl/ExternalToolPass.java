@@ -76,7 +76,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
-    myAnnotationHolder = new AnnotationHolderImpl(new AnnotationSession(file), false);
+    myAnnotationHolder = new AnnotationHolderImpl(file.getLanguage(), new AnnotationSession(file), false);
 
     myAnnotator2DataMap = new HashMap<ExternalAnnotator, MyData>();
     myExternalToolPassFactory = externalToolPassFactory;

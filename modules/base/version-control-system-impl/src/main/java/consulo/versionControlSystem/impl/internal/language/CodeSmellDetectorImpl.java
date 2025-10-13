@@ -28,6 +28,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.HighlightInfoTypeSeverityByKey;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
@@ -218,8 +219,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
         String description = highlightInfo.getDescription();
         HighlightInfoType type = highlightInfo.getType();
-        if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {
-            HighlightDisplayKey severityKey = ((HighlightInfoType.HighlightInfoTypeSeverityByKey) type).getSeverityKey();
+        if (type instanceof HighlightInfoTypeSeverityByKey) {
+            HighlightDisplayKey severityKey = ((HighlightInfoTypeSeverityByKey) type).getSeverityKey();
             String id = severityKey.getID();
             return "[" + id + "] " + description;
         }

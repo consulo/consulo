@@ -15,41 +15,42 @@
  */
 package consulo.codeEditor;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 
-@SuppressWarnings("unused")
+@UsedInPlugin
 public interface CodeInsightColors {
-  TextAttributesKey WRONG_REFERENCES_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRONG_REFERENCES_ATTRIBUTES");
-  TextAttributesKey ERRORS_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("ERRORS_ATTRIBUTES");
-  TextAttributesKey WARNINGS_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WARNING_ATTRIBUTES");
-  TextAttributesKey GENERIC_SERVER_ERROR_OR_WARNING = TextAttributesKey.createTextAttributesKey("GENERIC_SERVER_ERROR_OR_WARNING");
-  TextAttributesKey DUPLICATE_FROM_SERVER = TextAttributesKey.createTextAttributesKey("DUPLICATE_FROM_SERVER");
-  /**
-   * use #WEAK_WARNING_ATTRIBUTES instead
-   */
-  @Deprecated
-  TextAttributesKey INFO_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("INFO_ATTRIBUTES");
-  TextAttributesKey WEAK_WARNING_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("INFO_ATTRIBUTES");
-  TextAttributesKey INFORMATION_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("INFORMATION_ATTRIBUTES");
-  TextAttributesKey NOT_USED_ELEMENT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("NOT_USED_ELEMENT_ATTRIBUTES");
-  TextAttributesKey DEPRECATED_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("DEPRECATED_ATTRIBUTES");
-  TextAttributesKey MARKED_FOR_REMOVAL_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("MARKED_FOR_REMOVAL_ATTRIBUTES");
+    TextAttributesKey WRONG_REFERENCES_ATTRIBUTES = TextAttributesKey.of("WRONG_REFERENCES_ATTRIBUTES");
+    TextAttributesKey ERRORS_ATTRIBUTES = TextAttributesKey.of("ERRORS_ATTRIBUTES");
+    TextAttributesKey WARNINGS_ATTRIBUTES = TextAttributesKey.of("WARNING_ATTRIBUTES");
+    TextAttributesKey GENERIC_SERVER_ERROR_OR_WARNING = TextAttributesKey.of("GENERIC_SERVER_ERROR_OR_WARNING");
+    TextAttributesKey DUPLICATE_FROM_SERVER = TextAttributesKey.of("DUPLICATE_FROM_SERVER");
+    /**
+     * use #WEAK_WARNING_ATTRIBUTES instead
+     */
+    @Deprecated
+    TextAttributesKey INFO_ATTRIBUTES = TextAttributesKey.of("INFO_ATTRIBUTES");
+    TextAttributesKey WEAK_WARNING_ATTRIBUTES = TextAttributesKey.of("INFO_ATTRIBUTES");
+    TextAttributesKey INFORMATION_ATTRIBUTES = TextAttributesKey.of("INFORMATION_ATTRIBUTES");
+    TextAttributesKey NOT_USED_ELEMENT_ATTRIBUTES = TextAttributesKey.of("NOT_USED_ELEMENT_ATTRIBUTES");
+    TextAttributesKey DEPRECATED_ATTRIBUTES = TextAttributesKey.of("DEPRECATED_ATTRIBUTES");
+    TextAttributesKey MARKED_FOR_REMOVAL_ATTRIBUTES = TextAttributesKey.of("MARKED_FOR_REMOVAL_ATTRIBUTES");
 
-  TextAttributesKey MATCHED_BRACE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("MATCHED_BRACE_ATTRIBUTES");
-  TextAttributesKey UNMATCHED_BRACE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("UNMATCHED_BRACE_ATTRIBUTES");
+    TextAttributesKey MATCHED_BRACE_ATTRIBUTES = TextAttributesKey.of("MATCHED_BRACE_ATTRIBUTES");
+    TextAttributesKey UNMATCHED_BRACE_ATTRIBUTES = TextAttributesKey.of("UNMATCHED_BRACE_ATTRIBUTES");
 
-  TextAttributesKey JOIN_POINT = TextAttributesKey.createTextAttributesKey("JOIN_POINT");
-  TextAttributesKey BLINKING_HIGHLIGHTS_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("BLINKING_HIGHLIGHTS_ATTRIBUTES");
-  TextAttributesKey HYPERLINK_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("HYPERLINK_ATTRIBUTES");
-  TextAttributesKey FOLLOWED_HYPERLINK_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("FOLLOWED_HYPERLINK_ATTRIBUTES");
+    TextAttributesKey JOIN_POINT = TextAttributesKey.of("JOIN_POINT");
+    TextAttributesKey BLINKING_HIGHLIGHTS_ATTRIBUTES = TextAttributesKey.of("BLINKING_HIGHLIGHTS_ATTRIBUTES");
+    TextAttributesKey HYPERLINK_ATTRIBUTES = TextAttributesKey.of("HYPERLINK_ATTRIBUTES");
+    TextAttributesKey FOLLOWED_HYPERLINK_ATTRIBUTES = TextAttributesKey.of("FOLLOWED_HYPERLINK_ATTRIBUTES");
 
-  TextAttributesKey TODO_DEFAULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TODO_DEFAULT_ATTRIBUTES");
-  TextAttributesKey BOOKMARKS_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("BOOKMARKS_ATTRIBUTES");
+    TextAttributesKey TODO_DEFAULT_ATTRIBUTES = TextAttributesKey.of("TODO_DEFAULT_ATTRIBUTES");
+    TextAttributesKey BOOKMARKS_ATTRIBUTES = TextAttributesKey.of("BOOKMARKS_ATTRIBUTES");
 
-  // Colors
-  EditorColorKey METHOD_SEPARATORS_COLOR = EditorColorKey.createColorKey("METHOD_SEPARATORS_COLOR");
-  TextAttributesKey LINE_FULL_COVERAGE = TextAttributesKey.createTextAttributesKey("LINE_FULL_COVERAGE");
-  TextAttributesKey LINE_PARTIAL_COVERAGE = TextAttributesKey.createTextAttributesKey("LINE_PARTIAL_COVERAGE");
-  TextAttributesKey LINE_NONE_COVERAGE = TextAttributesKey.createTextAttributesKey("LINE_NONE_COVERAGE");
+    // Colors
+    EditorColorKey METHOD_SEPARATORS_COLOR = EditorColorKey.createColorKey("METHOD_SEPARATORS_COLOR");
+    TextAttributesKey LINE_FULL_COVERAGE = TextAttributesKey.of("LINE_FULL_COVERAGE");
+    TextAttributesKey LINE_PARTIAL_COVERAGE = TextAttributesKey.of("LINE_PARTIAL_COVERAGE");
+    TextAttributesKey LINE_NONE_COVERAGE = TextAttributesKey.of("LINE_NONE_COVERAGE");
 }

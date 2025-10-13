@@ -5,6 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.*;
 import consulo.language.psi.PsiElement;
@@ -32,26 +33,17 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class AnnotationHolderImpl extends SmartList<Annotation> implements AnnotationHolder {
     private static final Logger LOG = Logger.getInstance(AnnotationHolderImpl.class);
+
     private final AnnotationSession myAnnotationSession;
 
     private final boolean myBatchMode;
-    public Annotator myCurrentAnnotator;
     private ExternalAnnotator<?, ?> myExternalAnnotator;
 
-    /**
-     * @deprecated Do not instantiate the AnnotationHolderImpl directly, please use the one provided to
-     * {@link Annotator#annotate(PsiElement, AnnotationHolder)} instead
-     */
-    @Deprecated
-    public AnnotationHolderImpl(@Nonnull AnnotationSession session) {
-        this(session, false);
-        PluginExceptionUtil.reportDeprecatedUsage(
-            "AnnotationHolderImpl(AnnotationSession)",
-            "Please use the AnnotationHolder passed to Annotator.annotate() instead"
-        );
-    }
+    public Language myCurrentLanguage;
+    public Annotator myCurrentAnnotator;
 
-    public AnnotationHolderImpl(@Nonnull AnnotationSession session, boolean batchMode) {
+    public AnnotationHolderImpl(@Nullable Language language, @Nonnull AnnotationSession session, boolean batchMode) {
+        myCurrentLanguage = language;
         myAnnotationSession = session;
         myBatchMode = batchMode;
     }
@@ -275,7 +267,8 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
             message == null ? LocalizeValue.of() : LocalizeValue.of(message),
             tooltip == null ? LocalizeValue.of() : LocalizeValue.of(tooltip),
             callerClass,
-            methodName
+            methodName,
+            myCurrentLanguage
         );
     }
 
@@ -290,9 +283,10 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         @Nonnull LocalizeValue message,
         @Nonnull LocalizeValue tooltip,
         @Nullable Class<?> callerClass,
-        @Nonnull String methodName
+        @Nonnull String methodName,
+        @Nonnull Language language
     ) {
-        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
+        Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip, language);
         add(annotation);
         String callerInfo = callerClass == null ? "" : " (the call to which was found in " + callerClass + ")";
         PluginException pluginException = PluginExceptionUtil.createByClass(new DeprecatedMethodException("'AnnotationHolder." +

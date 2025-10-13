@@ -17,12 +17,12 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,25 +31,25 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
-  @Nonnull
-  static InspectionProjectProfileManager getInstance(Project project) {
-    return project.getInstance(InspectionProjectProfileManager.class);
-  }
-
-  @Nonnull
-  default InspectionProfile getCurrentProfile() {
-    return getInspectionProfile();
-  }
-
-  @Nonnull
-  InspectionProfile getInspectionProfile();
-
-  public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
-    HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
-    if (key != null) {
-      HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);
-      return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
+    @Nonnull
+    static InspectionProjectProfileManager getInstance(Project project) {
+        return project.getInstance(InspectionProjectProfileManager.class);
     }
-    return false;
-  }
+
+    @Nonnull
+    default InspectionProfile getCurrentProfile() {
+        return getInspectionProfile();
+    }
+
+    @Nonnull
+    InspectionProfile getInspectionProfile();
+
+    public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
+        HighlightDisplayKey key = InspectionCacheService.getInstance().get().find(shortName);
+        if (key != null) {
+            HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);
+            return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
+        }
+        return false;
+    }
 }

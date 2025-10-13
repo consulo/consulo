@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -65,7 +66,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     private static final String VALID_VERSION = "1.0";
     private static final String VERSION_TAG = "version";
     private static final String USED_LEVELS = "used_levels";
-    private final InspectionToolRegistrar myRegistrar;
+    private final Supplier<Collection<InspectionToolWrapper<?>>> myRegistrar;
     @Nonnull
     private final Map<String, Element> myUninstalledInspectionsSettings;
     private final ExternalInfo myExternalInfo = new ExternalInfo();
@@ -96,13 +97,13 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
 
     public InspectionProfileImpl(@Nonnull String profileName,
-                                 @Nonnull InspectionToolRegistrar registrar,
+                                 @Nonnull Supplier<Collection<InspectionToolWrapper<?>>> registrar,
                                  @Nonnull ProfileManager profileManager) {
         this(profileName, registrar, profileManager, true);
     }
 
     public InspectionProfileImpl(@Nonnull String profileName,
-                                 @Nonnull InspectionToolRegistrar registrar,
+                                 @Nonnull Supplier<Collection<InspectionToolWrapper<?>>> registrar,
                                  @Nonnull ProfileManager profileManager,
                                  boolean withDefault) {
         super(profileName);
@@ -116,14 +117,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     public static InspectionProfileImpl createSimple(@Nonnull String name,
                                                      @Nonnull Project project,
                                                      @Nonnull final InspectionToolWrapper... toolWrappers) {
-        InspectionToolRegistrar registrar = new InspectionToolRegistrar(project.getApplication()) {
-            @Nonnull
-            @Override
-            public List<InspectionToolWrapper> createTools() {
-                return Arrays.asList(toolWrappers);
-            }
-        };
-        InspectionProfileImpl profile = new InspectionProfileImpl(name, registrar, InspectionProfileManager.getInstance());
+        InspectionProfileImpl profile = new InspectionProfileImpl(name, () -> Arrays.asList(toolWrappers), InspectionProfileManager.getInstance());
         profile.initInspectionTools(project);
         for (InspectionToolWrapper toolWrapper : toolWrappers) {
             profile.enableTool(toolWrapper.getShortName(), project);
@@ -153,7 +147,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
 
     @Nonnull
-    public static InspectionProfileImpl getDefaultProfile(InspectionToolRegistrar registrar, ProfileManager profileManager) {
+    public static InspectionProfileImpl getDefaultProfile(Supplier<Collection<InspectionToolWrapper<?>>> registrar, ProfileManager profileManager) {
         return new InspectionProfileImpl("Default", registrar, profileManager, false);
     }
 
@@ -511,27 +505,14 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
             myBaseProfile.initInspectionTools(project);
         }
 
-        List<InspectionToolWrapper> tools = createTools(project);
+        Collection<InspectionToolWrapper<?>> tools = createTools(project);
 
         final Map<String, List<String>> dependencies = new HashMap<>();
         for (InspectionToolWrapper toolWrapper : tools) {
             String shortName = toolWrapper.getShortName();
-            HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
-            if (key == null) {
-                if (toolWrapper instanceof LocalInspectionToolWrapper) {
-                    key = HighlightDisplayKey.register(shortName,
-                        toolWrapper.getDisplayName(),
-                        ((LocalInspectionToolWrapper) toolWrapper).getID(),
-                        ((LocalInspectionToolWrapper) toolWrapper).getAlternativeID());
-                }
-                else {
-                    key = HighlightDisplayKey.register(shortName, toolWrapper.getDisplayName());
-                }
-            }
-
-            LOG.assertTrue(key != null, shortName + " ; number of initialized tools: " + myTools.size());
-            HighlightDisplayLevel level = myBaseProfile != null ? myBaseProfile.getErrorLevel(key, project) : toolWrapper.getDefaultLevel();
-            boolean enabled = myBaseProfile != null ? myBaseProfile.isToolEnabled(key) : toolWrapper.isEnabledByDefault();
+            HighlightDisplayKey highlightDisplayKey = toolWrapper.getHighlightDisplayKey();
+            HighlightDisplayLevel level = myBaseProfile != null ? myBaseProfile.getErrorLevel(highlightDisplayKey, project) : toolWrapper.getDefaultLevel();
+            boolean enabled = myBaseProfile != null ? myBaseProfile.isToolEnabled(highlightDisplayKey) : toolWrapper.isEnabledByDefault();
             ToolsImpl toolsList = new ToolsImpl(toolWrapper, level, !myLockedProfile && enabled, enabled);
             Element element = myUninstalledInspectionsSettings.remove(shortName);
             try {
@@ -580,11 +561,11 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
 
     @Nonnull
-    private List<InspectionToolWrapper> createTools(Project project) {
+    private Collection<InspectionToolWrapper<?>> createTools(Project project) {
         if (mySource != null) {
             return ContainerUtil.map(mySource.getDefaultStates(project), ScopeToolState::getTool);
         }
-        return myRegistrar.createTools();
+        return myRegistrar.get();
     }
 
     private HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey key, Project project) {
@@ -767,7 +748,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
                     NamedScope scope = getProfileManager().getScopesManager().getScope(scopeElement.getAttributeValue(NAME));
                     if (scope != null) {
                         for (InspectionToolWrapper toolWrapper : inspectionProfile.getInspectionTools(null)) {
-                            HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+                            HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
                             try {
                                 InspectionToolWrapper toolWrapperCopy = copyToolSettings(toolWrapper);
                                 HighlightDisplayLevel errorLevel = inspectionProfile.getErrorLevel(key, null, project);

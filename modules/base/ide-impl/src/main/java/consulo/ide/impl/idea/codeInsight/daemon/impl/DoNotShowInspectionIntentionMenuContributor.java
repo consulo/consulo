@@ -113,7 +113,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
                 toolWrapper = globalInspectionToolWrapper.getSharedLocalInspectionToolWrapper();
             }
             if (toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper && !localInspectionToolWrapper.isUnfair()) {
-                HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+                HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
                 if (profile.isToolEnabled(key, hostFile)
                     && HighlightDisplayLevel.DO_NOT_SHOW.equals(profile.getErrorLevel(key, hostFile))) {
                     intentionTools.add(localInspectionToolWrapper);
@@ -142,7 +142,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
         Predicate<LocalInspectionToolWrapper> processor = toolWrapper -> {
             LocalInspectionTool localInspectionTool = toolWrapper.getTool();
             Object toolState = toolWrapper.getToolState().getState();
-            final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+            final HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
             final LocalizeValue displayName = toolWrapper.getDisplayName();
             ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
                 @Override

@@ -20,6 +20,7 @@ import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.internal.RefManagerInternal;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,8 +30,8 @@ import jakarta.annotation.Nullable;
  * @since 2005-12-28
  */
 public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool> {
-    public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool) {
-        super(globalInspectionTool);
+    public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool, HighlightDisplayKey key) {
+        super(globalInspectionTool, key);
     }
 
     private GlobalInspectionToolWrapper(@Nonnull GlobalInspectionToolWrapper other) {
@@ -76,6 +77,6 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
         if (sharedTool == null) {
             return null;
         }
-        return new LocalInspectionToolWrapper(sharedTool);
+        return new LocalInspectionToolWrapper(sharedTool, getHighlightDisplayKey());
     }
 }

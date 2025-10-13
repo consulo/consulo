@@ -23,14 +23,12 @@ import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
 import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.inspection.SuppressQuickFix;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.internal.inspection.AnnotatorBasedInspection;
-import consulo.language.editor.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
@@ -122,11 +120,15 @@ public class IntentionActionDescriptor {
         if (editor != null && Boolean.FALSE.equals(editor.getUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY))) {
             return null;
         }
+
+        InspectionCache cache = InspectionCacheService.getInstance().get();
+
         List<IntentionAction> options = myOptions;
         HighlightDisplayKey key = myKey;
         if (myProblemGroup != null) {
             String problemName = myProblemGroup.getProblemName();
-            HighlightDisplayKey problemGroupKey = problemName != null ? HighlightDisplayKey.findById(problemName) : null;
+
+            HighlightDisplayKey problemGroupKey = problemName != null ? cache.findById(problemName) : null;
             if (problemGroupKey != null) {
                 key = problemGroupKey;
             }
@@ -139,7 +141,7 @@ public class IntentionActionDescriptor {
         InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
         InspectionToolWrapper toolWrapper = profile.getInspectionTool(key.toString(), element);
         if (!(toolWrapper instanceof LocalInspectionToolWrapper)) {
-            HighlightDisplayKey idKey = HighlightDisplayKey.findById(key.toString());
+            HighlightDisplayKey idKey = cache.findById(key.toString());
             if (idKey != null) {
                 toolWrapper = profile.getInspectionTool(idKey.toString(), element);
             }
@@ -151,7 +153,7 @@ public class IntentionActionDescriptor {
             IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
             InspectionTool wrappedTool = toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper
                 ? localInspectionToolWrapper.getTool()
-                : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
+                : ((GlobalInspectionToolWrapper) toolWrapper).getTool();
             if (wrappedTool instanceof AnnotatorBasedInspection) {
                 List<IntentionAction> actions = Collections.emptyList();
                 if (myProblemGroup instanceof SuppressableProblemGroup suppressableProblemGroup) {

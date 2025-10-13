@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
+import consulo.application.Application;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.ConfigurationException;
@@ -46,10 +47,7 @@ import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.internal.inspection.ScopeToolState;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.rawHighlight.*;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -177,7 +175,7 @@ public class SingleInspectionProfilePanel extends JPanel {
             return null;
         }
         InspectionProfileImpl inspectionProfile =
-            new InspectionProfileImpl(profileName, InspectionToolRegistrar.getInstance(), profileManager);
+            new InspectionProfileImpl(profileName, InspectionToolRegistrar.fromApplication(Application.get()), profileManager);
         if (initValue == -1) {
             inspectionProfile.initInspectionTools(project);
             ModifiableModel profileModifiableModel = inspectionProfile.getModifiableModel();
@@ -337,7 +335,7 @@ public class SingleInspectionProfilePanel extends JPanel {
                 if (textAttributes == null) {
                     continue;
                 }
-                HighlightInfoType.HighlightInfoTypeImpl info = new HighlightInfoType.HighlightInfoTypeImpl(severity, attributesKey);
+                HighlightInfoTypeImpl info = new HighlightInfoTypeImpl(severity, attributesKey);
                 registrar.registerSeverity(
                     new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info),
                     textAttributes.getErrorStripeColor()

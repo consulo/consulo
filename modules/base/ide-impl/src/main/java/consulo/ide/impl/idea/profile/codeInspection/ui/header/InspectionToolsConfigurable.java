@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
+import consulo.application.Application;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -37,7 +38,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.*;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -115,7 +116,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
     ProfileManager profileManager = selectedProfile.getProfileManager();
     InspectionProfileImpl inspectionProfile =
-      new InspectionProfileImpl(profileDefaultName, InspectionToolRegistrar.getInstance(), profileManager);
+      new InspectionProfileImpl(profileDefaultName, InspectionToolRegistrar.fromApplication(Application.get()), profileManager);
 
     inspectionProfile.copyFrom(selectedProfile);
     inspectionProfile.setName(profileDefaultName);
@@ -351,7 +352,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
         IdeaFileChooser.chooseFile(descriptor, getProject(), myWholePanel, null, file -> {
           if (file == null) return;
           InspectionProfileImpl profile =
-            new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.getInstance(), myProfileManager);
+            new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.fromApplication(Application.get()), myProfileManager);
           try {
             Element rootElement = JDOMUtil.loadDocument(VfsUtilCore.virtualToIoFile(file)).getRootElement();
             if (Comparing.strEqual(rootElement.getName(), "component")) {//import right from .idea/inspectProfiles/xxx.xml
@@ -382,8 +383,8 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
               if (buttonPressed == Messages.YES) {
                 for (String level : levels) {
                   TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
-                  HighlightInfoType.HighlightInfoTypeImpl info =
-                    new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50),
+                  HighlightInfoTypeImpl info =
+                    new HighlightInfoTypeImpl(new HighlightSeverity(level, 50),
                                                                 TextAttributesKey.createTextAttributesKey(level));
                   ((SeverityRegistrarImpl)myProfileManager.getOwnSeverityRegistrar()).registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(
                     textAttributes.clone(),

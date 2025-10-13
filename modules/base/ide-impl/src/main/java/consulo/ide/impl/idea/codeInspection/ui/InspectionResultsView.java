@@ -531,7 +531,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         boolean resultsFound = false;
         for (Tools currentTools : tools.values()) {
             InspectionToolWrapper defaultToolWrapper = currentTools.getDefaultState().getTool();
-            HighlightDisplayKey key = HighlightDisplayKey.find(defaultToolWrapper.getShortName());
+            HighlightDisplayKey key = defaultToolWrapper.getHighlightDisplayKey();
             for (ScopeToolState state : currentTools.getTools()) {
                 InspectionToolWrapper toolWrapper = state.getTool();
                 if (myProvider.checkReportedProblems(myGlobalInspectionContext, toolWrapper)) {
@@ -776,10 +776,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
                     actions.add(quickFixe);
                 }
             }
-            HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
-            if (key == null) {
-                return; //e.g. DummyEntryPointsTool
-            }
+
+            HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
 
             //options
             actions.addSeparator();
@@ -890,8 +888,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
             }
 
             if (toolWrapper != null) {
-                HighlightDisplayKey key =
-                    HighlightDisplayKey.find(toolWrapper.getShortName()); //do not search for dead code entry point tool
+                HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
                 if (key != null) {
                     new EditInspectionToolsSettingsAction(key).editToolSettings(
                         myProject,

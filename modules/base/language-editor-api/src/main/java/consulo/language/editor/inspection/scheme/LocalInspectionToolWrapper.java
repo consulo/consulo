@@ -17,6 +17,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -27,8 +28,8 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspectionTool> {
-  public LocalInspectionToolWrapper(@Nonnull LocalInspectionTool tool) {
-    super(tool);
+  public LocalInspectionToolWrapper(@Nonnull LocalInspectionTool tool, HighlightDisplayKey key) {
+    super(tool, key);
   }
 
   private LocalInspectionToolWrapper(@Nonnull LocalInspectionToolWrapper other) {
