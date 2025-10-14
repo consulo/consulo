@@ -36,14 +36,17 @@ import java.util.*;
  * @since 2025-10-13
  */
 public class InspectionCache {
+    private record InspectionAndHighlightDisplayKey(InspectionTool tool, HighlightDisplayKey highlightDisplayKey) {
+    }
+
     private static final Logger LOG = Logger.getInstance(InspectionCache.class);
 
-    private final Map<String, HighlightDisplayKey> myHighlighDisplayNameToKeyMap = new HashMap<>();
-    private final Map<String, HighlightDisplayKey> myHighlighDisplayIdToKeyMap = new HashMap<>();
-    private final Map<HighlightDisplayKey, LocalizeValue> myHighlighDisplayKeyToDisplayNameMap = new HashMap<>();
-    private final Map<HighlightDisplayKey, String> myHighlighDisplayKeyToAlternativeIDMap = new HashMap<>();
+    private final Map<String, HighlightDisplayKey> myHighlightDisplayNameToKeyMap = new HashMap<>();
+    private final Map<String, HighlightDisplayKey> myHighlightDisplayIdToKeyMap = new HashMap<>();
+    private final Map<HighlightDisplayKey, LocalizeValue> myHighlightDisplayKeyToDisplayNameMap = new HashMap<>();
+    private final Map<HighlightDisplayKey, String> myHighlightDisplayKeyToAlternativeIDMap = new HashMap<>();
 
-    private final List<InspectionToolWrapper<?>> myToolWrappers = new ArrayList<>();
+    private final List<InspectionAndHighlightDisplayKey> myTools = new ArrayList<>();
 
     private final Map<Language, Map<ProblemHighlightType, HighlightInfoType>> myLikeToolMapping = new HashMap<>();
 
@@ -63,9 +66,7 @@ public class InspectionCache {
                 return;
             }
 
-            LocalInspectionToolWrapper wrapper = new LocalInspectionToolWrapper(localInspectionTool, key);
-
-            myToolWrappers.add(wrapper);
+            myTools.add(new InspectionAndHighlightDisplayKey(inspectionTool, key));
 
             checkRuler(key, localInspectionTool);
         }
@@ -75,7 +76,7 @@ public class InspectionCache {
                 return;
             }
 
-            myToolWrappers.add(new GlobalInspectionToolWrapper(globalInspectionTool, key));
+            myTools.add(new InspectionAndHighlightDisplayKey(inspectionTool, key));
         }
         else {
             LOG.warn("Unknown inspection tool implementation: " + inspectionTool.getClass());
@@ -87,8 +88,19 @@ public class InspectionCache {
         return this;
     }
 
-    public List<InspectionToolWrapper<?>> getToolWrappers() {
-        return myToolWrappers;
+    public List<InspectionToolWrapper<?>> wrapTools() {
+        List<InspectionToolWrapper<?>> wrappers = new ArrayList<>(myTools.size());
+        for (InspectionAndHighlightDisplayKey entry : myTools) {
+            InspectionTool key = entry.tool();
+            HighlightDisplayKey value = entry.highlightDisplayKey();
+
+            if (key instanceof LocalInspectionTool localInspectionTool) {
+                wrappers.add(new LocalInspectionToolWrapper(localInspectionTool, value));
+            } else if (key instanceof GlobalInspectionTool globalInspectionTool) {
+                wrappers.add(new GlobalInspectionToolWrapper(globalInspectionTool, value));
+            }
+        }
+        return wrappers;
     }
 
     @Nonnull
@@ -152,16 +164,16 @@ public class InspectionCache {
     }
 
     public HighlightDisplayKey find(@Nonnull String name) {
-        return myHighlighDisplayNameToKeyMap.get(name);
+        return myHighlightDisplayNameToKeyMap.get(name);
     }
 
     @Nullable
     public HighlightDisplayKey findById(@Nonnull String id) {
-        HighlightDisplayKey key = myHighlighDisplayIdToKeyMap.get(id);
+        HighlightDisplayKey key = myHighlightDisplayIdToKeyMap.get(id);
         if (key != null) {
             return key;
         }
-        key = myHighlighDisplayNameToKeyMap.get(id);
+        key = myHighlightDisplayNameToKeyMap.get(id);
         if (key != null && key.getID().equals(id)) {
             return key;
         }
@@ -177,7 +189,7 @@ public class InspectionCache {
     ) {
         HighlightDisplayKey key = register(name, displayName, id);
         if (alternativeID != null) {
-            myHighlighDisplayKeyToAlternativeIDMap.put(key, alternativeID);
+            myHighlightDisplayKeyToAlternativeIDMap.put(key, alternativeID);
         }
         return key;
     }
@@ -188,7 +200,7 @@ public class InspectionCache {
             return LocalizeValue.of();
         }
         else {
-            LocalizeValue computable = myHighlighDisplayKeyToDisplayNameMap.get(key);
+            LocalizeValue computable = myHighlightDisplayKeyToDisplayNameMap.get(key);
             return computable == null ? LocalizeValue.of() : computable;
         }
     }
@@ -201,12 +213,12 @@ public class InspectionCache {
         }
         HighlightDisplayKey highlightDisplayKey = new HighlightDisplayKey(name, id);
 
-        myHighlighDisplayKeyToDisplayNameMap.put(highlightDisplayKey, displayName);
+        myHighlightDisplayKeyToDisplayNameMap.put(highlightDisplayKey, displayName);
 
-        myHighlighDisplayNameToKeyMap.put(name, highlightDisplayKey);
+        myHighlightDisplayNameToKeyMap.put(name, highlightDisplayKey);
 
         if (!Comparing.equal(id, name)) {
-            myHighlighDisplayIdToKeyMap.put(id, highlightDisplayKey);
+            myHighlightDisplayIdToKeyMap.put(id, highlightDisplayKey);
         }
 
         return highlightDisplayKey;

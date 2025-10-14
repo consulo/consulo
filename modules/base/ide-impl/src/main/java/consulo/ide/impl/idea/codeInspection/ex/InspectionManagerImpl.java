@@ -161,7 +161,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
                     SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
 
                     InspectionCache cache = app.getInstance(InspectionCacheService.class).get();
-                    for (InspectionToolWrapper toolWrapper : cache.getToolWrappers()) {
+                    for (InspectionToolWrapper toolWrapper : cache.wrapTools()) {
                         processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
 
                         String description = toolWrapper.loadDescription();

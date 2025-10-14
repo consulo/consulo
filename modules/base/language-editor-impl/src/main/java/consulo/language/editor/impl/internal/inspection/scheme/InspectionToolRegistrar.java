@@ -31,11 +31,11 @@ public interface InspectionToolRegistrar {
     static Supplier<Collection<InspectionToolWrapper<?>>> fromApplication(Application application) {
         return () -> {
             InspectionCache cache = application.getInstance(InspectionCacheService.class).get();
-            return cache.getToolWrappers();
+            return cache.wrapTools();
         };
     }
 
     static Supplier<Collection<InspectionToolWrapper<?>>> fromService(InspectionCacheService cacheService) {
-        return () -> cacheService.get().getToolWrappers();
+        return () -> cacheService.get().wrapTools();
     }
 }
