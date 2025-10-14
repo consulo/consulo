@@ -124,12 +124,12 @@ public interface HighlightInfo extends Segment {
 
         @Nonnull
         default Builder registerFix(@Nonnull IntentionAction action) {
-            return registerFix(action, null, null, null, null);
+            return registerFix(action, null, LocalizeValue.of(), null, null);
         }
 
         @Nonnull
         default Builder registerFix(@Nonnull IntentionAction action, @Nonnull TextRange textRange) {
-            return registerFix(action, null, null, textRange, null);
+            return registerFix(action, null, LocalizeValue.of(), textRange, null);
         }
 
         @Nonnull
