@@ -11,6 +11,7 @@ import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionActionProvider;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -29,7 +30,7 @@ class EditorNotificationActions {
       if (component instanceof IntentionActionProvider) {
         IntentionActionWithOptions action = ((IntentionActionProvider)component).getIntentionAction();
         if (action != null) {
-          intentions.notificationActionsToShow.add(new IntentionActionDescriptor(action, action.getOptions(), null));
+          intentions.notificationActionsToShow.add(new IntentionActionDescriptor(action, action.getOptions(), LocalizeValue.of()));
         }
       }
     }
