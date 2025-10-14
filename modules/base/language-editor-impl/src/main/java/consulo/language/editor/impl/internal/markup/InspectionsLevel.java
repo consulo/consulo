@@ -15,26 +15,27 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
-import consulo.codeEditor.EditorBundle;
-import org.jetbrains.annotations.PropertyKey;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-06-19
  */
 public enum InspectionsLevel {
-  NONE("iw.level.none"),
-  ERRORS("iw.level.errors"),
-  ALL("iw.level.all");
+    NONE(CodeEditorLocalize.iwLevelNone()),
+    ERRORS(CodeEditorLocalize.iwLevelErrors()),
+    ALL(CodeEditorLocalize.iwLevelAll());
 
-  private final String myKey;
+    private final LocalizeValue myTextValue;
 
-  InspectionsLevel(@PropertyKey(resourceBundle = "consulo.codeEditor.EditorBundle") String key) {
-    myKey = key;
-  }
+    InspectionsLevel(@Nonnull LocalizeValue textValue) {
+        myTextValue = textValue;
+    }
 
-  @Override
-  public String toString() {
-    return EditorBundle.message(myKey);
-  }
+    @Nonnull
+    public LocalizeValue getTextValue() {
+        return myTextValue;
+    }
 }
