@@ -29,7 +29,6 @@ import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 
-// from kotlin
 @ActionImpl(id = "ProjectViewEditSource", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE))
 public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     public ProjectViewEditSourceAction() {
@@ -39,6 +38,11 @@ public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
+        if (e.isFromContextMenu()) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        
         super.update(e);
 
         Presentation presentation = e.getPresentation();
