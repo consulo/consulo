@@ -20,13 +20,10 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import jakarta.annotation.Nonnull;
@@ -38,87 +35,74 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class SandLocalInspection extends LocalInspectionTool {
-  private static final String SHORT_NAME = getShortName(SandLocalInspection.class);
+    private static final String SHORT_NAME = getShortName(SandLocalInspection.class);
 
-  private static final class SandClassDisableFix implements LocalQuickFix {
     @Nonnull
     @Override
-    public LocalizeValue getName() {
-      return LocalizeValue.localizeTODO("Disable class check");
+    public String getShortName() {
+        return SHORT_NAME;
     }
 
+    @Nonnull
     @Override
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
-      InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-      profile.<SandLocalInspection, SandLocalInspectionState>modifyToolSettings(
-        SHORT_NAME,
-        descriptor.getPsiElement(),
-        (tool, state) -> state.setCheckClass(false)
-      );
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
-  }
 
-  @Nonnull
-  @Override
-  public String getShortName() {
-    return SHORT_NAME;
-  }
+    @Nonnull
+    @Override
+    public InspectionToolState<?> createStateProvider() {
+        return new SandLocalInspectionState();
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getGroupDisplayName() {
-    return InspectionLocalize.inspectionGeneralToolsGroupName();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Test Sand Inspection with Settings");
+    }
 
-  @Nonnull
-  @Override
-  public InspectionToolState<?> createStateProvider() {
-    return new SandLocalInspectionState();
-  }
+    @Nonnull
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.ERROR;
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Test Sand Inspection with Settings");
-  }
+    @Nullable
+    @Override
+    public Language getLanguage() {
+        return SandLanguage.INSTANCE;
+    }
 
-  @Nonnull
-  @Override
-  public HighlightDisplayLevel getDefaultLevel() {
-    return HighlightDisplayLevel.ERROR;
-  }
+    @Nonnull
+    @Override
+    public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
+                                          boolean isOnTheFly,
+                                          @Nonnull LocalInspectionToolSession session,
+                                          @Nonnull Object state) {
+        SandLocalInspectionState sandState = (SandLocalInspectionState) state;
+        return new PsiElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (element instanceof SandClass sandClass) {
+                    boolean checkClass = sandState.isCheckClass();
 
-  @Nullable
-  @Override
-  public Language getLanguage() {
-    return SandLanguage.INSTANCE;
-  }
+                    if (checkClass) {
+                        PsiElement nameIdentifier = sandClass.getNameIdentifier();
+                        if (nameIdentifier != null) {
+                            holder.newProblem(LocalizeValue.of("Test Error"))
+                                .range(nameIdentifier, new TextRange(0, nameIdentifier.getTextLength()))
+                                .withFixes(new UpdateInspectionOptionFix<SandLocalInspection, SandLocalInspectionState>(
+                                    SandLocalInspection.this,
+                                    LocalizeValue.localizeTODO("Disable class check"),
+                                    state -> state.setCheckClass(false))
+                                )
+                                .highlightType(ProblemHighlightType.ERROR)
+                                .create();
 
-  @Nonnull
-  @Override
-  public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
-                                        boolean isOnTheFly,
-                                        @Nonnull LocalInspectionToolSession session,
-                                        @Nonnull Object state) {
-    SandLocalInspectionState sandState = (SandLocalInspectionState)state;
-    return new PsiElementVisitor() {
-      @Override
-      public void visitElement(PsiElement element) {
-        if (element instanceof SandClass sandClass) {
-          boolean checkClass = sandState.isCheckClass();
-
-          if (checkClass) {
-            PsiElement nameIdentifier = sandClass.getNameIdentifier();
-            if (nameIdentifier != null) {
-              holder.newProblem(LocalizeValue.of("Test Error"))
-                .range(nameIdentifier, new TextRange(0, nameIdentifier.getTextLength()))
-                .withFixes(new SandClassDisableFix())
-                .highlightType(ProblemHighlightType.ERROR)
-                .create();
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    };
-  }
+        };
+    }
 }
