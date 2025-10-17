@@ -16,7 +16,7 @@
 package consulo.ide.impl.eap;
 
 import consulo.application.eap.EarlyAccessProgramDescriptor;
-import consulo.util.lang.StringUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -25,8 +25,8 @@ import jakarta.annotation.Nonnull;
  */
 record EarlyAccessProgramDescription(
     boolean available,
-    @Nonnull String name,
-    @Nonnull String decription,
+    @Nonnull LocalizeValue name,
+    @Nonnull LocalizeValue description,
     @Nonnull Class<? extends EarlyAccessProgramDescriptor> clazz,
     boolean restartRequired,
     @Nonnull EarlyAccessProgramDescriptor descriptor
@@ -35,7 +35,7 @@ record EarlyAccessProgramDescription(
         this(
             descriptor.isAvailable(),
             descriptor.getName(),
-            StringUtil.notNullize(descriptor.getDescription()),
+            descriptor.getDescription(),
             descriptor.getClass(),
             descriptor.isRestartRequired(),
             descriptor
@@ -45,7 +45,7 @@ record EarlyAccessProgramDescription(
     @Override
     public int compareTo(@Nonnull EarlyAccessProgramDescription o) {
         if (available == o.available) {
-            return name.compareToIgnoreCase(o.name);
+            return name.compareIgnoreCase(o.name);
         }
         return available ? -1 : +1;
     }

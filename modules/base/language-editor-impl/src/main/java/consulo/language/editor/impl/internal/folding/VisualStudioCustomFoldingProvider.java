@@ -17,6 +17,7 @@ package consulo.language.editor.impl.internal.folding;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CustomFoldingProvider;
+import consulo.localize.LocalizeValue;
 
 /**
  * Supports <a href="http://msdn.microsoft.com/en-us/library/9a1ybwek%28v=vs.100%29.aspx">VisualStudio custom foldings.</a>
@@ -40,8 +41,8 @@ public class VisualStudioCustomFoldingProvider extends CustomFoldingProvider {
   }
 
   @Override
-  public String getDescription() {
-    return "region...endregion Comments";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("region...endregion Comments");
   }
 
   @Override

@@ -70,6 +70,11 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
+    static LocalizeValue of(char c) {
+        return new SingleLocalizeValue(String.valueOf(c));
+    }
+
+    @Nonnull
     static LocalizeValue ofNullable(@Nullable String text) {
         return text == null ? of() : of(text);
     }

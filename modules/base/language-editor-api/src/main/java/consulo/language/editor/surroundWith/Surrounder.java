@@ -16,6 +16,7 @@
 package consulo.language.editor.surroundWith;
 
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
@@ -35,7 +36,8 @@ public interface Surrounder {
    *
    * @return the template name
    */
-  String getTemplateDescription();
+  @Nonnull
+  LocalizeValue getTemplateDescription();
 
   /**
    * Checks if the template can be used to surround the specified range of elements.

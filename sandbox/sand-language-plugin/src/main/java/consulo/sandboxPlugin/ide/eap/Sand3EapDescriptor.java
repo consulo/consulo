@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.ide.eap;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,8 +29,8 @@ import jakarta.annotation.Nonnull;
 public class Sand3EapDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "C";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("C");
   }
 
   @Override
@@ -39,7 +40,7 @@ public class Sand3EapDescriptor extends EarlyAccessProgramDescriptor {
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return "test";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("test");
   }
 }

@@ -25,6 +25,7 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -118,8 +119,8 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
   @Nonnull
   @Override
-  public String getName() {
-    return "Run line marker";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Run line marker");
   }
 
   @Nullable

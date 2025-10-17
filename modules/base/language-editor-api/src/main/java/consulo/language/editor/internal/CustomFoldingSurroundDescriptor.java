@@ -36,6 +36,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
@@ -183,8 +184,9 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
             myProvider = provider;
         }
 
+        @Nonnull
         @Override
-        public String getTemplateDescription() {
+        public LocalizeValue getTemplateDescription() {
             return myProvider.getDescription();
         }
 

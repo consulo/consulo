@@ -17,7 +17,7 @@ package consulo.diagram.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,18 +28,12 @@ import jakarta.annotation.Nonnull;
 public class DiagramSupportEapDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "Diagram Support";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Diagram Support");
   }
 
   @Override
   public boolean isAvailable() {
     return true;
-  }
-
-  @Nonnull
-  @Override
-  public String getDescription() {
-    return "";
   }
 }

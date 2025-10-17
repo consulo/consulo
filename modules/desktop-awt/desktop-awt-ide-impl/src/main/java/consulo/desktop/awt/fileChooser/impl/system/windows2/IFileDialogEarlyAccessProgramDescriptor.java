@@ -17,6 +17,7 @@ package consulo.desktop.awt.fileChooser.impl.system.windows2;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 
 import jakarta.annotation.Nonnull;
@@ -29,8 +30,8 @@ import jakarta.annotation.Nonnull;
 public class IFileDialogEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "New system look for file choose dialog (Windows)";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("New system look for file choose dialog (Windows)");
   }
 
   @Override

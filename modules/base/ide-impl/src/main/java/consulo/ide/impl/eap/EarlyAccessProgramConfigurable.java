@@ -20,12 +20,15 @@ import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -44,7 +47,7 @@ import java.util.Map;
  */
 @ExtensionImpl
 public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, Configurable.NoScroll {
-    private Map<EarlyAccessProgramDescriptor, JCheckBox> myCheckBoxes;
+    private Map<EarlyAccessProgramDescriptor, CheckBox> myCheckBoxes;
 
     private final Application myApplication;
 
@@ -74,7 +77,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
     @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
+    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
         myCheckBoxes = new LinkedHashMap<>();
 
         JPanel panel = new JPanel(new VerticalFlowLayout());
@@ -96,13 +99,13 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
             eapPanel.setEnabled(description.available());
 
             JPanel topPanel = new JPanel(new BorderLayout());
-            JCheckBox checkBox = new JCheckBox(description.name());
+            CheckBox checkBox = CheckBox.create(description.name());
             checkBox.setEnabled(description.available());
-            checkBox.addItemListener(e -> manager.setState(description.clazz(), checkBox.isSelected()));
+            checkBox.addValueListener(e -> manager.setState(description.clazz(), checkBox.getValueOrError()));
             myCheckBoxes.put(description.descriptor(), checkBox);
 
-            checkBox.setSelected(manager.getState(description.clazz()));
-            topPanel.add(checkBox, BorderLayout.WEST);
+            checkBox.setValue(manager.getState(description.clazz()));
+            topPanel.add(TargetAWT.to(checkBox), BorderLayout.WEST);
 
             if (description.restartRequired()) {
                 JBLabel comp = new JBLabel("Restart required");
@@ -114,7 +117,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
             eapPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
             JTextPane textPane = new JTextPane();
-            textPane.setText(description.decription());
+            textPane.setText(description.description().get());
             textPane.setEditable(false);
             if (!description.available()) {
                 textPane.setForeground(JBColor.GRAY);
@@ -155,7 +158,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
     public boolean isModified() {
         EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
         return myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class)
-            .anyMatchSafe(descriptor -> myCheckBoxes.get(descriptor).isSelected() != manager.getState(descriptor.getClass()));
+            .anyMatchSafe(descriptor -> myCheckBoxes.get(descriptor).getValueOrError() != manager.getState(descriptor.getClass()));
     }
 
     @RequiredUIAccess
@@ -169,6 +172,6 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
     public void reset() {
         EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
         myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class)
-            .forEach(descriptor -> myCheckBoxes.get(descriptor).setSelected(manager.getState(descriptor.getClass())));
+            .forEach(descriptor -> myCheckBoxes.get(descriptor).setValue(manager.getState(descriptor.getClass())));
     }
 }

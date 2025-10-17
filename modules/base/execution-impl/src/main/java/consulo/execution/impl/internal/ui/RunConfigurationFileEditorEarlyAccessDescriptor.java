@@ -17,9 +17,8 @@ package consulo.execution.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,13 +28,13 @@ import jakarta.annotation.Nullable;
 public class RunConfigurationFileEditorEarlyAccessDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "Run Configuration editor";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Run Configuration editor");
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  public String getDescription() {
-    return "Replace run configuration dialog with run configuration editor";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("Replace run configuration dialog with run configuration editor");
   }
 }

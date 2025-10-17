@@ -18,6 +18,8 @@ package consulo.language.editor.folding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base class and extension point for custom folding providers.
@@ -26,24 +28,25 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomFoldingProvider {
-  public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create(CustomFoldingProvider.class);
+    public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create(CustomFoldingProvider.class);
 
-  public abstract boolean isCustomRegionStart(String elementText);
+    public abstract boolean isCustomRegionStart(String elementText);
 
-  public abstract boolean isCustomRegionEnd(String elementText);
+    public abstract boolean isCustomRegionEnd(String elementText);
 
-  public abstract String getPlaceholderText(String elementText);
+    public abstract String getPlaceholderText(String elementText);
 
-  /**
-   * @return A description string shown in "Surround With" action.
-   */
-  public abstract String getDescription();
+    /**
+     * @return A description string shown in "Surround With" action.
+     */
+    @Nonnull
+    public abstract LocalizeValue getDescription();
 
-  public abstract String getStartString();
+    public abstract String getStartString();
 
-  public abstract String getEndString();
+    public abstract String getEndString();
 
-  public boolean isCollapsedByDefault(String text) {
-    return false;
-  }
+    public boolean isCollapsedByDefault(String text) {
+        return false;
+    }
 }

@@ -17,9 +17,8 @@ package consulo.application.impl.internal.start;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,14 +28,14 @@ import jakarta.annotation.Nullable;
 public class PluginPermissionEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "Plugin permissions";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Plugin permissions");
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  public String getDescription() {
-    return "Enable plugin permissions for plugins. See https://github.com/consulo/long-term-todo/issues/12";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("Enable plugin permissions for plugins. See https://github.com/consulo/long-term-todo/issues/12");
   }
 
   @Override

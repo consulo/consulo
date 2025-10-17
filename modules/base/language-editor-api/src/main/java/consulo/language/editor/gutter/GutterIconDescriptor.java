@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.gutter;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -33,10 +34,10 @@ public abstract class GutterIconDescriptor {
   /**
    * Human-readable provider name for UI.
    *
-   * @return null if no configuration needed
+   * @return {@link LocalizeValue#empty()} if no configuration needed
    */
-  @Nullable
-  public abstract String getName();
+  @Nonnull
+  public abstract LocalizeValue getName();
 
   @Nullable
   public Image getIcon() {
@@ -55,17 +56,12 @@ public abstract class GutterIconDescriptor {
     return NO_OPTIONS;
   }
 
-  @Override
-  public String toString() {
-    return getName();
-  }
-
   public static class Option extends GutterIconDescriptor {
     private final String myId;
-    private final String myName;
+    private final LocalizeValue myName;
     private final Image myIcon;
 
-    public Option(@Nonnull String id, @Nonnull String name, Image icon) {
+    public Option(@Nonnull String id, @Nonnull LocalizeValue name, Image icon) {
       myId = id;
       myName = name;
       myIcon = icon;
@@ -83,7 +79,7 @@ public abstract class GutterIconDescriptor {
 
     @Nonnull
     @Override
-    public String getName() {
+    public LocalizeValue getName() {
       return myName;
     }
 

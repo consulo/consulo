@@ -261,7 +261,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         List<AnAction> templateGroup = SurroundWithTemplateHandler.createActionGroup(editor, file, usedMnemonicsSet);
         if (!templateGroup.isEmpty()) {
-            applicable.add(new AnSeparator(IdeLocalize.actionAnonymousTextLiveTemplates()));
+            applicable.add(AnSeparator.create(IdeLocalize.actionAnonymousTextLiveTemplates()));
             applicable.addAll(templateGroup);
             applicable.add(AnSeparator.getInstance());
             applicable.add(new ConfigureTemplatesAction());
@@ -276,11 +276,20 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         private final PsiElement[] myElements;
 
         InvokeSurrounderAction(Surrounder surrounder, Project project, Editor editor, PsiElement[] elements, char mnemonic) {
-            super(LocalizeValue.localizeTODO(UIUtil.MNEMONIC + String.valueOf(mnemonic) + ". " + surrounder.getTemplateDescription()));
+            super(buildText(mnemonic, surrounder.getTemplateDescription()));
             mySurrounder = surrounder;
             myProject = project;
             myEditor = editor;
             myElements = elements;
+        }
+
+        private static LocalizeValue buildText(char mnemonic, LocalizeValue actionText) {
+            return LocalizeValue.join(
+                LocalizeValue.of(UIUtil.MNEMONIC),
+                LocalizeValue.of(mnemonic),
+                LocalizeValue.of(". "),
+                actionText
+            );
         }
 
         @Override

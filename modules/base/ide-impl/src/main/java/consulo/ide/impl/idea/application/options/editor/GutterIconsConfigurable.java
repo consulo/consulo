@@ -24,7 +24,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.configurable.EditorGeneralConfigurable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
@@ -33,18 +32,20 @@ import consulo.language.editor.gutter.LineMarkerSettings;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.CheckBoxList;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -61,10 +62,9 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   public static final String ID = "editor.gutterIcons";
 
   private CheckBoxList<GutterIconDescriptor> myList;
-  private JBCheckBox myShowGutterIconsJBCheckBox;
+  private CheckBox myShowGutterIconsJBCheckBox;
   private List<GutterIconDescriptor> myDescriptors;
 
-  @Nls
   @Nonnull
   @Override
   public LocalizeValue getDisplayName() {
@@ -81,12 +81,11 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nullable
   @Override
   public JComponent createComponent(@Nonnull Disposable uiDisposable) {
-    myShowGutterIconsJBCheckBox = new JBCheckBox(ApplicationLocalize.checkboxShowGutterIcons().get());
-    DialogUtil.registerMnemonic(myShowGutterIconsJBCheckBox, '&');
+    myShowGutterIconsJBCheckBox = CheckBox.create(ApplicationLocalize.checkboxShowGutterIcons());
 
     JPanel panel = new JPanel(new BorderLayout());
 
-    panel.add(myShowGutterIconsJBCheckBox, BorderLayout.NORTH);
+    panel.add(TargetAWT.to(myShowGutterIconsJBCheckBox), BorderLayout.NORTH);
 
     Map<GutterIconDescriptor, PluginDescriptor> firstDescriptors = new HashMap<>();
 
@@ -141,7 +140,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     List<LineMarkerProvider> providers = Application.get().getExtensionList(LineMarkerProvider.class);
     Function<LineMarkerProvider, PluginDescriptor> function = provider -> {
       PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-      return provider instanceof LineMarkerProviderDescriptor lineMarkerProviderDescriptor && lineMarkerProviderDescriptor.getName() != null
+      return provider instanceof LineMarkerProviderDescriptor lineMarkerProviderDescriptor && lineMarkerProviderDescriptor.getName() != LocalizeValue.empty()
         ? plugin : null;
     };
 
@@ -172,7 +171,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
     myDescriptors.sort((o1, o2) -> {
       if (pluginDescriptorMap.get(o1) != pluginDescriptorMap.get(o2)) return 0;
-      return Comparing.compare(o1.getName(), o2.getName());
+      return o1.getName().compareIgnoreCase(o2.getName());
     });
     PluginDescriptor current = null;
     for (GutterIconDescriptor descriptor : myDescriptors) {
@@ -183,8 +182,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
       }
     }
 
-    myList.setItems(myDescriptors, GutterIconDescriptor::getName);
-    myShowGutterIconsJBCheckBox.addChangeListener(e -> myList.setEnabled(myShowGutterIconsJBCheckBox.isSelected()));
+    myList.setItems(myDescriptors, descr -> descr.getName().get());
+    myShowGutterIconsJBCheckBox.addValueListener(e -> myList.setEnabled(myShowGutterIconsJBCheckBox.getValueOrError()));
     return panel;
   }
 
@@ -196,15 +195,15 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         return true;
       }
     }
-    return myShowGutterIconsJBCheckBox.isSelected() != EditorSettingsExternalizable.getInstance().areGutterIconsShown();
+    return myShowGutterIconsJBCheckBox.getValueOrError() != EditorSettingsExternalizable.getInstance().areGutterIconsShown();
   }
 
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
-    if (myShowGutterIconsJBCheckBox.isSelected() != editorSettings.areGutterIconsShown()) {
-      editorSettings.setGutterIconsShown(myShowGutterIconsJBCheckBox.isSelected());
+    if (myShowGutterIconsJBCheckBox.getValueOrError() != editorSettings.areGutterIconsShown()) {
+      editorSettings.setGutterIconsShown(myShowGutterIconsJBCheckBox.getValueOrError());
       EditorGeneralConfigurable.reinitAllEditors();
     }
     for (GutterIconDescriptor descriptor : myDescriptors) {
@@ -222,7 +221,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
       myList.setItemSelected(descriptor, LineMarkerSettings.getInstance().isEnabled(descriptor));
     }
     boolean gutterIconsShown = EditorSettingsExternalizable.getInstance().areGutterIconsShown();
-    myShowGutterIconsJBCheckBox.setSelected(gutterIconsShown);
+    myShowGutterIconsJBCheckBox.setValue(gutterIconsShown);
     myList.setEnabled(gutterIconsShown);
   }
 

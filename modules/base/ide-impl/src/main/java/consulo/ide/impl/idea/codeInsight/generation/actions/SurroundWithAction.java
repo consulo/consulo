@@ -31,11 +31,6 @@ public class SurroundWithAction extends BaseCodeInsightAction {
         return new SurroundWithHandler();
     }
 
-    //@Override
-    public boolean isUpdateInBackground() {
-        return false;
-    }
-
     @Override
     @RequiredReadAction
     protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {

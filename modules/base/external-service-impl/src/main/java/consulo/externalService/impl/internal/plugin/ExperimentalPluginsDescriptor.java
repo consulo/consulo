@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.plugin;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,13 +29,13 @@ import jakarta.annotation.Nonnull;
 public class ExperimentalPluginsDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override
-  public String getName() {
-    return "Experimental Plugins";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Experimental Plugins");
   }
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return "Allow install experimental plugins";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("Allow install experimental plugins");
   }
 }
