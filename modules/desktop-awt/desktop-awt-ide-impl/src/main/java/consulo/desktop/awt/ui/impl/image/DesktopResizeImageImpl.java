@@ -25,17 +25,17 @@ import javax.swing.*;
  * @since 2019-02-09
  */
 public class DesktopResizeImageImpl extends SizedIcon implements Image {
-  public DesktopResizeImageImpl(Icon delegate, int width, int height) {
-    super(delegate, width, height);
-  }
+    public DesktopResizeImageImpl(Icon delegate, int width, int height) {
+        super(delegate, width, height);
+    }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 }

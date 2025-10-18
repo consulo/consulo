@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -35,75 +36,78 @@ import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
  * @since 2020-08-01
  */
 public class DesktopImageWithTextImpl extends JBUI.ScalableJBIcon implements Icon, Image {
-  @Nonnull
-  private final String myText;
-  private final WeakReference<Component> myCompRef;
-  private final int myFontSize;
+    @Nonnull
+    private final String myText;
+    private final WeakReference<Component> myCompRef;
+    private final int myFontSize;
 
-  private Font myFont;
-  private FontMetrics myMetrics;
+    private Font myFont;
+    private FontMetrics myMetrics;
 
-  public DesktopImageWithTextImpl(@Nonnull String text, @Nonnull Component component, int fontSize) {
-    myText = text;
-    myFontSize = fontSize;
-    myCompRef = new WeakReference<>(component);
-    setIconPreScaled(false);
-    getScaleContext().addUpdateListener(() -> update());
-    update();
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) { // x,y is in USR_SCALE
-    g = g.create();
-    try {
-      GraphicsUtil.setupAntialiasing(g);
-      g.setFont(myFont);
-      UIUtil.drawStringWithHighlighting(g, myText, (int)scaleVal(x, OBJ_SCALE) + (int)scaleVal(2), (int)scaleVal(y, OBJ_SCALE) + getIconHeight() - (int)scaleVal(1), JBColor.foreground(),
-                                        JBColor.background());
+    public DesktopImageWithTextImpl(@Nonnull String text, @Nonnull Component component, int fontSize) {
+        myText = text;
+        myFontSize = fontSize;
+        myCompRef = new WeakReference<>(component);
+        setIconPreScaled(false);
+        getScaleContext().addUpdateListener(this::update);
+        update();
     }
-    finally {
-      g.dispose();
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) { // x,y is in USR_SCALE
+        g = g.create();
+        try {
+            GraphicsUtil.setupAntialiasing(g);
+            g.setFont(myFont);
+            UIUtil.drawStringWithHighlighting(
+                g,
+                myText,
+                (int) scaleVal(x, OBJ_SCALE) + (int) scaleVal(2),
+                (int) scaleVal(y, OBJ_SCALE) + getIconHeight() - (int) scaleVal(1),
+                JBColor.foreground(),
+                JBColor.background()
+            );
+        }
+        finally {
+            g.dispose();
+        }
     }
-  }
 
-  @Override
-  public int getIconWidth() {
-    return myMetrics.stringWidth(myText) + (int)scaleVal(4);
-  }
-
-  @Override
-  public int getIconHeight() {
-    return myMetrics.getHeight();
-  }
-
-  private void update() {
-    myFont = JBFont.create(JBFont.label().deriveFont((float)scaleVal(myFontSize, OBJ_SCALE))); // fontSize is in USR_SCALE
-    Component comp = myCompRef.get();
-    if (comp == null) {
-      comp = new Component() {
-      };
+    @Override
+    public int getIconWidth() {
+        return myMetrics.stringWidth(myText) + (int) scaleVal(4);
     }
-    myMetrics = comp.getFontMetrics(myFont);
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof DesktopImageWithTextImpl)) return false;
-    DesktopImageWithTextImpl icon = (DesktopImageWithTextImpl)o;
+    @Override
+    public int getIconHeight() {
+        return myMetrics.getHeight();
+    }
 
-    if (!Objects.equals(myText, icon.myText)) return false;
-    if (!Objects.equals(myFont, icon.myFont)) return false;
-    return true;
-  }
+    private void update() {
+        myFont = JBFont.create(JBFont.label().deriveFont((float) scaleVal(myFontSize, OBJ_SCALE))); // fontSize is in USR_SCALE
+        Component comp = myCompRef.get();
+        if (comp == null) {
+            comp = new Component() {
+            };
+        }
+        myMetrics = comp.getFontMetrics(myFont);
+    }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public boolean equals(Object o) {
+        return this == o
+            || o instanceof DesktopImageWithTextImpl that
+            && Objects.equals(myText, that.myText)
+            && Objects.equals(myFont, that.myFont);
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 }

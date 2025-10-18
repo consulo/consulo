@@ -26,37 +26,39 @@ import jakarta.annotation.Nonnull;
  * @since 2018-05-07
  */
 public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopAWTImage {
-  private final Image myImg1;
-  private final Image myImg2;
+    private final Image myImg1;
+    private final Image myImg2;
 
-  public DesktopAppendImageImpl(Image img1, Image img2) {
-    super(2, Alignment.CENTER);
-    myImg1 = img1;
-    setIcon(TargetAWT.to(img1), 0);
-    myImg2 = img2;
-    setIcon(TargetAWT.to(img2), 1);
-  }
+    public DesktopAppendImageImpl(Image img1, Image img2) {
+        super(2, Alignment.CENTER);
+        myImg1 = img1;
+        setIcon(TargetAWT.to(img1), 0);
+        myImg2 = img2;
+        setIcon(TargetAWT.to(img2), 1);
+    }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 
-  @Nonnull
-  @Override
-  public DesktopAWTImage copyWithNewSize(int width, int height) {
-    return new DesktopAppendImageImpl(ImageEffects.resize(myImg1, width, height), ImageEffects.resize(myImg2, width, height));
-  }
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        return new DesktopAppendImageImpl(ImageEffects.resize(myImg1, width, height), ImageEffects.resize(myImg2, width, height));
+    }
 
-  @Nonnull
-  @Override
-  public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
-    return new DesktopAppendImageImpl(DesktopAWTImage.copyWithForceLibraryId(myImg1, libraryId),
-                                      DesktopAWTImage.copyWithForceLibraryId(myImg2, libraryId));
-  }
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        return new DesktopAppendImageImpl(
+            DesktopAWTImage.copyWithForceLibraryId(myImg1, libraryId),
+            DesktopAWTImage.copyWithForceLibraryId(myImg2, libraryId)
+        );
+    }
 }

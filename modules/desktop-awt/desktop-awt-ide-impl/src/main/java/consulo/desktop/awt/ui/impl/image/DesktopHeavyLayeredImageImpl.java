@@ -20,34 +20,35 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Arrays;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2017-09-11
  */
 public class DesktopHeavyLayeredImageImpl extends LayeredIcon implements Image {
-  @Nonnull
-  public static Icon[] remap(Image[] icons) {
-    return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
-  }
+    @Nonnull
+    public static Icon[] remap(Image[] icons) {
+        return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
+    }
 
-  public DesktopHeavyLayeredImageImpl(int layerCount) {
-    super(layerCount);
-  }
+    public DesktopHeavyLayeredImageImpl(int layerCount) {
+        super(layerCount);
+    }
 
-  public DesktopHeavyLayeredImageImpl(@Nonnull Image... images) {
-    super(remap(images));
-  }
+    public DesktopHeavyLayeredImageImpl(@Nonnull Image... images) {
+        super(remap(images));
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
 }
