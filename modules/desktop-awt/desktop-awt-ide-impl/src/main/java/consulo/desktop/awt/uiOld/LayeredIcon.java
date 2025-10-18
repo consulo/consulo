@@ -135,8 +135,8 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
     }
 
     public void setIcon(Icon icon, int layer, int hShift, int vShift) {
-        if (icon instanceof LayeredIcon) {
-            ((LayeredIcon) icon).checkIHaventIconInsideMe(this);
+        if (icon instanceof LayeredIcon layeredIcon) {
+            layeredIcon.checkIHaventIconInsideMe(this);
         }
         myIcons[layer] = icon;
         myScaledIcons = null;
@@ -158,48 +158,47 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
             return;
         }
         int x;
-        int y;
-        switch (constraint) {
-            case SwingConstants.CENTER:
+        int y = switch (constraint) {
+            case SwingConstants.CENTER -> {
                 x = (width - w) / 2;
-                y = (height - h) / 2;
-                break;
-            case SwingConstants.NORTH:
+                yield (height - h) / 2;
+            }
+            case SwingConstants.NORTH -> {
                 x = (width - w) / 2;
-                y = 0;
-                break;
-            case SwingConstants.NORTH_EAST:
+                yield 0;
+            }
+            case SwingConstants.NORTH_EAST -> {
                 x = width - w;
-                y = 0;
-                break;
-            case SwingConstants.EAST:
+                yield 0;
+            }
+            case SwingConstants.EAST -> {
                 x = width - w;
-                y = (height - h) / 2;
-                break;
-            case SwingConstants.SOUTH_EAST:
+                yield (height - h) / 2;
+            }
+            case SwingConstants.SOUTH_EAST -> {
                 x = width - w;
-                y = height - h;
-                break;
-            case SwingConstants.SOUTH:
+                yield height - h;
+            }
+            case SwingConstants.SOUTH -> {
                 x = (width - w) / 2;
-                y = height - h;
-                break;
-            case SwingConstants.SOUTH_WEST:
+                yield height - h;
+            }
+            case SwingConstants.SOUTH_WEST -> {
                 x = 0;
-                y = height - h;
-                break;
-            case SwingConstants.WEST:
+                yield height - h;
+            }
+            case SwingConstants.WEST -> {
                 x = 0;
-                y = (height - h) / 2;
-                break;
-            case SwingConstants.NORTH_WEST:
+                yield (height - h) / 2;
+            }
+            case SwingConstants.NORTH_WEST -> {
                 x = 0;
-                y = 0;
-                break;
-            default:
-                throw new IllegalArgumentException(
-                    "The constraint should be one of SwingConstants' compass-directions [1..8] or CENTER [0], actual value is " + constraint);
-        }
+                yield 0;
+            }
+            default -> throw new IllegalArgumentException(
+                "The constraint should be one of SwingConstants' compass-directions [1..8] or CENTER [0], actual value is " + constraint
+            );
+        };
         setIcon(icon, layer, x, y);
     }
 

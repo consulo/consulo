@@ -31,68 +31,68 @@ import java.awt.image.BufferedImage;
  * @since 2020-08-09
  */
 public class DesktopColorizeImageImpl extends JBUI.CachingScalableJBIcon<DesktopColorizeImageImpl> implements Image {
-  private final Icon myBaseImage;
-  private final ColorValue myColorValue;
+    private final Icon myBaseImage;
+    private final ColorValue myColorValue;
 
-  public DesktopColorizeImageImpl(Icon baseImage, ColorValue colorValue) {
-    myBaseImage = baseImage;
-    myColorValue = colorValue;
-  }
-
-  @Nonnull
-  @Override
-  protected DesktopColorizeImageImpl copy() {
-    return new DesktopColorizeImageImpl(myBaseImage, myColorValue);
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    UIUtil.drawImage(g, colorize(myBaseImage, TargetAWT.to(myColorValue), false), x, y, null);
-  }
-
-  @Nonnull
-  private BufferedImage colorize(@Nonnull Icon source, @Nonnull Color color, boolean keepGray) {
-    float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-
-    BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
-    Graphics2D g = image.createGraphics();
-    source.paintIcon(null, g, 0, 0);
-    g.dispose();
-
-    BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
-    int[] rgba = new int[4];
-    float[] hsb = new float[3];
-    for (int y = 0; y < image.getRaster().getHeight(); y++) {
-      for (int x = 0; x < image.getRaster().getWidth(); x++) {
-        image.getRaster().getPixel(x, y, rgba);
-        if (rgba[3] != 0) {
-          Color.RGBtoHSB(rgba[0], rgba[1], rgba[2], hsb);
-          int rgb = Color.HSBtoRGB(base[0], base[1] * (keepGray ? hsb[1] : 1f), base[2] * hsb[2]);
-          img.getRaster().setPixel(x, y, new int[]{rgb >> 16 & 0xff, rgb >> 8 & 0xff, rgb & 0xff, rgba[3]});
-        }
-      }
+    public DesktopColorizeImageImpl(Icon baseImage, ColorValue colorValue) {
+        myBaseImage = baseImage;
+        myColorValue = colorValue;
     }
 
-    return img;
-  }
+    @Nonnull
+    @Override
+    protected DesktopColorizeImageImpl copy() {
+        return new DesktopColorizeImageImpl(myBaseImage, myColorValue);
+    }
 
-  @Override
-  public int getIconWidth() {
-    return myBaseImage.getIconWidth();
-  }
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+        UIUtil.drawImage(g, colorize(myBaseImage, TargetAWT.to(myColorValue), false), x, y, null);
+    }
 
-  @Override
-  public int getIconHeight() {
-    return myBaseImage.getIconHeight();
-  }
+    @Nonnull
+    private BufferedImage colorize(@Nonnull Icon source, @Nonnull Color color, boolean keepGray) {
+        float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+        BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+        Graphics2D g = image.createGraphics();
+        source.paintIcon(null, g, 0, 0);
+        g.dispose();
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+        BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+        int[] rgba = new int[4];
+        float[] hsb = new float[3];
+        for (int y = 0; y < image.getRaster().getHeight(); y++) {
+            for (int x = 0; x < image.getRaster().getWidth(); x++) {
+                image.getRaster().getPixel(x, y, rgba);
+                if (rgba[3] != 0) {
+                    Color.RGBtoHSB(rgba[0], rgba[1], rgba[2], hsb);
+                    int rgb = Color.HSBtoRGB(base[0], base[1] * (keepGray ? hsb[1] : 1f), base[2] * hsb[2]);
+                    img.getRaster().setPixel(x, y, new int[]{rgb >> 16 & 0xff, rgb >> 8 & 0xff, rgb & 0xff, rgba[3]});
+                }
+            }
+        }
+
+        return img;
+    }
+
+    @Override
+    public int getIconWidth() {
+        return myBaseImage.getIconWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+        return myBaseImage.getIconHeight();
+    }
+
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 }

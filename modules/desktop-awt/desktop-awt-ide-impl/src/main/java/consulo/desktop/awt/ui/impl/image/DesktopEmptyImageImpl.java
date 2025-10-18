@@ -16,11 +16,12 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.application.util.ConcurrentFactoryMap;
+import consulo.ui.Size2D;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.image.Image;
-import consulo.util.lang.Pair;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -28,37 +29,38 @@ import java.util.concurrent.ConcurrentMap;
  * @since 2018-05-07
  */
 public class DesktopEmptyImageImpl extends EmptyIcon implements Image, DesktopAWTImage {
-  private static final ConcurrentMap<Pair<Integer, Integer>, DesktopEmptyImageImpl> cache = ConcurrentFactoryMap.createMap(p -> new DesktopEmptyImageImpl(p.getFirst(), p.getSecond()));
+    private static final ConcurrentMap<Size2D, DesktopEmptyImageImpl> ourCache =
+        ConcurrentFactoryMap.createMap(s -> new DesktopEmptyImageImpl(s.width(), s.height()));
 
-  @Nonnull
-  public static DesktopEmptyImageImpl get(int width, int height) {
-    return cache.get(Pair.create(width, height));
-  }
+    @Nonnull
+    public static DesktopEmptyImageImpl get(int width, int height) {
+        return ourCache.get(new Size2D(width, height));
+    }
 
-  private DesktopEmptyImageImpl(int width, int height) {
-    super(width, height, false);
-    setIconPreScaled(false);
-  }
+    private DesktopEmptyImageImpl(int width, int height) {
+        super(width, height, false);
+        setIconPreScaled(false);
+    }
 
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
+    @Override
+    public int getHeight() {
+        return getIconHeight();
+    }
 
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
+    @Override
+    public int getWidth() {
+        return getIconWidth();
+    }
 
-  @Nonnull
-  @Override
-  public DesktopAWTImage copyWithNewSize(int width, int height) {
-    return get(width, height);
-  }
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        return get(width, height);
+    }
 
-  @Nonnull
-  @Override
-  public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
-    return this;
-  }
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        return this;
+    }
 }

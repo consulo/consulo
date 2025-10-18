@@ -28,7 +28,6 @@ import static consulo.ui.ex.awt.JBUI.ScaleType.*;
  */
 @SuppressWarnings("UseJBColor")
 public class JBUI {
-
     public static final String USER_SCALE_FACTOR_PROPERTY = JBUIScale.USER_SCALE_FACTOR_PROPERTY;
 
     /**
@@ -142,7 +141,8 @@ public class JBUI {
         private final ScaleType type;
 
         // The cache radically reduces potentially thousands of equal Scale instances.
-        private static final ThreadLocal<EnumMap<ScaleType, Map<Double, Scale>>> cache = ThreadLocal.withInitial(() -> new EnumMap<>(ScaleType.class));
+        private static final ThreadLocal<EnumMap<ScaleType, Map<Double, Scale>>> cache =
+            ThreadLocal.withInitial(() -> new EnumMap<>(ScaleType.class));
 
         @Nonnull
         public static Scale create(double value, @Nonnull ScaleType type) {
@@ -352,8 +352,8 @@ public class JBUI {
 
     @Nonnull
     public static JBDimension size(Dimension size) {
-        if (size instanceof JBDimension) {
-            JBDimension newSize = ((JBDimension) size).newSize();
+        if (size instanceof JBDimension dimension) {
+            JBDimension newSize = dimension.newSize();
             return size instanceof UIResource ? newSize.asUIResource() : newSize;
         }
         return new JBDimension(size.width, size.height);
@@ -733,17 +733,12 @@ public class JBUI {
          * @return the context scale factor of the provided type (1d for system scale)
          */
         public double getScale(@Nonnull ScaleType type) {
-            switch (type) {
-                case USR_SCALE:
-                    return usrScale.value;
-                case SYS_SCALE:
-                    return 1d;
-                case OBJ_SCALE:
-                    return objScale.value;
-                case PIX_SCALE:
-                    return pixScale.value;
-            }
-            return 1f; // unreachable
+            return switch (type) {
+                case USR_SCALE -> usrScale.value;
+                case SYS_SCALE -> 1d;
+                case OBJ_SCALE -> objScale.value;
+                case PIX_SCALE -> pixScale.value;
+            };
         }
 
         protected boolean onUpdated(boolean updated) {
@@ -807,15 +802,10 @@ public class JBUI {
         @Override
         @SuppressWarnings("EqualsHashCode")
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof BaseScaleContext)) {
-                return false;
-            }
-
-            BaseScaleContext that = (BaseScaleContext) obj;
-            return that.usrScale.value == usrScale.value && that.objScale.value == objScale.value;
+            return obj == this
+                || obj instanceof BaseScaleContext that
+                && that.usrScale.value == usrScale.value
+                && that.objScale.value == objScale.value;
         }
 
         /**
@@ -834,7 +824,7 @@ public class JBUI {
 
         public void addUpdateListener(@Nonnull UpdateListener l) {
             if (listeners == null) {
-                listeners = new ArrayList<UpdateListener>(1);
+                listeners = new ArrayList<>(1);
             }
             listeners.add(l);
         }
@@ -894,7 +884,7 @@ public class JBUI {
          */
         public static class Cache<D, S extends BaseScaleContext> {
             private final Function<S, D> myDataProvider;
-            private final AtomicReference<Pair<Double, D>> myData = new AtomicReference<Pair<Double, D>>(null);
+            private final AtomicReference<Pair<Double, D>> myData = new AtomicReference<>(null);
 
             /**
              * @param dataProvider provides a data object matching the passed scale context
@@ -904,7 +894,7 @@ public class JBUI {
             }
 
             /**
-             * Retunrs the data object from the cache if it matches the {@code ctx},
+             * Returns the data object from the cache if it matches the {@code ctx},
              * otherwise provides the new data via the provider and caches it.
              */
             @Nullable
@@ -971,13 +961,13 @@ public class JBUI {
         }
 
         /**
-         * Creates a context based on the comp's system scale and sticks to it via the {@link #update()} method.
+         * Creates a context based on the component's system scale and sticks to it via the {@link #update()} method.
          */
         @Nonnull
         public static ScaleContext create(@Nullable Component comp) {
             ScaleContext ctx = new ScaleContext(SYS_SCALE.of(sysScale(comp)));
             if (comp != null) {
-                ctx.compRef = new WeakReference<Component>(comp);
+                ctx.compRef = new WeakReference<>(comp);
             }
             return ctx;
         }
@@ -988,10 +978,12 @@ public class JBUI {
         @Nonnull
         public static ScaleContext create(@Nullable Component component, @Nullable Graphics2D graphics) {
             // Component is preferable to Graphics as a scale provider, as it lets the context stick
-            // to the comp's actual scale via the update method.
+            // to the component's actual scale via the update method.
             if (component != null) {
                 GraphicsConfiguration gc = component.getGraphicsConfiguration();
-                if (gc == null || gc.getDevice().getType() == GraphicsDevice.TYPE_IMAGE_BUFFER || gc.getDevice().getType() == GraphicsDevice.TYPE_PRINTER) {
+                if (gc == null
+                    || gc.getDevice().getType() == GraphicsDevice.TYPE_IMAGE_BUFFER
+                    || gc.getDevice().getType() == GraphicsDevice.TYPE_PRINTER) {
                     // can't rely on gc in this case as it may provide incorrect transform or scale
                     component = null;
                 }
@@ -1091,11 +1083,9 @@ public class JBUI {
         @Override
         protected <T extends BaseScaleContext> boolean updateAll(@Nonnull T ctx) {
             boolean updated = super.updateAll(ctx);
-            if (!(ctx instanceof ScaleContext)) {
+            if (!(ctx instanceof ScaleContext context)) {
                 return updated;
             }
-            ScaleContext context = (ScaleContext) ctx;
-
             if (compRef != null) {
                 compRef.clear();
             }
@@ -1120,11 +1110,9 @@ public class JBUI {
         @Override
         @SuppressWarnings("EqualsHashCode")
         public boolean equals(Object obj) {
-            if (super.equals(obj) && obj instanceof ScaleContext) {
-                ScaleContext that = (ScaleContext) obj;
-                return that.sysScale.value == sysScale.value;
-            }
-            return false;
+            return super.equals(obj)
+                && obj instanceof ScaleContext that
+                && that.sysScale.value == sysScale.value;
         }
 
         @Override
@@ -1350,17 +1338,12 @@ public class JBUI {
          * Updates the context and scales the provided value according to the provided type
          */
         protected double scaleVal(double value, @Nonnull ScaleType type) {
-            switch (type) {
-                case USR_SCALE:
-                    return super.scaleVal(value);
-                case SYS_SCALE:
-                    return value * getScale(SYS_SCALE);
-                case OBJ_SCALE:
-                    return value * getScale(OBJ_SCALE);
-                case PIX_SCALE:
-                    return super.scaleVal(value * getScale(OBJ_SCALE));
-            }
-            return value; // unreachable
+            return switch (type) {
+                case USR_SCALE -> super.scaleVal(value);
+                case SYS_SCALE -> value * getScale(SYS_SCALE);
+                case OBJ_SCALE -> value * getScale(OBJ_SCALE);
+                case PIX_SCALE -> super.scaleVal(value * getScale(OBJ_SCALE));
+            };
         }
     }
 
@@ -1417,20 +1400,20 @@ public class JBUI {
 
     public static int getInt(@Nonnull String propertyName, int defaultValue) {
         Object value = UIManager.get(propertyName);
-        return value instanceof Integer ? (Integer) value : defaultValue;
+        return value instanceof Integer integerValue ? integerValue : defaultValue;
     }
 
     public static float getFloat(String propertyName, float defaultValue) {
         Object value = UIManager.get(propertyName);
-        if (value instanceof Float) {
-            return (Float) value;
+        if (value instanceof Float floatValue) {
+            return floatValue;
         }
-        if (value instanceof Double) {
-            return ((Double) value).floatValue();
+        if (value instanceof Double doubleValue) {
+            return doubleValue.floatValue();
         }
-        if (value instanceof String) {
+        if (value instanceof String stringValue) {
             try {
-                return Float.parseFloat((String) value);
+                return Float.parseFloat(stringValue);
             }
             catch (NumberFormatException ignore) {
             }

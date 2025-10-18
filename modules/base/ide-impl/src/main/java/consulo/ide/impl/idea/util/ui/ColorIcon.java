@@ -22,6 +22,7 @@ import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,85 +30,89 @@ import java.awt.*;
 @Deprecated
 @DeprecationInfo("Desktop only")
 public class ColorIcon extends EmptyIcon {
-  private final Color myColor;
-  private boolean myBorder;
-  private int myColorSize;
+    private final Color myColor;
+    private boolean myBorder;
+    private int myColorSize;
 
-  public ColorIcon(int size, int colorSize, @Nonnull Color color, boolean border) {
-    super(size, size);
-    myColor = color;
-    myColorSize = colorSize;
-    myBorder = border;
-  }
-
-  public ColorIcon(int size, @Nonnull Color color, boolean border) {
-    this(size, size, color, border);
-  }
-
-  public ColorIcon(int size, @Nonnull Color color) {
-    this(size, color, false);
-  }
-
-  protected ColorIcon(ColorIcon icon) {
-    super(icon);
-    myColor = icon.myColor;
-    myBorder = icon.myBorder;
-    myColorSize = icon.myColorSize;
-  }
-
-  @Nonnull
-  @Override
-  protected ColorIcon copy() {
-    return new ColorIcon(this);
-  }
-
-  public Color getIconColor() {
-    return myColor;
-  }
-
-  @Override
-  public void paintIcon(Component component, Graphics g, int i, int j) {
-    int iconWidth = getIconWidth();
-    int iconHeight = getIconHeight();
-    g.setColor(getIconColor());
-
-    int size = getColorSize();
-    int x = i + (iconWidth - size) / 2;
-    int y = j + (iconHeight - size) / 2;
-
-    g.fillRect(x, y, size, size);
-
-    if (myBorder) {
-      g.setColor(Gray.x00.withAlpha(40));
-      g.drawRect(x, y, size, size);
+    public ColorIcon(int size, int colorSize, @Nonnull Color color, boolean border) {
+        super(size, size);
+        myColor = color;
+        myColorSize = colorSize;
+        myBorder = border;
     }
-  }
 
-  private int getColorSize() {
-    return (int)Math.ceil(scaleVal(myColorSize));
-  }
+    public ColorIcon(int size, @Nonnull Color color, boolean border) {
+        this(size, size, color, border);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
+    public ColorIcon(int size, @Nonnull Color color) {
+        this(size, color, false);
+    }
 
-    ColorIcon icon = (ColorIcon)o;
+    protected ColorIcon(ColorIcon icon) {
+        super(icon);
+        myColor = icon.myColor;
+        myBorder = icon.myBorder;
+        myColorSize = icon.myColorSize;
+    }
 
-    if (myBorder != icon.myBorder) return false;
-    if (myColorSize != icon.myColorSize) return false;
-    if (myColor != null ? !myColor.equals(icon.myColor) : icon.myColor != null) return false;
+    @Nonnull
+    @Override
+    protected ColorIcon copy() {
+        return new ColorIcon(this);
+    }
 
-    return true;
-  }
+    public Color getIconColor() {
+        return myColor;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (myColor != null ? myColor.hashCode() : 0);
-    result = 31 * result + (myBorder ? 1 : 0);
-    result = 31 * result + myColorSize;
-    return result;
-  }
+    @Override
+    public void paintIcon(Component component, Graphics g, int i, int j) {
+        int iconWidth = getIconWidth();
+        int iconHeight = getIconHeight();
+        g.setColor(getIconColor());
+
+        int size = getColorSize();
+        int x = i + (iconWidth - size) / 2;
+        int y = j + (iconHeight - size) / 2;
+
+        g.fillRect(x, y, size, size);
+
+        if (myBorder) {
+            g.setColor(Gray.x00.withAlpha(40));
+            g.drawRect(x, y, size, size);
+        }
+    }
+
+    private int getColorSize() {
+        return (int) Math.ceil(scaleVal(myColorSize));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        ColorIcon that = (ColorIcon) o;
+
+        return myBorder == that.myBorder
+            && myColorSize == that.myColorSize
+            && Objects.equals(myColor, that.myColor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (myColor != null ? myColor.hashCode() : 0);
+        result = 31 * result + (myBorder ? 1 : 0);
+        result = 31 * result + myColorSize;
+        return result;
+    }
 }
