@@ -158,6 +158,11 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
         return (int) result;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getName() + " " + width + "x" + height;
+    }
+
     public EmptyIconUIResource asUIResource() {
         return new EmptyIconUIResource(this);
     }
