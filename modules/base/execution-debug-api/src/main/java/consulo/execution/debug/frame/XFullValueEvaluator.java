@@ -16,8 +16,8 @@
 package consulo.execution.debug.frame;
 
 import consulo.execution.debug.Obsolescent;
-import consulo.execution.debug.XDebuggerBundle;
-
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -31,21 +31,21 @@ import java.awt.*;
  * @author nik
  */
 public abstract class XFullValueEvaluator {
-  private final String myLinkText;
+  private final LocalizeValue myLinkText;
   private boolean myShowValuePopup = true;
 
   protected XFullValueEvaluator() {
-    this(XDebuggerBundle.message("node.test.show.full.value"));
+    this(XDebuggerLocalize.nodeTestShowFullValue());
   }
 
   protected XFullValueEvaluator(int actualLength) {
-    this(XDebuggerBundle.message("node.text.ellipsis.truncated", actualLength));
+    this(XDebuggerLocalize.nodeTextEllipsisTruncated(actualLength));
   }
 
   /**
    * @param linkText text of the link what will be appended to a variables tree node text
    */
-  protected XFullValueEvaluator(@Nonnull String linkText) {
+  protected XFullValueEvaluator(@Nonnull LocalizeValue linkText) {
     myLinkText = linkText;
   }
 
@@ -64,7 +64,8 @@ public abstract class XFullValueEvaluator {
    */
   public abstract void startEvaluation(@Nonnull XFullValueEvaluationCallback callback);
 
-  public String getLinkText() {
+  @Nonnull
+  public LocalizeValue getLinkText() {
     return myLinkText;
   }
 

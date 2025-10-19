@@ -192,7 +192,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     private Project myProject;
 
     public MyLongTextHyperlink() {
-      super(XDebuggerLocalize.nodeTestShowFullValue().get());
+      super(XDebuggerLocalize.nodeTestShowFullValue());
     }
 
     public void setupComponent(String text, Project project) {

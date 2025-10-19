@@ -189,7 +189,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
       if (matcher.start() != prev) {
         objects.add(message.substring(prev, matcher.start()));
       }
-      objects.add(new HyperlinkListenerDelegator(matcher.group(2), matcher.group(1), hyperlinkListener));
+      objects.add(new HyperlinkListenerDelegator(LocalizeValue.of(matcher.group(2)), matcher.group(1), hyperlinkListener));
       prev = matcher.end();
     }
     while (matcher.find());
@@ -228,7 +228,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     private final HyperlinkListener hyperlinkListener;
     private final String href;
 
-    public HyperlinkListenerDelegator(@Nonnull String linkText, @Nullable String href, @Nonnull HyperlinkListener hyperlinkListener) {
+    public HyperlinkListenerDelegator(@Nonnull LocalizeValue linkText, @Nullable String href, @Nonnull HyperlinkListener hyperlinkListener) {
       super(linkText);
 
       this.hyperlinkListener = hyperlinkListener;
