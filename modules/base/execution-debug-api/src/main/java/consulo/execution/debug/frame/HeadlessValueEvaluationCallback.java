@@ -20,6 +20,7 @@ import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,7 +55,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
 
     @Override
     public void evaluated(@Nonnull String fullValue) {
-        evaluationComplete(fullValue);
+        evaluationComplete(LocalizeValue.of(fullValue));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
     }
 
     @Override
-    public void errorOccurred(@Nonnull String errorMessage) {
+    public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
         try {
             NotificationService.getInstance()
                 .newError(XDebuggerUIConstants.NOTIFICATION_GROUP)
@@ -75,7 +76,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         }
     }
 
-    private void evaluationComplete(@Nonnull String value) {
+    private void evaluationComplete(@Nonnull LocalizeValue value) {
         try {
             myEvaluated = true;
             mySemaphore.up();
@@ -90,7 +91,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         return myNode;
     }
 
-    protected void evaluationComplete(@Nonnull String value, @Nonnull Project project) {
+    protected void evaluationComplete(@Nonnull LocalizeValue value, @Nonnull Project project) {
     }
 
     @Override

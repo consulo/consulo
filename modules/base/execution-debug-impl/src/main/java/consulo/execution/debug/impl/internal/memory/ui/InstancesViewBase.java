@@ -9,6 +9,7 @@ import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
 import consulo.execution.debug.memory.InstancesProvider;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.JBPanel;
 import jakarta.annotation.Nonnull;
 
@@ -48,8 +49,7 @@ public abstract class InstancesViewBase extends JBPanel implements Disposable {
             ApplicationManager.getApplication().invokeLater(() -> {
                 myTreeState = XDebuggerTreeState.saveState(getInstancesTree());
 
-                getInstancesTree().setInfoMessage(
-                    "The application is running");
+                getInstancesTree().setInfoMessage(LocalizeValue.localizeTODO("The application is running"));
             });
         }
 

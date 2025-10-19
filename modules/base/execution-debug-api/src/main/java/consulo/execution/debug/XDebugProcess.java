@@ -24,11 +24,13 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueMarkerProvider;
 import consulo.execution.debug.internal.UnsupportedDebuggerEditorsProvider;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.concurrent.AsyncResult;
@@ -292,9 +294,14 @@ public abstract class XDebugProcess {
     /**
      * @return message to show in Variables View when debugger isn't paused
      */
-    public String getCurrentStateMessage() {
-        return mySession.isStopped() ? XDebuggerBundle.message("debugger.state.message.disconnected") : XDebuggerBundle
-            .message("debugger.state.message.connected");
+    @Nonnull
+    public LocalizeValue getCurrentStateMessage() {
+        if (mySession.isStopped()) {
+            return XDebuggerLocalize.debuggerStateMessageDisconnected();
+        }
+        else {
+            return XDebuggerLocalize.debuggerStateMessageConnected();
+        }
     }
 
     @Nullable

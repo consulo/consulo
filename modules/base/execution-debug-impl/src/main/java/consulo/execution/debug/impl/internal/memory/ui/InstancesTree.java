@@ -8,6 +8,7 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.annotation.Nonnull;
@@ -57,12 +58,11 @@ public class InstancesTree extends XDebuggerTree {
         rebuildTree(policy, XDebuggerTreeState.saveState(this));
     }
 
-    void setInfoMessage(@SuppressWarnings("SameParameterValue") @Nonnull String text) {
+    void setInfoMessage(@Nonnull LocalizeValue text) {
         myChildren = null;
         myRoot.clearChildren();
         myRoot.setMessage(text, XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, SimpleTextAttributes.REGULAR_ATTRIBUTES, null);
     }
-
 
     public enum RebuildPolicy {
         RELOAD_INSTANCES,

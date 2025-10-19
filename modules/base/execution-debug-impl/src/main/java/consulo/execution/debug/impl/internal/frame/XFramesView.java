@@ -26,6 +26,7 @@ import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.action.XFrameThreadsComboBoxGroup;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -174,7 +175,7 @@ public class XFramesView extends XDebugView {
                         }
 
                         @Override
-                        public void errorOccurred(@Nonnull String errorMessage) {
+                        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
                         }
                     });
                 }
@@ -324,7 +325,7 @@ public class XFramesView extends XDebugView {
     private class StackFramesListBuilder implements XStackFrameContainerEx {
         private XExecutionStack myExecutionStack;
         private final List<XStackFrame> myStackFrames;
-        private String myErrorMessage;
+        private LocalizeValue myErrorMessage = LocalizeValue.empty();
         private int myNextFrameIndex = 0;
         private volatile boolean myRunning;
         private boolean myAllFramesLoaded;
@@ -378,7 +379,7 @@ public class XFramesView extends XDebugView {
         }
 
         @Override
-        public void errorOccurred(@Nonnull String errorMessage) {
+        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
             if (isObsolete()) {
                 return;
             }
@@ -386,7 +387,7 @@ public class XFramesView extends XDebugView {
                 if (isObsolete()) {
                     return;
                 }
-                if (myErrorMessage == null) {
+                if (myErrorMessage == LocalizeValue.empty()) {
                     myErrorMessage = errorMessage;
                     addFrameListElements(Collections.singletonList(errorMessage), true);
                     myRunning = false;
@@ -431,7 +432,7 @@ public class XFramesView extends XDebugView {
         }
 
         public boolean start() {
-            if (myExecutionStack == null || myErrorMessage != null) {
+            if (myExecutionStack == null || myErrorMessage != LocalizeValue.empty()) {
                 return false;
             }
             myRunning = true;
@@ -471,8 +472,8 @@ public class XFramesView extends XDebugView {
         public void initModel(DefaultListModel model) {
             model.removeAllElements();
             myStackFrames.forEach(model::addElement);
-            if (myErrorMessage != null) {
-                model.addElement(myErrorMessage);
+            if (myErrorMessage != LocalizeValue.empty()) {
+                model.addElement(myErrorMessage.get());
             }
             else if (!myAllFramesLoaded) {
                 model.addElement(null);

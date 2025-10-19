@@ -19,7 +19,7 @@ import jakarta.annotation.Nullable;
 
 public interface XValueWithInlinePresentation {
   /**
-   * Value to be shown near variable in execution line (experimental feature). Should be calculated fast.
+   * Value to be shown near variable in execution line. Should be calculated fast.
    */
   @Nullable
   String computeInlinePresentation();

@@ -27,6 +27,7 @@ import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -130,7 +131,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         XDebugSession session = XDebugView.getSession(getPanel());
         if (session != null) {
             if (!session.isStopped() && session.isPaused()) {
-                root.setInfoMessage("Frame is not available", null);
+                root.setInfoMessage(LocalizeValue.localizeTODO("Frame is not available"), null);
             }
             else {
                 XDebugProcess debugProcess = session.getDebugProcess();

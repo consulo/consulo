@@ -16,10 +16,10 @@
 
 package consulo.execution.debug.frame;
 
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.annotation.Nullable;
@@ -71,7 +71,7 @@ public abstract class XStackFrame extends XValueContainer {
       component.setIcon(ExecutionDebugIconGroup.nodeFrame());
     }
     else {
-      component.append(XDebuggerBundle.message("invalid.frame"), SimpleTextAttributes.ERROR_ATTRIBUTES);
+      component.append(XDebuggerLocalize.invalidFrame(), SimpleTextAttributes.ERROR_ATTRIBUTES);
     }
   }
 }

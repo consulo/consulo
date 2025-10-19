@@ -27,6 +27,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.evaluate.XEvaluationCallbackBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -153,7 +154,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
                 myNode.setPresentation(XDebuggerUIConstants.ERROR_MESSAGE_ICON, new XErrorValuePresentation(errorMessage), false);
             }
         }

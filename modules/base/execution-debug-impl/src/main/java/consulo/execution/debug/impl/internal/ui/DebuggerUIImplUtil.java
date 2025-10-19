@@ -25,7 +25,6 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XBreakpointManager;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.breakpoint.XBreakpoint;
@@ -40,15 +39,18 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.XLightBreakpointPrope
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerUIUtil;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTextProvider;
 import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -56,7 +58,10 @@ import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.EditorColorsUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.*;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.AsyncResult;
@@ -299,10 +304,10 @@ public class DebuggerUIImplUtil {
         }
 
         @Override
-        public void errorOccurred(@Nonnull String errorMessage) {
+        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
             AppUIUtil.invokeOnEdt(() -> {
                 myTextArea.setForeground(XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES.getFgColor());
-                myTextArea.setText(errorMessage);
+                myTextArea.setText(errorMessage.get());
             });
         }
 
@@ -357,14 +362,14 @@ public class DebuggerUIImplUtil {
                 res.append(ShortcutUtil.getKeystrokeText(stroke));
             }
         }
-        return XDebuggerBundle.message("ad.extra.selection.shortcut", res.toString());
+        return XDebuggerLocalize.adExtraSelectionShortcut(res.toString()).get();
     }
 
     public static boolean isObsolete(Object object) {
         return Obsolescent.isObsolete(object);
     }
 
-    public static void setTreeNodeValue(XValueNodeImpl valueNode, String text, final Consumer<String> errorConsumer) {
+    public static void setTreeNodeValue(XValueNodeImpl valueNode, String text, @RequiredUIAccess Consumer<LocalizeValue> errorConsumer) {
         final XDebuggerTree tree = valueNode.getTree();
         final Project project = tree.getProject();
         XValueModifier modifier = valueNode.getValueContainer().getModifier();
@@ -383,7 +388,7 @@ public class DebuggerUIImplUtil {
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
                 AppUIUtil.invokeOnEdt(() -> {
                     tree.rebuildAndRestore(treeState);
                     errorConsumer.accept(errorMessage);

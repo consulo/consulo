@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueChildrenList;
@@ -23,7 +22,9 @@ import consulo.execution.debug.frame.XValueContainer;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerEvaluationDialog;
 import consulo.execution.debug.impl.internal.evaluate.XEvaluationCallbackBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -52,13 +53,13 @@ public class EvaluatingExpressionRootNode extends XValueContainerNode<Evaluating
       myDialog.startEvaluation(new XEvaluationCallbackBase() {
         @Override
         public void evaluated(@Nonnull XValue result) {
-          String name = UIUtil.removeMnemonic(XDebuggerBundle.message("xdebugger.evaluate.result"));
+          String name = XDebuggerLocalize.xdebuggerEvaluateResult().map(Presentation.NO_MNEMONIC).get();
           node.addChildren(XValueChildrenList.singleton(name, result), true);
           myDialog.evaluationDone();
         }
 
         @Override
-        public void errorOccurred(@Nonnull String errorMessage) {
+        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
           node.setErrorMessage(errorMessage);
           myDialog.evaluationDone();
         }

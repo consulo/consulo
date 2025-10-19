@@ -36,6 +36,7 @@ import consulo.execution.debug.ui.XValueTree;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.language.editor.ui.awt.HintUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -256,9 +257,9 @@ public class XValueHint extends AbstractValueHint {
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
                 if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
-                    ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage)));
+                    ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage.get())));
                 }
                 LOG.debug("Cannot evaluate '" + myExpression + "':" + errorMessage);
             }

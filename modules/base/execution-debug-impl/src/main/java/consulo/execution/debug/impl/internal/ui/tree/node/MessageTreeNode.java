@@ -45,14 +45,18 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   private final boolean myEllipsis;
   private XDebuggerTreeNodeHyperlink myLink;
 
-  private MessageTreeNode(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, String message, SimpleTextAttributes attributes, @Nullable Image icon) {
+  private MessageTreeNode(XDebuggerTree tree,
+                          @Nullable XDebuggerTreeNode parent,
+                          @Nonnull LocalizeValue message,
+                          SimpleTextAttributes attributes,
+                          @Nullable Image icon) {
     this(tree, parent, message, attributes, icon, null);
   }
 
   private MessageTreeNode(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    String message,
+    @Nonnull LocalizeValue message,
     SimpleTextAttributes attributes,
     @Nullable Image icon,
     XDebuggerTreeNodeHyperlink link
@@ -63,7 +67,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   private MessageTreeNode(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    String message,
+    @Nonnull LocalizeValue message,
     SimpleTextAttributes attributes,
     @Nullable Image icon,
     boolean ellipsis,
@@ -115,13 +119,13 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     LocalizeValue message = remaining == -1
       ? XDebuggerLocalize.nodeTextEllipsis0UnknownMoreNodesDoubleClickToShow()
       : XDebuggerLocalize.nodeTextEllipsis0MoreNodesDoubleClickToShow(remaining);
-    return new MessageTreeNode(tree, parent, message.get(), SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, null);
+    return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, null);
   }
 
   public static MessageTreeNode createMessageNode(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    String message,
+    LocalizeValue message,
     @Nullable Image icon
   ) {
     return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.REGULAR_ATTRIBUTES, icon);
@@ -150,34 +154,35 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   public static List<MessageTreeNode> createMessages(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    @Nonnull String errorMessage,
+    @Nonnull LocalizeValue errorMessage,
     XDebuggerTreeNodeHyperlink link,
     Image icon,
     SimpleTextAttributes attributes
   ) {
     List<MessageTreeNode> messages = new SmartList<>();
-    List<String> lines = StringUtil.split(errorMessage, "\n", true, false);
+    List<String> lines = StringUtil.split(errorMessage.get(), "\n", true, false);
     for (int i = 0; i < lines.size(); i++) {
-      messages.add(new MessageTreeNode(tree, parent, lines.get(i), attributes, icon, i == lines.size() - 1 ? link : null));
+      messages.add(new MessageTreeNode(tree, parent, LocalizeValue.of(lines.get(i)), attributes, icon, i == lines.size() - 1 ? link : null));
     }
     return messages;
   }
 
-  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @Nonnull String message) {
+  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @Nonnull LocalizeValue message) {
     return createInfoMessage(tree, message, null);
   }
 
   public static MessageTreeNode createInfoMessage(
     XDebuggerTree tree,
-    @Nonnull String message,
+    @Nonnull LocalizeValue messageValue,
     @Nullable HyperlinkListener hyperlinkListener
   ) {
+    String message = messageValue.get();
     Matcher matcher = MessageTreeNodeWithLinks.HREF_PATTERN.matcher(message);
     if (hyperlinkListener == null || !matcher.find()) {
       return new MessageTreeNode(
         tree,
         null,
-        message,
+        messageValue,
         SimpleTextAttributes.REGULAR_ATTRIBUTES,
         XDebuggerUIConstants.INFORMATION_MESSAGE_ICON
       );

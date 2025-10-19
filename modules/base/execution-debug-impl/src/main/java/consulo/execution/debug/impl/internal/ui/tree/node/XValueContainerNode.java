@@ -20,6 +20,7 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -170,12 +171,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void setErrorMessage(@Nonnull String errorMessage) {
-    setErrorMessage(errorMessage, null);
-  }
-
-  @Override
-  public void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
+  public void setErrorMessage(@Nonnull LocalizeValue errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
     setMessage(
       errorMessage,
       XDebuggerUIConstants.ERROR_MESSAGE_ICON,
@@ -187,7 +183,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void setMessage(
-    @Nonnull String message,
+    @Nonnull LocalizeValue message,
     Image icon,
     @Nonnull SimpleTextAttributes attributes,
     @Nullable XDebuggerTreeNodeHyperlink link
@@ -199,7 +195,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     );
   }
 
-  public void setInfoMessage(@Nonnull String message, @Nullable HyperlinkListener hyperlinkListener) {
+  public void setInfoMessage(@Nonnull LocalizeValue message, @Nullable HyperlinkListener hyperlinkListener) {
     invokeNodeUpdate(
       () -> setMessageNodes(
         Collections.singletonList(MessageTreeNode.createInfoMessage(myTree, message, hyperlinkListener)),

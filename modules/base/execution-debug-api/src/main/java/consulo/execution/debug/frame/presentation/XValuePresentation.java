@@ -15,8 +15,10 @@
  */
 package consulo.execution.debug.frame.presentation;
 
-import consulo.execution.debug.frame.XValueNode;
+import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.execution.debug.frame.XValueNode;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,87 +30,99 @@ import jakarta.annotation.Nullable;
  * @see XValueNode#setPresentation(consulo.ui.image.Image, XValuePresentation, boolean)
  */
 public abstract class XValuePresentation {
-  protected static final String DEFAULT_SEPARATOR = " = ";
-
-  /**
-   * Renders value text by delegating to {@code renderer} methods
-   * @param renderer {@link XValueTextRenderer} instance which provides methods to
-   */
-  public abstract void renderValue(@Nonnull XValueTextRenderer renderer);
-
-  /**
-   * @return separator between name and value in a debugger tree
-   */
-  @Nonnull
-  public String getSeparator() {
-    return DEFAULT_SEPARATOR;
-  }
-
-  /**
-   * @return optional type of the value, it is shown in gray color and surrounded by braces
-   */
-  @Nullable
-  public String getType() {
-    return null;
-  }
-
-  public interface XValueTextRenderer {
-    /**
-     * Appends {@code value} with to the node text. Invisible characters are shown in escaped form.
-     */
-    void renderValue(@Nonnull String value);
+    protected static final String DEFAULT_SEPARATOR = " = ";
 
     /**
-     * Appends {@code value} surrounded by quotes to the node text colored as a string
+     * Renders value text by delegating to {@code renderer} methods
+     *
+     * @param renderer {@link XValueTextRenderer} instance which provides methods to
      */
-    void renderStringValue(@Nonnull String value);
+    public abstract void renderValue(@Nonnull XValueTextRenderer renderer);
 
     /**
-     * Appends {@code value} highlighted as a number
+     * @return separator between name and value in a debugger tree
      */
-    void renderNumericValue(@Nonnull String value);
+    @Nonnull
+    public String getSeparator() {
+        return DEFAULT_SEPARATOR;
+    }
 
     /**
-     * Appends {@code value} surrounded by single quotes to the node text colored as a string
+     * @return optional type of the value, it is shown in gray color and surrounded by braces
      */
-    void renderCharValue(@Nonnull String value);
+    @Nullable
+    public String getType() {
+        return null;
+    }
 
-    /**
-     * Appends {@code value} highlighted as a keyword
-     */
-    void renderKeywordValue(@Nonnull String value);
+    public interface XValueTextRenderer {
+        /**
+         * Appends {@code value} with to the node text. Invisible characters are shown in escaped form.
+         */
+        void renderValue(@Nonnull String value);
 
-    void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key);
+        /**
+         * Appends {@code value} surrounded by quotes to the node text colored as a string
+         */
+        void renderStringValue(@Nonnull String value);
 
-    /**
-     * Appends {@code value} surrounded by quotes to the node text colored as a string
-     * @param value value to be shown
-     * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
-     * @param maxLength maximum number of characters to show
-     */
-    void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength);
+        /**
+         * Appends {@code value} highlighted as a number
+         */
+        void renderNumericValue(@Nonnull String value);
 
-    /**
-     * Appends {@code value} surrounded by quotes to the node text colored as a string
-     * @param value value to be shown
-     * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
-     * @param maxLength maximum number of characters to show
-     */
-    void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
+        /**
+         * Appends {@code value} surrounded by single quotes to the node text colored as a string
+         */
+        void renderCharValue(@Nonnull String value);
 
-    /**
-     * Appends gray colored {@code comment}
-     */
-    void renderComment(@Nonnull String comment);
+        /**
+         * Appends {@code value} highlighted as a keyword
+         */
+        void renderKeywordValue(@Nonnull String value);
 
-    /**
-     * Appends {@code symbol} which is not part of the value
-     */
-    void renderSpecialSymbol(@Nonnull String symbol);
+        void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key);
 
-    /**
-     * Appends red colored {@code error}
-     */
-    void renderError(@Nonnull String error);
-  }
+        /**
+         * Appends {@code value} surrounded by quotes to the node text colored as a string
+         *
+         * @param value                             value to be shown
+         * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
+         * @param maxLength                         maximum number of characters to show
+         */
+        void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength);
+
+        /**
+         * Appends {@code value} surrounded by quotes to the node text colored as a string
+         *
+         * @param value                             value to be shown
+         * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
+         * @param maxLength                         maximum number of characters to show
+         */
+        void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
+
+        /**
+         * Appends gray colored {@code comment}
+         */
+        void renderComment(@Nonnull String comment);
+
+        /**
+         * Appends {@code symbol} which is not part of the value
+         */
+        void renderSpecialSymbol(@Nonnull String symbol);
+
+        /**
+         * Appends red colored {@code error}
+         */
+        @Deprecated
+        @DeprecationInfo("Use #renderError(LocalizeValue)")
+        default void renderError(@Nonnull String error) {
+            renderError(LocalizeValue.of(error));
+        }
+
+        /**
+         * Appends red colored {@code error}
+         */
+        void renderError(@Nonnull LocalizeValue errorValue);
+    }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.execution.debug.frame.presentation;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -23,14 +25,20 @@ import jakarta.annotation.Nonnull;
  * @author egor
  */
 public class XErrorValuePresentation extends XValuePresentation {
-  private final String myError;
+    private final LocalizeValue myError;
 
-  public XErrorValuePresentation(@Nonnull String error) {
-    myError = error;
-  }
+    @Deprecated
+    @DeprecationInfo("Use with localize value")
+    public XErrorValuePresentation(@Nonnull String error) {
+        this(LocalizeValue.of(error));
+    }
 
-  @Override
-  public void renderValue(@Nonnull XValueTextRenderer renderer) {
-    renderer.renderError(myError);
-  }
+    public XErrorValuePresentation(@Nonnull LocalizeValue error) {
+        myError = error;
+    }
+
+    @Override
+    public void renderValue(@Nonnull XValueTextRenderer renderer) {
+        renderer.renderError(myError);
+    }
 }

@@ -110,7 +110,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
         HintManager.getInstance().showErrorHint(editor, errorMessage);
       }
       else {
-        Messages.showErrorDialog(myTree, errorMessage);
+        Messages.showErrorDialog(myTree, errorMessage.get());
       }
     });
 

@@ -15,62 +15,62 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.execution.debug.ui.XValueTextRendererBase;
-import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ColoredTextContainer;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
-
+import consulo.ui.ex.util.TextAttributesUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class XValueTextRendererImpl extends XValueTextRendererBase {
-  private final ColoredTextContainer myText;
+    private final ColoredTextContainer myText;
 
-  public XValueTextRendererImpl(ColoredTextContainer text) {
-    myText = text;
-  }
+    public XValueTextRendererImpl(ColoredTextContainer text) {
+        myText = text;
+    }
 
-  @Override
-  public void renderValue(@Nonnull String value) {
-    XValuePresentationUtil.renderValue(value, myText, SimpleTextAttributes.REGULAR_ATTRIBUTES, -1, null);
-  }
+    @Override
+    public void renderValue(@Nonnull String value) {
+        XValuePresentationUtil.renderValue(value, myText, SimpleTextAttributes.REGULAR_ATTRIBUTES, -1, null);
+    }
 
-  @Override
-  protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
-    TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
-    SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
-    myText.append(value, attributes);
-  }
+    @Override
+    protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+        TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
+        SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
+        myText.append(value, attributes);
+    }
 
-  @Override
-  public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
-    TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.STRING);
-    SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
-    myText.append(String.valueOf(quoteChar), attributes);
-    XValuePresentationUtil.renderValue(value, myText, attributes, maxLength, additionalSpecialCharsToHighlight);
-    myText.append(String.valueOf(quoteChar), attributes);
-  }
+    @Override
+    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+        TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.STRING);
+        SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
+        myText.append(String.valueOf(quoteChar), attributes);
+        XValuePresentationUtil.renderValue(value, myText, attributes, maxLength, additionalSpecialCharsToHighlight);
+        myText.append(String.valueOf(quoteChar), attributes);
+    }
 
-  @Override
-  public void renderError(@Nonnull String error) {
-    myText.append(error, SimpleTextAttributes.ERROR_ATTRIBUTES);
-  }
+    @Override
+    public void renderError(@Nonnull LocalizeValue errorValue) {
+        myText.append(errorValue, SimpleTextAttributes.ERROR_ATTRIBUTES);
+    }
 
-  @Override
-  public void renderComment(@Nonnull String comment) {
-    myText.append(comment, SimpleTextAttributes.GRAY_ATTRIBUTES);
-  }
+    @Override
+    public void renderComment(@Nonnull String comment) {
+        myText.append(comment, SimpleTextAttributes.GRAY_ATTRIBUTES);
+    }
 
-  @Override
-  public void renderSpecialSymbol(@Nonnull String symbol) {
-    myText.append(symbol, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-  }
+    @Override
+    public void renderSpecialSymbol(@Nonnull String symbol) {
+        myText.append(symbol, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+    }
 }

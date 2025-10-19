@@ -171,8 +171,8 @@ public abstract class XFetchValueActionBase extends AnAction {
         }
 
         @Override
-        protected void evaluationComplete(@Nonnull String value, @Nonnull Project project) {
-            myValueCollector.evaluationComplete(myValueIndex, value);
+        protected void evaluationComplete(@Nonnull LocalizeValue value, @Nonnull Project project) {
+            myValueCollector.evaluationComplete(myValueIndex, value.get());
         }
     }
 }

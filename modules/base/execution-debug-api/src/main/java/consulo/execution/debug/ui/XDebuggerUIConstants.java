@@ -16,7 +16,8 @@
 package consulo.execution.debug.ui;
 
 import consulo.application.AllIcons;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.DarculaColors;
@@ -30,9 +31,9 @@ import java.awt.*;
  * @author nik
  */
 public class XDebuggerUIConstants {
-  public static final String COLLECTING_DATA_MESSAGE = XDebuggerBundle.message("xdebugger.building.tree.node.message");
-  public static final String EVALUATING_EXPRESSION_MESSAGE = XDebuggerBundle.message("xdebugger.evaluating.expression.node.message");
-  public static final String MODIFYING_VALUE_MESSAGE = XDebuggerBundle.message("xdebugger.modifiyng.value.node.message");
+  public static final LocalizeValue COLLECTING_DATA_MESSAGE = XDebuggerLocalize.xdebuggerBuildingTreeNodeMessage();
+  public static final LocalizeValue EVALUATING_EXPRESSION_MESSAGE = XDebuggerLocalize.xdebuggerEvaluatingExpressionNodeMessage();
+  public static final LocalizeValue MODIFYING_VALUE_MESSAGE = XDebuggerLocalize.xdebuggerModifiyngValueNodeMessage();
 
   public static final Image ERROR_MESSAGE_ICON = AllIcons.General.Error;
   public static final Image INFORMATION_MESSAGE_ICON = AllIcons.General.Information;
