@@ -122,6 +122,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                         @Nonnull ActionPopupItem actionItem,
                         boolean isSelected
                     ) {
+                        myButtonSeparator.setVisible(false);
+
                         Presentation presentation = factory.getPresentation(actionItem.getAction());
 
                         AnAction action = actionItem.getAction();
