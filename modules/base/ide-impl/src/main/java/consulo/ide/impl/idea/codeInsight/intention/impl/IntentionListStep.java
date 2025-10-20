@@ -19,10 +19,13 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.Size2D;
 import consulo.ui.ex.popup.*;
+import consulo.ui.image.EmptyImage;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.LinkedHashMap;
@@ -39,6 +42,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     private final CachedIntentions myCachedIntentions;
     @Nullable
     private final IntentionHintComponent myIntentionHintComponent;
+    private final Size2D myMaxIconSize;
 
     private Runnable myFinalRunnable;
     private final Project myProject;
@@ -46,12 +50,17 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     @Nullable
     private final Editor myEditor;
 
-    public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent, @Nullable Editor editor, @Nonnull PsiFile file, @Nonnull Project project, CachedIntentions intentions) {
+    public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent,
+                             @Nullable Editor editor,
+                             @Nonnull PsiFile file,
+                             @Nonnull Project project,
+                             CachedIntentions intentions) {
         myIntentionHintComponent = intentionHintComponent;
         myProject = project;
         myFile = file;
         myEditor = editor;
         myCachedIntentions = intentions;
+        myMaxIconSize = getMaxIconSize();
     }
 
     @Override
@@ -78,6 +87,13 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         }
 
         return FINAL_CHOICE;
+    }
+
+    @Override
+    public boolean isFinal(IntentionActionWithTextCaching value) {
+        IntentionAction a = IntentionActionDelegate.unwrap(value.getAction());
+
+        return !(a instanceof AbstractEmptyIntentionAction) || !hasSubstep(value);
     }
 
     @Override
@@ -178,6 +194,17 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
 
     @Override
     public Image getIconFor(IntentionActionWithTextCaching value) {
+        Image icon = getOriginalIconFor(value);
+        if (icon == null || icon instanceof EmptyImage) {
+            icon = Image.empty(myMaxIconSize.width(), myMaxIconSize.height());
+        }
+        return icon;
+    }
+
+    @Nullable
+    public Image getOriginalIconFor(@Nonnull IntentionActionWithTextCaching value) {
+        if (!value.isShowIcon()) return null;
+
         return myCachedIntentions.getIcon(value);
     }
 
@@ -237,5 +264,24 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     @Override
     public String getIndexedString(IntentionActionWithTextCaching value) {
         return getTextFor(value);
+    }
+
+    @NotNull
+    private Size2D getMaxIconSize() {
+        int maxWidth = -1;
+        int maxHeight = -1;
+        for (IntentionActionWithTextCaching action : myCachedIntentions.getAllActions()) {
+            if (!action.isShowIcon()) {
+                continue;
+            }
+            Image icon = myCachedIntentions.getIcon(action);
+            if (icon instanceof EmptyImage) {
+                continue;
+            }
+            maxWidth = Math.max(maxWidth, icon.getWidth());
+            maxHeight = Math.max(maxHeight, icon.getHeight());
+        }
+
+        return new Size2D(maxWidth, maxHeight);
     }
 }

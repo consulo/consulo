@@ -23,6 +23,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
+import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -229,7 +230,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_empty(int width, int height) {
+  public EmptyImage _ImageEffects_empty(int width, int height) {
     return new WebEmptyImageImpl(width, height);
   }
 

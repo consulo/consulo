@@ -176,6 +176,8 @@ popup.hints.panel.click.to.configure.highlighting.tooltip.text:
     text: Click to configure highlighting for this file
 popup.hints.panel.click.to.configure.profile.text:
     text: Click to configure inspection profiles
+popup.list.item.renderer.next.step.label.accessible.name:
+    text: submenu
 position.panel.caret.count:
     text: '{0} carets'
 position.panel.selected.chars.count:

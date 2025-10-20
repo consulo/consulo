@@ -18,8 +18,7 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.ui.Size2D;
 import consulo.ui.ex.awt.EmptyIcon;
-import consulo.ui.image.Image;
-
+import consulo.ui.image.EmptyImage;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
@@ -28,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopEmptyImageImpl extends EmptyIcon implements Image, DesktopAWTImage {
+public class DesktopEmptyImageImpl extends EmptyIcon implements EmptyImage, DesktopAWTImage {
     private static final ConcurrentMap<Size2D, DesktopEmptyImageImpl> ourCache =
         ConcurrentFactoryMap.createMap(s -> new DesktopEmptyImageImpl(s.width(), s.height()));
 

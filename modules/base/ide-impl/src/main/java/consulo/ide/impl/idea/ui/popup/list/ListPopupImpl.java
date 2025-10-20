@@ -41,6 +41,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -272,6 +273,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return count;
     }
 
+    @Override
     public JList getList() {
         return myList;
     }
@@ -311,15 +313,33 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myList.getActionMap().put(ListActions.Right.ID, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleSelect(false);
+                Object selected = myList.getSelectedValue();
+                if (selected != null && myInlineActionsSupport.get().hasExtraButtons(selected)) {
+                    if (nextExtendedButton(selected)) {
+                        return;
+                    }
+                }
+
+                handleRightKeyPressed(createKeyEvent(e, KeyEvent.VK_RIGHT));
             }
         });
 
         myList.getActionMap().put(ListActions.Left.ID, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Object selected = myList.getSelectedValue();
+                if (selected != null && myInlineActionsSupport.get().hasExtraButtons(selected)) {
+                    if (prevExtendedButton(selected)) {
+                        return;
+                    }
+                }
+
+                disposeAsyncPopupWaiter();
                 if (isClosableByLeftArrow()) {
                     goBack();
+                }
+                else {
+                    handleLeftKeyPressed(createKeyEvent(e, KeyEvent.VK_LEFT));
                 }
             }
         });
@@ -328,6 +348,57 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         return myList;
+    }
+
+    @Nonnull
+    protected KeyEvent createKeyEvent(@NotNull ActionEvent e, int keyCode) {
+        return new KeyEvent(myList, KeyEvent.KEY_PRESSED, e.getWhen(), e.getModifiers(), keyCode, KeyEvent.CHAR_UNDEFINED);
+    }
+
+    protected void handleLeftKeyPressed(@Nonnull KeyEvent keyEvent) {
+    }
+
+    protected void handleRightKeyPressed(@Nonnull KeyEvent keyEvent) {
+        handleSelect(false, keyEvent);
+    }
+
+    private boolean nextExtendedButton(Object selected) {
+        Integer currentIndex = myList.getSelectedButtonIndex();
+        PopupInlineActionsSupport inlineActionsSupport = myInlineActionsSupport.get();
+        int buttonsCount = inlineActionsSupport.calcExtraButtonsCount(selected);
+        if (currentIndex == null) {
+            currentIndex = -1;
+        }
+        if (currentIndex >= buttonsCount - 1) {
+            return false;
+        }
+
+        boolean changed = myList.setSelectedButtonIndex(++currentIndex);
+        if (changed) {
+            getContent().repaint();
+            
+            if (inlineActionsSupport.isMoreButton(selected, currentIndex) && buttonsCount == 1) {
+                inlineActionsSupport.performAction(selected, currentIndex, null);
+            }
+        }
+        return true;
+    }
+
+    private boolean prevExtendedButton(Object selected) {
+        Integer currentIndex = myList.getSelectedButtonIndex();
+        if (currentIndex == null) {
+            return false;
+        }
+
+        if (--currentIndex < 0) {
+            currentIndex = null;
+        }
+
+        boolean changed = myList.setSelectedButtonIndex(currentIndex);
+        if (changed) {
+            getContent().repaint();
+        }
+        return true;
     }
 
     private boolean isMultiSelectionEnabled() {
@@ -708,6 +779,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return UIUtil.isActionClick(e, MouseEvent.MOUSE_RELEASED, true);
     }
 
+    @Override
     public Object[] getSelectedValues() {
         return myList.getSelectedValues();
     }
@@ -910,6 +982,10 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
                 super.setSelectionInterval(index0, index1); // TODO: support when needed
             }
         }
+    }
+
+    private void disposeAsyncPopupWaiter() {
+        // FIXME [VISTALL] unsupported
     }
 
     @Override

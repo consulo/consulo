@@ -89,17 +89,17 @@ public interface Image {
   }
 
   @Nonnull
-  static Image empty() {
+  static EmptyImage empty() {
     return empty(0);
   }
 
   @Nonnull
-  static Image empty(int widthAndHeight) {
+  static EmptyImage empty(int widthAndHeight) {
     return UIInternal.get()._ImageEffects_empty(widthAndHeight, widthAndHeight);
   }
 
   @Nonnull
-  static Image empty(int width, int height) {
+  static EmptyImage empty(int width, int height) {
     return UIInternal.get()._ImageEffects_empty(width, height);
   }
 

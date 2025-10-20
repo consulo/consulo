@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = IdeActions.ACTION_SHOW_INTENTION_ACTIONS)
 public class ShowIntentionActionsAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore {
     public ShowIntentionActionsAction() {
-        super(ActionLocalize.actionShowintentionactionsText(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
+        super(ActionLocalize.actionShowintentionactionsText(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulbgrey());
         setEnabledInModalContext(true);
     }
 

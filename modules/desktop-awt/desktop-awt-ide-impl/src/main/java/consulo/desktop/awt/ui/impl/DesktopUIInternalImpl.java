@@ -30,7 +30,6 @@ import consulo.desktop.awt.ui.impl.layout.*;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
 import consulo.desktop.awt.uiOld.DesktopDeferredIconImpl;
-import consulo.desktop.awt.uiOld.DesktopIconDeferrerImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -50,10 +49,8 @@ import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.FontManager;
-import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-import consulo.ui.image.ImageState;
+import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
 import consulo.ui.impl.model.MutableListModelImpl;
@@ -163,7 +160,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public Image _ImageEffects_empty(int width, int height) {
+    public EmptyImage _ImageEffects_empty(int width, int height) {
         return DesktopEmptyImageImpl.get(width, height);
     }
 

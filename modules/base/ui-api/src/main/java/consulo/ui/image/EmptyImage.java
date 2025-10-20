@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.ui.image;
-
-import consulo.ui.image.EmptyImage;
+package consulo.ui.image;
 
 /**
  * @author VISTALL
- * @since 2019-02-21
+ * @since 2025-10-20
  */
-public class WebEmptyImageImpl implements EmptyImage {
-  private final int myWidth;
-  private final int myHeight;
-
-  public WebEmptyImageImpl(int width, int height) {
-    myWidth = width;
-    myHeight = height;
-  }
-
-  @Override
-  public int getHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return myWidth;
-  }
+public interface EmptyImage extends Image {
 }

@@ -15,15 +15,14 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ui.image.Image;
-
+import consulo.ui.image.EmptyImage;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtEmptyImageImpl implements Image, DesktopSwtImage {
+public class DesktopSwtEmptyImageImpl implements EmptyImage, DesktopSwtImage {
   private final int myWidth;
   private final int myHeight;
 

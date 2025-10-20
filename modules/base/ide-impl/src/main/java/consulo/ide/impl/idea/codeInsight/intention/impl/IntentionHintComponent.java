@@ -93,6 +93,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
     private static final Border INACTIVE_BORDER = BorderFactory.createEmptyBorder(NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE);
     private static final Border INACTIVE_BORDER_SMALL = BorderFactory.createEmptyBorder(SMALL_BORDER_SIZE, SMALL_BORDER_SIZE, SMALL_BORDER_SIZE, SMALL_BORDER_SIZE);
+    @Nonnull
+    private final Project myProject;
 
     @TestOnly
     public CachedIntentions getCachedIntentions() {
@@ -355,6 +357,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     private IntentionHintComponent(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull final Editor editor, @Nonnull CachedIntentions cachedIntentions) {
         UIAccess.assertIsUIThread();
 
+        myProject = project;
         myFile = file;
         myEditor = editor;
         myCachedIntentions = cachedIntentions;
@@ -477,7 +480,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         if (myPopup != null) {
             Disposer.dispose(myPopup);
         }
-        myPopup = JBPopupFactory.getInstance().createListPopup(step);
+        myPopup = JBPopupFactory.getInstance().createListPopup(myProject, step);
         if (myPopup instanceof WizardPopup) {
             Shortcut[] shortcuts = KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS).getShortcuts();
             for (Shortcut shortcut : shortcuts) {

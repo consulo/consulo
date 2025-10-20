@@ -23,10 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.font.FontManager;
-import consulo.ui.image.IconLibraryManager;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-import consulo.ui.image.ImageState;
+import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
@@ -154,7 +151,7 @@ public abstract class UIInternal {
 
     public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
 
-    public abstract Image _ImageEffects_empty(int width, int height);
+    public abstract EmptyImage _ImageEffects_empty(int width, int height);
 
     public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
 

@@ -7,6 +7,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
@@ -162,12 +163,16 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
             myTextLabel.setDisplayedMnemonicIndex(-1);
         }
 
-        if (step.hasSubstep(value) && isSelectable) {
+        boolean showNextStepLabel = step.hasSubstep(value) && !myPopup.getPopupInlineActionsSupport().hasExtraButtons(value);
+        if (showNextStepLabel) {
             myNextStepLabel.setVisible(true);
             myNextStepLabel.setIcon(UIUtil.getMenuArrowIcon(isSelected));
+            myNextStepLabel.getAccessibleContext()
+                .setAccessibleName(isSelectable ? UILocalize.popupListItemRendererNextStepLabelAccessibleName().get() : null);
         }
         else {
             myNextStepLabel.setVisible(false);
+            myNextStepLabel.getAccessibleContext().setAccessibleName(null);
         }
 
         boolean hasNextIcon = myNextStepLabel.isVisible();
