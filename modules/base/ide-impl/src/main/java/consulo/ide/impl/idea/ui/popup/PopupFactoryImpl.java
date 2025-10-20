@@ -11,48 +11,38 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ui.ex.awt.popup.AWTPopupFactory;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
-import consulo.ui.util.TextWithMnemonic;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory {
-    private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
-
+public abstract class PopupFactoryImpl extends JBPopupFactory {
     @Nonnull
     @Override
     public ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex) {
@@ -79,9 +69,9 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         Component eachParent = c;
         while (eachParent != null) {
             if (eachParent instanceof JComponent) {
-                Object balloon = ((JComponent)eachParent).getClientProperty(Balloon.KEY);
+                Object balloon = ((JComponent) eachParent).getClientProperty(Balloon.KEY);
                 if (balloon instanceof Balloon) {
-                    return (Balloon)balloon;
+                    return (Balloon) balloon;
                 }
             }
             eachParent = eachParent.getParent();
@@ -122,308 +112,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         return app == null || !app.isUnitTestMode() ? new ListPopupImpl(step) : new MockConfirmation(step, yesText);
     }
 
-    public static class ActionGroupPopup extends ListPopupImpl {
-        private final Runnable myDisposeCallback;
-        private final Component myComponent;
-        private final String myActionPlace;
-
-        public ActionGroupPopup(
-            String title,
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull DataContext dataContext,
-            boolean showNumbers,
-            boolean useAlphaAsNumbers,
-            boolean showDisabledActions,
-            boolean honorActionMnemonics,
-            Runnable disposeCallback,
-            int maxRowCount,
-            Predicate<? super AnAction> preselectActionCondition,
-            @Nullable String actionPlace,
-            boolean forceHeavyPopup
-        ) {
-            this(
-                title,
-                actionGroup,
-                dataContext,
-                showNumbers,
-                useAlphaAsNumbers,
-                showDisabledActions,
-                honorActionMnemonics,
-                disposeCallback,
-                maxRowCount,
-                preselectActionCondition,
-                actionPlace,
-                null,
-                false,
-                forceHeavyPopup
-            );
-        }
-
-        public ActionGroupPopup(
-            String title,
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull DataContext dataContext,
-            boolean showNumbers,
-            boolean useAlphaAsNumbers,
-            boolean showDisabledActions,
-            boolean honorActionMnemonics,
-            Runnable disposeCallback,
-            int maxRowCount,
-            Predicate<? super AnAction> preselectActionCondition,
-            @Nullable String actionPlace,
-            boolean autoSelection,
-            boolean forceHeavyPopup
-        ) {
-            this(
-                title,
-                actionGroup,
-                dataContext,
-                showNumbers,
-                useAlphaAsNumbers,
-                showDisabledActions,
-                honorActionMnemonics,
-                disposeCallback,
-                maxRowCount,
-                preselectActionCondition,
-                actionPlace,
-                null,
-                autoSelection,
-                forceHeavyPopup
-            );
-        }
-
-        public ActionGroupPopup(
-            String title,
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull DataContext dataContext,
-            boolean showNumbers,
-            boolean useAlphaAsNumbers,
-            boolean showDisabledActions,
-            boolean honorActionMnemonics,
-            Runnable disposeCallback,
-            int maxRowCount,
-            Predicate<? super AnAction> preselectActionCondition,
-            @Nullable String actionPlace,
-            @Nullable BasePresentationFactory presentationFactory,
-            boolean autoSelection,
-            boolean forceHeavyPopup
-        ) {
-            this(
-                null,
-                createStep(
-                    title,
-                    actionGroup,
-                    dataContext,
-                    showNumbers,
-                    useAlphaAsNumbers,
-                    showDisabledActions,
-                    honorActionMnemonics,
-                    preselectActionCondition,
-                    actionPlace,
-                    presentationFactory,
-                    autoSelection
-                ),
-                disposeCallback,
-                dataContext,
-                actionPlace,
-                maxRowCount,
-                forceHeavyPopup
-            );
-        }
-
-        protected ActionGroupPopup(
-            @Nullable WizardPopup aParent,
-            @Nonnull ListPopupStep step,
-            @Nullable Runnable disposeCallback,
-            @Nonnull DataContext dataContext,
-            @Nullable String actionPlace,
-            int maxRowCount,
-            boolean forceHeavyPopup
-        ) {
-            super(dataContext.getData(Project.KEY), aParent, step, null, forceHeavyPopup);
-            setMaxRowCount(maxRowCount);
-            myDisposeCallback = disposeCallback;
-            myComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            myActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
-
-            registerAction("handleActionToggle1", KeyEvent.VK_SPACE, 0, new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    handleToggleAction();
-                }
-            });
-
-            addListSelectionListener(e -> {
-                JList list = (JList)e.getSource();
-                ActionItem actionItem = (ActionItem)list.getSelectedValue();
-                if (actionItem == null) {
-                    return;
-                }
-                updateActionItem(actionItem);
-            });
-        }
-
-        @Nonnull
-        private Presentation updateActionItem(@Nonnull ActionItem actionItem) {
-            AnAction action = actionItem.getAction();
-            Presentation presentation = new Presentation();
-            presentation.setDescriptionValue(action.getTemplatePresentation().getDescriptionValue());
-
-            AnActionEvent actionEvent = new AnActionEvent(
-                null,
-                DataManager.getInstance().getDataContext(myComponent),
-                myActionPlace,
-                presentation,
-                ActionManager.getInstance(),
-                0
-            );
-            actionEvent.setInjectedContext(action.isInInjectedContext());
-            ActionImplUtil.performDumbAwareUpdate(action, actionEvent, false);
-            return presentation;
-        }
-
-        private static ListPopupStep<ActionItem> createStep(
-            String title,
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull DataContext dataContext,
-            boolean showNumbers,
-            boolean useAlphaAsNumbers,
-            boolean showDisabledActions,
-            boolean honorActionMnemonics,
-            Predicate<? super AnAction> preselectActionCondition,
-            @Nullable String actionPlace,
-            @Nullable BasePresentationFactory presentationFactory,
-            boolean autoSelection
-        ) {
-            Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            consulo.ui.Component uiCompoment = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
-            if (component == null && uiCompoment != null) {
-                component = TargetAWT.to(uiCompoment);
-            }
-
-            LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
-
-            List<ActionItem> items = ActionPopupStep.createActionItems(
-                actionGroup,
-                dataContext,
-                showNumbers,
-                useAlphaAsNumbers,
-                showDisabledActions,
-                honorActionMnemonics,
-                actionPlace,
-                presentationFactory
-            );
-
-            return new ActionPopupStep(
-                items,
-                title,
-                getComponentContextSupplier(component),
-                actionPlace,
-                showNumbers || honorActionMnemonics && itemsHaveMnemonics(items),
-                preselectActionCondition,
-                autoSelection,
-                showDisabledActions,
-                presentationFactory
-            );
-        }
-
-        /**
-         * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, BasePresentationFactory)} instead.
-         */
-        @Deprecated
-        @Nonnull
-        public static List<ActionItem> getActionItems(
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull DataContext dataContext,
-            boolean showNumbers,
-            boolean useAlphaAsNumbers,
-            boolean showDisabledActions,
-            boolean honorActionMnemonics,
-            @Nullable String actionPlace
-        ) {
-            return ActionPopupStep.createActionItems(
-                actionGroup,
-                dataContext,
-                showNumbers,
-                useAlphaAsNumbers,
-                showDisabledActions,
-                honorActionMnemonics,
-                actionPlace,
-                null
-            );
-        }
-
-        @Override
-        public void dispose() {
-            if (myDisposeCallback != null) {
-                myDisposeCallback.run();
-            }
-            super.dispose();
-        }
-
-        @Override
-        public void handleSelect(boolean handleFinalChoices, InputEvent e) {
-            Object selectedValue = getList().getSelectedValue();
-            ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
-
-            if (actionPopupStep != null) {
-                KeepingPopupOpenAction dontClosePopupAction =
-                    getActionByClass(selectedValue, actionPopupStep, KeepingPopupOpenAction.class);
-                if (dontClosePopupAction != null) {
-                    actionPopupStep.performAction((AnAction)dontClosePopupAction, e != null ? e.getModifiers() : 0, e);
-                    for (ActionItem item : actionPopupStep.getValues()) {
-                        updateActionItem(item);
-                    }
-                    getList().repaint();
-                    return;
-                }
-            }
-
-            super.handleSelect(handleFinalChoices, e);
-        }
-
-        protected void handleToggleAction() {
-            Object[] selectedValues = getList().getSelectedValues();
-
-            ListPopupStep<Object> listStep = getListStep();
-            ActionPopupStep actionPopupStep = ObjectUtil.tryCast(listStep, ActionPopupStep.class);
-            if (actionPopupStep == null) {
-                return;
-            }
-
-            List<ToggleAction> filtered =
-                ContainerUtil.mapNotNull(selectedValues, o -> getActionByClass(o, actionPopupStep, ToggleAction.class));
-
-            for (ToggleAction action : filtered) {
-                actionPopupStep.performAction(action, 0);
-            }
-
-            for (ActionItem item : actionPopupStep.getValues()) {
-                updateActionItem(item);
-            }
-
-            getList().repaint();
-        }
-
-        @Nullable
-        private static <T> T getActionByClass(
-            @Nullable Object value,
-            @Nonnull ActionPopupStep actionPopupStep,
-            @Nonnull Class<T> actionClass
-        ) {
-            ActionItem item = value instanceof ActionItem ? (ActionItem)value : null;
-            if (item == null) {
-                return null;
-            }
-            if (!actionPopupStep.isSelectable(item)) {
-                return null;
-            }
-            return actionClass.isInstance(item.getAction()) ? actionClass.cast(item.getAction()) : null;
-        }
-    }
-
     @Nonnull
-    private static Supplier<DataContext> getComponentContextSupplier(Component component) {
+    public static Supplier<DataContext> getComponentContextSupplier(Component component) {
         return () -> DataManager.getInstance().getDataContext(component);
     }
 
@@ -488,7 +178,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
 
     @Nonnull
     @Override
-    public ListPopupStep<ActionItem> createActionsStep(
+    public ListPopupStep<ActionPopupItem> createActionsStep(
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         @Nullable String actionPlace,
@@ -517,16 +207,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         );
     }
 
-    private static boolean itemsHaveMnemonics(List<? extends ActionItem> items) {
-        for (ActionItem item : items) {
-            if (TextWithMnemonic.parse(item.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Nonnull
     @Override
     public ListPopup createListPopup(@Nonnull ListPopupStep step) {
@@ -550,13 +230,13 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
     @Nonnull
     @Override
     public TreePopup createTree(JBPopup parent, @Nonnull TreePopupStep aStep, Object parentValue) {
-        return new TreePopupImpl((Project)aStep.getProject(), parent, aStep, parentValue);
+        return new TreePopupImpl((Project) aStep.getProject(), parent, aStep, parentValue);
     }
 
     @Nonnull
     @Override
     public TreePopup createTree(@Nonnull TreePopupStep aStep) {
-        return new TreePopupImpl((Project)aStep.getProject(), null, aStep, null);
+        return new TreePopupImpl((Project) aStep.getProject(), null, aStep, null);
     }
 
     @Nonnull
@@ -570,7 +250,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
     @Override
     public RelativePoint guessBestPopupLocation(@Nonnull DataContext dataContext) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        JComponent focusOwner = component instanceof JComponent ? (JComponent)component : null;
+        JComponent focusOwner = component instanceof JComponent ? (JComponent) component : null;
 
         if (focusOwner == null) {
             Project project = dataContext.getData(Project.KEY);
@@ -599,7 +279,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         Point popupMenuPoint = null;
         Rectangle visibleRect = component.getVisibleRect();
         if (component instanceof JList) { // JList
-            JList list = (JList)component;
+            JList list = (JList) component;
             int firstVisibleIndex = list.getFirstVisibleIndex();
             int lastVisibleIndex = list.getLastVisibleIndex();
             int[] selectedIndices = list.getSelectedIndices();
@@ -612,7 +292,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             }
         }
         else if (component instanceof JTree) { // JTree
-            JTree tree = (JTree)component;
+            JTree tree = (JTree) component;
             int[] selectionRows = tree.getSelectionRows();
             if (selectionRows != null) {
                 Arrays.sort(selectionRows);
@@ -651,7 +331,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             }
         }
         else if (component instanceof JTable) {
-            JTable table = (JTable)component;
+            JTable table = (JTable) component;
             int column = table.getColumnModel().getSelectionModel().getLeadSelectionIndex();
             int row = Math.max(table.getSelectionModel().getLeadSelectionIndex(), table.getSelectionModel().getAnchorSelectionIndex());
             Rectangle rect = table.getCellRect(row, column, false);
@@ -661,7 +341,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             popupMenuPoint = new Point(rect.x, rect.y + rect.height - 1);
         }
         else if (component instanceof PopupOwner) {
-            popupMenuPoint = ((PopupOwner)component).getBestPopupPosition();
+            popupMenuPoint = ((PopupOwner) component).getBestPopupPosition();
         }
         if (popupMenuPoint == null) {
             popupMenuPoint = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height / 2);
@@ -743,7 +423,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
 
         JLabel label = new JLabel();
         JPanel content =
-            new NonOpaquePanel(new BorderLayout((int)(label.getIconTextGap() * 1.5), (int)(label.getIconTextGap() * 1.5)));
+            new NonOpaquePanel(new BorderLayout((int) (label.getIconTextGap() * 1.5), (int) (label.getIconTextGap() * 1.5)));
 
         NonOpaquePanel textWrapper = new NonOpaquePanel(new GridBagLayout());
         JScrollPane scrolledText = ScrollPaneFactory.createScrollPane(text, true);
@@ -775,80 +455,5 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
     ) {
         MessageType messageType = MessageType.from(type);
         return createHtmlTextBalloonBuilder(htmlContent, messageType.getDefaultIcon(), messageType.getPopupBackground(), listener);
-    }
-
-
-    public static class ActionItem implements ShortcutProvider {
-        private final AnAction myAction;
-        private LocalizeValue myTextValue;
-        private final boolean myIsEnabled;
-        private final Image myIcon;
-        private final Image mySelectedIcon;
-        private final String myDescription;
-        private final boolean myIsSeparator;
-
-        ActionItem(
-            @Nonnull AnAction action,
-            @Nonnull LocalizeValue textValue,
-            @Nullable String description,
-            boolean enabled,
-            @Nullable Image icon,
-            @Nullable Image selectedIcon,
-            boolean isSeparator
-        ) {
-            myAction = action;
-            myTextValue = textValue;
-            myIsEnabled = enabled;
-            myIcon = icon;
-            mySelectedIcon = selectedIcon;
-            myDescription = description;
-            myIsSeparator = isSeparator;
-            myAction.getTemplatePresentation().addPropertyChangeListener(evt -> {
-                if (evt.getPropertyName().equals(Presentation.PROP_TEXT)) {
-                    myTextValue = myAction.getTemplatePresentation().getTextValue();
-                }
-            });
-        }
-
-        @Nonnull
-        public AnAction getAction() {
-            return myAction;
-        }
-
-        @Nonnull
-        public LocalizeValue getText() {
-            return myTextValue;
-        }
-
-        @Nullable
-        public Image getIcon(boolean selected) {
-            return selected && mySelectedIcon != null ? mySelectedIcon : myIcon;
-        }
-
-        public boolean isSeparator() {
-            return myIsSeparator;
-        }
-
-        public boolean isEnabled() {
-            return myIsEnabled;
-        }
-
-        public String getDescription() {
-            return myDescription;
-        }
-
-        @Nullable
-        @Override
-        public ShortcutSet getShortcut() {
-            return myAction.getShortcutSet();
-        }
-
-        @Override
-        public String toString() {
-            if (myIsSeparator) {
-                return "separator = " + myTextValue.get();
-            }
-            return myTextValue.get();
-        }
     }
 }

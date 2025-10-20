@@ -19,6 +19,7 @@ import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
@@ -48,10 +49,11 @@ public abstract class ExecutorAction extends DumbAwareAction {
         super(text, description, icon);
     }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
+    @Override
+    @Nonnull
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+    }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {

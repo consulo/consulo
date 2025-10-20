@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,15 @@
  */
 package consulo.ui.ex.awt.popup;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import jakarta.annotation.Nullable;
-
-import javax.swing.*;
+import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
+import consulo.ui.ex.popup.ListPopup;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2024-12-06
+ * @since 2025-10-20
  */
-@Deprecated
-@DeprecationInfo("Do not depend to Swing classes")
-public interface AWTListPopup extends ListPopupInternal {
-    ListPopupModel getListModel();
-
-    @Nullable
-    SpeedSearch getSpeedSearch();
-
-    int getSelectedIndex();
-
-    void onChildSelectedFor(Object value);
-
-    JList getList();
-
-    JComponent getComponent();
-
-    Object[] getSelectedValues();
+public interface ListPopupInternal extends ListPopup {
+    @Nonnull
+    PopupInlineActionsSupport getPopupInlineActionsSupport();
 }

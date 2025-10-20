@@ -1231,6 +1231,8 @@ import.project.chooser.header:
     text: <html>Select {0}</html>
 incompatible.encoding.dialog.title:
     text: 'Incompatible Encoding: {0}'
+inline.actions.more.actions.text:
+    text: More Actions
 install.package.failure:
     text: Error occurred when installing package ''{0}''. <a href="xxx">Details...</a>
 item.file.templates:

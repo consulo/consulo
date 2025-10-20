@@ -16,7 +16,8 @@
 package consulo.desktop.awt.versionSystemControl;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -28,7 +29,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.function.Predicate;
 
-public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
+public class FlatSpeedSearchPopup extends ActionGroupPopup {
     public FlatSpeedSearchPopup(
         String title,
         @Nonnull ActionGroup actionGroup,
@@ -55,7 +56,7 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
         if (!super.shouldBeShowing(value)) {
             return false;
         }
-        return !(value instanceof PopupFactoryImpl.ActionItem actionItem && !shouldBeShowing(actionItem.getAction()));
+        return !(value instanceof ActionPopupItem actionItem && !shouldBeShowing(actionItem.getAction()));
     }
 
     protected boolean shouldBeShowing(@Nonnull AnAction action) {
@@ -64,8 +65,8 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
 
     protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
-        if (value instanceof PopupFactoryImpl.ActionItem) {
-            AnAction action = ((PopupFactoryImpl.ActionItem)value).getAction();
+        if (value instanceof ActionPopupItem) {
+            AnAction action = ((ActionPopupItem)value).getAction();
             if (clazz.isInstance(action)) {
                 return clazz.cast(action);
             }

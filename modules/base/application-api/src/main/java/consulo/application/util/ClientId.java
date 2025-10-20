@@ -15,46 +15,51 @@
  */
 package consulo.application.util;
 
+import consulo.application.AccessToken;
 import jakarta.annotation.Nonnull;
 
 /**
  * Stub from IDEA - API for CodeWithMe
  */
 public class ClientId {
-  public static class Companion {
-    public static boolean getPropagateAcrossThreads() {
-      return false;
+    public static class Companion {
+        public static boolean getPropagateAcrossThreads() {
+            return false;
+        }
     }
-  }
 
-  public static void withClientId(ClientId clientId, Runnable runnable) {
-    runnable.run();
-  }
+    public static AccessToken withClientId(ClientId clientId) {
+        return AccessToken.EMPTY_ACCESS_TOKEN;
+    }
 
-  public static <T> T withClientId(ClientId clientId, T action) {
-    return action;
-  }
+    public static void withClientId(ClientId clientId, Runnable runnable) {
+        runnable.run();
+    }
 
-  public static <T> T decorateFunction(T func) {
-    return func;
-  }
+    public static <T> T withClientId(ClientId clientId, T action) {
+        return action;
+    }
 
-  public static Runnable decorateRunnable(Runnable action) {
-    return action;
-  }
+    public static <T> T decorateFunction(T func) {
+        return func;
+    }
 
-  public static <T> T decorateBiConsumer(T b) {
-    return b;
-  }
+    public static Runnable decorateRunnable(Runnable action) {
+        return action;
+    }
 
-  private static ClientId ourLocal = new ClientId();
+    public static <T> T decorateBiConsumer(T b) {
+        return b;
+    }
 
-  @Nonnull
-  public static ClientId getCurrent() {
-    return ourLocal;
-  }
+    private static ClientId ourLocal = new ClientId();
 
-  public static boolean isCurrentlyUnderLocalId() {
-    return true;
-  }
+    @Nonnull
+    public static ClientId getCurrent() {
+        return ourLocal;
+    }
+
+    public static boolean isCurrentlyUnderLocalId() {
+        return true;
+    }
 }

@@ -114,9 +114,6 @@ public abstract class AnAction implements PossiblyDumbAware {
 
     private Presentation myTemplatePresentation;
     private ShortcutSet myShortcutSet = CustomShortcutSet.EMPTY;
-    private boolean myEnabledInModalContext;
-    private boolean myIsDefaultIcon = true;
-    private boolean myWorksInInjected;
 
     /**
      * Creates a new action with its text, description and icon set to <code>null</code>.
@@ -241,7 +238,8 @@ public abstract class AnAction implements PossiblyDumbAware {
     public final void copyFrom(@Nonnull AnAction sourceAction) {
         Presentation sourcePresentation = sourceAction.getTemplatePresentation();
         Presentation presentation = getTemplatePresentation();
-        presentation.copyFrom(sourcePresentation);
+        boolean allFlags = this instanceof ActionGroup && sourceAction instanceof ActionGroup;
+        presentation.copyFrom(sourcePresentation, null, allFlags);
         copyShortcutFrom(sourceAction);
     }
 
@@ -249,13 +247,12 @@ public abstract class AnAction implements PossiblyDumbAware {
         myShortcutSet = sourceAction.myShortcutSet;
     }
 
-
     public final boolean isEnabledInModalContext() {
-        return myEnabledInModalContext;
+        return getTemplatePresentation().isEnabledInModalContext();
     }
 
     protected final void setEnabledInModalContext(boolean enabledInModalContext) {
-        myEnabledInModalContext = enabledInModalContext;
+        getTemplatePresentation().setEnabledInModalContext(enabledInModalContext);
     }
 
     /**
@@ -316,7 +313,7 @@ public abstract class AnAction implements PossiblyDumbAware {
 
     @Nonnull
     protected Presentation createTemplatePresentation() {
-        Presentation presentation = new Presentation();
+        Presentation presentation = Presentation.newTemplatePresentation();
         presentation.setIcon(getTemplateIcon());
         return presentation;
     }
@@ -349,7 +346,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @param isDefaultIconSet true if the icon is internal, false if the icon is customized by the user.
      */
     public void setDefaultIcon(boolean isDefaultIconSet) {
-        myIsDefaultIcon = isDefaultIconSet;
+        getTemplatePresentation().setDefaultIcon(isDefaultIconSet);
     }
 
     /**
@@ -358,15 +355,15 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @return true if the icon is internal, false if the icon is customized by the user.
      */
     public boolean isDefaultIcon() {
-        return myIsDefaultIcon;
+        return getTemplatePresentation().isDefaultIcon();
     }
 
     public void setInjectedContext(boolean worksInInjected) {
-        myWorksInInjected = worksInInjected;
+        getTemplatePresentation().setPreferInjectedPsi(worksInInjected);
     }
 
     public boolean isInInjectedContext() {
-        return myWorksInInjected;
+        return getTemplatePresentation().isPreferInjectedPsi();
     }
 
     @Override

@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
@@ -46,7 +47,7 @@ import java.util.function.Function;
  */
 @Singleton
 @ServiceImpl
-public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl {
+public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTPopupFactory {
     private final Map<Disposable, List<Balloon>> myStorage = Maps.newWeakHashMap();
 
     @Override

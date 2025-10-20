@@ -66,7 +66,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         myIcons = icons;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public final String getTitle() {
         return myTitle;

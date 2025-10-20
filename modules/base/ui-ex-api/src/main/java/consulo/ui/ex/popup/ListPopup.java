@@ -59,4 +59,22 @@ public interface ListPopup extends JBPopup {
     void addListSelectionListener(ListSelectionListener listSelectionListener);
 
     void addSelectionListener(@Nonnull Consumer<Object> selectionListener);
+
+    default boolean isShowSubmenuOnHover() {
+        return false;
+    }
+
+    /**
+     * If enabled then all items with submenus will be expanded on mouse hover.
+     * If disabled then mouse click needed to expand submenu
+     */
+    default void setShowSubmenuOnHover(boolean showSubmenuOnHover) {
+    }
+
+    /**
+     * If enabled then item will be executed on click even if submenu for this item is opened
+     * If disabled then mouse click closes sub menu
+     */
+    default void setExecuteExpandedItemOnClick(boolean executeExpandedItemOnClick) {
+    }
 }

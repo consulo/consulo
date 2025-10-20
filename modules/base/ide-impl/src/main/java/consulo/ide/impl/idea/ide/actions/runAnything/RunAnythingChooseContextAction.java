@@ -24,8 +24,9 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.ui.popup.ActionPopupStep;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingContext;
 import consulo.project.Project;
@@ -140,14 +141,14 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
     }
 
-    class ChooseContextPopup extends PopupFactoryImpl.ActionGroupPopup {
+    class ChooseContextPopup extends ActionGroupPopup {
         ChooseContextPopup(ActionPopupStep step, DataContext dataContext) {
             super(null, step, null, dataContext, ActionPlaces.POPUP, -1, true);
         }
 
         @Override
         protected ListCellRenderer getListElementRenderer() {
-            return new PopupListElementRenderer<PopupFactoryImpl.ActionItem>(this) {
+            return new PopupListElementRenderer<ActionPopupItem>(this) {
                 private JLabel myInfoLabel;
 
                 @Override
@@ -164,8 +165,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
                 @Override
                 protected void customizeComponent(
-                    JList<? extends PopupFactoryImpl.ActionItem> list,
-                    PopupFactoryImpl.ActionItem actionItem,
+                    JList<? extends ActionPopupItem> list,
+                    ActionPopupItem actionItem,
                     boolean isSelected
                 ) {
                     AnActionEvent event = ActionImplUtil.createEmptyEvent();
@@ -186,10 +187,10 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     }
 
     class ChooseContextPopupStep extends ActionPopupStep {
-        private final List<PopupFactoryImpl.ActionItem> myActions;
+        private final List<ActionPopupItem> myActions;
 
         public ChooseContextPopupStep(
-            List<PopupFactoryImpl.ActionItem> actions,
+            List<ActionPopupItem> actions,
             DataContext dataContext
         ) {
             super(
@@ -207,7 +208,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
 
         @Override
-        public ListSeparator getSeparatorAbove(PopupFactoryImpl.ActionItem value) {
+        public ListSeparator getSeparatorAbove(ActionPopupItem value) {
             AnAction action = value.getAction();
             if (action instanceof BrowseDirectoryItem) {
                 return new ListSeparator(IdeLocalize.runAnythingContextSeparatorDirectories().get());
@@ -289,7 +290,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
 
         DataContext dataContext = e.getDataContext();
-        List<PopupFactoryImpl.ActionItem> actionItems = ActionPopupStep.createActionItems(
+        List<ActionPopupItem> actionItems = ActionPopupStep.createActionItems(
             new DefaultActionGroup(createItems()),
             dataContext,
             false,

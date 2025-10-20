@@ -556,6 +556,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.internal to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.idea.ui.popup.actionPopup to consulo.desktop.awt.ide.impl;
 
   //opens consulo.ide.impl.internal.ui to consulo.util.xml.serializer;
 }

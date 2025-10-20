@@ -363,15 +363,17 @@ public class JBCurrentTheme {
         Color BACKGROUND = JBColor.namedColor("List.background", DEFAULT_RENDERER_BACKGROUND);
         Color FOREGROUND = JBColor.namedColor("List.foreground", Label.foreground(false));
 
-        static
+        static int buttonLeftRightInsets() {
+            return JBUI.getInt("List.Button.leftRightInset", 8);
+        }
+
         @Nonnull
-        Color background(boolean selected, boolean focused) {
+        static Color background(boolean selected, boolean focused) {
             return selected ? List.Selection.background(focused) : BACKGROUND;
         }
 
-        static
         @Nonnull
-        Color foreground(boolean selected, boolean focused) {
+        static Color foreground(boolean selected, boolean focused) {
             return selected ? List.Selection.foreground(focused) : FOREGROUND;
         }
 
@@ -606,7 +608,8 @@ public class JBCurrentTheme {
     public static Border textFieldSubBorder(boolean left) {
         if (left) {
             return JBUI.Borders.emptyLeft(4);
-        } else {
+        }
+        else {
             return JBUI.Borders.emptyRight(4);
         }
     }

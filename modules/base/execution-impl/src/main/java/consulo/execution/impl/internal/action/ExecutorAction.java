@@ -56,7 +56,6 @@ public class ExecutorAction extends AnAction implements DumbAware {
         myExecutorRegistry = executorRegistry;
         myRunCurrentFileService = runCurrentFileService;
         myExecutor = executor;
-        getTemplatePresentation().setVisible(false);
     }
 
     @Override

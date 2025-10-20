@@ -10,7 +10,8 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.language.localize.LanguageLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -66,7 +67,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         BasePresentationFactory factory = new BasePresentationFactory();
-        ListPopup popup = new PopupFactoryImpl.ActionGroupPopup(
+        ListPopup popup = new ActionGroupPopup(
             LanguageLocalize.popupTitleCopy().get(),
             this,
             e.getDataContext(),
@@ -83,7 +84,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
             true
         ) {
             @Override
-            protected ListCellRenderer<PopupFactoryImpl.ActionItem> getListElementRenderer() {
+            protected ListCellRenderer<ActionPopupItem> getListElementRenderer() {
                 return new PopupListElementRenderer<>(this) {
                     private JLabel myInfoLabel;
                     private JLabel myShortcutLabel;
@@ -117,8 +118,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                     @Override
                     @RequiredReadAction
                     protected void customizeComponent(
-                        @Nonnull JList<? extends PopupFactoryImpl.ActionItem> list,
-                        @Nonnull PopupFactoryImpl.ActionItem actionItem,
+                        @Nonnull JList<? extends ActionPopupItem> list,
+                        @Nonnull ActionPopupItem actionItem,
                         boolean isSelected
                     ) {
                         Presentation presentation = factory.getPresentation(actionItem.getAction());

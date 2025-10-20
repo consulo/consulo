@@ -61,7 +61,7 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
                 border = UIManager.getBorder("List.focusSelectedCellHighlightBorder");
             }
             if (border == null) {
-                border = UIManager.getBorder( "List.focusCellHighlightBorder");
+                border = UIManager.getBorder("List.focusCellHighlightBorder");
             }
         }
 
@@ -88,7 +88,7 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
         myTextLabel.setOpaque(false);
     }
 
-    protected final JComponent layoutComponent(JComponent middleItemComponent) {
+    protected JComponent layoutComponent(JComponent middleItemComponent) {
         myNextStepLabel = new JLabel();
         myNextStepLabel.setOpaque(false);
         return JBUI.Panels.simplePanel(middleItemComponent)

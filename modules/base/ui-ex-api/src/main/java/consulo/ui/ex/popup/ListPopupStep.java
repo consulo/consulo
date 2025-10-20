@@ -90,4 +90,8 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @return the index of the item to be initially selected in the list.
      */
     int getDefaultOptionIndex();
+
+    default boolean isFinal(T value) {
+        return !hasSubstep(value);
+    }
 }
