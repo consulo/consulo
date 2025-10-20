@@ -105,7 +105,6 @@ public final class ActionMenu extends JMenu {
     private void installSynchronizer() {
         if (myMenuItemSynchronizer == null) {
             myMenuItemSynchronizer = new MenuItemSynchronizer();
-            myGroup.getAction().addPropertyChangeListener(myMenuItemSynchronizer);
             myPresentation.addPropertyChangeListener(myMenuItemSynchronizer);
         }
     }
@@ -118,7 +117,6 @@ public final class ActionMenu extends JMenu {
 
     private void uninstallSynchronizer() {
         if (myMenuItemSynchronizer != null) {
-            myGroup.getAction().removePropertyChangeListener(myMenuItemSynchronizer);
             myPresentation.removePropertyChangeListener(myMenuItemSynchronizer);
             myMenuItemSynchronizer = null;
         }

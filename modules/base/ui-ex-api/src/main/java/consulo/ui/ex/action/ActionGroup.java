@@ -9,8 +9,6 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.Nls;
 
 import java.util.ArrayList;
@@ -135,9 +133,6 @@ public abstract class ActionGroup extends AnAction {
         return new ImmutableBuilder();
     }
 
-    private boolean myPopup;
-    private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
-
     public static final ActionGroup EMPTY_GROUP = new DumbAwareActionGroup() {
         @Nonnull
         @Override
@@ -145,11 +140,6 @@ public abstract class ActionGroup extends AnAction {
             return EMPTY_ARRAY;
         }
     };
-
-    /**
-     * The actual value is a Boolean.
-     */
-    private static final String PROP_POPUP = "popup";
 
     /**
      * Creates a new {@code ActionGroup} with shortName set to {@code null} and
@@ -216,7 +206,7 @@ public abstract class ActionGroup extends AnAction {
      * @return {@code true} if the group is a popup, {@code false} otherwise
      */
     public boolean isPopup() {
-        return myPopup;
+        return getTemplatePresentation().isPopupGroup();
     }
 
     public boolean isPopup(@Nonnull String place) {
@@ -229,21 +219,7 @@ public abstract class ActionGroup extends AnAction {
      * @param popup If {@code true} the group will be shown as a popup in menus.
      */
     public final void setPopup(boolean popup) {
-        boolean oldPopup = myPopup;
-        myPopup = popup;
-        firePropertyChange(PROP_POPUP, oldPopup, myPopup);
-    }
-
-    public final void addPropertyChangeListener(@Nonnull PropertyChangeListener l) {
-        myChangeSupport.addPropertyChangeListener(l);
-    }
-
-    public final void removePropertyChangeListener(@Nonnull PropertyChangeListener l) {
-        myChangeSupport.removePropertyChangeListener(l);
-    }
-
-    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+        getTemplatePresentation().setPopupGroup(popup);
     }
 
     /**

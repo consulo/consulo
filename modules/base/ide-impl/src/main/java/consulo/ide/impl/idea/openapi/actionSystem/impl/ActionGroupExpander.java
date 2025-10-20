@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -43,7 +44,8 @@ public class ActionGroupExpander {
     public static List<AnAction> expandActionGroup(@Nonnull ActionGroup group,
                                                    PresentationFactory presentationFactory,
                                                    @Nonnull DataContext context,
-                                                   String place) {
+                                                   @Nonnull String place,
+                                                   @Nonnull Predicate<AnAction> filter) {
         List<AnAction> actions = new ActionUpdater(ActionManager.getInstance(),
             presentationFactory,
             context,
@@ -54,6 +56,7 @@ public class ActionGroupExpander {
         ).expandActionGroup(group, group instanceof CompactActionGroup);
 
         actions = new ArrayList<>(actions);
+        actions.removeIf(filter.negate());
 
         while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator) {
             actions.removeFirst();

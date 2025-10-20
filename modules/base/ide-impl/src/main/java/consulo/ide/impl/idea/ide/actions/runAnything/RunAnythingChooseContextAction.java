@@ -298,7 +298,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             true,
             true,
             ActionPlaces.POPUP,
-            null
+            new BasePresentationFactory()
         );
 
         ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);

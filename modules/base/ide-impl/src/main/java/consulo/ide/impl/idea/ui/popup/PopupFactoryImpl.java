@@ -25,6 +25,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
@@ -203,7 +204,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             actionPlace,
             null,
             defaultOptionIndex,
-            null
+            new BasePresentationFactory()
         );
     }
 

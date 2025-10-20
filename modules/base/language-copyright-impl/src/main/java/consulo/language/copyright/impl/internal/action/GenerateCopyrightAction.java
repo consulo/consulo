@@ -33,7 +33,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -48,6 +47,11 @@ public class GenerateCopyrightAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
+        if (Boolean.TRUE) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);

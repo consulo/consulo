@@ -304,7 +304,6 @@ public final class Presentation implements Cloneable {
 
     public void setVisible(boolean visible) {
         assertNotTemplatePresentation();
-
         myFlags = checkAndSetFlag(myFlags, IS_VISIBLE, visible, PROP_VISIBLE);
     }
 
@@ -314,7 +313,7 @@ public final class Presentation implements Cloneable {
      * @return <code>true</code> if action is enabled, <code>false</code> otherwise
      */
     public boolean isEnabled() {
-        return BitUtil.isSet(myFlags, IS_VISIBLE);
+        return BitUtil.isSet(myFlags, IS_ENABLED);
     }
 
     /**
@@ -562,6 +561,22 @@ public final class Presentation implements Cloneable {
      */
     public void setDefaultIcon(boolean defaultIcon) {
         myFlags = BitUtil.set(myFlags, IS_DEFAULT_ICON, defaultIcon);
+    }
+
+    /**
+     * @see Presentation#setPopupGroup(boolean)
+     */
+    public boolean isPopupGroup() {
+        return BitUtil.isSet(myFlags, IS_POPUP_GROUP);
+    }
+
+    /**
+     * For an action group presentation sets whether the action group is a popup group or not.
+     * A popup action group is shown as a submenu, a toolbar button that shows a popup when clicked, etc.
+     * A non-popup action group child actions are injected into the parent group.
+     */
+    public void setPopupGroup(boolean popup) {
+        myFlags = BitUtil.set(myFlags, IS_POPUP_GROUP, popup);
     }
 
     void assertNotTemplatePresentation() {

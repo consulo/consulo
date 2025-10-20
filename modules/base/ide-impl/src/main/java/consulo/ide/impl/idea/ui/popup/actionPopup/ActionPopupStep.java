@@ -99,9 +99,8 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         @Nullable String actionPlace,
         Predicate<? super AnAction> preselectCondition,
         int defaultOptionIndex,
-        @Nullable PresentationFactory targetPresentationFactory
+        @Nonnull PresentationFactory presentationFactory
     ) {
-        PresentationFactory presentationFactory = targetPresentationFactory == null ? new BasePresentationFactory() : targetPresentationFactory;
         List<ActionPopupItem> items = createActionItems(
             actionGroup,
             dataContext,

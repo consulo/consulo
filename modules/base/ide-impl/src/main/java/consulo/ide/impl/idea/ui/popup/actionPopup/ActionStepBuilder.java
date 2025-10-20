@@ -6,9 +6,9 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.popup.NothingHereAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -93,16 +93,24 @@ class ActionStepBuilder {
         }
     }
 
+    @RequiredUIAccess
     private void appendActionsFromGroup(@Nonnull ActionGroup actionGroup) {
-        List<AnAction> newVisibleActions =
-            ActionGroupExpander.expandActionGroup(actionGroup, myPresentationFactory, myDataContext, myActionPlace);
+        List<AnAction> actions =
+            ActionGroupExpander.expandActionGroup(actionGroup, myPresentationFactory, myDataContext, myActionPlace, action -> {
+                if (myShowDisabled) {
+                    return true;
+                }
 
-        List<AnAction> filtered = myShowDisabled ? newVisibleActions : ContainerUtil.filter(
-            newVisibleActions, o -> o instanceof AnSeparator || myPresentationFactory.getPresentation(o).isEnabled());
+                if (action instanceof AnSeparator) {
+                    return true;
+                }
+                Presentation presentation = myPresentationFactory.getPresentation(action);
+                return presentation.isEnabledAndVisible();
+            });
 
-        calcMaxIconSize(filtered);
+        calcMaxIconSize(actions);
 
-        for (AnAction action : filtered) {
+        for (AnAction action : actions) {
             appendAction(action);
         }
     }
