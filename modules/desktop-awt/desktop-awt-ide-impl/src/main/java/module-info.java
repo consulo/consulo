@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 14/01/2022
+ * @since 2022-01-14
  */
 open module consulo.desktop.awt.ide.impl {
     requires java.desktop;
@@ -27,26 +27,25 @@ open module consulo.desktop.awt.ide.impl {
 
     requires org.apache.commons.imaging;
 
-    requires consulo.external.service.impl;
-
-    requires consulo.container.api;
-    requires consulo.diagram.api;
-    requires consulo.bootstrap;
-    requires consulo.platform.impl;
-    requires consulo.ui.impl;
-    requires consulo.ide.impl;
-    requires consulo.desktop.ide.impl;
-    requires consulo.util.jna;
-    requires consulo.ui.ex.awt.api;
-    requires consulo.file.editor.impl;
-    requires consulo.desktop.bootstrap;
     requires consulo.application.ui.impl;
-    requires consulo.language.editor.impl;
+    requires consulo.bootstrap;
     requires consulo.code.editor.impl;
-    requires consulo.execution.impl;
+    requires consulo.container.api;
+    requires consulo.desktop.bootstrap;
+    requires consulo.desktop.ide.impl;
+    requires consulo.diagram.api;
     requires consulo.diff.impl;
-    requires consulo.version.control.system.impl;
+    requires consulo.execution.impl;
+    requires consulo.external.service.impl;
+    requires consulo.file.editor.impl;
+    requires consulo.ide.impl;
+    requires consulo.language.editor.impl;
+    requires consulo.platform.impl;
     requires consulo.project.ui.impl;
+    requires consulo.ui.ex.awt.api;
+    requires consulo.ui.impl;
+    requires consulo.util.jna;
+    requires consulo.version.control.system.impl;
 
     // TODO remove
     requires gnu.trove;
@@ -68,7 +67,7 @@ open module consulo.desktop.awt.ide.impl {
     provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopAWTContainerStartupImpl;
     provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 
-    // FIXME it's will not work due different classloaders?
+    // FIXME will it not work due to different class-loaders?
     provides javax.imageio.spi.ImageReaderSpi with consulo.desktop.awt.spi.CommonsImagingImageReaderSpi;
 
     provides org.cobraparser.css.DefaultCssFactory with consulo.desktop.awt.ui.impl.htmlView.ConsuloDefaultCssFactory;
