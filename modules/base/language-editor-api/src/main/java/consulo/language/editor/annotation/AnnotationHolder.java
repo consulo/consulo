@@ -2,6 +2,7 @@
 package consulo.language.editor.annotation;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
@@ -59,6 +60,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
+    @RequiredReadAction
     Annotation createWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message);
 
     /**
@@ -93,6 +95,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
+    @RequiredReadAction
     Annotation createWeakWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message);
 
     /**
@@ -129,6 +132,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
+    @RequiredReadAction
     Annotation createInfoAnnotation(@Nonnull PsiElement elt, @Nullable String message);
 
     /**

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -89,6 +90,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
+    @RequiredReadAction
     public Annotation createWarningAnnotation(@Nonnull PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
@@ -123,6 +125,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
+    @RequiredReadAction
     public Annotation createWeakWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
@@ -164,6 +167,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
+    @RequiredReadAction
     public Annotation createInfoAnnotation(@Nonnull PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
@@ -200,19 +204,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         LOG.assertTrue(containingFile != null, node);
         VirtualFile containingVFile = containingFile.getVirtualFile();
         VirtualFile myVFile = myFile.getVirtualFile();
-        if (!Comparing.equal(containingVFile, myVFile)) {
-            LOG.error("Annotation must be registered for an element inside '" +
-                myFile +
-                "' which is in '" +
-                myVFile +
-                "'.\n" +
-                "Element passed: '" +
-                node +
-                "' is inside the '" +
-                containingFile +
-                "' which is in '" +
-                containingVFile +
-                "'");
+        if (!Objects.equals(containingVFile, myVFile)) {
+            LOG.error(
+                "Annotation must be registered for an element inside '" + myFile + "' " +
+                    "which is in '" + myVFile + "'.\n" +
+                    "Element passed: '" + node + "' " +
+                    "is inside the '" + containingFile + "' " +
+                    "which is in '" + containingVFile + "'"
+            );
         }
     }
 
@@ -264,8 +263,8 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return doCreateAnnotation(
             severity,
             range,
-            message == null ? LocalizeValue.of() : LocalizeValue.of(message),
-            tooltip == null ? LocalizeValue.of() : LocalizeValue.of(tooltip),
+            message == null ? LocalizeValue.empty() : LocalizeValue.of(message),
+            tooltip == null ? LocalizeValue.empty() : LocalizeValue.of(tooltip),
             callerClass,
             methodName,
             myCurrentLanguage
@@ -289,25 +288,16 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip, language);
         add(annotation);
         String callerInfo = callerClass == null ? "" : " (the call to which was found in " + callerClass + ")";
-        PluginException pluginException = PluginExceptionUtil.createByClass(new DeprecatedMethodException("'AnnotationHolder." +
-            methodName +
-            "()' method" +
-            callerInfo +
-            " is slow, non-incremental " +
-            "and thus can cause unexpected behaviour (e.g. annoying blinking), " +
-            "is deprecated and will be removed soon. " +
-            "Please use `newAnnotation().create()` instead"), callerClass == null ? getClass() : callerClass);
-        if (callerClass != null) {
-            if (ourWarnList.add(callerClass.getName())) {
-                if (LOG_AS_ERROR) {
-                    LOG.error(pluginException);
-                }
-                else {
-                    LOG.warn(pluginException);
-                }
-            }
-        }
-        else {
+        PluginException pluginException = PluginExceptionUtil.createByClass(
+            new DeprecatedMethodException(
+                "'AnnotationHolder." + methodName + "()' method" + callerInfo + " is slow, non-incremental " +
+                    "and thus can cause unexpected behaviour (e.g. annoying blinking), " +
+                    "is deprecated and will be removed soon. " +
+                    "Please use `newAnnotation().create()` instead"
+            ),
+            callerClass == null ? getClass() : callerClass
+        );
+        if (callerClass == null || ourWarnList.add(callerClass.getName())) {
             if (LOG_AS_ERROR) {
                 LOG.error(pluginException);
             }
@@ -339,7 +329,13 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     @Nonnull
     @Override
     public AnnotationBuilder newOfSeverity(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
-        return new AnnotationBuilderImpl(this, severity, message, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
+        return new AnnotationBuilderImpl(
+            this,
+            severity,
+            message,
+            myCurrentElement,
+            ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator)
+        );
     }
 
     @Nonnull
@@ -348,7 +344,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return new AnnotationBuilderImpl(
             this,
             severity,
-            LocalizeValue.of(),
+            LocalizeValue.empty(),
             myCurrentElement,
             ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator)
         );
