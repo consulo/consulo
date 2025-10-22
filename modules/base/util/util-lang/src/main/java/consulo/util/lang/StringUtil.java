@@ -1176,6 +1176,16 @@ public final class StringUtil {
         return s.substring(start, end);
     }
 
+    @Contract(value = "null -> null", pure = true)
+    public static String trimToNull(@Nullable String s) {
+        if (s == null) {
+            return null;
+        }
+
+        String trimmed = s.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+
     @Nonnull
     @Contract(pure = true)
     public static String wrapWithDoubleQuote(@Nonnull String str) {

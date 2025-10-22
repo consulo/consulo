@@ -17,6 +17,7 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -29,6 +30,7 @@ import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -42,7 +44,7 @@ public class DebuggerKeymapExtension implements KeymapExtension {
         DefaultActionGroup debuggerGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_DEBUGGER);
         AnAction[] debuggerActions = debuggerGroup.getChildActionsOrStubs();
 
-        ArrayList<String> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (AnAction debuggerAction : debuggerActions) {
             String actionId =
                 debuggerAction instanceof ActionStubBase actionStubBase ? actionStubBase.getId() : actionManager.getId(debuggerAction);
@@ -52,8 +54,11 @@ public class DebuggerKeymapExtension implements KeymapExtension {
         }
 
         Collections.sort(ids);
-        KeymapGroup group = KeymapGroupFactory.getInstance()
-            .createGroup(KeyMapLocalize.debuggerActionsGroupTitle(), IdeActions.GROUP_DEBUGGER, null);
+        KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(
+            KeyMapLocalize.debuggerActionsGroupTitle(),
+            IdeActions.GROUP_DEBUGGER,
+            PlatformIconGroup.toolwindowsToolwindowdebugger()
+        );
         for (String id : ids) {
             group.addActionId(id);
         }

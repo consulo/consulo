@@ -17,18 +17,15 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.KeymapGroup;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,7 +41,7 @@ public class KeymapGroupImpl implements KeymapGroup {
     /**
      * KeymapGroupImpl or action id (String) or Separator or QuickList
      */
-    private final ArrayList<Object> myChildren;
+    private final List<Object> myChildren = new ArrayList<>();
 
     private final Set<String> myIds = new HashSet<>();
 
@@ -60,7 +57,6 @@ public class KeymapGroupImpl implements KeymapGroup {
         myName = name;
         myId = id;
         myIcon = icon;
-        myChildren = new ArrayList<>();
     }
 
     @Deprecated
@@ -131,7 +127,7 @@ public class KeymapGroupImpl implements KeymapGroup {
     }
 
     @Override
-    public ArrayList<Object> getChildren() {
+    public List<Object> getChildren() {
         return myChildren;
     }
 
@@ -225,18 +221,14 @@ public class KeymapGroupImpl implements KeymapGroup {
 
     @Override
     public void addAll(KeymapGroup group) {
-        for (Object o : ((KeymapGroupImpl) group).getChildren()) {
-            if (o instanceof String actionId) {
-                addActionId(actionId);
-            }
-            else if (o instanceof QuickList quickList) {
-                addQuickList(quickList);
-            }
-            else if (o instanceof KeymapGroupImpl subGroup) {
-                addGroup(subGroup);
-            }
-            else if (o instanceof AnSeparator) {
-                addSeparator();
+        for (Object o : group.getChildren()) {
+            switch (o) {
+                case String actionId -> addActionId(actionId);
+                case QuickList quickList -> addQuickList(quickList);
+                case KeymapGroupImpl subGroup -> addGroup(subGroup);
+                case AnSeparator separator -> addSeparator();
+                default -> {
+                }
             }
         }
     }
@@ -248,10 +240,8 @@ public class KeymapGroupImpl implements KeymapGroup {
         if (getName() != null) {
             groupToRestorePresentation = actionManager.getAction(getName());
         }
-        else {
-            if (getId() != null) {
-                groupToRestorePresentation = actionManager.getAction(getId());
-            }
+        else if (getId() != null) {
+            groupToRestorePresentation = actionManager.getAction(getId());
         }
         if (groupToRestorePresentation != null) {
             group.copyFrom(groupToRestorePresentation);
@@ -278,13 +268,14 @@ public class KeymapGroupImpl implements KeymapGroup {
         if (group.getName() != null && getName() != null) {
             return group.getName().equals(getName());
         }
-        if (getChildren() != null && group.getChildren() != null) {
-            if (getChildren().size() != group.getChildren().size()) {
+        List<Object> thisChildren = getChildren(), thatChildren = group.getChildren();
+        if (thisChildren != null && thatChildren != null) {
+            if (thisChildren.size() != thatChildren.size()) {
                 return false;
             }
 
-            for (int i = 0; i < getChildren().size(); i++) {
-                if (!getChildren().get(i).equals(group.getChildren().get(i))) {
+            for (int i = 0, n = thisChildren.size(); i < n; i++) {
+                if (!thisChildren.get(i).equals(thatChildren.get(i))) {
                     return false;
                 }
             }

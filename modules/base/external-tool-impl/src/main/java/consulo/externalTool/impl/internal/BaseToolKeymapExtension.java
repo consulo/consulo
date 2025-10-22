@@ -23,9 +23,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
+import consulo.util.lang.StringUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -45,17 +47,13 @@ public abstract class BaseToolKeymapExtension implements KeymapExtension {
         Arrays.sort(ids);
         KeymapGroup group = myKeymapGroupFactory.createGroup(getGroupName(), PlatformIconGroup.nodesKeymaptools());
 
-        HashMap<String, KeymapGroup> toolGroupNameToGroup = new HashMap<>();
+        Map<String, KeymapGroup> toolGroupNameToGroup = new HashMap<>();
 
         for (String id : ids) {
             if (filtered != null && !filtered.test(actionManager.getActionOrStub(id))) {
                 continue;
             }
-            String groupName = getGroupByActionId(id);
-
-            if (groupName != null && groupName.trim().length() == 0) {
-                groupName = null;
-            }
+            String groupName = StringUtil.trimToNull(getGroupByActionId(id));
 
             KeymapGroup subGroup = toolGroupNameToGroup.get(groupName);
             if (subGroup == null) {

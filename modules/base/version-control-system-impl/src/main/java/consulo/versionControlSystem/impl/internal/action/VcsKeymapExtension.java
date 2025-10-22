@@ -36,32 +36,25 @@ public class VcsKeymapExtension implements KeymapExtension {
     public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
         KeymapGroup result = KeymapGroupFactory.getInstance().createGroup(KeyMapLocalize.versionControlGroupTitle());
 
-        AnAction[] versionControlsGroups = getActions(VcsActionGroup.ID);
-        AnAction[] keymapGroups = getActions("Vcs.KeymapGroup");
-
-        for (AnAction action : versionControlsGroups) {
-            addAction(result, action, filtered, false);
-        }
-
-        for (AnAction action : keymapGroups) {
-            addAction(result, action, filtered, false);
-        }
-
-        AnAction[] generalActions = getActions("VcsGeneral.KeymapGroup");
-        for (AnAction action : generalActions) {
-            addAction(result, action, filtered, true);
-        }
+        addActions(result, VcsActionGroup.ID, filtered, false);
+        addActions(result, "Vcs.KeymapGroup", filtered, false);
+        addActions(result, "VcsGeneral.KeymapGroup", filtered, true);
 
         result.normalizeSeparators();
 
         return result;
     }
 
+    private static void addActions(KeymapGroup result, String groupId, Predicate<AnAction> filtered, boolean forceNonPopup) {
+        for (AnAction action : getActions(groupId)) {
+            addAction(result, action, filtered, false);
+        }
+    }
+
     private static void addAction(KeymapGroup result, AnAction action, Predicate<AnAction> filtered, boolean forceNonPopup) {
         if (action instanceof ActionGroup group) {
             if (forceNonPopup) {
-                AnAction[] actions = getActions(group);
-                for (AnAction childAction : actions) {
+                for (AnAction childAction : getActions(group)) {
                     addAction(result, childAction, filtered, true);
                 }
             }

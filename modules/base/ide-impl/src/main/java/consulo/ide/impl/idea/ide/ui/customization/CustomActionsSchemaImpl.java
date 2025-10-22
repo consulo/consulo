@@ -234,8 +234,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         for (Map.Entry<String, LocalizeValue> entry : myIdToNameList.entrySet()) {
             ActionGroup actionGroup = (ActionGroup)actionManager.getAction(entry.getKey());
             if (actionGroup != null) {
-                LocalizeValue actionText = entry.getValue();
-                root.add(ActionsTreeUtil.createNode(KeymapUtil.createGroup(actionGroup, actionText.get(), null, null, true, null, false)));
+                root.add(ActionsTreeUtil.createNode(KeymapUtil.createGroup(actionGroup, entry.getValue(), null, null, true, null, false)));
             }
         }
     }

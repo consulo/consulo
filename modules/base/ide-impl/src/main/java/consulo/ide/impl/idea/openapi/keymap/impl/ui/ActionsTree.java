@@ -264,8 +264,7 @@ public class ActionsTree {
             return false;
         }
 
-        List children = group.getChildren();
-        for (Object child : children) {
+        for (Object child : group.getChildren()) {
             if (child instanceof KeymapGroupImpl keymapGroup) {
                 if (isGroupChanged(keymapGroup, oldKeymap, newKeymap)) {
                     return true;
