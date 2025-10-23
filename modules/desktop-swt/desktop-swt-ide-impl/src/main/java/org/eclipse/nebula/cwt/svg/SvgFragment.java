@@ -26,9 +26,9 @@ import org.eclipse.swt.graphics.Rectangle;
  * and css style child elements.
  * <p>
  * Of particular importance is that the svg fragment can also contain
- * a viewbox which can be used for scaling the image to a particular size.
+ * a view-box which can be used for scaling the image to a particular size.
  * Therefore this element is where the real-world rendered dimensions
- * interact with the svg dimenions.
+ * interact with the svg dimensions.
  * </p>
  * <p>
  * See also:

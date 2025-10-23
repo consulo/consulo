@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class ReadOnlyAttributeUtil {
     /**
-     * Sets specified read-only status for the spcified <code>file</code>.
+     * Sets specified read-only status for the specified <code>file</code>.
      * This method can be performed only for files which are in local file system.
      *
      * @param file           file which read-only attribute to be changed.

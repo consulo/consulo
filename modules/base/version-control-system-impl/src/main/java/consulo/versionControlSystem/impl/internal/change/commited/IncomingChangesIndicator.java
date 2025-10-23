@@ -75,8 +75,8 @@ public class IncomingChangesIndicator {
   }
 
   public boolean needIndicator() {
-    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
-    for (AbstractVcs vcs : vcss) {
+    AbstractVcs[] vcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    for (AbstractVcs vcs : vcses) {
       CachingCommittedChangesProvider provider = vcs.getCachingCommittedChangesProvider();
       if (provider != null && provider.supportsIncomingChanges()) {
         return true;

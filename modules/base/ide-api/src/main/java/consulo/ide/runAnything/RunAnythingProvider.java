@@ -50,7 +50,7 @@ import java.util.List;
 public interface RunAnythingProvider<V> {
     /**
      * Use it to retrieve command executing context, e.g. project base directory, module or custom working directory
-     * that'd been chosen by the "Choose context" dropdown
+     * that'd been chosen by the "Choose context" drop-down
      */
     Key<RunAnythingContext> EXECUTING_CONTEXT = Key.create("EXECUTING_CONTEXT");
 

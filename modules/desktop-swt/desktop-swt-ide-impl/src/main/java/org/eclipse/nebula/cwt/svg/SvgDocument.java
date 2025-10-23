@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * <p>The SvgDocument is the base for all svg graphics.  It is used to
- * load an svg document from an inputstream or directly from a String.</p>
+ * load an svg document from an input stream or directly from a String.</p>
  * <p>An svg document may contain one or more svg fragments, each of which
  * can be accessed individually.</p>
  * <p></p>

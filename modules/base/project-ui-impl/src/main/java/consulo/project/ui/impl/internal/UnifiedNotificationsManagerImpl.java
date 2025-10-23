@@ -52,8 +52,8 @@ public class UnifiedNotificationsManagerImpl extends NotificationsManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project) {
-        return (T[]) Array.newInstance(klass, 0);
+    public <T extends Notification> T[] getNotificationsOfType(Class<T> clazz, @Nullable Project project) {
+        return (T[]) Array.newInstance(clazz, 0);
     }
 
     @Override

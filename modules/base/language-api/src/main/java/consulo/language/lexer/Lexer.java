@@ -28,7 +28,7 @@ public abstract class Lexer {
     /**
      * Prepare for lexing character data from <code>buffer</code> passed. Internal lexer state is supposed to be <code>initialState</code>. It is guaranteed
      * that the value of initialState has been returned by {@link #getState()} method of this <code>Lexer</code> at condition <code>startOffset=getTokenStart()</code>
-     * This method is used to incrementally relex changed characters using lexing data acquired from this particular lexer sometime in the past.
+     * This method is used to incrementally re-lex changed characters using lexing data acquired from this particular lexer sometime in the past.
      *
      * @param buffer       character data for lexing.
      * @param startOffset  offset to start lexing from

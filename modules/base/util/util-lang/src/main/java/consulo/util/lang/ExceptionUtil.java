@@ -34,16 +34,16 @@ public class ExceptionUtil {
     }
   }
 
-  public static <T> T findCause(Throwable e, Class<T> klass) {
-    while (e != null && !klass.isInstance(e)) {
+  public static <T> T findCause(Throwable e, Class<T> clazz) {
+    while (e != null && !clazz.isInstance(e)) {
       e = e.getCause();
     }
     @SuppressWarnings("unchecked") T t = (T)e;
     return t;
   }
 
-  public static boolean causedBy(Throwable e, Class klass) {
-    return findCause(e, klass) != null;
+  public static boolean causedBy(Throwable e, Class clazz) {
+    return findCause(e, clazz) != null;
   }
 
   @Nonnull

@@ -26,7 +26,7 @@ public class AuthDialogImpl extends DialogWrapper {
   private AuthenticationPanel authPanel;
 
   /**
-   * If password if prefilled, it is expected to continue remembering it.
+   * If password if pre-filled, it is expected to continue remembering it.
    * On the other hand, if password saving is disabled, the checkbox is not shown.
    * In other cases, {@code rememberByDefault} is used.
    */
@@ -44,7 +44,7 @@ public class AuthDialogImpl extends DialogWrapper {
     if (passwordSafe.isMemoryOnly()) {
       return false;
     }
-    // if password is prefilled, it is expected to continue remembering it.
+    // if password is pre-filled, it is expected to continue remembering it.
     if (!StringUtil.isEmptyOrSpaces(password)) {
       return true;
     }

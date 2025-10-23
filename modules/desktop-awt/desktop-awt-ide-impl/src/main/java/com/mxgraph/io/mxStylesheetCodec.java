@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Codec for mxStylesheets. This class is created and registered
- * dynamically at load time and used implicitely via mxCodec
+ * dynamically at load time and used implicitly via mxCodec
  * and the mxCodecRegistry.
  */
 public class mxStylesheetCodec extends mxObjectCodec {

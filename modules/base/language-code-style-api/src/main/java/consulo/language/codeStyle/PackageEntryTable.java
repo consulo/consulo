@@ -48,9 +48,9 @@ public class PackageEntryTable implements JDOMExternalizable, Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        PackageEntryTable clon = new PackageEntryTable();
-        clon.copyFrom(this);
-        return clon;
+        PackageEntryTable clone = new PackageEntryTable();
+        clone.copyFrom(this);
+        return clone;
     }
 
     public void copyFrom(PackageEntryTable packageTable) {

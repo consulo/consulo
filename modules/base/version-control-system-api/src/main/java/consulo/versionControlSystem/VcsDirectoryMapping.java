@@ -30,7 +30,7 @@ public class VcsDirectoryMapping {
   public static final VcsDirectoryMapping[] EMPTY_ARRAY = new VcsDirectoryMapping[0];
   private String myDirectory;
   // for reliable comparison
-  private String mySystemIdependentPath;
+  private String mySystemIndependentPath;
   private String myVcs;
   private VcsRootSettings myRootSettings;
 
@@ -66,11 +66,11 @@ public class VcsDirectoryMapping {
   }
 
   private void initSystemIndependentPath() {
-    mySystemIdependentPath = FileUtil.toSystemIndependentName(myDirectory);
+    mySystemIndependentPath = FileUtil.toSystemIndependentName(myDirectory);
   }
 
   public String systemIndependentPath() {
-    return mySystemIdependentPath;
+    return mySystemIndependentPath;
   }
 
   public String getVcs() {

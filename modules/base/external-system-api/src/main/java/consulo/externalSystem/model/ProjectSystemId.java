@@ -16,7 +16,7 @@ import java.util.Locale;
  * This class serves as an id of a system which defines project structure, i.e. it might be any external system or the ide itself.
  *
  * @author Denis Zhdanov
- * @since 2/14/12 12:59 PM
+ * @since 2012-02-14
  */
 public class ProjectSystemId implements Serializable {
 
@@ -29,7 +29,7 @@ public class ProjectSystemId implements Serializable {
     private final String myId;
 
     @Nonnull
-    private final String myCaptalizeId;
+    private final String myCapitalizedId;
 
     @Nonnull
     private final LocalizeValue myDisplayName;
@@ -49,7 +49,7 @@ public class ProjectSystemId implements Serializable {
 
     public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
         myId = id;
-        myCaptalizeId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
+        myCapitalizedId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
         myDisplayName = displayName;
         myIcon = icon;
     }
@@ -82,12 +82,12 @@ public class ProjectSystemId implements Serializable {
 
     @Nonnull
     public String getLibraryPrefix() {
-        return myCaptalizeId;
+        return myCapitalizedId;
     }
 
     @Nonnull
     public String getRunConfigurationId() {
-        return myCaptalizeId + "RunConfiguration";
+        return myCapitalizedId + "RunConfiguration";
     }
 
     @Override

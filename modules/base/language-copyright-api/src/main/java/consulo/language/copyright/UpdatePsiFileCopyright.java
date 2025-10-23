@@ -75,14 +75,14 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     PsiElement lastComment = comment;
     Commenter commenter = Commenter.forLanguage(PsiUtilCore.findLanguageFromElement(comment));
     if (isLineComment(commenter, comment, doc)) {
-      int sline = doc.getLineNumber(comment.getTextRange().getStartOffset());
-      int eline = doc.getLineNumber(comment.getTextRange().getEndOffset());
+      int sLine = doc.getLineNumber(comment.getTextRange().getStartOffset());
+      int eLine = doc.getLineNumber(comment.getTextRange().getEndOffset());
       for (int j = i - 1; j >= 0; j--) {
         PsiComment cmt = comments.get(j);
 
-        if (isLineComment(commenter, cmt, doc) && doc.getLineNumber(cmt.getTextRange().getEndOffset()) == sline - 1) {
+        if (isLineComment(commenter, cmt, doc) && doc.getLineNumber(cmt.getTextRange().getEndOffset()) == sLine - 1) {
           firstComment = cmt;
-          sline = doc.getLineNumber(cmt.getTextRange().getStartOffset());
+          sLine = doc.getLineNumber(cmt.getTextRange().getStartOffset());
         }
         else {
           break;
@@ -90,9 +90,9 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
       }
       for (int j = i + 1; j < comments.size(); j++) {
         PsiComment cmt = comments.get(j);
-        if (isLineComment(commenter, cmt, doc) && doc.getLineNumber(cmt.getTextRange().getStartOffset()) == eline + 1) {
+        if (isLineComment(commenter, cmt, doc) && doc.getLineNumber(cmt.getTextRange().getStartOffset()) == eLine + 1) {
           lastComment = cmt;
-          eline = doc.getLineNumber(cmt.getTextRange().getEndOffset());
+          eLine = doc.getLineNumber(cmt.getTextRange().getEndOffset());
         }
         else {
           break;

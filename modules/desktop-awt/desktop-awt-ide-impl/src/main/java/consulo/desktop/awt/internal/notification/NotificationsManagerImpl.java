@@ -110,17 +110,17 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Override
     @Nonnull
-    public <T extends Notification> T[] getNotificationsOfType(@Nonnull Class<T> klass, @Nullable Project project) {
+    public <T extends Notification> T[] getNotificationsOfType(@Nonnull Class<T> clazz, @Nullable Project project) {
         List<T> result = new ArrayList<>();
         if (project == null || !project.isDefault() && !project.isDisposed()) {
             for (Notification notification : EventLog.getLogModel(project).getNotifications()) {
-                if (klass.isInstance(notification)) {
+                if (clazz.isInstance(notification)) {
                     //noinspection unchecked
                     result.add((T) notification);
                 }
             }
         }
-        return ArrayUtil.toObjectArray(result, klass);
+        return ArrayUtil.toObjectArray(result, clazz);
     }
 
     public void doNotify(@Nonnull Notification notification, @Nullable Project project) {

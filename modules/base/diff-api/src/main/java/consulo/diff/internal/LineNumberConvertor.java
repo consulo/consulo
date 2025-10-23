@@ -25,13 +25,13 @@ import java.util.TreeMap;
 import java.util.function.IntUnaryOperator;
 
 public class LineNumberConvertor {
-  // Oneside -> Twoside
+  // One-side -> Two-side
   @Nonnull
   private final TreeMap<Integer, Integer> myFragments1;
   @Nonnull
   private final TreeMap<Integer, Integer> myFragments2;
 
-  // Twoside -> Oneside
+  // Two-side -> One-side
   @Nonnull
   private final TreeMap<Integer, Integer> myInvertedFragments1;
   @Nonnull
@@ -101,7 +101,7 @@ public class LineNumberConvertor {
   }
 
   /*
-   * Both oneside and one of the sides were changed in a same way. We should update converters, because of changed shift.
+   * Both one-side and one of the sides were changed in a same way. We should update converters, because of changed shift.
    */
   public void handleOnesideChange(int startLine, int endLine, int shift, @Nonnull Side masterSide) {
     myCorrector.handleOnesideChange(startLine, endLine, shift, masterSide);
@@ -113,7 +113,7 @@ public class LineNumberConvertor {
   }
 
   /*
-   * This convertor returns exact matching between lines, and -1 if it's impossible
+   * This converter returns exact matching between lines, and -1 if it's impossible
    */
   private static int convert(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
@@ -122,7 +122,7 @@ public class LineNumberConvertor {
   }
 
   /*
-   * This convertor returns 'good enough' position, even if exact matching is impossible
+   * This converter returns 'good enough' position, even if exact matching is impossible
    */
   private static int convertApproximate(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
@@ -177,14 +177,14 @@ public class LineNumberConvertor {
   /*
    * myFragments allow to convert between Sm-So-Su, Mm-Mo-Mu, Em-Eo-Eu.
    *
-   * Corrector processes information about synchronous modification B -> B' (when masterSide and oneside are modified the same way),
+   * Corrector processes information about synchronous modification B -> B' (when masterSide and one-side are modified the same way),
    * and allows to convert between Sm'-So'-Su', Mm'-Mo'-Mu', Em'-Eo'-Eu'.
    *
    *
    *        Before                             After
    *
    * masterSide     unchangedSide
-   *         oneside
+   *         one-side
    *
    * Sm +       + So    + Su         Sm' +       + So'   + Su'
    *    |       |       |                |       |       |

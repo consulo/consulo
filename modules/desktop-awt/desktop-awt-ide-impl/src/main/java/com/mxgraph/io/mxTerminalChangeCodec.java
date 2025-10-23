@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * Codec for mxChildChanges. This class is created and registered
- * dynamically at load time and used implicitely via mxCodec
+ * dynamically at load time and used implicitly via mxCodec
  * and the mxCodecRegistry.
  */
 public class mxTerminalChangeCodec extends mxObjectCodec {
@@ -26,8 +26,8 @@ public class mxTerminalChangeCodec extends mxObjectCodec {
   /**
    * Constructs a new model codec for the given arguments.
    */
-  public mxTerminalChangeCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping) {
-    super(template, exclude, idrefs, mapping);
+  public mxTerminalChangeCodec(Object template, String[] exclude, String[] idRefs, Map<String, String> mapping) {
+    super(template, exclude, idRefs, mapping);
   }
 
   /* (non-Javadoc)

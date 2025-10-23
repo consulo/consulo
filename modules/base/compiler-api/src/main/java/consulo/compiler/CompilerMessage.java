@@ -44,7 +44,7 @@ public interface CompilerMessage {
     CompilerMessageCategory getCategory();
 
     /**
-     * Returs the message text.
+     * Returns the message text.
      *
      * @return message text
      */

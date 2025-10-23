@@ -22,16 +22,16 @@ import javax.swing.*;
 import java.util.function.Function;
 
 public class ListSpeedSearch extends SpeedSearchBase<JList> {
-  private final Function<Object, String> myToStringConvertor;
+  private final Function<Object, String> myToStringConverter;
 
   public ListSpeedSearch(JList list) {
     super(list);
-    myToStringConvertor = null;
+    myToStringConverter = null;
   }
 
   public ListSpeedSearch(JList component, Function<Object, String> convertor) {
     super(component);
-    myToStringConvertor = convertor;
+    myToStringConverter = convertor;
   }
 
   @Override
@@ -66,8 +66,8 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
 
   @Override
   protected String getElementText(Object element) {
-    if (myToStringConvertor != null) {
-      return myToStringConvertor.apply(element);
+    if (myToStringConverter != null) {
+      return myToStringConverter.apply(element);
     }
     return element == null ? null : element.toString();
   }

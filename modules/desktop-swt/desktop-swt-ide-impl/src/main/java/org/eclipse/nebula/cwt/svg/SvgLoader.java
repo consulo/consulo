@@ -11,7 +11,7 @@
  * Contributors:
  *    Jeremy Dowdall <jeremyd@aspencloud.com> - initial API and implementation
  *    Edward Francis <edward.k.francis@gmail.com> - Handle Bézier relative commands correctly
- *    Edward Frnacis <edward.k.francis@gmail.com> - parsePathData handle multiple commands.
+ *    Edward Francis <edward.k.francis@gmail.com> - parsePathData handle multiple commands.
  *****************************************************************************/
 package org.eclipse.nebula.cwt.svg;
 

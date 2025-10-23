@@ -17,22 +17,22 @@ public class mxGenericChangeCodec extends mxObjectCodec {
   /**
    *
    */
-  protected String fieldname;
+  protected String fieldName;
 
   /**
    * Constructs a new model codec.
    */
-  public mxGenericChangeCodec(Object template, String fieldname) {
-    this(template, new String[]{"model", "previous"}, new String[]{"cell"}, null, fieldname);
+  public mxGenericChangeCodec(Object template, String fieldName) {
+    this(template, new String[]{"model", "previous"}, new String[]{"cell"}, null, fieldName);
   }
 
   /**
    * Constructs a new model codec for the given arguments.
    */
-  public mxGenericChangeCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping, String fieldname) {
+  public mxGenericChangeCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping, String fieldName) {
     super(template, exclude, idrefs, mapping);
 
-    this.fieldname = fieldname;
+    this.fieldName = fieldName;
   }
 
   /* (non-Javadoc)
@@ -46,9 +46,8 @@ public class mxGenericChangeCodec extends mxObjectCodec {
       setFieldValue(obj, "cell", dec.decodeCell((Node)cell, false));
     }
 
-    setFieldValue(obj, "previous", getFieldValue(obj, fieldname));
+    setFieldValue(obj, "previous", getFieldValue(obj, fieldName));
 
     return obj;
   }
-
 }

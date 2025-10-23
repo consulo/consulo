@@ -88,7 +88,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
                     children.addAll(BaseProjectViewDirectoryHelper.getDirectoryChildren(directory, getSettings(), false));
                 }
                 else {
-                    // this is the case when a source root has pakage prefix assigned
+                    // this is the case when a source root has package prefix assigned
                     topLevelPackages.add(directoryPackage);
                 }
             }

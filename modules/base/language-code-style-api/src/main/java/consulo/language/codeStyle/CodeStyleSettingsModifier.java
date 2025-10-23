@@ -33,7 +33,7 @@ public interface CodeStyleSettingsModifier {
 
     /**
      * Checks if the modifier may potentially override project code style settings. This may include enabled/disabled flag in settings,
-     * a presense of certain files and etc. The method is called on a pooled thread and thus may not return immediately.
+     * a presence of certain files and etc. The method is called on a pooled thread and thus may not return immediately.
      *
      * @param project The project to check the overriding status for.
      * @return True if the modifier may override project setting, false otherwise (default).

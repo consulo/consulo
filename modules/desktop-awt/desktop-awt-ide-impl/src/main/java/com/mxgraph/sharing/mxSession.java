@@ -11,7 +11,7 @@ import org.w3c.dom.Node;
 /**
  * Implements a session that may be attached to a shared diagram. The session
  * contains a synchronized buffer which is used to hold the pending edits which
- * are to be sent to a specific client. The update mechnism between the server
+ * are to be sent to a specific client. The update mechanism between the server
  * and the client uses HTTP requests (polling). The request is kept on the server
  * for an amount of time or wakes up / returns immediately if the buffer is no
  * longer empty.

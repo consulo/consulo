@@ -31,26 +31,24 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 15/09/2023
+ * @since 2023-09-15
  */
 public abstract class MergingProcessingQueue<K, V> {
   private final ApplicationConcurrency myApplicationConcurrency;
   private final Project myProject;
-  private final int myTickInMiliseconds;
+  private final int myTickInMillis;
 
   private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
-  private final Queue<K> myUpdateQeueu = new ConcurrentLinkedDeque<>();
+  private final Queue<K> myUpdateQueue = new ConcurrentLinkedDeque<>();
 
-  public MergingProcessingQueue(ApplicationConcurrency applicationConcurrency,
-                                Project project,
-                                int tickInMiliseconds) {
+  public MergingProcessingQueue(ApplicationConcurrency applicationConcurrency, Project project, int tickInMillis) {
     myApplicationConcurrency = applicationConcurrency;
     myProject = project;
-    myTickInMiliseconds = tickInMiliseconds;
+    myTickInMillis = tickInMillis;
   }
 
   public void queueAdd(K key) {
-    myUpdateQeueu.add(key);
+    myUpdateQueue.add(key);
 
     if (myUpdateFuture.state() != Future.State.RUNNING) {
       restart();
@@ -61,10 +59,10 @@ public abstract class MergingProcessingQueue<K, V> {
     myUpdateFuture = myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
       if (myProject.isDisposed()) return;
 
-      List<Pair<K, V>> collectedValues = new ArrayList<>(myUpdateQeueu.size());
+      List<Pair<K, V>> collectedValues = new ArrayList<>(myUpdateQueue.size());
 
       K it = null;
-      while ((it = myUpdateQeueu.poll()) != null) {
+      while ((it = myUpdateQueue.poll()) != null) {
         K finalIt = it;
 
         calculateValue(myProject, it, v -> collectedValues.add(Pair.pair(finalIt, v)));
@@ -79,11 +77,11 @@ public abstract class MergingProcessingQueue<K, V> {
           updateValueInsideUI(myProject, data.getKey(), data.getValue());
         }
       });
-    }, myTickInMiliseconds, TimeUnit.MILLISECONDS);
+    }, myTickInMillis, TimeUnit.MILLISECONDS);
   }
 
   public void dispose() {
-    myUpdateQeueu.clear();
+    myUpdateQueue.clear();
     myUpdateFuture.cancel(false);
   }
 

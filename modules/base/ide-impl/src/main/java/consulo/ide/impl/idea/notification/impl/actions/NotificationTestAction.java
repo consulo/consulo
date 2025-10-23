@@ -45,7 +45,7 @@ import java.util.List;
  * @author Sergey.Malenkov
  */
 public class NotificationTestAction extends AnAction implements DumbAware {
-    public static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Ballon");
+    public static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Balloon");
     public static final NotificationGroup TEST_STICKY_GROUP =
         new NotificationGroup("testSticky", LocalizeValue.localizeTODO("Test Sticky"), NotificationDisplayType.STICKY_BALLOON, true);
     public static final NotificationGroup TEST_TOOLWINDOW_GROUP =
