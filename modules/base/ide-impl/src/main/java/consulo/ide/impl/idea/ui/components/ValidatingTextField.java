@@ -60,7 +60,7 @@ public class ValidatingTextField extends ValidatingComponent<JTextField> {
   }
 
   /**
-   * to be overriden
+   * to be overridden
    */
   protected String validateTextOnChange(String text, DocumentEvent e) {
     return null;

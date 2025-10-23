@@ -42,7 +42,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
   private static <T extends PsiElement> T findElementInRange(@Nonnull PsiFile file,
                                                              int startOffset,
                                                              int endOffset,
-                                                             @Nonnull Class<T> klass,
+                                                             @Nonnull Class<T> clazz,
                                                              @Nonnull Language language,
                                                              @Nullable PsiElement initialElement) {
     PsiElement element1 = file.getViewProvider().findElementAt(startOffset, language);
@@ -57,7 +57,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
     }
     if (element2 == null || element1 == null) return null;
     PsiElement commonParent = PsiTreeUtil.findCommonParent(element1, element2);
-    T element = ReflectionUtil.isAssignable(klass, commonParent.getClass()) ? (T)commonParent : PsiTreeUtil.getParentOfType(commonParent, klass);
+    T element = ReflectionUtil.isAssignable(clazz, commonParent.getClass()) ? (T)commonParent : PsiTreeUtil.getParentOfType(commonParent, clazz);
 
     if (element == initialElement) {
       return element;

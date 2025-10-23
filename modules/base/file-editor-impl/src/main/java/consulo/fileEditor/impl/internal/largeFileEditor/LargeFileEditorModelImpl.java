@@ -474,8 +474,8 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
                         documentOfPagesModel.getIndexOfPageByPageNumber(result.startPosition.pageNumber))
                         + result.startPosition.symbolOffsetInPage;
                     int to = documentOfPagesModel.getSymbolOffsetToStartOfPage(
-                        documentOfPagesModel.getIndexOfPageByPageNumber(result.endPostion.pageNumber))
-                        + result.endPostion.symbolOffsetInPage;
+                        documentOfPagesModel.getIndexOfPageByPageNumber(result.endPosition.pageNumber))
+                        + result.endPosition.symbolOffsetInPage;
                     if (from < 0) from = 0;
                     if (to > documentOfPagesModel.getDocument().getTextLength()) to = documentOfPagesModel.getDocument().getTextLength();
                     if (from < to) {
@@ -1067,11 +1067,11 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     @RequiredUIAccess
     public void showSearchResult(SearchResult searchResult) {
         targetSelectionState.set(searchResult.startPosition.pageNumber, searchResult.startPosition.symbolOffsetInPage,
-            searchResult.endPostion.pageNumber, searchResult.endPostion.symbolOffsetInPage);
+            searchResult.endPosition.pageNumber, searchResult.endPosition.symbolOffsetInPage);
         targetSelectionState.isExists = true;
 
-        targetCaretPosition.pageNumber = searchResult.endPostion.pageNumber;
-        targetCaretPosition.symbolOffsetInPage = searchResult.endPostion.symbolOffsetInPage;
+        targetCaretPosition.pageNumber = searchResult.endPosition.pageNumber;
+        targetCaretPosition.symbolOffsetInPage = searchResult.endPosition.symbolOffsetInPage;
         isNeedToShowCaret = true;
 
         requestUpdate();

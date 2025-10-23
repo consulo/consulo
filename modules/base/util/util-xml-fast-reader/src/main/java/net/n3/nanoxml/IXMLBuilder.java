@@ -25,14 +25,11 @@
  *
  *  3. This notice may not be removed or altered from any source distribution.
  */
-
 package net.n3.nanoxml;
-
 
 import consulo.annotation.DeprecationInfo;
 
 import java.io.Reader;
-
 
 /**
  * NanoXML uses IXMLBuilder to construct the XML data structure it retrieved
@@ -41,7 +38,7 @@ import java.io.Reader;
  * <p>
  * If a method of the builder throws an exception, the parsing is aborted and
  * {@link net.n3.nanoxml.IXMLParser#parse} throws an
- * {@link net.n3.nanoxml.XMLException} which encasulates the original
+ * {@link net.n3.nanoxml.XMLException} which encapsulates the original
  * exception.
  *
  * @author Marc De Scheemaecker
@@ -128,7 +125,7 @@ public interface IXMLBuilder {
 
 
   /**
-   * This method is called when the end of an XML elemnt is encountered.
+   * This method is called when the end of an XML element is encountered.
    *
    * @param name     the name of the element.
    * @param nsPrefix the prefix used to identify the namespace. If no

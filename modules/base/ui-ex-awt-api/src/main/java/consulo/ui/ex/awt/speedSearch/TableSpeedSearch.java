@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,20 +36,20 @@ import static javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 
 public class TableSpeedSearch extends SpeedSearchBase<JTable> {
   private static final BiFunction<Object, Cell, String> TO_STRING = (o, cell) -> o == null || o instanceof Boolean ? "" : o.toString();
-  private final BiFunction<Object, ? super Cell, String> myToStringConvertor;
+  private final BiFunction<Object, ? super Cell, String> myToStringConverter;
 
   public TableSpeedSearch(JTable table) {
     this(table, TO_STRING);
   }
 
-  public TableSpeedSearch(JTable table, Function<Object, String> toStringConvertor) {
-    this(table, (o, c) -> toStringConvertor.apply(o));
+  public TableSpeedSearch(JTable table, Function<Object, String> toStringConverter) {
+    this(table, (o, c) -> toStringConverter.apply(o));
   }
 
-  public TableSpeedSearch(JTable table, BiFunction<Object, ? super Cell, String> toStringConvertor) {
+  public TableSpeedSearch(JTable table, BiFunction<Object, ? super Cell, String> toStringConverter) {
     super(table);
 
-    myToStringConvertor = toStringConvertor;
+    myToStringConverter = toStringConverter;
     // edit on F2 & double click, do not interfere with quick search
     table.putClientProperty("JTable.autoStartsEdit", Boolean.FALSE);
 
@@ -110,7 +109,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     int row = index / myComponent.getColumnCount();
     int col = index % myComponent.getColumnCount();
     Object value = myComponent.getValueAt(row, col);
-    return myToStringConvertor.apply(value, new Cell(row, col));
+    return myToStringConverter.apply(value, new Cell(row, col));
   }
 
   private class MyListIterator implements ListIterator<Object> {

@@ -63,14 +63,14 @@ public class ConfigurationModelHandler extends ModelHandlerBase {
         // See LOGBACK-527 (the system property is looked up first). Thus, it overrides
         // the equivalent property in the config file. This reversal of scope priority
         // is justified by the use case: the admin trying to chase rogue config file
-        String debugAttrib = OptionHelper.getSystemProperty(DEBUG_SYSTEM_PROPERTY_KEY, null);
-        if (debugAttrib == null) {
-            debugAttrib = mic.subst(configurationModel.getDebugStr());
+        String debugAttr = OptionHelper.getSystemProperty(DEBUG_SYSTEM_PROPERTY_KEY, null);
+        if (debugAttr == null) {
+            debugAttr = mic.subst(configurationModel.getDebugStr());
         }
         
 
-        if (!(OptionHelper.isNullOrEmptyOrAllSpaces(debugAttrib) || debugAttrib.equalsIgnoreCase(FALSE.toString())
-                || debugAttrib.equalsIgnoreCase(NULL_STR))) {
+        if (!(OptionHelper.isNullOrEmptyOrAllSpaces(debugAttr) || debugAttr.equalsIgnoreCase(FALSE.toString())
+                || debugAttr.equalsIgnoreCase(NULL_STR))) {
             StatusListenerConfigHelper.addOnConsoleListenerInstance(context, new OnConsoleStatusListener());
         }
 

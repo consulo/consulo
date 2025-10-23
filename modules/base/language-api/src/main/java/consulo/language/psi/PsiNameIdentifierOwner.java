@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 /**
  * A PSI element which has a name given by an identifier token in the PSI tree.
  * <p/>
- * Implementors should also override {@link PsiElement#getTextOffset()} to return
+ * Implementers should also override {@link PsiElement#getTextOffset()} to return
  * the relative offset of the identifier token.
  */
 public interface PsiNameIdentifierOwner extends PsiNamedElement {

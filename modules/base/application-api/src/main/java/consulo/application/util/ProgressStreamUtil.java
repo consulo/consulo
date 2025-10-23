@@ -27,7 +27,7 @@ import java.security.MessageDigest;
 
 /**
  * @author VISTALL
- * @since 05-Jul-22
+ * @since 2022-07-05
  */
 public class ProgressStreamUtil {
   /**
@@ -46,7 +46,7 @@ public class ProgressStreamUtil {
 
   /**
    * @param indicator           Progress indicator.
-   * @param digest              MessageDigest for updating while dowloading
+   * @param digest              MessageDigest for updating while downloading
    * @param inputStream         source stream
    * @param outputStream        destination stream
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.

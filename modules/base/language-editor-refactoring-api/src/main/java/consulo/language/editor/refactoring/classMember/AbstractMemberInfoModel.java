@@ -5,8 +5,8 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Nikolay.Tropin
- * 8/23/13
+ * @author Nikolay.Tropin
+ * @since 2013-08-23
  */
 public abstract class AbstractMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {
 

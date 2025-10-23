@@ -16,6 +16,7 @@
 package consulo.application.ui.wm;
 
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.util.concurrent.AsyncResult;
 
 import jakarta.annotation.Nonnull;
@@ -28,12 +29,12 @@ public interface FocusRequestor extends Disposable {
   /**
    * Requests focus on a component
    *
-   * @param c      - component to reqiest focus to
+   * @param c      - component to request focus to
    * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
-   * @return action callback that either notifies when the focus was obtained or focus request was droppped
+   * @return action callback that either notifies when the focus was obtained or focus request was dropped
    */
   @Nonnull
-  AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced);
+  AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced);
 
   // TODO [VISTALL] AWT & Swing dependency
 
@@ -42,9 +43,9 @@ public interface FocusRequestor extends Disposable {
   /**
    * Requests focus on a component
    *
-   * @param c      - component to reqiest focus to
+   * @param c      - component to request focus to
    * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
-   * @return action callback that either notifies when the focus was obtained or focus request was droppped
+   * @return action callback that either notifies when the focus was obtained or focus request was dropped
    */
   @Nonnull
   AsyncResult<Void> requestFocus(@Nonnull java.awt.Component c, boolean forced);

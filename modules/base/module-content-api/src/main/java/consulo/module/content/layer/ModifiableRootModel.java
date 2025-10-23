@@ -52,7 +52,7 @@ public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRo
   boolean isChanged();
 
   /**
-   * Must be invoked for uncommited models that are no longer needed.
+   * Must be invoked for uncommitted models that are no longer needed.
    */
   void dispose();
 

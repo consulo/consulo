@@ -49,7 +49,7 @@ public interface MemberChooserBuilder<T extends ClassMember> {
   MemberChooserBuilder<T> withMultipleSelection();
 
   /**
-   * Return dataholder of selected data. Keys will be used from options, and ClassMember#KEY_OF_ARRAY
+   * Return data-holder of selected data. Keys will be used from options, and ClassMember#KEY_OF_ARRAY
    */
   @RequiredUIAccess
   void showAsync(@Nonnull Project project, @Nonnull Consumer<UserDataHolder> consumer);

@@ -37,13 +37,13 @@ public class SimpleListPopupStep<T> extends BaseListPopupStep<T> {
                                List<? extends T> items,
                                Function<T, String> textBuilder,
                                Consumer<? super T> finishAction,
-                               T defautValue) {
+                               T defaultValue) {
         super(title.get(), items);
         myTextBuilder = textBuilder;
         myFinishAction = finishAction;
 
-        if (defautValue != null) {
-            myDefaultIndex = items.indexOf(defautValue);
+        if (defaultValue != null) {
+            myDefaultIndex = items.indexOf(defaultValue);
         }
         else {
             myDefaultIndex = -1;

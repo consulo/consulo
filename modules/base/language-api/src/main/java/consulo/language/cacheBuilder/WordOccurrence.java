@@ -31,7 +31,7 @@ public class WordOccurrence {
 
   /**
    * Creates a new occurrence with the specified text fragment and kind.
-   * @param text initial charsequence.
+   * @param text initial CharSequence.
    * @param start start offset in initial char sequence.
    * @param end end offset in initial char sequence.
    * @param kind The type of text where the word was encountered (code, comments or literals).
@@ -46,7 +46,7 @@ public class WordOccurrence {
 
   /**
    * Updates occurrence with the specified text fragment and kind.
-   * @param text initial charsequence.
+   * @param text initial CharSequence.
    * @param start start offset in initial char sequence.
    * @param end end offset in initial char sequence.
    * @param kind The type of text where the word was encountered (code, comments or literals).

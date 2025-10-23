@@ -25,11 +25,11 @@ import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosition> implements HorizontalLayout {
-    public DesktopHorizontalLayoutImpl(int gapInPixesl) {
-        initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(JBUI.scale(gapInPixesl)));
+    public DesktopHorizontalLayoutImpl(int gapInPixels) {
+        initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(JBUI.scale(gapInPixels)));
     }
 
     @Nonnull

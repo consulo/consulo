@@ -159,9 +159,9 @@ public final class CloseSearchTask extends SearchTaskBase {
 
                 for (int i = allMatchesAtFrame.size() - 1; i >= 0; i--) {
                     searchResult = allMatchesAtFrame.get(i);
-                    if (searchResult.endPostion.pageNumber < options.rightBoundPageNumber
-                        || searchResult.endPostion.pageNumber == options.rightBoundPageNumber
-                        && searchResult.endPostion.symbolOffsetInPage < options.rightBoundCaretPageOffset) {
+                    if (searchResult.endPosition.pageNumber < options.rightBoundPageNumber
+                        || searchResult.endPosition.pageNumber == options.rightBoundPageNumber
+                        && searchResult.endPosition.symbolOffsetInPage < options.rightBoundCaretPageOffset) {
                         return i;
                     }
                 }

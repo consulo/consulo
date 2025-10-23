@@ -120,7 +120,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
         return null;
     }
 

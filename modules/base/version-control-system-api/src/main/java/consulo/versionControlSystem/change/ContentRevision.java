@@ -47,7 +47,7 @@ public interface ContentRevision {
   /**
    * Revision ID. Content revisions with same file path and revision number are considered to be equal and must have same content unless
    * {@link VcsRevisionNumber#NULL} is returned. Use {@link VcsRevisionNumber#NULL} when revision number is not applicable like for
-   * the currently uncommited revision.
+   * the currently uncommitted revision.
    * @return revision ID in terms of version control
    */
   @Nonnull

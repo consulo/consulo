@@ -62,7 +62,7 @@ public interface ParserDefinition extends LanguageExtension {
     Language getLanguage();
 
     /**
-     * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental relexing - it is always
+     * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental re-lexing - it is always
      * called for the entire file.
      *
      * @param languageVersion version of language

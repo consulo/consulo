@@ -19,7 +19,7 @@ package consulo.application.util;
  * A variation on {@link CachedValue} which allows to reuse the same value provider in all cached values, make it static
  * and thus save some memory.
  * In most cases {@link CachedValue} should be preferred:
- * the memory benefits of parameterization are negligible, while the client code becomes longer, more complicated and error-prone.<p></p>
+ * the memory benefits of parametrization are negligible, while the client code becomes longer, more complicated and error-prone.<p></p>
  * <p>
  * Note that this object holds just one cached value, not a map from parameters to their respective results.
  * So the {@code value} argument of {@link #getValue(Object)} method must always be the same

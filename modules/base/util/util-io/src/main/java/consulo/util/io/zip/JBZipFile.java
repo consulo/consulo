@@ -38,7 +38,7 @@ import java.util.zip.ZipException;
  * <code>java.util.zip.ZipEntry</code>.</p>
  * <p/>
  * <p>It doesn't extend <code>java.util.zip.ZipFile</code> as it would
- * have to reimplement all methods anyway.  Like
+ * have to re-implement all methods anyway.  Like
  * <code>java.util.ZipFile</code>, it uses RandomAccessFile under the
  * covers and supports compressed and uncompressed entries.</p>
  * <p/>

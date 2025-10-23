@@ -21,28 +21,28 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * if T and S are compared by convertion to Z, we can find where some t should be placed in s list
+ * if T and S are compared by conversion to Z, we can find where some t should be placed in s list
  *
  * @author irengrig
  * @since 2011-02-21
  */
 public class HackSearch<T,S,Z> {
-  private final Function<T,Z> myTZConvertor;
-  private final Function<S,Z> mySZConvertor;
+  private final Function<T,Z> myTZConverter;
+  private final Function<S,Z> mySZConverter;
   private final Comparator<Z> myZComparator;
   private S myFake;
   private Z myFakeConverted;
   private final Comparator<S> myComparator;
 
-  public HackSearch(Function<T, Z> TZConvertor, Function<S, Z> SZConvertor, Comparator<Z> zComparator) {
-    myTZConvertor = TZConvertor;
-    mySZConvertor = SZConvertor;
+  public HackSearch(Function<T, Z> TZConverter, Function<S, Z> SZConverter, Comparator<Z> zComparator) {
+    myTZConverter = TZConverter;
+    mySZConverter = SZConverter;
     myZComparator = zComparator;
     myComparator = new Comparator<S>() {
     @Override
     public int compare(S o1, S o2) {
-      Z z1 = mySZConvertor.apply(o1);
-      Z z2 = mySZConvertor.apply(o2);
+      Z z1 = mySZConverter.apply(o1);
+      Z z2 = mySZConverter.apply(o2);
       if (o1 == myFake) {
         z1 = myFakeConverted;
       } else if (o2 == myFake) {
@@ -56,8 +56,8 @@ public class HackSearch<T,S,Z> {
   public int search(List<S> list, T item) {
     if (list.isEmpty()) return 0;
     myFake = list.get(0);
-    myFakeConverted = myTZConvertor.apply(item);
-    if (myZComparator.compare(mySZConvertor.apply(myFake), myTZConvertor.apply(item)) >= 0) {
+    myFakeConverted = myTZConverter.apply(item);
+    if (myZComparator.compare(mySZConverter.apply(myFake), myTZConverter.apply(item)) >= 0) {
       return 0;
     }
 

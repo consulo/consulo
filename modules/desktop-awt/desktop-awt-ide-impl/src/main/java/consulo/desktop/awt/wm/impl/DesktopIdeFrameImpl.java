@@ -405,8 +405,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
-        return (E) myRootPane.findExtension(extensioClass);
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+        return (E) myRootPane.findExtension(extensionClass);
     }
 
     private void updateTitle() {

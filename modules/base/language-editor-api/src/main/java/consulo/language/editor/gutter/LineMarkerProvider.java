@@ -51,7 +51,7 @@ public interface LineMarkerProvider extends LanguageExtension {
   /**
    * Allow check current file for enabling this provider.
    *
-   * For example some linemarkers require module extensions, and without it no sence generate linemarkers
+   * For example some line-markers require module extensions, and without it no sense generate line-markers
    */
   default boolean isAvailable(@Nonnull PsiFile file) {
     return true;
