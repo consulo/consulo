@@ -19,9 +19,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
 /**
- * Bridge due VCS impl require AWT diff impl which not avaliable 
+ * Bridge due VCS impl require AWT diff impl which not available
  * @author VISTALL
- * @since 06-Jul-24
+ * @since 2024-07-06
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CacheChangeProcessorBridgeFactory {

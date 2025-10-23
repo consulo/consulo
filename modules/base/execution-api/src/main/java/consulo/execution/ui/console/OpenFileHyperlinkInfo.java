@@ -37,8 +37,8 @@ public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
     this(project, file, true, line, column);
   }
 
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurenceNavigation, int documentLine, int documentColumn) {
-    super(project, includeInOccurenceNavigation, documentLine, documentColumn);
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurrenceNavigation, int documentLine, int documentColumn) {
+    super(project, includeInOccurrenceNavigation, documentLine, documentColumn);
     myVirtualFile = file;
   }
 

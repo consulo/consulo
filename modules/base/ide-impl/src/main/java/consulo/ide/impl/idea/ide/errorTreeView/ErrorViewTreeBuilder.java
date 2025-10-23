@@ -42,9 +42,9 @@ public class ErrorViewTreeBuilder extends AbstractTreeBuilder{
     getUpdater().addSubtreeToUpdate(getRootNode());
   }
 
-  public void updateTree(Runnable runAferUpdate) {
+  public void updateTree(Runnable runAfterUpdate) {
     if (isDisposed()) return;
-    getUpdater().runAfterUpdate(runAferUpdate);
+    getUpdater().runAfterUpdate(runAfterUpdate);
     updateTree();
   }
 

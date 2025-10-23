@@ -52,7 +52,7 @@ class Job {
       };
     }
 
-    // fixme [vistall] no sence in onCancelling
+    // fixme [vistall] no sense in onCancelling
 
     myOnComplete.add(handler);
     return () -> myOnComplete.remove(handler);

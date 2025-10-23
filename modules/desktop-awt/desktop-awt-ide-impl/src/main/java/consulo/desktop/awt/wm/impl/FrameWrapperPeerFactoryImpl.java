@@ -125,8 +125,8 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
-      return myOwner.getNorthExtension(extensioClass);
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+      return myOwner.getNorthExtension(extensionClass);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
       return null;
     }
 

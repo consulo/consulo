@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2021-12-08
  *
- * from kolin
+ * from kotlin
  */
 public interface FilePathChange {
     public static class Simple implements FilePathChange {

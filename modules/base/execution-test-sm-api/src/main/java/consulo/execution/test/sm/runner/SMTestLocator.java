@@ -41,17 +41,17 @@ public interface SMTestLocator {
     List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nonnull Project project, @Nonnull GlobalSearchScope scope);
 
     /**
-     * Creates the <code>Location</code> list from <code>protocol</code>, <code>path</code>, and <code>metainfo</code> in <code>scope</code>.
-     * Implementation of test framework can provide additional information in <code>metainfo</code> parameter,
-     * The <code>metainfo</code> parameter simplifies the search for locations, but can not be used to identify the test.
-     * A good example for code>metainfo</code> is the line number of the beginning of the test. It can speed up the search procedure,
+     * Creates the <code>Location</code> list from <code>protocol</code>, <code>path</code>, and <code>metaInfo</code> in <code>scope</code>.
+     * Implementation of test framework can provide additional information in <code>metaInfo</code> parameter,
+     * The <code>metaInfo</code> parameter simplifies the search for locations, but can not be used to identify the test.
+     * A good example for code>metaInfo</code> is the line number of the beginning of the test. It can speed up the search procedure,
      * but it changes when editing.
      */
     @Nonnull
     default List<Location> getLocation(
         @Nonnull String protocol,
         @Nonnull String path,
-        @Nullable String metainfo,
+        @Nullable String metaInfo,
         @Nonnull Project project,
         @Nonnull GlobalSearchScope scope
     ) {

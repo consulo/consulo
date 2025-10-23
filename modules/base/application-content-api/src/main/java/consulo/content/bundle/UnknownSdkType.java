@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Used as a plug for all SDKs which type cannot be determined (for example, plugin that registered a custom type has been deinstalled)
+ * Used as a plug for all SDKs which type cannot be determined (for example, plugin that registered a custom type has been uninstalled)
  *
  * @author Eugene Zhuravlev
  * @since 2004-12-11

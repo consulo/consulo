@@ -23,7 +23,7 @@ import java.util.List;
 
 public abstract class Filter<T extends AbstractTestProxy> {
   /**
-   * All instances (and subclasses's instances) should be singletons.
+   * All instances (and subclasses' instances) should be singletons.
    *
    * @see consulo.ide.impl.idea.execution.junit2.TestProxy#selectChildren
    */

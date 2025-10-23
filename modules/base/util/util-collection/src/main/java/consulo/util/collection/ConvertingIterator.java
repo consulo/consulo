@@ -23,11 +23,11 @@ import java.util.function.Function;
  */
 public class ConvertingIterator <Domain, Range> implements Iterator<Range> {
   private final Iterator<Domain> myBaseIterator;
-  private final Function<Domain, Range> myConvertor;
+  private final Function<Domain, Range> myConverter;
 
-  public ConvertingIterator(Iterator<Domain> baseIterator, Function<Domain, Range> convertor) {
+  public ConvertingIterator(Iterator<Domain> baseIterator, Function<Domain, Range> converter) {
     myBaseIterator = baseIterator;
-    myConvertor = convertor;
+    myConverter = converter;
   }
 
   @Override
@@ -37,7 +37,7 @@ public class ConvertingIterator <Domain, Range> implements Iterator<Range> {
 
   @Override
   public Range next() {
-    return myConvertor.apply(myBaseIterator.next());
+    return myConverter.apply(myBaseIterator.next());
   }
 
   @Override
@@ -45,13 +45,13 @@ public class ConvertingIterator <Domain, Range> implements Iterator<Range> {
     myBaseIterator.remove();
   }
 
-  public static <Domain, Intermediate, Range> Function<Domain, Range> composition(Function<Domain, Intermediate> convertor1,
-                                                                                  Function<Intermediate, Range> convertor2) {
-    return domain -> convertor2.apply(convertor1.apply(domain));
+  public static <Domain, Intermediate, Range> Function<Domain, Range> composition(Function<Domain, Intermediate> converter1,
+                                                                                  Function<Intermediate, Range> converter2) {
+    return domain -> converter2.apply(converter1.apply(domain));
   }
 
   public static <Domain, Range> ConvertingIterator<Domain, Range>
-    create(Iterator<Domain> iterator, Function<Domain, Range> convertor) {
-    return new ConvertingIterator<Domain, Range>(iterator, convertor);
+    create(Iterator<Domain> iterator, Function<Domain, Range> converter) {
+    return new ConvertingIterator<Domain, Range>(iterator, converter);
   }
 }

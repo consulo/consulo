@@ -44,14 +44,14 @@ public class FileCopyPasteUtil {
         return createDataFlavor(mimeType, null, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> klass) {
-        return createDataFlavor(mimeType, klass, false);
+    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> clazz) {
+        return createDataFlavor(mimeType, clazz, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> klass, boolean register) {
+    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> clazz, boolean register) {
         try {
-            DataFlavor flavor = klass != null
-                ? new DataFlavor(mimeType + ";class=" + klass.getName(), null, klass.getClassLoader())
+            DataFlavor flavor = clazz != null
+                ? new DataFlavor(mimeType + ";class=" + clazz.getName(), null, clazz.getClassLoader())
                 : new DataFlavor(mimeType);
 
             if (register) {

@@ -46,7 +46,7 @@ public interface TitlelessDecorator {
         }
 
         if (os.isWindows() || os.isLinux()) {
-            // no sence for it - we already without title
+            // no sense for it - we already without title
             if (MAIN_WINDOW.equals(windowId)) {
                 return NOTHING;
             }

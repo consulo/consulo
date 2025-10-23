@@ -17,9 +17,9 @@ package consulo.application.dumb;
 
 /**
  * A marker interface for the things that are allowed to run in dumb mode (when indices are in background update).
- * Implementors must take care of handling and/or not calling non-DumbAware parts of system
+ * Implementers must take care of handling and/or not calling non-DumbAware parts of system
  * <p>
- * Known implementors are:
+ * Known implementers are:
  * <li> {@link consulo.ide.impl.idea.openapi.actionSystem.AnAction}s
  * <li> {@link consulo.ide.impl.idea.openapi.fileEditor.FileEditorProvider}s
  * <li> post-startup activities ({@link consulo.ide.impl.idea.openapi.startup.StartupManager#registerPostStartupActivity(Runnable)})

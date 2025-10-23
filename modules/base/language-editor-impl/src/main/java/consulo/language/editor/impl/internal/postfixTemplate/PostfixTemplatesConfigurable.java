@@ -53,7 +53,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
       myPostfixTemplatesEnabled = CheckBox.create(LocalizeValue.localizeTODO("&Enable postfix templates"));
       myLayout.add(myPostfixTemplatesEnabled);
 
-      myCompletionEnabledCheckbox = CheckBox.create(LocalizeValue.localizeTODO("&Show postfix templates in completion autopopup"));
+      myCompletionEnabledCheckbox = CheckBox.create(LocalizeValue.localizeTODO("&Show postfix templates in completion auto-popup"));
       myLayout.add(myCompletionEnabledCheckbox);
 
       ComboBox.Builder<Character> builder = ComboBox.<Character>builder();

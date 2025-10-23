@@ -49,7 +49,7 @@ import java.util.List;
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @implNote common part from desktop implentation
+ * @implNote common part from desktop implementation
  */
 public abstract class SoftWrapApplianceManager implements Dumpable {
   public static final Key<Object> IGNORE_OLD_SOFT_WRAP_LOGIC_REGISTRY_OPTION = Key.create("softWrap.ignoreOldSoftWrapLogicRegistryOption");

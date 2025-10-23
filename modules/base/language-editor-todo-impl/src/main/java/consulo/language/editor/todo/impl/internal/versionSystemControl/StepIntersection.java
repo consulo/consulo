@@ -32,8 +32,8 @@ import java.util.function.Supplier;
  * @since 2011-02-18
  */
 public class StepIntersection<Data, Area> {
-    private final Function<Data, TextRange> myDataConvertor;
-    private final Function<Area, TextRange> myAreasConvertor;
+    private final Function<Data, TextRange> myDataConverter;
+    private final Function<Area, TextRange> myAreasConverter;
     private TextRange myDataRange;
     private TextRange myAreaRange;
     private Data myCurData;
@@ -45,16 +45,16 @@ public class StepIntersection<Data, Area> {
     // EA-28497, EA-26379
     private final Supplier<String> myDebugDocumentTextGetter;
 
-    public StepIntersection(Function<Data, TextRange> dataConvertor,
-                            Function<Area, TextRange> areasConvertor,
+    public StepIntersection(Function<Data, TextRange> dataConverter,
+                            Function<Area, TextRange> areasConverter,
                             List<Area> areas,
                             Supplier<String> debugDocumentTextGetter) {
         myAreas = areas;
         myDebugDocumentTextGetter = debugDocumentTextGetter;
         myAreaIndex = 0;
-        myDataConvertor = dataConvertor;
-        myAreasConvertor = areasConvertor;
-        myHackSearch = new HackSearch<>(myDataConvertor, myAreasConvertor, new Comparator<>() {
+        myDataConverter = dataConverter;
+        myAreasConverter = areasConverter;
+        myHackSearch = new HackSearch<>(myDataConverter, myAreasConverter, new Comparator<>() {
             @Override
             public int compare(TextRange o1, TextRange o2) {
                 return o1.intersects(o2) ? 0 : o1.getStartOffset() < o2.getStartOffset() ? -1 : 1;
@@ -113,7 +113,7 @@ public class StepIntersection<Data, Area> {
     private void initArea() {
         myAreaIndex = 0;
         myCurArea = myAreas.get(myAreaIndex);
-        myAreaRange = myAreasConvertor.apply(myCurArea);
+        myAreaRange = myAreasConverter.apply(myCurArea);
     }
 
     private void areaStep() {
@@ -123,18 +123,18 @@ public class StepIntersection<Data, Area> {
         if (myAreaIndex >= myAreas.size()) {
             return;
         }
-    /*assert myAreaRange == null || myAreaRange.getEndOffset() < myAreasConvertor.convert(myAreas.get(myAreaIndex)).getStartOffset() :
-      "Area ranges intersect: first: " + myAreaRange + ", second: " + myAreasConvertor.convert(myAreas.get(myAreaIndex)) + ", text: '" +
+    /*assert myAreaRange == null || myAreaRange.getEndOffset() < myAreasConverter.convert(myAreas.get(myAreaIndex)).getStartOffset() :
+      "Area ranges intersect: first: " + myAreaRange + ", second: " + myAreasConverter.convert(myAreas.get(myAreaIndex)) + ", text: '" +
       myDebugDocumentTextGetter.get() + "'";*/
         myCurArea = myAreas.get(myAreaIndex);
-        myAreaRange = myAreasConvertor.apply(myCurArea);
+        myAreaRange = myAreasConverter.apply(myCurArea);
     }
 
     private void dataStep() {
         myCurData = myDataIterator.next();
-    /*assert myDataRange == null || myDataRange.getEndOffset() < myDataConvertor.convert(myCurData).getStartOffset() :
-      "Data ranges intersect: first: " + myDataRange + ", second: " + myDataConvertor.convert(myCurData) + ", text: '" +
+    /*assert myDataRange == null || myDataRange.getEndOffset() < myDataConverter.convert(myCurData).getStartOffset() :
+      "Data ranges intersect: first: " + myDataRange + ", second: " + myDataConverter.convert(myCurData) + ", text: '" +
       myDebugDocumentTextGetter.get() + "'";*/
-        myDataRange = myDataConvertor.apply(myCurData);
+        myDataRange = myDataConverter.apply(myCurData);
     }
 }

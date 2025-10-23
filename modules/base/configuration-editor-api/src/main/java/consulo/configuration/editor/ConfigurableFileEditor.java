@@ -53,7 +53,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
     protected U myConfigurable;
 
-    private JComponent myPreferedFocusedComponent;
+    private JComponent myPreferredFocusedComponent;
 
     private JPanel myContentPanel;
 
@@ -80,7 +80,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         UiNotifyConnector.doWhenFirstShown(component, () -> {
             myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
         });
-        myPreferedFocusedComponent = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
+        myPreferredFocusedComponent = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
 
         myContentPanel = new JPanel(new BorderLayout());
         myContentPanel.add(component, BorderLayout.CENTER);
@@ -176,7 +176,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         }
         
         init();
-        return myPreferedFocusedComponent;
+        return myPreferredFocusedComponent;
     }
 
     @Override

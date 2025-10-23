@@ -61,7 +61,7 @@ public class PluginDownloader {
     private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
     private static final String CHECKSUM_ALGORITHM = "SHA3-256";
-    private static final int MAX_TRYS = 3;
+    private static final int MAX_TRIES = 3;
 
     @Nonnull
     public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
@@ -127,7 +127,7 @@ public class PluginDownloader {
 
         LocalizeValue errorMessage = ExternalServiceLocalize.unknownError();
         if (checkChecksum) {
-            for (int i = 0; i < MAX_TRYS; i++) {
+            for (int i = 0; i < MAX_TRIES; i++) {
                 try {
                     pi.checkCanceled();
 

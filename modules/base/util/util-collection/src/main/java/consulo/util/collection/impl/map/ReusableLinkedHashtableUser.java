@@ -17,7 +17,7 @@ package consulo.util.collection.impl.map;
 
 /**
  * <p>User of {@link ReusableLinkedHashtable}. Instance implementing this interface must answer if it is a master map
- * and be able to detach from the hash-table via creating a new one containing only the key/value enries owned by the map.</p>
+ * and be able to detach from the hash-table via creating a new one containing only the key/value entries owned by the map.</p>
  *
  * @see ReusableLinkedHashtable
  * @author UNV
@@ -25,7 +25,7 @@ package consulo.util.collection.impl.map;
  */
 public interface ReusableLinkedHashtableUser {
     /**
-     * <p>Stop reusing current hash-table by creating a new one containing only the key/value enries owned by the map.
+     * <p>Stop reusing current hash-table by creating a new one containing only the key/value entries owned by the map.
      * This prevents memory leak.</p>
      */
     void detachFromTable();

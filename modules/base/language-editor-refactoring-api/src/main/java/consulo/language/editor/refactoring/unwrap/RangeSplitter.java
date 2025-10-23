@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.unwrap;
 
 import consulo.document.util.TextRange;
@@ -22,23 +21,23 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class RangeSplitter {
-  public static List<TextRange> split(TextRange target, List<TextRange> deviders) {
+  public static List<TextRange> split(TextRange target, List<TextRange> dividers) {
     List<TextRange> result = new ArrayList<>();
     result.add(target);
 
-    for (TextRange devider : deviders) {
+    for (TextRange divider : dividers) {
       List<TextRange> temp = new ArrayList<>();
       for (TextRange range : result) {
-        if (!range.contains(devider)) {
+        if (!range.contains(divider)) {
           temp.add(range);
           continue;
         }
 
-        if (range.getStartOffset() < devider.getStartOffset())
-          temp.add(new TextRange(range.getStartOffset(), devider.getStartOffset()));
+        if (range.getStartOffset() < divider.getStartOffset())
+          temp.add(new TextRange(range.getStartOffset(), divider.getStartOffset()));
 
-        if (range.getEndOffset() > devider.getEndOffset())
-          temp.add(new TextRange(devider.getEndOffset(), range.getEndOffset()));
+        if (range.getEndOffset() > divider.getEndOffset())
+          temp.add(new TextRange(divider.getEndOffset(), range.getEndOffset()));
       }
       result = temp;
     }
