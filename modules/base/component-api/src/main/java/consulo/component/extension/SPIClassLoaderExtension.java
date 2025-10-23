@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import jakarta.annotation.Nonnull;
 
 /**
- * Extension for registering plugins for getting it for composite class-loaders, for loading SPI providers from JDK
+ * Extension for registering plugins for getting it for composite {@link ClassLoader}s, for loading SPI providers from JDK
  * <p>
  * Possible variants of target classes {@link javax.imageio.ImageIO} and {@link  javax.sound.sampled.AudioSystem}
  *

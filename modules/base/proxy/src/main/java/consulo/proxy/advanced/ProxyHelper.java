@@ -30,7 +30,7 @@ import java.util.Arrays;
  */
 public final class ProxyHelper {
   /**
-   * @return base class-loader based on superclass and interfaces
+   * @return base {@link ClassLoader} based on superclass and interfaces
    */
   @Nonnull
   public static ClassLoader preferClassLoader(@Nullable Class<?> superclass, @Nullable Class<?>... interfaces) {

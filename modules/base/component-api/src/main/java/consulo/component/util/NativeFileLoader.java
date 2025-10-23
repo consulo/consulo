@@ -13,10 +13,11 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public final class NativeFileLoader {
-  // TODO [VISTALL] make loading by class-loader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
+  // TODO [VISTALL] make loading by classloader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
 
   /**
-   * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace (from target class-loader, not NativeLibraryLoader class-loader)
+   * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace
+   *                   (from target classloader, not NativeLibraryLoader classloader)
    */
   public static void loadLibrary(@Nonnull String libName, Consumer<String> systemLoad) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
