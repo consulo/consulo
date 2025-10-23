@@ -16,7 +16,8 @@ public final class NativeFileLoader {
   // TODO [VISTALL] make loading by classloader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
 
   /**
-   * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace (from target classloader, not NativeLibraryLoader classloader)
+   * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace
+   *                   (from target classloader, not NativeLibraryLoader classloader)
    */
   public static void loadLibrary(@Nonnull String libName, Consumer<String> systemLoad) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();

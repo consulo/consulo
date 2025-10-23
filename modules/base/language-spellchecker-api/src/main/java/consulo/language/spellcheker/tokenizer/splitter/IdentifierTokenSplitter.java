@@ -90,7 +90,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
           ch >= '\u30A0' && ch <= '\u30ff' || // Katakana
           ch >= '\u4E00' && ch <= '\u9FFF' || // CJK Unified ideographs
           ch >= '\uF900' && ch <= '\uFAFF' || // CJK Compatibility Ideographs
-          ch >= '\uFF00' && ch <= '\uFFEF' //Halfwidth and Fullwidth Forms of Katakana & Fullwidth ASCII variants
+          ch >= '\uFF00' && ch <= '\uFFEF' //Half-width and Full-width Forms of Katakana & Full-width ASCII variants
       ) {
         if (s >= 0) {
           add(text, result, i, s);

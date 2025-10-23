@@ -67,14 +67,14 @@ public class ObjectsConvertor {
     return convert(in, FILEPATH_FILE);
   }
 
-  public static <T, S> List<S> convert(@Nonnull Collection<T> in, Function<T, S> convertor) {
-    return convert(in, convertor, null);
+  public static <T, S> List<S> convert(@Nonnull Collection<T> in, Function<T, S> converter) {
+    return convert(in, converter, null);
   }
 
-  public static <T, U, S extends U> List<S> convert(@Nonnull Collection<T> in, Function<T, S> convertor, @Nullable Function<U, Boolean> outFilter) {
+  public static <T, U, S extends U> List<S> convert(@Nonnull Collection<T> in, Function<T, S> converter, @Nullable Function<U, Boolean> outFilter) {
     List<S> out = new ArrayList<S>();
     for (T t : in) {
-      S converted = convertor.apply(t);
+      S converted = converter.apply(t);
       if ((outFilter != null) && (!Boolean.TRUE.equals(outFilter.apply(converted)))) continue;
       out.add(converted);
     }

@@ -22,6 +22,7 @@ import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
@@ -30,19 +31,24 @@ import consulo.versionControlSystem.localize.VcsLocalize;
  * @since 2025-08-17
  */
 @ActionImpl(
-    id = "VcsNavBarToobarActions",
+    id = "VcsToobarActions",
     children = {
         @ActionRef(type = VcsToolbarLabelAction.class),
         @ActionRef(type = CommonUpdateProjectAction.class),
-        @ActionRef(id = "Vcs.Push"),
         @ActionRef(type = CommonCheckinProjectAction.class),
+        @ActionRef(type = CompareWithTheSameVersionAction.class),
         @ActionRef(type = TabbedShowHistoryAction.class),
+        @ActionRef(id = IdeActions.CHANGES_VIEW_REVERT),
         @ActionRef(type = AnSeparator.class)
     },
-    parents = @ActionParentRef(value = @ActionRef(id = "NavBarVcsGroup"), anchor = ActionRefAnchor.FIRST)
+    parents = @ActionParentRef(
+        value = @ActionRef(id = "MainToolBarSettings"),
+        anchor = ActionRefAnchor.BEFORE,
+        relatedToAction = @ActionRef(id = "ShowSettings")
+    )
 )
-public class VcsNavBarToobarActionsGroup extends DefaultActionGroup implements DumbAware {
-    public VcsNavBarToobarActionsGroup() {
-        super(VcsLocalize.groupNavBarToolbarActionsText(), false);
+public class VcsToolbarActionsGroup extends DefaultActionGroup implements DumbAware {
+    public VcsToolbarActionsGroup() {
+        super(VcsLocalize.groupToobarActionsText(), false);
     }
 }

@@ -43,7 +43,7 @@ import java.util.List;
 @ServiceImpl
 public class UsageViewContentManagerImpl extends UsageViewContentManager {
     private final Key<Boolean> REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.REUSABLE_CONTENT_KEY");
-    //todo[myakovlev] dont use it
+    //todo[myakovlev] don't use it
     private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");
     private final Key<UsageView> NEW_USAGE_VIEW_KEY = Key.create("NEW_USAGE_VIEW_KEY");
     private final ContentManager myFindContentManager;

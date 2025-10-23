@@ -67,7 +67,7 @@ public interface HasValidator<V> extends Component {
   Disposable addValidator(@Nonnull Validator<V> validator);
 
   /**
-   * Check value in all validaters and show notification
+   * Check value in all validators and show notification
    *
    * @return true if all validators return null
    */

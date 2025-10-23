@@ -22,19 +22,19 @@ public class mxSpaceManager extends mxEventSource {
   protected boolean enabled;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute name to be passed to
    * mxCell.is to check if the rule applies to a cell.
    */
   protected boolean shiftRightwards;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute name to be passed to
    * mxCell.is to check if the rule applies to a cell.
    */
   protected boolean shiftDownwards;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute name to be passed to
    * mxCell.is to check if the rule applies to a cell.
    */
   protected boolean extendParents;
@@ -181,9 +181,9 @@ public class mxSpaceManager extends mxEventSource {
     mxIGraphModel model = graph.getModel();
 
     mxCellState state = view.getState(cell);
-    mxCellState pstate = view.getState(model.getParent(cell));
+    mxCellState pState = view.getState(model.getParent(cell));
 
-    if (state != null && pstate != null) {
+    if (state != null && pState != null) {
       Object[] cells = getCellsToShift(state);
       mxGeometry geo = model.getGeometry(cell);
 
@@ -191,8 +191,8 @@ public class mxSpaceManager extends mxEventSource {
         mxPoint tr = view.getTranslate();
         double scale = view.getScale();
 
-        double x0 = state.getX() - pstate.getOrigin().getX() - tr.getX() * scale;
-        double y0 = state.getY() - pstate.getOrigin().getY() - tr.getY() * scale;
+        double x0 = state.getX() - pState.getOrigin().getX() - tr.getX() * scale;
+        double y0 = state.getY() - pState.getOrigin().getY() - tr.getY() * scale;
         double right = state.getX() + state.getWidth();
         double bottom = state.getY() + state.getHeight();
 

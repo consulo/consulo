@@ -82,7 +82,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
             ContainerUtil.addIfNotNull(languages, state.getTool().getLanguage());
         }
 
-        // if we dont have inspections for this languages, show it anyway
+        // if we don't have inspections for this languages, show it anyway
         languages.addAll(myInspectionsFilter.getSuitableLanguages());
 
         if (!languages.isEmpty()) {

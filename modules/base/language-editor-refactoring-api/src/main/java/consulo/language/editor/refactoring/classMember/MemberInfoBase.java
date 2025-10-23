@@ -29,7 +29,7 @@ public abstract class MemberInfoBase<T extends PsiElement> {
   protected String displayName;
   private boolean isChecked = false;
   /**
-   * TRUE if is overriden, FALSE if implemented, null if not implemented or overriden
+   * TRUE if is overridden, FALSE if implemented, null if not implemented or overridden
    */
   protected Boolean overrides;
   private boolean toAbstract = false;

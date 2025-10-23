@@ -91,7 +91,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
         // unused
     }
 
-    private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
+    private static void start(StatCollector stat, Runnable appInitializeMark, String[] args) {
         ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopAWTContainerStartupImpl.class));
 
         try {
@@ -113,7 +113,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
         StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
             ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs, stat);
 
-            app.run(stat, appInitalizeMark, newConfigFolder);
+            app.run(stat, appInitializeMark, newConfigFolder);
         });
     }
 }

@@ -38,8 +38,8 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
         @ActionRef(type = CloseLogTabAction.class)
     }
 )
-public class InternalToolbalGroup extends DefaultActionGroup implements DumbAware {
-    public InternalToolbalGroup() {
+public class InternalToolbarGroup extends DefaultActionGroup implements DumbAware {
+    public InternalToolbarGroup() {
         super(VersionControlSystemLogLocalize.groupToolbarText(), false);
     }
 }

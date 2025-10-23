@@ -91,7 +91,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
             .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
             .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
             .dialogDescription(LocalizeValue.of());
-        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Enviroment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
+        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Environment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
             showMacroDialog();
         }));
 

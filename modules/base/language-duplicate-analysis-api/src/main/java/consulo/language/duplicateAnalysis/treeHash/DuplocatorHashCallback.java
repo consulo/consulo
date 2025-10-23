@@ -74,7 +74,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
     List<List<PsiFragment>> fragments = myDuplicates.get(hash);
 
     if (fragments == null) {
-      if (!myReadOnly) { //do not add new hashcodes
+      if (!myReadOnly) { //do not add new hash-codes
         List<List<PsiFragment>> list = new ArrayList<>();
         List<PsiFragment> listf = new ArrayList<>();
 

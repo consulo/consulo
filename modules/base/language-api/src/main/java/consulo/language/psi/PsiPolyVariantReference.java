@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 /**
  * Inherit this interface if you want the reference to resolve to more than one element,
  * or if you want to provide resolve result(s) for a superset of valid resolve cases.
- * e.g. in java references in static context are resolved to nonstatic methods in case
+ * e.g. in java references in static context are resolved to non-static methods in case
  * there is no valid candidate. isValidResult() in this case should return false
  * for later analysis by highlighting pass.
  *

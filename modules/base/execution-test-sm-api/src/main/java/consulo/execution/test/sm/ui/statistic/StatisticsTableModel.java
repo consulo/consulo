@@ -95,7 +95,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         List<SMTestProxy> list = new ArrayList<>();
         // suite's total statistics
         list.add(suite);
-        // chiled's statistics
+        // children's statistics
         list.addAll(suite.getChildren());
 
         return list;

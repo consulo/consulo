@@ -46,7 +46,7 @@ public abstract class NotificationsManager {
     @RequiredUIAccess
     public abstract Window findWindowForBalloon(@Nullable Project project);
 
-    public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project);
+    public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> clazz, @Nullable Project project);
 
     @Nonnull
     public Balloon createBalloon(

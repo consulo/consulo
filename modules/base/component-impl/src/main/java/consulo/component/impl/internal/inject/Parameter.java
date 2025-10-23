@@ -27,7 +27,7 @@ package consulo.component.impl.internal.inject;
  */
 interface Parameter<T> {
   /**
-   * Retrieve the object from the Parameter that statisfies the expected type.
+   * Retrieve the object from the Parameter that satisfies the expected type.
    *
    * @param container    the container from which dependencies are resolved.
    * @param adapter      the {@link ComponentAdapter} that is asking for the instance
@@ -39,7 +39,7 @@ interface Parameter<T> {
   T resolveInstance(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
 
   /**
-   * Check if the Parameter can statisfy the expected type using the container.
+   * Check if the Parameter can satisfy the expected type using the container.
    *
    * @param container    the container from which dependencies are resolved.
    * @param adapter      the {@link ComponentAdapter} that is asking for the instance

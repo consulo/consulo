@@ -68,7 +68,7 @@ public abstract class DaemonCodeAnalyzer {
     public abstract ProgressIndicator createDaemonProgressIndicator();
 
     /**
-     * Force rehighlighting for all files.
+     * Force re-highlighting for all files.
      */
     public void restart(String reason) {
         // debug reason not supported
@@ -76,14 +76,14 @@ public abstract class DaemonCodeAnalyzer {
     }
 
     /**
-     * Force rehighlighting for all files.
+     * Force re-highlighting for all files.
      */
     public abstract void restart();
 
     /**
-     * Force rehighlighting for a specific file.
+     * Force re-highlighting for a specific file.
      *
-     * @param file the file to rehighlight.
+     * @param file the file to re-highlight.
      */
     public abstract void restart(@Nonnull PsiFile file);
 

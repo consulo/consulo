@@ -83,7 +83,7 @@ class JarLoader extends Loader {
 
     @Override
     boolean containsPath(String resourcePath) {
-        // data already loaded - dont use jar index
+        // data already loaded - don't use jar index
         if (myLoadingFilter != null) {
             return true;
         }

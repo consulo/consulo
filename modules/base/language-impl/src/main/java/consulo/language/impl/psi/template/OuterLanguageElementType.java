@@ -11,7 +11,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Element type that may be used for representing outer fragments in templating language.
+ * Element type that may be used for representing outer fragments in template language.
  *
  * @see ITemplateDataElementType
  * @see OuterLanguageElementImpl

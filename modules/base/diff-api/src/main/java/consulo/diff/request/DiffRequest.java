@@ -29,11 +29,11 @@ public abstract class DiffRequest implements UserDataHolder {
   @Nullable
   public abstract String getTitle();
 
-  /*
+  /**
    * Called when DiffRequest is shown
    *
-   * Implementors may use this notification to add and remove listeners to avoid memory leaks.
-   * DiffRequest could be shown multiple times, so implementors should count assignments
+   * Implementers may use this notification to add and remove listeners to avoid memory leaks.
+   * DiffRequest could be shown multiple times, so implementers should count assignments
    *
    * @param isAssigned true means request processing started, false means processing has stopped.
    *                   Total number of calls with true should be same as for false

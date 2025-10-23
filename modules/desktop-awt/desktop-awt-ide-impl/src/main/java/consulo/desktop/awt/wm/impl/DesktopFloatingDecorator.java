@@ -92,7 +92,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     }
     else {
       // Due to JDK's bug #4234645 we cannot support custom decoration on Linux platform.
-      // The prblem is that Window.setLocation() doesn't work properly wjen the dialod is displayable.
+      // The problem is that Window.setLocation() doesn't work properly when the dialog is displayable.
       // Therefore we use native WM decoration.
       // TODO[vova] investigate the problem under Mac OSX.
       cp.add(myInternalDecorator, BorderLayout.CENTER);

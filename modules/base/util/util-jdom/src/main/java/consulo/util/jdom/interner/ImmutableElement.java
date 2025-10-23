@@ -90,8 +90,8 @@ class ImmutableElement extends Element {
     myContent = newContent.isEmpty() ? EMPTY_CONTENT : newContent.toArray(EMPTY_CONTENT); // ContentList is final, can't subclass
 
     this.namespace = origin.getNamespace();
-    for (Namespace addns : origin.getAdditionalNamespaces()) {
-      super.addNamespaceDeclaration(addns);
+    for (Namespace addNs : origin.getAdditionalNamespaces()) {
+      super.addNamespaceDeclaration(addNs);
     }
   }
 

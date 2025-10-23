@@ -42,7 +42,7 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Override
   public File getPluginPath(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    assert temp instanceof PluginClassLoader : "classloader is not plugin";
+    assert temp instanceof PluginClassLoader : "classloader is not a plugin";
     PluginClassLoader classLoader = (PluginClassLoader)temp;
     PluginId pluginId = classLoader.getPluginId();
     PluginDescriptor plugin = PluginManager.findPlugin(pluginId);

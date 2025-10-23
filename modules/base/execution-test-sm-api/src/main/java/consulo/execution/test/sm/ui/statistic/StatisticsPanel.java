@@ -90,7 +90,7 @@ public class StatisticsPanel implements DataProvider {
         // Expand selected or go to parent on ENTER
         KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         SMRunnerUtil.registerAsAction(enterKey, "go-to-selected-suite-or-parent", gotoSuiteOrParentAction, myStatisticsTableView);
-        // Contex menu in Table
+        // Context menu in Table
         PopupHandler.installPopupHandler(myStatisticsTableView, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);
         // set this statistic tab as dataprovider for test's table view
         DataManager.registerDataProvider(myStatisticsTableView, this);

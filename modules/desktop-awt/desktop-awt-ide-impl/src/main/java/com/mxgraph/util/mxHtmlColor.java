@@ -152,7 +152,7 @@ public class mxHtmlColor {
     htmlColors.put("greenyellow", parseColor("#ADFF2F"));
     htmlColors.put("honeydew", parseColor("#F0FFF0"));
     htmlColors.put("hotpink", parseColor("#FF69B4"));
-    htmlColors.put("indianred ", parseColor("#CD5C5C"));
+    htmlColors.put("indianred", parseColor("#CD5C5C"));
     htmlColors.put("indigo ", parseColor("#4B0082"));
     htmlColors.put("ivory", parseColor("#FFFFF0"));
     htmlColors.put("khaki", parseColor("#F0E68C"));

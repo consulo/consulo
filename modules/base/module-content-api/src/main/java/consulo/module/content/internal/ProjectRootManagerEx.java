@@ -28,7 +28,7 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
     return (ProjectRootManagerEx)getInstance(project);
   }
 
-  // invokes runnable surrounded by beforeRootsChage()/rootsChanged() callbacks
+  // invokes runnable surrounded by beforeRootsChange()/rootsChanged() callbacks
   public abstract void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents);
 
   public abstract void markRootsForRefresh();

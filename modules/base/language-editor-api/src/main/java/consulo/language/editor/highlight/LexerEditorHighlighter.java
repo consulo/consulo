@@ -241,12 +241,12 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         Highlighting lexer is expected to periodically return to its "initial state" and
         so to denote valid starting points for incremental highlighting.
 
-        If this requirement is unfulfiled, document has to be always re-analyzed from the beginning
+        If this requirement is unfulfilled, document has to be always re-analyzed from the beginning
         up to the point of modification,  which can hog CPU and make typing / editing very sluggish,
         especially at large offsets (with at least O(n) time complexity).
 
         As the faulty lexer implementations otherwise behave normally, it's often hard to spot the problem in the wild.
-        Despite additng LexerTestCase.checkCorrectRestart and LexerTestCase.checkZeroState checks and fixing many lexers,
+        Despite adding LexerTestCase.checkCorrectRestart and LexerTestCase.checkZeroState checks and fixing many lexers,
         it's still not so unusual to discover a further broken lexer through pure luck.
 
         The following runtime check reports cases when document has to be re-analyzed from 0 offset and

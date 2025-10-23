@@ -23,10 +23,10 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 14.05.2024
+ * @since 2024-05-14
  */
 @Deprecated
-@DeprecationInfo("Speicific for Rider. Drop")
+@DeprecationInfo("Specific for Rider. Dropping")
 public class RunToolbarProcessData {
   public static Consumer<ExecutionEnvironment> prepareBaseSettingCustomization(RunnerAndConfigurationSettings settings,
                                                                                Consumer<ExecutionEnvironment> additional) {

@@ -48,8 +48,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2025-05-31
  */
-@ActionImpl(id = "ShowBallonTestAction", parents = @ActionParentRef(@ActionRef(id = "Internal.UI.Desktop")))
-public class ShowBallonTestAction extends DumbAwareAction {
+@ActionImpl(id = "ShowBalloonTestAction", parents = @ActionParentRef(@ActionRef(id = "Internal.UI.Desktop")))
+public class ShowBalloonTestAction extends DumbAwareAction {
     private static final String BORDER_RADIUS_VAR = "TextComponent.arc";
 
     private static class BalloonTestDialog extends DialogWrapper {
@@ -152,7 +152,7 @@ public class ShowBallonTestAction extends DumbAwareAction {
         }
     }
 
-    public ShowBallonTestAction() {
+    public ShowBalloonTestAction() {
         super(LocalizeValue.localizeTODO("Show Balloon Test"));
     }
 

@@ -30,7 +30,7 @@ import java.io.IOException;
  * <li> the {@link #getImmediateValue(Project, VirtualFile)} is executed,
  * a non-null result is returned</li>
  * <li> the {@link #getImmediateValue(Module)} is executed for the module of a file,
- * a non-null result is retuned</li>
+ * a non-null result is returned</li>
  * <li> iterate all parent file that is in content root of the file
  * and try to return first non-null
  * result of the {@link #getImmediateValue(Project, VirtualFile)} call

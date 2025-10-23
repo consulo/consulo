@@ -75,9 +75,9 @@ public final class StateRestoringCheckBoxWrapper {
     /**
      * The method should be used instead of setEnabled(false) or disable() in order to support selected state saving/recovering
      * Remembers the selected state of the checkbox when the checkbox is enabled, disables it
-     * and sets the selected state according to tha parameter pased
+     * and sets the selected state according to tha parameter passed
      *
-     * @param isSelected the parameter telling whetheer the checkbox is selected when disabled
+     * @param isSelected the parameter telling whether the checkbox is selected when disabled
      */
     @RequiredUIAccess
     public void makeUnselectable(boolean isSelected) {

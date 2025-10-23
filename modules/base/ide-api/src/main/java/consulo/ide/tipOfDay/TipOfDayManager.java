@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TipOfDayManager {
   /**
-   * Schedule show tips dialog. Will open one time, per app start (even if mupliple projects open)
+   * Schedule show tips dialog. Will open one time, per app start (even if multiple projects open)
    */
   void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project);
 

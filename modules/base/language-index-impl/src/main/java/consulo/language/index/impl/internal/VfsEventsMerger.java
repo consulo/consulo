@@ -76,7 +76,7 @@ class VfsEventsMerger {
   }
 
   // 1. Method can be invoked in several threads
-  // 2. Method processes snapshot of available events at the time of the invokation, it does mean that if events are produced concurrently
+  // 2. Method processes snapshot of available events at the time of the invocation, it does mean that if events are produced concurrently
   // with the processing then set of events will be not empty
   // 3. Method regularly checks for cancellations (thus can finish with PCEs) but event processor should process the change info atomically
   // (without PCE)

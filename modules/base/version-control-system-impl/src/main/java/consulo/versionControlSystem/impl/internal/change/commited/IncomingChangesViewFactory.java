@@ -29,7 +29,7 @@ import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
 @ExtensionImpl
 public class IncomingChangesViewFactory implements ChangesViewContentFactory {
@@ -43,7 +43,7 @@ public class IncomingChangesViewFactory implements ChangesViewContentFactory {
   @Nonnull
   @Override
   public LocalizeValue getTabName() {
-    return LocalizeValue.localizeTODO("Incomming");
+    return LocalizeValue.localizeTODO("Incoming");
   }
 
   @Nonnull

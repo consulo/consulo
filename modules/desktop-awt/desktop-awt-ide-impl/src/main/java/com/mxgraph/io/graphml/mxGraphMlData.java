@@ -67,10 +67,8 @@ public class mxGraphMlData {
       this.dataShapeEdge = new mxGraphMlShapeEdge(shapeEdgeElement);
     }
     else {
-      NodeList childs = dataElement.getChildNodes();
-      List<Node> childrens = mxGraphMlUtils.copyNodeList(childs);
-
-      for (Node n : childrens) {
+      NodeList children = dataElement.getChildNodes();
+      for (Node n : mxGraphMlUtils.copyNodeList(children)) {
         if (n.getNodeName().equals("#text")) {
 
           this.dataValue += n.getNodeValue();

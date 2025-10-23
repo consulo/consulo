@@ -21,9 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Consumer;
 
 /**
- * This is stub for Vaadin License Checker, since we will never use commercial libraries in opensource projects,
- *
- * and we don't want attach commercial libraries in opensource project
+ * This is stub for Vaadin License Checker, since we will never use commercial libraries in open-source projects,
+ * and we don't want attach commercial libraries in open-source project
  */
 public class LicenseChecker {
   public static Logger getLogger() {

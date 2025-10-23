@@ -51,8 +51,8 @@ public interface CellTransform {
       private ActionCallback restore(final int index) {
         final ActionCallback result = new ActionCallback();
         Restore action = myActions.get(index);
-        ActionCallback actionCalback = action.restoreInGrid();
-        actionCalback.doWhenDone(new Runnable() {
+        ActionCallback actionCallback = action.restoreInGrid();
+        actionCallback.doWhenDone(new Runnable() {
           @Override
           public void run() {
             if (index < myActions.size() - 1) {
