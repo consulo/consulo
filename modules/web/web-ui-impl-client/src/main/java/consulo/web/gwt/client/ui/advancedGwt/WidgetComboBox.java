@@ -69,7 +69,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
    */
   private DelegateHandler delegateHandler;
   /**
-   * a keyboard events listener that switches off default browser handling and replaces it with conponents'
+   * a keyboard events listener that switches off default browser handling and replaces it with components'
    */
   private ComboBoxKeyboardManager keyboardManager;
   /**
@@ -156,7 +156,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
 
   /**
    * This method sets focus on this widget.<p/>
-   * But note that the combo box is not a focus event sourcer. It siply delegtes this functionality
+   * But note that the combo box is not a focus event sourcer. It simply delegates this functionality
    * to the text box.
    *
    * @param focus is a flag of focus.
@@ -350,7 +350,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
    * If index < 0 or index >= {@link #getItemCount()} it throws an exception.
    *
    * @param index is an index of the item to get.
-   * @return a foudn item.
+   * @return a found item.
    * @throws IndexOutOfBoundsException if index is invalid.
    */
   public Widget getItem(int index) {
@@ -652,7 +652,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
   }
 
   /**
-   * This method gets a keybord manager implementation for the component.
+   * This method gets a keyboard manager implementation for the component.
    *
    * @return an instance of the manager.
    */

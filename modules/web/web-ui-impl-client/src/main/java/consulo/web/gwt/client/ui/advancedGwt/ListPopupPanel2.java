@@ -357,7 +357,7 @@ public class ListPopupPanel2 extends VOverlay implements AdvancedWidget, HasChan
 
   /**
    * Enables or disables lazy rendering option.<p/>
-   * If this option is enabled the list displays only several items on lazily reders other ones on scroll down.<p/>
+   * If this option is enabled the list displays only several items on lazily renders other ones on scroll down.<p/>
    * By default lazy rendering is disabled. Switch it on for really large (over 500 items) lists only.
    *
    * @param lazyRenderingEnabled is an option value.
@@ -434,7 +434,7 @@ public class ListPopupPanel2 extends VOverlay implements AdvancedWidget, HasChan
   }
 
   /**
-   * This method higlights a selected row.
+   * This method highlights a selected row.
    *
    * @param newRow a row for selection.
    */
@@ -446,7 +446,7 @@ public class ListPopupPanel2 extends VOverlay implements AdvancedWidget, HasChan
   /**
    * This method wraps the specified widget into the focus panel and adds necessary listeners.
    *
-   * @param widget is an item widget to be wraped.
+   * @param widget is an item widget to be wrapped.
    * @return a focus panel adopted for displaying.
    */
   protected FocusPanel adoptItemWidget(Widget widget) {
@@ -576,12 +576,12 @@ public class ListPopupPanel2 extends VOverlay implements AdvancedWidget, HasChan
   }
 
   /**
-   * This scroll handler is invoked on any scrolling event caotured by the items list.<p/>
+   * This scroll handler is invoked on any scrolling event captured by the items list.<p/>
    * It check whether the scrolling position value is equal to the last item position and tries to
    * render the next page of data.
    */
   protected class ListScrollHandler implements ScrollHandler {
-    /** the list has been scrolled programatically */
+    /** the list has been scrolled programmatically */
     private boolean autoScrollingEnabled;
 
     /** see class docs */
