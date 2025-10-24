@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem;
-
-import consulo.ui.ex.action.Presentation;
+package consulo.ui.ex.internal;
 
 /**
- * Markup interface to ignore the visible children count and always call "actionPerformed".
- * {@link Presentation#isPerformGroup()} in submenus is combined with visible
- * children count to decide whether to show "... >" submenu or just an invokable menu item.
- *
- * @author gregsh
+ * @author VISTALL
+ * @since 2025-10-21
+ * <p>
+ * TODO make that better
  */
-public interface AlwaysPerformingActionGroup {
-
+public interface PopupListModelApi {
+    void refilter();
 }

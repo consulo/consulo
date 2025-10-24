@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -43,6 +44,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -243,6 +245,17 @@ public class ActionImplUtil {
         catch (IndexNotReadyException e1) {
             showDumbModeWarning(e);
         }
+    }
+
+    public static boolean isKeepPopupOpen(KeepPopupOnPerform mode, InputEvent event) {
+        return switch (mode) {
+            case Never -> false;
+            case Always -> true;
+            case IfRequested -> event instanceof MouseEvent && UIUtil.isControlKeyDown((MouseEvent) event);
+            case IfPreferred -> UISettings.getInstance().getKeepPopupsForToggles() ||
+                (event instanceof MouseEvent && UIUtil.isControlKeyDown((MouseEvent) event));
+            default -> false;
+        };
     }
 
     @Nonnull

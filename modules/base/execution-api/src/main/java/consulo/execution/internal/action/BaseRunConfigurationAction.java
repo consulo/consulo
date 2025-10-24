@@ -123,17 +123,6 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     }
 
     @Override
-    public boolean canBePerformed(DataContext dataContext) {
-        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
-        RunnerAndConfigurationSettings existing = context.findExisting();
-        if (existing == null) {
-            List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
-            return fromContext.size() <= 1;
-        }
-        return true;
-    }
-
-    @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
@@ -200,12 +189,25 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
 
     protected abstract void perform(ConfigurationContext context);
 
+    private boolean canBePerformed(DataContext dataContext) {
+        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+        RunnerAndConfigurationSettings existing = context.findExisting();
+        if (existing == null) {
+            List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
+            return fromContext.size() <= 1;
+        }
+        return true;
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
         Presentation presentation = event.getPresentation();
         RunnerAndConfigurationSettings existing = context.findExisting();
         RunnerAndConfigurationSettings configuration = existing;
+
+        presentation.setPerformGroup(canBePerformed(event.getDataContext()));
+
         if (configuration == null) {
             configuration = context.getConfiguration();
         }

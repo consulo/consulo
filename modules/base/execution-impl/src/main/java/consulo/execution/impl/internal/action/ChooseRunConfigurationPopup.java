@@ -53,7 +53,6 @@ import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -552,17 +551,18 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
         @Override
         public PopupStep onChosen(ItemWrapper selectedValue, boolean finalChoice) {
-            return onChosen(selectedValue, false, 0);
+            return onChosen(selectedValue, false, null);
         }
 
         @Override
         public PopupStep onChosen(
             ItemWrapper wrapper,
             boolean finalChoice,
-            @MagicConstant(flagsFromClass = InputEvent.class) int eventModifiers
+            @Nullable InputEvent event
         ) {
             Executor targetExecutor = myAction.getExecutor();
 
+            int eventModifiers = event == null ? 0 : event.getModifiers();
             boolean shiftPressed = BitUtil.isSet(eventModifiers, InputEvent.SHIFT_DOWN_MASK);
             if (shiftPressed) {
                 targetExecutor = myAction.myAlternativeExecutor;

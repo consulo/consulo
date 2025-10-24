@@ -230,6 +230,10 @@ public class LoadContextAction extends BaseTaskAction {
             }
         };
         ActionGroup contextGroup = new ActionGroup(text, text, holder.getIcon()) {
+            {
+                getTemplatePresentation().setPerformGroup(true);
+            }
+
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -250,12 +254,6 @@ public class LoadContextAction extends BaseTaskAction {
                     }
                 };
             }
-
-            @Override
-            public boolean canBePerformed(@Nonnull DataContext context) {
-                return true;
-            }
-
         };
         contextGroup.setPopup(true);
         return contextGroup;

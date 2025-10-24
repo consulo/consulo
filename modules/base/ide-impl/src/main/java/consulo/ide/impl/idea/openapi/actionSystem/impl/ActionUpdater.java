@@ -100,7 +100,7 @@ public class ActionUpdater {
                 uiAccess,
                 group,
                 "canBePerformed",
-                () -> group.canBePerformed(getDataContext(group))
+                () -> myUpdatedPresentations.get(group).isPerformGroup()
             )
         );
         myCheapStrategy =

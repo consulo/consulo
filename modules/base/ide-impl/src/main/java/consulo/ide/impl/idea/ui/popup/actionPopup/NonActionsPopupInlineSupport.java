@@ -3,12 +3,12 @@ package consulo.ide.impl.idea.ui.popup.actionPopup;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 
-import javax.swing.JComponent;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +16,8 @@ import java.util.List;
 class NonActionsPopupInlineSupport implements PopupInlineActionsSupport {
     private final ListPopupImpl myListPopup;
 
-    NonActionsPopupInlineSupport(ListPopupImpl myListPopup) {
-        this.myListPopup = myListPopup;
+    NonActionsPopupInlineSupport(ListPopupImpl listPopup) {
+        myListPopup = listPopup;
     }
 
     @Override
@@ -34,7 +34,7 @@ class NonActionsPopupInlineSupport implements PopupInlineActionsSupport {
     @Override
     public String getToolTipText(Object element, int index) {
         if (isMoreButton(element, index)) {
-            return IdeLocalize.inlineActionsMoreActionsText().get();
+            return ActionLocalize.inlineActionsMoreActionsText().get();
         }
         return null;
     }

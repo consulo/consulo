@@ -10,6 +10,7 @@ import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.idea.ui.popup.util.MnemonicsSearch;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -24,8 +25,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public abstract class WizardPopup extends AbstractPopup implements ActionListener, ElementFilter {
     private static final Logger LOG = Logger.getInstance(WizardPopup.class);
@@ -51,6 +52,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     private final ActionMap myActionMap = new ActionMap();
     private final InputMap myInputMap = new InputMap();
+
+    protected BiPredicate<Object, Boolean> myCustomFilter = (o, aBoolean) -> true;
 
     /**
      * @deprecated use {@link #WizardPopup(Project, JBPopup, PopupStep)}
@@ -82,11 +85,50 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
         scrollPane.setBorder(null);
 
-        init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null, isResizable(), aStep.getTitle(), null, true, null, false, null, null, false, null, true, false, true, null, 0f,
-            null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.emptyList(), null, false, true, true, null, true, null, List.of(), List.of());
+        init(
+            project,
+            scrollPane,
+            getPreferredFocusableComponent(),
+            true,
+            true,
+            true,
+            null,
+            isResizable(),
+            aStep.getTitle(),
+            null,
+            true,
+            null,
+            false,
+            null,
+            null,
+            false,
+            null,
+            true,
+            false,
+            true,
+            null,
+            0f,
+            null,
+            true,
+            false,
+            new Component[0],
+            null,
+            SwingConstants.LEFT,
+            true,
+            List.of(),
+            null,
+            false,
+            true,
+            true,
+            null,
+            true,
+            null,
+            List.of(),
+            List.of()
+        );
 
         setForcedHeavyweight(forceHeavyPopup);
-        
+
         registerAction("disposeAll", KeyEvent.VK_ESCAPE, InputEvent.SHIFT_MASK, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -143,6 +185,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     protected abstract JComponent createContent();
 
+    @RequiredUIAccess
     @Override
     public void dispose() {
         myAutoSelectionTimer.stop();
@@ -167,6 +210,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         }
     }
 
+    @RequiredUIAccess
     @Override
     public void show(@Nonnull Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
         LOG.assertTrue(!isDisposed());
@@ -265,6 +309,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         return (String) myInputMap.get(keyStroke);
     }
 
+    @Override
     public void registerAction(String aActionName, KeyStroke keyStroke, Action aAction) {
         myInputMap.put(keyStroke, aActionName);
         myActionMap.put(aActionName, aAction);
@@ -310,15 +355,18 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         }
 
         private Dimension computeNotBiggerDimension(Dimension ofContent, Point locationOnScreen) {
-            int resultHeight = ofContent.height > MAX_SIZE.height + 50 ? MAX_SIZE.height : ofContent.height;
-            if (locationOnScreen != null) {
+            int resultHeight;
+            if (locationOnScreen == null) {
+                resultHeight = ofContent.height > MAX_SIZE.height + 50 ? MAX_SIZE.height : ofContent.height;
+            }
+            else {
                 Rectangle r = ScreenUtil.getScreenRectangle(locationOnScreen);
-                resultHeight = ofContent.height > r.height - (r.height / 4) ? r.height - (r.height / 4) : ofContent.height;
+                resultHeight = Math.min(ofContent.height, r.height - (r.height / 4));
             }
 
-            int resultWidth = ofContent.width > MAX_SIZE.width ? MAX_SIZE.width : ofContent.width;
+            int resultWidth = Math.min(ofContent.width, MAX_SIZE.width);
 
-            if (ofContent.height > MAX_SIZE.height) {
+            if (ofContent.height > resultHeight) {
                 resultWidth += ScrollPaneFactory.createScrollPane().getVerticalScrollBar().getPreferredSize().getWidth();
             }
 
@@ -383,6 +431,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         return new Rectangle(getContent().getLocationOnScreen(), getContent().getSize());
     }
 
+    @SuppressWarnings("unchecked")
     protected WizardPopup createPopup(WizardPopup parent, PopupStep step, Object parentValue) {
         if (step instanceof AsyncPopupStep asyncPopupStep) {
             return new AsyncPopupImpl(getProject(), parent, asyncPopupStep, parentValue);
@@ -425,6 +474,13 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     @Override
     public boolean shouldBeShowing(Object value) {
+        if (!shouldBeShowingImpl(value)) {
+            return false;
+        }
+        return myCustomFilter.test(value, mySpeedSearch.isHoldingFilter());
+    }
+
+    private boolean shouldBeShowingImpl(Object value) {
         if (!myStep.isSpeedSearchEnabled()) {
             return true;
         }

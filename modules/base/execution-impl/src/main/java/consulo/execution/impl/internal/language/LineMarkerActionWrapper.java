@@ -34,7 +34,13 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     public LineMarkerActionWrapper(PsiElement element, @Nonnull AnAction origin) {
         myElement = element;
         myOrigin = origin;
+
         copyFrom(origin);
+
+        if (!(myOrigin instanceof ActionGroup)) {
+            getTemplatePresentation().setPerformGroup(true);
+            getTemplatePresentation().setPopupGroup(true);
+        }
     }
 
     @Nonnull
@@ -55,18 +61,8 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     }
 
     @Override
-    public boolean canBePerformed(@Nonnull DataContext context) {
-        return !(myOrigin instanceof ActionGroup actionGroup) || actionGroup.canBePerformed(wrapContext(context));
-    }
-
-    @Override
     public boolean isDumbAware() {
         return myOrigin.isDumbAware();
-    }
-
-    @Override
-    public boolean isPopup() {
-        return !(myOrigin instanceof ActionGroup actionGroup) || actionGroup.isPopup();
     }
 
     @Override

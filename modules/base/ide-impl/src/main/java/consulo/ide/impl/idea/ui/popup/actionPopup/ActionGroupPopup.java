@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class ActionGroupPopup extends ListPopupImpl {
@@ -47,7 +48,8 @@ public class ActionGroupPopup extends ListPopupImpl {
         int maxRowCount,
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
-        boolean forceHeavyPopup
+        boolean forceHeavyPopup,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             title,
@@ -63,7 +65,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             actionPlace,
             new BasePresentationFactory(),
             false,
-            forceHeavyPopup
+            forceHeavyPopup,
+            customFilter
         );
     }
 
@@ -80,7 +83,8 @@ public class ActionGroupPopup extends ListPopupImpl {
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
         boolean autoSelection,
-        boolean forceHeavyPopup
+        boolean forceHeavyPopup,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             title,
@@ -96,7 +100,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             actionPlace,
             new BasePresentationFactory(),
             autoSelection,
-            forceHeavyPopup
+            forceHeavyPopup,
+            customFilter
         );
     }
 
@@ -114,7 +119,8 @@ public class ActionGroupPopup extends ListPopupImpl {
         @Nullable String actionPlace,
         @Nonnull PresentationFactory presentationFactory,
         boolean autoSelection,
-        boolean forceHeavyPopup
+        boolean forceHeavyPopup,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             null,
@@ -135,7 +141,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             dataContext,
             actionPlace,
             maxRowCount,
-            forceHeavyPopup
+            forceHeavyPopup,
+            customFilter
         );
     }
 
@@ -146,11 +153,13 @@ public class ActionGroupPopup extends ListPopupImpl {
         @Nonnull DataContext dataContext,
         @Nullable String actionPlace,
         int maxRowCount,
-        boolean forceHeavyPopup
+        boolean forceHeavyPopup,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     ) {
         super(dataContext.getData(Project.KEY), aParent, step, null, forceHeavyPopup);
         setMaxRowCount(maxRowCount);
         myDisposeCallback = disposeCallback;
+        myCustomFilter = customFilter;
         myComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         myActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
 
@@ -278,7 +287,7 @@ public class ActionGroupPopup extends ListPopupImpl {
             KeepingPopupOpenAction dontClosePopupAction =
                 getActionByClass(selectedValue, actionPopupStep, KeepingPopupOpenAction.class);
             if (dontClosePopupAction != null) {
-                actionPopupStep.performAction((AnAction) dontClosePopupAction, e != null ? e.getModifiers() : 0, e);
+                actionPopupStep.performAction((AnAction) dontClosePopupAction, e);
                 for (ActionPopupItem item : actionPopupStep.getValues()) {
                     updateActionItem(item);
                 }
@@ -303,7 +312,7 @@ public class ActionGroupPopup extends ListPopupImpl {
             ContainerUtil.mapNotNull(selectedValues, o -> getActionByClass(o, actionPopupStep, ToggleAction.class));
 
         for (ToggleAction action : filtered) {
-            actionPopupStep.performAction(action, 0);
+            actionPopupStep.performAction(action, null);
         }
 
         for (ActionPopupItem item : actionPopupStep.getValues()) {

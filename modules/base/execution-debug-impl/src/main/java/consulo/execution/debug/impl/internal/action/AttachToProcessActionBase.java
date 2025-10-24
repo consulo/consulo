@@ -32,7 +32,6 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -767,7 +766,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         public PopupStep onChosen(
             AttachItem selectedValue,
             boolean finalChoice,
-            @MagicConstant(flagsFromClass = InputEvent.class) int eventModifiers
+            @Nullable InputEvent event
         ) {
             return onChosen(selectedValue, finalChoice);
         }

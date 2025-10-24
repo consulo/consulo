@@ -2342,6 +2342,8 @@ group.reopen.mac.text:
     text: Open _Recent
 group.reopen.win.text:
     text: _Reopen
+inline.actions.more.actions.text:
+    text: More Actions
 not.action.OptimizeImports.description:
     text: Remove unused imports and reorder/reorganize imports
 not.action.OptimizeImports.text:

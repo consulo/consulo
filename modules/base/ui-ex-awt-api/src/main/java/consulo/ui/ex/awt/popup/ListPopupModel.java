@@ -17,6 +17,7 @@ package consulo.ui.ex.awt.popup;
 
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
+import consulo.ui.ex.internal.PopupListModelApi;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.util.lang.StringUtil;
@@ -26,7 +27,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPopupModel extends AbstractListModel {
+public class ListPopupModel extends AbstractListModel implements PopupListModelApi {
 
     private final List<Object> myOriginalList;
     private final List<Object> myFilteredList = new ArrayList<>();
@@ -62,6 +63,13 @@ public class ListPopupModel extends AbstractListModel {
         }
 
         return null;
+    }
+
+    public void syncModel() {
+        myOriginalList.clear();
+        myOriginalList.addAll(myStep.getValues());
+        rebuildLists();
+        fireContentsChanged(this, 0, myFilteredList.size());
     }
 
     private void rebuildLists() {
@@ -131,6 +139,7 @@ public class ListPopupModel extends AbstractListModel {
         return myStep.getSeparatorAbove(value);
     }
 
+    @Override
     public void refilter() {
         rebuildLists();
         if (myFilteredList.isEmpty() && !myOriginalList.isEmpty()) {
@@ -148,5 +157,4 @@ public class ListPopupModel extends AbstractListModel {
     public int getClosestMatchIndex() {
         return myFullMatchIndex != -1 ? myFullMatchIndex : myStartsWithIndex;
     }
-
 }

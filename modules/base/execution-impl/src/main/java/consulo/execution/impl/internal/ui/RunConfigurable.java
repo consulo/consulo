@@ -122,6 +122,8 @@ public class RunConfigurable extends BaseConfigurable {
     private final Project myProject;
     private RunDialogBase myRunDialog;
     private final TitlelessDecorator myTitlelessDecorator;
+    @Nullable
+    private final RunConfiguration myPreselectedConfiguration;
     final DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode("Root");
     final MyTreeModel myTreeModel = new MyTreeModel(myRoot);
     final Tree myTree = new Tree(myTreeModel);
@@ -141,13 +143,21 @@ public class RunConfigurable extends BaseConfigurable {
     private RunManagerImpl myRunManager;
 
     public RunConfigurable(Project project) {
-        this(project, null, TitlelessDecorator.NOTHING);
+        this(project, null, TitlelessDecorator.NOTHING, null);
     }
 
-    public RunConfigurable(Project project, @Nullable RunDialogBase runDialog, TitlelessDecorator titlelessDecorator) {
+    public RunConfigurable(Project project, @Nullable RunConfiguration preselectedConfiguration) {
+        this(project, null, TitlelessDecorator.NOTHING, preselectedConfiguration);
+    }
+
+    public RunConfigurable(Project project,
+                           @Nullable RunDialogBase runDialog,
+                           TitlelessDecorator titlelessDecorator,
+                           @Nullable RunConfiguration preselectedConfiguration) {
         myProject = project;
         myRunDialog = runDialog;
         myTitlelessDecorator = titlelessDecorator;
+        myPreselectedConfiguration = preselectedConfiguration;
         myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
     }
 
@@ -357,21 +367,30 @@ public class RunConfigurable extends BaseConfigurable {
 
             drawPressAddButtonMessage(null);
 
-            selectFromManager();
+            selectFromManager(null);
         });
         sortTopLevelBranches();
         ((DefaultTreeModel) myTree.getModel()).reload();
     }
 
     @RequiredUIAccess
-    public void selectFromManager() {
+    public void selectFromManager(@Nullable RunConfiguration selected) {
         myTree.requestFocusInWindow();
-        RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
-        if (settings != null) {
-            selectConfiguration(settings.getConfiguration());
+
+        if (myPreselectedConfiguration != null) {
+            selectConfiguration(myPreselectedConfiguration);
+        }
+        else if (selected != null) {
+            selectConfiguration(selected);
         }
         else {
-            mySelectedConfigurable = null;
+            RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
+            if (settings != null) {
+                selectConfiguration(settings.getConfiguration());
+            }
+            else {
+                mySelectedConfigurable = null;
+            }
         }
     }
 
@@ -662,7 +681,7 @@ public class RunConfigurable extends BaseConfigurable {
         myTitlelessDecorator.makeLeftComponentLower(leftPanel);
 
         mySplitter.setFirstComponent(leftPanel);
-        
+
         myRightPanel.setBorder(JBUI.Borders.empty(8));
         mySplitter.setSecondComponent(myTitlelessDecorator.modifyRightComponent(myWholePanel, myRightPanel));
         myWholePanel.add(mySplitter, BorderLayout.CENTER);

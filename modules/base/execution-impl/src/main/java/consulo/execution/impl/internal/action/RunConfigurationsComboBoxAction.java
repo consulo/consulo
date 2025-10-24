@@ -20,11 +20,14 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
+import consulo.execution.impl.internal.action.runPopup.*;
+import consulo.execution.internal.RunConfigurationStartHistory;
 import consulo.execution.internal.RunCurrentFileExecutor;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
@@ -33,21 +36,22 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
+import consulo.ui.ex.awt.popup.AWTListPopup;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
-import consulo.util.lang.StringUtil;
+import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,8 +93,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                 updatePresentation(activeTarget, selectedConfiguration, project, presentation, e.getPlace());
                 if (selectedConfiguration == null) {
                     Set<Image> defaultRunImages = new SmartHashSet<>();
-                    
-                    for (Executor executor : myApplication.getExtensionPoint(Executor.class).getOrBuildCache(RunCurrentFileExecutor.CACHE_KEY)) {
+
+                    for (Executor executor : RunCurrentFileExecutor.getExecutors(myApplication)) {
                         RunCurrentFileActionStatus status = ReadAction.compute(() -> myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false));
 
                         for (RunnerAndConfigurationSettings runConfig : status.runConfigs()) {
@@ -100,7 +104,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
                     if (defaultRunImages.size() == 1) {
                         presentation.setIcon(ContainerUtil.getFirstItem(defaultRunImages));
-                    } else {
+                    }
+                    else {
                         presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
                     }
                 }
@@ -158,7 +163,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         }
     }
 
-    private static void setConfigurationIcon(Presentation presentation, RunnerAndConfigurationSettings settings, Project project) {
+    public static void setConfigurationIcon(Presentation presentation, RunnerAndConfigurationSettings settings, Project project) {
         try {
             Image icon = RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings);
             ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
@@ -183,164 +188,140 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     @Nonnull
     @Override
     public ActionGroup createPopupActionGroup(JComponent button) {
-        ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
         Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
-        if (project != null) {
-            RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
+        if (project == null) {
+            return ActionGroup.EMPTY_GROUP;
+        }
 
-            allActionsGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
-            allActionsGroup.add(new SaveTemporaryAction());
-            allActionsGroup.addSeparator();
-            allActionsGroup.add(new RunCurrentFileAction());
-            allActionsGroup.addSeparator();
+        RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
 
-            RunnerAndConfigurationSettings selected = RunManager.getInstance(project).getSelectedConfiguration();
-            if (selected != null) {
-                ExecutionTarget activeTarget = ExecutionTargetManager.getActiveTarget(project);
-                for (ExecutionTarget eachTarget : ExecutionTargetManager.getTargetsToChooseFor(project, selected.getConfiguration())) {
-                    allActionsGroup.add(new SelectTargetAction(project, eachTarget, eachTarget.equals(activeTarget)));
-                }
-                allActionsGroup.addSeparator();
+        ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
+
+        //allActionsGroup.add(new AllRunConfigurationsToggle());
+
+        RunnerAndConfigurationSettings selected = RunManager.getInstance(project).getSelectedConfiguration();
+        if (selected != null) {
+            boolean added = false;
+            ExecutionTarget activeTarget = ExecutionTargetManager.getActiveTarget(project);
+            for (ExecutionTarget eachTarget : ExecutionTargetManager.getTargetsToChooseFor(project, selected.getConfiguration())) {
+                allActionsGroup.add(new SelectTargetAction(project, eachTarget, eachTarget.equals(activeTarget)));
+                added = true;
             }
 
-            List<ConfigurationType> types = runManager.getConfigurationFactories();
-            for (ConfigurationType type : types) {
-                DefaultActionGroup actionGroup = new DefaultActionGroup();
-                Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
-                for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
-                    DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
-                    group.getTemplatePresentation().setIcon(PlatformIconGroup.nodesFolder());
-                    for (RunnerAndConfigurationSettings settings : entry.getValue()) {
-                        group.add(new SelectConfigAction(settings, project));
-                    }
-                    if (group != actionGroup) {
-                        actionGroup.add(group);
-                    }
-                }
-
-                allActionsGroup.add(actionGroup);
-                allActionsGroup.addSeparator();
+            if (added) {
+                allActionsGroup.add(createSeparatorWithTag(ActionFilterUtil.TAG_REGULAR_HIDE));
             }
         }
+
+        // region hided elements
+        List<ConfigurationType> types = runManager.getConfigurationFactories();
+        for (ConfigurationType type : types) {
+            DefaultActionGroup actionGroup = new DefaultActionGroup();
+            Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
+
+            if (structure.isEmpty()) {
+                continue;
+            }
+
+
+            for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
+                DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
+                group.getTemplatePresentation().setIcon(PlatformIconGroup.nodesFolder());
+                for (RunnerAndConfigurationSettings settings : entry.getValue()) {
+                    group.add(new SelectConfigAction(settings, project, ActionFilterUtil.TAG_REGULAR_HIDE));
+                }
+
+                if (group != actionGroup) {
+                    actionGroup.add(group);
+                }
+            }
+
+            allActionsGroup.add(actionGroup);
+            allActionsGroup.add(createSeparatorWithTag(ActionFilterUtil.TAG_REGULAR_HIDE));
+        }
+        // endregion
+
+        allActionsGroup.addSeparator();
+        allActionsGroup.add(new RunCurrentFileAction());
+        allActionsGroup.addSeparator();
+        allActionsGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
+
+//        RunnerAndConfigurationSettings selected = RunManager.getInstance(project).getSelectedConfiguration();
+//        if (selected != null) {
+//            ExecutionTarget activeTarget = ExecutionTargetManager.getActiveTarget(project);
+//            for (ExecutionTarget eachTarget : ExecutionTargetManager.getTargetsToChooseFor(project, selected.getConfiguration())) {
+//                allActionsGroup.add(new SelectTargetAction(project, eachTarget, eachTarget.equals(activeTarget)));
+//            }
+//            allActionsGroup.addSeparator();
+//        }
+//
+//        List<ConfigurationType> types = runManager.getConfigurationFactories();
+//        for (ConfigurationType type : types) {
+//            DefaultActionGroup actionGroup = new DefaultActionGroup();
+//            Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
+//            for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
+//                DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
+//                group.getTemplatePresentation().setIcon(PlatformIconGroup.nodesFolder());
+//                for (RunnerAndConfigurationSettings settings : entry.getValue()) {
+//                    group.add(new SelectConfigAction(settings, project));
+//                }
+//                if (group != actionGroup) {
+//                    actionGroup.add(group);
+//                }
+//            }
+//
+//            allActionsGroup.add(actionGroup);
+//            allActionsGroup.addSeparator();
+//        }
         return allActionsGroup.build();
     }
 
-    private static class SaveTemporaryAction extends DumbAwareAction {
-        public SaveTemporaryAction() {
-            Presentation presentation = getTemplatePresentation();
-            presentation.setIcon(PlatformIconGroup.actionsMenu_saveall());
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            Project project = e.getRequiredData(Project.KEY);
-            RunnerAndConfigurationSettings settings = chooseTempSettings(project);
-            if (settings != null) {
-                RunManager runManager = RunManager.getInstance(project);
-                runManager.makeStable(settings);
-            }
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            Presentation presentation = e.getPresentation();
-            Project project = e.getData(Project.KEY);
-            if (project == null) {
-                presentation.setEnabledAndVisible(false);
-                return;
-            }
-            RunnerAndConfigurationSettings settings = chooseTempSettings(project);
-            if (settings == null) {
-                presentation.setEnabledAndVisible(false);
-            }
-            else {
-                LocalizeValue textValue = ExecutionLocalize.saveTemporaryRunConfigurationActionName(settings.getName());
-
-                presentation.setTextValue(textValue);
-                presentation.setDescriptionValue(textValue.map(Presentation.NO_MNEMONIC));
-                presentation.setEnabledAndVisible(true);
-            }
-        }
-
-        @Nullable
-        private static RunnerAndConfigurationSettings chooseTempSettings(@Nonnull Project project) {
-            RunnerAndConfigurationSettings selectedConfiguration = RunManager.getInstance(project).getSelectedConfiguration();
-            if (selectedConfiguration != null && selectedConfiguration.isTemporary()) {
-                return selectedConfiguration;
-            }
-            Iterator<RunnerAndConfigurationSettings> iterator = RunManager.getInstance(project).getTempConfigurationsList().iterator();
-            return iterator.hasNext() ? iterator.next() : null;
-        }
+    private AnSeparator createSeparatorWithTag(String tag) {
+        AnSeparator separator = new AnSeparator();
+        separator.getTemplatePresentation().putClientProperty(ActionFilterUtil.SEARCH_TAG, tag);
+        return separator;
     }
 
-    private static class SelectTargetAction extends AnAction {
-        private final Project myProject;
-        private final ExecutionTarget myTarget;
+    @Nonnull
+    @Override
+    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+        ActionGroup group = createPopupActionGroup(component, context);
 
-        public SelectTargetAction(Project project, ExecutionTarget target, boolean selected) {
-            myProject = project;
-            myTarget = target;
+        Project project = context.getRequiredData(Project.KEY);
 
-            String name = target.getDisplayName();
-            Presentation presentation = getTemplatePresentation();
-            presentation.setDisabledMnemonic(true);
-            presentation.setTextValue(LocalizeValue.of(name));
-            presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + name));
+        RunConfigurationStartHistory runConfigurationStartHistory = RunConfigurationStartHistory.getInstance(project);
 
-            presentation.setIcon(
-                selected
-                    ? ImageEffects.resize(PlatformIconGroup.actionsChecked(), Image.DEFAULT_ICON_SIZE)
-                    : Image.empty(Image.DEFAULT_ICON_SIZE)
-            );
-            presentation.setSelectedIcon(
-                selected
-                    ? ImageEffects.resize(PlatformIconGroup.actionsChecked_selected(), Image.DEFAULT_ICON_SIZE)
-                    : Image.empty(Image.DEFAULT_ICON_SIZE)
-            );
-        }
+        AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createActionGroupPopup(
+            getPopupTitle(),
+            group,
+            context,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            shouldShowDisabledActions(),
+            onDispose,
+            getMaxRows(),
+            getPreselectCondition(),
+            getPopupActionPlace(),
+            (o, isHoldingFilter) -> {
+                if (Boolean.TRUE) {
+                    // TODO hack until support
+                    return true;
+                }
 
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            ExecutionTargetManager.setActiveTarget(myProject, myTarget);
-            updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), RunManagerEx.getInstanceEx(myProject).getSelectedConfiguration(), myProject, e.getPresentation(), e.getPlace());
-        }
-    }
+                if (!(o instanceof UserDataHolder userDataHolder)) {
+                    return false;
+                }
 
-    private static class SelectConfigAction extends DumbAwareAction {
-        private final RunnerAndConfigurationSettings myConfiguration;
-        private final Project myProject;
+                String searchTag = userDataHolder.getUserData(ActionFilterUtil.SEARCH_TAG);
+                return searchTag == null || switch (searchTag) {
+                    case ActionFilterUtil.TAG_REGULAR_HIDE -> runConfigurationStartHistory.isAllConfigurationsExpanded();
+                    default -> true;
+                };
 
-        public SelectConfigAction(RunnerAndConfigurationSettings configuration, Project project) {
-            myConfiguration = configuration;
-            myProject = project;
-            String name = StringUtil.notNullize(configuration.getName());
-            Presentation presentation = getTemplatePresentation();
-            presentation.setDisabledMnemonic(true);
-            presentation.setTextValue(LocalizeValue.of(name));
-            ConfigurationType type = configuration.getType();
-            if (type != null) {
-                presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + type.getConfigurationTypeDescription() + " '" + name + "'"));
             }
-            updateIcon(presentation);
-        }
+        );
 
-        private void updateIcon(Presentation presentation) {
-            setConfigurationIcon(presentation, myConfiguration, myProject);
-        }
+        popup.getListModel().syncModel();
 
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
-            updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation(), e.getPlace());
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            super.update(e);
-            updateIcon(e.getPresentation());
-        }
+        return popup;
     }
 }

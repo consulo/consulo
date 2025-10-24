@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
@@ -56,7 +56,7 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
             return null;
         }
         if (isMoreButton(element, index)) {
-            return IdeLocalize.inlineActionsMoreActionsText().get();
+            return ActionLocalize.inlineActionsMoreActionsText().get();
         }
         ActionPopupItem item =
             myStep.getInlineItems((ActionPopupItem) element).get(index);

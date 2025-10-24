@@ -15,6 +15,7 @@
  */
 package consulo.execution.internal;
 
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.execution.executor.Executor;
 
@@ -36,4 +37,8 @@ public interface RunCurrentFileExecutor {
 
         return executors;
     });
+
+    public static List<Executor> getExecutors(Application application) {
+        return application.getExtensionPoint(Executor.class).getOrBuildCache(RunCurrentFileExecutor.CACHE_KEY);
+    }
 }

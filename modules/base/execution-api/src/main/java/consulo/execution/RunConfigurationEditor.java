@@ -39,6 +39,9 @@ public interface RunConfigurationEditor {
     @RequiredUIAccess
     void editAll();
 
+    @RequiredUIAccess
+    void editOne(@Nonnull RunnerAndConfigurationSettings configuration);
+
     default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, LocalizeValue title) {
         return editConfiguration(project, configuration, title, null);
     }
@@ -52,6 +55,8 @@ public interface RunConfigurationEditor {
         );
     }
 
+    @Deprecated
+    @DeprecationInfo("Use consulo.execution.RunConfigurationEditor#editConfiguration(RunnerAndConfigurationSettings)")
     default boolean editConfiguration(
         Project project,
         RunnerAndConfigurationSettings configuration,
@@ -62,13 +67,13 @@ public interface RunConfigurationEditor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
+    @DeprecationInfo("Use consulo.execution.RunConfigurationEditor#editConfiguration(RunnerAndConfigurationSettings)")
     default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title) {
         return editConfiguration(project, configuration, title, null);
     }
 
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
+    @DeprecationInfo("Use consulo.execution.RunConfigurationEditor#editConfiguration(RunnerAndConfigurationSettings)")
     default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
         return editConfiguration(
             environment.getProject(),
@@ -79,6 +84,6 @@ public interface RunConfigurationEditor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
+    @DeprecationInfo("Use consulo.execution.RunConfigurationEditor#editConfiguration(RunnerAndConfigurationSettings)")
     boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor);
 }

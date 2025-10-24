@@ -10,6 +10,8 @@ action.name.save.as.configuration:
     text: Save As
 action.name.save.configuration:
     text: Save Configuration
+action.save.configuration.from.popup:
+    text: Save
 action.terminating.process.progress.kill.description:
     text: Kill process
 add.new.run.configuration.action.name:
@@ -606,6 +608,8 @@ run.configuration.display.settings.checkbox:
     text: Display settings &before launching
 run.configuration.dump.threads.action.name:
     text: Dump Threads
+run.configuration.edit.action:
+    text: Edit…
 run.configuration.edit.default.configuration.settings.description:
     text: Edit defaults settings
 run.configuration.edit.default.configuration.settings.text:
@@ -726,6 +730,8 @@ run.debug.dialog.title:
     text: Run/Debug Configurations
 run.error.message.title:
     text: Run Error
+run.toolbar.widget.all.configurations:
+    text: All Configurations  {0}
 runner.content.tooltip.layout.settings:
     text: Layout Settings
 save.run.configuration.for.item.action.name:
@@ -738,6 +744,8 @@ seaching.test.progress.title:
     text: Searching For Tests...
 searching.test.progress.title:
     text: Searching For Tests...
+select.0.1:
+    text: Select {0} ''{1}''
 select.applet.policy.file.dialog.title:
     text: Select applet policy file
 select.run.configuration.for.item.action.name:

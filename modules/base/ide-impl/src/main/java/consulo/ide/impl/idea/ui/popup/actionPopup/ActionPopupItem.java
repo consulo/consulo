@@ -23,6 +23,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ActionPopupItem implements ShortcutProvider {
+public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
     // do not expose myPresentation
     private final Presentation myPresentation = Presentation.newTemplatePresentation();
 
@@ -251,5 +252,16 @@ public class ActionPopupItem implements ShortcutProvider {
             return "separator: " + myTextValue.get();
         }
         return myTextValue.get();
+    }
+
+    @Nullable
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        return myPresentation.getClientProperty(key);
+    }
+
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        myPresentation.putClientProperty(key, value);
     }
 }

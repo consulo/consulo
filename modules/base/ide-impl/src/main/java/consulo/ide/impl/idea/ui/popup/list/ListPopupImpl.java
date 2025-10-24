@@ -6,11 +6,13 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.actionPopup.PopupInlineActionsSupportKt;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -37,6 +39,7 @@ import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
@@ -376,7 +379,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         boolean changed = myList.setSelectedButtonIndex(++currentIndex);
         if (changed) {
             getContent().repaint();
-            
+
             if (inlineActionsSupport.isMoreButton(selected, currentIndex) && buttonsCount == 1) {
                 inlineActionsSupport.performAction(selected, currentIndex, null);
             }
@@ -521,10 +524,10 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         Integer inlineButtonIndex = myList.getSelectedButtonIndex();
         if (inlineButtonIndex != null) {
             KeepPopupOnPerform keepPopup = myInlineActionsSupport.get().getKeepPopupOnPerform(selectedValue, inlineButtonIndex);
-// TODO
-//            if (!Utils.isKeepPopupOpen(keepPopup, e)) {
-//                disposePopup(e);
-//            }
+
+            if (!ActionImplUtil.isKeepPopupOpen(keepPopup, e)) {
+                disposePopup(e);
+            }
             myInlineActionsSupport.get().performAction(selectedValue, inlineButtonIndex, e);
             return true;
         }
@@ -542,7 +545,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
                 nextStep = ((MultiSelectionListPopupStep<Object>) listStep).onChosen(Arrays.asList(selection), handleFinalChoices);
             }
             else if (e != null && listStep instanceof ListPopupStepEx<?>) {
-                nextStep = ((ListPopupStepEx<Object>) listStep).onChosen(selectedValue, handleFinalChoices, e.getModifiers());
+                nextStep = ((ListPopupStepEx<Object>) listStep).onChosen(selectedValue, handleFinalChoices, e);
             }
             else {
                 nextStep = listStep.onChosen(selectedValue, handleFinalChoices);
@@ -551,6 +554,17 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         finally {
             insideOnChosen.set(false);
         }
+
+        if (nextStep == PopupStep.FINAL_CHOICE &&
+            onlyItem instanceof ActionPopupItem item &&
+            ActionImplUtil.isKeepPopupOpen(item.getKeepPopupOnPerform(), e)) {
+            ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
+            if (actionPopupStep != null && actionPopupStep.isSelectable(item)) {
+                actionPopupStep.updateStepItems(getList());
+                return false;
+            }
+        }
+
         return handleNextStep(nextStep, selection.size() == 1 ? selectedValue : null, e);
     }
 
@@ -564,6 +578,15 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
                 }
             }
         }
+    }
+
+    private void disposePopup(@Nullable InputEvent e) {
+        if (myStep.getFinalRunnable() != null) {
+            setFinalRunnable(myStep.getFinalRunnable());
+        }
+        setOk(true);
+        disposeAllParents(e);
+        setIndexForShowingChild(-1);
     }
 
     @Override
@@ -876,7 +899,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
             ListPopupModel model = getListModel();
             for (int i = 0; i < model.getSize(); i++) {
-                Object o = model.get(i);
+                Object o = model.getElementAt(i);
                 if (model.isSeparator(o)) {
                     String textFor = model.getTextFor(o);
                     if (!StringUtil.isEmpty(textFor)) {

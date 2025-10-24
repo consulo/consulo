@@ -56,11 +56,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
 
     public CopyReferencePopup() {
         super(ActionLocalize.groupCopyreferencepopupgroupText(), true);
-    }
 
-    @Override
-    public boolean canBePerformed(@Nonnull DataContext context) {
-        return true;
+        getTemplatePresentation().setPerformGroup(true);
     }
 
     @Override
@@ -81,7 +78,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
             ActionPlaces.COPY_REFERENCE_POPUP,
             factory,
             false,
-            true
+            true,
+            (o, aBoolean) -> true
         ) {
             @Override
             protected ListCellRenderer<ActionPopupItem> getListElementRenderer() {

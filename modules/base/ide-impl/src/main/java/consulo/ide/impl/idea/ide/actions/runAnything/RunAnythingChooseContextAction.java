@@ -143,7 +143,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     class ChooseContextPopup extends ActionGroupPopup {
         ChooseContextPopup(ActionPopupStep step, DataContext dataContext) {
-            super(null, step, null, dataContext, ActionPlaces.POPUP, -1, true);
+            super(null, step, null, dataContext, ActionPlaces.POPUP, -1, true, (o, aBoolean) -> true);
         }
 
         @Override
@@ -225,6 +225,10 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     public RunAnythingChooseContextAction(JPanel containingPanel) {
         this.containingPanel = containingPanel;
+
+        Presentation presentation = getTemplatePresentation();
+        presentation.setPerformGroup(true);
+        presentation.setPopupGroup(true);
     }
 
     public abstract void setSelectedContext(@Nullable RunAnythingContext context);
@@ -236,16 +240,6 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     public abstract List<RunAnythingContext> getAvailableContexts();
 
     public abstract void setAvailableContexts(List<? extends RunAnythingContext> contexts);
-
-    @Override
-    public boolean canBePerformed(@Nonnull DataContext context) {
-        return true;
-    }
-
-    @Override
-    public boolean isPopup() {
-        return true;
-    }
 
     @Nonnull
     @Override

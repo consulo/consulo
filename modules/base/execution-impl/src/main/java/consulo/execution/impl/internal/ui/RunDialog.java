@@ -55,7 +55,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         setOKButtonText(executor.getStartActionText());
         setOKButtonIcon(TargetAWT.to(executor.getIcon()));
 
-        myConfigurable = new RunConfigurable(project, this, titlelessDecorator);
+        myConfigurable = new RunConfigurable(project, this, titlelessDecorator, null);
 
         init();
 

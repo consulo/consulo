@@ -16,10 +16,14 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.configuration.editor.ConfigurableFileEditor;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -33,8 +37,22 @@ public class RunConfigurationFileEditor extends ConfigurableFileEditor<RunConfig
 
     @Override
     public void onUpdateRequestParams(@Nonnull Map<String, String> params) {
+
+        RunConfiguration selected = null;
+        String preselectedId = params.get(RunConfigurationEditorProvider.RUN_CONFIGURATION_ID);
+        if (preselectedId != null) {
+            Collection<RunnerAndConfigurationSettings> collection = RunManager.getInstance(myProject).getSortedConfigurations();
+            for (RunnerAndConfigurationSettings settings : collection) {
+                if (preselectedId.equals(settings.getUniqueID())) {
+                    selected = settings.getConfiguration();
+                }
+            }
+        }
+
         if (myConfigurable != null) {
-            myProject.getUIAccess().give(() -> myConfigurable.selectFromManager());
+            RunConfiguration finalSelected = selected;
+
+            myProject.getUIAccess().give(() -> myConfigurable.selectFromManager(finalSelected));
         }
     }
 

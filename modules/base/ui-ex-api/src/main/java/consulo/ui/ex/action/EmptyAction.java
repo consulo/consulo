@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.util.ActionUtil;
@@ -170,11 +169,6 @@ public final class EmptyAction extends AnAction {
         @Override
         public void update(@Nonnull AnActionEvent e) {
             myDelegate.update(e);
-        }
-
-        @Override
-        public boolean canBePerformed(DataContext context) {
-            return myDelegate.canBePerformed(context);
         }
 
         @Override

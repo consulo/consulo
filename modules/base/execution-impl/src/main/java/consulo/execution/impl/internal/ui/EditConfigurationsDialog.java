@@ -16,6 +16,7 @@
 
 package consulo.execution.impl.internal.ui;
 
+import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
@@ -29,53 +30,57 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
-  protected Executor myExecutor;
+    protected Executor myExecutor;
 
-  public EditConfigurationsDialog(Project project) {
-    super(project, new RunConfigurable(project), "consulo.execution.impl.internal.ui.EditConfigurationsDialog");
-    getConfigurable().setRunDialog(this);
-    setTitle(ExecutionLocalize.runDebugDialogTitle());
-  }
-
-  @Override
-  public RunConfigurable getConfigurable() {
-    return (RunConfigurable)super.getConfigurable();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-    RunConfigurable configurable = getConfigurable();
-    configurable.createComponent(getDisposable());
-    configurable.setWholePanel(rootPanel);
-    Splitter splitter = configurable.getSplitter();
-    return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());
-  }
-
-  @Override
-  protected void doOKAction() {
-    RunConfigurable configurable = getConfigurable();
-    super.doOKAction();
-    if (isOK()) {
-      // if configurable was not modified, apply was not called and Run Configurable has not called 'updateActiveConfigurationFromSelected'
-      configurable.updateActiveConfigurationFromSelected();
+    public EditConfigurationsDialog(Project project) {
+        this(project, null);
     }
-  }
 
-  @Override
-  public Size2D getDefaultSize() {
-    return new Size2D(750, 500);
-  }
+    public EditConfigurationsDialog(Project project, @Nullable RunConfiguration preselectedConfiguration) {
+        super(project, new RunConfigurable(project, preselectedConfiguration), "consulo.execution.impl.internal.ui.EditConfigurationsDialog");
+        getConfigurable().setRunDialog(this);
+        setTitle(ExecutionLocalize.runDebugDialogTitle());
+    }
 
-  @Nullable
-  @Override
-  public Executor getExecutor() {
-    return myExecutor;
-  }
+    @Override
+    public RunConfigurable getConfigurable() {
+        return (RunConfigurable) super.getConfigurable();
+    }
 
-  @Override
-  public void setOKActionEnabled(boolean isEnabled) {
-    super.setOKActionEnabled(isEnabled);
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
+        RunConfigurable configurable = getConfigurable();
+        configurable.createComponent(getDisposable());
+        configurable.setWholePanel(rootPanel);
+        Splitter splitter = configurable.getSplitter();
+        return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());
+    }
+
+    @Override
+    protected void doOKAction() {
+        RunConfigurable configurable = getConfigurable();
+        super.doOKAction();
+        if (isOK()) {
+            // if configurable was not modified, apply was not called and Run Configurable has not called 'updateActiveConfigurationFromSelected'
+            configurable.updateActiveConfigurationFromSelected();
+        }
+    }
+
+    @Override
+    public Size2D getDefaultSize() {
+        return new Size2D(750, 500);
+    }
+
+    @Nullable
+    @Override
+    public Executor getExecutor() {
+        return myExecutor;
+    }
+
+    @Override
+    public void setOKActionEnabled(boolean isEnabled) {
+        super.setOKActionEnabled(isEnabled);
+    }
 }

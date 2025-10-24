@@ -236,23 +236,23 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
     @Override
     public PopupStep onChosen(ActionPopupItem actionChoice, boolean finalChoice) {
-        return onChosen(actionChoice, finalChoice, 0);
+        return onChosen(actionChoice, finalChoice, null);
     }
 
     @Override
     public PopupStep<ActionPopupItem> onChosen(
-        ActionPopupItem actionChoice,
+        ActionPopupItem item,
         boolean finalChoice,
-        int eventModifiers
+        @Nullable InputEvent event
     ) {
-        if (!actionChoice.isEnabled()) {
+        if (!item.isEnabled()) {
             return FINAL_CHOICE;
         }
-        AnAction action = actionChoice.getAction();
+        AnAction action = item.getAction();
         DataContext dataContext = myContext.get();
-        if (action instanceof ActionGroup group && (!finalChoice || !group.canBePerformed(dataContext))) {
+        if (action instanceof ActionGroup subGroup && (!finalChoice || !item.isPerformGroup())) {
             return createActionsStep(
-                group,
+                subGroup,
                 dataContext,
                 myEnableMnemonics,
                 true,
@@ -267,17 +267,17 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
                 myPresentationFactory
             );
         }
+        else if (ActionImplUtil.isKeepPopupOpen(item.getKeepPopupOnPerform(), event)) {
+            performActionItem(item, event);
+            return FINAL_CHOICE;
+        }
         else {
-            myFinalRunnable = () -> performAction(action, eventModifiers);
+            myFinalRunnable = () -> performAction(action, event);
             return FINAL_CHOICE;
         }
     }
 
-    public void performAction(@Nonnull AnAction action, int modifiers) {
-        performAction(action, modifiers, null);
-    }
-
-    public void performAction(@Nonnull AnAction action, int modifiers, InputEvent inputEvent) {
+    public void performAction(@Nonnull AnAction action, InputEvent inputEvent) {
         DataContext dataContext = myContext.get();
         AnActionEvent event = new AnActionEvent(
             inputEvent,
@@ -285,7 +285,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
             myActionPlace,
             action.getTemplatePresentation().clone(),
             ActionManager.getInstance(),
-            modifiers
+            inputEvent == null ? 0 : inputEvent.getModifiers()
         );
         event.setInjectedContext(action.isInInjectedContext());
         if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {

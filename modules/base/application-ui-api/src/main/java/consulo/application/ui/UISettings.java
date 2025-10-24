@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -470,16 +469,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return SHOW_TREE_INDENT_GUIDES;
     }
 
-    public boolean getAnimatedScrolling() {
-        return !Platform.current().os().isMac() || !SystemInfo.isJetBrainsJvm;
-    }
-
     public boolean getFullPathsInWindowHeader() {
         return FULL_PATHS_IN_WINDOW_HEADER;
-    }
-
-    public boolean getUseContrastScrollbars() {
-        return false;
     }
 
     public float getIdeScale() {
@@ -492,5 +483,9 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     public void setShowBreakpointsOverLineNumbers(boolean value) {
         SHOW_BREAKPOINTS_OVER_LINE_NUMBERS = value;
+    }
+
+    public boolean getKeepPopupsForToggles() {
+        return true;
     }
 }

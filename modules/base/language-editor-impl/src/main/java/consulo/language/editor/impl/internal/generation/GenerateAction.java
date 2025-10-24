@@ -28,7 +28,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -112,12 +111,9 @@ public class GenerateAction extends DumbAwareAction {
             myAction = action;
             myEditTemplateAction = editTemplateAction;
             copyFrom(action);
-            setPopup(true);
-        }
 
-        @Override
-        public boolean canBePerformed(@Nonnull DataContext context) {
-            return true;
+            getTemplatePresentation().setPopupGroup(true);
+            getTemplatePresentation().setPerformGroup(true);
         }
 
         @Nonnull

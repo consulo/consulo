@@ -2,7 +2,6 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.component.ActionAPI;
-import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -186,18 +185,11 @@ public abstract class ActionGroup extends AnAction {
     }
 
     /**
-     * This method can be called in popup menus if {@link #canBePerformed(DataContext)} is {@code true}.
+     * This method can be called in popup menus if {@link Presentation#isPerformGroup()} is {@code true}.
      */
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-    }
-
-    /**
-     * @return {@code true} if {@link #actionPerformed(AnActionEvent)} should be called.
-     */
-    public boolean canBePerformed(@Nonnull DataContext context) {
-        return false;
     }
 
     /**

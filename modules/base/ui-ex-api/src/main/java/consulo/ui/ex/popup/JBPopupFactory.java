@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -410,8 +411,8 @@ public abstract class JBPopupFactory {
     );
 
     @Nonnull
-    public abstract ListPopup createActionGroupPopup(
-        @Nls(capitalization = Nls.Capitalization.Title) String title,
+    public ListPopup createActionGroupPopup(
+        @Nullable String title,
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         ActionSelectionAid aid,
@@ -420,6 +421,33 @@ public abstract class JBPopupFactory {
         int maxRowCount,
         @Nullable Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace
+    ) {
+        return createActionGroupPopup(
+            title,
+            actionGroup,
+            dataContext,
+            aid,
+            showDisabledActions,
+            disposeCallback,
+            maxRowCount,
+            preselectActionCondition,
+            actionPlace,
+            (o, aBoolean) -> true
+        );
+    }
+
+    @Nonnull
+    public abstract ListPopup createActionGroupPopup(
+        @Nullable String title,
+        @Nonnull ActionGroup actionGroup,
+        @Nonnull DataContext dataContext,
+        ActionSelectionAid aid,
+        boolean showDisabledActions,
+        @Nullable Runnable disposeCallback,
+        int maxRowCount,
+        @Nullable Predicate<? super AnAction> preselectActionCondition,
+        @Nullable String actionPlace,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     );
 
     /**

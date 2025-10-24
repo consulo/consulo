@@ -242,7 +242,7 @@ public class ActionToolbarButtonEngine {
     }
 
     public void actionPerformed(AnActionEvent event) {
-        if (myIdeAction instanceof ActionGroup && !(myIdeAction instanceof CustomComponentAction) && ((ActionGroup) myIdeAction).isPopup() && !((ActionGroup) myIdeAction).canBePerformed(event.getDataContext())) {
+        if (myIdeAction instanceof ActionGroup && !(myIdeAction instanceof CustomComponentAction) && ((ActionGroup) myIdeAction).isPopup() && !event.getPresentation().isPerformGroup()) {
             ActionManagerEx am = (ActionManagerEx) ActionManager.getInstance();
             DesktopActionPopupMenuImpl popupMenu = (DesktopActionPopupMenuImpl) am.createActionPopupMenu(event.getPlace(), (ActionGroup) myIdeAction, new MenuItemPresentationFactory() {
                 @Override

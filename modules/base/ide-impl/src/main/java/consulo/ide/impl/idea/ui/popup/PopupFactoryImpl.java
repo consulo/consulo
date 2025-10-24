@@ -40,6 +40,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -129,7 +130,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         Runnable disposeCallback,
         int maxRowCount,
         Predicate<? super AnAction> preselectActionCondition,
-        @Nullable String actionPlace
+        @Nullable String actionPlace,
+        @Nonnull BiPredicate<Object, Boolean> customFilter
     ) {
         return new ActionGroupPopup(
             title,
@@ -143,7 +145,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             maxRowCount,
             preselectActionCondition,
             actionPlace,
-            true
+            true,
+            customFilter
         );
     }
 
@@ -173,7 +176,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             maxRowCount,
             preselectActionCondition,
             null,
-            forceHeavyPopup
+            forceHeavyPopup,
+            (o, aBoolean) -> true
         );
     }
 

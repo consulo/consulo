@@ -25,12 +25,14 @@ import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.ModalityHelper;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.PopupBorder;
+import consulo.ide.impl.idea.ui.UiInterceptors;
+import consulo.ide.impl.idea.ui.WindowMoveListener;
+import consulo.ide.impl.idea.ui.WindowResizeListener;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -43,7 +45,9 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.*;
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
@@ -57,6 +61,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
@@ -78,14 +83,13 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -370,7 +374,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myCaption != null && myCaption.getComponentCount() > 0) {
             myCaption.setBorder(JBCurrentTheme.listCellBorderFull());
         }
-        
+
         setWindowActive(myHeaderAlwaysFocusable);
 
         myContent.add(myHeaderPanel, BorderLayout.NORTH);
@@ -472,7 +476,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     public void showCenteredInCurrentWindow(@Nonnull ComponentManager project) {
-        if (UiInterceptors.tryIntercept(this)) return;
+        if (UiInterceptors.tryIntercept(this)) {
+            return;
+        }
 
         Window window = getCurrentWindow((Project) project);
 
@@ -511,7 +517,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             Component parent = component.getParent();
 
             if (component instanceof Window w) {
-                if (ModalityHelper.isModalBlocked(w)) break;
+                if (ModalityHelper.isModalBlocked(w)) {
+                    break;
+                }
                 res = w;
             }
             component = parent;
@@ -840,7 +848,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    private void disposePopup() {
+    protected void disposePopup() {
         all.remove(this);
         if (myPopup != null) {
             resetWindow();
@@ -1482,8 +1490,19 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     public void pack(boolean width, boolean height) {
+        Dimension size = calculateSizeForPack(width, height);
+        if (size == null) return;
+
+        Window window = getContentWindow(myContent);
+        if (window != null) {
+            window.setSize(size);
+        }
+    }
+
+    @Nullable
+    protected Dimension calculateSizeForPack(boolean width, boolean height) {
         if (!isVisible() || !width && !height || isBusy()) {
-            return;
+            return null;
         }
 
         Dimension size = getSize();
@@ -1497,21 +1516,17 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                 int delta = screen.width + screen.x - location.x;
                 if (size.width > delta) {
                     size.width = delta;
-                    if (!Platform.current().os().isMac() || Registry.is("mac.scroll.horizontal.gap")) {
-                        // we shrank horizontally - need to increase height to fit the horizontal scrollbar
-                        JScrollPane scrollPane = ScrollUtil.findScrollPane(myContent);
-                        if (scrollPane != null && scrollPane.getHorizontalScrollBarPolicy() != ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
-                            JScrollBar scrollBar = scrollPane.getHorizontalScrollBar();
-                            if (scrollBar != null) {
-                                prefSize.height += scrollBar.getPreferredSize().height;
-                            }
-                        }
-                    }
                 }
             }
         }
 
         if (height) {
+            if (size.width < prefSize.width) {
+                if (!Platform.current().os().isMac() || Registry.is("mac.scroll.horizontal.gap")) {
+                    // we shrank horizontally - need to increase height to fit the horizontal scrollbar
+                    forHorizontalScrollBar(bar -> prefSize.height += bar.getPreferredSize().height);
+                }
+            }
             size.height = prefSize.height;
             if (screen != null) {
                 int delta = screen.height + screen.y - location.y;
@@ -1521,11 +1536,22 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             }
         }
 
-        size.height += getAdComponentHeight();
+        return size;
+    }
 
-        Window window = getContentWindow(myContent);
-        if (window != null) {
-            window.setSize(size);
+    @Nullable
+    private JScrollBar findHorizontalScrollBar() {
+        JScrollPane pane = ScrollUtil.findScrollPane(myContent);
+        if (pane == null || ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER == pane.getHorizontalScrollBarPolicy()) {
+            return null;
+        }
+        return pane.getHorizontalScrollBar();
+    }
+
+    private void forHorizontalScrollBar(@Nonnull Consumer<? super JScrollBar> consumer) {
+        JScrollBar bar = findHorizontalScrollBar();
+        if (bar != null) {
+            consumer.accept(bar);
         }
     }
 

@@ -21,13 +21,9 @@ import consulo.configuration.editor.ConfigurationFileEditorProvider;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -35,6 +31,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class RunConfigurationEditorProvider implements ConfigurationFileEditorProvider {
+    public static final String RUN_CONFIGURATION_ID = "RUN_CONFIGURATION_ID";
+
     @Nonnull
     @Override
     public String getId() {

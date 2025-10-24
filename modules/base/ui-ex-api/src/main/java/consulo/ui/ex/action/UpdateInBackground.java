@@ -6,7 +6,7 @@ import consulo.application.progress.ProgressManager;
 
 /**
  * Implement this in actions or action groups to flag that their {@link AnAction#update}, {@link ActionGroup#getChildren(AnActionEvent)}
- * and {@link ActionGroup#canBePerformed} methods can be invoked on a background thread.<p></p>
+ * and {@link Presentation#isPerformGroup()} methods can be invoked on a background thread.<p></p>
  * <p>
  * This means that those updating methods shouldn't access Swing component hierarchy directly,
  * and any further data they access should be thread-safe.
