@@ -27,7 +27,7 @@ import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
  * - now we extends FlexTable - without SimplePanel, simplified tree
  * <p/>
  * <p/>
- * This is a basic class for all text boxs with a button.
+ * This is a basic class for all text boxes with a button.
  *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
  * @see WidgetComboBox
@@ -48,7 +48,7 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
    */
   private Image choiceButtonImage;
   /**
-   * a falg meaning whether the widget locked
+   * a flag meaning whether the widget locked
    */
   private boolean locked;
   /**
