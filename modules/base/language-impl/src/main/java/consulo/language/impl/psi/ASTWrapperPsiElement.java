@@ -13,38 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
-  private final ASTNode myNode;
+    private final ASTNode myNode;
 
-  public ASTWrapperPsiElement(@Nonnull ASTNode node) {
-    myNode = node;
-  }
+    public ASTWrapperPsiElement(@Nonnull ASTNode node) {
+        myNode = node;
+    }
 
-  @Override
-  public PsiElement getParent() {
-    return SharedImplUtil.getParent(getNode());
-  }
+    @Override
+    @RequiredReadAction
+    public PsiElement getParent() {
+        return SharedImplUtil.getParent(getNode());
+    }
 
-  @Override
-  @Nonnull
-  public ASTNode getNode() {
-    return myNode;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public ASTNode getNode() {
+        return myNode;
+    }
 
-  @Override
-  public String toString() {
-    return getClass().getSimpleName() + "(" + myNode.getElementType().toString() + ")";
-  }
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + myNode.getElementType().toString() + ")";
+    }
 }

@@ -31,53 +31,64 @@ import jakarta.annotation.Nullable;
 
 //TODO [VISTALL] not good name for util
 public class ProjectUtilCore {
-  @Nonnull
-  @RequiredReadAction
-  public static String appendModuleName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result, boolean moduleOnTheLeft) {
-    Module module = ModuleContentUtil.findModuleForFile(file, project);
-    if (module == null || ModuleManager.getInstance(project).getModules().length == 1) {
-      return result;
-    }
-
-    if (moduleOnTheLeft) {
-      return "[" + module.getName() + "] " + result;
-    }
-    return result + " [" + module.getName() + "]";
-  }
-
-  @Nullable
-  public static String decorateWithLibraryName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result) {
-    if (file.getFileSystem() instanceof LocalFileProvider localFileProvider) {
-      VirtualFile localFile = localFileProvider.getLocalVirtualFileFor(file);
-      if (localFile != null) {
-        OrderEntry libraryEntry = ModuleContentLibraryUtil.findLibraryEntry(file, project);
-        if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-          return result + " [" + sdkOrderEntry.getSdkName() + "]";
+    @Nonnull
+    @RequiredReadAction
+    public static String appendModuleName(
+        @Nonnull VirtualFile file,
+        @Nonnull Project project,
+        @Nonnull String result,
+        boolean moduleOnTheLeft
+    ) {
+        Module module = ModuleContentUtil.findModuleForFile(file, project);
+        if (module == null || ModuleManager.getInstance(project).getModules().length == 1) {
+            return result;
         }
-        else if (libraryEntry != null) {
-          return result + " [" + libraryEntry.getPresentableName() + "]";
+
+        if (moduleOnTheLeft) {
+            return "[" + module.getName() + "] " + result;
         }
-      }
+        return result + " [" + module.getName() + "]";
     }
 
-    return null;
-  }
+    @Nullable
+    public static String decorateWithLibraryName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result) {
+        if (file.getFileSystem() instanceof LocalFileProvider localFileProvider) {
+            VirtualFile localFile = localFileProvider.getLocalVirtualFileFor(file);
+            if (localFile != null) {
+                OrderEntry libraryEntry = ModuleContentLibraryUtil.findLibraryEntry(file, project);
+                if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+                    return result + " [" + sdkOrderEntry.getSdkName() + "]";
+                }
+                else if (libraryEntry != null) {
+                    return result + " [" + libraryEntry.getPresentableName() + "]";
+                }
+            }
+        }
 
-  @RequiredReadAction
-  public static String displayUrlRelativeToProject(@Nonnull VirtualFile file, @Nonnull String result, @Nonnull Project project, boolean includeFilePath, boolean moduleOnTheLeft) {
-    if (includeFilePath) {
-      //noinspection ConstantConditions
-      String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
-      if (result.startsWith(projectHomeUrl)) {
-        result = "..." + result.substring(projectHomeUrl.length());
-      }
+        return null;
     }
 
-    String urlWithLibraryName = decorateWithLibraryName(file, project, result);
-    if (urlWithLibraryName != null) {
-      return urlWithLibraryName;
-    }
+    @RequiredReadAction
+    public static String displayUrlRelativeToProject(
+        @Nonnull VirtualFile file,
+        @Nonnull String result,
+        @Nonnull Project project,
+        boolean includeFilePath,
+        boolean moduleOnTheLeft
+    ) {
+        if (includeFilePath) {
+            //noinspection ConstantConditions
+            String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
+            if (result.startsWith(projectHomeUrl)) {
+                result = "..." + result.substring(projectHomeUrl.length());
+            }
+        }
 
-    return appendModuleName(file, project, result, moduleOnTheLeft);
-  }
+        String urlWithLibraryName = decorateWithLibraryName(file, project, result);
+        if (urlWithLibraryName != null) {
+            return urlWithLibraryName;
+        }
+
+        return appendModuleName(file, project, result, moduleOnTheLeft);
+    }
 }

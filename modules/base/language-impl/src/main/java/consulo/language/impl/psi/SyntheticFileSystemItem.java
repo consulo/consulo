@@ -18,188 +18,197 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
-  public static final Logger LOG = Logger.getInstance(SyntheticFileSystemItem.class);
+    public static final Logger LOG = Logger.getInstance(SyntheticFileSystemItem.class);
 
-  protected final Project myProject;
-  protected final PsiManager myManager;
+    protected final Project myProject;
+    protected final PsiManager myManager;
 
-  public SyntheticFileSystemItem(Project project) {
-    myProject = project;
-    myManager = PsiManager.getInstance(myProject);
-  }
-
-  protected static boolean processFileSystemItem(PsiElementProcessor<PsiFileSystemItem> processor, PsiFileSystemItem element) {
-    if (processor instanceof PsiFileSystemItemProcessor && !((PsiFileSystemItemProcessor)processor).acceptItem(element.getName(), true)) {
-      return true;
+    public SyntheticFileSystemItem(Project project) {
+        myProject = project;
+        myManager = PsiManager.getInstance(myProject);
     }
 
-    return processor.execute(element);
-  }
+    @RequiredReadAction
+    @SuppressWarnings("SimplifiableIfStatement")
+    protected static boolean processFileSystemItem(PsiElementProcessor<PsiFileSystemItem> processor, PsiFileSystemItem element) {
+        if (processor instanceof PsiFileSystemItemProcessor fsItemProcessor && !fsItemProcessor.acceptItem(element.getName(), true)) {
+            return true;
+        }
 
-  @Override
-  public boolean isDirectory() {
-    return true;
-  }
+        return processor.execute(element);
+    }
 
-  @Override
-  public ASTNode getNode() {
-    return null;
-  }
+    @Override
+    public boolean isDirectory() {
+        return true;
+    }
 
-  @Override
-  public boolean isPhysical() {
-    return true;
-  }
+    @Override
+    public ASTNode getNode() {
+        return null;
+    }
 
-  @Override
-  public boolean isWritable() {
-    return true;
-  }
+    @Override
+    public boolean isPhysical() {
+        return true;
+    }
 
-  @Override
-  public boolean isValid() {
-    VirtualFile virtualFile = getVirtualFile();
-    return virtualFile != null && virtualFile.isValid();
-  }
+    @Override
+    public boolean isWritable() {
+        return true;
+    }
 
-  @Override
-  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Frameworks cannot be changed");
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        VirtualFile virtualFile = getVirtualFile();
+        return virtualFile != null && virtualFile.isValid();
+    }
 
-  @Override
-  public void checkDelete() throws IncorrectOperationException {
-    throw new IncorrectOperationException("Frameworks cannot be deleted");
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Frameworks cannot be changed");
+    }
 
-  @Override
-  public void delete() throws IncorrectOperationException {
-    throw new IncorrectOperationException("Frameworks cannot be deleted");
-  }
+    @Override
+    public void checkDelete() throws IncorrectOperationException {
+        throw new IncorrectOperationException("Frameworks cannot be deleted");
+    }
 
-  @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
-    // TODO
-  }
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        throw new IncorrectOperationException("Frameworks cannot be deleted");
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public PsiElement[] getChildren() {
-    PsiElementProcessor.CollectElements<PsiFileSystemItem> collector = new PsiElementProcessor.CollectElements<PsiFileSystemItem>();
-    processChildren(collector);
-    return collector.toArray(new PsiFileSystemItem[0]);
-  }
+    @Override
+    public void accept(@Nonnull PsiElementVisitor visitor) {
+        // TODO
+    }
 
-  @Override
-  public PsiManager getManager() {
-    return myManager;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public PsiElement[] getChildren() {
+        PsiElementProcessor.CollectElements<PsiFileSystemItem> collector = new PsiElementProcessor.CollectElements<>();
+        processChildren(collector);
+        return collector.toArray(new PsiFileSystemItem[0]);
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Language getLanguage() {
-    return Language.ANY;
-  }
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        return myManager;
+    }
 
-  @Override
-  public void checkSetName(String name) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Frameworks cannot be renamed");
-  }
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Language getLanguage() {
+        return Language.ANY;
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Frameworks cannot be renamed");
-  }
+    @Override
+    public void checkSetName(String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Frameworks cannot be renamed");
+    }
 
-  @Override
-  @Nullable
-  public PsiFile getContainingFile() {
-    return null;
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Frameworks cannot be renamed");
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public TextRange getTextRange() {
-    return null;
-  }
+    @Override
+    @Nullable
+    public PsiFile getContainingFile() {
+        return null;
+    }
 
-  @RequiredReadAction
-  @Override
-  public int getStartOffsetInParent() {
-    return -1;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public TextRange getTextRange() {
+        return TextRange.EMPTY_RANGE;
+    }
 
-  @RequiredReadAction
-  @Override
-  public int getTextLength() {
-    return -1;
-  }
+    @Override
+    @RequiredReadAction
+    public int getStartOffsetInParent() {
+        return -1;
+    }
 
-  @RequiredReadAction
-  @Override
-  public PsiElement findElementAt(int offset) {
-    return null;
-  }
+    @Override
+    @RequiredReadAction
+    public int getTextLength() {
+        return -1;
+    }
 
-  @Override
-  public int getTextOffset() {
-    return -1;
-  }
+    @Override
+    @RequiredReadAction
+    public PsiElement findElementAt(int offset) {
+        return null;
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public String getText() {
-    return null;
-  }
+    @Override
+    public int getTextOffset() {
+        return -1;
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public char[] textToCharArray() {
-    return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO throw new InsupportedOperationException()
-  }
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getText() {
+        return null;
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull CharSequence text) {
-    return false;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public char[] textToCharArray() {
+        return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO throw new UnsupportedOperationException()
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull PsiElement element) {
-    return false;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull CharSequence text) {
+        return false;
+    }
 
-  @Override
-  public PsiElement copy() {
-    LOG.error("method not implemented");
-    return null;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull PsiElement element) {
+        return false;
+    }
 
-  @Override
-  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
-    throw new IncorrectOperationException();
-  }
+    @Override
+    public PsiElement copy() {
+        LOG.error("method not implemented");
+        return null;
+    }
 
-  @Override
-  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException();
-  }
+    @Override
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        throw new IncorrectOperationException();
+    }
 
-  @Override
-  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException();
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException();
+    }
 
-  @Override
-  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
-    throw new IncorrectOperationException();
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException();
+    }
+
+    @Override
+    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+        throw new IncorrectOperationException();
+    }
 }

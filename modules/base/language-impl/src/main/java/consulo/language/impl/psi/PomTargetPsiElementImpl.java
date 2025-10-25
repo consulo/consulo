@@ -38,170 +38,179 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements PomTargetPsiElement {
-  private final PomTarget myTarget;
-  private final Project myProject;
+    private final PomTarget myTarget;
+    private final Project myProject;
 
-  public PomTargetPsiElementImpl(@Nonnull PsiTarget target) {
-    this(target.getNavigationElement().getProject(), target);
-  }
-
-  public PomTargetPsiElementImpl(@Nonnull Project project, @Nonnull PomTarget target) {
-    super(null);
-    myProject = project;
-    myTarget = target;
-  }
-
-  @Override
-  @Nonnull
-  public PomTarget getTarget() {
-    return myTarget;
-  }
-
-  @RequiredReadAction
-  @Override
-  public String getName() {
-    if (myTarget instanceof PomNamedTarget) {
-      return ((PomNamedTarget)myTarget).getName();
-    }
-    return null;
-  }
-
-  @Override
-  public boolean isWritable() {
-    if (myTarget instanceof PomRenameableTarget) {
-      return ((PomRenameableTarget)myTarget).isWritable();
-    }
-    return false;
-  }
-
-  @Override
-  public String getTypeName() {
-    throw new UnsupportedOperationException("Method getTypeName is not yet implemented for " + myTarget.getClass().getName() + "; see PomDescriptionProvider");
-  }
-
-  @Nonnull
-  @Override
-  public PsiElement getNavigationElement() {
-    if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement();
-    }
-    return super.getNavigationElement();
-  }
-
-  @Override
-  public Image getIcon() {
-    Image icon = TypePresentationService.getInstance().getIcon(myTarget);
-    if (icon != null) return icon;
-
-    if (myTarget instanceof PsiTarget) {
-      return IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0);
-    }
-    return null;
-  }
-
-  @Override
-  public boolean isValid() {
-    if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement().isValid();
+    public PomTargetPsiElementImpl(@Nonnull PsiTarget target) {
+        this(target.getNavigationElement().getProject(), target);
     }
 
-    return myTarget.isValid();
-  }
-
-  @RequiredWriteAction
-  @Override
-  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-    if (myTarget instanceof PomRenameableTarget) {
-      ((PomRenameableTarget)myTarget).setName(name);
-      return this;
-    } 
-    throw new UnsupportedOperationException("Cannot rename " + myTarget);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    PomTargetPsiElementImpl that = (PomTargetPsiElementImpl)o;
-
-    if (!myTarget.equals(that.myTarget)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myTarget.hashCode();
-  }
-
-  @Override
-  public boolean isEquivalentTo(PsiElement another) {
-    return equals(another) ||
-           (another != null && myTarget instanceof PsiTarget && another.isEquivalentTo(((PsiTarget)myTarget).getNavigationElement()));
-  }
-
-  @Override
-  public PsiElement getContext() {
-    if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement();
+    public PomTargetPsiElementImpl(@Nonnull Project project, @Nonnull PomTarget target) {
+        super(null);
+        myProject = project;
+        myTarget = target;
     }
-    return null;
-  }
 
-  @Override
-  @Nullable
-  public PsiElement getParent() {
-    return null;
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    myTarget.navigate(requestFocus);
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return myTarget.canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return myTarget.canNavigateToSource();
-  }
-
-  @Override
-  @Nullable
-  public PsiFile getContainingFile() {
-    if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement().getContainingFile();
+    @Override
+    @Nonnull
+    public PomTarget getTarget() {
+        return myTarget;
     }
-    return null;
-  }
 
-  @Override
-  @Nonnull
-  public Language getLanguage() {
-    if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement().getLanguage();
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        if (myTarget instanceof PomNamedTarget namedTarget) {
+            return namedTarget.getName();
+        }
+        return null;
     }
-    return Language.ANY;
-  }
 
-  @Nonnull
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  public String getLocationString() {
-    if (myTarget instanceof PsiTarget) {
-      PsiFile file = ((PsiTarget)myTarget).getNavigationElement().getContainingFile();
-      if (file != null) {
-        return "(" + file.getName() + ")";
-      }
+    @Override
+    public boolean isWritable() {
+        if (myTarget instanceof PomRenameableTarget renameableTarget) {
+            return renameableTarget.isWritable();
+        }
+        return false;
     }
-    return super.getLocationString();
-  }
+
+    @Override
+    public String getTypeName() {
+        throw new UnsupportedOperationException("Method getTypeName is not yet implemented for " + myTarget.getClass()
+            .getName() + "; see PomDescriptionProvider");
+    }
+
+    @Nonnull
+    @Override
+    public PsiElement getNavigationElement() {
+        if (myTarget instanceof PsiTarget target) {
+            return target.getNavigationElement();
+        }
+        return super.getNavigationElement();
+    }
+
+    @Override
+    @RequiredReadAction
+    public Image getIcon() {
+        Image icon = TypePresentationService.getInstance().getIcon(myTarget);
+        if (icon != null) {
+            return icon;
+        }
+
+        if (myTarget instanceof PsiTarget target) {
+            return IconDescriptorUpdaters.getIcon(target.getNavigationElement(), 0);
+        }
+        return null;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        if (myTarget instanceof PsiTarget target) {
+            return target.getNavigationElement().isValid();
+        }
+
+        return myTarget.isValid();
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        if (myTarget instanceof PomRenameableTarget renameableTarget) {
+            renameableTarget.setName(name);
+            return this;
+        }
+        throw new UnsupportedOperationException("Cannot rename " + myTarget);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PomTargetPsiElementImpl that = (PomTargetPsiElementImpl) o;
+
+        return myTarget.equals(that.myTarget);
+    }
+
+    @Override
+    public int hashCode() {
+        return myTarget.hashCode();
+    }
+
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        return equals(another)
+            || another != null && myTarget instanceof PsiTarget target && another.isEquivalentTo(target.getNavigationElement());
+    }
+
+    @Override
+    public PsiElement getContext() {
+        return myTarget instanceof PsiTarget target ? target.getNavigationElement() : null;
+    }
+
+    @Override
+    @Nullable
+    public PsiElement getParent() {
+        return null;
+    }
+
+    @Override
+    public void navigate(boolean requestFocus) {
+        myTarget.navigate(requestFocus);
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return myTarget.canNavigate();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return myTarget.canNavigateToSource();
+    }
+
+    @Override
+    @Nullable
+    public PsiFile getContainingFile() {
+        if (myTarget instanceof PsiTarget target) {
+            return target.getNavigationElement().getContainingFile();
+        }
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Language getLanguage() {
+        if (myTarget instanceof PsiTarget target) {
+            return target.getNavigationElement().getLanguage();
+        }
+        return Language.ANY;
+    }
+
+    @Nonnull
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
+
+    @Override
+    @RequiredReadAction
+    public String getLocationString() {
+        if (myTarget instanceof PsiTarget target) {
+            PsiFile file = target.getNavigationElement().getContainingFile();
+            if (file != null) {
+                return "(" + file.getName() + ")";
+            }
+        }
+        return super.getLocationString();
+    }
 }

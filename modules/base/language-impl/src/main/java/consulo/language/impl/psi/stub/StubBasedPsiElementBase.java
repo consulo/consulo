@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi.stub;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.RecursionManager;
@@ -30,7 +28,6 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.SharedImplUtil;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.language.impl.internal.psi.SubstrateRef;
 import consulo.language.impl.internal.psi.SubstrateRefOwner;
 import consulo.language.impl.psi.ASTDelegatePsiElement;
@@ -44,13 +41,13 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.internal.SingleProjectHolder;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,441 +81,481 @@ import java.util.List;
  * @see PsiFileWithStubSupport
  */
 public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegatePsiElement implements StubBasedPsiElement<T>, SubstrateRefOwner<T> {
-  public static final Key<String> CREATION_TRACE = Key.create("CREATION_TRACE");
-  public static final boolean ourTraceStubAstBinding =
-    Boolean.valueOf(Platform.current().jvm().getRuntimeProperty("trace.stub.ast.binding", "false"));
+    public static final Key<String> CREATION_TRACE = Key.create("CREATION_TRACE");
+    public static final boolean ourTraceStubAstBinding =
+        Boolean.valueOf(Platform.current().jvm().getRuntimeProperty("trace.stub.ast.binding", "false"));
 
-  private volatile SubstrateRef mySubstrateRef;
-  private final IElementType myElementType;
+    private volatile SubstrateRef mySubstrateRef;
+    private final IElementType myElementType;
 
-  public StubBasedPsiElementBase(@Nonnull T stub, @Nonnull IStubElementType nodeType) {
-    mySubstrateRef = new SubstrateRef.StubRef(stub);
-    myElementType = nodeType;
-  }
-
-  public StubBasedPsiElementBase(@Nonnull ASTNode node) {
-    mySubstrateRef = SubstrateRef.createAstStrongRef(node);
-    myElementType = node.getElementType();
-  }
-
-  /**
-   * This constructor is created to allow inheriting from this class in JVM languages which doesn't support multiple constructors (e.g. Scala).
-   * If your language does support multiple constructors use {@link #StubBasedPsiElementBase(StubElement, IStubElementType)} and
-   * {@link #StubBasedPsiElementBase(ASTNode)} instead.
-   */
-  public StubBasedPsiElementBase(T stub, IElementType nodeType, ASTNode node) {
-    if (stub != null) {
-      if (nodeType == null) throw new IllegalArgumentException("null cannot be passed to 'nodeType' when 'stub' is non-null");
-      if (node != null) throw new IllegalArgumentException("null must be passed to 'node' parameter when 'stub' is non-null");
-      mySubstrateRef = new SubstrateRef.StubRef(stub);
-      myElementType = nodeType;
-    }
-    else {
-      if (node == null) throw new IllegalArgumentException("'stub' and 'node' parameters cannot be null both");
-      if (nodeType != null) throw new IllegalArgumentException("null must be passed to 'nodeType' parameter when 'node' is non-null");
-      mySubstrateRef = SubstrateRef.createAstStrongRef(node);
-      myElementType = node.getElementType();
-    }
-  }
-
-
-  /**
-   * Ensures this element is AST-based. This is an expensive operation that might take significant time and allocate lots of objects,
-   * so it should be to be avoided if possible.
-   *
-   * @return an AST node corresponding to this element. If the element is currently operating via stubs,
-   * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
-   * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
-   */
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public ASTNode getNode() {
-    if (mySubstrateRef instanceof SubstrateRef.StubRef) {
-      ApplicationManager.getApplication().assertReadAccessAllowed();
-      PsiFileImpl file = (PsiFileImpl)getContainingFile();
-      if (!file.isValid()) throw new PsiInvalidElementAccessException(file);
-
-      FileElement treeElement = file.getTreeElement();
-      if (treeElement != null && mySubstrateRef instanceof SubstrateRef.StubRef) {
-        return notBoundInExistingAst(file, treeElement);
-      }
-
-      treeElement = file.calcTreeElement();
-      if (mySubstrateRef instanceof SubstrateRef.StubRef) {
-        return failedToBindStubToAst(file, treeElement);
-      }
+    public StubBasedPsiElementBase(@Nonnull T stub, @Nonnull IStubElementType nodeType) {
+        mySubstrateRef = new SubstrateRef.StubRef(stub);
+        myElementType = nodeType;
     }
 
-    return mySubstrateRef.getNode();
-  }
-
-  private ASTNode failedToBindStubToAst(@Nonnull PsiFileImpl file, @Nonnull FileElement fileElement) {
-    VirtualFile vFile = file.getVirtualFile();
-    StubTree stubTree = file.getStubTree();
-    String stubString = stubTree != null ? ((PsiFileStubImpl)stubTree.getRoot()).printTree() : null;
-    String astString = RecursionManager.doPreventingRecursion("failedToBindStubToAst", true, () -> DebugUtil.treeToString(fileElement, true));
-
-    @NonNls String message =
-            "Failed to bind stub to AST for element " + getClass() + " in " + (vFile == null ? "<unknown file>" : vFile.getPath()) + "\nFile:\n" + file + "@" + System.identityHashCode(file);
-
-    String creationTraces = ourTraceStubAstBinding ? dumpCreationTraces(fileElement) : null;
-
-    List<Attachment> attachments = new ArrayList<>();
-    if (stubString != null) {
-      attachments.add(AttachmentFactory.get().create("stubTree.txt", stubString));
-    }
-    if (astString != null) {
-      attachments.add(AttachmentFactory.get().create("ast.txt", astString));
-    }
-    if (creationTraces != null) {
-      attachments.add(AttachmentFactory.get().create("creationTraces.txt", creationTraces));
+    public StubBasedPsiElementBase(@Nonnull ASTNode node) {
+        mySubstrateRef = SubstrateRef.createAstStrongRef(node);
+        myElementType = node.getElementType();
     }
 
-    throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));
-  }
-
-  @Nonnull
-  private String dumpCreationTraces(@Nonnull FileElement fileElement) {
-    final StringBuilder traces = new StringBuilder("\nNow " + Thread.currentThread() + "\n");
-    traces.append("My creation trace:\n").append(getUserData(CREATION_TRACE));
-    traces.append("AST creation traces:\n");
-    fileElement.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
-      @Override
-      public void visitComposite(CompositeElement composite) {
-        PsiElement psi = composite.getPsi();
-        if (psi != null) {
-          traces.append(psi).append("@").append(System.identityHashCode(psi)).append("\n");
-          String trace = psi.getUserData(CREATION_TRACE);
-          if (trace != null) {
-            traces.append(trace).append("\n");
-          }
+    /**
+     * This constructor is created to allow inheriting from this class in JVM languages which doesn't support multiple constructors (e.g. Scala).
+     * If your language does support multiple constructors use {@link #StubBasedPsiElementBase(StubElement, IStubElementType)} and
+     * {@link #StubBasedPsiElementBase(ASTNode)} instead.
+     */
+    public StubBasedPsiElementBase(T stub, IElementType nodeType, ASTNode node) {
+        if (stub != null) {
+            if (nodeType == null) {
+                throw new IllegalArgumentException("null cannot be passed to 'nodeType' when 'stub' is non-null");
+            }
+            if (node != null) {
+                throw new IllegalArgumentException("null must be passed to 'node' parameter when 'stub' is non-null");
+            }
+            mySubstrateRef = new SubstrateRef.StubRef(stub);
+            myElementType = nodeType;
         }
-        super.visitComposite(composite);
-      }
-    });
-    return traces.toString();
-  }
-
-  @SuppressWarnings({"NonConstantStringShouldBeStringBuffer", "StringConcatenationInLoop"})
-  private ASTNode notBoundInExistingAst(@Nonnull PsiFileImpl file, @Nonnull FileElement treeElement) {
-    String message = "file=" + file + "; tree=" + treeElement;
-    PsiElement each = this;
-    while (each != null) {
-      message += "\n each of class " + each.getClass() + "; valid=" + each.isValid();
-      if (each instanceof StubBasedPsiElementBase) {
-        message += "; ref=" + ((StubBasedPsiElementBase<?>)each).mySubstrateRef;
-        each = ((StubBasedPsiElementBase<?>)each).getParentByStub();
-      }
-      else {
-        if (each instanceof PsiFile) {
-          message += "; same file=" + (each == file) + "; current tree= " + file.getTreeElement() + "; stubTree=" + file.getStubTree() + "; physical=" + file.isPhysical();
+        else {
+            if (node == null) {
+                throw new IllegalArgumentException("'stub' and 'node' parameters cannot be null both");
+            }
+            if (nodeType != null) {
+                throw new IllegalArgumentException("null must be passed to 'nodeType' parameter when 'node' is non-null");
+            }
+            mySubstrateRef = SubstrateRef.createAstStrongRef(node);
+            myElementType = node.getElementType();
         }
-        break;
-      }
-    }
-    StubElement<?> eachStub = getStub();
-    while (eachStub != null) {
-      message += "\n each stub " + (eachStub instanceof PsiFileStubImpl ? ((PsiFileStubImpl<?>)eachStub).getDiagnostics() : eachStub);
-      eachStub = eachStub.getParentStub();
     }
 
-    if (ourTraceStubAstBinding) {
-      message += dumpCreationTraces(treeElement);
-    }
-    throw new AssertionError(message);
-  }
 
-  /**
-   * Don't invoke this method, it's public for implementation reasons.
-   */
-  public final void setNode(@Nonnull ASTNode node) {
-    setSubstrateRef(SubstrateRef.createAstStrongRef(node));
-  }
+    /**
+     * Ensures this element is AST-based. This is an expensive operation that might take significant time and allocate lots of objects,
+     * so it should be to be avoided if possible.
+     *
+     * @return an AST node corresponding to this element. If the element is currently operating via stubs,
+     * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
+     * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
+     */
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public ASTNode getNode() {
+        if (mySubstrateRef instanceof SubstrateRef.StubRef) {
+            getApplication().assertReadAccessAllowed();
+            PsiFileImpl file = (PsiFileImpl) getContainingFile();
+            if (!file.isValid()) {
+                throw new PsiInvalidElementAccessException(file);
+            }
 
-  /**
-   * Don't invoke this method, it's public for implementation reasons.
-   */
-  public final void setSubstrateRef(@Nonnull SubstrateRef substrateRef) {
-    mySubstrateRef = substrateRef;
-  }
+            FileElement treeElement = file.getTreeElement();
+            if (treeElement != null && mySubstrateRef instanceof SubstrateRef.StubRef) {
+                return notBoundInExistingAst(file, treeElement);
+            }
 
-  @Nonnull
-  @Override
-  public Language getLanguage() {
-    return myElementType.getLanguage();
-  }
+            treeElement = file.calcTreeElement();
+            if (mySubstrateRef instanceof SubstrateRef.StubRef) {
+                return failedToBindStubToAst(file, treeElement);
+            }
+        }
 
-  @Override
-  @Nonnull
-  public PsiFile getContainingFile() {
-    try {
-      return mySubstrateRef.getContainingFile();
-    }
-    catch (PsiInvalidElementAccessException e) {
-      if (PsiInvalidElementAccessException.getInvalidationTrace(this) != null) {
-        throw new PsiInvalidElementAccessException(this, e);
-      }
-      else {
-        throw e;
-      }
-    }
-  }
-
-  @Override
-  public boolean isWritable() {
-    return getContainingFile().isWritable();
-  }
-
-  @Override
-  public boolean isValid() {
-    ProgressManager.checkCanceled();
-    return mySubstrateRef.isValid();
-  }
-
-  @Nonnull
-  @Override
-  public PsiManager getManager() {
-    Project project = SingleProjectHolder.theOnlyOpenProject();
-    if (project != null) {
-      return PsiManager.getInstance(project);
-    }
-    return getContainingFile().getManager();
-  }
-
-  @Override
-  @Nonnull
-  public Project getProject() {
-    Project project = SingleProjectHolder.theOnlyOpenProject();
-    if (project != null) {
-      return project;
-    }
-    return getContainingFile().getProject();
-  }
-
-  @Override
-  public boolean isPhysical() {
-    return getContainingFile().isPhysical();
-  }
-
-  @Override
-  public PsiElement getContext() {
-    T stub = getStub();
-    if (stub != null) {
-      if (!(stub instanceof PsiFileStub)) {
-        return stub.getParentStub().getPsi();
-      }
-    }
-    return super.getContext();
-  }
-
-  /**
-   * Please consider using {@link #getParent()} instead, because this method can return different results before and after AST is loaded.
-   *
-   * @return a PSI element taken from parent stub (if present) or parent AST node.
-   */
-  protected final PsiElement getParentByStub() {
-    StubElement<?> stub = getStub();
-    if (stub != null) {
-      return stub.getParentStub().getPsi();
+        return mySubstrateRef.getNode();
     }
 
-    return SharedImplUtil.getParent(getNode());
-  }
+    @RequiredReadAction
+    private ASTNode failedToBindStubToAst(@Nonnull PsiFileImpl file, @Nonnull FileElement fileElement) {
+        VirtualFile vFile = file.getVirtualFile();
+        StubTree stubTree = file.getStubTree();
+        String stubString = stubTree != null ? ((PsiFileStubImpl) stubTree.getRoot()).printTree() : null;
+        String astString =
+            RecursionManager.doPreventingRecursion("failedToBindStubToAst", true, () -> DebugUtil.treeToString(fileElement, true));
 
-  /**
-   * @deprecated use {@link #getParent()} instead
-   */
-  @Deprecated
-  protected final PsiElement getParentByTree() {
-    return SharedImplUtil.getParent(getNode());
-  }
+        String message = "Failed to bind stub to AST for element " + getClass() + " in " +
+            (vFile == null ? "<unknown file>" : vFile.getPath()) + "\nFile:\n" + file + "@" + System.identityHashCode(file);
 
-  /**
-   * @return the parent of this element. Uses stub hierarchy if possible, but might cause an expensive switch to AST
-   * if the parent stub doesn't correspond to the parent AST node.
-   */
-  @Override
-  public PsiElement getParent() {
-    T stub = getGreenStub();
-    if (stub != null && !((ObjectStubBase<?>)stub).isDangling()) {
-      return stub.getParentStub().getPsi();
+        String creationTraces = ourTraceStubAstBinding ? dumpCreationTraces(fileElement) : null;
+
+        List<Attachment> attachments = new ArrayList<>();
+        if (stubString != null) {
+            attachments.add(AttachmentFactory.get().create("stubTree.txt", stubString));
+        }
+        if (astString != null) {
+            attachments.add(AttachmentFactory.get().create("ast.txt", astString));
+        }
+        if (creationTraces != null) {
+            attachments.add(AttachmentFactory.get().create("creationTraces.txt", creationTraces));
+        }
+
+        throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));
     }
 
-    return SourceTreeToPsiMap.treeElementToPsi(getNode().getTreeParent());
-  }
-
-  @Nonnull
-  public IStubElementType getElementType() {
-    if (!(myElementType instanceof IStubElementType)) {
-      throw new ClassCastException("Not a stub type: " + myElementType + " in " + getClass());
+    @Nonnull
+    private String dumpCreationTraces(@Nonnull FileElement fileElement) {
+        final StringBuilder traces = new StringBuilder("\nNow " + Thread.currentThread() + "\n");
+        traces.append("My creation trace:\n").append(getUserData(CREATION_TRACE));
+        traces.append("AST creation traces:\n");
+        fileElement.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
+            @Override
+            public void visitComposite(CompositeElement composite) {
+                PsiElement psi = composite.getPsi();
+                if (psi != null) {
+                    traces.append(psi).append("@").append(System.identityHashCode(psi)).append("\n");
+                    String trace = psi.getUserData(CREATION_TRACE);
+                    if (trace != null) {
+                        traces.append(trace).append("\n");
+                    }
+                }
+                super.visitComposite(composite);
+            }
+        });
+        return traces.toString();
     }
-    return (IStubElementType<?, ?>)myElementType;
-  }
 
-  /**
-   * Note: for most clients (where the logic doesn't crucially differ for stub and AST cases), {@link #getGreenStub()} should be preferred.
-   *
-   * @return the stub that this element is built upon, or null if the element is currently AST-based. The latter can happen
-   * if the file text was loaded from the very beginning, or if it was loaded via {@link #getNode()} on this or any other element
-   * in the containing file.
-   */
-  @Nullable
-  public T getStub() {
-    ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
-    //noinspection unchecked
-    return (T)mySubstrateRef.getStub();
-  }
+    @RequiredReadAction
+    @SuppressWarnings({"NonConstantStringShouldBeStringBuffer", "StringConcatenationInLoop"})
+    private ASTNode notBoundInExistingAst(@Nonnull PsiFileImpl file, @Nonnull FileElement treeElement) {
+        String message = "file=" + file + "; tree=" + treeElement;
+        PsiElement each = this;
+        while (each != null) {
+            message += "\n each of class " + each.getClass() + "; valid=" + each.isValid();
+            if (each instanceof StubBasedPsiElementBase stubBasedElemBase) {
+                message += "; ref=" + stubBasedElemBase.mySubstrateRef;
+                each = stubBasedElemBase.getParentByStub();
+            }
+            else {
+                if (each instanceof PsiFile) {
+                    message += "; same file=" + (each == file) + "; " +
+                        "current tree= " + file.getTreeElement() + "; " +
+                        "stubTree=" + file.getStubTree() + "; " +
+                        "physical=" + file.isPhysical();
+                }
+                break;
+            }
+        }
+        StubElement<?> eachStub = getStub();
+        while (eachStub != null) {
+            message +=
+                "\n each stub " + (eachStub instanceof PsiFileStubImpl ? ((PsiFileStubImpl<?>) eachStub).getDiagnostics() : eachStub);
+            eachStub = eachStub.getParentStub();
+        }
 
-  /**
-   * Like {@link #getStub()}, but can return a non-null value after the element has been switched to AST. Can be used
-   * to retrieve the information which is cheaper to get from a stub than by tree traversal.
-   *
-   * @see PsiFileImpl#getGreenStub()
-   */
-  @Nullable
-  public final T getGreenStub() {
-    ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
-    //noinspection unchecked
-    return (T)mySubstrateRef.getGreenStub();
-  }
-
-  /**
-   * @return a child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nullable
-  public <Psi extends PsiElement> Psi getStubOrPsiChild(@Nonnull IStubElementType<? extends StubElement, Psi> elementType) {
-    T stub = getGreenStub();
-    if (stub != null) {
-      //noinspection unchecked
-      StubElement<Psi> element = stub.findChildStubByType(elementType);
-      if (element != null) {
-        return element.getPsi();
-      }
+        if (ourTraceStubAstBinding) {
+            message += dumpCreationTraces(treeElement);
+        }
+        throw new AssertionError(message);
     }
-    else {
-      ASTNode childNode = getNode().findChildByType(elementType);
-      if (childNode != null) {
+
+    /**
+     * Don't invoke this method, it's public for implementation reasons.
+     */
+    public final void setNode(@Nonnull ASTNode node) {
+        setSubstrateRef(SubstrateRef.createAstStrongRef(node));
+    }
+
+    /**
+     * Don't invoke this method, it's public for implementation reasons.
+     */
+    @Override
+    public final void setSubstrateRef(@Nonnull SubstrateRef substrateRef) {
+        mySubstrateRef = substrateRef;
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Language getLanguage() {
+        return myElementType.getLanguage();
+    }
+
+    @Override
+    @Nonnull
+    public PsiFile getContainingFile() {
+        try {
+            return mySubstrateRef.getContainingFile();
+        }
+        catch (PsiInvalidElementAccessException e) {
+            if (PsiInvalidElementAccessException.getInvalidationTrace(this) != null) {
+                throw new PsiInvalidElementAccessException(this, e);
+            }
+            else {
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public boolean isWritable() {
+        return getContainingFile().isWritable();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        ProgressManager.checkCanceled();
+        return mySubstrateRef.isValid();
+    }
+
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        Project project = SingleProjectHolder.theOnlyOpenProject();
+        if (project != null) {
+            return PsiManager.getInstance(project);
+        }
+        return getContainingFile().getManager();
+    }
+
+    @Override
+    @Nonnull
+    public Project getProject() {
+        Project project = SingleProjectHolder.theOnlyOpenProject();
+        if (project != null) {
+            return project;
+        }
+        return getContainingFile().getProject();
+    }
+
+    @Override
+    public boolean isPhysical() {
+        return getContainingFile().isPhysical();
+    }
+
+    @Override
+    public PsiElement getContext() {
+        T stub = getStub();
+        if (stub != null) {
+            if (!(stub instanceof PsiFileStub)) {
+                return stub.getParentStub().getPsi();
+            }
+        }
+        return super.getContext();
+    }
+
+    /**
+     * Please consider using {@link #getParent()} instead, because this method can return different results before and after AST is loaded.
+     *
+     * @return a PSI element taken from parent stub (if present) or parent AST node.
+     */
+    @RequiredReadAction
+    protected final PsiElement getParentByStub() {
+        StubElement<?> stub = getStub();
+        if (stub != null) {
+            return stub.getParentStub().getPsi();
+        }
+
+        return SharedImplUtil.getParent(getNode());
+    }
+
+    /**
+     * @deprecated use {@link #getParent()} instead
+     */
+    @Deprecated
+    @RequiredReadAction
+    protected final PsiElement getParentByTree() {
+        return SharedImplUtil.getParent(getNode());
+    }
+
+    /**
+     * @return the parent of this element. Uses stub hierarchy if possible, but might cause an expensive switch to AST
+     * if the parent stub doesn't correspond to the parent AST node.
+     */
+    @Override
+    @RequiredReadAction
+    public PsiElement getParent() {
+        T stub = getGreenStub();
+        if (stub != null && !((ObjectStubBase<?>) stub).isDangling()) {
+            return stub.getParentStub().getPsi();
+        }
+
+        return SourceTreeToPsiMap.treeElementToPsi(getNode().getTreeParent());
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public IStubElementType getElementType() {
+        if (!(myElementType instanceof IStubElementType)) {
+            throw new ClassCastException("Not a stub type: " + myElementType + " in " + getClass());
+        }
+        return (IStubElementType<?, ?>) myElementType;
+    }
+
+    /**
+     * Note: for most clients (where the logic doesn't crucially differ for stub and AST cases), {@link #getGreenStub()} should be preferred.
+     *
+     * @return the stub that this element is built upon, or null if the element is currently AST-based. The latter can happen
+     * if the file text was loaded from the very beginning, or if it was loaded via {@link #getNode()} on this or any other element
+     * in the containing file.
+     */
+    @Nullable
+    @Override
+    public T getStub() {
+        ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
         //noinspection unchecked
-        return (Psi)childNode.getPsi();
-      }
+        return (T) mySubstrateRef.getStub();
     }
-    return null;
-  }
 
-  /**
-   * @return a not-null child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nonnull
-  public <S extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(@Nonnull IStubElementType<S, Psi> elementType) {
-    Psi result = getStubOrPsiChild(elementType);
-    if (result == null) {
-      throw new AssertionError("Missing required child of type " + elementType + "; tree: " + DebugUtil.psiToString(this, false));
-    }
-    return result;
-  }
-
-  /**
-   * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nonnull
-  public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull IStubElementType<S, ? extends Psi> elementType, @Nonnull Psi[] array) {
-    T stub = getGreenStub();
-    if (stub != null) {
-      //noinspection unchecked
-      return (Psi[])stub.getChildrenByType(elementType, array);
-    }
-    else {
-      ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
-      Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
-      for (int i = 0; i < nodes.length; i++) {
+    /**
+     * Like {@link #getStub()}, but can return a non-null value after the element has been switched to AST. Can be used
+     * to retrieve the information which is cheaper to get from a stub than by tree traversal.
+     *
+     * @see PsiFileImpl#getGreenStub()
+     */
+    @Nullable
+    @Override
+    public final T getGreenStub() {
+        ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
         //noinspection unchecked
-        psiElements[i] = (Psi)nodes[i].getPsi();
-      }
-      return psiElements;
+        return (T) mySubstrateRef.getGreenStub();
     }
-  }
 
-  /**
-   * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nonnull
-  public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull IStubElementType<S, ? extends Psi> elementType, @Nonnull ArrayFactory<? extends Psi> f) {
-    T stub = getGreenStub();
-    if (stub != null) {
-      //noinspection unchecked
-      return (Psi[])stub.getChildrenByType(elementType, f);
+    /**
+     * @return a child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nullable
+    @RequiredReadAction
+    public <Psi extends PsiElement> Psi getStubOrPsiChild(@Nonnull IStubElementType<? extends StubElement, Psi> elementType) {
+        T stub = getGreenStub();
+        if (stub != null) {
+            //noinspection unchecked
+            StubElement<Psi> element = stub.findChildStubByType(elementType);
+            if (element != null) {
+                return element.getPsi();
+            }
+        }
+        else {
+            ASTNode childNode = getNode().findChildByType(elementType);
+            if (childNode != null) {
+                //noinspection unchecked
+                return (Psi) childNode.getPsi();
+            }
+        }
+        return null;
     }
-    else {
-      ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
-      Psi[] psiElements = f.create(nodes.length);
-      for (int i = 0; i < nodes.length; i++) {
-        //noinspection unchecked
-        psiElements[i] = (Psi)nodes[i].getPsi();
-      }
-      return psiElements;
-    }
-  }
 
-  /**
-   * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nonnull
-  public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull Psi[] array) {
-    T stub = getGreenStub();
-    if (stub != null) {
-      //noinspection unchecked
-      return (Psi[])stub.getChildrenByType(filter, array);
+    /**
+     * @return a not-null child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nonnull
+    @RequiredReadAction
+    public <S extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(@Nonnull IStubElementType<S, Psi> elementType) {
+        Psi result = getStubOrPsiChild(elementType);
+        if (result == null) {
+            throw new AssertionError("Missing required child of type " + elementType + "; tree: " + DebugUtil.psiToString(this, false));
+        }
+        return result;
     }
-    else {
-      ASTNode[] nodes = getNode().getChildren(filter);
-      Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
-      for (int i = 0; i < nodes.length; i++) {
-        //noinspection unchecked
-        psiElements[i] = (Psi)nodes[i].getPsi();
-      }
-      return psiElements;
-    }
-  }
 
-  /**
-   * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
-   */
-  @Nonnull
-  public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull ArrayFactory<? extends Psi> f) {
-    T stub = getGreenStub();
-    if (stub != null) {
-      //noinspection unchecked
-      return (Psi[])stub.getChildrenByType(filter, f);
+    /**
+     * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nonnull
+    @RequiredReadAction
+    public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
+        @Nonnull IStubElementType<S, ? extends Psi> elementType,
+        @Nonnull Psi[] array
+    ) {
+        T stub = getGreenStub();
+        if (stub != null) {
+            //noinspection unchecked
+            return (Psi[]) stub.getChildrenByType(elementType, array);
+        }
+        else {
+            ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
+            Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
+            for (int i = 0; i < nodes.length; i++) {
+                //noinspection unchecked
+                psiElements[i] = (Psi) nodes[i].getPsi();
+            }
+            return psiElements;
+        }
     }
-    else {
-      ASTNode[] nodes = getNode().getChildren(filter);
-      Psi[] psiElements = f.create(nodes.length);
-      for (int i = 0; i < nodes.length; i++) {
-        //noinspection unchecked
-        psiElements[i] = (Psi)nodes[i].getPsi();
-      }
-      return psiElements;
-    }
-  }
 
-  /**
-   * @return a first ancestor of specified type, in stub hierarchy (if this element is currently stub-based) or AST hierarchy (otherwise).
-   */
-  @Nullable
-  protected <E extends PsiElement> E getStubOrPsiParentOfType(@Nonnull Class<E> parentClass) {
-    T stub = getStub();
-    if (stub != null) {
-      //noinspection unchecked
-      return (E)stub.getParentStubOfType(parentClass);
+    /**
+     * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nonnull
+    @RequiredReadAction
+    public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
+        @Nonnull IStubElementType<S, ? extends Psi> elementType,
+        @Nonnull ArrayFactory<? extends Psi> f
+    ) {
+        T stub = getGreenStub();
+        if (stub != null) {
+            //noinspection unchecked
+            return (Psi[]) stub.getChildrenByType(elementType, f);
+        }
+        else {
+            ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
+            Psi[] psiElements = f.create(nodes.length);
+            for (int i = 0; i < nodes.length; i++) {
+                //noinspection unchecked
+                psiElements[i] = (Psi) nodes[i].getPsi();
+            }
+            return psiElements;
+        }
     }
-    return PsiTreeUtil.getParentOfType(this, parentClass);
-  }
 
-  @Override
-  protected Object clone() {
-    StubBasedPsiElementBase<?> copy = (StubBasedPsiElementBase<?>)super.clone();
-    copy.setSubstrateRef(SubstrateRef.createAstStrongRef(getNode()));
-    return copy;
-  }
+    /**
+     * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nonnull
+    @RequiredReadAction
+    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull Psi[] array) {
+        T stub = getGreenStub();
+        if (stub != null) {
+            //noinspection unchecked
+            return (Psi[]) stub.getChildrenByType(filter, array);
+        }
+        else {
+            ASTNode[] nodes = getNode().getChildren(filter);
+            Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
+            for (int i = 0; i < nodes.length; i++) {
+                //noinspection unchecked
+                psiElements[i] = (Psi) nodes[i].getPsi();
+            }
+            return psiElements;
+        }
+    }
+
+    /**
+     * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
+     */
+    @Nonnull
+    @RequiredReadAction
+    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull ArrayFactory<? extends Psi> f) {
+        T stub = getGreenStub();
+        if (stub != null) {
+            //noinspection unchecked
+            return (Psi[]) stub.getChildrenByType(filter, f);
+        }
+        else {
+            ASTNode[] nodes = getNode().getChildren(filter);
+            Psi[] psiElements = f.create(nodes.length);
+            for (int i = 0; i < nodes.length; i++) {
+                //noinspection unchecked
+                psiElements[i] = (Psi) nodes[i].getPsi();
+            }
+            return psiElements;
+        }
+    }
+
+    /**
+     * @return a first ancestor of specified type, in stub hierarchy (if this element is currently stub-based) or AST hierarchy (otherwise).
+     */
+    @Nullable
+    protected <E extends PsiElement> E getStubOrPsiParentOfType(@Nonnull Class<E> parentClass) {
+        T stub = getStub();
+        if (stub != null) {
+            //noinspection unchecked
+            return (E) stub.getParentStubOfType(parentClass);
+        }
+        return PsiTreeUtil.getParentOfType(this, parentClass);
+    }
+
+    @Override
+    @RequiredReadAction
+    protected Object clone() {
+        StubBasedPsiElementBase<?> copy = (StubBasedPsiElementBase<?>) super.clone();
+        copy.setSubstrateRef(SubstrateRef.createAstStrongRef(getNode()));
+        return copy;
+    }
 }

@@ -31,34 +31,35 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 2014-03-19
  */
 public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements PsiNamedElement, PsiNameIdentifierOwner {
-  public SandClass(@Nonnull ASTNode node) {
-    super(node);
-  }
+    public SandClass(@Nonnull ASTNode node) {
+        super(node);
+    }
 
-  public SandClass(@Nonnull SandClassStub stub, @Nonnull IStubElementType nodeType) {
-    super(stub, nodeType);
-  }
+    public SandClass(@Nonnull SandClassStub stub, @Nonnull IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-  @RequiredReadAction
-  @Override
-  public String getName() {
-    PsiElement nameIdentifier = getNameIdentifier();
-    return nameIdentifier != null ? nameIdentifier.getText() : null;
-  }
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier != null ? nameIdentifier.getText() : null;
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-    return null;
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        return null;
+    }
 
-  @RequiredReadAction
-  @Nullable
-  @Override
-  public PsiElement getNameIdentifier() {
-    return findChildByType(SandTokens.IDENTIFIER);
-  }
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public PsiElement getNameIdentifier() {
+        return findChildByType(SandTokens.IDENTIFIER);
+    }
 }

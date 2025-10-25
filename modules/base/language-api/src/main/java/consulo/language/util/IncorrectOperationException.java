@@ -15,20 +15,31 @@
  */
 package consulo.language.util;
 
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 public class IncorrectOperationException extends RuntimeException {
-  public IncorrectOperationException() {
-    super();
-  }
+    public IncorrectOperationException() {
+        super();
+    }
 
-  public IncorrectOperationException(String message) {
-    super(message);
-  }
+    public IncorrectOperationException(@Nonnull LocalizeValue message) {
+        super(message.get());
+    }
 
-  public IncorrectOperationException(Throwable t) {
-    super(t);
-  }
+    public IncorrectOperationException(String message) {
+        super(message);
+    }
 
-  public IncorrectOperationException(String message, Throwable t) {
-    super(message, t);
-  }
+    public IncorrectOperationException(Throwable t) {
+        super(t);
+    }
+
+    public IncorrectOperationException(@Nonnull LocalizeValue message, Throwable t) {
+        super(message.get(), t);
+    }
+
+    public IncorrectOperationException(String message, Throwable t) {
+        super(message, t);
+    }
 }

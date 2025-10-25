@@ -37,141 +37,141 @@ import jakarta.annotation.Nullable;
  */
 public abstract class FakePsiElement extends PsiElementBase implements PsiNamedElement, ItemPresentation {
 
-  @Override
-  public ItemPresentation getPresentation() {
-    return this;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Language getLanguage() {
-    return Language.ANY;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public PsiElement[] getChildren() {
-    return PsiElement.EMPTY_ARRAY;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public PsiElement getFirstChild() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public PsiElement getLastChild() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public PsiElement getNextSibling() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public PsiElement getPrevSibling() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public TextRange getTextRange() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  public int getStartOffsetInParent() {
-    return 0;
-  }
-
-  @RequiredReadAction
-  @Override
-  public int getTextLength() {
-    return 0;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  public PsiElement findElementAt(int offset) {
-    return null;
-  }
-
-  @Override
-  public int getTextOffset() {
-    return 0;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nullable
-  @NonNls
-  public String getText() {
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public char[] textToCharArray() {
-    return new char[0];
-  }
-
-  @RequiredReadAction
-  @Override
-  public boolean textContains(char c) {
-    return false;
-  }
-
-  @Override
-  @Nullable
-  public ASTNode getNode() {
-    return null;
-  }
-
-  @Override
-  public String getPresentableText() {
-    return getName();
-  }
-
-  @Override
-  @Nullable
-  public String getLocationString() {
-    return null;
-  }
-
-  @Override
-  @Nullable
-  public Image getIcon() {
-    return null;
-  }
-
-  @RequiredWriteAction
-  @Override
-  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public PsiManager getManager() {
-    PsiElement parent = getParent();
-    if(parent != null) {
-      return parent.getManager();
+    @Override
+    public ItemPresentation getPresentation() {
+        return this;
     }
-    throw new IllegalArgumentException("Parent must be not null for return PsiManager, or override this method. Class: " + getClass());
-  }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Language getLanguage() {
+        return Language.ANY;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public PsiElement[] getChildren() {
+        return PsiElement.EMPTY_ARRAY;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public PsiElement getFirstChild() {
+        return null;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public PsiElement getLastChild() {
+        return null;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public PsiElement getNextSibling() {
+        return null;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public PsiElement getPrevSibling() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public TextRange getTextRange() {
+        return TextRange.EMPTY_RANGE;
+    }
+
+    @RequiredReadAction
+    @Override
+    public int getStartOffsetInParent() {
+        return 0;
+    }
+
+    @RequiredReadAction
+    @Override
+    public int getTextLength() {
+        return 0;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public PsiElement findElementAt(int offset) {
+        return null;
+    }
+
+    @Override
+    public int getTextOffset() {
+        return 0;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    @NonNls
+    public String getText() {
+        return null;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public char[] textToCharArray() {
+        return new char[0];
+    }
+
+    @RequiredReadAction
+    @Override
+    public boolean textContains(char c) {
+        return false;
+    }
+
+    @Override
+    @Nullable
+    public ASTNode getNode() {
+        return null;
+    }
+
+    @Override
+    public String getPresentableText() {
+        return getName();
+    }
+
+    @Override
+    @Nullable
+    public String getLocationString() {
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public Image getIcon() {
+        return null;
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        PsiElement parent = getParent();
+        if (parent != null) {
+            return parent.getManager();
+        }
+        throw new IllegalArgumentException("Parent must be not null for return PsiManager, or override this method. Class: " + getClass());
+    }
 }

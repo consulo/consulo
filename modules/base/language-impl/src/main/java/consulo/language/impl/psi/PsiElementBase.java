@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.*;
@@ -32,311 +32,346 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
-  private static final Logger LOG = Logger.getInstance(PsiElementBase.class);
+    private static final Logger LOG = Logger.getInstance(PsiElementBase.class);
 
-  @RequiredReadAction
-  @Override
-  public PsiElement getFirstChild() {
-    PsiElement[] children = getChildren();
-    if (children.length == 0) return null;
-    return children[0];
-  }
-
-  @RequiredReadAction
-  @Override
-  public PsiElement getLastChild() {
-    PsiElement[] children = getChildren();
-    if (children.length == 0) return null;
-    return children[children.length - 1];
-  }
-
-  @RequiredReadAction
-  @Override
-  public PsiElement getNextSibling() {
-    return SharedPsiElementImplUtil.getNextSibling(this);
-  }
-
-  @RequiredReadAction
-  @Override
-  public PsiElement getPrevSibling() {
-    return SharedPsiElementImplUtil.getPrevSibling(this);
-  }
-
-  @Override
-  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
-    PsiElement child = getFirstChild();
-    while (child != null) {
-      child.accept(visitor);
-      child = child.getNextSibling();
+    @Override
+    @RequiredReadAction
+    public PsiElement getFirstChild() {
+        PsiElement[] children = getChildren();
+        if (children.length == 0) {
+            return null;
+        }
+        return children[0];
     }
-  }
 
-  @Override
-  public PsiReference getReference() {
-    return null;
-  }
-
-  @Override
-  @Nonnull
-  public PsiReference[] getReferences() {
-    return SharedPsiElementImplUtil.getReferences(this);
-  }
-
-  @RequiredReadAction
-  @Override
-  public PsiReference findReferenceAt(int offset) {
-    return SharedPsiElementImplUtil.findReferenceAt(this, offset);
-  }
-
-  @Override
-  public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Operation not supported in: " + getClass());
-  }
-
-  @Override
-  public PsiElement addRangeBefore(@Nonnull PsiElement first,
-                                   @Nonnull PsiElement last,
-                                   PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Operation not supported in: " + getClass());
-  }
-
-  @Override
-  public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Operation not supported in: " + getClass());
-  }
-
-  @Override
-  public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Operation not supported in: " + getClass());
-  }
-
-  @Override
-  public PsiElement copy() {
-    return (PsiElement)clone();
-  }
-
-  @Override
-  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public void delete() throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public void checkDelete() throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @Override
-  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  @RequiredReadAction
-  @Override
-  public boolean textContains(char c) {
-    return getText().indexOf(c) >= 0;
-  }
-
-  @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
-                                     @Nonnull ResolveState state,
-                                     PsiElement lastParent,
-                                     @Nonnull PsiElement place) {
-    return true;
-  }
-
-  @Override
-  public PsiElement getContext() {
-    return getParent();
-  }
-
-  @Override
-  @Nonnull
-  public PsiElement getNavigationElement() {
-    return this;
-  }
-
-  @Override
-  public PsiElement getOriginalElement() {
-    return this;
-  }
-
-  @Override
-  @Nonnull
-  public GlobalSearchScope getResolveScope() {
-    return ResolveScopeManager.getElementResolveScope(this);
-  }
-
-  @Override
-  @Nonnull
-  public SearchScope getUseScope() {
-    return ResolveScopeManager.getElementUseScope(this);
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
-    if (descriptor != null) {
-      descriptor.navigate(requestFocus);
+    @Override
+    @RequiredReadAction
+    public PsiElement getLastChild() {
+        PsiElement[] children = getChildren();
+        if (children.length == 0) {
+            return null;
+        }
+        return children[children.length - 1];
     }
-  }
 
-  @Override
-  public boolean canNavigate() {
-    return PsiNavigationSupport.getInstance().canNavigate(this);
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
-  }
-
-  @RequiredReadAction
-  @Nullable
-  @Override
-  public Module getModule() throws PsiInvalidElementAccessException {
-    PsiFile file = getContainingFile();
-    return file == null ? null : file.getModule();
-  }
-
-  @Override
-  @Nonnull
-  public Project getProject() {
-    PsiManager manager = getManager();
-    return manager.getProject();
-  }
-
-  //default implementations of methods from NavigationItem
-  @Override
-  public ItemPresentation getPresentation() {
-    return null;
-  }
-
-  @Override
-  public boolean isEquivalentTo(PsiElement another) {
-    return this == another;
-  }
-
-  @Override
-  public PsiFile getContainingFile() {
-    PsiElement parent = getParent();
-    if (parent == null) throw new PsiInvalidElementAccessException(this);
-    return parent.getContainingFile();
-  }
-
-  @Override
-  public boolean isPhysical() {
-    PsiElement parent = getParent();
-    return parent != null && parent.isPhysical();
-  }
-
-  @Override
-  public boolean isWritable() {
-    PsiElement parent = getParent();
-    return parent != null && parent.isWritable();
-  }
-
-  @Override
-  public boolean isValid() {
-    PsiElement parent = getParent();
-    while (parent != null && parent.getClass() == this.getClass()) {
-      parent = parent.getParent();
+    @Override
+    @RequiredReadAction
+    public PsiElement getNextSibling() {
+        return SharedPsiElementImplUtil.getNextSibling(this);
     }
-    return parent != null && parent.isValid();
-  }
 
-  //Q: get rid of these methods?
-  @Override
-  public boolean textMatches(@Nonnull CharSequence text) {
-    return Comparing.equal(getText(), text, true);
-  }
-
-  @Override
-  public boolean textMatches(@Nonnull PsiElement element) {
-    return getText().equals(element.getText());
-  }
-
-  @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
-    visitor.visitElement(this);
-  }
-
-  @Override
-  public String getName() {
-    return null;
-  }
-
-  @Nonnull
-  protected <T> T notNullChild(T child) {
-    if (child == null) {
-      LOG.error(getText() + "\n parent=" + getParent().getText());
+    @Override
+    @RequiredReadAction
+    public PsiElement getPrevSibling() {
+        return SharedPsiElementImplUtil.getPrevSibling(this);
     }
-    return child;
-  }
 
-  @Nonnull
-  protected <T> T[] findChildrenByClass(Class<T> aClass) {
-    List<T> result = new ArrayList<>();
-    for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
-      if (aClass.isInstance(cur)) result.add((T)cur);
+    @Override
+    @RequiredReadAction
+    public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
+        PsiElement child = getFirstChild();
+        while (child != null) {
+            child.accept(visitor);
+            child = child.getNextSibling();
+        }
     }
-    return result.toArray((T[])Array.newInstance(aClass, result.size()));
-  }
 
-  @Nullable
-  protected <T> T findChildByClass(Class<T> aClass) {
-    for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
-      if (aClass.isInstance(cur)) return (T)cur;
+    @Override
+    public PsiReference getReference() {
+        return null;
     }
-    return null;
-  }
 
-  @Nonnull
-  protected <T> T findNotNullChildByClass(Class<T> aClass) {
-    return notNullChild(findChildByClass(aClass));
-  }
-
-  @Nonnull
-  public LanguageVersion getLanguageVersion() {
-    return PsiTreeUtil.getLanguageVersion(this);
-  }
-
-  @Nonnull
-  @Override
-  public PsiManager getManager() {
-    try {
-      return PsiManager.getInstance(getProject());
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        return SharedPsiElementImplUtil.getReferences(this);
     }
-    catch (StackOverflowError e) {
-      throw new IllegalArgumentException("Implementation conflict getProject() + getManager(): Class: " + getClass().getName(), e);
+
+    @Override
+    @RequiredReadAction
+    public PsiReference findReferenceAt(int offset) {
+        return SharedPsiElementImplUtil.findReferenceAt(this, offset);
     }
-  }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Operation not supported in: " + getClass());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
+        throws IncorrectOperationException {
+        throw new IncorrectOperationException("Operation not supported in: " + getClass());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Operation not supported in: " + getClass());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Operation not supported in: " + getClass());
+    }
+
+    @Override
+    public PsiElement copy() {
+        return (PsiElement) clone();
+    }
+
+    @Override
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    public void checkDelete() throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+
+    @RequiredReadAction
+    @Override
+    public boolean textContains(char c) {
+        return getText().indexOf(c) >= 0;
+    }
+
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return true;
+    }
+
+    @Override
+    public PsiElement getContext() {
+        return getParent();
+    }
+
+    @Override
+    @Nonnull
+    public PsiElement getNavigationElement() {
+        return this;
+    }
+
+    @Override
+    public PsiElement getOriginalElement() {
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public GlobalSearchScope getResolveScope() {
+        return ResolveScopeManager.getElementResolveScope(this);
+    }
+
+    @Override
+    @Nonnull
+    public SearchScope getUseScope() {
+        return ResolveScopeManager.getElementUseScope(this);
+    }
+
+    @Override
+    public void navigate(boolean requestFocus) {
+        Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+        if (descriptor != null) {
+            descriptor.navigate(requestFocus);
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return PsiNavigationSupport.getInstance().canNavigate(this);
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return canNavigate();
+    }
+
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public Module getModule() throws PsiInvalidElementAccessException {
+        PsiFile file = getContainingFile();
+        return file == null ? null : file.getModule();
+    }
+
+    @Override
+    @Nonnull
+    public Project getProject() {
+        PsiManager manager = getManager();
+        return manager.getProject();
+    }
+
+    //default implementations of methods from NavigationItem
+    @Override
+    public ItemPresentation getPresentation() {
+        return null;
+    }
+
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        return this == another;
+    }
+
+    @Override
+    public PsiFile getContainingFile() {
+        PsiElement parent = getParent();
+        if (parent == null) {
+            throw new PsiInvalidElementAccessException(this);
+        }
+        return parent.getContainingFile();
+    }
+
+    @Override
+    public boolean isPhysical() {
+        PsiElement parent = getParent();
+        return parent != null && parent.isPhysical();
+    }
+
+    @Override
+    public boolean isWritable() {
+        PsiElement parent = getParent();
+        return parent != null && parent.isWritable();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        PsiElement parent = getParent();
+        while (parent != null && parent.getClass() == this.getClass()) {
+            parent = parent.getParent();
+        }
+        return parent != null && parent.isValid();
+    }
+
+    //Q: get rid of these methods?
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull CharSequence text) {
+        return Objects.equals(getText(), text);
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull PsiElement element) {
+        return getText().equals(element.getText());
+    }
+
+    @Override
+    public void accept(@Nonnull PsiElementVisitor visitor) {
+        visitor.visitElement(this);
+    }
+
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        throw null;
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    protected <T> T notNullChild(T child) {
+        if (child == null) {
+            LOG.error(getText() + "\n parent=" + getParent().getText());
+        }
+        return child;
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    @SuppressWarnings("unchecked")
+    protected <T> T[] findChildrenByClass(Class<T> aClass) {
+        List<T> result = new ArrayList<>();
+        for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
+            if (aClass.isInstance(cur)) {
+                result.add((T) cur);
+            }
+        }
+        return result.toArray((T[]) Array.newInstance(aClass, result.size()));
+    }
+
+    @Nullable
+    @RequiredReadAction
+    @SuppressWarnings("unchecked")
+    protected <T> T findChildByClass(Class<T> aClass) {
+        for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
+            if (aClass.isInstance(cur)) {
+                return (T) cur;
+            }
+        }
+        return null;
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    protected <T> T findNotNullChildByClass(Class<T> aClass) {
+        return notNullChild(findChildByClass(aClass));
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public LanguageVersion getLanguageVersion() {
+        return PsiTreeUtil.getLanguageVersion(this);
+    }
+
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        try {
+            return PsiManager.getInstance(getProject());
+        }
+        catch (StackOverflowError e) {
+            throw new IllegalArgumentException("Implementation conflict getProject() + getManager(): Class: " + getClass().getName(), e);
+        }
+    }
 }
