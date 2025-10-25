@@ -15,51 +15,57 @@
  */
 package consulo.task.impl.internal.language;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.impl.psi.FakePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import consulo.task.Task;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
  */
 public class TaskPsiElement extends FakePsiElement {
-  private final PsiManager myPsiManager;
-  private final Task myTask;
+    private final PsiManager myPsiManager;
+    private final Task myTask;
 
-  public TaskPsiElement(PsiManager psiManager, Task task) {
-    myPsiManager = psiManager;
-    myTask = task;
-  }
+    public TaskPsiElement(PsiManager psiManager, Task task) {
+        myPsiManager = psiManager;
+        myTask = task;
+    }
 
-  @Override
-  public PsiElement getParent() {
-    return null;
-  }
+    @Override
+    public PsiElement getParent() {
+        return null;
+    }
 
-  public Task getTask() {
-    return myTask;
-  }
+    public Task getTask() {
+        return myTask;
+    }
 
-  @Override
-  public boolean isValid() {
-    return true;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        return true;
+    }
 
-  @Override
-  public PsiManager getManager() {
-    return myPsiManager;
-  }
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        return myPsiManager;
+    }
 
-  @Override
-  public PsiFile getContainingFile() {
-    return PsiFileFactory.getInstance(getProject()).createFileFromText("foo.txt", "");
-  }
+    @Override
+    public PsiFile getContainingFile() {
+        return PsiFileFactory.getInstance(getProject()).createFileFromText("foo.txt", "");
+    }
 
-  @Override
-  public String getName() {
-    return myTask.getPresentableName();
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        return myTask.getPresentableName();
+    }
 }

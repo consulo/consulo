@@ -3,8 +3,7 @@
 package consulo.language.editor.impl.inspection.reference;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
@@ -90,7 +89,7 @@ public class RefManagerImpl implements RefManagerInternal {
         myContext = context;
         myPsiManager = PsiManager.getInstance(project);
         myRefProject = new RefProjectImpl(this);
-        for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
+        project.getApplication().getExtensionPoint(InspectionExtensionsFactory.class).forEach(factory -> {
             RefManagerExtension<?> extension = factory.createRefManagerExtension(this);
             if (extension != null) {
                 myExtensions.put(extension.getID(), extension);
@@ -98,7 +97,7 @@ public class RefManagerImpl implements RefManagerInternal {
                     myLanguageExtensions.put(language, extension);
                 }
             }
-        }
+        });
         if (scope != null) {
             for (Module module : ModuleManager.getInstance(getProject()).getModules()) {
                 getRefModule(module);
@@ -198,6 +197,7 @@ public class RefManagerImpl implements RefManagerInternal {
         }
     }
 
+    @Override
     public void registerGraphAnnotator(@Nonnull RefGraphAnnotator annotator) {
         if (myGraphAnnotators.add(annotator) && annotator instanceof RefGraphAnnotatorEx refGraphAnnotatorEx) {
             refGraphAnnotatorEx.initialize(this);
@@ -216,7 +216,7 @@ public class RefManagerImpl implements RefManagerInternal {
     @Override
     public <T> T getExtension(@Nonnull Key<T> key) {
         //noinspection unchecked
-        return (T)myExtensions.get(key);
+        return (T) myExtensions.get(key);
     }
 
     @Override
@@ -262,7 +262,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
         if (refEntity instanceof RefDirectory refDirectory) {
             Element fileElement = new Element("file");
-            VirtualFile virtualFile = ((PsiDirectory)refDirectory.getPsiElement()).getVirtualFile();
+            VirtualFile virtualFile = ((PsiDirectory) refDirectory.getPsiElement()).getVirtualFile();
             fileElement.addContent(virtualFile.getUrl());
             problem.addContent(fileElement);
         }
@@ -402,11 +402,11 @@ public class RefManagerImpl implements RefManagerInternal {
 
         answer = new ArrayList<>(myRefTable.values());
         List<RefElement> list = answer;
-        AccessRule.read(() -> Lists.quickSort(
+        ReadAction.run(() -> Lists.quickSort(
             list,
             (o1, o2) -> {
-                VirtualFile v1 = ((RefElementImpl)o1).getVirtualFile();
-                VirtualFile v2 = ((RefElementImpl)o2).getVirtualFile();
+                VirtualFile v1 = ((RefElementImpl) o1).getVirtualFile();
+                VirtualFile v2 = ((RefElementImpl) o2).getVirtualFile();
                 return (v1 != null ? v1.hashCode() : 0) - (v2 != null ? v2.hashCode() : 0);
             }
         ));
@@ -422,7 +422,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
     @Override
     public synchronized boolean isInGraph(VirtualFile file) {
-        return !myUnprocessedFiles.get(((VirtualFileWithId)file).getId());
+        return !myUnprocessedFiles.get(((VirtualFileWithId) file).getId());
     }
 
     @Nullable
@@ -467,13 +467,12 @@ public class RefManagerImpl implements RefManagerInternal {
 
     @Nonnull
     private static PsiAnchor createAnchor(@Nonnull PsiElement element) {
-        return AccessRule.read(() -> PsiAnchor.create(element));
+        return ReadAction.compute(() -> PsiAnchor.create(element));
     }
 
     public void initializeAnnotators() {
-        for (RefGraphAnnotator annotator : RefGraphAnnotator.EP_NAME.getExtensionList()) {
-            registerGraphAnnotator(annotator);
-        }
+        getProject().getApplication().getExtensionPoint(RefGraphAnnotator.class)
+            .forEach(this::registerGraphAnnotator);
     }
 
     private class ProjectIterator extends PsiElementVisitor {
@@ -491,11 +490,9 @@ public class RefManagerImpl implements RefManagerInternal {
                     RefManagerExtension externalFileManagerExtension =
                         myExtensions.values().stream().filter(ex -> ex.shouldProcessExternalFile(file)).findFirst().orElse(null);
                     if (externalFileManagerExtension == null) {
-                        if (element instanceof PsiFile) {
-                            VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
-                            if (virtualFile instanceof VirtualFileWithId virtualFileWithId) {
-                                registerUnprocessed(virtualFileWithId);
-                            }
+                        if (element instanceof PsiFile psiFile
+                            && PsiUtilCore.getVirtualFile(psiFile) instanceof VirtualFileWithId virtualFileWithId) {
+                            registerUnprocessed(virtualFileWithId);
                         }
                     }
                     else {
@@ -515,9 +512,9 @@ public class RefManagerImpl implements RefManagerInternal {
                                     refWhat = getReference(targetContainingFile);
                                 }
 
-                                if (refWhat != null) {
-                                    ((RefElementImpl)refWhat).addInReference(refFile);
-                                    ((RefElementImpl)refFile).addOutReference(refWhat);
+                                if (refWhat instanceof RefElementImpl refElement) {
+                                    refElement.addInReference(refFile);
+                                    ((RefElementImpl) refFile).addOutReference(refElement);
                                 }
                             }
                         }
@@ -530,7 +527,7 @@ public class RefManagerImpl implements RefManagerInternal {
                                 //in case of implicit inheritance, e.g. GroovyObject
                                 //= no explicit reference is provided, dependency on groovy library could be treated as redundant though it is not
                                 //inReference is not important in this case
-                                ((RefElementImpl)refFile).addOutReference(superClassReference);
+                                ((RefElementImpl) refFile).addOutReference(superClassReference);
                             }
                         });
 
@@ -580,14 +577,14 @@ public class RefManagerImpl implements RefManagerInternal {
 
     @Nullable
     public RefElement getReference(PsiElement elem, boolean ignoreScope) {
-        if (AccessRule.read(() -> elem == null || !elem.isValid() || elem instanceof LightweightPsiElement
+        if (ReadAction.compute(() -> elem == null || !elem.isValid() || elem instanceof LightweightPsiElement
             || !(elem instanceof PsiDirectory) && !belongsToScope(elem, ignoreScope))) {
             return null;
         }
 
         return getFromRefTableOrCache(
             elem,
-            () -> AccessRule.read(() -> {
+            () -> ReadAction.compute(() -> {
                 RefManagerExtension extension = getExtension(elem.getLanguage());
                 if (extension != null) {
                     RefElement refElement = extension.createRefElement(elem);
@@ -603,8 +600,8 @@ public class RefManagerImpl implements RefManagerInternal {
                 }
                 return null;
             }),
-            element -> AccessRule.read(() -> {
-                ((RefElementImpl)element).initialize();
+            element -> ReadAction.run(() -> {
+                ((RefElementImpl) element).initialize();
                 for (RefManagerExtension each : myExtensions.values()) {
                     each.onEntityInitialized(element, elem);
                 }
@@ -661,7 +658,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
         PsiAnchor psiAnchor = createAnchor(element);
         //noinspection unchecked
-        T result = (T)(myRefTable.get(psiAnchor));
+        T result = (T) (myRefTable.get(psiAnchor));
 
         if (result != null) {
             return result;
@@ -681,7 +678,7 @@ public class RefManagerImpl implements RefManagerInternal {
         RefElement prev = myRefTable.putIfAbsent(psiAnchor, result);
         if (prev != null) {
             //noinspection unchecked
-            result = (T)prev;
+            result = (T) prev;
         }
         else if (whenCached != null) {
             whenCached.accept(result);
@@ -703,10 +700,12 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
+    @RequiredReadAction
     public boolean belongsToScope(PsiElement psiElement) {
         return belongsToScope(psiElement, false);
     }
 
+    @RequiredReadAction
     private boolean belongsToScope(PsiElement psiElement, boolean ignoreScope) {
         if (psiElement == null || !psiElement.isValid()) {
             return false;
@@ -714,7 +713,7 @@ public class RefManagerImpl implements RefManagerInternal {
         if (psiElement instanceof PsiCompiledElement) {
             return false;
         }
-        PsiFile containingFile = AccessRule.read(psiElement::getContainingFile);
+        PsiFile containingFile = ReadAction.compute(psiElement::getContainingFile);
         if (containingFile == null) {
             return false;
         }
@@ -723,7 +722,7 @@ public class RefManagerImpl implements RefManagerInternal {
                 return false;
             }
         }
-        Boolean inProject = AccessRule.read(() -> psiElement.getManager().isInProject(psiElement));
+        Boolean inProject = ReadAction.compute(() -> psiElement.getManager().isInProject(psiElement));
         return inProject && (ignoreScope || getScope() == null || getScope().contains(psiElement));
     }
 
@@ -745,8 +744,8 @@ public class RefManagerImpl implements RefManagerInternal {
             removeRefElement(refChild, deletedRefs);
         }
 
-        ((RefManagerImpl)refElement.getRefManager()).removeReference(refElement);
-        ((RefElementImpl)refElement).referenceRemoved();
+        ((RefManagerImpl) refElement.getRefManager()).removeReference(refElement);
+        ((RefElementImpl) refElement).referenceRemoved();
         if (!deletedRefs.contains(refElement)) {
             deletedRefs.add(refElement);
         }
@@ -756,6 +755,6 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     public boolean isValidPointForReference() {
-        return myIsInProcess || myOfflineView || Application.get().isUnitTestMode();
+        return myIsInProcess || myOfflineView || getProject().getApplication().isUnitTestMode();
     }
 }

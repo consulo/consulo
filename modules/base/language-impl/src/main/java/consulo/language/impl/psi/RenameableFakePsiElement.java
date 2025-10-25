@@ -27,86 +27,89 @@ import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author peter
-*/
+ */
 public abstract class RenameableFakePsiElement extends FakePsiElement implements PsiMetaOwner, PsiPresentableMetaData {
-  private final PsiElement myParent;
+    private final PsiElement myParent;
 
-  protected RenameableFakePsiElement(PsiElement parent) {
-    myParent = parent;
-  }
+    protected RenameableFakePsiElement(PsiElement parent) {
+        myParent = parent;
+    }
 
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return null;
+    }
 
-  @Override
-  public PsiElement getParent() {
-    return myParent;
-  }
+    @Override
+    public PsiElement getParent() {
+        return myParent;
+    }
 
-  @Override
-  public PsiFile getContainingFile() {
-    return myParent.getContainingFile();
-  }
+    @Override
+    public PsiFile getContainingFile() {
+        return myParent.getContainingFile();
+    }
 
-  @RequiredReadAction
-  @Override
-  public abstract String getName();
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public abstract String getName();
 
-  @Override
-  @Nonnull
-  public Language getLanguage() {
-    return getContainingFile().getLanguage();
-  }
+    @Override
+    @Nonnull
+    @RequiredReadAction
+    public Language getLanguage() {
+        return getContainingFile().getLanguage();
+    }
 
-  @Override
-  @Nonnull
-  public Project getProject() {
-    return myParent.getProject();
-  }
+    @Override
+    @Nonnull
+    public Project getProject() {
+        return myParent.getProject();
+    }
 
-  @Override
-  public PsiManager getManager() {
-    return PsiManager.getInstance(getProject());
-  }
+    @Nonnull
+    @Override
+    public PsiManager getManager() {
+        return PsiManager.getInstance(getProject());
+    }
 
-  @Override
-  @Nullable
-  public PsiMetaData getMetaData() {
-    return this;
-  }
+    @Override
+    @Nullable
+    public PsiMetaData getMetaData() {
+        return this;
+    }
 
-  @Override
-  public PsiElement getDeclaration() {
-    return this;
-  }
+    @Override
+    public PsiElement getDeclaration() {
+        return this;
+    }
 
-  @Override
-  public String getName(PsiElement context) {
-    return getName();
-  }
+    @Override
+    @RequiredReadAction
+    public String getName(PsiElement context) {
+        return getName();
+    }
 
-  @Override
-  public void init(PsiElement element) {
-  }
+    @Override
+    public void init(PsiElement element) {
+    }
 
-  @Override
-  public Object[] getDependences() {
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
+    @Override
+    public Object[] getDependences() {
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    }
 
-  @Override
-  @Nullable
-  public TextRange getTextRange() {
-    return TextRange.EMPTY_RANGE;
-  }
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public TextRange getTextRange() {
+        return TextRange.EMPTY_RANGE;
+    }
 }

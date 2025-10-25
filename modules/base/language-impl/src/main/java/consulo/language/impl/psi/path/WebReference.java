@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.impl.psi.FakePsiElement;
 import consulo.language.psi.PsiElement;
@@ -29,69 +30,74 @@ import jakarta.annotation.Nullable;
  * @author Eugene.Kudelevsky
  */
 public class WebReference extends PsiReferenceBase<PsiElement> {
-  @Nullable
-  private final String myUrl;
+    @Nullable
+    private final String myUrl;
 
-  public WebReference(@Nonnull PsiElement element) {
-    this(element, (String)null);
-  }
+    public WebReference(@Nonnull PsiElement element) {
+        this(element, (String) null);
+    }
 
-  public WebReference(@Nonnull PsiElement element, @Nullable String url) {
-    super(element, true);
-    myUrl = url;
-  }
+    public WebReference(@Nonnull PsiElement element, @Nullable String url) {
+        super(element, true);
+        myUrl = url;
+    }
 
-  public WebReference(@Nonnull PsiElement element, @Nonnull TextRange textRange) {
-    this(element, textRange, null);
-  }
+    public WebReference(@Nonnull PsiElement element, @Nonnull TextRange textRange) {
+        this(element, textRange, null);
+    }
 
-  public WebReference(@Nonnull PsiElement element, TextRange textRange, @Nullable String url) {
-    super(element, textRange, true);
-    myUrl = url;
-  }
-
-  @Override
-  public PsiElement resolve() {
-    return new MyFakePsiElement();
-  }
-
-  public String getUrl() {
-    return myUrl != null ? myUrl : getValue();
-  }
-
-  @Nonnull
-  @Override
-  public Object[] getVariants() {
-    return EMPTY_ARRAY;
-  }
-
-  public class MyFakePsiElement extends FakePsiElement implements SyntheticElement {
-    @Override
-    public PsiElement getParent() {
-      return myElement;
+    public WebReference(@Nonnull PsiElement element, TextRange textRange, @Nullable String url) {
+        super(element, textRange, true);
+        myUrl = url;
     }
 
     @Override
-    public void navigate(boolean requestFocus) {
-      Platform.current().openInBrowser(getUrl());
+    @RequiredReadAction
+    public PsiElement resolve() {
+        return new MyFakePsiElement();
     }
 
+    public String getUrl() {
+        return myUrl != null ? myUrl : getValue();
+    }
+
+    @Nonnull
     @Override
-    public String getPresentableText() {
-      return getUrl();
+    @RequiredReadAction
+    public Object[] getVariants() {
+        return EMPTY_ARRAY;
     }
 
+    public class MyFakePsiElement extends FakePsiElement implements SyntheticElement {
+        @Override
+        public PsiElement getParent() {
+            return myElement;
+        }
 
-    @Override
-    public String getName() {
-      return getUrl();
-    }
+        @Override
+        public void navigate(boolean requestFocus) {
+            Platform.current().openInBrowser(getUrl());
+        }
 
-    @Override
-    public TextRange getTextRange() {
-      TextRange rangeInElement = getRangeInElement();
-      TextRange elementRange = myElement.getTextRange();
-      return elementRange != null ? rangeInElement.shiftRight(elementRange.getStartOffset()) : rangeInElement;
+        @Override
+        public String getPresentableText() {
+            return getUrl();
+        }
+
+
+        @Nonnull
+        @Override
+        @RequiredReadAction
+        public String getName() {
+            return getUrl();
+        }
+
+        @Override
+        @RequiredReadAction
+        public TextRange getTextRange() {
+            TextRange rangeInElement = getRangeInElement();
+            TextRange elementRange = myElement.getTextRange();
+            return rangeInElement.shiftRight(elementRange.getStartOffset());
+        }
     }
-  }
 }

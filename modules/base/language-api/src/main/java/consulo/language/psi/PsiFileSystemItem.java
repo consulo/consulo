@@ -28,19 +28,19 @@ import jakarta.annotation.Nullable;
  * @author ven
  */
 public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatablePsiElement {
-  boolean isDirectory();
+    boolean isDirectory();
 
-  @Override
-  @Nullable
-  PsiFileSystemItem getParent();
+    @Nullable
+    @Override
+    PsiFileSystemItem getParent();
 
-  @Nullable
-  VirtualFile getVirtualFile();
+    @Nullable
+    VirtualFile getVirtualFile();
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  String getName();
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    String getName();
 
-  boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor);
+    boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor);
 }

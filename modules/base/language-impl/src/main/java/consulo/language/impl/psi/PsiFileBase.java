@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.FileViewProvider;
@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -31,54 +32,55 @@ import java.util.Set;
  * @author max
  */
 public abstract class PsiFileBase extends PsiFileImpl {
-  @Nonnull
-  private final Language myLanguage;
-  @Nonnull
-  private final ParserDefinition myParserDefinition;
+    @Nonnull
+    private final Language myLanguage;
+    @Nonnull
+    private final ParserDefinition myParserDefinition;
 
-  protected PsiFileBase(@Nonnull FileViewProvider viewProvider, @Nonnull Language language) {
-    super(viewProvider);
-    myLanguage = findLanguage(language, viewProvider);
-    ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
-    if (parserDefinition == null) {
-      throw new RuntimeException("PsiFileBase: language.getParserDefinition() returned null for: "+myLanguage);
+    protected PsiFileBase(@Nonnull FileViewProvider viewProvider, @Nonnull Language language) {
+        super(viewProvider);
+        myLanguage = findLanguage(language, viewProvider);
+        ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
+        if (parserDefinition == null) {
+            throw new RuntimeException("PsiFileBase: language.getParserDefinition() returned null for: " + myLanguage);
+        }
+        myParserDefinition = parserDefinition;
+        IFileElementType nodeType = parserDefinition.getFileNodeType();
+        assert nodeType.getLanguage() == myLanguage : nodeType.getLanguage() + " != " + myLanguage;
+        init(nodeType, nodeType);
     }
-    myParserDefinition = parserDefinition;
-    IFileElementType nodeType = parserDefinition.getFileNodeType();
-    assert nodeType.getLanguage() == myLanguage: nodeType.getLanguage() + " != " + myLanguage;
-    init(nodeType, nodeType);
-  }
 
-  private static Language findLanguage(Language baseLanguage, FileViewProvider viewProvider) {
-    Set<Language> languages = viewProvider.getLanguages();
-    for (Language actualLanguage : languages) {
-      if (actualLanguage.isKindOf(baseLanguage)) {
-        return actualLanguage;
-      }
+    private static Language findLanguage(Language baseLanguage, FileViewProvider viewProvider) {
+        Set<Language> languages = viewProvider.getLanguages();
+        for (Language actualLanguage : languages) {
+            if (actualLanguage.isKindOf(baseLanguage)) {
+                return actualLanguage;
+            }
+        }
+        throw new AssertionError(
+            "Language " + baseLanguage + " doesn't participate in view provider " + viewProvider + ": " + new ArrayList<>(languages));
     }
-    throw new AssertionError(
-        "Language " + baseLanguage + " doesn't participate in view provider " + viewProvider + ": " + new ArrayList<Language>(languages));
-  }
 
-  @Nonnull
-  @Override
-  public FileType getFileType() {
-    return getViewProvider().getFileType();
-  }
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+        return getViewProvider().getFileType();
+    }
 
-  @Override
-  @Nonnull
-  public final Language getLanguage() {
-    return myLanguage;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public final Language getLanguage() {
+        return myLanguage;
+    }
 
-  @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
-    visitor.visitFile(this);
-  }
+    @Override
+    public void accept(@Nonnull PsiElementVisitor visitor) {
+        visitor.visitFile(this);
+    }
 
-  @Nonnull
-  public ParserDefinition getParserDefinition() {
-    return myParserDefinition;
-  }
+    @Nonnull
+    public ParserDefinition getParserDefinition() {
+        return myParserDefinition;
+    }
 }

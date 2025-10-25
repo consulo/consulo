@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.ApplicationManager;
 import consulo.content.scope.SearchScope;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -32,6 +30,7 @@ import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -39,371 +38,394 @@ import jakarta.annotation.Nullable;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier {
 
-  private static final Logger LOG = Logger.getInstance(LightPsiFileImpl.class);
-  private PsiFile myOriginalFile = null;
-  private boolean myExplicitlySetAsValid = false;
-  private boolean myInvalidated = false;
-  private final FileViewProvider myViewProvider;
-  private final PsiManagerImpl myManager;
-  private final Language myLanguage;
+    private static final Logger LOG = Logger.getInstance(LightPsiFileImpl.class);
+    private PsiFile myOriginalFile = null;
+    private boolean myExplicitlySetAsValid = false;
+    private boolean myInvalidated = false;
+    private final FileViewProvider myViewProvider;
+    private final PsiManagerImpl myManager;
+    private final Language myLanguage;
 
-  public LightPsiFileImpl(@Nonnull FileViewProvider provider, @Nonnull Language language) {
-    myViewProvider = provider;
-    myManager = (PsiManagerImpl)provider.getManager();
-    myLanguage = language;
-  }
-
-  @Override
-  public VirtualFile getVirtualFile() {
-    return getViewProvider().isEventSystemEnabled() ? getViewProvider().getVirtualFile() : null;
-  }
-
-  @Override
-  public boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor) {
-    return true;
-  }
-
-  @Override
-  public boolean isValid() {
-    if (myInvalidated) return false;
-    if (!getViewProvider().isPhysical() || myExplicitlySetAsValid) return true; // "dummy" file
-    return getViewProvider().getVirtualFile().isValid();
-  }
-
-  public void setIsValidExplicitly(boolean b) {
-    LOG.assertTrue(ApplicationManager.getApplication().isUnitTestMode());
-    myExplicitlySetAsValid = b;
-  }
-
-  @RequiredReadAction
-  @Override
-  public String getText() {
-    return getViewProvider().getContents().toString();
-  }
-
-  @Override
-  public long getModificationStamp() {
-    return getViewProvider().getModificationStamp();
-  }
-
-  @Override
-  public void subtreeChanged() {
-    clearCaches();
-    getViewProvider().rootChanged(this);
-  }
-
-  public abstract void clearCaches();
-
-  @Override
-  @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
-  protected LightPsiFileImpl clone() {
-    FileViewProvider provider = getViewProvider().clone();
-    LightPsiFileImpl clone = (LightPsiFileImpl)provider.getPsi(getLanguage());
-
-    copyCopyableDataTo(clone);
-
-    if (getViewProvider().isEventSystemEnabled()) {
-      clone.myOriginalFile = this;
+    public LightPsiFileImpl(@Nonnull FileViewProvider provider, @Nonnull Language language) {
+        myViewProvider = provider;
+        myManager = (PsiManagerImpl) provider.getManager();
+        myLanguage = language;
     }
-    else if (myOriginalFile != null) {
-      clone.myOriginalFile = myOriginalFile;
+
+    @Override
+    public VirtualFile getVirtualFile() {
+        return getViewProvider().isEventSystemEnabled() ? getViewProvider().getVirtualFile() : null;
     }
-    return clone;
-  }
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public String getName() {
-    return getViewProvider().getVirtualFile().getName();
-  }
-
-  @RequiredWriteAction
-  @Override
-  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-    checkSetName(name);
-    subtreeChanged();
-    return PsiFileImplUtil.setName(this, name);
-  }
-
-  @Override
-  public void checkSetName(String name) throws IncorrectOperationException {
-    if (!getViewProvider().isEventSystemEnabled()) return;
-    PsiFileImplUtil.checkSetName(this, name);
-  }
-
-  @Override
-  public PsiDirectory getParent() {
-    return getContainingDirectory();
-  }
-
-  @Override
-  public PsiDirectory getContainingDirectory() {
-    VirtualFile parentFile = getViewProvider().getVirtualFile().getParent();
-    if (parentFile == null) return null;
-    return getManager().findDirectory(parentFile);
-  }
-
-  @Nullable
-  public PsiDirectory getParentDirectory() {
-    return getContainingDirectory();
-  }
-
-  @Override
-  public PsiFile getContainingFile() {
-    return this;
-  }
-
-  @RequiredWriteAction
-  @Override
-  public void delete() throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
-
-  @Override
-  public void checkDelete() throws IncorrectOperationException {
-    if (!getViewProvider().isEventSystemEnabled()) {
-      throw new IncorrectOperationException();
+    @Override
+    public boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor) {
+        return true;
     }
-    CheckUtil.checkWritable(this);
-  }
 
-  @Override
-  @Nonnull
-  public PsiFile getOriginalFile() {
-    return myOriginalFile == null ? this : myOriginalFile;
-  }
-
-  public void setOriginalFile(PsiFile originalFile) {
-    myOriginalFile = originalFile.getOriginalFile();
-  }
-
-  @Override
-  @Nonnull
-  public PsiFile[] getPsiRoots() {
-    return new PsiFile[]{this};
-  }
-
-  @Override
-  public boolean isPhysical() {
-    return getViewProvider().isEventSystemEnabled();
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Language getLanguage() {
-    return myLanguage;
-  }
-
-  @Override
-  @Nonnull
-  public FileViewProvider getViewProvider() {
-    return myViewProvider;
-  }
-
-  @Override
-  public PsiManager getManager() {
-    return myManager;
-  }
-
-  @Override
-  @Nonnull
-  public Project getProject() {
-    return getManager().getProject();
-  }
-
-  @Override
-  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
-    PsiElement child = getFirstChild();
-    while (child != null) {
-      PsiElement nextSibling = child.getNextSibling();
-      child.accept(visitor);
-      child = nextSibling;
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        if (myInvalidated) {
+            return false;
+        }
+        if (!getViewProvider().isPhysical() || myExplicitlySetAsValid) {
+            return true; // "dummy" file
+        }
+        return getViewProvider().getVirtualFile().isValid();
     }
-  }
 
-  @Override
-  public final synchronized PsiElement copy() {
-    return clone();
-  }
+    public void setIsValidExplicitly(boolean b) {
+        LOG.assertTrue(getApplication().isUnitTestMode());
+        myExplicitlySetAsValid = b;
+    }
 
-  @Override
-  public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
-    CheckUtil.checkWritable(this);
-  }
+    @RequiredReadAction
+    @Override
+    public String getText() {
+        return getViewProvider().getContents().toString();
+    }
 
-  @Override
-  @Nonnull
-  public synchronized PsiReference[] getReferences() {
-    return SharedPsiElementImplUtil.getReferences(this);
-  }
+    @Override
+    public long getModificationStamp() {
+        return getViewProvider().getModificationStamp();
+    }
 
-  @Override
-  @Nonnull
-  public SearchScope getUseScope() {
-    return ResolveScopeManager.getElementUseScope(this);
-  }
+    @Override
+    public void subtreeChanged() {
+        clearCaches();
+        getViewProvider().rootChanged(this);
+    }
 
-  @Override
-  public void navigate(boolean requestFocus) {
-    PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
-  }
+    @Override
+    public abstract void clearCaches();
 
-  @RequiredReadAction
-  @Override
-  public synchronized PsiElement findElementAt(int offset) {
-    return getViewProvider().findElementAt(offset);
-  }
+    @Override
+    @RequiredReadAction
+    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
+    protected LightPsiFileImpl clone() {
+        FileViewProvider provider = getViewProvider().clone();
+        LightPsiFileImpl clone = (LightPsiFileImpl) provider.getPsi(getLanguage());
 
-  @RequiredReadAction
-  @Override
-  public synchronized PsiReference findReferenceAt(int offset) {
-    return getViewProvider().findReferenceAt(offset);
-  }
+        copyCopyableDataTo(clone);
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public char[] textToCharArray() {
-    return CharArrayUtil.fromSequence(getViewProvider().getContents());
-  }
+        if (getViewProvider().isEventSystemEnabled()) {
+            clone.myOriginalFile = this;
+        }
+        else if (myOriginalFile != null) {
+            clone.myOriginalFile = myOriginalFile;
+        }
+        return clone;
+    }
 
-  @Override
-  public boolean isContentsLoaded() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        return getViewProvider().getVirtualFile().getName();
+    }
 
-  @Override
-  public void onContentReload() {
-  }
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        checkSetName(name);
+        subtreeChanged();
+        return PsiFileImplUtil.setName(this, name);
+    }
 
-  @Override
-  public boolean isWritable() {
-    return getViewProvider().getVirtualFile().isWritable();
-  }
+    @Override
+    @RequiredUIAccess
+    public void checkSetName(String name) throws IncorrectOperationException {
+        if (!getViewProvider().isEventSystemEnabled()) {
+            return;
+        }
+        PsiFileImplUtil.checkSetName(this, name);
+    }
 
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public abstract PsiElement[] getChildren();
+    @Override
+    @RequiredReadAction
+    public PsiDirectory getParent() {
+        return getContainingDirectory();
+    }
 
-  @RequiredReadAction
-  @Override
-  public PsiElement getFirstChild() {
-    PsiElement[] children = getChildren();
-    return children.length == 0 ? null : children[0];
-  }
+    @Override
+    @RequiredReadAction
+    public PsiDirectory getContainingDirectory() {
+        VirtualFile parentFile = getViewProvider().getVirtualFile().getParent();
+        if (parentFile == null) {
+            return null;
+        }
+        return getManager().findDirectory(parentFile);
+    }
 
-  @RequiredReadAction
-  @Override
-  public PsiElement getLastChild() {
-    PsiElement[] children = getChildren();
-    return children.length == 0 ? null : children[children.length - 1];
-  }
+    @Nullable
+    @RequiredReadAction
+    public PsiDirectory getParentDirectory() {
+        return getContainingDirectory();
+    }
 
-  @RequiredReadAction
-  @Override
-  public TextRange getTextRange() {
-    return new TextRange(0, getTextLength());
-  }
+    @Override
+    public PsiFile getContainingFile() {
+        return this;
+    }
 
-  @RequiredReadAction
-  @Override
-  public int getStartOffsetInParent() {
-    return 0;
-  }
+    @RequiredWriteAction
+    @Override
+    public void delete() throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
 
-  @RequiredReadAction
-  @Override
-  public int getTextLength() {
-    return getViewProvider().getContents().length();
-  }
+    @Override
+    public void checkDelete() throws IncorrectOperationException {
+        if (!getViewProvider().isEventSystemEnabled()) {
+            throw new IncorrectOperationException();
+        }
+        CheckUtil.checkWritable(this);
+    }
 
-  @Override
-  public int getTextOffset() {
-    return 0;
-  }
+    @Override
+    @Nonnull
+    public PsiFile getOriginalFile() {
+        return myOriginalFile == null ? this : myOriginalFile;
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull PsiElement element) {
-    return textMatches(element.getText());
-  }
+    public void setOriginalFile(PsiFile originalFile) {
+        myOriginalFile = originalFile.getOriginalFile();
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull CharSequence text) {
-    return text.equals(getViewProvider().getContents());
-  }
+    @Override
+    @Nonnull
+    public PsiFile[] getPsiRoots() {
+        return new PsiFile[]{this};
+    }
 
-  @RequiredReadAction
-  @Override
-  public boolean textContains(char c) {
-    return getText().indexOf(c) >= 0;
-  }
+    @Override
+    public boolean isPhysical() {
+        return getViewProvider().isEventSystemEnabled();
+    }
 
-  @Override
-  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Language getLanguage() {
+        return myLanguage;
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Override
+    @Nonnull
+    public FileViewProvider getViewProvider() {
+        return myViewProvider;
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public PsiManager getManager() {
+        return myManager;
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Project getProject() {
+        return getManager().getProject();
+    }
 
-  @RequiredWriteAction
-  @Override
-  public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
-          throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Override
+    @RequiredReadAction
+    public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
+        PsiElement child = getFirstChild();
+        while (child != null) {
+            PsiElement nextSibling = child.getNextSibling();
+            child.accept(visitor);
+            child = nextSibling;
+        }
+    }
 
-  @RequiredWriteAction
-  @Override
-  public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-          throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Override
+    @RequiredReadAction
+    public final synchronized PsiElement copy() {
+        return clone();
+    }
 
-  @RequiredWriteAction
-  @Override
-  public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Override
+    public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+        CheckUtil.checkWritable(this);
+    }
 
-  @RequiredWriteAction
-  @Override
-  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
-    throw new IncorrectOperationException("Not implemented");
-  }
+    @Override
+    @Nonnull
+    public synchronized PsiReference[] getReferences() {
+        return SharedPsiElementImplUtil.getReferences(this);
+    }
 
-  @Override
-  public FileASTNode getNode() {
-    return null;
-  }
+    @Override
+    @Nonnull
+    public SearchScope getUseScope() {
+        return ResolveScopeManager.getElementUseScope(this);
+    }
 
-  public abstract LightPsiFileImpl copyLight(FileViewProvider viewProvider);
+    @Override
+    public void navigate(boolean requestFocus) {
+        PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
+    }
 
-  @Override
-  public PsiElement getContext() {
-    return FileContextUtil.getFileContext(this);
-  }
+    @RequiredReadAction
+    @Override
+    public synchronized PsiElement findElementAt(int offset) {
+        return getViewProvider().findElementAt(offset);
+    }
 
-  @Override
-  public void markInvalidated() {
-    myInvalidated = true;
-  }
+    @RequiredReadAction
+    @Override
+    public synchronized PsiReference findReferenceAt(int offset) {
+        return getViewProvider().findReferenceAt(offset);
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public char[] textToCharArray() {
+        return CharArrayUtil.fromSequence(getViewProvider().getContents());
+    }
+
+    @Override
+    public boolean isContentsLoaded() {
+        return true;
+    }
+
+    @Override
+    public void onContentReload() {
+    }
+
+    @Override
+    public boolean isWritable() {
+        return getViewProvider().getVirtualFile().isWritable();
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public abstract PsiElement[] getChildren();
+
+    @RequiredReadAction
+    @Override
+    public PsiElement getFirstChild() {
+        PsiElement[] children = getChildren();
+        return children.length == 0 ? null : children[0];
+    }
+
+    @RequiredReadAction
+    @Override
+    public PsiElement getLastChild() {
+        PsiElement[] children = getChildren();
+        return children.length == 0 ? null : children[children.length - 1];
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public TextRange getTextRange() {
+        return new TextRange(0, getTextLength());
+    }
+
+    @Override
+    @RequiredReadAction
+    public int getStartOffsetInParent() {
+        return 0;
+    }
+
+    @Override
+    @RequiredReadAction
+    public int getTextLength() {
+        return getViewProvider().getContents().length();
+    }
+
+    @Override
+    public int getTextOffset() {
+        return 0;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull PsiElement element) {
+        return textMatches(element.getText());
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull CharSequence text) {
+        return text.equals(getViewProvider().getContents());
+    }
+
+    @RequiredReadAction
+    @Override
+    public boolean textContains(char c) {
+        return getText().indexOf(c) >= 0;
+    }
+
+    @Override
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
+        throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
+        throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @RequiredWriteAction
+    @Override
+    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+        throw new IncorrectOperationException("Not implemented");
+    }
+
+    @Override
+    public FileASTNode getNode() {
+        return null;
+    }
+
+    public abstract LightPsiFileImpl copyLight(FileViewProvider viewProvider);
+
+    @Override
+    public PsiElement getContext() {
+        return FileContextUtil.getFileContext(this);
+    }
+
+    @Override
+    public void markInvalidated() {
+        myInvalidated = true;
+    }
 }
