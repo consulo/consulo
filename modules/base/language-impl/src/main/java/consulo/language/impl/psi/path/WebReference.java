@@ -85,13 +85,14 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
         }
 
 
-        @Nonnull
+        @Nullable
         @Override
         @RequiredReadAction
         public String getName() {
             return getUrl();
         }
 
+        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getTextRange() {

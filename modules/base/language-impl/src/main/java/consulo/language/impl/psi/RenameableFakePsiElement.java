@@ -56,7 +56,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         return myParent.getContainingFile();
     }
 
-    @Nonnull
+    @Nullable
     @Override
     @RequiredReadAction
     public abstract String getName();
@@ -106,7 +106,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {

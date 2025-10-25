@@ -37,7 +37,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier {
-
     private static final Logger LOG = Logger.getInstance(LightPsiFileImpl.class);
     private PsiFile myOriginalFile = null;
     private boolean myExplicitlySetAsValid = false;

@@ -120,7 +120,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return result == null ? PsiDirectory.EMPTY_ARRAY : result.toArray(new PsiDirectory[result.size()]);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     @RequiredReadAction
     public String getName() {
@@ -128,7 +128,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
             getApplication().assertReadAccessAllowed();
         }
         if (myQualifiedName.isEmpty()) {
-            throw new NullPointerException();
+            return null;
         }
         int index = myQualifiedName.lastIndexOf('.');
         if (index < 0) {
@@ -249,7 +249,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
-        throw new UnsupportedOperationException();
+        return TextRange.EMPTY_RANGE;
     }
 
     @Override

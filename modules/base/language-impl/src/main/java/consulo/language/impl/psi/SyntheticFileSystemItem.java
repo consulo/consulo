@@ -132,7 +132,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
-        throw new UnsupportedOperationException();
+        return TextRange.EMPTY_RANGE;
     }
 
     @Override

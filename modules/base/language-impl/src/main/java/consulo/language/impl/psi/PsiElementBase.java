@@ -310,11 +310,11 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         visitor.visitElement(this);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     @RequiredReadAction
     public String getName() {
-        throw new UnsupportedOperationException();
+        throw null;
     }
 
     @Nonnull

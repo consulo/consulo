@@ -57,7 +57,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
         return myTarget;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     @RequiredReadAction
     public String getName() {
