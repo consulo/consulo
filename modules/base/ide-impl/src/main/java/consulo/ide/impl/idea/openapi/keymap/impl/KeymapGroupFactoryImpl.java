@@ -23,6 +23,7 @@ import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,10 +32,17 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
+    private final @Nonnull ActionManager myActionManager;
+
+    @Inject
+    public KeymapGroupFactoryImpl(@Nonnull ActionManager actionManager) {
+        myActionManager = actionManager;
+    }
+
     @Nonnull
     @Override
-    public KeymapGroup.Builder newBuilder(@Nonnull ActionManager actionManager) {
-        return new KeymapGroupImpl.BuilderImpl(this, actionManager);
+    public KeymapGroup.Builder newBuilder() {
+        return new KeymapGroupImpl.BuilderImpl(this, myActionManager);
     }
 
     @Nonnull

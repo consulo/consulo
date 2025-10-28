@@ -323,7 +323,7 @@ public class KeymapUtil {
                 AnAction[] children = group.getChildActionsOrStubs();
                 for (AnAction child : children) {
                     if (!(child instanceof AnSeparator)) {
-                        return LocalizeValue.localizeTODO("group." + getName(child));
+                        return LocalizeValue.join(LocalizeValue.of("group."), getName(child));
                     }
                 }
                 return LocalizeValue.localizeTODO("Empty unnamed group");

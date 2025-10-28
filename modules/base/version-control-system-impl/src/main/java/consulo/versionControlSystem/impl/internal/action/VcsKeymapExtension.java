@@ -18,12 +18,10 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
-import consulo.ui.ex.keymap.util.KeymapUtil;
 
 import java.util.function.Predicate;
 
@@ -40,6 +38,6 @@ public class VcsKeymapExtension implements KeymapExtension {
             .addGroup(VcsActionGroup.ID)
             .addGroup("Vcs.KeymapGroup")
             .addGroup("VcsGeneral.KeymapGroup", true)
-            .create();
+            .build();
     }
 }

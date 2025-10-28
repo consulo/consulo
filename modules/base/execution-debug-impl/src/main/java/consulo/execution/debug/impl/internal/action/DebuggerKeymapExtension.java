@@ -18,19 +18,13 @@ package consulo.execution.debug.impl.internal.action;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -48,6 +42,6 @@ public class DebuggerKeymapExtension implements KeymapExtension {
             )
             .filter(filtered)
             .addGroup(IdeActions.GROUP_DEBUGGER)
-            .create();
+            .build();
     }
 }

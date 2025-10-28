@@ -41,9 +41,6 @@ public interface KeymapGroup {
 
     interface CreatingBuilder {
         @Nonnull
-        KeymapGroup create();
-
-        @Nonnull
         CreatingBuilder filter(@Nullable Predicate<AnAction> filter);
 
         @Nonnull
@@ -54,6 +51,9 @@ public interface KeymapGroup {
 
         @Nonnull
         CreatingBuilder addAction(AnAction action, boolean forceNonPopup);
+
+        @Nonnull
+        KeymapGroup build();
     }
 
     void addActionId(String id);

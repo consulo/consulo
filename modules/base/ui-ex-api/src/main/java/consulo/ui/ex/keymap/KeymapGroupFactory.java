@@ -33,12 +33,7 @@ public abstract class KeymapGroupFactory {
     }
 
     @Nonnull
-    public KeymapGroup.Builder newBuilder() {
-        return newBuilder(ActionManager.getInstance());
-    }
-
-    @Nonnull
-    public abstract KeymapGroup.Builder newBuilder(@Nonnull ActionManager actionManager);
+    public abstract KeymapGroup.Builder newBuilder();
 
     @Nonnull
     public abstract KeymapGroup createGroup(@Nonnull LocalizeValue name);

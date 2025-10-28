@@ -91,14 +91,6 @@ public class KeymapGroupImpl implements KeymapGroup {
 
         @Nonnull
         @Override
-        public KeymapGroup create() {
-            myKeymapGroup.normalizeSeparators();
-            return myKeymapGroup;
-        }
-
-
-        @Nonnull
-        @Override
         public CreatingBuilder filter(@Nullable Predicate<AnAction> filter) {
             myFilter = filter != null ? filter : action -> true;
             return this;
@@ -147,7 +139,14 @@ public class KeymapGroupImpl implements KeymapGroup {
             return this;
         }
 
-        public AnAction[] getActions(String groupId) {
+        @Nonnull
+        @Override
+        public KeymapGroup build() {
+            myKeymapGroup.normalizeSeparators();
+            return myKeymapGroup;
+        }
+
+        private AnAction[] getActions(String groupId) {
             return getActions((ActionGroup) myActionManager.getActionOrStub(groupId));
         }
 
