@@ -18,12 +18,10 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
-import consulo.ui.ex.keymap.util.KeymapUtil;
 
 import java.util.function.Predicate;
 
@@ -34,64 +32,12 @@ import java.util.function.Predicate;
 public class VcsKeymapExtension implements KeymapExtension {
     @Override
     public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
-        KeymapGroup result = KeymapGroupFactory.getInstance().createGroup(KeyMapLocalize.versionControlGroupTitle());
-
-        AnAction[] versionControlsGroups = getActions(VcsActionGroup.ID);
-        AnAction[] keymapGroups = getActions("Vcs.KeymapGroup");
-
-        for (AnAction action : versionControlsGroups) {
-            addAction(result, action, filtered, false);
-        }
-
-        for (AnAction action : keymapGroups) {
-            addAction(result, action, filtered, false);
-        }
-
-        AnAction[] generalActions = getActions("VcsGeneral.KeymapGroup");
-        for (AnAction action : generalActions) {
-            addAction(result, action, filtered, true);
-        }
-
-        result.normalizeSeparators();
-
-        return result;
-    }
-
-    private static void addAction(KeymapGroup result, AnAction action, Predicate<AnAction> filtered, boolean forceNonPopup) {
-        if (action instanceof ActionGroup group) {
-            if (forceNonPopup) {
-                AnAction[] actions = getActions(group);
-                for (AnAction childAction : actions) {
-                    addAction(result, childAction, filtered, true);
-                }
-            }
-            else {
-                KeymapGroup subGroup = KeymapUtil.createGroup(group, false, filtered);
-                if (subGroup.getSize() > 0) {
-                    result.addGroup(subGroup);
-                }
-            }
-        }
-        else if (action instanceof AnSeparator) {
-            if (result instanceof KeymapGroup keymapGroup) {
-                keymapGroup.addSeparator();
-            }
-        }
-        else if (filtered == null || filtered.test(action)) {
-            String id = action instanceof ActionStubBase actionStubBase
-                ? actionStubBase.getId()
-                : ActionManager.getInstance().getId(action);
-            result.addActionId(id);
-        }
-    }
-
-    private static AnAction[] getActions(String actionGroup) {
-        return getActions((ActionGroup)ActionManager.getInstance().getActionOrStub(actionGroup));
-    }
-
-    private static AnAction[] getActions(ActionGroup group) {
-        return group instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs()
-            : group.getChildren(null);
+        return KeymapGroupFactory.getInstance().newBuilder()
+            .root(KeyMapLocalize.versionControlGroupTitle())
+            .filter(filtered)
+            .addGroup(VcsActionGroup.ID)
+            .addGroup("Vcs.KeymapGroup")
+            .addGroup("VcsGeneral.KeymapGroup", true)
+            .build();
     }
 }

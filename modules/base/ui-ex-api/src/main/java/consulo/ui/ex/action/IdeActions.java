@@ -398,6 +398,7 @@ public interface IdeActions {
 
     String GROUP_EDITOR = "EditorActions";
 
+    @Deprecated(forRemoval = true)
     String GROUP_DEBUGGER = "DebuggerActions";
 
     String ACTION_TOGGLE_LINE_BREAKPOINT = "ToggleLineBreakpoint";

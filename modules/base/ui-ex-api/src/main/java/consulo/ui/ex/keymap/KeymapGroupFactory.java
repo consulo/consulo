@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
@@ -30,6 +31,9 @@ public abstract class KeymapGroupFactory {
     public static KeymapGroupFactory getInstance() {
         return Application.get().getInstance(KeymapGroupFactory.class);
     }
+
+    @Nonnull
+    public abstract KeymapGroup.Builder newBuilder();
 
     @Nonnull
     public abstract KeymapGroup createGroup(@Nonnull LocalizeValue name);

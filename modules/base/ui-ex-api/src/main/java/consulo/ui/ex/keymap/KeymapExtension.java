@@ -18,10 +18,9 @@ package consulo.ui.ex.keymap;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnAction;
-
 import jakarta.annotation.Nullable;
+
 import java.util.function.Predicate;
 
 /**
@@ -30,8 +29,6 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface KeymapExtension {
-  ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(KeymapExtension.class);
-
-  @Nullable
-  KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project);
+    @Nullable
+    KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project);
 }

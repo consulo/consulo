@@ -17,12 +17,14 @@ package consulo.ui.ex.keymap.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.*;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -42,7 +44,7 @@ import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
 
 /**
  * @author VISTALL
- * @since 08-Mar-22
+ * @since 2022-03-08
  */
 public class KeymapUtil {
     private static final Logger LOG = Logger.getInstance(KeymapUtil.class);
@@ -61,7 +63,7 @@ public class KeymapUtil {
     @Nullable
     public static Shortcut getPrimaryShortcut(@Nullable String actionId) {
         KeymapManager keymapManager = KeymapManager.getInstance();
-        if (keymapManager == null || actionId == null) {
+        if (actionId == null) {
             return null;
         }
         return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
@@ -120,36 +122,32 @@ public class KeymapUtil {
     }
 
     public static String getShortcutText(@Nonnull Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
-        String s = "";
+        return switch (shortcut) {
+            case KeyboardShortcut keyboardShortcut -> {
+                String s = "";
+                String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke(), useUnicodeCharactersForShortcuts);
+                if (!acceleratorText.isEmpty()) {
+                    s = acceleratorText;
+                }
 
-        if (shortcut instanceof KeyboardShortcut) {
-            KeyboardShortcut keyboardShortcut = (KeyboardShortcut) shortcut;
+                acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke(), useUnicodeCharactersForShortcuts);
+                if (!acceleratorText.isEmpty()) {
+                    s += ", " + acceleratorText;
+                }
 
-            String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke(), useUnicodeCharactersForShortcuts);
-            if (!acceleratorText.isEmpty()) {
-                s = acceleratorText;
+                yield s;
             }
 
-            acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke(), useUnicodeCharactersForShortcuts);
-            if (!acceleratorText.isEmpty()) {
-                s += ", " + acceleratorText;
-            }
-        }
-        else if (shortcut instanceof MouseShortcut) {
-            MouseShortcut mouseShortcut = (MouseShortcut) shortcut;
-            s = getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
-        }
-        else if (shortcut instanceof KeyboardModifierGestureShortcut) {
-            KeyboardModifierGestureShortcut gestureShortcut = (KeyboardModifierGestureShortcut) shortcut;
-            s = gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ";
-            s += getKeystrokeText(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts);
-        }
-        else {
-            throw new IllegalArgumentException("unknown shortcut class: " + shortcut.getClass().getCanonicalName());
-        }
-        return s;
+            case MouseShortcut mouseShortcut ->
+                getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount()).get();
+
+            case KeyboardModifierGestureShortcut gestureShortcut ->
+                (gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ") +
+                    getKeystrokeText(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts);
+
+            default -> throw new IllegalArgumentException("unknown shortcut class: " + shortcut.getClass().getCanonicalName());
+        };
     }
-
 
     /**
      * @param button     target mouse button
@@ -157,9 +155,12 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static String getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+    @Nonnull
+    public static LocalizeValue getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
         if (clickCount < 3) {
-            return KeyMapBundle.message("mouse." + (clickCount == 1 ? "" : "double.") + "click.shortcut.text", getModifiersText(mapNewModifiers(modifiers)), button);
+            return clickCount == 1
+                ? KeyMapLocalize.mouseClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button)
+                : KeyMapLocalize.mouseDoubleClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button);
         }
         else {
             throw new IllegalStateException("unknown clickCount: " + clickCount);
@@ -190,7 +191,7 @@ public class KeymapUtil {
     @Nonnull
     public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
         Application application = ApplicationManager.getApplication();
-        KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
+        KeymapManager keymapManager = application == null ? null : application.getInstance(KeymapManager.class);
         if (keymapManager == null || actionId == null) {
             return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
         }
@@ -226,11 +227,8 @@ public class KeymapUtil {
     public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, String actionId) {
         MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
         for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
-            if (shortcut instanceof MouseShortcut) {
-                MouseShortcut mouseShortcut = (MouseShortcut) shortcut;
-                if (mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
-                    return true;
-                }
+            if (shortcut instanceof MouseShortcut mouseShortcut && mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
+                return true;
             }
         }
         return false;
@@ -238,7 +236,7 @@ public class KeymapUtil {
 
     public static KeymapGroup createGroup(
         ActionGroup actionGroup,
-        String groupName,
+        @Nonnull LocalizeValue groupName,
         Image icon,
         Image openIcon,
         boolean ignore,
@@ -249,7 +247,7 @@ public class KeymapUtil {
 
     public static KeymapGroup createGroup(
         ActionGroup actionGroup,
-        String groupName,
+        @Nonnull LocalizeValue groupName,
         Image icon,
         Image openIcon,
         boolean ignore,
@@ -259,13 +257,13 @@ public class KeymapUtil {
         ActionManager actionManager = ActionManager.getInstance();
         KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(groupName, actionManager.getId(actionGroup), icon);
         AnAction[] children = actionGroup instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs() : actionGroup.getChildren(null);
+            ? defaultActionGroup.getChildActionsOrStubs()
+            : actionGroup.getChildren(null);
 
         for (AnAction action : children) {
             LOG.assertTrue(action != null, groupName + " contains null actions");
             if (action instanceof ActionGroup childActionGroup) {
-                KeymapGroup subGroup =
-                    createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
+                KeymapGroup subGroup = createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
                 if (subGroup.getSize() > 0) {
                     if (!ignore && !childActionGroup.isPopup()) {
                         group.addAll(subGroup);
@@ -283,7 +281,8 @@ public class KeymapUtil {
             }
             else if (action != null) {
                 String id = action instanceof ActionStubBase actionStubBase
-                    ? actionStubBase.getId() : actionManager.getId(action);
+                    ? actionStubBase.getId()
+                    : actionManager.getId(action);
                 if (id != null) {
                     if (id.startsWith(TOOL_ACTION_PREFIX)) {
                         continue;
@@ -304,30 +303,32 @@ public class KeymapUtil {
         return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered);
     }
 
-    private static String getName(AnAction action) {
-        String name = action.getTemplatePresentation().getText();
-        if (name != null && !name.isEmpty()) {
+    @Nonnull
+    private static LocalizeValue getName(AnAction action) {
+        LocalizeValue name = action.getTemplatePresentation().getTextValue();
+        if (name != LocalizeValue.empty()) {
             return name;
         }
         else {
             String id = action instanceof ActionStubBase actionStubBase
-                ? actionStubBase.getId() : ActionManager.getInstance().getId(action);
+                ? actionStubBase.getId()
+                : ActionManager.getInstance().getId(action);
             if (id != null) {
-                return id;
+                return LocalizeValue.of(id);
             }
             if (action instanceof DefaultActionGroup group) {
                 if (group.getChildrenCount() == 0) {
-                    return "Empty group";
+                    return LocalizeValue.localizeTODO("Empty group");
                 }
                 AnAction[] children = group.getChildActionsOrStubs();
                 for (AnAction child : children) {
                     if (!(child instanceof AnSeparator)) {
-                        return "group." + getName(child);
+                        return LocalizeValue.join(LocalizeValue.of("group."), getName(child));
                     }
                 }
-                return "Empty unnamed group";
+                return LocalizeValue.localizeTODO("Empty unnamed group");
             }
-            return action.getClass().getName();
+            return LocalizeValue.of(action.getClass().getName());
         }
     }
 }
