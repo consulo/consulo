@@ -17,9 +17,9 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
@@ -37,11 +37,11 @@ public class DebuggerKeymapExtension implements KeymapExtension {
         return KeymapGroupFactory.getInstance().newBuilder()
             .root(
                 KeyMapLocalize.debuggerActionsGroupTitle(),
-                IdeActions.GROUP_DEBUGGER,
+                XDebuggerActions.KEYMAP_GROUP,
                 PlatformIconGroup.toolwindowsToolwindowdebugger()
             )
             .filter(filtered)
-            .addGroup(IdeActions.GROUP_DEBUGGER)
+            .addGroup(XDebuggerActions.KEYMAP_GROUP)
             .build();
     }
 }

@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.frame.action.*;
 import consulo.execution.debug.impl.internal.ui.tree.action.*;
 import consulo.localize.LocalizeValue;
@@ -28,7 +29,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 2025-10-08
  */
 @ActionImpl(
-    id = "XDebugger.Actions",
+    id = XDebuggerActions.KEYMAP_GROUP,
     children = {
         @ActionRef(type = XSetValueAction.class),
         @ActionRef(type = XCopyValueAction.class),
