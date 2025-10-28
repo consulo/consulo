@@ -40,29 +40,14 @@ import java.util.function.Predicate;
 public class DebuggerKeymapExtension implements KeymapExtension {
     @Override
     public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
-        ActionManager actionManager = ActionManager.getInstance();
-        DefaultActionGroup debuggerGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_DEBUGGER);
-        AnAction[] debuggerActions = debuggerGroup.getChildActionsOrStubs();
-
-        List<String> ids = new ArrayList<>();
-        for (AnAction debuggerAction : debuggerActions) {
-            String actionId =
-                debuggerAction instanceof ActionStubBase actionStubBase ? actionStubBase.getId() : actionManager.getId(debuggerAction);
-            if (filtered == null || filtered.test(debuggerAction)) {
-                ids.add(actionId);
-            }
-        }
-
-        Collections.sort(ids);
-        KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(
-            KeyMapLocalize.debuggerActionsGroupTitle(),
-            IdeActions.GROUP_DEBUGGER,
-            PlatformIconGroup.toolwindowsToolwindowdebugger()
-        );
-        for (String id : ids) {
-            group.addActionId(id);
-        }
-
-        return group;
+        return KeymapGroupFactory.getInstance().newBuilder()
+            .root(
+                KeyMapLocalize.debuggerActionsGroupTitle(),
+                IdeActions.GROUP_DEBUGGER,
+                PlatformIconGroup.toolwindowsToolwindowdebugger()
+            )
+            .filter(filtered)
+            .addGroup(IdeActions.GROUP_DEBUGGER)
+            .create();
     }
 }

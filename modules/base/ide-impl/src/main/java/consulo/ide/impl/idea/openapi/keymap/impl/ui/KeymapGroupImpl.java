@@ -18,21 +18,146 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeymapGroup;
+import consulo.ui.ex.keymap.KeymapGroupFactory;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author anna
  * @since 2005-03-18
  */
 public class KeymapGroupImpl implements KeymapGroup {
+    private static class BuilderBase {
+        @Nonnull
+        protected final KeymapGroupFactory myKeymapGroupFactory;
+        @Nonnull
+        protected final ActionManager myActionManager;
+
+        private BuilderBase(@Nonnull KeymapGroupFactory keymapGroupFactory, @Nonnull ActionManager actionManager) {
+            myKeymapGroupFactory = keymapGroupFactory;
+            myActionManager = actionManager;
+        }
+    }
+
+    public static class BuilderImpl extends BuilderBase implements Builder {
+        public BuilderImpl(@Nonnull KeymapGroupFactory keymapGroupFactory, @Nonnull ActionManager actionManager) {
+            super(keymapGroupFactory, actionManager);
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder root(@Nonnull LocalizeValue name) {
+            return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name));
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull Image icon) {
+            return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, icon));
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull String id, @Nonnull Image icon) {
+            return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, id, icon));
+        }
+    }
+
+    public static class CreatingBuilderImpl extends BuilderBase implements CreatingBuilder {
+        @Nonnull
+        private final KeymapGroup myKeymapGroup;
+        @Nonnull
+        private Predicate<AnAction> myFilter = action -> true;
+
+        public CreatingBuilderImpl(
+            @Nonnull KeymapGroupFactory keymapGroupFactory,
+            @Nonnull ActionManager actionManager,
+            @Nonnull KeymapGroup keymapGroup
+        ) {
+            super(keymapGroupFactory, actionManager);
+            myKeymapGroup = keymapGroup;
+        }
+
+        @Nonnull
+        @Override
+        public KeymapGroup create() {
+            myKeymapGroup.normalizeSeparators();
+            return myKeymapGroup;
+        }
+
+
+        @Nonnull
+        @Override
+        public CreatingBuilder filter(@Nullable Predicate<AnAction> filter) {
+            myFilter = filter != null ? filter : action -> true;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder addGroup(@Nonnull String groupId) {
+            return addGroup(groupId, false);
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder addGroup(@Nonnull String groupId, boolean forceNonPopup) {
+            for (AnAction action : getActions(groupId)) {
+                addAction(action, forceNonPopup);
+            }
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public CreatingBuilder addAction(AnAction action, boolean forceNonPopup) {
+            if (action instanceof ActionGroup group) {
+                if (forceNonPopup) {
+                    for (AnAction childAction : getActions(group)) {
+                        addAction(childAction, true);
+                    }
+                }
+                else {
+                    KeymapGroup subGroup = KeymapUtil.createGroup(group, false, myFilter);
+                    if (subGroup.getSize() > 0) {
+                        myKeymapGroup.addGroup(subGroup);
+                    }
+                }
+            }
+            else if (action instanceof AnSeparator) {
+                myKeymapGroup.addSeparator();
+            }
+            else if (myFilter.test(action)) {
+                String id = action instanceof ActionStubBase actionStubBase
+                    ? actionStubBase.getId()
+                    : ActionManager.getInstance().getId(action);
+                myKeymapGroup.addActionId(id);
+            }
+            return this;
+        }
+
+        public AnAction[] getActions(String groupId) {
+            return getActions((ActionGroup) myActionManager.getActionOrStub(groupId));
+        }
+
+        private static AnAction[] getActions(ActionGroup group) {
+            return group instanceof DefaultActionGroup defaultActionGroup
+                ? defaultActionGroup.getChildActionsOrStubs()
+                : group.getChildren(null);
+        }
+    }
+
     private KeymapGroupImpl myParent;
     @Nonnull
     private final LocalizeValue myName;
@@ -247,14 +372,12 @@ public class KeymapGroupImpl implements KeymapGroup {
             group.copyFrom(groupToRestorePresentation);
         }
         for (Object o : myChildren) {
-            if (o instanceof String actionId) {
-                group.add(actionManager.getAction(actionId));
-            }
-            else if (o instanceof AnSeparator) {
-                group.addSeparator();
-            }
-            else if (o instanceof KeymapGroupImpl keymapGroup) {
-                group.add(keymapGroup.constructActionGroup(popup));
+            switch (o) {
+                case String actionId -> group.add(actionManager.getAction(actionId));
+                case AnSeparator separator -> group.addSeparator();
+                case KeymapGroupImpl keymapGroup -> group.add(keymapGroup.constructActionGroup(popup));
+                default -> {
+                }
             }
         }
         return group;

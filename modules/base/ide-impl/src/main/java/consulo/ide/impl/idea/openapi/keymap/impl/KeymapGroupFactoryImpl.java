@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.image.Image;
@@ -30,6 +31,12 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
+    @Nonnull
+    @Override
+    public KeymapGroup.Builder newBuilder(@Nonnull ActionManager actionManager) {
+        return new KeymapGroupImpl.BuilderImpl(this, actionManager);
+    }
+
     @Nonnull
     @Override
     public KeymapGroup createGroup(@Nonnull LocalizeValue name) {

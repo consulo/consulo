@@ -34,57 +34,12 @@ import java.util.function.Predicate;
 public class VcsKeymapExtension implements KeymapExtension {
     @Override
     public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
-        KeymapGroup result = KeymapGroupFactory.getInstance().createGroup(KeyMapLocalize.versionControlGroupTitle());
-
-        addActions(result, VcsActionGroup.ID, filtered, false);
-        addActions(result, "Vcs.KeymapGroup", filtered, false);
-        addActions(result, "VcsGeneral.KeymapGroup", filtered, true);
-
-        result.normalizeSeparators();
-
-        return result;
-    }
-
-    private static void addActions(KeymapGroup result, String groupId, Predicate<AnAction> filtered, boolean forceNonPopup) {
-        for (AnAction action : getActions(groupId)) {
-            addAction(result, action, filtered, false);
-        }
-    }
-
-    private static void addAction(KeymapGroup result, AnAction action, Predicate<AnAction> filtered, boolean forceNonPopup) {
-        if (action instanceof ActionGroup group) {
-            if (forceNonPopup) {
-                for (AnAction childAction : getActions(group)) {
-                    addAction(result, childAction, filtered, true);
-                }
-            }
-            else {
-                KeymapGroup subGroup = KeymapUtil.createGroup(group, false, filtered);
-                if (subGroup.getSize() > 0) {
-                    result.addGroup(subGroup);
-                }
-            }
-        }
-        else if (action instanceof AnSeparator) {
-            if (result instanceof KeymapGroup keymapGroup) {
-                keymapGroup.addSeparator();
-            }
-        }
-        else if (filtered == null || filtered.test(action)) {
-            String id = action instanceof ActionStubBase actionStubBase
-                ? actionStubBase.getId()
-                : ActionManager.getInstance().getId(action);
-            result.addActionId(id);
-        }
-    }
-
-    private static AnAction[] getActions(String actionGroup) {
-        return getActions((ActionGroup)ActionManager.getInstance().getActionOrStub(actionGroup));
-    }
-
-    private static AnAction[] getActions(ActionGroup group) {
-        return group instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs()
-            : group.getChildren(null);
+        return KeymapGroupFactory.getInstance().newBuilder()
+            .root(KeyMapLocalize.versionControlGroupTitle())
+            .filter(filtered)
+            .addGroup(VcsActionGroup.ID)
+            .addGroup("Vcs.KeymapGroup")
+            .addGroup("VcsGeneral.KeymapGroup", true)
+            .create();
     }
 }
