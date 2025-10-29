@@ -166,7 +166,7 @@ class ShortcutPresenter implements Disposable {
         LocalizeValue parentGroupName = parentNames.get(actionId);
         InputEvent event = actionData.myEvent;
         String actionText = (parentGroupName != null ? parentGroupName + " " + MacKeymapUtil.RIGHT + " " : "") +
-            actionData.myActionText.map((localizeManager, string) -> StringUtil.trimEnd(string, "..."));
+            actionData.myActionText.map((localizeManager, string) -> StringUtil.trimEnd(string, "…"));
 
         List<Pair<String, Font>> fragments = new ArrayList<>();
         if (actionText.length() > 0) {
