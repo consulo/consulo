@@ -18,6 +18,7 @@ package consulo.ide.impl.presentationAssistant;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -50,10 +51,11 @@ class ShortcutPresenter implements Disposable {
     public static class ActionData {
         private final String myActionId;
         private final Project myProject;
-        private final String myActionText;
+        @Nonnull
+        private final LocalizeValue myActionText;
         private final InputEvent myEvent;
 
-        public ActionData(String actionId, Project project, String actionText, @Nullable InputEvent event) {
+        public ActionData(String actionId, Project project, @Nonnull LocalizeValue actionText, @Nullable InputEvent event) {
             myActionId = actionId;
             myProject = project;
             myActionText = actionText;
@@ -61,7 +63,7 @@ class ShortcutPresenter implements Disposable {
         }
     }
 
-    private Set<String> movingActions = Set.of(
+    private static final Set<String> MOVING_ACTIONS = Set.of(
         IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT,
         IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT,
         IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN,
@@ -86,17 +88,22 @@ class ShortcutPresenter implements Disposable {
         "EditorPageUpWithSelection"
     );
 
-    private Set<String> typingActions = Set.of(
+    private static final Set<String> TYPING_ACTIONS = Set.of(
         IdeActions.ACTION_EDITOR_BACKSPACE,
         IdeActions.ACTION_EDITOR_ENTER,
         IdeActions.ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE
     );
 
-    private Set<String> parentGroupIds = Set.of("CodeCompletionGroup", "FoldingGroup", "GoToMenu", "IntroduceActionsGroup");
+    private static final Set<String> PARENT_GROUP_IDS = Set.of(
+        "CodeCompletionGroup",
+        "FoldingGroup",
+        "GoToMenu",
+        "IntroduceActionsGroup"
+    );
 
     private ActionInfoPanel infoPanel;
 
-    private Map<String, String> parentNames = new HashMap<>();
+    private Map<String, LocalizeValue> parentNames = new HashMap<>();
 
     public ShortcutPresenter() {
         enable();
@@ -104,40 +111,42 @@ class ShortcutPresenter implements Disposable {
 
     public void enable() {
         ActionManager actionManager = ActionManager.getInstance();
-        for (String groupId : parentGroupIds) {
-            AnAction group = actionManager.getAction(groupId);
-            if (group instanceof ActionGroup) {
-                fillParentNames((ActionGroup) group, group.getTemplatePresentation().getText());
+        for (String groupId : PARENT_GROUP_IDS) {
+            if (actionManager.getAction(groupId) instanceof ActionGroup actionGroup) {
+                fillParentNames(actionGroup, actionGroup.getTemplatePresentation().getTextValue());
             }
         }
 
-        actionManager.addAnActionListener(new AnActionListener() {
-            private ActionData currentAction;
+        actionManager.addAnActionListener(
+            new AnActionListener() {
+                private ActionData currentAction;
 
-            @Override
-            public void beforeActionPerformed(AnAction anAction, DataContext dataContext, AnActionEvent event) {
-                currentAction = null;
-                String id = ActionManager.getInstance().getId(anAction);
-                if (id == null) {
-                    return;
+                @Override
+                public void beforeActionPerformed(AnAction anAction, DataContext dataContext, AnActionEvent event) {
+                    currentAction = null;
+                    String id = ActionManager.getInstance().getId(anAction);
+                    if (id == null) {
+                        return;
+                    }
+                    if (!MOVING_ACTIONS.contains(id) && !TYPING_ACTIONS.contains(id) && event != null) {
+                        Project project = event.getData(Project.KEY);
+                        LocalizeValue text = event.getPresentation().getTextValue();
+                        currentAction = new ActionData(id, project, text, event.getInputEvent());
+                    }
                 }
-                if (!movingActions.contains(id) && !typingActions.contains(id) && event != null) {
-                    Project project = event.getData(Project.KEY);
-                    String text = event.getPresentation().getText();
-                    currentAction = new ActionData(id, project, text, event.getInputEvent());
-                }
-            }
 
-            @Override
-            public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                ActionData actionData = currentAction;
-                String actionId = ActionManager.getInstance().getId(action);
-                if (actionData != null && actionData.myActionId.equals(actionId)) {
-                    showActionInfo(actionData);
+                @Override
+                public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                    ActionData actionData = currentAction;
+                    String actionId = ActionManager.getInstance().getId(action);
+                    if (actionData != null && actionData.myActionId.equals(actionId)) {
+                        showActionInfo(actionData);
+                    }
                 }
-            }
 
-        }, this);
+            },
+            this
+        );
     }
 
     public void disable() {
@@ -154,11 +163,10 @@ class ShortcutPresenter implements Disposable {
 
     public void showActionInfo(ActionData actionData) {
         String actionId = actionData.myActionId;
-        String parentGroupName = parentNames.get(actionId);
+        LocalizeValue parentGroupName = parentNames.get(actionId);
         InputEvent event = actionData.myEvent;
-        String actionText =
-            (parentGroupName != null ? parentGroupName + " " + MacKeymapUtil.RIGHT + " " : "") + StringUtil.trimEnd(StringUtil.notNullize(
-                actionData.myActionText), "...");
+        String actionText = (parentGroupName != null ? parentGroupName + " " + MacKeymapUtil.RIGHT + " " : "") +
+            actionData.myActionText.map((localizeManager, string) -> StringUtil.trimEnd(string, "..."));
 
         List<Pair<String, Font>> fragments = new ArrayList<>();
         if (actionText.length() > 0) {
@@ -186,8 +194,9 @@ class ShortcutPresenter implements Disposable {
             }
         }
 
-        Project realProject =
-            actionData.myProject == null ? ArrayUtil.getFirstElement(ProjectManager.getInstance().getOpenProjects()) : actionData.myProject;
+        Project realProject = actionData.myProject == null
+            ? ArrayUtil.getFirstElement(ProjectManager.getInstance().getOpenProjects())
+            : actionData.myProject;
         if (realProject != null && !realProject.isDisposed() && realProject.isOpen()) {
             if (infoPanel == null || !infoPanel.canBeReused()) {
                 infoPanel = new ActionInfoPanel(realProject, fragments);
@@ -359,7 +368,7 @@ class ShortcutPresenter implements Disposable {
         return modifiers;
     }
 
-    private void fillParentNames(ActionGroup group, String parentName) {
+    private void fillParentNames(ActionGroup group, @Nonnull LocalizeValue parentName) {
         ActionManager actionManager = ActionManager.getInstance();
         for (AnAction item : group.getChildren(null)) {
             if (item instanceof ActionGroup actionGroup) {
