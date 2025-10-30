@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -22,7 +21,6 @@ import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
@@ -147,8 +145,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             String key = keys.nextElement();
             JTree tree = myType2TreeMap.get(key);
             myOccurrenceNavigators.put(key, new OccurenceNavigatorSupport(tree) {
-                @Override
                 @Nullable
+                @Override
                 protected Navigatable createDescriptorForNode(@Nonnull DefaultMutableTreeNode node) {
                     HierarchyNodeDescriptor descriptor = getDescriptor(node);
                     if (descriptor == null) {
@@ -167,12 +165,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
                 @Override
                 public String getNextOccurenceActionName() {
-                    return getNextOccurenceActionNameImpl();
+                    return getNextOccurrenceActionNameImpl().get();
                 }
 
                 @Override
                 public String getPreviousOccurenceActionName() {
-                    return getPrevOccurenceActionNameImpl();
+                    return getPrevOccurrenceActionNameImpl().get();
                 }
             });
             myTreePanel.add(ScrollPaneFactory.createScrollPane(tree), key);
@@ -201,10 +199,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     protected abstract PsiElement getElementFromDescriptor(@Nonnull HierarchyNodeDescriptor descriptor);
 
     @Nonnull
-    protected abstract String getPrevOccurenceActionNameImpl();
+    protected abstract LocalizeValue getPrevOccurrenceActionNameImpl();
 
     @Nonnull
-    protected abstract String getNextOccurenceActionNameImpl();
+    protected abstract LocalizeValue getNextOccurrenceActionNameImpl();
 
     protected abstract void createTrees(@Nonnull Map<String, JTree> trees);
 
@@ -575,6 +573,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
+        @RequiredUIAccess
         public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             HierarchyBrowserManager.State state = HierarchyBrowserManager.getInstance(myProject).getState();
             assert state != null;
@@ -636,9 +635,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
             UIAccess uiAccess = UIAccess.current();
 
-            BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement, b -> {
-                uiAccess.give(() -> ((HierarchyBrowserBaseEx) b).changeView(correctViewType(browser, currentViewType)));
-            });
+            BrowseHierarchyActionBase.createAndAddToPanel(
+                selectedElement.getProject(),
+                provider,
+                selectedElement,
+                b -> uiAccess.give(() -> ((HierarchyBrowserBaseEx) b).changeView(correctViewType(browser, currentViewType)))
+            );
         }
 
         protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
@@ -696,7 +698,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public final void update(@Nonnull AnActionEvent event) {
-            event.getPresentation().setEnabled(ReadAction.compute(() -> isValidBase()));
+            event.getPresentation().setEnabled(ReadAction.compute(HierarchyBrowserBaseEx.this::isValidBase));
         }
     }
 
