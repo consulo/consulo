@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.language.editor.hierarchy.TypeHierarchyProvider;
@@ -129,16 +128,16 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         return super.getData(dataId);
     }
 
-    @Override
     @Nonnull
-    protected String getPrevOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyTypePrevOccurenceName().get();
+    @Override
+    protected LocalizeValue getPrevOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyTypePrevOccurenceName();
     }
 
-    @Override
     @Nonnull
-    protected String getNextOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyTypeNextOccurenceName().get();
+    @Override
+    protected LocalizeValue getNextOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyTypeNextOccurenceName();
     }
 
     private final class MyDeleteProvider implements DeleteProvider {

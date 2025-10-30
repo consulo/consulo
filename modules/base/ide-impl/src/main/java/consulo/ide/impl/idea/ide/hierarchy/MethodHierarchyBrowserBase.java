@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.application.Application;
@@ -48,14 +47,14 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
     @Override
     @Nonnull
-    protected String getPrevOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyMethodPrevOccurenceName().get();
+    protected LocalizeValue getPrevOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyMethodPrevOccurenceName();
     }
 
     @Override
     @Nonnull
-    protected String getNextOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyMethodNextOccurenceName().get();
+    protected LocalizeValue getNextOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyMethodNextOccurenceName();
     }
 
     protected static JPanel createStandardLegendPanel(
@@ -65,20 +64,19 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     ) {
         JPanel panel = new JPanel(new GridBagLayout());
 
-        GridBagConstraints gc =
-            new GridBagConstraints(
-                0,
-                0,
-                1,
-                1,
-                1,
-                0,
-                GridBagConstraints.WEST,
-                GridBagConstraints.HORIZONTAL,
-                JBUI.insets(3, 5, 0, 5),
-                0,
-                0
-            );
+        GridBagConstraints gc = new GridBagConstraints(
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL,
+            JBUI.insets(3, 5, 0, 5),
+            0,
+            0
+        );
 
         JLabel label = new JBLabel(methodDefinedText, PlatformIconGroup.hierarchyMethoddefined(), SwingConstants.LEFT);
         label.setUI(new MultiLineLabelUI());
@@ -129,6 +127,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
         }
 
         @Override
+        @RequiredUIAccess
         public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             HierarchyBrowserManager.getInstance(myProject).getState().HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED = flag;
 

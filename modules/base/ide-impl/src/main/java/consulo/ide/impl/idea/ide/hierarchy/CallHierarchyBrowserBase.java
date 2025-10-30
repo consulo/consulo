@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.application.Application;
@@ -28,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import consulo.util.nodep.function.Function;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -85,14 +83,14 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
     @Nonnull
     @Override
-    protected String getPrevOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyCallPrevOccurenceName().get();
+    protected LocalizeValue getPrevOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyCallPrevOccurenceName();
     }
 
     @Nonnull
     @Override
-    protected String getNextOccurenceActionNameImpl() {
-        return IdeLocalize.hierarchyCallNextOccurenceName().get();
+    protected LocalizeValue getNextOccurrenceActionNameImpl() {
+        return IdeLocalize.hierarchyCallNextOccurenceName();
     }
 
     private class ChangeViewTypeActionBase extends ToggleAction {
@@ -114,6 +112,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
 
         @Override
+        @RequiredUIAccess
         public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             if (flag) {
 //              setWaitCursor();
@@ -130,7 +129,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
     }
 
-    protected static class BaseOnThisMethodAction extends BaseOnThisElementAction<CallHierarchyProvider> {
+    public static class BaseOnThisMethodAction extends BaseOnThisElementAction<CallHierarchyProvider> {
         public BaseOnThisMethodAction() {
             super(
                 IdeLocalize.actionBaseOnThisMethod(),
