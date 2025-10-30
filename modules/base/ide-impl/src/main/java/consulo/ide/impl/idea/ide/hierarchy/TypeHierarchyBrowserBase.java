@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.language.editor.hierarchy.TypeHierarchyProvider;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.DeleteProvider;
+import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.language.psi.PsiElement;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -170,7 +170,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
     }
 
-    protected static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
+    public static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
         public BaseOnThisTypeAction() {
             super(LocalizeValue.empty(), IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
         }
