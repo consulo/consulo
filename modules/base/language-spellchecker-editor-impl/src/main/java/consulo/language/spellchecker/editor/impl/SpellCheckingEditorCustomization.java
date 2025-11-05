@@ -70,11 +70,11 @@ public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
             file.putUserData(InspectionProfileWrapper.CUSTOMIZATION_KEY, strategy);
         }
 
-        if (!(strategy instanceof MyInspectionProfileStrategy myStrategy)) {
+        if (!(strategy instanceof MyInspectionProfileStrategy inspectionProfileStrategy)) {
             return;
         }
 
-        myStrategy.setUseSpellCheck(apply);
+        inspectionProfileStrategy.setUseSpellCheck(apply);
 
         if (apply) {
             editor.putUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY, false);
