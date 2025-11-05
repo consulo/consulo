@@ -23,28 +23,29 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * TODO handle multiple engines
  *
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 @Singleton
 @ServiceImpl
 public class SpellcheckerEngineManagerImpl implements SpellcheckerEngineManager {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public SpellcheckerEngineManagerImpl(Application application) {
-    myApplication = application;
-  }
+    @Inject
+    public SpellcheckerEngineManagerImpl(Application application) {
+        myApplication = application;
+    }
 
-  @Nullable
-  @Override
-  public SpellcheckerEngine getActiveEngine() {
-    List<SpellcheckerEngine> list = myApplication.getExtensionList(SpellcheckerEngine.class);
-    return list.isEmpty() ? null : list.get(0);
-  }
+    @Nullable
+    @Override
+    public SpellcheckerEngine getActiveEngine() {
+        List<SpellcheckerEngine> list = myApplication.getExtensionList(SpellcheckerEngine.class);
+        return list.isEmpty() ? null : list.get(0);
+    }
 }

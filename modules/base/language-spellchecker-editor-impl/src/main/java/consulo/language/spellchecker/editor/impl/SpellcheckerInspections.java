@@ -23,23 +23,25 @@ import consulo.util.collection.MultiMap;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 public class SpellcheckerInspections {
-  public static final ExtensionPointCacheKey<InspectionTool, MultiMap<String, String>> MAPPING =
-    ExtensionPointCacheKey.create("TOOLS_MAPPING", walker -> {
-      MultiMap<String, String> multiMap = new MultiMap<>();
+    public static final ExtensionPointCacheKey<InspectionTool, MultiMap<String, String>> MAPPING = ExtensionPointCacheKey.create(
+        "TOOLS_MAPPING",
+        walker -> {
+            MultiMap<String, String> multiMap = new MultiMap<>();
 
-      walker.walk(tool -> {
-        if (tool instanceof SpellcheckerInspection spellcheckerInspection) {
-          multiMap.putValue(spellcheckerInspection.getSpellcheckerEngineId(), spellcheckerInspection.getShortName());
+            walker.walk(tool -> {
+                if (tool instanceof SpellcheckerInspection spellcheckerInspection) {
+                    multiMap.putValue(spellcheckerInspection.getSpellcheckerEngineId(), spellcheckerInspection.getShortName());
+                }
+            });
+            return multiMap;
         }
-      });
-      return multiMap;
-    });
+    );
 
-  public static boolean isOwneedSpellcheckerInspection(String spellcheckerEngineId, String toolId) {
-    MultiMap<String, String> map = Application.get().getExtensionPoint(InspectionTool.class).getOrBuildCache(MAPPING);
-    return map.get(spellcheckerEngineId).contains(toolId);
-  }
+    public static boolean isOwneedSpellcheckerInspection(String spellcheckerEngineId, String toolId) {
+        MultiMap<String, String> map = Application.get().getExtensionPoint(InspectionTool.class).getOrBuildCache(MAPPING);
+        return map.get(spellcheckerEngineId).contains(toolId);
+    }
 }
