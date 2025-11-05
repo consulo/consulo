@@ -31,6 +31,7 @@ import consulo.language.editor.ui.awt.EditorTextFieldProvider;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -52,17 +53,18 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class CommitMessageImpl extends AbstractDataProviderPanel implements Disposable, CommitMessage {
-
     public static final Key<DataContext> DATA_CONTEXT_KEY = Key.create("commit message data context");
     private final EditorTextField myEditorField;
     private Consumer<String> myMessageConsumer;
     private TitledSeparator mySeparator;
     private boolean myCheckSpelling;
 
+    @RequiredUIAccess
     public CommitMessageImpl(Project project) {
         this(project, true);
     }
 
+    @RequiredUIAccess
     public CommitMessageImpl(Project project, boolean withSeparator) {
         super(new BorderLayout());
         myEditorField = createEditorField(project);
@@ -122,6 +124,7 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
     }
 
     @Override
+    @RequiredUIAccess
     public void setCommitMessage(String currentDescription) {
         setText(currentDescription);
     }
@@ -166,6 +169,7 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
         return myEditorField;
     }
 
+    @RequiredUIAccess
     public void setText(String initialMessage) {
         String text = initialMessage == null ? "" : initialMessage;
         myEditorField.setText(text);
@@ -196,13 +200,13 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
     @Override
     public void setCheckSpelling(boolean check) {
         myCheckSpelling = check;
-        Editor editor = myEditorField.getEditor();
-        if (!(editor instanceof EditorEx)) {
+        if (!(myEditorField.getEditor() instanceof EditorEx editorEx)) {
             return;
         }
-        EditorEx editorEx = (EditorEx) editor;
 
-        SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(check).ifPresent(customizer -> customizer.accept(editorEx));
+        SpellcheckingEditorCustomizationProvider.getInstance()
+            .getCustomizationOpt(check)
+            .ifPresent(customizer -> customizer.accept(editorEx));
     }
 
     @Override

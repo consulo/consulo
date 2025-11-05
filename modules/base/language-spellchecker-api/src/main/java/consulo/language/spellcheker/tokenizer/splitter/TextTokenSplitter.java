@@ -20,34 +20,35 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextTokenSplitter extends BaseTokenSplitter {
-  private static final TextTokenSplitter INSTANCE = new TextTokenSplitter();
+    private static final TextTokenSplitter INSTANCE = new TextTokenSplitter();
 
-  public static TextTokenSplitter getInstance() {
-    return INSTANCE;
-  }
-
-  private static final Pattern EXTENDED_WORD_AND_SPECIAL = Pattern.compile("([&#]|0x[0-9]*)?\\p{L}+'?\\p{L}[_\\p{L}]*");
-
-  @Override
-  public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-    if (text == null || StringUtil.isEmpty(text)) {
-      return;
+    public static TextTokenSplitter getInstance() {
+        return INSTANCE;
     }
-    doSplit(text, range, consumer);
-  }
 
-  protected void doSplit(@Nonnull String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-    WordTokenSplitter ws = WordTokenSplitter.getInstance();
-    Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(text);
-    matcher.region(range.getStartOffset(), range.getEndOffset());
-    while (matcher.find()) {
-      TextRange found = new TextRange(matcher.start(), matcher.end());
-      ws.split(text, found, consumer);
+    private static final Pattern EXTENDED_WORD_AND_SPECIAL = Pattern.compile("([&#]|0x[0-9]*)?\\p{L}+'?\\p{L}[_\\p{L}]*");
+
+    @Override
+    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
+        if (text == null || StringUtil.isEmpty(text)) {
+            return;
+        }
+        doSplit(text, range, consumer);
     }
-  }
+
+    protected void doSplit(@Nonnull String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
+        WordTokenSplitter ws = WordTokenSplitter.getInstance();
+        Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(text);
+        matcher.region(range.getStartOffset(), range.getEndOffset());
+        while (matcher.find()) {
+            TextRange found = new TextRange(matcher.start(), matcher.end());
+            ws.split(text, found, consumer);
+        }
+    }
 }

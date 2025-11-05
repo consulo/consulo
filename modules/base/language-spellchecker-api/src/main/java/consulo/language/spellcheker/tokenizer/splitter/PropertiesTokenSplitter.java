@@ -20,33 +20,34 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class PropertiesTokenSplitter extends BaseTokenSplitter {
-  private static final PropertiesTokenSplitter INSTANCE = new PropertiesTokenSplitter();
+    private static final PropertiesTokenSplitter INSTANCE = new PropertiesTokenSplitter();
 
-  public static PropertiesTokenSplitter getInstance() {
-    return INSTANCE;
-  }
-
-  private static final Pattern WORD = Pattern.compile("\\p{L}*");
-
-  @Override
-  public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-    if (text == null || StringUtil.isEmpty(text)) {
-      return;
+    public static PropertiesTokenSplitter getInstance() {
+        return INSTANCE;
     }
-    IdentifierTokenSplitter splitter = IdentifierTokenSplitter.getInstance();
-    Matcher matcher = WORD.matcher(range.substring(text));
-    while (matcher.find()) {
-      if (matcher.end() - matcher.start() < MIN_RANGE_LENGTH) {
-        continue;
-      }
-      TextRange found = matcherRange(range, matcher);
-      splitter.split(text, found, consumer);
+
+    private static final Pattern WORD = Pattern.compile("\\p{L}*");
+
+    @Override
+    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
+        if (text == null || StringUtil.isEmpty(text)) {
+            return;
+        }
+        IdentifierTokenSplitter splitter = IdentifierTokenSplitter.getInstance();
+        Matcher matcher = WORD.matcher(range.substring(text));
+        while (matcher.find()) {
+            if (matcher.end() - matcher.start() < MIN_RANGE_LENGTH) {
+                continue;
+            }
+            TextRange found = matcherRange(range, matcher);
+            splitter.split(text, found, consumer);
+        }
     }
-  }
 }

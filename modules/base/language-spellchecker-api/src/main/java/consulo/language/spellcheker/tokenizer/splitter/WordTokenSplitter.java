@@ -16,36 +16,36 @@
 package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WordTokenSplitter extends BaseTokenSplitter {
-  private static final WordTokenSplitter INSTANCE = new WordTokenSplitter();
+    private static final WordTokenSplitter INSTANCE = new WordTokenSplitter();
 
-  public static WordTokenSplitter getInstance() {
-    return INSTANCE;
-  }
+    public static WordTokenSplitter getInstance() {
+        return INSTANCE;
+    }
 
-  private static final Pattern SPECIAL = Pattern.compile("&\\p{Alnum}{4};?|#\\p{Alnum}{3,6}|0x\\p{Alnum}?");
+    private static final Pattern SPECIAL = Pattern.compile("&\\p{Alnum}{4};?|#\\p{Alnum}{3,6}|0x\\p{Alnum}?");
 
-  @Override
-  public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-    if (text == null || range.getLength() <= 1) {
-      return;
+    @Override
+    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
+        if (text == null || range.getLength() <= 1) {
+            return;
+        }
+        Matcher specialMatcher = SPECIAL.matcher(text);
+        specialMatcher.region(range.getStartOffset(), range.getEndOffset());
+        if (specialMatcher.find()) {
+            TextRange found = new TextRange(specialMatcher.start(), specialMatcher.end());
+            addWord(consumer, true, found);
+        }
+        else {
+            IdentifierTokenSplitter.getInstance().split(text, range, consumer);
+        }
     }
-    Matcher specialMatcher = SPECIAL.matcher(text);
-    specialMatcher.region(range.getStartOffset(), range.getEndOffset());
-    if (specialMatcher.find()) {
-      TextRange found = new TextRange(specialMatcher.start(), specialMatcher.end());
-      addWord(consumer, true, found);
-    }
-    else {
-      IdentifierTokenSplitter.getInstance().split(text, range, consumer);
-    }
-  }
 }

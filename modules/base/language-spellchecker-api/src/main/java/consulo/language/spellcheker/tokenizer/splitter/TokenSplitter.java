@@ -19,8 +19,9 @@ import consulo.document.util.TextRange;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 public interface TokenSplitter {
-  void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer);
+    void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer);
 }

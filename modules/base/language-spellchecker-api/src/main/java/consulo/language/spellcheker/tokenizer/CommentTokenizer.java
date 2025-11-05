@@ -22,11 +22,13 @@ import consulo.language.spellcheker.tokenizer.splitter.CommentTokenSplitter;
 import jakarta.annotation.Nonnull;
 
 public class CommentTokenizer extends Tokenizer<PsiComment> {
-  @RequiredReadAction
-  @Override
-  public void tokenize(@Nonnull PsiComment element, TokenConsumer consumer) {
-    // doccomment chameleon expands as PsiComment inside PsiComment, avoid duplication
-    if (element.getParent() instanceof PsiComment) return;
-    consumer.consumeToken(element, CommentTokenSplitter.getInstance());
-  }
+    @Override
+    @RequiredReadAction
+    public void tokenize(@Nonnull PsiComment element, TokenConsumer consumer) {
+        // doc-comment chameleon expands as PsiComment inside PsiComment, avoid duplication
+        if (element.getParent() instanceof PsiComment) {
+            return;
+        }
+        consumer.consumeToken(element, CommentTokenSplitter.getInstance());
+    }
 }

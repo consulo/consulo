@@ -24,41 +24,46 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TextFieldWithCompletion extends LanguageTextField {
-  private final boolean myForceAutoPopup;
-  private final boolean myShowHint;
+    private final boolean myForceAutoPopup;
+    private final boolean myShowHint;
 
-  public TextFieldWithCompletion(@Nonnull Project project,
-                                 @Nonnull TextCompletionProvider provider,
-                                 @Nonnull String value,
-                                 boolean oneLineMode,
-                                 boolean forceAutoPopup,
-                                 boolean showHint) {
-    this(project, provider, value, oneLineMode, true, forceAutoPopup, showHint);
-  }
-
-  public TextFieldWithCompletion(@Nullable Project project,
-                                 @Nonnull TextCompletionProvider provider,
-                                 @Nonnull String value,
-                                 boolean oneLineMode,
-                                 boolean autoPopup,
-                                 boolean forceAutoPopup,
-                                 boolean showHint) {
-    super(PlainTextLanguage.INSTANCE, project, value, new TextCompletionUtil.DocumentWithCompletionCreator(provider, autoPopup),
-          oneLineMode);
-    myForceAutoPopup = forceAutoPopup;
-    myShowHint = showHint;
-  }
-
-  @Override
-  protected EditorEx createEditor() {
-    EditorEx editor = super.createEditor();
-    SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
-    editor.putUserData(AutoPopupController.ALWAYS_AUTO_POPUP, myForceAutoPopup);
-
-    if (myShowHint) {
-      TextCompletionUtil.installCompletionHint(editor);
+    public TextFieldWithCompletion(
+        @Nonnull Project project,
+        @Nonnull TextCompletionProvider provider,
+        @Nonnull String value,
+        boolean oneLineMode,
+        boolean forceAutoPopup,
+        boolean showHint
+    ) {
+        this(project, provider, value, oneLineMode, true, forceAutoPopup, showHint);
     }
 
-    return editor;
-  }
+    public TextFieldWithCompletion(
+        @Nullable Project project,
+        @Nonnull TextCompletionProvider provider,
+        @Nonnull String value,
+        boolean oneLineMode,
+        boolean autoPopup,
+        boolean forceAutoPopup,
+        boolean showHint
+    ) {
+        super(PlainTextLanguage.INSTANCE, project, value, new TextCompletionUtil.DocumentWithCompletionCreator(provider, autoPopup),
+            oneLineMode
+        );
+        myForceAutoPopup = forceAutoPopup;
+        myShowHint = showHint;
+    }
+
+    @Override
+    protected EditorEx createEditor() {
+        EditorEx editor = super.createEditor();
+        SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
+        editor.putUserData(AutoPopupController.ALWAYS_AUTO_POPUP, myForceAutoPopup);
+
+        if (myShowHint) {
+            TextCompletionUtil.installCompletionHint(editor);
+        }
+
+        return editor;
+    }
 }

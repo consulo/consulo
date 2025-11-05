@@ -21,30 +21,31 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngine {
-  @Nonnull
-  String getId();
+    @Nonnull
+    String getId();
 
-  @Nonnull
-  LocalizeValue getDisplayName();
+    @Nonnull
+    LocalizeValue getDisplayName();
 
-  @Nonnull
-  List<String> getSuggestions(@Nonnull Project project, @Nonnull String text);
+    @Nonnull
+    List<String> getSuggestions(@Nonnull Project project, @Nonnull String text);
 
-  boolean hasProblem(@Nonnull Project project, @Nonnull String word);
+    boolean hasProblem(@Nonnull Project project, @Nonnull String word);
 
-  default boolean canSaveUserWords(@Nonnull Project project) {
-    return false;
-  }
+    default boolean canSaveUserWords(@Nonnull Project project) {
+        return false;
+    }
 
-  default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
-    throw new UnsupportedOperationException();
-  }
+    default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
+        throw new UnsupportedOperationException();
+    }
 }

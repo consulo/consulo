@@ -24,17 +24,24 @@ import consulo.language.spellcheker.tokenizer.splitter.TokenSplitter;
  * @author yole
  */
 public abstract class TokenConsumer {
-  @RequiredReadAction
-  public void consumeToken(PsiElement element, TokenSplitter tokenSplitter) {
-    consumeToken(element, false, tokenSplitter);
-  }
+    @RequiredReadAction
+    public void consumeToken(PsiElement element, TokenSplitter tokenSplitter) {
+        consumeToken(element, false, tokenSplitter);
+    }
 
-  @RequiredReadAction
-  public void consumeToken(PsiElement element, boolean useRename, TokenSplitter tokenSplitter) {
-    String text = element.getText();
-    consumeToken(element, text, useRename, 0, TextRange.allOf(text), tokenSplitter);
-  }
+    @RequiredReadAction
+    public void consumeToken(PsiElement element, boolean useRename, TokenSplitter tokenSplitter) {
+        String text = element.getText();
+        consumeToken(element, text, useRename, 0, TextRange.allOf(text), tokenSplitter);
+    }
 
-  @RequiredReadAction
-  public abstract void consumeToken(PsiElement element, String text, boolean useRename, int offset, TextRange rangeToCheck, TokenSplitter tokenSplitter);
+    @RequiredReadAction
+    public abstract void consumeToken(
+        PsiElement element,
+        String text,
+        boolean useRename,
+        int offset,
+        TextRange rangeToCheck,
+        TokenSplitter tokenSplitter
+    );
 }

@@ -32,64 +32,66 @@ import consulo.language.spellcheker.tokenizer.*;
 import consulo.language.spellcheker.tokenizer.splitter.PlainTextTokenSplitter;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SpellcheckingStrategy implements LanguageExtension {
-  private static final ExtensionPointCacheKey<SpellcheckingStrategy, ByLanguageValue<List<SpellcheckingStrategy>>> KEY =
-          ExtensionPointCacheKey.create("SpellcheckingStrategy", LanguageOneToMany.build(false));
+    private static final ExtensionPointCacheKey<SpellcheckingStrategy, ByLanguageValue<List<SpellcheckingStrategy>>> KEY =
+        ExtensionPointCacheKey.create("SpellcheckingStrategy", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<SpellcheckingStrategy> forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(SpellcheckingStrategy.class).getOrBuildCache(KEY).requiredGet(language);
-  }
+    @Nonnull
+    public static List<SpellcheckingStrategy> forLanguage(@Nonnull Language language) {
+        return Application.get().getExtensionPoint(SpellcheckingStrategy.class).getOrBuildCache(KEY).requiredGet(language);
+    }
 
-  protected final Tokenizer<PsiComment> myCommentTokenizer = new CommentTokenizer();
-  protected final Tokenizer<PsiNameIdentifierOwner> myNameIdentifierOwnerTokenizer = new PsiIdentifierOwnerTokenizer();
+    protected final Tokenizer<PsiComment> myCommentTokenizer = new CommentTokenizer();
+    protected final Tokenizer<PsiNameIdentifierOwner> myNameIdentifierOwnerTokenizer = new PsiIdentifierOwnerTokenizer();
 
-  public static final Tokenizer EMPTY_TOKENIZER = new Tokenizer() {
+    public static final Tokenizer EMPTY_TOKENIZER = new Tokenizer() {
+        @Override
+        @RequiredReadAction
+        public void tokenize(@Nonnull PsiElement element, TokenConsumer consumer) {
+        }
+    };
+
+    public static final Tokenizer<PsiElement> TEXT_TOKENIZER = new TokenizerBase<>(PlainTextTokenSplitter.getInstance());
+
+    @Nonnull
     @RequiredReadAction
-    @Override
-    public void tokenize(@Nonnull PsiElement element, TokenConsumer consumer) {
-    }
-  };
+    public Tokenizer getTokenizer(PsiElement element) {
+        if (element instanceof PsiWhiteSpace) {
+            return EMPTY_TOKENIZER;
+        }
 
-  public static final Tokenizer<PsiElement> TEXT_TOKENIZER = new TokenizerBase<>(PlainTextTokenSplitter.getInstance());
+        if (element instanceof PsiLanguageInjectionHost && InjectedLanguageManager.getInstance(element.getProject())
+            .getInjectedPsiFiles(element) != null) {
+            return EMPTY_TOKENIZER;
+        }
 
-  @Nonnull
-  @RequiredReadAction
-  public Tokenizer getTokenizer(PsiElement element) {
-    if (element instanceof PsiWhiteSpace) {
-      return EMPTY_TOKENIZER;
-    }
+        if (element instanceof PsiNameIdentifierOwner) {
+            return myNameIdentifierOwnerTokenizer;
+        }
 
-    if (element instanceof PsiLanguageInjectionHost && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
-      return EMPTY_TOKENIZER;
-    }
+        if (element instanceof PsiComment) {
+            if (SpellcheckerInternalHelper.getInstance().isSuppressionComment(element)) {
+                return EMPTY_TOKENIZER;
+            }
 
-    if (element instanceof PsiNameIdentifierOwner) {
-      return myNameIdentifierOwnerTokenizer;
-    }
+            //don't check shebang
+            if (element.getTextOffset() == 0 && element.getText().startsWith("#!")) {
+                return EMPTY_TOKENIZER;
+            }
+            return myCommentTokenizer;
+        }
 
-    if (element instanceof PsiComment) {
-      if (SpellcheckerInternalHelper.getInstance().isSuppressionComment(element)) {
+        if (element instanceof PsiPlainText) {
+            return TEXT_TOKENIZER;
+        }
         return EMPTY_TOKENIZER;
-      }
-
-      //don't check shebang
-      if (element.getTextOffset() == 0 && element.getText().startsWith("#!")) {
-        return EMPTY_TOKENIZER;
-      }
-      return myCommentTokenizer;
     }
 
-    if (element instanceof PsiPlainText) {
-      return TEXT_TOKENIZER;
+    public boolean isMyContext(@Nonnull PsiElement element) {
+        return true;
     }
-    return EMPTY_TOKENIZER;
-  }
-
-  public boolean isMyContext(@Nonnull PsiElement element) {
-    return true;
-  }
 }
