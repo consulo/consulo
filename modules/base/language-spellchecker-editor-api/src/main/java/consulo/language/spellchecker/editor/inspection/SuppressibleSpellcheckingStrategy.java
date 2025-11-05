@@ -26,13 +26,13 @@ import jakarta.annotation.Nonnull;
  * Just delegate this to your suppression util code, as you'll do in normal inspection for your language.
  */
 public abstract class SuppressibleSpellcheckingStrategy extends SpellcheckingStrategy {
-  /**
-   * @see consulo.language.editor.inspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
-   */
-  public abstract boolean isSuppressedFor(@Nonnull PsiElement element, @Nonnull String name);
+    /**
+     * @see consulo.language.editor.inspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
+     */
+    public abstract boolean isSuppressedFor(@Nonnull PsiElement element, @Nonnull String name);
 
-  /**
-   * @see consulo.language.editor.inspection.BatchSuppressableTool#getBatchSuppressActions(PsiElement)
-   */
-  public abstract SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, @Nonnull String name);
+    /**
+     * @see consulo.language.editor.inspection.BatchSuppressableTool#getBatchSuppressActions(PsiElement)
+     */
+    public abstract SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, @Nonnull String name);
 }

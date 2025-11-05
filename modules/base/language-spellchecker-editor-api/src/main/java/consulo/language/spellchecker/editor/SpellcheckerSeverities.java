@@ -19,8 +19,8 @@ import consulo.language.editor.annotation.HighlightSeverity;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 public final class SpellcheckerSeverities {
-  public static final HighlightSeverity TYPO = new HighlightSeverity("TYPO", HighlightSeverity.INFORMATION.myVal + 5);
+    public static final HighlightSeverity TYPO = new HighlightSeverity("TYPO", HighlightSeverity.INFORMATION.myVal + 5);
 }

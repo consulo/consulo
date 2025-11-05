@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SpellcheckingEditorCustomizationProvider {

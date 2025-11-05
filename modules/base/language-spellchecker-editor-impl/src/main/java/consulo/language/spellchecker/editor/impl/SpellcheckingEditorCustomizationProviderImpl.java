@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -35,23 +36,22 @@ import java.util.function.Consumer;
 @ServiceImpl
 @Singleton
 public class SpellcheckingEditorCustomizationProviderImpl implements SpellcheckingEditorCustomizationProvider {
+    private final SpellcheckerEngineManager mySpellcheckerEngineManager;
 
-  private final SpellcheckerEngineManager mySpellcheckerEngineManager;
-
-  @Inject
-  public SpellcheckingEditorCustomizationProviderImpl(SpellcheckerEngineManager spellcheckerEngineManager) {
-    mySpellcheckerEngineManager = spellcheckerEngineManager;
-  }
-
-  @Nonnull
-  @Override
-  public Optional<Consumer<EditorEx>> getCustomizationOpt(boolean enabled) {
-    SpellcheckerEngine activeEngine = mySpellcheckerEngineManager.getActiveEngine();
-    if (activeEngine == null) {
-      return Optional.empty();
+    @Inject
+    public SpellcheckingEditorCustomizationProviderImpl(SpellcheckerEngineManager spellcheckerEngineManager) {
+        mySpellcheckerEngineManager = spellcheckerEngineManager;
     }
 
-    SpellCheckingEditorCustomization customization = new SpellCheckingEditorCustomization(enabled, activeEngine.getId());
-    return Optional.of(customization);
-  }
+    @Nonnull
+    @Override
+    public Optional<Consumer<EditorEx>> getCustomizationOpt(boolean enabled) {
+        SpellcheckerEngine activeEngine = mySpellcheckerEngineManager.getActiveEngine();
+        if (activeEngine == null) {
+            return Optional.empty();
+        }
+
+        SpellCheckingEditorCustomization customization = new SpellCheckingEditorCustomization(enabled, activeEngine.getId());
+        return Optional.of(customization);
+    }
 }

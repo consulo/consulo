@@ -21,44 +21,45 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngineManager {
-  @Nullable
-  SpellcheckerEngine getActiveEngine();
+    @Nullable
+    SpellcheckerEngine getActiveEngine();
 
-  @Nonnull
-  default List<String> getSuggestions(@Nonnull Project project, @Nonnull String text) {
-    SpellcheckerEngine engine = getActiveEngine();
-    if (engine == null) {
-      return List.of();
-    }
-    return engine.getSuggestions(project, text);
-  }
-
-  default boolean hasProblem(@Nonnull Project project, @Nonnull String word) {
-    SpellcheckerEngine engine = getActiveEngine();
-    return engine != null && engine.hasProblem(project, word);
-  }
-
-  default boolean canSaveUserWords(@Nonnull Project project) {
-    SpellcheckerEngine engine = getActiveEngine();
-    return engine != null && engine.canSaveUserWords(project);
-  }
-
-  default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
-    if (!canSaveUserWords(project)) {
-      throw new IllegalArgumentException("#canSaveUserWords(Project) return false");
+    @Nonnull
+    default List<String> getSuggestions(@Nonnull Project project, @Nonnull String text) {
+        SpellcheckerEngine engine = getActiveEngine();
+        if (engine == null) {
+            return List.of();
+        }
+        return engine.getSuggestions(project, text);
     }
 
-    SpellcheckerEngine engine = getActiveEngine();
-    if (engine != null) {
-      engine.acceptWordAsCorrect(project, word);
+    default boolean hasProblem(@Nonnull Project project, @Nonnull String word) {
+        SpellcheckerEngine engine = getActiveEngine();
+        return engine != null && engine.hasProblem(project, word);
     }
-  }
+
+    default boolean canSaveUserWords(@Nonnull Project project) {
+        SpellcheckerEngine engine = getActiveEngine();
+        return engine != null && engine.canSaveUserWords(project);
+    }
+
+    default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
+        if (!canSaveUserWords(project)) {
+            throw new IllegalArgumentException("#canSaveUserWords(Project) return false");
+        }
+
+        SpellcheckerEngine engine = getActiveEngine();
+        if (engine != null) {
+            engine.acceptWordAsCorrect(project, word);
+        }
+    }
 }
