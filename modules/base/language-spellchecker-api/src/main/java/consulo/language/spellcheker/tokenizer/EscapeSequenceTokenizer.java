@@ -10,31 +10,36 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Tokenizer<T> {
-  private static final Key<int[]> ESCAPE_OFFSETS = Key.create("escape.tokenizer.offsets");
+    private static final Key<int[]> ESCAPE_OFFSETS = Key.create("escape.tokenizer.offsets");
 
-  @RequiredReadAction
-  public static void processTextWithOffsets(PsiElement element, TokenConsumer consumer, StringBuilder unescapedText,
-                                            int[] offsets, int startOffset) {
-    if (element != null) {
-      element.putUserData(ESCAPE_OFFSETS, offsets);
+    @RequiredReadAction
+    public static void processTextWithOffsets(
+        PsiElement element,
+        TokenConsumer consumer,
+        StringBuilder unescapedText,
+        int[] offsets,
+        int startOffset
+    ) {
+        if (element != null) {
+            element.putUserData(ESCAPE_OFFSETS, offsets);
+        }
+        String text = unescapedText.toString();
+        consumer.consumeToken(element, text, false, startOffset, TextRange.allOf(text), PlainTextTokenSplitter.getInstance());
+        if (element != null) {
+            element.putUserData(ESCAPE_OFFSETS, null);
+        }
     }
-    String text = unescapedText.toString();
-    consumer.consumeToken(element, text, false, startOffset, TextRange.allOf(text), PlainTextTokenSplitter.getInstance());
-    if (element != null) {
-      element.putUserData(ESCAPE_OFFSETS, null);
-    }
-  }
 
-  @Override
-  @Nonnull
-  public TextRange getHighlightingRange(PsiElement element, int offset, TextRange range) {
-    int[] offsets = element.getUserData(ESCAPE_OFFSETS);
-    if (offsets != null) {
-      int start = offsets[range.getStartOffset()];
-      int end = offsets[range.getEndOffset()];
+    @Nonnull
+    @Override
+    public TextRange getHighlightingRange(PsiElement element, int offset, TextRange range) {
+        int[] offsets = element.getUserData(ESCAPE_OFFSETS);
+        if (offsets != null) {
+            int start = offsets[range.getStartOffset()];
+            int end = offsets[range.getEndOffset()];
 
-      return new TextRange(offset + start, offset + end);
+            return new TextRange(offset + start, offset + end);
+        }
+        return super.getHighlightingRange(element, offset, range);
     }
-    return super.getHighlightingRange(element, offset, range);
-  }
 }

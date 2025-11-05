@@ -27,22 +27,23 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class TokenizerBase<T extends PsiElement> extends Tokenizer<T> {
-  public static <T extends PsiElement> TokenizerBase<T> create(TokenSplitter splitter) {
-    return new TokenizerBase<T>(splitter);
-  }
-
-  private final TokenSplitter mySplitter;
-
-  public TokenizerBase(TokenSplitter splitter) {
-    mySplitter = splitter;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void tokenize(@Nonnull T element, TokenConsumer consumer) {
-    if (element instanceof PsiLanguageInjectionHost && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
-      return;
+    public static <T extends PsiElement> TokenizerBase<T> create(TokenSplitter splitter) {
+        return new TokenizerBase<>(splitter);
     }
-    consumer.consumeToken(element, mySplitter);
-  }
+
+    private final TokenSplitter mySplitter;
+
+    public TokenizerBase(TokenSplitter splitter) {
+        mySplitter = splitter;
+    }
+
+    @Override
+    @RequiredReadAction
+    public void tokenize(@Nonnull T element, TokenConsumer consumer) {
+        if (element instanceof PsiLanguageInjectionHost
+            && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
+            return;
+        }
+        consumer.consumeToken(element, mySplitter);
+    }
 }

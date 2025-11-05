@@ -22,15 +22,15 @@ import consulo.language.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 14/01/2023
+ * @since 2023-01-14
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public class SpellcheckerInternalHelper {
-  public static SpellcheckerInternalHelper getInstance() {
-    return Application.get().getInstance(SpellcheckerInternalHelper.class);
-  }
+    public static SpellcheckerInternalHelper getInstance() {
+        return Application.get().getInstance(SpellcheckerInternalHelper.class);
+    }
 
-  public boolean isSuppressionComment(PsiElement element) {
-    return false;
-  }
+    public boolean isSuppressionComment(PsiElement element) {
+        return false;
+    }
 }
