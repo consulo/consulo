@@ -20,13 +20,13 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.language.spellcheker.tokenizer.splitter.*;
+import consulo.util.io.StreamUtil;
 import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -394,9 +394,9 @@ public class SplitterTest {
     }
 
     @Test
-    public void testTCData() {
+    public void testTCData() throws IOException {
         InputStream stream = SplitterTest.class.getResourceAsStream("contents.txt");
-        String text = convertStreamToString(stream);
+        String text = StreamUtil.readText(stream, StandardCharsets.UTF_8);
         List<String> words = wordsToCheck(PlainTextTokenSplitter.getInstance(), text);
         assertEquals(0, words.size());
     }
@@ -424,34 +424,5 @@ public class SplitterTest {
     private static void correctListToCheck(TokenSplitter splitter, String text, @Nonnull String... expected) {
         assertThat(wordsToCheck(splitter, text))
             .isEqualTo(Arrays.asList(expected));
-    }
-
-    private String convertStreamToString(InputStream is) {
-        if (is != null) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-            }
-            catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            finally {
-                try {
-                    is.close();
-                }
-                catch (IOException ignore) {
-
-                }
-            }
-            return sb.toString();
-        }
-        else {
-            return "";
-        }
     }
 }
