@@ -15,35 +15,21 @@
  */
 package consulo.language.spellcheker.tokenizer.splitter;
 
-import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.BombedStringUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class BaseTokenSplitter implements TokenSplitter {
     public static final int MIN_RANGE_LENGTH = 3;
-
-    protected static void addWord(@Nonnull Consumer<TextRange> consumer, boolean ignore, @Nullable TextRange found) {
-        if (found == null || ignore) {
-            return;
-        }
-        boolean tooShort = (found.getEndOffset() - found.getStartOffset()) <= MIN_RANGE_LENGTH;
-        if (tooShort) {
-            return;
-        }
-        consumer.accept(found);
-    }
 
     protected static boolean isAllWordsAreUpperCased(@Nonnull String text, @Nonnull List<TextRange> words) {
         for (TextRange word : words) {
@@ -87,15 +73,20 @@ public abstract class BaseTokenSplitter implements TokenSplitter {
     }
 
     @Nonnull
-    static protected List<TextRange> excludeByPattern(String text, TextRange range, @Nonnull Pattern toExclude, int groupToInclude) {
+    protected static List<TextRange> excludeByPattern(
+        @Nonnull SplitContext context,
+        TextRange range,
+        @Nonnull Pattern toExclude,
+        int groupToInclude
+    ) {
         List<TextRange> toCheck = new SmartList<>();
         int from = range.getStartOffset();
         int till;
         boolean addLast = true;
-        Matcher matcher = toExclude.matcher(BombedStringUtil.newBombedCharSequence(range.substring(text), 500));
+        Matcher matcher = toExclude.matcher(BombedStringUtil.newBombedCharSequence(range.substring(context.getText()), 500));
         try {
             while (matcher.find()) {
-                checkCancelled();
+                context.checkCanceled();
                 TextRange found = matcherRange(range, matcher);
                 till = found.getStartOffset();
                 if (range.getEndOffset() - found.getEndOffset() < MIN_RANGE_LENGTH) {
@@ -126,9 +117,5 @@ public abstract class BaseTokenSplitter implements TokenSplitter {
             return Collections.singletonList(range);
             //return Collections.emptyList();
         }
-    }
-
-    public static void checkCancelled() {
-        ProgressIndicatorProvider.checkCanceled();
     }
 }

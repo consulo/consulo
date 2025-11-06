@@ -34,18 +34,14 @@ public class WordTokenSplitter extends BaseTokenSplitter {
     private static final Pattern SPECIAL = Pattern.compile("&\\p{Alnum}{4};?|#\\p{Alnum}{3,6}|0x\\p{Alnum}?");
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || range.getLength() <= 1) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty() || range.getLength() <= 1) {
             return;
         }
-        Matcher specialMatcher = SPECIAL.matcher(text);
+        Matcher specialMatcher = SPECIAL.matcher(context.getText());
         specialMatcher.region(range.getStartOffset(), range.getEndOffset());
-        if (specialMatcher.find()) {
-            TextRange found = new TextRange(specialMatcher.start(), specialMatcher.end());
-            addWord(consumer, true, found);
-        }
-        else {
-            IdentifierTokenSplitter.getInstance().split(text, range, consumer);
+        if (!specialMatcher.find()) {
+            IdentifierTokenSplitter.getInstance().split(context, range);
         }
     }
 }

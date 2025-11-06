@@ -16,16 +16,11 @@
 package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
-import consulo.util.lang.StringUtil;
-import org.jdom.Verifier;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jdom.Verifier;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,23 +36,24 @@ public class PlainTextTokenSplitter extends BaseTokenSplitter {
     private static final Pattern URL = Pattern.compile("((?>file|ftp|https?)://([^/]+)(/\\w*)?(/\\w*))");
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || StringUtil.isEmpty(text)) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty()) {
             return;
         }
+        String text = context.getText();
         String substring = range.substring(text);
         if (Verifier.checkCharacterData(substring) != null) {
             return;
         }
-        //for(int i = 0; i < text.length(); ++i) {
-        //    final char ch = text.charAt(i);
+        //for (int i = 0; i < text.length(); ++i) {
+        //    char ch = text.charAt(i);
         //    if (ch >= '\u3040' && ch <= '\u309f' || // Hiragana
         //        ch >= '\u30A0' && ch <= '\u30ff' || // Katakana
         //        ch >= '\u4E00' && ch <= '\u9FFF' || // CJK Unified ideographs
         //        ch >= '\uF900' && ch <= '\uFAFF' || // CJK Compatibility Ideographs
         //        ch >= '\uFF00' && ch <= '\uFFEF' //Half-width and Full-width Forms of Katakana & Full-width ASCII variants
         //    ) {
-        //      return;
+        //        return;
         //    }
         //}
 
@@ -66,7 +62,7 @@ public class PlainTextTokenSplitter extends BaseTokenSplitter {
         int till;
         Matcher matcher = SPLIT_PATTERN.matcher(range.substring(text));
         while (true) {
-            checkCancelled();
+            context.checkCanceled();
             List<TextRange> toCheck;
             TextRange wRange;
             String word;
@@ -85,16 +81,16 @@ public class PlainTextTokenSplitter extends BaseTokenSplitter {
                 word = wRange.substring(text);
             }
             if (word.contains("@")) {
-                toCheck = excludeByPattern(text, wRange, MAIL, 0);
+                toCheck = excludeByPattern(context, wRange, MAIL, 0);
             }
             else if (word.contains("://")) {
-                toCheck = excludeByPattern(text, wRange, URL, 0);
+                toCheck = excludeByPattern(context, wRange, URL, 0);
             }
             else {
                 toCheck = Collections.singletonList(wRange);
             }
             for (TextRange r : toCheck) {
-                ws.split(text, r, consumer);
+                ws.split(context, r);
             }
             if (matcher.hitEnd()) {
                 break;

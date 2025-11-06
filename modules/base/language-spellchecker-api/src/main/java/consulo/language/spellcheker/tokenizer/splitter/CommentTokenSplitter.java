@@ -35,15 +35,15 @@ public class CommentTokenSplitter extends BaseTokenSplitter {
     }
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || StringUtil.isEmpty(text)) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty()) {
             return;
         }
 
-        List<TextRange> toCheck = excludeByPattern(text, range, HTML, 2);
+        List<TextRange> toCheck = excludeByPattern(context, range, HTML, 2);
         TokenSplitter ps = PlainTextTokenSplitter.getInstance();
         for (TextRange r : toCheck) {
-            ps.split(text, r, consumer);
+            ps.split(context, r);
         }
     }
 }

@@ -23,21 +23,21 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 28/12/2021
+ * @since 2021-12-28
  */
 public class BombedStringUtil {
-  @Nonnull
-  @Contract(pure = true)
-  public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence, long delay) {
-    final long myTime = System.currentTimeMillis() + delay;
-    return new StringUtil.BombedCharSequence(sequence) {
-      @Override
-      protected void checkCanceled() {
-        long l = System.currentTimeMillis();
-        if (l >= myTime) {
-          throw new ProcessCanceledException();
-        }
-      }
-    };
-  }
+    @Nonnull
+    @Contract(pure = true)
+    public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence, long delay) {
+        final long myTime = System.currentTimeMillis() + delay;
+        return new StringUtil.BombedCharSequence(sequence) {
+            @Override
+            protected void checkCanceled() {
+                long l = System.currentTimeMillis();
+                if (l >= myTime) {
+                    throw new ProcessCanceledException();
+                }
+            }
+        };
+    }
 }

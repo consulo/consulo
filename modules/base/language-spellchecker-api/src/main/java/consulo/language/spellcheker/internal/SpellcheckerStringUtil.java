@@ -26,12 +26,12 @@ import java.util.List;
 
 public final class SpellcheckerStringUtil {
     public static boolean isCapitalized(String word) {
-        if (word.length() == 0) {
+        if (word.isEmpty()) {
             return false;
         }
 
         boolean lowCase = true;
-        for (int i = 1; i < word.length() && lowCase; i++) {
+        for (int i = 1, n = word.length(); i < n && lowCase; i++) {
             lowCase = Character.isLowerCase(word.charAt(i));
         }
 
@@ -39,7 +39,7 @@ public final class SpellcheckerStringUtil {
     }
 
     public static boolean isCapitalized(@Nonnull String text, @Nonnull TextRange range) {
-        if (range.getLength() == 0) {
+        if (range.isEmpty()) {
             return false;
         }
         CharacterIterator it =
@@ -53,7 +53,7 @@ public final class SpellcheckerStringUtil {
     }
 
     public static boolean isUpperCased(@Nonnull String text, @Nonnull TextRange range) {
-        if (range.getLength() == 0) {
+        if (range.isEmpty()) {
             return false;
         }
         CharacterIterator it = new StringCharacterIterator(text, range.getStartOffset(), range.getEndOffset(), range.getStartOffset());
@@ -69,7 +69,7 @@ public final class SpellcheckerStringUtil {
 
     public static boolean isUpperCase(String word) {
         boolean upperCase = true;
-        for (int i = 0; i < word.length() && upperCase; i++) {
+        for (int i = 0, n = word.length(); i < n && upperCase; i++) {
             upperCase = Character.isUpperCase(word.charAt(i));
         }
 
@@ -87,13 +87,13 @@ public final class SpellcheckerStringUtil {
     }
 
     public static void capitalize(List<String> words) {
-        for (int i = 0; i < words.size(); i++) {
+        for (int i = 0, n = words.size(); i < n; i++) {
             words.set(i, StringUtil.capitalize(words.get(i)));
         }
     }
 
     public static void upperCase(List<String> words) {
-        for (int i = 0; i < words.size(); i++) {
+        for (int i = 0, n = words.size(); i < n; i++) {
             words.set(i, words.get(i).toUpperCase());
         }
     }
