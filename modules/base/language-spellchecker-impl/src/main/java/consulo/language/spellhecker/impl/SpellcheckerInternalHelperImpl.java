@@ -15,6 +15,7 @@
  */
 package consulo.language.spellhecker.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.psi.PsiElement;
@@ -23,13 +24,14 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 14/01/2023
+ * @since 2023-01-14
  */
 @Singleton
 @ServiceImpl
 public class SpellcheckerInternalHelperImpl extends SpellcheckerInternalHelper {
-  @Override
-  public boolean isSuppressionComment(PsiElement element) {
-    return SuppressionUtil.isSuppressionComment(element);
-  }
+    @Override
+    @RequiredReadAction
+    public boolean isSuppressionComment(PsiElement element) {
+        return SuppressionUtil.isSuppressionComment(element);
+    }
 }

@@ -16,7 +16,6 @@
 package consulo.language.spellchecker.editor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -24,10 +23,12 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.spellchecker.editor.SpellcheckerSeverities;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -36,33 +37,33 @@ import java.util.List;
  */
 @ExtensionImpl
 public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
-  private static final TextAttributesKey TYPO_KEY = TextAttributesKey.createTextAttributesKey("TYPO");
+    private static final TextAttributesKey TYPO_KEY = TextAttributesKey.of("TYPO");
 
-  static class TYPO extends HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
-    public TYPO() {
-      super(SpellcheckerSeverities.TYPO, TYPO_KEY);
+    static class TYPO extends HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
+        public TYPO() {
+            super(SpellcheckerSeverities.TYPO, TYPO_KEY);
+        }
+
+        @Nonnull
+        @Override
+        public Image getIcon() {
+            return PlatformIconGroup.generalInspectionstypos();
+        }
     }
 
     @Nonnull
     @Override
-    public Image getIcon() {
-      return AllIcons.General.InspectionsTypos;
+    public List<HighlightInfoType> getSeveritiesHighlightInfoTypes() {
+        return List.of(new TYPO());
     }
-  }
 
-  @Override
-  @Nonnull
-  public List<HighlightInfoType> getSeveritiesHighlightInfoTypes() {
-    return List.of(new TYPO());
-  }
+    @Override
+    public ColorValue getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
+        return textAttributes.getErrorStripeColor();
+    }
 
-  @Override
-  public ColorValue getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
-    return textAttributes.getErrorStripeColor();
-  }
-
-  @Override
-  public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {
-    return SpellcheckerSeverities.TYPO != minSeverity;
-  }
+    @Override
+    public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {
+        return SpellcheckerSeverities.TYPO != minSeverity;
+    }
 }

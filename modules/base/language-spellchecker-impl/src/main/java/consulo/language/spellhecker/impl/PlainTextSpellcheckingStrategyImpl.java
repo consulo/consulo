@@ -24,13 +24,13 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 26/03/2023
+ * @since 2023-03-26
  */
 @ExtensionImpl
 public class PlainTextSpellcheckingStrategyImpl extends SpellcheckingStrategy {
-  @Nonnull
-  @Override
-  public Language getLanguage() {
-    return PlainTextLanguage.INSTANCE;
-  }
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PlainTextLanguage.INSTANCE;
+    }
 }
