@@ -22,6 +22,9 @@ import consulo.language.psi.PsiReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * @author UNV
  * @since 2024-10-31
@@ -72,12 +75,22 @@ public interface ProblemBuilder {
     ProblemBuilder showTooltip(boolean showTooltip);
 
     @Nonnull
-    default ProblemBuilder withFix(@Nonnull LocalQuickFix fix) {
-        return withFixes(fix);
+    ProblemBuilder withFix(@Nonnull LocalQuickFix fix);
+
+    default ProblemBuilder withOptionalFix(@Nullable LocalQuickFix fix) {
+        return fix != null ? withFix(fix) : this;
     }
 
     @Nonnull
-    ProblemBuilder withFixes(LocalQuickFix... localQuickFixes);
+    default ProblemBuilder withFixes(LocalQuickFix... fixes) {
+        if (fixes == null || fixes.length == 0) {
+            return this;
+        }
+        return fixes.length == 1 ? withFix(fixes[0]) : withFixes(Arrays.asList(fixes));
+    }
+
+    @Nonnull
+    ProblemBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes);
 
     void create();
 }
