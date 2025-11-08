@@ -19,32 +19,39 @@ import consulo.util.collection.HashingStrategy;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public abstract class CollectionFactory {
-  private static CollectionFactory ourFactory;
+    private static CollectionFactory ourFactory;
 
-  public static CollectionFactory get() {
-    if (ourFactory == null) {
-      Optional<CollectionFactory> first = ServiceLoader.load(CollectionFactory.class, CollectionFactory.class.getClassLoader()).findFirst();
-      ourFactory = first.get();
+    public static CollectionFactory get() {
+        if (ourFactory == null) {
+            Optional<CollectionFactory> first =
+                ServiceLoader.load(CollectionFactory.class, CollectionFactory.class.getClassLoader()).findFirst();
+            ourFactory = first.get();
+        }
+        return Objects.requireNonNull(ourFactory);
     }
-    return Objects.requireNonNull(ourFactory);
-  }
 
-  public static final int UNKNOWN_CAPACITY = -1;
+    public static final int UNKNOWN_CAPACITY = -1;
 
-  public abstract <T> Set<T> newHashSetWithStrategy(int capacity, @Nullable Collection<? extends T> inner, HashingStrategy<T> strategy);
+    public abstract <T> Set<T> newHashSetWithStrategy(int capacity, @Nullable Collection<? extends T> inner, HashingStrategy<T> strategy);
 
-  public abstract <K, V> Map<K, V> newHashMapWithStrategy(int capacity, float loadFactor, @Nullable Map<? extends K, ? extends V> inner, @Nonnull HashingStrategy<K> hashingStrategy);
+    public abstract <K, V> Map<K, V> newHashMapWithStrategy(
+        int capacity,
+        float loadFactor,
+        @Nullable Map<? extends K, ? extends V> inner,
+        @Nonnull HashingStrategy<K> hashingStrategy
+    );
 
-  public abstract <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy);
+    public abstract <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy);
 
-  public abstract <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy);
+    public abstract <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy);
 
-  public abstract void trimToSize(Map<?, ?> map);
+    public abstract void trimToSize(Map<?, ?> map);
 }
