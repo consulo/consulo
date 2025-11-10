@@ -21,8 +21,11 @@ import consulo.language.editor.inspection.ProblemBuilder;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;import jakarta.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author UNV
@@ -36,7 +39,8 @@ public abstract class AbstractProblemBuilder implements ProblemBuilder {
     protected boolean myIsAfterEndOfLine = false;
     protected boolean myOnTheFly = false;
     protected boolean myShowTooltip = true;
-    protected LocalQuickFix[] myLocalQuickFixes = null;
+    @Nullable
+    protected List<LocalQuickFix> myLocalQuickFixes = null;
 
     public AbstractProblemBuilder(LocalizeValue descriptionTemplate) {
         myDescriptionTemplate = descriptionTemplate;
@@ -89,13 +93,22 @@ public abstract class AbstractProblemBuilder implements ProblemBuilder {
 
     @Nonnull
     @Override
-    public AbstractProblemBuilder withFixes(LocalQuickFix... fixes) {
-        if (myLocalQuickFixes != null) {
-            myLocalQuickFixes = ArrayUtil.mergeArrays(myLocalQuickFixes, fixes);
-        }
-        else {
-            myLocalQuickFixes = fixes;
-        }
+    public ProblemBuilder withFix(@Nonnull LocalQuickFix fix) {
+        nonNullLocalQuickFixes().add(fix);
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public ProblemBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes) {
+        nonNullLocalQuickFixes().addAll(localQuickFixes);
+        return this;
+    }
+
+    protected List<LocalQuickFix> nonNullLocalQuickFixes() {
+        if (myLocalQuickFixes == null) {
+            myLocalQuickFixes = new SmartList<>();
+        }
+        return myLocalQuickFixes;
     }
 }

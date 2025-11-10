@@ -62,7 +62,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
                 myStartElement,
                 myEndElement,
                 myDescriptionTemplate.get(),
-                myLocalQuickFixes,
+                myLocalQuickFixes == null ? LocalQuickFix.EMPTY_ARRAY : myLocalQuickFixes.toArray(LocalQuickFix.EMPTY_ARRAY),
                 myHighlightType,
                 myIsAfterEndOfLine,
                 myRangeInElement,
