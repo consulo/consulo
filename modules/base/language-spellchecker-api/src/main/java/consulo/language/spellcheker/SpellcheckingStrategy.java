@@ -64,8 +64,8 @@ public abstract class SpellcheckingStrategy implements LanguageExtension {
             return EMPTY_TOKENIZER;
         }
 
-        if (element instanceof PsiLanguageInjectionHost && InjectedLanguageManager.getInstance(element.getProject())
-            .getInjectedPsiFiles(element) != null) {
+        if (element instanceof PsiLanguageInjectionHost
+            && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
             return EMPTY_TOKENIZER;
         }
 

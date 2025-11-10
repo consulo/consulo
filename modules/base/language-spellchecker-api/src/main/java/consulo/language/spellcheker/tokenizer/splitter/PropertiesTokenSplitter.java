@@ -36,18 +36,18 @@ public class PropertiesTokenSplitter extends BaseTokenSplitter {
     private static final Pattern WORD = Pattern.compile("\\p{L}*");
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || StringUtil.isEmpty(text)) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty()) {
             return;
         }
         IdentifierTokenSplitter splitter = IdentifierTokenSplitter.getInstance();
-        Matcher matcher = WORD.matcher(range.substring(text));
+        Matcher matcher = WORD.matcher(context.substring(range));
         while (matcher.find()) {
             if (matcher.end() - matcher.start() < MIN_RANGE_LENGTH) {
                 continue;
             }
             TextRange found = matcherRange(range, matcher);
-            splitter.split(text, found, consumer);
+            splitter.split(context, found);
         }
     }
 }

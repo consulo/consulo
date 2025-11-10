@@ -41,6 +41,13 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
     private static final char HALFWIDTH_AND_FULLWIDTH_FORMS_START = '\uFF00';
     private static final char HALFWIDTH_AND_FULLWIDTH_FORMS_END = '\uFFEF';
 
+    private static final int LETTER_TYPE_MASK = (1 << Character.LOWERCASE_LETTER)
+        | (1 << Character.UPPERCASE_LETTER)
+        | (1 << Character.TITLECASE_LETTER)
+        | (1 << Character.OTHER_LETTER)
+        | (1 << Character.MODIFIER_LETTER)
+        | (1 << Character.OTHER_PUNCTUATION);
+
     public static IdentifierTokenSplitter getInstance() {
         return INSTANCE;
     }
@@ -49,13 +56,14 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
     private static final Pattern WORD_IN_QUOTES = Pattern.compile("'([^']*)'");
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || range.getLength() < 1 || range.getStartOffset() < 0) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty() || range.isEmpty() || range.getStartOffset() < 0) {
             return;
         }
 
-        List<TextRange> extracted = excludeByPattern(text, range, WORD_IN_QUOTES, 1);
+        List<TextRange> extracted = excludeByPattern(context, range, WORD_IN_QUOTES, 1);
 
+        String text = context.getText();
         for (TextRange textRange : extracted) {
             List<TextRange> words = splitByCase(text, textRange);
 
@@ -64,7 +72,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
             }
 
             if (words.size() == 1) {
-                addWord(consumer, false, words.get(0));
+                context.addWord(words.get(0));
                 continue;
             }
 
@@ -78,12 +86,14 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
             boolean isAllWordsAreUpperCased = isAllWordsAreUpperCased(text, words);
 
             for (TextRange word : words) {
-                boolean uc = SpellcheckerStringUtil.isUpperCased(text, word);
-                boolean flag = (uc && !isAllWordsAreUpperCased);
                 Matcher matcher = WORD.matcher(text.substring(word.getStartOffset(), word.getEndOffset()));
                 if (matcher.find()) {
                     TextRange found = matcherRange(word, matcher);
-                    addWord(consumer, flag, found);
+                    boolean uc = SpellcheckerStringUtil.isUpperCased(text, word);
+                    boolean ignore = uc && !isAllWordsAreUpperCased;
+                    if (!ignore) {
+                        context.addWord(found);
+                    }
                 }
             }
         }
@@ -104,7 +114,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
                 || CJK_COMPAT_IDEOGRAPHS_START <= ch && ch <= CJK_COMPAT_IDEOGRAPHS_END
                 || HALFWIDTH_AND_FULLWIDTH_FORMS_START <= ch && ch <= HALFWIDTH_AND_FULLWIDTH_FORMS_END) {
                 if (s >= 0) {
-                    add(text, result, i, s);
+                    add(result, i, s);
                     s = -1;
                 }
                 prevType = Character.MATH_SYMBOL;
@@ -113,12 +123,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
             }
 
             int type = Character.getType(ch);
-            if (type == Character.LOWERCASE_LETTER ||
-                type == Character.UPPERCASE_LETTER ||
-                type == Character.TITLECASE_LETTER ||
-                type == Character.OTHER_LETTER ||
-                type == Character.MODIFIER_LETTER ||
-                type == Character.OTHER_PUNCTUATION) {
+            if (((1 << type) & LETTER_TYPE_MASK) != 0) {
                 //letter
                 if (s < 0) {
                     //start
@@ -126,18 +131,18 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
                 }
                 else if (type == Character.UPPERCASE_LETTER && prevType == Character.LOWERCASE_LETTER) {
                     //a|Camel
-                    add(text, result, i, s);
+                    add(result, i, s);
                     s = i;
                 }
                 else if (i - s >= 1 && type == Character.LOWERCASE_LETTER && prevType == Character.UPPERCASE_LETTER) {
                     //CAPITALN|ext
-                    add(text, result, i - 1, s);
+                    add(result, i - 1, s);
                     s = i - 1;
                 }
             }
             else if (s >= 0) {
                 //non-letter
-                add(text, result, i, s);
+                add(result, i, s);
                 s = -1;
             }
             prevType = type;
@@ -145,15 +150,14 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
         }
         //remainder
         if (s >= 0) {
-            add(text, result, i, s);
+            add(result, i, s);
         }
         return result;
     }
 
-    private static void add(String text, List<TextRange> result, int i, int s) {
+    private static void add(List<TextRange> result, int i, int s) {
         if (i - s > 3) {
             TextRange textRange = new TextRange(s, i);
-            //System.out.println("textRange = " + textRange + " = "+ textRange.substring(text));
             result.add(textRange);
         }
     }

@@ -16,12 +16,9 @@
 package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
-import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,20 +32,20 @@ public class TextTokenSplitter extends BaseTokenSplitter {
     private static final Pattern EXTENDED_WORD_AND_SPECIAL = Pattern.compile("([&#]|0x[0-9]*)?\\p{L}+'?\\p{L}[_\\p{L}]*");
 
     @Override
-    public void split(@Nullable String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-        if (text == null || StringUtil.isEmpty(text)) {
+    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+        if (context.isEmpty()) {
             return;
         }
-        doSplit(text, range, consumer);
+        doSplit(context, range);
     }
 
-    protected void doSplit(@Nonnull String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
+    protected void doSplit(@Nonnull SplitContext context, @Nonnull TextRange range) {
         WordTokenSplitter ws = WordTokenSplitter.getInstance();
-        Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(text);
+        Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(context.getText());
         matcher.region(range.getStartOffset(), range.getEndOffset());
         while (matcher.find()) {
             TextRange found = new TextRange(matcher.start(), matcher.end());
-            ws.split(text, found, consumer);
+            ws.split(context, found);
         }
     }
 }
