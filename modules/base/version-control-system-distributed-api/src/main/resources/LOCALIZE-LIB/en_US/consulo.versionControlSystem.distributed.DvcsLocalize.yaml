@@ -1,0 +1,68 @@
+action.BranchActionGroupPopup.Anonymous.text.restore.size:
+    text: Restore Size
+action.BranchActionGroupPopup.settings.text:
+    text: Settings
+branch.popup.maximum.branch.length.sample:
+    text: 'VCS: Rebasing feature-12345 in custom development branch'
+branch.popup.vcs.name.branches:
+    text: '{0} Branches'
+branch.popup.vcs.name.branches.in.repo:
+    text: '{0} Branches in {1}'
+branch.popup.warning.branches.have.diverged:
+    text: Branches have diverged
+clone.destination.directory.error.access:
+    text: "Could not create {0}<br/>Check your access rights"
+clone.repository.url.test.failed.message:
+    text: "Repository test failed<br/>{0}"
+clone.button:
+    text: Clone
+clone.destination.directory.description:
+    text: Select a parent directory destination directory for clone
+clone.destination.directory.title:
+    text: Parent Directory
+clone.destination.exists.error:
+    text: The path {0} exists. Repository cannot be cloned to an existing directory.
+clone.dir.name:
+    text: 'Directory &Name:'
+clone.invalid.url:
+    text: Repository URL is a malformed URL or non-existent directory.
+clone.parent.dir:
+    text: '&Parent Directory:'
+clone.parent.missing.error:
+    text: The parent path {0} must exist.
+clone.repository.url:
+    text: '{0} &Repository URL:'
+clone.test:
+    text: '&Test'
+clone.test.connection.title:
+    text: Test Connection
+clone.test.failed.error:
+    text: Repository test has failed.
+clone.test.success.message:
+    text: <html>Connection to repository {0} has been successful.</html>
+clone.testing:
+    text: Testing repository {0}
+clone.title:
+    text: Clone Repository
+clone.url.is.not.directory.error:
+    text: Repository URL is not a directory.
+cloning.repository:
+    text: Cloning source repository {0}
+commit.amend:
+    text: Amend commit
+commit.amend.tooltip:
+    text: <html>Merge this commit with the previous one</html>
+notification.synched.branches.content:
+    text: You have several {0} roots in the project and they all are checked out at the same branch. We've enabled synchronous branch control for the project.<br/>If you wish to control branches in different roots separately, you may <a href='settings'>disable</a> the setting.
+notification.synched.branches.title:
+    text: Synchronous branch control enabled
+push.force.confirmation.text:
+    text: You''re going to force push{0}. It may overwrite commits at the remote. Are you sure you want to proceed?
+sync.setting:
+    text: Control repositories &synchronously
+sync.setting.description:
+    text: If selected, you would be able to checkout, compare, delete and create new branches in all {0} roots with a single action. It will also affect behavior of the push dialog.
+tooltip.branch.widget.root.name.text:
+    text: 'Root: {0}'
+tooltip.branch.widget.vcs.branch.name.text:
+    text: '{0} Branch: {1}'

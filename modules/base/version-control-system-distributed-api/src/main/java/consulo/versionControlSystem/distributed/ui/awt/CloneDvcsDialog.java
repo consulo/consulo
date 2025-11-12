@@ -33,8 +33,9 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
+import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -87,9 +88,11 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     @Nullable
     private final String myDefaultRepoUrl;
 
-    public CloneDvcsDialog(@Nonnull Project project,
-                           @Nonnull LocalizeValue displayName,
-                           @Nonnull String vcsDirectoryName) {
+    public CloneDvcsDialog(
+        @Nonnull Project project,
+        @Nonnull LocalizeValue displayName,
+        @Nonnull String vcsDirectoryName
+    ) {
         this(project, displayName, vcsDirectoryName, null);
     }
 
@@ -106,17 +109,20 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         $$$setupUI$$$();
         init();
         initListeners();
-        setTitle(DvcsBundle.message("clone.title"));
-        myRepositoryUrlLabel.setText(DvcsBundle.message("clone.repository.url", displayName.get()));
+        setTitle(DvcsLocalize.cloneTitle());
+        myRepositoryUrlLabel.setText(DvcsLocalize.cloneRepositoryUrl(displayName).get());
         myRepositoryUrlLabel.setDisplayedMnemonic('R');
-        setOKButtonText(DvcsBundle.message("clone.button"));
+        setOKButtonText(DvcsLocalize.cloneButton());
 
-        FrameStateManager.getInstance().addListener(new FrameStateListener() {
-            @Override
-            public void onFrameActivated() {
-                updateButtons();
-            }
-        }, getDisposable());
+        FrameStateManager.getInstance().addListener(
+            new FrameStateListener() {
+                @Override
+                public void onFrameActivated() {
+                    updateButtons();
+                }
+            },
+            getDisposable()
+        );
     }
 
     @Override
@@ -126,7 +132,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             super.doOKAction();
             return;
         }
-        setErrorText("Couldn't create " + parent + "<br/>Check your access rights");
+        setErrorText(DvcsLocalize.cloneDestinationDirectoryErrorAccess(parent));
         setOKActionEnabled(false);
     }
 
@@ -147,11 +153,11 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      * Init components
      */
     private void initListeners() {
-        FileChooserDescriptor fcd = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        fcd.setShowFileSystemRoots(true);
-        fcd.setTitle(DvcsBundle.message("clone.destination.directory.title"));
-        fcd.setDescription(DvcsBundle.message("clone.destination.directory.description"));
-        fcd.setHideIgnored(false);
+        FileChooserDescriptor fcd = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+            .withShowFileSystemRoots(true)
+            .withTitleValue(DvcsLocalize.cloneDestinationDirectoryTitle())
+            .withDescriptionValue(DvcsLocalize.cloneDestinationDirectoryDescription())
+            .withHideIgnored(false);
         myParentDirectory.addActionListener(
             new ComponentWithBrowseButton.BrowseFolderActionListener<JTextField>(
                 fcd.getTitleValue(),
@@ -202,20 +208,24 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         myTestURL = getCurrentUrlText();
         TestResult testResult = ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> test(myTestURL),
-            DvcsBundle.message("clone.testing", myTestURL),
+            DvcsLocalize.cloneTesting(myTestURL),
             true,
             myProject
         );
         if (testResult.isSuccess()) {
             Messages.showInfoMessage(
                 myTestButton,
-                DvcsBundle.message("clone.test.success.message", myTestURL),
-                DvcsBundle.message("clone.test.connection.title")
+                DvcsLocalize.cloneTestSuccessMessage(myTestURL).get(),
+                DvcsLocalize.cloneTestConnectionTitle().get()
             );
             myTestResult = Boolean.TRUE;
         }
         else {
-            Messages.showErrorDialog(myProject, assertNotNull(testResult.getError()), "Repository Test Failed");
+            Messages.showErrorDialog(
+                myProject,
+                assertNotNull(testResult.getError()),
+                DvcsLocalize.cloneRepositoryUrlTestFailedMessage(XmlStringUtil.escapeString(testResult.getError())).get()
+            );
             myTestResult = Boolean.FALSE;
         }
         updateButtons();
@@ -253,8 +263,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             return false;
         }
         File file = new File(myParentDirectory.getText(), myDirectoryName.getText());
-        if (file.exists() && (!file.isDirectory()) || !ArrayUtil.isEmpty(file.list())) {
-            setErrorText(DvcsBundle.message("clone.destination.exists.error", file));
+        if (file.exists() && !file.isDirectory() || !ArrayUtil.isEmpty(file.list())) {
+            setErrorText(DvcsLocalize.cloneDestinationExistsError(file));
             setOKActionEnabled(false);
             return false;
         }
@@ -275,7 +285,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         }
         if (myTestResult != null && repository.equals(myTestURL)) {
             if (!myTestResult) {
-                setErrorText(DvcsBundle.message("clone.test.failed.error"));
+                setErrorText(DvcsLocalize.cloneTestFailedError());
                 setOKActionEnabled(false);
                 return false;
             }
@@ -299,7 +309,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             File file = new File(repository);
             if (file.exists()) {
                 if (!file.isDirectory()) {
-                    setErrorText(DvcsBundle.message("clone.url.is.not.directory.error"));
+                    setErrorText(DvcsLocalize.cloneUrlIsNotDirectoryError());
                     setOKActionEnabled(false);
                 }
                 return true;
@@ -308,7 +318,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         catch (Exception fileExp) {
             // do nothing
         }
-        setErrorText(DvcsBundle.message("clone.invalid.url"));
+        setErrorText(DvcsLocalize.cloneInvalidUrl());
         setOKActionEnabled(false);
         return false;
     }
@@ -395,8 +405,6 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      * Method generated by Consulo GUI Designer
      * >>> IMPORTANT!! <<<
      * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
      */
     private void $$$setupUI$$$() {
         createUIComponents();
@@ -406,35 +414,202 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         myRepositoryUrlLabel.setText("Repository URL");
         myRepositoryUrlLabel.setDisplayedMnemonic('R');
         myRepositoryUrlLabel.setDisplayedMnemonicIndex(0);
-        myRootPanel.add(myRepositoryUrlLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        myRootPanel.add(spacer1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        myRootPanel.add(spacer2, new GridConstraints(3, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        myRootPanel.add(myRepositoryURL, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, DvcsBundle.message("clone.parent.dir"));
-        myRootPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myRootPanel.add(
+            myRepositoryUrlLabel,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer1 = new Spacer();
+        myRootPanel.add(
+            spacer1,
+            new GridConstraints(
+                3,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_VERTICAL,
+                1,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer2 = new Spacer();
+        myRootPanel.add(
+            spacer2,
+            new GridConstraints(
+                3,
+                1,
+                1,
+                3,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myRootPanel.add(
+            myRepositoryURL,
+            new GridConstraints(
+                0,
+                1,
+                1,
+                2,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(150, -1),
+                null,
+                0,
+                false
+            )
+        );
+        JLabel label1 = new JLabel();
+        this.$$$loadLabelText$$$(label1, DvcsLocalize.cloneParentDir().get());
+        myRootPanel.add(
+            label1,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
         myParentDirectory = new TextFieldWithBrowseButton();
-        myRootPanel.add(myParentDirectory, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, DvcsBundle.message("clone.dir.name"));
-        myRootPanel.add(label2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myRootPanel.add(
+            myParentDirectory,
+            new GridConstraints(
+                1,
+                1,
+                1,
+                3,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JLabel label2 = new JLabel();
+        this.$$$loadLabelText$$$(label2, DvcsLocalize.cloneDirName().get());
+        myRootPanel.add(
+            label2,
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
         myTestButton = new JButton();
-        this.$$$loadButtonText$$$(myTestButton, DvcsBundle.message("clone.test"));
-        myRootPanel.add(myTestButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        this.$$$loadButtonText$$$(myTestButton, DvcsLocalize.cloneTest().get());
+        myRootPanel.add(
+            myTestButton,
+            new GridConstraints(
+                0,
+                3,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
         myDirectoryName = new JTextField();
-        myRootPanel.add(myDirectoryName, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        myRootPanel.add(spacer3, new GridConstraints(2, 2, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        myRootPanel.add(
+            myDirectoryName,
+            new GridConstraints(
+                2,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(150, -1),
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer3 = new Spacer();
+        myRootPanel.add(
+            spacer3,
+            new GridConstraints(
+                2,
+                2,
+                1,
+                2,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
         label2.setLabelFor(myDirectoryName);
     }
 
-    /**
-     * @noinspection ALL
-     */
     private void $$$loadLabelText$$$(JLabel component, String text) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         boolean haveMnemonic = false;
         char mnemonic = '\0';
         int mnemonicIndex = -1;
@@ -459,11 +634,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         }
     }
 
-    /**
-     * @noinspection ALL
-     */
     private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         boolean haveMnemonic = false;
         char mnemonic = '\0';
         int mnemonicIndex = -1;

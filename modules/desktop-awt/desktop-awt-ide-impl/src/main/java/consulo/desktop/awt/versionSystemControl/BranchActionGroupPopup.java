@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
@@ -24,7 +25,6 @@ import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.branch.BranchActionGroup;
 import consulo.versionControlSystem.distributed.branch.PopupElementWithAdditionalInfo;
 import consulo.versionControlSystem.distributed.icon.DistributedVersionControlIconGroup;
@@ -32,6 +32,7 @@ import consulo.versionControlSystem.distributed.internal.BranchHideableActionGro
 import consulo.versionControlSystem.distributed.internal.BranchListPopup;
 import consulo.versionControlSystem.distributed.internal.BranchMoreAction;
 import consulo.versionControlSystem.distributed.internal.BranchMoreHideableActionGroup;
+import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -106,8 +107,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             }
         };
         AnAction restoreSizeButton = new AnAction(
-            DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"),
-            null,
+            DvcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
+            LocalizeValue.empty(),
             PlatformIconGroup.generalCollapsecomponent()
         ) {
             @Override
@@ -123,7 +124,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
                 e.getPresentation().setEnabled(myUserSizeChanged);
             }
         };
-        ActionGroup settingsGroup = new ActionGroup(DvcsBundle.message("action.BranchActionGroupPopup.settings.text"), true) {
+        ActionGroup settingsGroup = new ActionGroup(DvcsLocalize.actionBranchactiongrouppopupSettingsText(), true) {
             @Override
             @Nonnull
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
@@ -253,8 +254,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     }
 
     private static List<AnAction> createSpeedSearchActions(@Nonnull ActionGroup parentActionGroup, boolean isFirstLevel) {
-        if (parentActionGroup instanceof BranchHideableActionGroup) {
-            parentActionGroup = ((BranchHideableActionGroup) parentActionGroup).getDelegate();
+        if (parentActionGroup instanceof BranchHideableActionGroup branchHideableActionGroup) {
+            parentActionGroup = branchHideableActionGroup.getDelegate();
         }
 
         if (parentActionGroup instanceof BranchActionGroup) {
@@ -267,10 +268,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             speedSearchActions.add(AnSeparator.create(parentActionGroup.getTemplatePresentation().getTextValue()));
         }
         for (AnAction child : parentActionGroup.getChildren(null)) {
-            if (child instanceof ActionGroup) {
-                ActionGroup childGroup = (ActionGroup) child;
-                if (childGroup instanceof BranchHideableActionGroup) {
-                    childGroup = ((BranchHideableActionGroup) childGroup).getDelegate();
+            if (child instanceof ActionGroup childGroup) {
+                if (childGroup instanceof BranchHideableActionGroup branchHideableActionGroup) {
+                    childGroup = branchHideableActionGroup.getDelegate();
                 }
 
                 if (isFirstLevel) {
@@ -295,7 +295,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     @Override
     public void handleSelect(boolean handleFinalChoices, InputEvent e) {
         BranchActionGroup branchActionGroup = getSelectedBranchGroup();
-        if (branchActionGroup != null && e instanceof MouseEvent && myListElementRenderer.isIconAt(((MouseEvent) e).getPoint())) {
+        if (branchActionGroup != null && e instanceof MouseEvent mouseEvent && myListElementRenderer.isIconAt(mouseEvent.getPoint())) {
             branchActionGroup.toggle();
             getList().repaint();
         }
@@ -350,8 +350,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     }
 
     private WizardPopup createListPopupStep(WizardPopup parent, PopupStep step, Object parentValue) {
-        if (step instanceof ListPopupStep) {
-            return new BranchActionGroupPopup(parent, (ListPopupStep) step, parentValue);
+        if (step instanceof ListPopupStep listPopupStep) {
+            return new BranchActionGroupPopup(parent, listPopupStep, parentValue);
         }
         return super.createPopup(parent, step, parentValue);
     }

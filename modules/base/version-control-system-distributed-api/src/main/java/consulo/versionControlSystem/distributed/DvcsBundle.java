@@ -15,14 +15,19 @@
  */
 package consulo.versionControlSystem.distributed;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
- * @since 29.04.14
+ * @since 2014-04-29
  */
 @Deprecated
+@DeprecationInfo("Use DvcsLocalize")
+@MigratedExtensionsTo(DvcsLocalize.class)
 public class DvcsBundle extends AbstractBundle {
   private static final DvcsBundle ourInstance = new DvcsBundle();
 
