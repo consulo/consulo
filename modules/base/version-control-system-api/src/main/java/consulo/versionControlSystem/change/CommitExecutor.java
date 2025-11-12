@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
-import org.jetbrains.annotations.Nls;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface CommitExecutor {
-  @Nls
-  String getActionText();
+    @Nonnull
+    LocalizeValue getActionText();
 
-  @Nonnull
-  CommitSession createCommitSession();
+    @Nonnull
+    CommitSession createCommitSession();
 }

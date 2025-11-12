@@ -21,11 +21,11 @@ import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,7 +47,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox rearrangeBox = new NonFocusableCheckBox(VcsBundle.message("checkbox.checkin.options.rearrange.code"));
+        final JCheckBox rearrangeBox = new NonFocusableCheckBox(VcsLocalize.checkboxCheckinOptionsRearrangeCode().get());
         CheckinHandlerUtil.disableWhenDumb(myProject, rearrangeBox, "Impossible until indices are up-to-date");
         return new RefreshableOnComponent() {
             @Override
@@ -78,13 +78,10 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
     }
 
     @Override
-    public void runCheckinHandlers(final Runnable finishAction) {
-        Runnable performCheckoutAction = new Runnable() {
-            @Override
-            public void run() {
-                FileDocumentManager.getInstance().saveAllDocuments();
-                finishAction.run();
-            }
+    public void runCheckinHandlers(Runnable finishAction) {
+        Runnable performCheckoutAction = () -> {
+            FileDocumentManager.getInstance().saveAllDocuments();
+            finishAction.run();
         };
 
         if (VcsConfiguration.getInstance(myProject).REARRANGE_BEFORE_PROJECT_COMMIT && !DumbService.isDumb(myProject)) {

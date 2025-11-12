@@ -33,8 +33,6 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,14 +52,13 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
         final ToolsProjectConfig config = ToolsProjectConfig.getInstance(panel.getProject());
 
         return new CheckinHandler() {
-
             @Override
             public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
                 JLabel label = new JLabel(ExternalToolLocalize.toolsAfterCommitDescription().get());
                 ComboboxWithBrowseButton listComponent = new ComboboxWithBrowseButton();
                 final JComboBox comboBox = listComponent.getComboBox();
                 comboBox.setModel(new CollectionComboBoxModel(getComboBoxElements(), null));
-                comboBox.setRenderer(new ListCellRendererWrapper<Object>() {
+                comboBox.setRenderer(new ListCellRendererWrapper<>() {
                     @Override
                     public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                         if (value instanceof ToolsGroup) {
@@ -76,22 +73,19 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
                     }
                 });
 
-                listComponent.getButton().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        Object item = comboBox.getSelectedItem();
-                        String id = null;
-                        if (item instanceof Tool) {
-                            id = ((Tool) item).getActionId();
-                        }
-                        ToolSelectDialog dialog = new ToolSelectDialog(panel.getProject(), id, new ToolsPanel());
-                        dialog.show();
-                        if (!dialog.isOK()) {
-                            return;
-                        }
-
-                        comboBox.setModel(new CollectionComboBoxModel(getComboBoxElements(), dialog.getSelectedTool()));
+                listComponent.getButton().addActionListener(e -> {
+                    Object item = comboBox.getSelectedItem();
+                    String id = null;
+                    if (item instanceof Tool) {
+                        id = ((Tool) item).getActionId();
                     }
+                    ToolSelectDialog dialog = new ToolSelectDialog(panel.getProject(), id, new ToolsPanel());
+                    dialog.show();
+                    if (!dialog.isOK()) {
+                        return;
+                    }
+
+                    comboBox.setModel(new CollectionComboBoxModel(getComboBoxElements(), dialog.getSelectedTool()));
                 });
 
                 BorderLayout layout = new BorderLayout();
@@ -143,25 +137,19 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
 
             @Override
             public void checkinSuccessful() {
-                final String id = config.getAfterCommitToolsId();
+                String id = config.getAfterCommitToolsId();
                 if (id == null) {
                     return;
                 }
-                DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
-                    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            ToolAction.runTool(id, context);
-                        }
-                    });
-                });
+                DataManager.getInstance().getDataContextFromFocus().doWhenDone(
+                    context -> UIUtil.invokeAndWaitIfNeeded((Runnable) () -> ToolAction.runTool(id, context))
+                );
             }
         };
     }
 
     private static List<Object> getComboBoxElements() {
-        List<Object> result = new ArrayList<Object>();
+        List<Object> result = new ArrayList<>();
         ToolManager manager = ToolManager.getInstance();
         result.add(NONE_TOOL);//for empty selection
         for (ToolsGroup group : manager.getGroups()) {

@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitSession;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -32,79 +33,93 @@ import java.awt.*;
 import java.util.List;
 
 public class SessionDialog extends DialogWrapper {
+    public static final String VCS_CONFIGURATION_UI_TITLE = "Vcs.SessionDialog.title";
 
-  @NonNls public static final String VCS_CONFIGURATION_UI_TITLE = "Vcs.SessionDialog.title";
+    private final CommitSession mySession;
+    private final List<Change> myChanges;
 
-  private final CommitSession mySession;
-  private final List<Change> myChanges;
+    private final String myCommitMessage;
 
-  private final String myCommitMessage;
+    private final JPanel myCenterPanel = new JPanel(new BorderLayout());
+    private final JComponent myConfigurationComponent;
 
-  private final JPanel myCenterPanel = new JPanel(new BorderLayout());
-  private final JComponent myConfigurationComponent;
-
-  public SessionDialog(String title, Project project,
-                       CommitSession session, List<Change> changes,
-                       String commitMessage, @Nullable JComponent configurationComponent) {
-    super(project, true);
-    mySession = session;
-    myChanges = changes;
-    myCommitMessage = commitMessage;
-    myConfigurationComponent =
+    public SessionDialog(
+        @Nonnull LocalizeValue title,
+        Project project,
+        CommitSession session,
+        List<Change> changes,
+        String commitMessage,
+        @Nullable JComponent configurationComponent
+    ) {
+        super(project, true);
+        mySession = session;
+        myChanges = changes;
+        myCommitMessage = commitMessage;
+        myConfigurationComponent =
             configurationComponent == null ? createConfigurationUI(mySession, myChanges, myCommitMessage) : configurationComponent;
-    String configurationComponentName =
-            myConfigurationComponent != null ? (String)myConfigurationComponent.getClientProperty(VCS_CONFIGURATION_UI_TITLE) : null;
-    setTitle(StringUtil.isEmptyOrSpaces(configurationComponentName)
-             ? CommitChangeListDialog.trimEllipsis(title) : configurationComponentName);
-    init();
-    initValidation();
-  }
-
-  public SessionDialog(String title, Project project,
-                       CommitSession session, List<Change> changes,
-                       String commitMessage) {
-    this(title, project, session, changes, commitMessage, null);
-  }
-
-  @Nullable
-  public static JComponent createConfigurationUI(CommitSession session, List<Change> changes, String commitMessage) {
-    try {
-      return session.getAdditionalConfigurationUI(changes, commitMessage);
+        String configurationComponentName =
+            myConfigurationComponent != null ? (String) myConfigurationComponent.getClientProperty(VCS_CONFIGURATION_UI_TITLE) : null;
+        setTitle(
+            StringUtil.isEmptyOrSpaces(configurationComponentName)
+                ? title.map((localizeManager, string) -> CommitChangeListDialog.trimEllipsis(string))
+                : LocalizeValue.localizeTODO(configurationComponentName)
+        );
+        init();
+        initValidation();
     }
-    catch(AbstractMethodError e) {
-      return session.getAdditionalConfigurationUI();
+
+    public SessionDialog(
+        @Nonnull LocalizeValue title,
+        Project project,
+        CommitSession session,
+        List<Change> changes,
+        String commitMessage
+    ) {
+        this(title, project, session, changes, commitMessage, null);
     }
-  }
 
-  @jakarta.annotation.Nullable
-  protected JComponent createCenterPanel() {
-    myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
-    return myCenterPanel;
-  }
-
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
-  }
-
-  @jakarta.annotation.Nullable
-  @Override
-  protected ValidationInfo doValidate() {
-    updateButtons();
-    return mySession.validateFields();
-  }
-
-  private void updateButtons() {
-    setOKActionEnabled(mySession.canExecute(myChanges, myCommitMessage));
-  }
-
-  @Override
-  protected String getHelpId() {
-    try {
-      return mySession.getHelpId();
+    @Nullable
+    public static JComponent createConfigurationUI(CommitSession session, List<Change> changes, String commitMessage) {
+        try {
+            return session.getAdditionalConfigurationUI(changes, commitMessage);
+        }
+        catch (AbstractMethodError e) {
+            return session.getAdditionalConfigurationUI();
+        }
     }
-    catch (AbstractMethodError e) {
-      return null;
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
+        return myCenterPanel;
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
+    }
+
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    protected ValidationInfo doValidate() {
+        updateButtons();
+        return mySession.validateFields();
+    }
+
+    private void updateButtons() {
+        setOKActionEnabled(mySession.canExecute(myChanges, myCommitMessage));
+    }
+
+    @Override
+    protected String getHelpId() {
+        try {
+            return mySession.getHelpId();
+        }
+        catch (AbstractMethodError e) {
+            return null;
+        }
+    }
 }

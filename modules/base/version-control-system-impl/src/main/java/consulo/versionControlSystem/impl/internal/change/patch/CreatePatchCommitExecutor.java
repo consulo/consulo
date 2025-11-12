@@ -17,12 +17,12 @@
 package consulo.versionControlSystem.impl.internal.change.patch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.CommonBundle;
 import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.util.WaitForProgressToShow;
@@ -30,12 +30,12 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.util.AskWithOpenFileInFileManager;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsApplicationSettings;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.patch.FilePatch;
@@ -50,7 +50,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.io.File;
@@ -71,10 +70,10 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         myProject = project;
     }
 
+    @Nonnull
     @Override
-    @Nls
-    public String getActionText() {
-        return "Create Patch...";
+    public LocalizeValue getActionText() {
+        return LocalizeValue.localizeTODO("Create Patch...");
     }
 
     @Override
@@ -116,7 +115,8 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
                 patchPath = settings.PATCH_STORAGE_LOCATION;
                 if (patchPath == null) {
-                    patchPath = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir().getPresentableUrl();
+                    patchPath = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir()
+                        .getPresentableUrl();
                 }
             }
 
@@ -143,31 +143,32 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         }
 
         @Override
+        @RequiredUIAccess
         public void execute(Collection<Change> changes, String commitMessage) {
             String fileName = myPanel.getFileName();
-            final File file = new File(fileName).getAbsoluteFile();
+            File file = new File(fileName).getAbsoluteFile();
             if (file.exists()) {
-                final int[] result = new int[1];
-                WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(new Runnable() {
-                    @Override
-                    public void run() {
-                        result[0] = Messages.showYesNoDialog(myProject, "File " + file.getName() + " (" + file.getParent() + ")" +
-                                " already exists.\nDo you want to overwrite it?",
-                            CommonBundle.getWarningTitle(), Messages.getWarningIcon());
-                    }
-                });
+                int[] result = new int[1];
+                WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(() -> result[0] = Messages.showYesNoDialog(
+                    myProject,
+                    "File " + file.getName() + " (" + file.getParent() + ") already exists.\nDo you want to overwrite it?",
+                    CommonLocalize.titleWarning().get(),
+                    UIUtil.getWarningIcon()
+                ));
                 if (Messages.NO == result[0]) {
                     return;
                 }
             }
             if (file.getParentFile() == null) {
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-                    @Override
-                    public void run() {
-                        Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", "Can not write patch to specified file: " +
-                            file.getPath()), CommonBundle.getErrorTitle());
-                    }
-                }, ModalityState.nonModal(), myProject);
+                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                    () -> Messages.showErrorDialog(
+                        myProject,
+                        VcsLocalize.createPatchErrorTitle("Can not write patch to specified file: " + file.getPath()).get(),
+                        CommonLocalize.titleError().get()
+                    ),
+                    ModalityState.nonModal(),
+                    myProject
+                );
                 return;
             }
 
@@ -178,13 +179,15 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 }
             }
             if (binaryCount == changes.size()) {
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-                    @Override
-                    public void run() {
-                        Messages.showInfoMessage(myProject, VcsBundle.message("create.patch.all.binary"),
-                            VcsBundle.message("create.patch.commit.action.title"));
-                    }
-                }, null, myProject);
+                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                    () -> Messages.showInfoMessage(
+                        myProject,
+                        VcsLocalize.createPatchAllBinary().get(),
+                        VcsLocalize.createPatchCommitActionTitle().get()
+                    ),
+                    null,
+                    myProject
+                );
                 return;
             }
             try {
@@ -222,15 +225,17 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
             catch (ProcessCanceledException e) {
                 //
             }
-            catch (final Exception ex) {
+            catch (Exception ex) {
                 LOG.info(ex);
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-                    @Override
-                    public void run() {
-                        Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", ex.getMessage()),
-                            CommonBundle.getErrorTitle());
-                    }
-                }, null, myProject);
+                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                    () -> Messages.showErrorDialog(
+                        myProject,
+                        VcsLocalize.createPatchErrorTitle(ex.getMessage()).get(),
+                        CommonLocalize.titleError().get()
+                    ),
+                    null,
+                    myProject
+                );
             }
         }
 

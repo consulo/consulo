@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.SharedLayoutProcessors;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
@@ -34,9 +33,6 @@ import java.awt.*;
 import java.util.Collection;
 
 public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
-
-    public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports.before.commit");
-
     protected final Project myProject;
     private final CheckinProjectPanel myPanel;
 
@@ -48,7 +44,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox optimizeBox = new JCheckBox(VcsBundle.message("checkbox.checkin.options.optimize.imports"));
+        final JCheckBox optimizeBox = new JCheckBox(VcsLocalize.checkboxCheckinOptionsOptimizeImports().get());
         CheckinHandlerUtil.disableWhenDumb(myProject, optimizeBox, "Impossible until indices are up-to-date");
 
         return new RefreshableOnComponent() {
@@ -81,16 +77,13 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
     }
 
     @Override
-    public void runCheckinHandlers(final Runnable finishAction) {
+    public void runCheckinHandlers(Runnable finishAction) {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
-        Runnable performCheckoutAction = new Runnable() {
-            @Override
-            public void run() {
-                FileDocumentManager.getInstance().saveAllDocuments();
-                finishAction.run();
-            }
+        Runnable performCheckoutAction = () -> {
+            FileDocumentManager.getInstance().saveAllDocuments();
+            finishAction.run();
         };
 
         if (configuration.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT) {
@@ -98,7 +91,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
 
             processors.createOptimizeImportsProcessor(
                 CheckinHandlerUtil.getPsiFiles(myProject, files),
-                COMMAND_NAME,
+                CodeInsightLocalize.processOptimizeImportsBeforeCommit().get(),
                 performCheckoutAction
             ).run();
         }

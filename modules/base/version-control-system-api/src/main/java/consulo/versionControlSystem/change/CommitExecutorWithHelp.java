@@ -19,5 +19,5 @@ package consulo.versionControlSystem.change;
  * @author irengrig
  */
 public interface CommitExecutorWithHelp extends CommitExecutor {
-  String getHelpId();
+    String getHelpId();
 }

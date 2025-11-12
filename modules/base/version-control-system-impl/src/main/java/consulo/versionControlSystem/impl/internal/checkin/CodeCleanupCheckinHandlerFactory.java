@@ -22,13 +22,13 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -56,7 +56,7 @@ public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
 
         @Override
         public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-            final JCheckBox cleanupCodeCb = new NonFocusableCheckBox(VcsBundle.message("before.checkin.cleanup.code"));
+            final JCheckBox cleanupCodeCb = new NonFocusableCheckBox(VcsLocalize.beforeCheckinCleanupCode().get());
             return new RefreshableOnComponent() {
                 @Override
                 public JComponent getComponent() {
