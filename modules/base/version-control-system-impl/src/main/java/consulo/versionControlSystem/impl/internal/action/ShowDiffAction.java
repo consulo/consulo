@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffUserDataKeys;
@@ -103,6 +102,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
         // this trick is essential since we are under some conditions to refresh changes;
         // but we can only rely on callback after refresh
+        @RequiredUIAccess
         Runnable performer = () -> {
             Change[] convertedChanges;
             if (needsConversion) {
@@ -143,7 +143,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
                 performer,
                 InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
                 VcsLocalize.actionChangesViewDiffText().get(),
-                Application.get().getCurrentModalityState()
+                project.getApplication().getCurrentModalityState()
             );
         }
         else {
@@ -154,13 +154,11 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     private static boolean checkIfThereAreFakeRevisions(@Nonnull Project project, @Nonnull Change[] changes) {
         boolean needsConversion = false;
         for (Change change : changes) {
-            ContentRevision beforeRevision = change.getBeforeRevision();
-            ContentRevision afterRevision = change.getAfterRevision();
-            if (beforeRevision instanceof FakeRevision) {
+            if (change.getBeforeRevision() instanceof FakeRevision beforeRevision) {
                 VcsDirtyScopeManager.getInstance(project).fileDirty(beforeRevision.getFile());
                 needsConversion = true;
             }
-            if (afterRevision instanceof FakeRevision) {
+            if (change.getAfterRevision() instanceof FakeRevision afterRevision) {
                 VcsDirtyScopeManager.getInstance(project).fileDirty(afterRevision.getFile());
                 needsConversion = true;
             }
@@ -168,7 +166,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
         return needsConversion;
     }
 
-    @Nullable
+    @Nonnull
     private static Change[] loadFakeRevisions(@Nonnull Project project, @Nonnull Change[] changes) {
         List<Change> matchingChanges = new ArrayList<>();
         for (Change change : changes) {

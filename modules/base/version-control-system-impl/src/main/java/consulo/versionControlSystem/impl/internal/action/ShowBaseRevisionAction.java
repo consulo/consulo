@@ -61,7 +61,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
             return;
         }
         VirtualFile[] selectedFilePaths = vcsContext.getSelectedFiles();
-        if (selectedFilePaths == null || selectedFilePaths.length != 1) {
+        if (selectedFilePaths.length != 1) {
             return;
         }
         VirtualFile selectedFile = selectedFilePaths[0];

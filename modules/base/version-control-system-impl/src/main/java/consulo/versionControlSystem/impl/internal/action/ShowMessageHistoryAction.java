@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.impl.internal.ui.awt.TempContentChooser;
@@ -60,7 +59,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
         Project project = e.getData(Project.KEY);
         Object panel = e.getData(CheckinProjectPanel.PANEL_KEY);
         if (!(panel instanceof CommitMessage)) {
-            panel = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+            panel = e.getData(CommitMessage.KEY);
         }
 
         if (project == null || panel == null) {
@@ -78,7 +77,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         Refreshable panel = e.getData(CheckinProjectPanel.PANEL_KEY);
-        CommitMessage commitMessage = panel instanceof CommitMessage cmtMsgI ? cmtMsgI : e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+        CommitMessage commitMessage = panel instanceof CommitMessage cmtMsgI ? cmtMsgI : e.getData(CommitMessage.KEY);
 
         if (commitMessage != null) {
             final VcsConfiguration configuration = VcsConfiguration.getInstance(project);

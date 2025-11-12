@@ -13,128 +13,130 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.checkin;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.util.lang.function.PairConsumer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalCommitExecutor;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
-
 import jakarta.annotation.Nullable;
+
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * A callback which can be used to extend the user interface of the Checkin Project/Checkin File
  * dialogs and to perform actions before commit, on successful commit and on failed commit.
  *
  * @author lesya
- * @since 5.1
  * @see BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)
  * @see CodeAnalysisBeforeCheckinHandler
+ * @since 5.1
  */
 public abstract class CheckinHandler {
-  /**
-   * you can return this handler if your handler shouldn't be created (for instance, your VCS is not active)
-   */
-  @Deprecated
-  @DeprecationInfo("Return null if handler is not supported")
-  public static final CheckinHandler DUMMY = new CheckinHandler() {
-  };
+    /**
+     * you can return this handler if your handler shouldn't be created (for instance, your VCS is not active)
+     */
+    @Deprecated
+    @DeprecationInfo("Return null if handler is not supported")
+    public static final CheckinHandler DUMMY = new CheckinHandler() {
+    };
 
-  public enum ReturnResult {
-    COMMIT, CANCEL, CLOSE_WINDOW
-  }
+    public enum ReturnResult {
+        COMMIT,
+        CANCEL,
+        CLOSE_WINDOW
+    }
 
-  /**
-   * Returns the panel which is inserted in the "Before Check In" group box of the Checkin Project
-   * or Checkin File dialogs.
-   *
-   * @return the panel instance, or null if the handler does not provide any options to show in the
-   * "Before Check In" group.
-   */
-  @Nullable
-  public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-    return null;
-  }
+    /**
+     * Returns the panel which is inserted in the "Before Check In" group box of the Checkin Project
+     * or Checkin File dialogs.
+     *
+     * @return the panel instance, or null if the handler does not provide any options to show in the
+     * "Before Check In" group.
+     */
+    @Nullable
+    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+        return null;
+    }
 
-  /**
-   * Returns the panel which is inserted in the "After Check In" group box of the Checkin Project
-   * or Checkin File dialogs.
-   *
-   * @return the panel instance, or null if the handler does not provide any options to show in the
-   * "After Check In" group.
-   * @param parentDisposable
-   */
-  @Nullable
-  public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
-    return null;
-  }
+    /**
+     * Returns the panel which is inserted in the "After Check In" group box of the Checkin Project
+     * or Checkin File dialogs.
+     *
+     * @param parentDisposable
+     * @return the panel instance, or null if the handler does not provide any options to show in the
+     * "After Check In" group.
+     */
+    @Nullable
+    public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
+        return null;
+    }
 
-  /**
-   * Performs the before check-in processing when a custom commit executor is used. The method can use the
-   * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
-   * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
-   * get information about the files to be checked in.
-   *
-   * @param executor the commit executor, or null if the standard commit operation is executed.
-   * @param additionalDataConsumer
-   * @return the code indicating whether the check-in operation should be performed or aborted.
-   */
-  public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
-    return beforeCheckin();
-  }
+    /**
+     * Performs the before check-in processing when a custom commit executor is used. The method can use the
+     * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
+     * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
+     * get information about the files to be checked in.
+     *
+     * @param executor               the commit executor, or null if the standard commit operation is executed.
+     * @param additionalDataConsumer
+     * @return the code indicating whether the check-in operation should be performed or aborted.
+     */
+    @RequiredUIAccess
+    public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
+        return beforeCheckin();
+    }
 
-  /**
-   * Performs the before check-in processing. The method can use the
-   * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
-   * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
-   * get information about the files to be checked in.
-   *
-   * @return the code indicating whether the check-in operation should be performed or aborted.
-   */
-  public ReturnResult beforeCheckin() {
-    return ReturnResult.COMMIT;
-  }
+    /**
+     * Performs the before check-in processing. The method can use the
+     * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
+     * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
+     * get information about the files to be checked in.
+     *
+     * @return the code indicating whether the check-in operation should be performed or aborted.
+     */
+    public ReturnResult beforeCheckin() {
+        return ReturnResult.COMMIT;
+    }
 
-  /**
-   * Performs the processing on successful check-in. The method can use the
-   * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
-   * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
-   * get information about the checked in files.
-   */
-  public void checkinSuccessful() {
+    /**
+     * Performs the processing on successful check-in. The method can use the
+     * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
+     * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
+     * get information about the checked in files.
+     */
+    public void checkinSuccessful() {
+    }
 
-  }
+    /**
+     * Performs the processing on failed check-in. The method can use the
+     * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
+     * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
+     * get information about the checked in files.
+     *
+     * @param exception the list of VCS exceptions identifying the problems that occurred during the
+     *                  commit operation.
+     */
+    public void checkinFailed(List<VcsException> exception) {
+    }
 
-  /**
-   * Performs the processing on failed check-in. The method can use the
-   * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
-   * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
-   * get information about the checked in files.
-   *
-   * @param exception the list of VCS exceptions identifying the problems that occurred during the
-   * commit operation.
-   */
-  public void checkinFailed(List<VcsException> exception) {
+    /**
+     * Called to notify handler that user has included/excluded some changes to/from commit
+     */
+    public void includedChangesChanged() {
+    }
 
-  }
-
-  /**
-   * Called to notify handler that user has included/excluded some changes to/from commit
-   */
-  public void includedChangesChanged() {
-  }
-
-  /**
-   * allows to skip before checkin steps when is not applicable. E.g. there should be no check for todos before shelf/create patch 
-   * @param executor current operation (null for commit)
-   * @return true if handler should be skipped
-   */
-  public boolean acceptExecutor(CommitExecutor executor) {
-    return executor == null || !(executor instanceof LocalCommitExecutor);
-  }
+    /**
+     * allows to skip before checkin steps when is not applicable. E.g. there should be no check for todos before shelf/create patch
+     *
+     * @param executor current operation (null for commit)
+     * @return true if handler should be skipped
+     */
+    public boolean acceptExecutor(CommitExecutor executor) {
+        return executor == null || !(executor instanceof LocalCommitExecutor);
+    }
 }

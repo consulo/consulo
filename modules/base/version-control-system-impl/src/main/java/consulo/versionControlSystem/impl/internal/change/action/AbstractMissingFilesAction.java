@@ -93,7 +93,8 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
 
     protected abstract boolean synchronously();
 
-    protected abstract String getName();
+    @Nonnull
+    protected abstract LocalizeValue getName();
 
     protected abstract List<VcsException> processFiles(AbstractVcs vcs, List<FilePath> files);
 }

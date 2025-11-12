@@ -13,36 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.application.Application;
-import consulo.application.CommonBundle;
-import consulo.versionControlSystem.CodeSmellInfo;
+import consulo.component.ProcessCanceledException;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.CodeSmellDetector;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitExecutor;
-import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.versionControlSystem.checkin.CheckinHandler;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.function.PairConsumer;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * The check-in handler which performs code analysis before check-in. Source code for this class
@@ -52,123 +51,136 @@ import java.util.List;
  * @since 5.1
  */
 public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
+    private final Project myProject;
+    private final CheckinProjectPanel myCheckinPanel;
+    private static final Logger LOG = Logger.getInstance(CodeAnalysisBeforeCheckinHandler.class);
 
-  private final Project myProject;
-  private final CheckinProjectPanel myCheckinPanel;
-  private static final Logger LOG = Logger.getInstance(CodeAnalysisBeforeCheckinHandler.class);
-
-  public CodeAnalysisBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
-    myProject = project;
-    myCheckinPanel = panel;
-  }
-
-  @Override
-  @jakarta.annotation.Nullable
-  public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-    final JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.standard.options.check.smells"));
-    return new RefreshableOnComponent() {
-      @Override
-      public JComponent getComponent() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(checkBox);
-        CheckinHandlerUtil.disableWhenDumb(myProject, checkBox, "Code analysis is impossible until indices are up-to-date");
-        return panel;
-      }
-
-      @Override
-      public void refresh() {
-      }
-
-      @Override
-      public void saveState() {
-        getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = checkBox.isSelected();
-      }
-
-      @Override
-      public void restoreState() {
-        checkBox.setSelected(getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT);
-      }
-    };
-  }
-
-  private VcsConfiguration getSettings() {
-    return VcsConfiguration.getInstance(myProject);
-  }
-
-  private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
-    int errorCount = collectErrors(codeSmells);
-    int warningCount = codeSmells.size() - errorCount;
-    String commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
-    if (commitButtonText.endsWith("...")) {
-      commitButtonText = commitButtonText.substring(0, commitButtonText.length()-3);
+    public CodeAnalysisBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
+        myProject = project;
+        myCheckinPanel = panel;
     }
 
-    int answer = Messages.showYesNoCancelDialog(myProject,
-      VcsBundle.message("before.commit.files.contain.code.smells.edit.them.confirm.text", errorCount, warningCount),
-      VcsBundle.message("code.smells.error.messages.tab.name"), VcsBundle.message("code.smells.review.button"),
-      commitButtonText, CommonBundle.getCancelButtonText(), UIUtil.getWarningIcon());
-    if (answer == 0) {
-      CodeSmellDetector.getInstance(myProject).showCodeSmellErrors(codeSmells);
-      return ReturnResult.CLOSE_WINDOW;
-    }
-    else if (answer == 2 || answer == -1) {
-      return ReturnResult.CANCEL;
-    }
-    else {
-      return ReturnResult.COMMIT;
-    }
-  }
+    @Override
+    @Nullable
+    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+        final JCheckBox checkBox = new JCheckBox(VcsLocalize.beforeCheckinStandardOptionsCheckSmells().get());
+        return new RefreshableOnComponent() {
+            @Override
+            public JComponent getComponent() {
+                JPanel panel = new JPanel(new BorderLayout());
+                panel.add(checkBox);
+                CheckinHandlerUtil.disableWhenDumb(myProject, checkBox, "Code analysis is impossible until indices are up-to-date");
+                return panel;
+            }
 
-  private static int collectErrors(List<CodeSmellInfo> codeSmells) {
-    int result = 0;
-    for (CodeSmellInfo codeSmellInfo : codeSmells) {
-      if (codeSmellInfo.getSeverity() == HighlightSeverity.ERROR) result++;
-    }
-    return result;
-  }
+            @Override
+            public void refresh() {
+            }
 
-  @Override
-  public ReturnResult beforeCheckin(CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
-    if (getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT) {
-      if (DumbService.getInstance(myProject).isDumb()) {
-        if (Messages.showOkCancelDialog(
-          myProject,
-            "Code analysis can't be performed while " + Application.get().getName() + " updates the indices in background.\n" +
-                "You can commit the changes without running inspections, or you can wait until indices are built.",
-            "Code analysis is not possible right now",
-            "&Wait",
-            "&Commit",
-            null
-        ) == DialogWrapper.OK_EXIT_CODE) {
-          return ReturnResult.CANCEL;
+            @Override
+            public void saveState() {
+                getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = checkBox.isSelected();
+            }
+
+            @Override
+            public void restoreState() {
+                checkBox.setSelected(getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT);
+            }
+        };
+    }
+
+    private VcsConfiguration getSettings() {
+        return VcsConfiguration.getInstance(myProject);
+    }
+
+    @RequiredUIAccess
+    private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
+        int errorCount = collectErrors(codeSmells);
+        int warningCount = codeSmells.size() - errorCount;
+        String commitButtonText = executor != null ? executor.getActionText().get() : myCheckinPanel.getCommitActionName().get();
+        if (commitButtonText.endsWith("...")) {
+            commitButtonText = commitButtonText.substring(0, commitButtonText.length() - 3);
         }
-        return ReturnResult.COMMIT;
-      }
 
-      try {
-        List<CodeSmellInfo> codeSmells =
-          CodeSmellDetector.getInstance(myProject).findCodeSmells(new ArrayList<VirtualFile>(myCheckinPanel.getVirtualFiles()));
-        if (!codeSmells.isEmpty()) {
-          return processFoundCodeSmells(codeSmells, executor);
+        int answer = Messages.showYesNoCancelDialog(
+            myProject,
+            VcsLocalize.beforeCommitFilesContainCodeSmellsEditThemConfirmText(errorCount, warningCount).get(),
+            VcsLocalize.codeSmellsErrorMessagesTabName().get(),
+            VcsLocalize.codeSmellsReviewButton().get(),
+            commitButtonText,
+            CommonLocalize.buttonCancel().get(),
+            UIUtil.getWarningIcon()
+        );
+        if (answer == 0) {
+            CodeSmellDetector.getInstance(myProject).showCodeSmellErrors(codeSmells);
+            return ReturnResult.CLOSE_WINDOW;
+        }
+        else if (answer == 2 || answer == -1) {
+            return ReturnResult.CANCEL;
         }
         else {
-          return ReturnResult.COMMIT;
+            return ReturnResult.COMMIT;
         }
-      }
-      catch (ProcessCanceledException e) {
-        return ReturnResult.CANCEL;
-      } catch (Exception e) {
-        LOG.error(e);
-        if (Messages.showOkCancelDialog(myProject,
-                                "Code analysis failed with exception: " + e.getClass().getName() + ": " + e.getMessage(),
-                                "Code analysis failed", "&Commit", "&Cancel", null) == DialogWrapper.OK_EXIT_CODE) {
-          return ReturnResult.COMMIT;
+    }
+
+    private static int collectErrors(List<CodeSmellInfo> codeSmells) {
+        int result = 0;
+        for (CodeSmellInfo codeSmellInfo : codeSmells) {
+          if (codeSmellInfo.getSeverity() == HighlightSeverity.ERROR) {
+            result++;
+          }
         }
-        return ReturnResult.CANCEL;
-      }
+        return result;
     }
-    else {
-      return ReturnResult.COMMIT;
+
+    @Override
+    @RequiredUIAccess
+    public ReturnResult beforeCheckin(CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
+        if (getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT) {
+            if (DumbService.getInstance(myProject).isDumb()) {
+                if (Messages.showOkCancelDialog(
+                    myProject,
+                    "Code analysis can't be performed while " + Application.get().getName() + " updates the indices in background.\n" +
+                        "You can commit the changes without running inspections, or you can wait until indices are built.",
+                    "Code analysis is not possible right now",
+                    "&Wait",
+                    "&Commit",
+                    null
+                ) == DialogWrapper.OK_EXIT_CODE) {
+                    return ReturnResult.CANCEL;
+                }
+                return ReturnResult.COMMIT;
+            }
+
+            try {
+                List<CodeSmellInfo> codeSmells =
+                    CodeSmellDetector.getInstance(myProject).findCodeSmells(new ArrayList<>(myCheckinPanel.getVirtualFiles()));
+                if (!codeSmells.isEmpty()) {
+                    return processFoundCodeSmells(codeSmells, executor);
+                }
+                else {
+                    return ReturnResult.COMMIT;
+                }
+            }
+            catch (ProcessCanceledException e) {
+                return ReturnResult.CANCEL;
+            }
+            catch (Exception e) {
+                LOG.error(e);
+                if (Messages.showOkCancelDialog(myProject,
+                    "Code analysis failed with exception: " + e.getClass().getName() + ": " + e.getMessage(),
+                    "Code analysis failed",
+                    "&Commit",
+                    "&Cancel",
+                    null
+                ) == DialogWrapper.OK_EXIT_CODE) {
+                    return ReturnResult.COMMIT;
+                }
+                return ReturnResult.CANCEL;
+            }
+        }
+        else {
+            return ReturnResult.COMMIT;
+        }
     }
-  }
 }

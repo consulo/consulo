@@ -49,7 +49,6 @@ import consulo.versionControlSystem.impl.internal.change.PseudoMap;
 import consulo.versionControlSystem.impl.internal.change.RefreshablePanel;
 import consulo.versionControlSystem.impl.internal.change.ui.AlienLocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
-import consulo.versionControlSystem.checkin.CheckinChangeListSpecificComponent;
 import consulo.versionControlSystem.impl.internal.checkin.CheckinMetaHandler;
 import consulo.versionControlSystem.impl.internal.ui.awt.InputException;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowserBase;
@@ -356,6 +355,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         ).show();
     }
 
+    @RequiredUIAccess
     private CommitChangeListDialog(
         @Nonnull Project project,
         @Nonnull List<Change> changes,
@@ -495,7 +495,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             }
         }
 
-        String actionName = getCommitActionName();
+        String actionName = getCommitActionName().get();
         String borderTitleName = actionName.replace("_", "").replace("&", "");
         if (beforeVisible) {
             beforeBox.add(Box.createVerticalGlue());
@@ -528,7 +528,11 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
         myOkActionText = actionName.replace(BundleBase.MNEMONIC, '&');
 
-        setTitle(myShowVcsCommit ? myActionName : LocalizeValue.localizeTODO(trimEllipsis(myExecutors.get(0).getActionText())));
+        setTitle(
+            myShowVcsCommit
+                ? myActionName
+                : myExecutors.get(0).getActionText().map((localizeManager, string) -> trimEllipsis(string))
+        );
 
         restoreState();
 
@@ -564,6 +568,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         showDetailsIfSaved();
     }
 
+    @RequiredUIAccess
     private void setComment(LocalChangeList initialSelection, String comment) {
         if (comment != null) {
             setCommitMessage(comment);
@@ -754,15 +759,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         boolean isOK = true;
         JComponent configurationUI = SessionDialog.createConfigurationUI(session, getIncludedChanges(), getCommitMessage());
         if (configurationUI != null) {
-            DialogWrapper sessionDialog =
-                new SessionDialog(
-                    commitExecutor.getActionText(),
-                    getProject(),
-                    session,
-                    getIncludedChanges(),
-                    getCommitMessage(),
-                    configurationUI
-                );
+            DialogWrapper sessionDialog = new SessionDialog(
+                commitExecutor.getActionText(),
+                getProject(),
+                session,
+                getIncludedChanges(),
+                getCommitMessage(),
+                configurationUI
+            );
             isOK = sessionDialog.showAndGet();
         }
         if (isOK) {
@@ -794,7 +798,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
                     catch (Throwable e) {
                         Messages.showErrorDialog(
                             VcsLocalize.errorExecutingCommit(commitExecutor.getActionText(), e.getLocalizedMessage()).get(),
-                            commitExecutor.getActionText()
+                            commitExecutor.getActionText().get()
                         );
 
                         for (CheckinHandler handler : myHandlers) {
@@ -849,6 +853,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
     }
 
+    @RequiredUIAccess
     private void updateComment() {
         if (myVcsConfiguration.CLEAR_INITIAL_COMMIT_MESSAGE) {
             return;
@@ -897,19 +902,20 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         ApplicationPropertiesComponent.getInstance().setValue(DETAILS_SHOW_OPTION, myDetailsSplitter.isOn(), DETAILS_SHOW_OPTION_DEFAULT);
     }
 
+    @Nonnull
     @Override
-    public String getCommitActionName() {
-        String name = null;
+    public LocalizeValue getCommitActionName() {
+        LocalizeValue name = LocalizeValue.empty();
         for (AbstractVcs vcs : getAffectedVcses()) {
             CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-            if (name == null && checkinEnvironment != null) {
+            if (name == LocalizeValue.empty() && checkinEnvironment != null) {
                 name = checkinEnvironment.getCheckinOperationName();
             }
             else {
-                name = VcsLocalize.commitDialogDefaultCommitOperationName().get();
+                name = VcsLocalize.commitDialogDefaultCommitOperationName();
             }
         }
-        return name != null ? name : VcsLocalize.commitDialogDefaultCommitOperationName().get();
+        return name != LocalizeValue.empty() ? name : VcsLocalize.commitDialogDefaultCommitOperationName();
     }
 
     @Override
@@ -1257,11 +1263,13 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     @Override
+    @RequiredUIAccess
     public void setCommitMessage(String currentDescription) {
         setCommitMessageText(currentDescription);
         myCommitMessageArea.requestFocusInMessage();
     }
 
+    @RequiredUIAccess
     private void setCommitMessageText(String currentDescription) {
         myLastKnownComment = currentDescription;
         myCommitMessageArea.setText(currentDescription);
@@ -1377,7 +1385,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         );
     }
 
-    private class CommitExecutorAction extends AbstractAction {
+    private class CommitExecutorAction extends LocalizeAction {
         @Nonnull
         private final CommitExecutor myCommitExecutor;
 
@@ -1409,6 +1417,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     private static class DiffCommitMessageEditor extends CommitMessageImpl implements Disposable {
+        @RequiredUIAccess
         public DiffCommitMessageEditor(CommitChangeListDialog dialog) {
             super(dialog.getProject());
             getEditorField().setDocument(dialog.myCommitMessageArea.getEditorField().getDocument());

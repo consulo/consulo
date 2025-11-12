@@ -15,11 +15,11 @@
  */
 package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AllVcses;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -29,13 +29,14 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 class StartUseVcsDialog extends DialogWrapper {
     @Nonnull
     private final Project myProject;
 
-    private ComboBox<Object> myVcsComboBox;
+    private ComboBox<AbstractVcs> myVcsComboBox;
 
     StartUseVcsDialog(@Nonnull Project project) {
         super(project, true);
@@ -53,8 +54,7 @@ class StartUseVcsDialog extends DialogWrapper {
 
     @Nullable
     public AbstractVcs getSelectedVcs() {
-        Object selectedItem = myVcsComboBox.getSelectedItem();
-        return selectedItem == ObjectUtil.NULL ? null : (AbstractVcs)selectedItem;
+        return (AbstractVcs) myVcsComboBox.getSelectedItem();
     }
 
     @Override
@@ -71,24 +71,19 @@ class StartUseVcsDialog extends DialogWrapper {
         ++gb.gridx;
         gb.anchor = GridBagConstraints.NORTHEAST;
 
-        List<Object> vcses = new ArrayList<>();
-        vcses.add(ObjectUtil.NULL);
+        List<AbstractVcs> vcses = new ArrayList<>();
+        vcses.add(null);
 
         List<AbstractVcs> sortedVcs = new ArrayList<>(AllVcses.getInstance(myProject).getSupportedVcses());
-        sortedVcs.sort((o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
+        sortedVcs.sort(Comparator.comparing(AbstractVcs::getDisplayName));
 
         vcses.addAll(sortedVcs);
 
         myVcsComboBox = new ComboBox<>(new CollectionComboBoxModel<>(vcses));
-        myVcsComboBox.setRenderer(new ColoredListCellRenderer() {
+        myVcsComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                if (value == ObjectUtil.NULL) {
-                    append("");
-                }
-                else {
-                    append(((AbstractVcs)value).getDisplayName());
-                }
+            protected void customizeCellRenderer(@Nonnull JList list, AbstractVcs value, int index, boolean selected, boolean hasFocus) {
+                append(value == null ? LocalizeValue.empty() : value.getDisplayName());
             }
         });
         mainPanel.add(myVcsComboBox, gb);

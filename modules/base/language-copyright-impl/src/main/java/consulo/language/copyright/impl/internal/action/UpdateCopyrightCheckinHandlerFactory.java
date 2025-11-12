@@ -15,12 +15,13 @@
  */
 package consulo.language.copyright.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
-import consulo.util.lang.function.PairConsumer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.checkin.CheckinHandler;
@@ -36,6 +37,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author anna
@@ -43,58 +45,61 @@ import java.util.List;
  */
 @ExtensionImpl(id = "copyright", order = "after code-cleanup")
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
-  @Override
-  @Nonnull
-  public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
-    return new CheckinHandler() {
-      @Override
-      public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox updateCopyrightCb = new JCheckBox("Update copyright");
-        return new RefreshableOnComponent() {
-          @Override
-          public JComponent getComponent() {
-            JPanel panel = new JPanel(new BorderLayout());
-            panel.add(updateCopyrightCb, BorderLayout.WEST);
-            return panel;
-          }
+    @Override
+    @Nonnull
+    public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
+        return new CheckinHandler() {
+            @Override
+            public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+                final JCheckBox updateCopyrightCb = new JCheckBox("Update copyright");
+                return new RefreshableOnComponent() {
+                    @Override
+                    public JComponent getComponent() {
+                        JPanel panel = new JPanel(new BorderLayout());
+                        panel.add(updateCopyrightCb, BorderLayout.WEST);
+                        return panel;
+                    }
 
-          @Override
-          public void refresh() {
-          }
+                    @Override
+                    public void refresh() {
+                    }
 
-          @Override
-          public void saveState() {
-            UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT = updateCopyrightCb.isSelected();
-          }
+                    @Override
+                    public void saveState() {
+                        UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT =
+                            updateCopyrightCb.isSelected();
+                    }
 
-          @Override
-          public void restoreState() {
-            updateCopyrightCb.setSelected(UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT);
-          }
+                    @Override
+                    public void restoreState() {
+                        updateCopyrightCb.setSelected(UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT);
+                    }
+                };
+            }
+
+            @Override
+            @RequiredUIAccess
+            public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
+                if (UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT) {
+                    new UpdateCopyrightProcessor(panel.getProject(), null, getPsiFiles()).run();
+                    FileDocumentManager.getInstance().saveAllDocuments();
+                }
+                return super.beforeCheckin();
+            }
+
+            @RequiredReadAction
+            private PsiFile[] getPsiFiles() {
+                Collection<VirtualFile> files = panel.getVirtualFiles();
+                List<PsiFile> psiFiles = new ArrayList<>();
+                PsiManager manager = PsiManager.getInstance(panel.getProject());
+                for (VirtualFile file : files) {
+                    PsiFile psiFile = manager.findFile(file);
+                    if (psiFile != null) {
+                        psiFiles.add(psiFile);
+                    }
+                }
+                return PsiUtilCore.toPsiFileArray(psiFiles);
+            }
         };
-      }
-
-      @Override
-      public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
-        if (UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT) {
-          new UpdateCopyrightProcessor(panel.getProject(), null, getPsiFiles()).run();
-          FileDocumentManager.getInstance().saveAllDocuments();
-        }
-        return super.beforeCheckin();
-      }
-
-      private PsiFile[] getPsiFiles() {
-        Collection<VirtualFile> files = panel.getVirtualFiles();
-        List<PsiFile> psiFiles = new ArrayList<PsiFile>();
-        PsiManager manager = PsiManager.getInstance(panel.getProject());
-        for (VirtualFile file : files) {
-          PsiFile psiFile = manager.findFile(file);
-          if (psiFile != null) {
-            psiFiles.add(psiFile);
-          }
-        }
-        return PsiUtilCore.toPsiFileArray(psiFiles);
-      }
-    };
-  }
+    }
 }

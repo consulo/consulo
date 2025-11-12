@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.change;
 
 public abstract class CommitExecutorBase implements CommitExecutor {
-
-  public boolean areChangesRequired() {
-    return true;
-  }
+    public boolean areChangesRequired() {
+        return true;
+    }
 }

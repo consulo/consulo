@@ -90,12 +90,13 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     @Nonnull
     @RequiredUIAccess
     protected FilePath[] prepareRootsForCommit(@Nonnull FilePath[] roots, @Nonnull Project project) {
-        Application.get().saveAll();
+        project.getApplication().saveAll();
 
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }
 
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    @Nonnull
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return getActionName(context);
     }
 
@@ -122,7 +123,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return result;
     }
 
-    protected abstract String getActionName(@Nonnull VcsContext dataContext);
+    @Nonnull
+    protected abstract LocalizeValue getActionName(@Nonnull VcsContext dataContext);
 
     @Nonnull
     protected abstract FilePath[] getRoots(@Nonnull VcsContext dataContext);
@@ -140,7 +142,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
             presentation.setEnabled(false);
         }
         else {
-            presentation.setText(getActionName(vcsContext) + "...");
+            presentation.setTextValue(getActionName(vcsContext).map((localizeManager, string) -> string + "..."));
             presentation.setEnabled(!ProjectLevelVcsManager.getInstance(project).isBackgroundVcsOperationRunning());
             presentation.setVisible(true);
         }

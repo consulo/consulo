@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
@@ -34,7 +33,6 @@ import java.awt.*;
 import java.util.Collection;
 
 public class ReformatBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
-
     public static final String COMMAND_NAME = FormatterUtil.REFORMAT_BEFORE_COMMIT_COMMAND_NAME;
 
     protected final Project myProject;
@@ -48,7 +46,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox reformatBox = new JCheckBox(VcsBundle.message("checkbox.checkin.options.reformat.code"));
+        final JCheckBox reformatBox = new JCheckBox(VcsLocalize.checkboxCheckinOptionsReformatCode().get());
 
         return new RefreshableOnComponent() {
             @Override
@@ -80,16 +78,13 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
     }
 
     @Override
-    public void runCheckinHandlers(final Runnable finishAction) {
+    public void runCheckinHandlers(Runnable finishAction) {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
-        Runnable performCheckoutAction = new Runnable() {
-            @Override
-            public void run() {
-                FileDocumentManager.getInstance().saveAllDocuments();
-                finishAction.run();
-            }
+        Runnable performCheckoutAction = () -> {
+            FileDocumentManager.getInstance().saveAllDocuments();
+            finishAction.run();
         };
 
         if (reformat(configuration, true)) {

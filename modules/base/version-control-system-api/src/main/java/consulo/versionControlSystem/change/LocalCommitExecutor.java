@@ -26,5 +26,5 @@ import consulo.project.Project;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class LocalCommitExecutor implements CommitExecutorWithHelp {
-  public static final ExtensionList<LocalCommitExecutor, Project> EP = ExtensionList.of(LocalCommitExecutor.class);
+    public static final ExtensionList<LocalCommitExecutor, Project> EP = ExtensionList.of(LocalCommitExecutor.class);
 }

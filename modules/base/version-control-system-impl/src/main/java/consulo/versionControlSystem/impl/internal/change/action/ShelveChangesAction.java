@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.action.VcsContext;
@@ -39,13 +40,15 @@ public class ShelveChangesAction extends AbstractCommitChangesAction {
         );
     }
 
+    @Nonnull
     @Override
-    protected String getActionName(@Nonnull VcsContext dataContext) {
-        return VcsLocalize.shelveChangesAction().get();
+    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+        return VcsLocalize.shelveChangesAction();
     }
 
+    @Nonnull
     @Override
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return getActionName(context);
     }
 

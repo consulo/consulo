@@ -43,8 +43,7 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getRequiredData(Project.KEY);
-        StartUseVcsDialog dialog = new StartUseVcsDialog(project);
+        StartUseVcsDialog dialog = new StartUseVcsDialog(e.getRequiredData(Project.KEY));
         if (dialog.showAndGet()) {
             AbstractVcs vcs = dialog.getSelectedVcs();
             vcs.enableIntegration();
