@@ -495,7 +495,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             }
         }
 
-        String actionName = getCommitActionName();
+        String actionName = getCommitActionName().get();
         String borderTitleName = actionName.replace("_", "").replace("&", "");
         if (beforeVisible) {
             beforeBox.add(Box.createVerticalGlue());
@@ -897,19 +897,20 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         ApplicationPropertiesComponent.getInstance().setValue(DETAILS_SHOW_OPTION, myDetailsSplitter.isOn(), DETAILS_SHOW_OPTION_DEFAULT);
     }
 
+    @Nonnull
     @Override
-    public String getCommitActionName() {
-        String name = null;
+    public LocalizeValue getCommitActionName() {
+        LocalizeValue name = LocalizeValue.empty();
         for (AbstractVcs vcs : getAffectedVcses()) {
             CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-            if (name == null && checkinEnvironment != null) {
+            if (name == LocalizeValue.empty() && checkinEnvironment != null) {
                 name = checkinEnvironment.getCheckinOperationName();
             }
             else {
-                name = VcsLocalize.commitDialogDefaultCommitOperationName().get();
+                name = VcsLocalize.commitDialogDefaultCommitOperationName();
             }
         }
-        return name != null ? name : VcsLocalize.commitDialogDefaultCommitOperationName().get();
+        return name != LocalizeValue.empty() ? name : VcsLocalize.commitDialogDefaultCommitOperationName();
     }
 
     @Override

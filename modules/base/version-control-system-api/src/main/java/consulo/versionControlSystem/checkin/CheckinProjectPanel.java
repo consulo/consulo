@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.checkin;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.change.Change;
@@ -22,6 +23,7 @@ import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
@@ -34,65 +36,68 @@ import java.util.Collection;
  * @see BaseCheckinHandlerFactory#createHandler(CommitMessage, CommitContext)
  */
 public interface CheckinProjectPanel extends Refreshable, CommitMessage {
-  JComponent getComponent();
+    @Override
+    JComponent getComponent();
 
-  JComponent getPreferredFocusedComponent();
+    JComponent getPreferredFocusedComponent();
 
-  /**
-   * Checks if the checkin operation has anything to check in.
-   *
-   * @return true if any files need to be updated, added or deleted; false otherwise.
-   */
-  boolean hasDiffs();
+    /**
+     * Checks if the checkin operation has anything to check in.
+     *
+     * @return true if any files need to be updated, added or deleted; false otherwise.
+     */
+    boolean hasDiffs();
 
-  /**
-   * Returns the list of files selected for checkin, as {@link VirtualFile} objects. The returned list
-   * does not include files which will be deleted from the VCS during the check-in operation.
-   *
-   * @return the files selected for checkin.
-   */
-  Collection<VirtualFile> getVirtualFiles();
+    /**
+     * Returns the list of files selected for checkin, as {@link VirtualFile} objects. The returned list
+     * does not include files which will be deleted from the VCS during the check-in operation.
+     *
+     * @return the files selected for checkin.
+     */
+    Collection<VirtualFile> getVirtualFiles();
 
-  Collection<Change> getSelectedChanges();
+    Collection<Change> getSelectedChanges();
 
-  /**
-   * Returns the list of files selected for checkin, as {@link java.io.File} objects. The returned list
-   * includes files which will be deleted from the VCS during the check-in operation.
-   *
-   * @return the files selected for checkin.
-   * @since 5.1
-   */
-  Collection<File> getFiles();
+    /**
+     * Returns the list of files selected for checkin, as {@link java.io.File} objects. The returned list
+     * includes files which will be deleted from the VCS during the check-in operation.
+     *
+     * @return the files selected for checkin.
+     * @since 5.1
+     */
+    Collection<File> getFiles();
 
-  /**
-   * Returns the project in which the checkin is performed.
-   *
-   * @return the project instance.
-   */
-  Project getProject();
+    /**
+     * Returns the project in which the checkin is performed.
+     *
+     * @return the project instance.
+     */
+    Project getProject();
 
-  /**
-   * Checks whether any changes under vcs are included into commit operation
-   */
-  boolean vcsIsAffected(String name);
+    /**
+     * Checks whether any changes under vcs are included into commit operation
+     */
+    boolean vcsIsAffected(String name);
 
-  /**
-   * Returns the list of roots for the check-in (roots of all modules under version control
-   * in a "checkin project" operation, the files/directories selected for check-in in a
-   * "checkin directory" or "checkin file" operation).
-   *
-   * @return the list of roots for check-in.
-   */
-  Collection<VirtualFile> getRoots();
+    /**
+     * Returns the list of roots for the check-in (roots of all modules under version control
+     * in a "checkin project" operation, the files/directories selected for check-in in a
+     * "checkin directory" or "checkin file" operation).
+     *
+     * @return the list of roots for check-in.
+     */
+    Collection<VirtualFile> getRoots();
 
-  /**
-   * Gets the description for the check-in.
-   *
-   * @return the description text.
-   * @since 5.1
-   */
-  @Nonnull
-  String getCommitMessage();
+    /**
+     * Gets the description for the check-in.
+     *
+     * @return the description text.
+     * @since 5.1
+     */
+    @Nonnull
+    @Override
+    String getCommitMessage();
 
-  String getCommitActionName();
+    @Nonnull
+    LocalizeValue getCommitActionName();
 }

@@ -98,7 +98,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
   private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
     int errorCount = collectErrors(codeSmells);
     int warningCount = codeSmells.size() - errorCount;
-    String commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
+    String commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName().get();
     if (commitButtonText.endsWith("...")) {
       commitButtonText = commitButtonText.substring(0, commitButtonText.length()-3);
     }

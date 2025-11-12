@@ -188,7 +188,7 @@ public class TodoCheckinHandler extends CheckinHandler {
   }
 
   private ReturnResult showResults(TodoCheckinHandlerWorker worker, CommitExecutor executor) {
-    String commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName();
+    String commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName().get();
     commitButtonText = StringUtil.trimEnd(commitButtonText, "...");
 
     LocalizeValue text = createMessage(worker);
