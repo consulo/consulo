@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -39,13 +40,15 @@ public class CreatePatchAction extends AbstractCommitChangesAction {
         );
     }
 
+    @Nonnull
     @Override
-    protected String getActionName(@Nonnull VcsContext dataContext) {
-        return VcsLocalize.createPatchCommitActionTitle().get();
+    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+        return VcsLocalize.createPatchCommitActionTitle();
     }
 
+    @Nonnull
     @Override
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return getActionName(context);
     }
 

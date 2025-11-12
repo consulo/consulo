@@ -95,7 +95,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }
 
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    @Nonnull
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return getActionName(context);
     }
 
@@ -122,7 +123,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return result;
     }
 
-    protected abstract String getActionName(@Nonnull VcsContext dataContext);
+    @Nonnull
+    protected abstract LocalizeValue getActionName(@Nonnull VcsContext dataContext);
 
     @Nonnull
     protected abstract FilePath[] getRoots(@Nonnull VcsContext dataContext);

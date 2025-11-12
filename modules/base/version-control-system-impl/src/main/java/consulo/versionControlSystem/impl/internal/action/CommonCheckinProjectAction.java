@@ -64,8 +64,7 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         for (AbstractVcs vcs : vcsManager.getAllActiveVcss()) {
             if (vcs.getCheckinEnvironment() != null) {
-                VirtualFile[] roots = vcsManager.getRootsUnderVcs(vcs);
-                for (VirtualFile root : roots) {
+                for (VirtualFile root : vcsManager.getRootsUnderVcs(vcs)) {
                     virtualFiles.add(new FilePathImpl(root));
                 }
             }
@@ -93,21 +92,23 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
             return;
         }
 
-        String actionName = getActionName(vcsContext) + "...";
-        presentation.setText(actionName);
+        LocalizeValue actionName = getActionName(vcsContext).map((localizeManager, string) -> string + "...");
+        presentation.setTextValue(actionName);
 
         presentation.setEnabled(!plVcsManager.isBackgroundVcsOperationRunning());
         presentation.setVisible(true);
     }
 
+    @Nonnull
     @Override
-    protected String getActionName(@Nonnull VcsContext dataContext) {
-        return VcsLocalize.actionNameCommitProject().get();
+    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+        return VcsLocalize.actionNameCommitProject();
     }
 
+    @Nonnull
     @Override
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
-        return VcsLocalize.vcsCommandNameCheckinNoMnemonics().get();
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+        return VcsLocalize.vcsCommandNameCheckinNoMnemonics();
     }
 
     protected boolean filterRootsBeforeAction() {

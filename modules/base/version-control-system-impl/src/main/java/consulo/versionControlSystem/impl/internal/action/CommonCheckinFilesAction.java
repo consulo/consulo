@@ -20,11 +20,9 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.Streams;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -52,32 +50,33 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
         super(VcsLocalize.actionCheckInFilesText(), LocalizeValue.empty(), null);
     }
 
+    @Nonnull
     @Override
-    protected String getActionName(@Nonnull VcsContext dataContext) {
-        String actionName = Optional.ofNullable(dataContext.getProject())
+    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+        LocalizeValue actionName = Optional.ofNullable(dataContext.getProject())
             .map(project -> getCommonVcs(getRootsStream(dataContext), project))
             .map(AbstractVcs::getCheckinEnvironment)
             .map(CheckinEnvironment::getCheckinOperationName)
-            .orElse(VcsLocalize.vcsCommandNameCheckin().get());
+            .orElse(VcsLocalize.vcsCommandNameCheckin());
 
         return modifyCheckinActionName(dataContext, actionName);
     }
 
-    private String modifyCheckinActionName(@Nonnull VcsContext dataContext, String checkinActionName) {
-        String result = checkinActionName;
+    private LocalizeValue modifyCheckinActionName(@Nonnull VcsContext dataContext, @Nonnull LocalizeValue checkinActionName) {
         List<FilePath> roots = getRootsStream(dataContext).limit(2).collect(Collectors.toList());
-
         if (!roots.isEmpty()) {
-            String messageKey = roots.get(0).isDirectory() ? "action.name.checkin.directory" : "action.name.checkin.file";
-            result = VcsBundle.message(StringUtil.pluralize(messageKey, roots.size()), checkinActionName);
+            return roots.get(0).isDirectory()
+                ? VcsLocalize.actionCheckInDirectories0Text(checkinActionName, roots.size())
+                : VcsLocalize.actionCheckInFiles0Text(checkinActionName, roots.size());
         }
 
-        return result;
+        return checkinActionName;
     }
 
+    @Nonnull
     @Override
-    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
-        return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics().get());
+    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+        return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics());
     }
 
     @Nullable

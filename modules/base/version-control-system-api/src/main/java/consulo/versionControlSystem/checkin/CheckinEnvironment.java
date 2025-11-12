@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.checkin;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.function.PairConsumer;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
@@ -24,10 +25,10 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -39,35 +40,40 @@ import java.util.function.Function;
  * @see AbstractVcs#getCheckinEnvironment()
  */
 public interface CheckinEnvironment extends VcsProviderMarker {
-  @Nullable
-  RefreshableOnComponent createAdditionalOptionsPanel(CheckinProjectPanel panel, PairConsumer<Object, Object> additionalDataConsumer);
+    @Nullable
+    RefreshableOnComponent createAdditionalOptionsPanel(CheckinProjectPanel panel, PairConsumer<Object, Object> additionalDataConsumer);
 
-  @Nullable
-  String getDefaultMessageFor(FilePath[] filesToCheckin);
+    @Nullable
+    String getDefaultMessageFor(FilePath[] filesToCheckin);
 
-  @Nullable
-  @NonNls
-  String getHelpId();
+    @Nullable
+    String getHelpId();
 
-  String getCheckinOperationName();
+    @Nonnull
+    LocalizeValue getCheckinOperationName();
 
-  @Nullable
-  List<VcsException> commit(List<Change> changes, String preparedComment);
+    @Nullable
+    List<VcsException> commit(List<Change> changes, String preparedComment);
 
-  @Nullable
-  List<VcsException> commit(List<Change> changes, String preparedComment, @Nonnull Function<Object, Object> parametersHolder, Set<String> feedback);
+    @Nullable
+    List<VcsException> commit(
+        List<Change> changes,
+        String preparedComment,
+        @Nonnull Function<Object, Object> parametersHolder,
+        Set<String> feedback
+    );
 
-  @Nullable
-  List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
+    @Nullable
+    List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
 
-  @Nullable
-  List<VcsException> scheduleUnversionedFilesForAddition(List<VirtualFile> files);
+    @Nullable
+    List<VcsException> scheduleUnversionedFilesForAddition(List<VirtualFile> files);
 
-  boolean keepChangeListAfterCommit(ChangeList changeList);
+    boolean keepChangeListAfterCommit(ChangeList changeList);
 
-  /**
-   * @return true if VFS refresh has to be performed after commit, because files might have changed during commit
-   * (for example, due to keyword substitution in SVN or read-only status in Perforce).
-   */
-  boolean isRefreshAfterCommitNeeded();
+    /**
+     * @return true if VFS refresh has to be performed after commit, because files might have changed during commit
+     * (for example, due to keyword substitution in SVN or read-only status in Perforce).
+     */
+    boolean isRefreshAfterCommitNeeded();
 }

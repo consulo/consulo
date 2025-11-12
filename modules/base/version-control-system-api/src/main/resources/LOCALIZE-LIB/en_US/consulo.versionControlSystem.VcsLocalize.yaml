@@ -12,6 +12,10 @@ action.changes.view.remove.deleted.description:
     text: Schedule selected files to be removed from VCS
 action.changes.view.remove.deleted.text:
     text: Remove from VCS
+action.check.in.directories.0.text:
+    text: '{0} Director{1,choice,1#y|2#ies}'
+action.check.in.files.0.text:
+    text: '{0} File{1,choice,1#|2#s}'
 action.check.in.files.text:
     text: Check _In
 action.check.in.project.text:
@@ -74,14 +78,6 @@ action.name.check.scope.status:
     text: Chec_k {0} Status
 action.name.check.status:
     text: Chec_k Status
-action.name.checkin.directories:
-    text: '{0} Directories'
-action.name.checkin.directory:
-    text: '{0} Directory'
-action.name.checkin.file:
-    text: '{0} File'
-action.name.checkin.files:
-    text: '{0} Files'
 action.name.commit.project:
     text: Comm&it Changes
 action.name.compare:
