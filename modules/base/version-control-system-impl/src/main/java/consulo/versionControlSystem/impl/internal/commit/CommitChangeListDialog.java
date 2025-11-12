@@ -1385,12 +1385,12 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         );
     }
 
-    private class CommitExecutorAction extends AbstractAction {
+    private class CommitExecutorAction extends LocalizeAction {
         @Nonnull
         private final CommitExecutor myCommitExecutor;
 
         public CommitExecutorAction(@Nonnull CommitExecutor commitExecutor, boolean isDefault) {
-            super(commitExecutor.getActionText().get());
+            super(commitExecutor.getActionText());
             myCommitExecutor = commitExecutor;
             if (isDefault) {
                 putValue(DEFAULT_ACTION, Boolean.TRUE);

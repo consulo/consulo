@@ -90,10 +90,10 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
         if (vcs != null) {
             VcsHistoryProvider provider = vcs.getVcsHistoryProvider();
 
-            result = provider != null &&
-                (provider.supportsHistoryForDirectories() || !path.isDirectory()) &&
-                AbstractVcs.fileInVcsByFileStatus(project, fileOrParent) &&
-                provider.canShowHistoryFor(fileOrParent);
+            result = provider != null
+                && (provider.supportsHistoryForDirectories() || !path.isDirectory())
+                && AbstractVcs.fileInVcsByFileStatus(project, fileOrParent)
+                && provider.canShowHistoryFor(fileOrParent);
         }
 
         return result;

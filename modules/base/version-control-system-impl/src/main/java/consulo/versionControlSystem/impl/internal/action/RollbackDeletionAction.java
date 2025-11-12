@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -59,8 +60,8 @@ public class RollbackDeletionAction extends AbstractMissingFilesAction {
     }
 
     @Override
-    protected String getName() {
-        return VcsLocalize.changesActionRollbackText().get();
+    protected LocalizeValue getName() {
+        return VcsLocalize.changesActionRollbackText();
     }
 
     @Override
