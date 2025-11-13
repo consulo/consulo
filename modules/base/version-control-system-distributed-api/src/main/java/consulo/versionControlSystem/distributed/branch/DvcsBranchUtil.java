@@ -17,7 +17,7 @@ package consulo.versionControlSystem.distributed.branch;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
 import jakarta.annotation.Nonnull;
@@ -54,7 +54,7 @@ public class DvcsBranchUtil {
     @Nonnull
     public static String shortenBranchName(@Nonnull String fullBranchName) {
         // -1, because there are arrows indicating that it is a popup
-        int maxLength = DvcsLocalize.branchPopupMaximumBranchLengthSample().get().length() - 1;
+        int maxLength = DistributedVcsLocalize.branchPopupMaximumBranchLengthSample().get().length() - 1;
         return StringUtil.shortenTextWithEllipsis(fullBranchName, maxLength, 5);
     }
 }

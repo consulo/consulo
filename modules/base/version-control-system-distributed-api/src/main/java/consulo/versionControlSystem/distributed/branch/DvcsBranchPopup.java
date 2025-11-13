@@ -31,7 +31,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.internal.BranchListPopup;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
@@ -78,8 +78,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         myIsInSpecificRepository =
             myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC;
         LocalizeValue title = myIsInSpecificRepository
-            ? DvcsLocalize.branchPopupVcsNameBranchesInRepo(myVcs.getDisplayName(), DvcsUtil.getShortRepositoryName(currentRepository))
-            : DvcsLocalize.branchPopupVcsNameBranches(myVcs.getDisplayName());
+            ? DistributedVcsLocalize.branchPopupVcsNameBranchesInRepo(myVcs.getDisplayName(), DvcsUtil.getShortRepositoryName(currentRepository))
+            : DistributedVcsLocalize.branchPopupVcsNameBranches(myVcs.getDisplayName());
 
         FlatSpeedSearchPopupFactory popupFactory = FlatSpeedSearchPopupFactory.getInstance();
         myPopup = (BranchListPopup) popupFactory.createBranchPopup(
@@ -114,8 +114,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     private void notifyAboutSyncedBranches() {
         NotificationService.getInstance()
             .newInfo(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
-            .title(DvcsLocalize.notificationSynchedBranchesTitle())
-            .content(DvcsLocalize.notificationSynchedBranchesContent(myVcs.getDisplayName()))
+            .title(DistributedVcsLocalize.notificationSynchedBranchesTitle())
+            .content(DistributedVcsLocalize.notificationSynchedBranchesContent(myVcs.getDisplayName()))
             .hyperlinkListener(new NotificationListener() {
                 @Override
                 @RequiredUIAccess
@@ -167,7 +167,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
     private void warnThatBranchesDivergedIfNeeded() {
         if (myRepositoryManager.moreThanOneRoot() && myMultiRootBranchConfig.diverged() && userWantsSyncControl()) {
-            myPopup.setWarning(DvcsLocalize.branchPopupWarningBranchesHaveDiverged());
+            myPopup.setWarning(DistributedVcsLocalize.branchPopupWarningBranchesHaveDiverged());
         }
     }
 
