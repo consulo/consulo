@@ -15,8 +15,11 @@
  */
 package consulo.language.editor.refactoring.util;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -39,7 +42,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,16 +56,29 @@ public class CommonRefactoringUtil {
     }
 
     @RequiredUIAccess
-    public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
+    public static void showErrorMessage(
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message,
+        @Nullable String helpId,
+        @Nonnull Project project
+    ) {
         if (project.getApplication().isUnitTestMode()) {
-            throw new RuntimeException(message);
+            throw new RuntimeException(message.get());
         }
         RefactoringMessageDialog dialog =
-            new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
+            new RefactoringMessageDialog(title, message, helpId, UIUtil.getErrorIcon(), false, project);
         dialog.show();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
+        showErrorMessage(LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(message), helpId, project);
+    }
+
     // order of usages across different files is irrelevant
+    @RequiredReadAction
     public static void sortDepthFirstRightLeftOrder(UsageInfo[] usages) {
         Arrays.sort(usages, (usage1, usage2) -> {
             PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
@@ -84,6 +99,10 @@ public class CommonRefactoringUtil {
      * Fatal refactoring problem during unit test run. Corresponds to message of modal dialog shown during user driven refactoring.
      */
     public static class RefactoringErrorHintException extends RuntimeException {
+        public RefactoringErrorHintException(@Nonnull LocalizeValue message) {
+            super(message.get());
+        }
+
         public RefactoringErrorHintException(String message) {
             super(message);
         }
@@ -93,12 +112,12 @@ public class CommonRefactoringUtil {
     public static void showErrorHint(
         @Nonnull Project project,
         @Nullable Editor editor,
-        @Nonnull @Nls String message,
-        @Nonnull @Nls String title,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue title,
         @Nullable String helpId
     ) {
         if (project.getApplication().isUnitTestMode()) {
-            throw new RefactoringErrorHintException(message);
+            throw new RefactoringErrorHintException(message.get());
         }
 
         project.getApplication().invokeLater(() -> {
@@ -109,6 +128,19 @@ public class CommonRefactoringUtil {
                 HintManager.getInstance().showErrorHint(editor, message);
             }
         });
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    public static void showErrorHint(
+        @Nonnull Project project,
+        @Nullable Editor editor,
+        @Nonnull String message,
+        @Nonnull String title,
+        @Nullable String helpId
+    ) {
+        showErrorHint(project, editor, LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title), helpId);
     }
 
     public static String htmlEmphasize(@Nonnull String text) {
@@ -123,7 +155,7 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
-        return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed().get());
+        return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed());
     }
 
     @RequiredUIAccess
@@ -132,7 +164,7 @@ public class CommonRefactoringUtil {
             project,
             Collections.<PsiElement>emptySet(),
             Arrays.asList(elements),
-            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            RefactoringLocalize.refactoringCannotBePerformed(),
             true
         );
     }
@@ -147,15 +179,22 @@ public class CommonRefactoringUtil {
             project,
             Collections.<PsiElement>emptySet(),
             elements,
-            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            RefactoringLocalize.refactoringCannotBePerformed(),
             notifyOnFail
         );
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
+    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull LocalizeValue messagePrefix) {
         return element.isWritable()
             || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
+        return checkReadOnlyStatus(element, project, LocalizeValue.of(messagePrefix));
     }
 
     @RequiredUIAccess
@@ -164,7 +203,7 @@ public class CommonRefactoringUtil {
             project,
             elements,
             Collections.<PsiElement>emptySet(),
-            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            RefactoringLocalize.refactoringCannotBePerformed(),
             false
         );
     }
@@ -179,7 +218,7 @@ public class CommonRefactoringUtil {
             project,
             elements,
             Collections.<PsiElement>emptySet(),
-            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            RefactoringLocalize.refactoringCannotBePerformed(),
             notifyOnFail
         );
     }
@@ -191,7 +230,7 @@ public class CommonRefactoringUtil {
         @Nonnull Collection<? extends PsiElement> flat,
         boolean notifyOnFail
     ) {
-        return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed().get(), notifyOnFail);
+        return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed(), notifyOnFail);
     }
 
     @RequiredUIAccess
@@ -199,7 +238,7 @@ public class CommonRefactoringUtil {
         @Nonnull Project project,
         @Nonnull Collection<? extends PsiElement> recursive,
         @Nonnull Collection<? extends PsiElement> flat,
-        @Nonnull String messagePrefix,
+        @Nonnull LocalizeValue messagePrefix,
         boolean notifyOnFail
     ) {
         Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
@@ -212,7 +251,7 @@ public class CommonRefactoringUtil {
         ContainerUtil.addAll(failed, status.getReadonlyFiles());
 
         if (notifyOnFail && (!failed.isEmpty() || seenNonWritablePsiFilesWithoutVirtualFile && readonly.isEmpty())) {
-            StringBuilder message = new StringBuilder(messagePrefix).append('\n');
+            StringBuilder message = new StringBuilder(messagePrefix.get()).append('\n');
             int i = 0;
             for (VirtualFile virtualFile : failed) {
                 LocalizeValue subj = virtualFile.isDirectory()
@@ -229,7 +268,7 @@ public class CommonRefactoringUtil {
                     break;
                 }
             }
-            showErrorMessage(RefactoringLocalize.errorTitle().get(), message.toString(), null, project);
+            showErrorMessage(RefactoringLocalize.errorTitle(), LocalizeValue.localizeTODO(message.toString()), null, project);
             return false;
         }
 
@@ -245,8 +284,7 @@ public class CommonRefactoringUtil {
         boolean seenNonWritablePsiFilesWithoutVirtualFile = false;
 
         for (PsiElement element : elements) {
-            if (element instanceof PsiDirectory) {
-                PsiDirectory dir = (PsiDirectory)element;
+            if (element instanceof PsiDirectory dir) {
                 VirtualFile vFile = dir.getVirtualFile();
                 if (vFile.getFileSystem().isReadOnly()) {
                     failed.add(vFile);
@@ -258,9 +296,8 @@ public class CommonRefactoringUtil {
                     readonly.add(vFile);
                 }
             }
-            else if (element instanceof PsiDirectoryContainer) {
-                PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
-                for (PsiDirectory directory : directories) {
+            else if (element instanceof PsiDirectoryContainer dirContainer) {
+                for (PsiDirectory directory : dirContainer.getDirectories()) {
                     VirtualFile virtualFile = directory.getVirtualFile();
                     if (recursively) {
                         if (virtualFile.getFileSystem().isReadOnly()) {
@@ -329,7 +366,13 @@ public class CommonRefactoringUtil {
     }
 
     @RequiredUIAccess
-    public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
+    public static boolean checkFileExist(
+        @Nullable PsiDirectory targetDirectory,
+        int[] choice,
+        PsiFile file,
+        String name,
+        @Nonnull LocalizeValue title
+    ) {
         if (targetDirectory == null) {
             return false;
         }
@@ -337,11 +380,14 @@ public class CommonRefactoringUtil {
         if (existing != null && !existing.equals(file)) {
             int selection;
             if (choice == null || choice[0] == -1) {
-                String message =
-                    String.format("File '%s' already exists in directory '%s'", name, targetDirectory.getVirtualFile().getPath());
-                String[] options =
-                    choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
-                selection = Messages.showDialog(message, title, options, 0, UIUtil.getQuestionIcon());
+                LocalizeValue message = RefactoringLocalize.dialogMessageFileAlreadyExistsInDirectory(
+                    name,
+                    targetDirectory.getVirtualFile().getPresentableUrl()
+                );
+                String[] options = choice == null
+                    ? new String[]{RefactoringLocalize.copyOverwriteButton().get(), RefactoringLocalize.copySkipButton().get()}
+                    : new String[]{RefactoringLocalize.copyOverwriteButton().get(), RefactoringLocalize.copySkipButton().get(), RefactoringLocalize.copyOverwriteForAllButton().get(), RefactoringLocalize.copySkipForAllButton().get()};
+                selection = Messages.showDialog(message.get(), title.get(), options, 0, UIUtil.getQuestionIcon());
             }
             else {
                 selection = choice[0];
@@ -355,7 +401,7 @@ public class CommonRefactoringUtil {
             if (selection == 0 && file != existing) {
                 CommandProcessor.getInstance().newCommand()
                     .project(targetDirectory.getProject())
-                    .name(LocalizeValue.ofNullable(title))
+                    .name(title)
                     .inWriteAction()
                     .run(existing::delete);
             }

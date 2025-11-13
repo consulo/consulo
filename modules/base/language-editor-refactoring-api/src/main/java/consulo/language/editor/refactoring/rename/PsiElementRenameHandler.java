@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
@@ -41,7 +39,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -49,7 +46,8 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * @author Jeka, dsl
+ * @author Jeka
+ * @author dsl
  * @since 2001-11-13
  */
 public class PsiElementRenameHandler implements RenameHandler {
@@ -106,14 +104,15 @@ public class PsiElementRenameHandler implements RenameHandler {
 
         VirtualFile contextFile = PsiUtilCore.getVirtualFile(nameSuggestionContext);
 
-        if (nameSuggestionContext != null && nameSuggestionContext.isPhysical() &&
-            (contextFile == null || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
-            String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
+        if (nameSuggestionContext != null && nameSuggestionContext.isPhysical()
+            && (contextFile == null
+            || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
+            LocalizeValue message = RefactoringLocalize.dialogMessageSelectedElementUsedFromNonProjectFiles();
             if (project.getApplication().isUnitTestMode()) {
                 throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
             }
             int buttonPressed =
-                Messages.showYesNoDialog(project, message, RefactoringLocalize.cannotPerformRefactoring().get(), UIUtil.getWarningIcon());
+                Messages.showYesNoDialog(project, message.get(), RefactoringLocalize.cannotPerformRefactoring().get(), UIUtil.getWarningIcon());
             if (buttonPressed != Messages.YES) {
                 return;
             }
@@ -127,26 +126,26 @@ public class PsiElementRenameHandler implements RenameHandler {
     @RequiredUIAccess
     public static boolean canRename(Project project, Editor editor, PsiElement element)
         throws CommonRefactoringUtil.RefactoringErrorHintException {
-        String message = renameabilityStatus(project, element);
-        if (StringUtil.isNotEmpty(message)) {
-            showErrorMessage(project, editor, message);
+        LocalizeValue message = renameabilityStatus(project, element);
+        if (message != LocalizeValue.empty()) {
+            CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle(), null);
             return false;
         }
         return true;
     }
 
-    @Nullable
+    @Nonnull
     @RequiredReadAction
-    static String renameabilityStatus(Project project, PsiElement element) {
+    static LocalizeValue renameabilityStatus(Project project, PsiElement element) {
         if (element == null) {
-            return "";
+            return LocalizeValue.empty();
         }
 
         boolean hasRenameProcessor = RenamePsiElementProcessor.forElement(element) != RenamePsiElementProcessor.DEFAULT;
         boolean hasWritableMetaData = element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiWritableMetaData;
 
         if (!hasRenameProcessor && !hasWritableMetaData && !(element instanceof PsiNamedElement)) {
-            return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRename()).get();
+            return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRename());
         }
 
         if (!PsiManager.getInstance(project).isInProject(element)) {
@@ -154,26 +153,21 @@ public class PsiElementRenameHandler implements RenameHandler {
                 VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
                 if (!(virtualFile != null && RefactoringInternalHelper.getInstance().isWriteAccessAllowed(virtualFile, project))) {
                     LocalizeValue message = RefactoringLocalize.errorOutOfProjectElement(UsageViewUtil.getType(element));
-                    return RefactoringLocalize.cannotPerformRefactoringWithReason(message).get();
+                    return RefactoringLocalize.cannotPerformRefactoringWithReason(message);
                 }
             }
 
             if (!element.isWritable()) {
-                return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorCannotBeRenamed()).get();
+                return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorCannotBeRenamed());
             }
         }
 
         if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
             LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
-            return RefactoringLocalize.cannotPerformRefactoringWithReason(message).get();
+            return RefactoringLocalize.cannotPerformRefactoringWithReason(message);
         }
 
-        return null;
-    }
-
-    @RequiredUIAccess
-    static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
-        CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle().get(), null);
+        return LocalizeValue.empty();
     }
 
     @RequiredUIAccess
@@ -229,7 +223,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
     public static boolean isVetoed(PsiElement element) {
         return element == null || element instanceof SyntheticElement
-            || VetoRenameCondition.EP.findFirstSafe(Application.get(), it -> it.isVetoed(element)) != null;
+            || element.getApplication().getExtensionPoint(VetoRenameCondition.class).anyMatchSafe(it -> it.isVetoed(element));
     }
 
     @Nullable

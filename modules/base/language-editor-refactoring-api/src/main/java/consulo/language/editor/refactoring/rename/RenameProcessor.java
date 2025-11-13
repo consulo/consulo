@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -21,6 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
@@ -57,8 +57,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     protected final LinkedHashMap<PsiElement, String> myAllRenames = new LinkedHashMap<>();
 
-    private @Nonnull
-    PsiElement myPrimaryElement;
+    @Nonnull
+    private PsiElement myPrimaryElement;
     private String myNewName = null;
 
     private boolean mySearchInComments;
@@ -202,12 +202,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                         Collections.addAll(variableUsages, usages);
                     }
                 };
-                if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
-                    runnable,
-                    RefactoringLocalize.searchingForVariables().get(),
-                    true,
-                    myProject
-                )) {
+                if (!ProgressManager.getInstance()
+                    .runProcessWithProgressSynchronously(runnable, RefactoringLocalize.searchingForVariables(), true, myProject)) {
                     return false;
                 }
             }
@@ -219,7 +215,13 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                 Map.Entry<PsiElement, String> entry = iterator.next();
                 if (entry.getKey() instanceof PsiFile file) {
                     PsiDirectory containingDirectory = file.getContainingDirectory();
-                    if (CommonRefactoringUtil.checkFileExist(containingDirectory, choice, file, entry.getValue(), "Rename")) {
+                    if (CommonRefactoringUtil.checkFileExist(
+                        containingDirectory,
+                        choice,
+                        file,
+                        entry.getValue(),
+                        RefactoringLocalize.commandNameRename()
+                    )) {
                         iterator.remove();
                         continue;
                     }
@@ -228,7 +230,12 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             }
         }
         catch (IncorrectOperationException e) {
-            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle().get(), e.getMessage(), getHelpID(), myProject);
+            CommonRefactoringUtil.showErrorMessage(
+                RefactoringLocalize.renameTitle(),
+                LocalizeValue.ofNullable(e.getMessage()),
+                getHelpID(),
+                myProject
+            );
             return false;
         }
 
@@ -272,7 +279,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         });
 
         return ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(runnable, RefactoringLocalize.searchingForVariables().get(), true, myProject);
+            .runProcessWithProgressSynchronously(runnable, RefactoringLocalize.searchingForVariables(), true, myProject);
     }
 
     @RequiredUIAccess
@@ -314,9 +321,11 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     @RequiredReadAction
     public UsageInfo[] findUsages() {
         myRenamers.clear();
-        ArrayList<UsageInfo> result = new ArrayList<>();
+        List<UsageInfo> result = new ArrayList<>();
 
         List<PsiElement> elements = new ArrayList<>(myAllRenames.keySet());
+        ExtensionPoint<AutomaticRenamerFactory> renamerFactoryEP =
+            myProject.getApplication().getExtensionPoint(AutomaticRenamerFactory.class);
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < elements.size(); i++) {
             PsiElement element = elements.get(i);
@@ -335,11 +344,11 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                 }
             }
 
-            for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
+            renamerFactoryEP.forEach(factory -> {
                 if (factory.getOptionName() == LocalizeValue.of() && factory.isApplicable(element)) {
                     myRenamers.add(factory.createRenamer(element, newName, usagesList));
                 }
-            }
+            });
         }
         UsageInfo[] usageInfos = result.toArray(new UsageInfo[result.size()]);
         usageInfos = UsageViewUtil.removeDuplicatedUsages(usageInfos);
@@ -482,7 +491,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             if (usage.getReference() instanceof LightweightPsiElement) {
                 continue; //filter out implicit references (e.g. from derived class to super class' default constructor)
             }
-            MoveRenameUsageInfo usageInfo = (MoveRenameUsageInfo)usage;
+            MoveRenameUsageInfo usageInfo = (MoveRenameUsageInfo) usage;
             if (usage instanceof RelatedUsageInfo relatedUsageInfo) {
                 PsiElement relatedElement = relatedUsageInfo.getRelatedElement();
                 if (elements.contains(relatedElement)) {

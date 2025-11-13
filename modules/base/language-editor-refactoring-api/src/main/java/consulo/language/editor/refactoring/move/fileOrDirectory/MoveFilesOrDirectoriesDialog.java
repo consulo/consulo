@@ -178,6 +178,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(myHelpID);
     }
@@ -218,8 +219,8 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
                 });
                 if (myTargetDirectory == null) {
                     CommonRefactoringUtil.showErrorMessage(
-                        getTitle(),
-                        RefactoringLocalize.cannotCreateDirectory().get(),
+                        LocalizeValue.localizeTODO(getTitle()),
+                        RefactoringLocalize.cannotCreateDirectory(),
                         myHelpID,
                         myProject
                     );

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.move.fileOrDirectory;
 
 import consulo.language.editor.refactoring.RefactoringSettings;
-import consulo.language.editor.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.MoveCallback;
@@ -25,6 +23,7 @@ import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -149,7 +148,7 @@ public class MoveFilesOrDirectoriesUtil {
                         return;
                     }
 
-                    Collection<PsiElement> toCheck = new ArrayList<>(List.of((PsiElement)targetDirectory1));
+                    Collection<PsiElement> toCheck = new ArrayList<>(List.of((PsiElement) targetDirectory1));
                     for (PsiElement e : newElements) {
                         toCheck.add(e instanceof PsiFileSystemItem && e.getParent() != null ? e.getParent() : e);
                     }
@@ -164,7 +163,13 @@ public class MoveFilesOrDirectoriesUtil {
                         List<PsiElement> els = new ArrayList<>();
                         for (PsiElement psiElement : newElements) {
                             if (psiElement instanceof PsiFile file
-                                && CopyFilesOrDirectoriesHandler.checkFileExist(targetDirectory1, choice, file, file.getName(), "Move")) {
+                                && CommonRefactoringUtil.checkFileExist(
+                                targetDirectory1,
+                                choice,
+                                file,
+                                file.getName(),
+                                RefactoringLocalize.commandNameMove()
+                            )) {
                                 continue;
                             }
                             checkMove(psiElement, targetDirectory1);
@@ -192,8 +197,8 @@ public class MoveFilesOrDirectoriesUtil {
                     }
                     catch (IncorrectOperationException e) {
                         CommonRefactoringUtil.showErrorMessage(
-                            RefactoringLocalize.errorTitle().get(),
-                            e.getMessage(),
+                            RefactoringLocalize.errorTitle(),
+                            LocalizeValue.ofNullable(e.getMessage()),
                             "refactoring.moveFile",
                             project
                         );
@@ -221,7 +226,7 @@ public class MoveFilesOrDirectoriesUtil {
             };
         }
         else {
-            return (PsiDirectory)element;
+            return (PsiDirectory) element;
         }
     }
 

@@ -23,6 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,17 +31,18 @@ import jakarta.annotation.Nullable;
  * @author Maxim.Medvedev
  */
 public interface ChangeSignatureHandler extends RefactoringActionHandler {
-  LocalizeValue REFACTORING_NAME = RefactoringLocalize.changesignatureRefactoringName();
+    LocalizeValue REFACTORING_NAME = RefactoringLocalize.changesignatureRefactoringName();
 
-  @Nullable
-  PsiElement findTargetMember(PsiFile file, Editor editor);
+    @Nullable
+    PsiElement findTargetMember(PsiFile file, Editor editor);
 
-  @Nullable
-  PsiElement findTargetMember(PsiElement element);
+    @Nullable
+    PsiElement findTargetMember(PsiElement element);
 
-  @Override
-  void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nullable DataContext dataContext);
+    @Override
+    @RequiredUIAccess
+    void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nullable DataContext dataContext);
 
-  @Nullable
-  String getTargetNotFoundMessage();
+    @Nullable
+    String getTargetNotFoundMessage();
 }

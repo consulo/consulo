@@ -39,6 +39,7 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiWritableMetaData;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -145,7 +146,7 @@ public class RenameUtil {
         @RequiredReadAction
         UsageInfoFactory factory = (usage, startOffset, endOffset) -> {
             TextRange textRange = usage.getTextRange();
-            int start = textRange == null ? 0 : textRange.getStartOffset();
+            int start = textRange.getStartOffset();
             return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, stringToReplace);
         };
         TextOccurrencesUtil.addTextOccurences(element, stringToSearch, projectScope, result, factory);
@@ -239,11 +240,11 @@ public class RenameUtil {
         }
         project.getApplication().invokeLater(() -> {
             String helpID = RenamePsiElementProcessor.forElement(element).getHelpID(element);
-            String message = e.getMessage();
-            if (StringUtil.isEmpty(message)) {
-                message = RefactoringLocalize.renameNotSupported().get();
+            LocalizeValue message = LocalizeValue.ofNullable(e.getMessage());
+            if (message == LocalizeValue.empty()) {
+                message = RefactoringLocalize.renameNotSupported();
             }
-            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle().get(), message, helpID, project);
+            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle(), message, helpID, project);
         });
     }
 
@@ -280,8 +281,7 @@ public class RenameUtil {
 
         if (hasBindables) {
             for (UsageInfo usage : usages) {
-                PsiReference ref = usage.getReference();
-                if (ref instanceof BindablePsiReference) {
+                if (usage.getReference() instanceof BindablePsiReference ref) {
                     try {
                         ref.bindToElement(namedElement);
                     }

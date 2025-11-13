@@ -117,8 +117,8 @@ public abstract class BaseRefactoringAction extends AnAction {
             CommonRefactoringUtil.showErrorHint(
                 project,
                 editor,
-                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRefactor()).get(),
-                RefactoringLocalize.cannotPerformRefactoring().get(),
+                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRefactor()),
+                RefactoringLocalize.cannotPerformRefactoring(),
                 null
             );
             return;

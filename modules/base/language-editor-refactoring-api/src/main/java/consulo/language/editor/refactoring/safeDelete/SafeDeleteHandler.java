@@ -53,7 +53,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
             LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(
                 RefactoringLocalize.isNotSupportedInTheCurrentContext(REFACTORING_NAME)
             );
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), REFACTORING_NAME.get(), "refactoring.safeDelete");
+            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, "refactoring.safeDelete");
             return;
         }
         invoke(project, new PsiElement[]{element}, dataContext);
@@ -82,7 +82,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
     @RequiredUIAccess
     public static void invoke(
-        Project project,
+        @Nonnull Project project,
         PsiElement[] elements,
         @Nullable Module module,
         boolean checkDelegates,
@@ -93,34 +93,37 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
                 return;
             }
         }
-        PsiElement[] temptoDelete = PsiTreeUtil.filterAncestors(elements);
-        Set<PsiElement> elementsSet = new HashSet<>(Arrays.asList(temptoDelete));
+        PsiElement[] tempToDelete = PsiTreeUtil.filterAncestors(elements);
+        Set<PsiElement> elementsSet = new HashSet<>(Arrays.asList(tempToDelete));
         Set<PsiElement> fullElementsSet = new LinkedHashSet<>();
 
         if (checkDelegates) {
-            for (PsiElement element : temptoDelete) {
-                boolean found = false;
-                for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
-                    if (delegate.handlesElement(element)) {
-                        found = true;
-                        Collection<? extends PsiElement> addElements =
-                            delegate instanceof SafeDeleteProcessorDelegateBase safeDeleteProcessor
-                                ? safeDeleteProcessor.getElementsToSearch(element, module, elementsSet)
-                                : delegate.getElementsToSearch(element, elementsSet);
-                        if (addElements == null) {
-                            return;
+            for (PsiElement element : tempToDelete) {
+                Boolean found = project.getApplication().getExtensionPoint(SafeDeleteProcessorDelegate.class)
+                    .computeSafeIfAny(delegate -> {
+                        if (delegate.handlesElement(element)) {
+                            Collection<? extends PsiElement> addElements =
+                                delegate instanceof SafeDeleteProcessorDelegateBase safeDeleteProcessor
+                                    ? safeDeleteProcessor.getElementsToSearch(element, module, elementsSet)
+                                    : delegate.getElementsToSearch(element, elementsSet);
+                            if (addElements == null) {
+                                return Boolean.FALSE;
+                            }
+                            fullElementsSet.addAll(addElements);
+                            return Boolean.TRUE;
                         }
-                        fullElementsSet.addAll(addElements);
-                        break;
-                    }
-                }
-                if (!found) {
+                        return null;
+                    });
+                if (found == null) {
                     fullElementsSet.add(element);
+                }
+                else if (found == Boolean.FALSE) {
+                    return;
                 }
             }
         }
         else {
-            ContainerUtil.addAll(fullElementsSet, temptoDelete);
+            ContainerUtil.addAll(fullElementsSet, tempToDelete);
         }
 
         if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, fullElementsSet, true)) {
@@ -144,6 +147,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
             }
         }
         else {
+            @RequiredUIAccess
             SafeDeleteDialog.Callback callback = dialog -> SafeDeleteProcessor.createInstance(
                 project,
                 () -> {

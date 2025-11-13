@@ -17,6 +17,7 @@ package consulo.language.editor.refactoring.impl.internal.inline;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
@@ -52,12 +53,13 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
             dataContext = DataManager.getInstance().getDataContext();
         }
         Editor editor = dataContext.getData(Editor.KEY);
-        for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
+        project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
             if (handler.canInlineElement(elements[0])) {
                 handler.inlineElement(project, editor, elements[0]);
-                return;
+                return ExtensionPoint.Flow.BREAK;
             }
-        }
+            return ExtensionPoint.Flow.CONTINUE;
+        });
 
         invokeInliner(editor, elements[0]);
     }
@@ -72,12 +74,14 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
             element = BaseRefactoringAction.getElementAtCaret(editor, file);
         }
         if (element != null) {
-            for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
-                if (handler.canInlineElementInEditor(element, editor)) {
-                    handler.inlineElement(project, editor, element);
-                    return;
+            PsiElement finalElement = element;
+            project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
+                if (handler.canInlineElementInEditor(finalElement, editor)) {
+                    handler.inlineElement(project, editor, finalElement);
+                    return ExtensionPoint.Flow.CONTINUE;
                 }
-            }
+                return ExtensionPoint.Flow.CONTINUE;
+            });
 
             if (invokeInliner(editor, element)) {
                 return;
@@ -85,7 +89,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
             LocalizeValue message =
                 RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), REFACTORING_NAME.get(), null);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
         }
     }
 

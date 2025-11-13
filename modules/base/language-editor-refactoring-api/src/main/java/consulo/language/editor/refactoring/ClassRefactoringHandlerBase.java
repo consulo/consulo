@@ -40,7 +40,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
         while (true) {
             if (element == null || element instanceof PsiFile) {
                 LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(getInvalidPositionMessage());
-                CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getTitle(), getHelpId());
+                CommonRefactoringUtil.showErrorHint(project, editor, message, getTitle(), getHelpId());
                 return;
             }
 
@@ -70,7 +70,9 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
     protected abstract String getHelpId();
 
-    protected abstract String getTitle();
+    @Nonnull
+    protected abstract LocalizeValue getTitle();
 
-    protected abstract String getInvalidPositionMessage();
+    @Nonnull
+    protected abstract LocalizeValue getInvalidPositionMessage();
 }
