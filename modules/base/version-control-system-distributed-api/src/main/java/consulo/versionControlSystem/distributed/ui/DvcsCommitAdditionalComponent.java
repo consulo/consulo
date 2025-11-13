@@ -29,7 +29,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -72,9 +72,9 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
         c.weightx = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        myAmend = new NonFocusableCheckBox(DvcsLocalize.commitAmend().get());
+        myAmend = new NonFocusableCheckBox(DistributedVcsLocalize.commitAmend().get());
         myAmend.setMnemonic('m');
-        myAmend.setToolTipText(DvcsLocalize.commitAmendTooltip().get());
+        myAmend.setToolTipText(DistributedVcsLocalize.commitAmendTooltip().get());
         myPreviousMessage = myCheckinPanel.getCommitMessage();
 
         myAmend.addActionListener(e -> {

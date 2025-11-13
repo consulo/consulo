@@ -35,7 +35,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -109,10 +109,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         $$$setupUI$$$();
         init();
         initListeners();
-        setTitle(DvcsLocalize.cloneTitle());
-        myRepositoryUrlLabel.setText(DvcsLocalize.cloneRepositoryUrl(displayName).get());
+        setTitle(DistributedVcsLocalize.cloneTitle());
+        myRepositoryUrlLabel.setText(DistributedVcsLocalize.cloneRepositoryUrl(displayName).get());
         myRepositoryUrlLabel.setDisplayedMnemonic('R');
-        setOKButtonText(DvcsLocalize.cloneButton());
+        setOKButtonText(DistributedVcsLocalize.cloneButton());
 
         FrameStateManager.getInstance().addListener(
             new FrameStateListener() {
@@ -132,7 +132,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             super.doOKAction();
             return;
         }
-        setErrorText(DvcsLocalize.cloneDestinationDirectoryErrorAccess(parent));
+        setErrorText(DistributedVcsLocalize.cloneDestinationDirectoryErrorAccess(parent));
         setOKActionEnabled(false);
     }
 
@@ -155,8 +155,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     private void initListeners() {
         FileChooserDescriptor fcd = FileChooserDescriptorFactory.createSingleFolderDescriptor()
             .withShowFileSystemRoots(true)
-            .withTitleValue(DvcsLocalize.cloneDestinationDirectoryTitle())
-            .withDescriptionValue(DvcsLocalize.cloneDestinationDirectoryDescription())
+            .withTitleValue(DistributedVcsLocalize.cloneDestinationDirectoryTitle())
+            .withDescriptionValue(DistributedVcsLocalize.cloneDestinationDirectoryDescription())
             .withHideIgnored(false);
         myParentDirectory.addActionListener(
             new ComponentWithBrowseButton.BrowseFolderActionListener<JTextField>(
@@ -208,15 +208,15 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         myTestURL = getCurrentUrlText();
         TestResult testResult = ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> test(myTestURL),
-            DvcsLocalize.cloneTesting(myTestURL),
+            DistributedVcsLocalize.cloneTesting(myTestURL),
             true,
             myProject
         );
         if (testResult.isSuccess()) {
             Messages.showInfoMessage(
                 myTestButton,
-                DvcsLocalize.cloneTestSuccessMessage(myTestURL).get(),
-                DvcsLocalize.cloneTestConnectionTitle().get()
+                DistributedVcsLocalize.cloneTestSuccessMessage(myTestURL).get(),
+                DistributedVcsLocalize.cloneTestConnectionTitle().get()
             );
             myTestResult = Boolean.TRUE;
         }
@@ -224,7 +224,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             Messages.showErrorDialog(
                 myProject,
                 assertNotNull(testResult.getError()),
-                DvcsLocalize.cloneRepositoryUrlTestFailedMessage(XmlStringUtil.escapeString(testResult.getError())).get()
+                DistributedVcsLocalize.cloneRepositoryUrlTestFailedMessage(XmlStringUtil.escapeString(testResult.getError())).get()
             );
             myTestResult = Boolean.FALSE;
         }
@@ -264,7 +264,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         }
         File file = new File(myParentDirectory.getText(), myDirectoryName.getText());
         if (file.exists() && !file.isDirectory() || !ArrayUtil.isEmpty(file.list())) {
-            setErrorText(DvcsLocalize.cloneDestinationExistsError(file));
+            setErrorText(DistributedVcsLocalize.cloneDestinationExistsError(file));
             setOKActionEnabled(false);
             return false;
         }
@@ -285,7 +285,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         }
         if (myTestResult != null && repository.equals(myTestURL)) {
             if (!myTestResult) {
-                setErrorText(DvcsLocalize.cloneTestFailedError());
+                setErrorText(DistributedVcsLocalize.cloneTestFailedError());
                 setOKActionEnabled(false);
                 return false;
             }
@@ -309,7 +309,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             File file = new File(repository);
             if (file.exists()) {
                 if (!file.isDirectory()) {
-                    setErrorText(DvcsLocalize.cloneUrlIsNotDirectoryError());
+                    setErrorText(DistributedVcsLocalize.cloneUrlIsNotDirectoryError());
                     setOKActionEnabled(false);
                 }
                 return true;
@@ -318,7 +318,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         catch (Exception fileExp) {
             // do nothing
         }
-        setErrorText(DvcsLocalize.cloneInvalidUrl());
+        setErrorText(DistributedVcsLocalize.cloneInvalidUrl());
         setOKActionEnabled(false);
         return false;
     }
@@ -489,7 +489,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             )
         );
         JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, DvcsLocalize.cloneParentDir().get());
+        this.$$$loadLabelText$$$(label1, DistributedVcsLocalize.cloneParentDir().get());
         myRootPanel.add(
             label1,
             new GridConstraints(
@@ -528,7 +528,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             )
         );
         JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, DvcsLocalize.cloneDirName().get());
+        this.$$$loadLabelText$$$(label2, DistributedVcsLocalize.cloneDirName().get());
         myRootPanel.add(
             label2,
             new GridConstraints(
@@ -548,7 +548,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             )
         );
         myTestButton = new JButton();
-        this.$$$loadButtonText$$$(myTestButton, DvcsLocalize.cloneTest().get());
+        this.$$$loadButtonText$$$(myTestButton, DistributedVcsLocalize.cloneTest().get());
         myRootPanel.add(
             myTestButton,
             new GridConstraints(

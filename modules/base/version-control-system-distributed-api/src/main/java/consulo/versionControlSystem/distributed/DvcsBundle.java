@@ -18,7 +18,7 @@ package consulo.versionControlSystem.distributed;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -26,8 +26,8 @@ import org.jetbrains.annotations.PropertyKey;
  * @since 2014-04-29
  */
 @Deprecated
-@DeprecationInfo("Use DvcsLocalize")
-@MigratedExtensionsTo(DvcsLocalize.class)
+@DeprecationInfo("Use DistributedVcsLocalize")
+@MigratedExtensionsTo(DistributedVcsLocalize.class)
 public class DvcsBundle extends AbstractBundle {
   private static final DvcsBundle ourInstance = new DvcsBundle();
 

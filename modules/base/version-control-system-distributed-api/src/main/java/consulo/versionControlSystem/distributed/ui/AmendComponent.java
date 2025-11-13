@@ -28,7 +28,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -70,7 +70,7 @@ public abstract class AmendComponent {
         @Nonnull RepositoryManager<? extends Repository> repoManager,
         @Nonnull CheckinProjectPanel panel
     ) {
-        this(project, repoManager, panel, DvcsLocalize.commitAmend().get());
+        this(project, repoManager, panel, DistributedVcsLocalize.commitAmend().get());
     }
 
     public AmendComponent(
@@ -83,7 +83,7 @@ public abstract class AmendComponent {
         myCheckinPanel = panel;
         myAmend = new NonFocusableCheckBox(title);
         myAmend.setMnemonic('m');
-        myAmend.setToolTipText(DvcsLocalize.commitAmendTooltip().get());
+        myAmend.setToolTipText(DistributedVcsLocalize.commitAmendTooltip().get());
         myPreviousMessage = myCheckinPanel.getCommitMessage();
 
         myAmend.addActionListener(e -> {

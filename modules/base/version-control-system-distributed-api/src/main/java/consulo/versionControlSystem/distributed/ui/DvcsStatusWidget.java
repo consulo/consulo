@@ -16,7 +16,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
@@ -191,12 +191,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         if (repository == null) {
             return LocalizeValue.empty();
         }
-        LocalizeValue message = DvcsLocalize.tooltipBranchWidgetVcsBranchNameText(myVcsName, getFullBranchName(repository));
+        LocalizeValue message = DistributedVcsLocalize.tooltipBranchWidgetVcsBranchNameText(myVcsName, getFullBranchName(repository));
         if (isMultiRoot(repository.getProject())) {
             message = LocalizeValue.join(
                 message,
                 LocalizeValue.of("\n"),
-                DvcsLocalize.tooltipBranchWidgetRootNameText(repository.getRoot().getName())
+                DistributedVcsLocalize.tooltipBranchWidgetRootNameText(repository.getRoot().getName())
             );
         }
         return message;
