@@ -32,7 +32,7 @@ import consulo.versionControlSystem.distributed.internal.BranchHideableActionGro
 import consulo.versionControlSystem.distributed.internal.BranchListPopup;
 import consulo.versionControlSystem.distributed.internal.BranchMoreAction;
 import consulo.versionControlSystem.distributed.internal.BranchMoreHideableActionGroup;
-import consulo.versionControlSystem.distributed.localize.DvcsLocalize;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -107,7 +107,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             }
         };
         AnAction restoreSizeButton = new AnAction(
-            DvcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
+            DistributedVcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
             LocalizeValue.empty(),
             PlatformIconGroup.generalCollapsecomponent()
         ) {
@@ -124,7 +124,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
                 e.getPresentation().setEnabled(myUserSizeChanged);
             }
         };
-        ActionGroup settingsGroup = new ActionGroup(DvcsLocalize.actionBranchactiongrouppopupSettingsText(), true) {
+        ActionGroup settingsGroup = new ActionGroup(DistributedVcsLocalize.actionBranchactiongrouppopupSettingsText(), true) {
             @Override
             @Nonnull
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
