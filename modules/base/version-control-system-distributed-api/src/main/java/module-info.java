@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 31-Jul-22
+ * @since 2022-07-31
  */
 module consulo.version.control.system.distributed.api {
     requires transitive consulo.version.control.system.api;
@@ -16,10 +16,11 @@ module consulo.version.control.system.distributed.api {
 
     exports consulo.versionControlSystem.distributed;
     exports consulo.versionControlSystem.distributed.action;
-    exports consulo.versionControlSystem.distributed.push;
-    exports consulo.versionControlSystem.distributed.repository;
     exports consulo.versionControlSystem.distributed.branch;
     exports consulo.versionControlSystem.distributed.icon;
+    exports consulo.versionControlSystem.distributed.localize;
+    exports consulo.versionControlSystem.distributed.push;
+    exports consulo.versionControlSystem.distributed.repository;
     exports consulo.versionControlSystem.distributed.ui;
     exports consulo.versionControlSystem.distributed.ui.awt;
 

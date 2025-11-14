@@ -176,6 +176,12 @@ add.confirmation.label.text:
     text: 'When files are created with {0}:'
 all.vcs.init.message.text:
     text: Initializing VCS...
+amend.commit.load.message.error.text:
+    text: "Could not load commit message of the commit to amend.\n{0}"
+amend.commit.load.message.error.title:
+    text: Commit Message Not Loaded
+amend.commit.load.message.task.title:
+    text: Loading Commit Message
 annotate.action.description:
     text: Annotate file
 annotate.action.name:

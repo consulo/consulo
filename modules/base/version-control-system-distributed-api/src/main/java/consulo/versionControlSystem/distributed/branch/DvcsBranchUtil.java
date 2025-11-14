@@ -17,37 +17,44 @@ package consulo.versionControlSystem.distributed.branch;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 public class DvcsBranchUtil {
+    @Nullable
+    public static <T extends DvcsBranchInfo> T find(
+        @Nullable Collection<T> branches,
+        @Nullable Repository repository,
+        @Nonnull String sourceBranch
+    ) {
+        if (branches == null) {
+            return null;
+        }
+        return ContainerUtil.find(branches, targetInfo -> repoAndSourceAreEqual(repository, sourceBranch, targetInfo));
+    }
 
+    private static boolean repoAndSourceAreEqual(
+        @Nullable Repository repository,
+        @Nonnull String sourceBranch,
+        @Nonnull DvcsBranchInfo targetInfo
+    ) {
+        return getPathFor(repository).equals(targetInfo.repoPath) && StringUtil.equals(targetInfo.sourceName, sourceBranch);
+    }
 
-  @Nullable
-  public static <T extends DvcsBranchInfo> T find(@Nullable Collection<T> branches, @Nullable Repository repository, @Nonnull String sourceBranch) {
-    if (branches == null) return null;
-    return ContainerUtil.find(branches, targetInfo -> repoAndSourceAreEqual(repository, sourceBranch, targetInfo));
-  }
+    @Nonnull
+    public static String getPathFor(@Nullable Repository repository) {
+        return repository == null ? "" : repository.getRoot().getPath();
+    }
 
-  private static boolean repoAndSourceAreEqual(@Nullable Repository repository, @Nonnull String sourceBranch, @Nonnull DvcsBranchInfo targetInfo) {
-    return getPathFor(repository).equals(targetInfo.repoPath) && StringUtil.equals(targetInfo.sourceName, sourceBranch);
-  }
-
-  @Nonnull
-  public static String getPathFor(@Nullable Repository repository) {
-    return repository == null ? "" : repository.getRoot().getPath();
-  }
-
-  @Nls
-  @Nonnull
-  public static String shortenBranchName(@Nls @Nonnull String fullBranchName) {
-    // -1, because there are arrows indicating that it is a popup
-    int maxLength = DvcsBundle.message("branch.popup.maximum.branch.length.sample").length() - 1;
-    return StringUtil.shortenTextWithEllipsis(fullBranchName, maxLength, 5);
-  }
+    @Nonnull
+    public static String shortenBranchName(@Nonnull String fullBranchName) {
+        // -1, because there are arrows indicating that it is a popup
+        int maxLength = DistributedVcsLocalize.branchPopupMaximumBranchLengthSample().get().length() - 1;
+        return StringUtil.shortenTextWithEllipsis(fullBranchName, maxLength, 5);
+    }
 }

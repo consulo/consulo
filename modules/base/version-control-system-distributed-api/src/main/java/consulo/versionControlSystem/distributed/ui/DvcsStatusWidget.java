@@ -4,6 +4,7 @@ package consulo.versionControlSystem.distributed.ui;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -14,15 +15,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -36,12 +36,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     @Nullable
     private String myText;
-    @Nullable
-    private String myTooltip;
+    @Nonnull
+    private LocalizeValue myTooltip;
     @Nullable
     private Image myIcon;
 
-    protected DvcsStatusWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, @Nonnull @Nls String vcsName) {
+    protected DvcsStatusWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, @Nonnull String vcsName) {
         super(project, factory);
         myVcsName = vcsName;
 
@@ -54,7 +54,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Nullable
     protected abstract T guessCurrentRepository(@Nonnull Project project);
 
-    @Nls
     @Nonnull
     protected abstract String getFullBranchName(@Nonnull T repository);
 
@@ -120,7 +119,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Nullable
     @Override
     public String getTooltipText() {
-        return myTooltip;
+        return myTooltip == LocalizeValue.empty() ? null : myTooltip.get();
     }
 
     @Nullable
@@ -167,7 +166,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     private void update() {
         myText = null;
-        myTooltip = null;
+        myTooltip = LocalizeValue.empty();
         myIcon = null;
 
         if (isDisposed()) {
@@ -187,15 +186,18 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         rememberRecentRoot(repository.getRoot().getPath());
     }
 
-    @Nullable
-    private String getToolTip(@Nullable T repository) {
+    @Nonnull
+    private LocalizeValue getToolTip(@Nullable T repository) {
         if (repository == null) {
-            return null;
+            return LocalizeValue.empty();
         }
-        String message = DvcsBundle.message("tooltip.branch.widget.vcs.branch.name.text", myVcsName, getFullBranchName(repository));
+        LocalizeValue message = DistributedVcsLocalize.tooltipBranchWidgetVcsBranchNameText(myVcsName, getFullBranchName(repository));
         if (isMultiRoot(repository.getProject())) {
-            message += "\n";
-            message += DvcsBundle.message("tooltip.branch.widget.root.name.text", repository.getRoot().getName());
+            message = LocalizeValue.join(
+                message,
+                LocalizeValue.of("\n"),
+                DistributedVcsLocalize.tooltipBranchWidgetRootNameText(repository.getRoot().getName())
+            );
         }
         return message;
     }

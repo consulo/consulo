@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.ApplicationWindowStateService;
@@ -34,6 +34,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.language.editor.ui.awt.HintUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -226,7 +227,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     private void debugState(@Nonnull String message, @Nonnull State... states) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(hashCode() + " - " + message);
-            if (!ApplicationManager.getApplication().isDispatchThread()) {
+            if (!Application.get().isDispatchThread()) {
                 LOG.debug("unexpected thread");
             }
             for (State state : states) {
@@ -243,45 +244,47 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Nonnull
     @SuppressWarnings("ReturnValueIgnored")
-    protected AbstractPopup init(Project project,
-                                 @Nonnull JComponent component,
-                                 @Nullable JComponent preferredFocusedComponent,
-                                 boolean requestFocus,
-                                 boolean focusable,
-                                 boolean movable,
-                                 String dimensionServiceKey,
-                                 boolean resizable,
-                                 @Nullable String caption,
-                                 @Nullable Supplier<Boolean> callback,
-                                 boolean cancelOnClickOutside,
-                                 @Nullable Set<JBPopupListener> listeners,
-                                 boolean useDimServiceForXYLocation,
-                                 @Nullable ComponentPopupBuilderImpl.CancelButtonInfo cancelButtonInfo,
-                                 @Nullable MouseChecker cancelOnMouseOutCallback,
-                                 boolean cancelOnWindow,
-                                 @Nullable ActiveIcon titleIcon,
-                                 boolean cancelKeyEnabled,
-                                 boolean locateByContent,
-                                 boolean placeWithinScreenBounds,
-                                 @Nullable Dimension minSize,
-                                 float alpha,
-                                 @Nullable MaskProvider maskProvider,
-                                 boolean inStack,
-                                 boolean modalContext,
-                                 @Nullable Component[] focusOwners,
-                                 @Nullable String adText,
-                                 int adTextAlignment,
-                                 boolean headerAlwaysFocusable,
-                                 @Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
-                                 @Nullable Predicate<? super JBPopup> pinCallback,
-                                 boolean mayBeParent,
-                                 boolean showShadow,
-                                 boolean showBorder,
-                                 Color borderColor,
-                                 boolean cancelOnWindowDeactivation,
-                                 @Nullable Predicate<? super KeyEvent> keyEventHandler,
-                                 @Nonnull List<AnAction> headerLeftActions,
-                                 @Nonnull List<AnAction> headerRightActions) {
+    protected AbstractPopup init(
+        Project project,
+        @Nonnull JComponent component,
+        @Nullable JComponent preferredFocusedComponent,
+        boolean requestFocus,
+        boolean focusable,
+        boolean movable,
+        String dimensionServiceKey,
+        boolean resizable,
+        @Nullable String caption,
+        @Nullable Supplier<Boolean> callback,
+        boolean cancelOnClickOutside,
+        @Nullable Set<JBPopupListener> listeners,
+        boolean useDimServiceForXYLocation,
+        @Nullable ComponentPopupBuilderImpl.CancelButtonInfo cancelButtonInfo,
+        @Nullable MouseChecker cancelOnMouseOutCallback,
+        boolean cancelOnWindow,
+        @Nullable ActiveIcon titleIcon,
+        boolean cancelKeyEnabled,
+        boolean locateByContent,
+        boolean placeWithinScreenBounds,
+        @Nullable Dimension minSize,
+        float alpha,
+        @Nullable MaskProvider maskProvider,
+        boolean inStack,
+        boolean modalContext,
+        @Nullable Component[] focusOwners,
+        @Nullable String adText,
+        int adTextAlignment,
+        boolean headerAlwaysFocusable,
+        @Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
+        @Nullable Predicate<? super JBPopup> pinCallback,
+        boolean mayBeParent,
+        boolean showShadow,
+        boolean showBorder,
+        Color borderColor,
+        boolean cancelOnWindowDeactivation,
+        @Nullable Predicate<? super KeyEvent> keyEventHandler,
+        @Nonnull List<AnAction> headerLeftActions,
+        @Nonnull List<AnAction> headerRightActions
+    ) {
         assert !requestFocus || focusable : "Incorrect argument combination: requestFocus=true focusable=false";
 
         all.add(this);
@@ -289,8 +292,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myActivityKey = new UiActivity.Focus("Popup:" + this);
         myProject = project;
         myComponent = component;
-        myPopupBorder = showBorder ? borderColor != null ? PopupBorder.Factory.createColored(borderColor) : PopupBorder.Factory.create(true,
-            showShadow) : PopupBorder.Factory
+        myPopupBorder = showBorder ? borderColor != null ? PopupBorder.Factory.createColored(borderColor) : PopupBorder.Factory.create(
+            true,
+            showShadow
+        ) : PopupBorder.Factory
             .createEmpty();
         myShadowed = showShadow;
         myContent = createContentPanel(resizable, myPopupBorder, false);
@@ -355,7 +360,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             }
 
             if (!rightActions.isEmpty()) {
-                ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
+                ActionToolbar toolbar = ActionManager.getInstance()
+                    .createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
                 toolbar.setMiniMode(true);
                 toolbar.setTargetComponent(myContent);
 
@@ -363,7 +369,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             }
 
             if (!headerLeftActions.isEmpty()) {
-                ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("PopupLeft", ActionGroup.newImmutableBuilder().addAll(headerLeftActions).build(), true);
+                ActionToolbar toolbar = ActionManager.getInstance()
+                    .createActionToolbar("PopupLeft", ActionGroup.newImmutableBuilder().addAll(headerLeftActions).build(), true);
                 toolbar.setMiniMode(true);
                 toolbar.setTargetComponent(myContent);
 
@@ -421,8 +428,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     public void setShowHints(boolean show) {
-        Window ancestor = getContentWindow(myComponent);
-        if (ancestor instanceof RootPaneContainer rootPaneContainer) {
+        if (getContentWindow(myComponent) instanceof RootPaneContainer rootPaneContainer) {
             JRootPane rootPane = rootPaneContainer.getRootPane();
             if (rootPane != null) {
                 rootPane.putClientProperty(SHOW_HINTS, show);
@@ -528,6 +534,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showInCenterOf(@Nonnull Component aComponent) {
         HelpTooltipImpl.setMasterPopup(aComponent, this);
         Point popupPoint = getCenterOf(aComponent, getPreferredContentSize());
@@ -535,11 +542,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showUnderneathOf(@Nonnull Component aComponent) {
         show(new RelativePoint(aComponent, new Point(JBUIScale.scale(2), aComponent.getHeight())));
     }
 
     @Override
+    @RequiredUIAccess
     public void show(@Nonnull RelativePoint aPoint) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
@@ -550,6 +559,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point) {
         show(owner, point.x, point.y, false);
     }
@@ -565,6 +575,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showInBestPositionFor(@Nonnull DataContext dataContext) {
         Editor editor = dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         if (editor != null && editor.getComponent().isShowing()) {
@@ -576,6 +587,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showInFocusCenter() {
         Component focused = getWndManager().getFocusedComponent(myProject);
         if (focused != null) {
@@ -643,6 +655,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     //@Override
+    @RequiredUIAccess
     public void showInBestPositionFor(@Nonnull Editor editor) {
         // Intercept before the following assert; otherwise assertion may fail
         if (UiInterceptors.tryIntercept(this)) {
@@ -695,9 +708,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Nonnull
-    private static Point getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(@Nonnull Point originalLocation,
-                                                                               @Nonnull Dimension popupSize,
-                                                                               @Nonnull Editor editor) {
+    private static Point getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(
+        @Nonnull Point originalLocation,
+        @Nonnull Dimension popupSize,
+        @Nonnull Editor editor
+    ) {
         Rectangle preferredBounds = new Rectangle(originalLocation, popupSize);
         Rectangle adjustedBounds = new Rectangle(preferredBounds);
         ScreenUtil.moveRectangleToFitTheScreen(adjustedBounds);
@@ -878,6 +893,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void show(@Nonnull Component owner) {
         show(owner, -1, -1, true);
     }
@@ -885,13 +901,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Override
     @RequiredUIAccess
     public void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails) {
-        if (inputDetails != null) {
-            Point2D positionOnScreen = inputDetails.getPositionOnScreen();
-            show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
-        }
-        else {
-            show(TargetAWT.to(component), -1, -1, true);
-        }
+        Point2D positionOnScreen = inputDetails.getPositionOnScreen();
+        show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
     }
 
     @RequiredUIAccess
@@ -1242,10 +1253,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     private static boolean isIdeFrame(Component component) {
-        if (!(component instanceof Window)) {
+        if (!(component instanceof Window window)) {
             return false;
         }
-        consulo.ui.Window uiWindow = TargetAWT.from((Window) component);
+        consulo.ui.Window uiWindow = TargetAWT.from(window);
         return uiWindow.getUserData(IdeFrame.KEY) != null;
     }
 
@@ -1309,7 +1320,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myCancelOnMouseOutCallback != null || myCancelOnWindow) {
             myMouseOutCanceller = new Canceller();
             Toolkit.getDefaultToolkit()
-                .addAWTEventListener(myMouseOutCanceller, MOUSE_EVENT_MASK | WINDOW_ACTIVATED | WINDOW_GAINED_FOCUS | MOUSE_MOTION_EVENT_MASK);
+                .addAWTEventListener(
+                    myMouseOutCanceller,
+                    MOUSE_EVENT_MASK | WINDOW_ACTIVATED | WINDOW_GAINED_FOCUS | MOUSE_MOTION_EVENT_MASK
+                );
         }
 
 
@@ -1406,7 +1420,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             return false;
         }
 
-        getFocusManager().doWhenFocusSettlesDown(() -> _requestFocus());
+        getFocusManager().doWhenFocusSettlesDown(this::_requestFocus);
 
         return true;
     }
@@ -1416,7 +1430,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             return;
         }
 
-        JComponent toFocus = ObjectUtil.chooseNotNull(myPreferredFocusedComponent, mySpeedSearchAlwaysShown ? mySpeedSearchPatternField : null);
+        JComponent toFocus =
+            ObjectUtil.chooseNotNull(myPreferredFocusedComponent, mySpeedSearchAlwaysShown ? mySpeedSearchPatternField : null);
         if (toFocus != null) {
             IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
                 if (!myDisposed) {
@@ -1491,7 +1506,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Override
     public void pack(boolean width, boolean height) {
         Dimension size = calculateSizeForPack(width, height);
-        if (size == null) return;
+        if (size == null) {
+            return;
+        }
 
         Window window = getContentWindow(myContent);
         if (window != null) {
@@ -2033,8 +2050,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    public void setWarning(@Nonnull String text) {
-        JBLabel label = new JBLabel(text, AllIcons.General.BalloonWarning, SwingConstants.CENTER);
+    public void setWarning(@Nonnull LocalizeValue text) {
+        JBLabel label = new JBLabel(text.get(), PlatformIconGroup.generalBalloonwarning(), SwingConstants.CENTER);
         label.setOpaque(true);
         Color color = TargetAWT.to(HintUtil.getInformationColor());
         label.setBackground(color);

@@ -31,6 +31,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.internal.BranchListPopup;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
@@ -57,8 +58,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     protected final Repo myCurrentRepository;
     @Nonnull
     protected final BranchListPopup myPopup;
-    @Nonnull
-    protected final String myRepoTitleInfo;
+    protected final boolean myIsInSpecificRepository;
 
     protected DvcsBranchPopup(
         @Nonnull Repo currentRepository,
@@ -74,13 +74,21 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         myVcs = currentRepository.getVcs();
         myVcsSettings = vcsSettings;
         myMultiRootBranchConfig = multiRootBranchConfig;
-        String title = myVcs.getDisplayName() + " Branches";
-        myRepoTitleInfo = (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC)
-            ? " in " + DvcsUtil.getShortRepositoryName(currentRepository)
-            : "";
+
+        myIsInSpecificRepository =
+            myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC;
+        LocalizeValue title = myIsInSpecificRepository
+            ? DistributedVcsLocalize.branchPopupVcsNameBranchesInRepo(myVcs.getDisplayName(), DvcsUtil.getShortRepositoryName(currentRepository))
+            : DistributedVcsLocalize.branchPopupVcsNameBranches(myVcs.getDisplayName());
 
         FlatSpeedSearchPopupFactory popupFactory = FlatSpeedSearchPopupFactory.getInstance();
-        myPopup = (BranchListPopup) popupFactory.createBranchPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions(), dimensionKey);
+        myPopup = (BranchListPopup) popupFactory.createBranchPopup(
+            title.get(),
+            myProject,
+            preselectActionCondition,
+            createActions(),
+            dimensionKey
+        );
 
         initBranchSyncPolicyIfNotInitialized();
         warnThatBranchesDivergedIfNeeded();
@@ -106,15 +114,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     private void notifyAboutSyncedBranches() {
         NotificationService.getInstance()
             .newInfo(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
-            .title(LocalizeValue.localizeTODO("Synchronous branch control enabled"))
-            .content(LocalizeValue.localizeTODO(
-                "You have several " +
-                    myVcs.getDisplayName() +
-                    " roots in the project and they all are checked out at the same branch. " +
-                    "We've enabled synchronous branch control for the project. <br/>" +
-                    "If you wish to control branches in different roots separately, " +
-                    "you may <a href='settings'>disable</a> the setting."
-            ))
+            .title(DistributedVcsLocalize.notificationSynchedBranchesTitle())
+            .content(DistributedVcsLocalize.notificationSynchedBranchesContent(myVcs.getDisplayName()))
             .hyperlinkListener(new NotificationListener() {
                 @Override
                 @RequiredUIAccess
@@ -166,7 +167,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
     private void warnThatBranchesDivergedIfNeeded() {
         if (myRepositoryManager.moreThanOneRoot() && myMultiRootBranchConfig.diverged() && userWantsSyncControl()) {
-            myPopup.setWarning("Branches have diverged");
+            myPopup.setWarning(DistributedVcsLocalize.branchPopupWarningBranchesHaveDiverged());
         }
     }
 
@@ -177,8 +178,10 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
     }
 
-    protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull ActionGroup.Builder popupGroup,
-                                                                  @Nullable ActionGroup actions);
+    protected abstract void fillPopupWithCurrentRepositoryActions(
+        @Nonnull ActionGroup.Builder popupGroup,
+        @Nullable ActionGroup actions
+    );
 
     public static class MyMoreIndex {
         public static final int MAX_REPO_NUM = 8;
