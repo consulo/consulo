@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.extractInclude;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.language.Language;
@@ -84,19 +81,13 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         }
     }
 
-
     protected abstract void doReplaceRange(String includePath, T first, T last);
 
     @Nonnull
     @RequiredReadAction
-    protected String doExtract(
-        PsiDirectory targetDirectory,
-        String targetfileName,
-        T first,
-        T last,
-        Language includingLanguage
-    ) throws IncorrectOperationException {
-        PsiFile file = targetDirectory.createFile(targetfileName);
+    protected String doExtract(PsiDirectory targetDirectory, String targetFileName, T first, T last, Language includingLanguage)
+        throws IncorrectOperationException {
+        PsiFile file = targetDirectory.createFile(targetFileName);
         Project project = targetDirectory.getProject();
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
         Document document = documentManager.getDocument(file);
@@ -118,51 +109,52 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         String includePath,
         List<IncludeDuplicate<T>> duplicates,
         Editor editor,
-        Project project
+        @Nonnull Project project
     ) {
-        if (duplicates.size() > 0) {
-            LocalizeValue message =
-                RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(Application.get().getName());
-            int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName(), UIUtil.getInformationIcon());
-            if (exitCode == Messages.YES) {
-                CommandProcessor.getInstance().newCommand()
-                    .project(project)
-                    .name(RefactoringLocalize.removeDuplicatesCommand())
-                    .run(() -> {
-                        boolean replaceAll = false;
-                        for (IncludeDuplicate<T> pair : duplicates) {
-                            if (!replaceAll) {
-                                highlightInEditor(project, pair, editor);
-
-                                ReplacePromptDialog promptDialog =
-                                    new ReplacePromptDialog(false, RefactoringLocalize.replaceFragment(), project);
-                                promptDialog.show();
-                                ReplacePromptDialog.PromptResult promptResult = promptDialog.getPromptResult();
-                                if (promptResult == ReplacePromptDialog.PromptResult.SKIP) {
-                                    continue;
-                                }
-                                if (promptResult == ReplacePromptDialog.PromptResult.CANCEL) {
-                                    break;
-                                }
-
-                                if (promptResult == ReplacePromptDialog.PromptResult.OK) {
-                                    doReplaceRange(includePath, pair.getStart(), pair.getEnd());
-                                }
-                                else if (promptResult == ReplacePromptDialog.PromptResult.ALL) {
-                                    doReplaceRange(includePath, pair.getStart(), pair.getEnd());
-                                    replaceAll = true;
-                                }
-                                else {
-                                    LOG.error("Unknown return status");
-                                }
-                            }
-                            else {
-                                doReplaceRange(includePath, pair.getStart(), pair.getEnd());
-                            }
-                        }
-                    });
-            }
+        if (duplicates.isEmpty()) {
+            return;
         }
+        LocalizeValue message =
+            RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(project.getApplication().getName());
+        int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName().get(), UIUtil.getInformationIcon());
+        if (exitCode != Messages.YES) {
+            return;
+        }
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(RefactoringLocalize.removeDuplicatesCommand())
+            .run(() -> {
+                boolean replaceAll = false;
+                for (IncludeDuplicate<T> pair : duplicates) {
+                    if (!replaceAll) {
+                        highlightInEditor(project, pair, editor);
+
+                        ReplacePromptDialog promptDialog = new ReplacePromptDialog(false, RefactoringLocalize.replaceFragment(), project);
+                        promptDialog.show();
+                        ReplacePromptDialog.PromptResult promptResult = promptDialog.getPromptResult();
+                        if (promptResult == ReplacePromptDialog.PromptResult.SKIP) {
+                            continue;
+                        }
+                        if (promptResult == ReplacePromptDialog.PromptResult.CANCEL) {
+                            break;
+                        }
+
+                        if (promptResult == ReplacePromptDialog.PromptResult.OK) {
+                            doReplaceRange(includePath, pair.getStart(), pair.getEnd());
+                        }
+                        else if (promptResult == ReplacePromptDialog.PromptResult.ALL) {
+                            doReplaceRange(includePath, pair.getStart(), pair.getEnd());
+                            replaceAll = true;
+                        }
+                        else {
+                            LOG.error("Unknown return status");
+                        }
+                    }
+                    else {
+                        doReplaceRange(includePath, pair.getStart(), pair.getEnd());
+                    }
+                }
+            });
     }
 
     @RequiredReadAction
@@ -205,7 +197,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         myIncludingFile = file;
         if (!editor.getSelectionModel().hasSelection()) {
             LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.noSelection());
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
         int start = editor.getSelectionModel().getSelectionStart();
@@ -215,21 +207,21 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         if (children == null) {
             LocalizeValue message =
                 RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.selectionDoesNotFormAFragmentForExtraction());
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
 
         if (!verifyChildRange(children.getFirst(), children.getSecond())) {
             LocalizeValue message =
                 RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.cannotExtractSelectedElementsIntoIncludeFile());
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
 
         FileType fileType = getFileType(getLanguageForExtract(children.getFirst()));
         if (!(fileType instanceof LanguageFileType)) {
             LocalizeValue message = RefactoringLocalize.theLanguageForSelectedElementsHasNoAssociatedFileType();
-            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
 
@@ -242,10 +234,10 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
             PsiDirectory targetDirectory = dialog.getTargetDirectory();
             LOG.assertTrue(targetDirectory != null);
-            String targetfileName = dialog.getTargetFileName();
+            String targetFileName = dialog.getTargetFileName();
             CommandProcessor.getInstance().newCommand()
                 .project(project)
-                .name(LocalizeValue.ofNullable(getRefactoringName()))
+                .name(getRefactoringName())
                 .inWriteAction()
                 .run(() -> {
                     try {
@@ -256,15 +248,20 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                             first,
                             second,
                             file,
-                            (start1, end1) -> duplicates.add(new IncludeDuplicate<>((T)start1, (T)end1))
+                            (start1, end1) -> duplicates.add(new IncludeDuplicate<>((T) start1, (T) end1))
                         );
-                        String includePath = processPrimaryFragment(first, second, targetDirectory, targetfileName, file);
+                        String includePath = processPrimaryFragment(first, second, targetDirectory, targetFileName, file);
                         editor.getCaretModel().moveToOffset(first.getTextRange().getStartOffset());
 
                         project.getApplication().invokeLater(() -> replaceDuplicates(includePath, duplicates, editor, project));
                     }
                     catch (IncorrectOperationException e) {
-                        CommonRefactoringUtil.showErrorMessage(getRefactoringName(), e.getMessage(), null, project);
+                        CommonRefactoringUtil.showErrorMessage(
+                            getRefactoringName(),
+                            LocalizeValue.ofNullable(e.getMessage()),
+                            null,
+                            project
+                        );
                     }
 
                     editor.getSelectionModel().removeSelection();
@@ -287,14 +284,15 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         return verifyChildRange(firstToExtract, lastToExtract);
     }
 
+    @RequiredReadAction
     public String processPrimaryFragment(
         T firstToExtract,
         T lastToExtract,
         PsiDirectory targetDirectory,
-        String targetfileName,
+        String targetFileName,
         PsiFile srcFile
     ) throws IncorrectOperationException {
-        String includePath = doExtract(targetDirectory, targetfileName, firstToExtract, lastToExtract, srcFile.getLanguage());
+        String includePath = doExtract(targetDirectory, targetFileName, firstToExtract, lastToExtract, srcFile.getLanguage());
 
         doReplaceRange(includePath, firstToExtract, lastToExtract);
         return includePath;
@@ -303,10 +301,11 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     @Nonnull
     @Override
     public LocalizeValue getActionTitleValue() {
-        return LocalizeValue.localizeTODO("Extract Include File...");
+        return RefactoringLocalize.extractIncludeFileActionTitle();
     }
 
-    protected String getRefactoringName() {
-        return REFACTORING_NAME.get();
+    @Nonnull
+    protected LocalizeValue getRefactoringName() {
+        return REFACTORING_NAME;
     }
 }

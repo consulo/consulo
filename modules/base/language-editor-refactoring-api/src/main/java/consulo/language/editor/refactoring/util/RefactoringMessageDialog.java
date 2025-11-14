@@ -15,13 +15,16 @@
  */
 package consulo.language.editor.refactoring.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.HelpManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,58 +32,98 @@ import java.util.List;
 
 @Deprecated
 public class RefactoringMessageDialog extends DialogWrapper {
-  private final String myMessage;
-  private final String myHelpTopic;
-  private final Icon myIcon;
-  private final boolean myIsCancelButtonVisible;
+    @Nonnull
+    private final LocalizeValue myMessage;
+    private final String myHelpTopic;
+    private final Icon myIcon;
+    private final boolean myIsCancelButtonVisible;
 
-  public RefactoringMessageDialog(String title, String message, String helpTopic, @NonNls String iconId, boolean showCancelButton, Project project) {
-    super(project, false);
-    setTitle(title);
-    myMessage = message;
-    myHelpTopic = helpTopic;
-    myIsCancelButtonVisible = showCancelButton;
-    myIcon = UIManager.getIcon(iconId);
-    init();
-  }
-
-  @Nonnull
-  @Override
-  protected Action[] createActions() {
-    List<Action> actions = new ArrayList<>();
-    actions.add(getOKAction());
-    if (myIsCancelButtonVisible) {
-      actions.add(getCancelAction());
+    public RefactoringMessageDialog(
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message,
+        String helpTopic,
+        Image icon,
+        boolean showCancelButton,
+        Project project
+    ) {
+        this(title, message, helpTopic, (Icon) icon, showCancelButton, project);
     }
-    if (myHelpTopic != null) {
-      actions.add(getHelpAction());
+
+    public RefactoringMessageDialog(
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message,
+        String helpTopic,
+        Icon icon,
+        boolean showCancelButton,
+        Project project
+    ) {
+        super(project, false);
+        setTitle(title);
+        myMessage = message;
+        myHelpTopic = helpTopic;
+        myIsCancelButtonVisible = showCancelButton;
+        myIcon = icon;
+        init();
     }
-    return actions.toArray(new Action[actions.size()]);
-  }
 
-  @Override
-  protected JComponent createNorthPanel() {
-    JLabel label = new JLabel(myMessage);
-    label.setUI(new MultiLineLabelUI());
-
-    JPanel panel = new JPanel(new BorderLayout(10, 0));
-    if (myIcon != null) {
-      panel.add(new JLabel(myIcon), BorderLayout.WEST);
-      panel.add(label, BorderLayout.CENTER);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public RefactoringMessageDialog(
+        String title,
+        String message,
+        String helpTopic,
+        String iconId,
+        boolean showCancelButton,
+        Project project
+    ) {
+        this(
+            LocalizeValue.ofNullable(title),
+            LocalizeValue.ofNullable(message),
+            helpTopic,
+            UIManager.getIcon(iconId),
+            showCancelButton,
+            project
+        );
     }
-    else {
-      panel.add(label, BorderLayout.WEST);
+
+    @Nonnull
+    @Override
+    protected Action[] createActions() {
+        List<Action> actions = new ArrayList<>();
+        actions.add(getOKAction());
+        if (myIsCancelButtonVisible) {
+            actions.add(getCancelAction());
+        }
+        if (myHelpTopic != null) {
+            actions.add(getHelpAction());
+        }
+        return actions.toArray(new Action[actions.size()]);
     }
-    return panel;
-  }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return null;
-  }
+    @Override
+    protected JComponent createNorthPanel() {
+        JLabel label = new JLabel(myMessage.get());
+        label.setUI(new MultiLineLabelUI());
 
-  @Override
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(myHelpTopic);
-  }
+        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        if (myIcon != null) {
+            panel.add(new JLabel(myIcon), BorderLayout.WEST);
+            panel.add(label, BorderLayout.CENTER);
+        }
+        else {
+            panel.add(label, BorderLayout.WEST);
+        }
+        return panel;
+    }
+
+    @Override
+    protected JComponent createCenterPanel() {
+        return null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp(myHelpTopic);
+    }
 }

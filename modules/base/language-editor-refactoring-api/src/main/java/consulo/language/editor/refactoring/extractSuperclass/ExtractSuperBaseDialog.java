@@ -262,7 +262,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
         }
         if (errorString[0] != null) {
             if (errorString[0].length() > 0) {
-                CommonRefactoringUtil.showErrorMessage(myRefactoringName.get(), errorString[0], getHelpId(), myProject);
+                CommonRefactoringUtil.showErrorMessage(myRefactoringName, LocalizeValue.ofNullable(errorString[0]), getHelpId(), myProject);
             }
             return;
         }

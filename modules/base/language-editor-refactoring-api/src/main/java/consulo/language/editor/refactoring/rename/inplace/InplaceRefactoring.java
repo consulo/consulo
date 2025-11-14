@@ -16,6 +16,7 @@
 package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
@@ -153,8 +154,7 @@ public abstract class InplaceRefactoring {
         if (myElementToRename != null) {
             myInitialName = initialName;
             PsiFile containingFile = myElementToRename.getContainingFile();
-            if (!notSameFile(getTopLevelVirtualFile(containingFile.getViewProvider()), containingFile)
-                && myElementToRename != null && myElementToRename.getTextRange() != null) {
+            if (!notSameFile(getTopLevelVirtualFile(containingFile.getViewProvider()), containingFile) && myElementToRename != null) {
                 myRenameOffset = myEditor.getDocument().createRangeMarker(myElementToRename.getTextRange());
                 myRenameOffset.setGreedyToRight(true);
                 myRenameOffset.setGreedyToLeft(true); // todo not sure if we need this
@@ -165,21 +165,21 @@ public abstract class InplaceRefactoring {
     @RequiredUIAccess
     public static void unableToStartWarning(Project project, Editor editor) {
         StartMarkAction startMarkAction = StartMarkAction.canStart(project);
-        String message = startMarkAction.getCommandName() + " is not finished yet.";
+        LocalizeValue message = ApplicationLocalize.dialogMessageCommandNotFinishedYet(startMarkAction.getCommandName());
         Document oldDocument = startMarkAction.getDocument();
         if (editor == null || oldDocument != editor.getDocument()) {
             int exitCode = Messages.showYesNoDialog(
                 project,
-                message,
+                message.get(),
                 RefactoringLocalize.cannotPerformRefactoring().get(),
-                "Continue Started",
-                "Cancel Started",
+                RefactoringLocalize.inplaceRefactoringContinueStarted().get(),
+                RefactoringLocalize.inplaceRefactoringAbandonStarted().get(),
                 UIUtil.getErrorIcon()
             );
             navigateToStarted(oldDocument, project, exitCode);
         }
         else {
-            CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.cannotPerformRefactoring().get(), null);
+            CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.cannotPerformRefactoring(), null);
         }
     }
 
@@ -321,7 +321,8 @@ public abstract class InplaceRefactoring {
             if (isReferenceAtCaret(selectedElement, ref)) {
                 Expression expression = createTemplateExpression(selectedElement);
                 builder.replaceElement(ref.getElement(), getRangeToRename(ref), PRIMARY_VARIABLE_NAME, expression,
-                    shouldStopAtLookupExpression(expression));
+                    shouldStopAtLookupExpression(expression)
+                );
                 subrefOnPrimaryElement = true;
                 continue;
             }
@@ -348,9 +349,9 @@ public abstract class InplaceRefactoring {
                     myProject,
                     e.getMessage(),
                     getCommandName(),
-                    "Navigate to Started",
-                    "Cancel Started",
-                    "Cancel",
+                    RefactoringLocalize.inplaceRefactoringNavigateToStarted().get(),
+                    RefactoringLocalize.inplaceRefactoringAbandonStarted().get(),
+                    RefactoringLocalize.inplaceRefactoringCancelCurrent().get(),
                     UIUtil.getErrorIcon()
                 );
                 if (exitCode == Messages.CANCEL) {
@@ -395,14 +396,7 @@ public abstract class InplaceRefactoring {
     @RequiredReadAction
     protected boolean isReferenceAtCaret(PsiElement selectedElement, PsiReference ref) {
         TextRange textRange = ref.getRangeInElement().shiftRight(ref.getElement().getTextRange().getStartOffset());
-        if (selectedElement != null) {
-            TextRange selectedElementRange = selectedElement.getTextRange();
-            LOG.assertTrue(selectedElementRange != null, selectedElement);
-            if (selectedElementRange != null && selectedElementRange.contains(textRange)) {
-                return true;
-            }
-        }
-        return false;
+        return selectedElement != null && selectedElement.getTextRange().contains(textRange);
     }
 
     protected void beforeTemplateStart() {
@@ -429,7 +423,6 @@ public abstract class InplaceRefactoring {
         Template template = builder.buildInlineTemplate();
         template.setToReformat(false);
         TextRange range = myScope.getTextRange();
-        assert range != null;
         myHighlighters = new ArrayList<>();
         Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);
         topLevelEditor.getCaretModel().moveToOffset(range.getStartOffset());
@@ -537,7 +530,7 @@ public abstract class InplaceRefactoring {
     public static EditorEx createPreviewComponent(Project project, FileType languageFileType) {
         Document document = EditorFactory.getInstance().createDocument("");
         UndoUtil.disableUndoFor(document);
-        EditorEx previewEditor = (EditorEx)EditorFactory.getInstance().createEditor(document, project, languageFileType, true);
+        EditorEx previewEditor = (EditorEx) EditorFactory.getInstance().createEditor(document, project, languageFileType, true);
         previewEditor.setOneLineMode(true);
         EditorSettings settings = previewEditor.getSettings();
         settings.setAdditionalLinesCount(0);
@@ -747,7 +740,8 @@ public abstract class InplaceRefactoring {
         if (element == selectedElement && checkRangeContainsOffset(offset, reference.getRangeInElement(), element)) {
             Expression expression = createTemplateExpression(selectedElement);
             builder.replaceElement(reference.getElement(), getRangeToRename(reference), PRIMARY_VARIABLE_NAME, expression,
-                shouldStopAtLookupExpression(expression));
+                shouldStopAtLookupExpression(expression)
+            );
         }
         else {
             builder.replaceElement(reference.getElement(), getRangeToRename(reference), OTHER_VARIABLE_NAME, PRIMARY_VARIABLE_NAME, false);
@@ -768,11 +762,22 @@ public abstract class InplaceRefactoring {
     ) {
         if (element == selectedElement) {
             Expression expression = createTemplateExpression(myElementToRename);
-            builder.replaceElement(element, getRangeToRename(element), PRIMARY_VARIABLE_NAME, expression, shouldStopAtLookupExpression(expression));
+            builder.replaceElement(
+                element,
+                getRangeToRename(element),
+                PRIMARY_VARIABLE_NAME,
+                expression,
+                shouldStopAtLookupExpression(expression)
+            );
         }
         else {
-            builder.replaceElement(element, Objects.requireNonNullElseGet(textRange, () -> getRangeToRename(element)), OTHER_VARIABLE_NAME,
-                PRIMARY_VARIABLE_NAME, false);
+            builder.replaceElement(
+                element,
+                Objects.requireNonNullElseGet(textRange, () -> getRangeToRename(element)),
+                OTHER_VARIABLE_NAME,
+                PRIMARY_VARIABLE_NAME,
+                false
+            );
         }
     }
 
@@ -827,11 +832,8 @@ public abstract class InplaceRefactoring {
             }
         }
 
-        if (nameIdentifier != null) {
-            TextRange range = nameIdentifier.getTextRange();
-            if (range != null && range.containsOffset(offset)) {
-                return nameIdentifier;
-            }
+        if (nameIdentifier != null && nameIdentifier.getTextRange().containsOffset(offset)) {
+            return nameIdentifier;
         }
 
         for (Pair<PsiElement, TextRange> stringUsage : stringUsages) {
@@ -979,6 +981,7 @@ public abstract class InplaceRefactoring {
         }
 
         @Override
+        @RequiredUIAccess
         public void templateFinished(Template template, boolean brokenOff) {
             boolean bind = false;
             try {
@@ -991,7 +994,7 @@ public abstract class InplaceRefactoring {
             finally {
                 if (!bind) {
                     try {
-                        ((RealEditor)EditorWindow.getTopLevelEditor(myEditor)).stopDumbLater();
+                        ((RealEditor) EditorWindow.getTopLevelEditor(myEditor)).stopDumbLater();
                     }
                     finally {
                         FinishMarkAction.finish(myProject, myEditor.getDocument(), myMarkAction);
@@ -1004,6 +1007,7 @@ public abstract class InplaceRefactoring {
         }
 
         @Override
+        @RequiredUIAccess
         public void templateCancelled(Template template) {
             try {
                 PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);

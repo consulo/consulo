@@ -30,6 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiReference;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -117,8 +118,8 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
                             CommonRefactoringUtil.showErrorHint(
                                 project,
                                 editor,
-                                notFoundMessage,
-                                ChangeSignatureHandler.REFACTORING_NAME.get(),
+                                LocalizeValue.localizeTODO(notFoundMessage),
+                                ChangeSignatureHandler.REFACTORING_NAME,
                                 null
                             );
                         }

@@ -314,6 +314,12 @@ column.name.name:
     text: 'Name:'
 column.name.type:
     text: 'Type:'
+command.name.copy:
+    text: Copy
+command.name.move:
+    text: Move
+command.name.rename:
+    text: Rename
 comments.elements.header:
     text: Occurrences found in comments, strings and non-code files {0}
 constructor.being.refactored.is.used.in.initializer.of.0:
@@ -372,6 +378,14 @@ copy.handler.copy.class:
     text: Copy Class
 copy.handler.copy.files.directories:
     text: Copy files/directories
+copy.overwrite.button:
+    text: Overwrite
+copy.overwrite.for.all.button:
+    text: Overwrite for all
+copy.skip.button:
+    text: Skip
+copy.skip.for.all.button:
+    text: Skip for all
 create.class.command:
     text: Create class {0}
 create.directory:
@@ -412,6 +426,12 @@ destination.package:
     text: 'Destination &package:'
 detecting.possible.conflicts:
     text: Detecting possible conflicts...
+dialog.message.file.already.exists.in.directory:
+    text: File ''{0}'' already exists in directory ''{1}''
+dialog.message.refactoring.not.available.in.current.scope:
+    text: '{0} is not available in the current scope'
+dialog.message.selected.element.used.from.non.project.files:
+    text: Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?
 directories.and.all.references.to.package.will.be.renamed:
     text: "\n\nDo you want to rename the whole package or directory \n{0} only?"
 directory.0.already.contains.1.named.2:
@@ -538,6 +558,8 @@ expression.result:
     text: expression result
 extract.chained.constructor.checkbox:
     text: Extract &chained constructor
+extract.include.file.action.title:
+    text: Extract Include File…
 extract.include.file.title:
     text: Extract include file
 extract.interface.command.name:
@@ -723,6 +745,14 @@ inner.class.name:
     text: '&Inner class name:'
 inner.classes.cannot.have.static.members:
     text: Inner classes cannot have static members.
+inplace.refactoring.abandon.started:
+    text: Abandon Started
+inplace.refactoring.cancel.current:
+    text: Cancel Current
+inplace.refactoring.continue.started:
+    text: Continue Started
+inplace.refactoring.navigate.to.started:
+    text: Navigate to Started
 instance.initializer.description:
     text: instance initializer of class {0}
 instances.casted.to.java.lang.object:
@@ -767,6 +797,8 @@ introduce.parameter.to.method:
     text: 'Extract parameter to method:'
 introduce.selection.error:
     text: Cannot perform refactoring using selected element(s)
+introduce.target.chooser.expressions.title:
+    text: Expressions
 introduce.variable.title:
     text: Extract Variable
 introduced.variable.will.conflict.with.0:

@@ -150,8 +150,8 @@ public class EncodingUtil {
             CommonRefactoringUtil.showErrorHint(
                 project,
                 editor,
-                IdeLocalize.dialogMessageCannotSaveTheFile0(virtualFile.getPresentableUrl()).get(),
-                IdeLocalize.dialogTitleUnableToSave().get(),
+                IdeLocalize.dialogMessageCannotSaveTheFile0(virtualFile.getPresentableUrl()),
+                IdeLocalize.dialogTitleUnableToSave(),
                 null
             );
             return;
@@ -160,7 +160,7 @@ public class EncodingUtil {
         EncodingProjectManagerImpl.suppressReloadDuring(() -> {
             EncodingManager.getInstance().setEncoding(virtualFile, charset);
             try {
-                Application.get().runWriteAction((ThrowableComputable<Object, IOException>) () -> {
+                project.getApplication().runWriteAction((ThrowableComputable<Object, IOException>) () -> {
                     virtualFile.setCharset(charset);
                     LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
                     return null;
@@ -209,8 +209,8 @@ public class EncodingUtil {
         // if file was modified, the user will be asked here
         try {
             EncodingProjectManagerImpl.suppressReloadDuring(
-                () ->
-                    ((FileDocumentManagerImpl) documentManager).contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false))
+                () -> ((FileDocumentManagerImpl) documentManager)
+                    .contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false))
             );
         }
         finally {

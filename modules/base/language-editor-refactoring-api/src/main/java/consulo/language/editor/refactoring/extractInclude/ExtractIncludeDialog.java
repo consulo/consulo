@@ -176,7 +176,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
                     myTargetDirectory = webPath == null ? null : targetDirectory;
                 }
                 catch (IncorrectOperationException e) {
-                    CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME.get(), e.getMessage(), null, project);
+                    CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME, LocalizeValue.ofNullable(e.getMessage()), null, project);
                 }
             });
         if (myTargetDirectory == null) {

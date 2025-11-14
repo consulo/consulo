@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.copy;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.Application;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesUtil;
@@ -72,7 +71,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 return false;
             }
 
-            String name = ((PsiFileSystemItem)element).getName();
+            String name = ((PsiFileSystemItem) element).getName();
             if (names.contains(name)) {
                 return false;
             }
@@ -128,12 +127,13 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @RequiredUIAccess
-    private static void doCopyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, Project project) {
+    private static void doCopyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, @Nonnull Project project) {
         PsiDirectory targetDirectory;
         String newName;
         boolean openInEditor;
-        VirtualFile[] files = Arrays.stream(elements).map(el -> ((PsiFileSystemItem)el).getVirtualFile()).toArray(VirtualFile[]::new);
-        if (Application.get().isUnitTestMode()) {
+        VirtualFile[] files = Arrays.stream(elements)
+            .map(el -> ((PsiFileSystemItem) el).getVirtualFile()).toArray(VirtualFile[]::new);
+        if (project.getApplication().isUnitTestMode()) {
             targetDirectory = defaultTargetDirectory;
             newName = null;
             openInEditor = true;
@@ -162,7 +162,13 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 }
             }
             catch (IncorrectOperationException e) {
-                CommonRefactoringUtil.showErrorHint(project, null, e.getMessage(), CommonLocalize.titleError().get(), null);
+                CommonRefactoringUtil.showErrorHint(
+                    project,
+                    null,
+                    LocalizeValue.ofNullable(e.getMessage()),
+                    CommonLocalize.titleError(),
+                    null
+                );
                 return;
             }
 
@@ -174,7 +180,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void doClone(PsiElement element) {
         doCloneFile(element);
     }
@@ -194,7 +200,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         }
 
         PsiElement[] elements = {element};
-        VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
+        VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
         CopyFilesOrDirectoriesDialog dialog = new CopyFilesOrDirectoriesDialog(elements, null, element.getProject(), true);
         if (dialog.showAndGet()) {
             String newName = dialog.getNewName();
@@ -273,7 +279,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                     LOG.info("invalid file: " + file.getExtension());
                     continue;
                 }
-                PsiFile f = copyToDirectory((PsiFileSystemItem)psiElement, newName, targetDirectory, choice, title.get());
+                PsiFile f = copyToDirectory((PsiFileSystemItem) psiElement, newName, targetDirectory, choice, title.get());
                 if (firstFile == null) {
                     firstFile = f;
                 }
@@ -324,7 +330,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     ) throws IncorrectOperationException, IOException {
         if (elementToCopy instanceof PsiFile file) {
             String name = newName == null ? file.getName() : newName;
-            if (checkFileExist(targetDirectory, choice, file, name, "Copy")) {
+            if (CommonRefactoringUtil.checkFileExist(targetDirectory, choice, file, name, RefactoringLocalize.commandNameCopy())) {
                 return null;
             }
             return CommandProcessor.getInstance().<PsiFile>newCommand()
@@ -390,12 +396,6 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         else {
             throw new IllegalArgumentException("unexpected elementToCopy: " + elementToCopy);
         }
-    }
-
-    @Deprecated
-    @RequiredUIAccess
-    public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
-        return CommonRefactoringUtil.checkFileExist(targetDirectory, choice, file, name, title);
     }
 
     @Nullable

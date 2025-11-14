@@ -1472,3 +1472,5 @@ wrapping.wrap.on.typing.no.wrap:
     text: 'No'
 wrapping.wrap.on.typing.wrap:
     text: 'Yes'
+dialog.message.command.not.finished.yet:
+    text: "{0} is not finished yet."

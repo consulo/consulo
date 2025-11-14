@@ -49,6 +49,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -78,7 +79,7 @@ public abstract class ChangeSignatureDialogBase<
     Descriptor extends MethodDescriptor<ParamInfo, Visibility>,
     ParameterTableModelItem extends ParameterTableModelItemBase<ParamInfo>,
     ParameterTableModel extends ParameterTableModelBase<ParamInfo, ParameterTableModelItem>
-> extends RefactoringDialog {
+    > extends RefactoringDialog {
     private static final Logger LOG = Logger.getInstance(ChangeSignatureDialogBase.class);
 
     protected static final String EXIT_SILENTLY = "";
@@ -176,6 +177,7 @@ public abstract class ChangeSignatureDialogBase<
         return result;
     }
 
+    @RequiredUIAccess
     public boolean isGenerateDelegate() {
         return myAllowDelegation && myDelegationPanel.isGenerateDelegate();
     }
@@ -283,6 +285,7 @@ public abstract class ChangeSignatureDialogBase<
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -347,7 +350,7 @@ public abstract class ChangeSignatureDialogBase<
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                Ref<CallerChooserBase<Method>> chooser = new Ref<>();
+                SimpleReference<CallerChooserBase<Method>> chooser = new SimpleReference<>();
                 Consumer<Set<Method>> callback = callers -> {
                     myMethodsToPropagateParameters = callers;
                     myParameterPropagationTreeToReuse = chooser.get().getTree();
@@ -618,7 +621,12 @@ public abstract class ChangeSignatureDialogBase<
         String message = validateAndCommitData();
         if (message != null) {
             if (message != EXIT_SILENTLY) {
-                CommonRefactoringUtil.showErrorMessage(getTitle(), message, getHelpId(), myProject);
+                CommonRefactoringUtil.showErrorMessage(
+                    LocalizeValue.localizeTODO(getTitle()),
+                    LocalizeValue.localizeTODO(message),
+                    getHelpId(),
+                    myProject
+                );
             }
             return;
         }
