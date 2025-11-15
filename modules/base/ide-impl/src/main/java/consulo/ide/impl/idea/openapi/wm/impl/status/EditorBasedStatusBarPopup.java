@@ -390,8 +390,9 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             return text.get();
         }
 
-        public String getToolTip() {
-            return toolTip.get();
+        @Nonnull
+        public LocalizeValue getToolTip() {
+            return toolTip;
         }
 
         public Image getIcon() {

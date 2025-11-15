@@ -7,14 +7,13 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.localize.UILocalize;
@@ -85,12 +84,13 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         });
     }
 
+    @Nonnull
     @Override
-    public String getTooltipText() {
+    public LocalizeValue getTooltipText() {
         VirtualFile virtualFile = getCurrentFile();
         int writable = virtualFile == null || virtualFile.isWritable() ? 1 : 0;
         int readonly = writable == 1 ? 0 : 1;
-        return ActionLocalize.actionTogglereadonlyattributeFiles(readonly, 1).get();
+        return ActionLocalize.actionTogglereadonlyattributeFiles(readonly, 1);
     }
 
     @Override

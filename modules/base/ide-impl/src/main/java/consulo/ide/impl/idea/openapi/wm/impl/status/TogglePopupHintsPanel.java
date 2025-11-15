@@ -18,6 +18,7 @@ import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
@@ -37,7 +38,8 @@ import java.util.function.Consumer;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
     private Image myCurrentIcon;
-    private String myToolTipText;
+    @Nonnull
+    private LocalizeValue myToolTipText = LocalizeValue.empty();
 
     public TogglePopupHintsPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
         super(project, factory);
@@ -66,8 +68,9 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         return myCurrentIcon;
     }
 
+    @Nonnull
     @Override
-    public String getTooltipText() {
+    public LocalizeValue getTooltipText() {
         return myToolTipText;
     }
 
@@ -112,14 +115,13 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
     public void clear() {
         myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
-        myToolTipText = null;
+        myToolTipText = LocalizeValue.empty();
         myStatusBar.updateWidget(getId());
     }
 
     public void updateStatus() {
         UIUtil.invokeLaterIfNeeded(() -> updateStatus(getCurrentFile()));
     }
-
 
     private void updateStatus(PsiFile file) {
         if (isDisposed()) {
@@ -128,28 +130,28 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         if (isStateChangeable(file)) {
             if (PowerSaveMode.isEnabled()) {
                 myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
-                myToolTipText = "Code analysis is disabled in power save mode.\n";
+                myToolTipText = LocalizeValue.localizeTODO("Code analysis is disabled in power save mode.\n");
             }
             else if (HighlightingLevelManager.getInstance(getProject()).shouldInspect(file)) {
                 myCurrentIcon = PlatformIconGroup.ideHectoron();
                 InspectionProfileImpl profile = InspectionProjectProfileManager.getInstance(file.getProject()).getCurrentProfile();
                 if (profile.wasInitialized()) {
-                    myToolTipText = "Current inspection profile: " + profile.getName() + ".\n";
+                    myToolTipText = LocalizeValue.localizeTODO("Current inspection profile: " + profile.getName() + ".\n");
                 }
             }
             else if (HighlightingLevelManager.getInstance(getProject()).shouldHighlight(file)) {
                 myCurrentIcon = PlatformIconGroup.ideHectorsyntax();
-                myToolTipText = "Highlighting level is: Syntax.\n";
+                myToolTipText = LocalizeValue.localizeTODO("Highlighting level is: Syntax.\n");
             }
             else {
                 myCurrentIcon = PlatformIconGroup.ideHectoroff();
-                myToolTipText = "Inspections are off.\n";
+                myToolTipText = LocalizeValue.localizeTODO("Inspections are off.\n");
             }
-            myToolTipText += UILocalize.popupHintsPanelClickToConfigureHighlightingTooltipText();
+            myToolTipText = LocalizeValue.join(myToolTipText, UILocalize.popupHintsPanelClickToConfigureHighlightingTooltipText());
         }
         else {
             myCurrentIcon = file != null ? ImageEffects.grayed(PlatformIconGroup.ideHectoroff()) : null;
-            myToolTipText = null;
+            myToolTipText = LocalizeValue.empty();
         }
 
         if (!myProject.getApplication().isUnitTestMode() && myStatusBar != null) {

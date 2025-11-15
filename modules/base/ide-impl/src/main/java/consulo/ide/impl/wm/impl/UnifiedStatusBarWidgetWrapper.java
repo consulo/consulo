@@ -92,7 +92,7 @@ public class UnifiedStatusBarWidgetWrapper {
     public void beforeUpdate() {
       String text = myWidgetPresentation.getText();
       myLabel.setText(text);
-      myLabel.setToolTipText(LocalizeValue.ofNullable(myWidgetPresentation.getTooltipText()));
+      myLabel.setToolTipText(myWidgetPresentation.getTooltipText());
       myLabel.setVisible(!text.isEmpty());
     }
 

@@ -37,7 +37,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Nullable
     private String myText;
     @Nonnull
-    private LocalizeValue myTooltip;
+    private LocalizeValue myTooltip = LocalizeValue.empty();
     @Nullable
     private Image myIcon;
 
@@ -116,10 +116,10 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return StringUtil.defaultIfEmpty(myText, "");
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getTooltipText() {
-        return myTooltip == LocalizeValue.empty() ? null : myTooltip.get();
+    public LocalizeValue getTooltipText() {
+        return myTooltip;
     }
 
     @Nullable
