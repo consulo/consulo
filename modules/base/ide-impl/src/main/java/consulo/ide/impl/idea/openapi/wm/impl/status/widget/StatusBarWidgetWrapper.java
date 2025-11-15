@@ -5,6 +5,7 @@ import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -23,18 +24,14 @@ import java.util.function.Consumer;
 public interface StatusBarWidgetWrapper {
     @Nonnull
     static JComponent wrap(@Nonnull StatusBarWidget widget, @Nonnull StatusBarWidget.WidgetPresentation presentation) {
-        if (presentation instanceof StatusBarWidget.IconPresentation) {
-            return new StatusBarWidgetWrapper.Icon(widget, (StatusBarWidget.IconPresentation) presentation);
-        }
-        else if (presentation instanceof StatusBarWidget.TextPresentation) {
-            return new StatusBarWidgetWrapper.Text(widget, (StatusBarWidget.TextPresentation) presentation);
-        }
-        else if (presentation instanceof StatusBarWidget.MultipleTextValuesPresentation) {
-            return new StatusBarWidgetWrapper.MultipleTextValues(widget, (StatusBarWidget.MultipleTextValuesPresentation) presentation);
-        }
-        else {
-            throw new IllegalArgumentException("Unable to find a wrapper for presentation: " + presentation.getClass().getSimpleName());
-        }
+        return switch (presentation) {
+            case StatusBarWidget.IconPresentation iconPresentation -> new StatusBarWidgetWrapper.Icon(widget, iconPresentation);
+            case StatusBarWidget.TextPresentation textPresentation -> new StatusBarWidgetWrapper.Text(widget, textPresentation);
+            case StatusBarWidget.MultipleTextValuesPresentation multiTextPresentation ->
+                new StatusBarWidgetWrapper.MultipleTextValues(widget, multiTextPresentation);
+            default ->
+                throw new IllegalArgumentException("Unable to find a wrapper for presentation: " + presentation.getClass().getSimpleName());
+        };
     }
 
     @Nonnull
@@ -43,12 +40,12 @@ public interface StatusBarWidgetWrapper {
     @RequiredUIAccess
     void beforeUpdate();
 
-    static void setWidgetTooltip(JComponent widgetComponent, @Nullable String toolTipText, @Nullable String shortcutText) {
+    static void setWidgetTooltip(JComponent widgetComponent, @Nonnull LocalizeValue toolTipText, @Nullable String shortcutText) {
         HelpTooltipImpl.dispose(widgetComponent);
 
-        if (!StringUtil.isEmptyOrSpaces(toolTipText)) {
+        if (toolTipText != LocalizeValue.empty()) {
             HelpTooltipImpl helpTooltip = new HelpTooltipImpl();
-            helpTooltip.setTitle(toolTipText);
+            helpTooltip.setTitle(toolTipText.get());
 
             if (shortcutText != null) {
                 helpTooltip.setShortcut(shortcutText);
@@ -165,8 +162,8 @@ public interface StatusBarWidgetWrapper {
             return myPresentation;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void beforeUpdate() {
             myWidget.beforeUpdate();
 

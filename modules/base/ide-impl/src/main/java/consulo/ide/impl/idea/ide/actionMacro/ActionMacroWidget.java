@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro;
 
-import consulo.application.AllIcons;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.PositionTracker;
@@ -38,156 +39,159 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
-  private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
-  private static final String RECORDED = "Recorded: ";
+    private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
+    private static final String RECORDED = "Recorded: ";
 
-  private AnimatedIconComponent myIcon = new AnimatedIconComponent("Macro recording",
-                                                                   new Image[]{
-                                                                     AllIcons.Ide.Macro.Recording_1,
-                                                                     AllIcons.Ide.Macro.Recording_2,
-                                                                     AllIcons.Ide.Macro.Recording_3,
-                                                                     AllIcons.Ide.Macro.Recording_4
-                                                                   },
-                                                                   AllIcons.Ide.Macro.Recording_1,
-                                                                   1000);
-  private final WidgetPresentation myPresentation;
+    private AnimatedIconComponent myIcon = new AnimatedIconComponent(
+        "Macro recording",
+        new Image[]{
+            PlatformIconGroup.ideMacroRecording_1(),
+            PlatformIconGroup.ideMacroRecording_2(),
+            PlatformIconGroup.ideMacroRecording_3(),
+            PlatformIconGroup.ideMacroRecording_4()
+        },
+        PlatformIconGroup.ideMacroRecording_1(),
+        1000
+    );
+    private final WidgetPresentation myPresentation;
 
-  private JPanel myBalloonComponent;
-  private Balloon myBalloon;
-  private final JLabel myText;
-  private String myLastTyping = "";
+    private JPanel myBalloonComponent;
+    private Balloon myBalloon;
+    private final JLabel myText;
+    private String myLastTyping = "";
 
-  ActionMacroWidget() {
-    myPresentation = new WidgetPresentation() {
-      @Override
-      public String getTooltipText() {
-        return "Macro is being recorded now";
-      }
+    ActionMacroWidget() {
+        myPresentation = new WidgetPresentation() {
+            @Nonnull
+            @Override
+            public LocalizeValue getTooltipText() {
+                return LocalizeValue.localizeTODO("Macro is being recorded now");
+            }
 
-      @Override
-      public Consumer<MouseEvent> getClickConsumer() {
-        return ActionMacroWidget.this;
-      }
-    };
+            @Override
+            public Consumer<MouseEvent> getClickConsumer() {
+                return ActionMacroWidget.this;
+            }
+        };
 
 
-    new BaseButtonBehavior(myIcon) {
-      @Override
-      protected void execute(MouseEvent e) {
-        showBalloon();
-      }
-    };
+        new BaseButtonBehavior(myIcon) {
+            @Override
+            protected void execute(MouseEvent e) {
+                showBalloon();
+            }
+        };
 
-    myBalloonComponent = new NonOpaquePanel(new BorderLayout());
+        myBalloonComponent = new NonOpaquePanel(new BorderLayout());
 
-    AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
-    DefaultActionGroup group = new DefaultActionGroup();
-    group.add(stopAction);
-    ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
-    tb.setMiniMode(true);
+        AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.add(stopAction);
+        ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
+        tb.setMiniMode(true);
 
-    NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
-    top.add(tb.getComponent(), BorderLayout.WEST);
-    myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
-    Dimension preferredSize = myText.getPreferredSize();
-    myText.setPreferredSize(preferredSize);
-    myText.setText("Macro recording started...");
-    myLastTyping = "";
-    top.add(myText, BorderLayout.CENTER);
-    myBalloonComponent.add(top, BorderLayout.CENTER);
-  }
-
-  private void showBalloon() {
-    if (myBalloon != null) {
-      Disposer.dispose(myBalloon);
-      return;
+        NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
+        top.add(tb.getComponent(), BorderLayout.WEST);
+        myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
+        Dimension preferredSize = myText.getPreferredSize();
+        myText.setPreferredSize(preferredSize);
+        myText.setText("Macro recording started...");
+        myLastTyping = "";
+        top.add(myText, BorderLayout.CENTER);
+        myBalloonComponent.add(top, BorderLayout.CENTER);
     }
 
-    myBalloon = JBPopupFactory.getInstance()
-                              .createBalloonBuilder(myBalloonComponent)
-                              .setAnimationCycle(200)
-                              .setCloseButtonEnabled(true)
-                              .setHideOnAction(false)
-                              .setHideOnClickOutside(false)
-                              .setHideOnFrameResize(false)
-                              .setHideOnKeyOutside(false)
-                              .setSmallVariant(true)
-                              .setShadow(true)
-                              .createBalloon();
-
-    Disposer.register(myBalloon, () -> myBalloon = null);
-
-    myBalloon.addListener(new JBPopupAdapter() {
-      @Override
-      public void onClosed(LightweightWindowEvent event) {
+    private void showBalloon() {
         if (myBalloon != null) {
-          Disposer.dispose(myBalloon);
+            Disposer.dispose(myBalloon);
+            return;
         }
-      }
-    });
 
-    myBalloon.show(new PositionTracker<>(myIcon) {
-      @Override
-      public RelativePoint recalculateLocation(Balloon object) {
-        return new RelativePoint(myIcon, new Point(myIcon.getSize().width / 2, 4));
-      }
-    }, Balloon.Position.above);
-  }
+        myBalloon = JBPopupFactory.getInstance()
+            .createBalloonBuilder(myBalloonComponent)
+            .setAnimationCycle(200)
+            .setCloseButtonEnabled(true)
+            .setHideOnAction(false)
+            .setHideOnClickOutside(false)
+            .setHideOnFrameResize(false)
+            .setHideOnKeyOutside(false)
+            .setSmallVariant(true)
+            .setShadow(true)
+            .createBalloon();
 
-  @Nonnull
-  @Override
-  public JComponent getComponent() {
-    return myIcon;
-  }
+        Disposer.register(myBalloon, () -> myBalloon = null);
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return "MacroRecording";
-  }
+        myBalloon.addListener(new JBPopupAdapter() {
+            @Override
+            public void onClosed(LightweightWindowEvent event) {
+                if (myBalloon != null) {
+                    Disposer.dispose(myBalloon);
+                }
+            }
+        });
 
-  @Override
-  public void accept(MouseEvent mouseEvent) {
-  }
-
-  @Override
-  public WidgetPresentation getPresentation() {
-    return myPresentation;
-  }
-
-  @Override
-  public void install(@Nonnull StatusBar statusBar) {
-    showBalloon();
-  }
-
-  @Override
-  public void dispose() {
-    myIcon.dispose();
-    if (myBalloon != null) {
-      Disposer.dispose(myBalloon);
-    }
-  }
-
-  public void notifyUser(String text, boolean typing) {
-    String actualText = text;
-    if (typing) {
-      int maxLength = TYPING_SAMPLE.length();
-      myLastTyping += text;
-      if (myLastTyping.length() > maxLength) {
-        myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - maxLength);
-      }
-      actualText = myLastTyping;
-    }
-    else {
-      myLastTyping = "";
+        myBalloon.show(new PositionTracker<>(myIcon) {
+            @Override
+            public RelativePoint recalculateLocation(Balloon object) {
+                return new RelativePoint(myIcon, new Point(myIcon.getSize().width / 2, 4));
+            }
+        }, Balloon.Position.above);
     }
 
-    notifyUser(RECORDED + actualText);
-  }
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        return myIcon;
+    }
 
-  private void notifyUser(String text) {
-    myText.setText(text);
-    myText.revalidate();
-    myText.repaint();
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return "MacroRecording";
+    }
+
+    @Override
+    public void accept(MouseEvent mouseEvent) {
+    }
+
+    @Override
+    public WidgetPresentation getPresentation() {
+        return myPresentation;
+    }
+
+    @Override
+    public void install(@Nonnull StatusBar statusBar) {
+        showBalloon();
+    }
+
+    @Override
+    public void dispose() {
+        myIcon.dispose();
+        if (myBalloon != null) {
+            Disposer.dispose(myBalloon);
+        }
+    }
+
+    public void notifyUser(String text, boolean typing) {
+        String actualText = text;
+        if (typing) {
+            int maxLength = TYPING_SAMPLE.length();
+            myLastTyping += text;
+            if (myLastTyping.length() > maxLength) {
+                myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - maxLength);
+            }
+            actualText = myLastTyping;
+        }
+        else {
+            myLastTyping = "";
+        }
+
+        notifyUser(RECORDED + actualText);
+    }
+
+    private void notifyUser(String text) {
+        myText.setText(text);
+        myText.revalidate();
+        myText.repaint();
+    }
 }

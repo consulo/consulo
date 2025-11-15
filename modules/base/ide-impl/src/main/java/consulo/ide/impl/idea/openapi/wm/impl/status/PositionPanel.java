@@ -15,6 +15,7 @@ import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -24,7 +25,6 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -73,12 +73,13 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
         return Component.CENTER_ALIGNMENT;
     }
 
+    @Nonnull
     @Override
-    public String getTooltipText() {
-        return UILocalize.goToLineCommandName().get();
+    public LocalizeValue getTooltipText() {
+        return UILocalize.goToLineCommandName();
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getShortcutText() {
         return KeymapUtil.getFirstKeyboardShortcutText("GotoLine");

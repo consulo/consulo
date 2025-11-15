@@ -16,6 +16,7 @@
 package consulo.project.ui.wm;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
@@ -52,8 +53,8 @@ public interface StatusBarWidget extends Disposable {
     }
 
     interface WidgetPresentation {
-        @Nullable
-        String getTooltipText();
+        @Nonnull
+        LocalizeValue getTooltipText();
 
         @Nullable
         default String getShortcutText() {
