@@ -314,7 +314,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     @Override
     @RequiredReadAction
     public String getName() {
-        throw null;
+        return null;
     }
 
     @Nonnull
