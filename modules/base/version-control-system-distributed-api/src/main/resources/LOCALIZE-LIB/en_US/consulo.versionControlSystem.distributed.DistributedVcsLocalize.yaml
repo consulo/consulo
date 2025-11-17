@@ -2,6 +2,12 @@ action.BranchActionGroupPopup.Anonymous.text.restore.size:
     text: Restore Size
 action.BranchActionGroupPopup.settings.text:
     text: Settings
+action.new.branch.description:
+    text: Create and checkout new branch
+action.new.branch.no.commits.description:
+    text: Checkout of a new branch is not possible before the first commit
+action.new.branch.text:
+    text: New Branch
 branch.popup.maximum.branch.length.sample:
     text: 'VCS: Rebasing feature-12345 in custom development branch'
 branch.popup.vcs.name.branches:
@@ -10,14 +16,12 @@ branch.popup.vcs.name.branches.in.repo:
     text: '{0} Branches in {1}'
 branch.popup.warning.branches.have.diverged:
     text: Branches have diverged
-clone.destination.directory.error.access:
-    text: "Could not create {0}<br/>Check your access rights"
-clone.repository.url.test.failed.message:
-    text: "Repository test failed<br/>{0}"
 clone.button:
     text: Clone
 clone.destination.directory.description:
     text: Select a parent directory destination directory for clone
+clone.destination.directory.error.access:
+    text: Could not create {0}<br/>Check your access rights
 clone.destination.directory.title:
     text: Parent Directory
 clone.destination.exists.error:
@@ -32,6 +36,8 @@ clone.parent.missing.error:
     text: The parent path {0} must exist.
 clone.repository.url:
     text: '{0} &Repository URL:'
+clone.repository.url.test.failed.message:
+    text: Repository test failed<br/>{0}
 clone.test:
     text: '&Test'
 clone.test.connection.title:

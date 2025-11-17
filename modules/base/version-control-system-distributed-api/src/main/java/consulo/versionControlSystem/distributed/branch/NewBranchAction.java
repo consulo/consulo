@@ -15,42 +15,41 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class NewBranchAction<T extends Repository> extends DumbAwareAction {
-  protected final List<T> myRepositories;
-  protected final Project myProject;
+    protected final List<T> myRepositories;
+    protected final Project myProject;
 
-  public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
-    super(
-      LocalizeValue.localizeTODO("New Branch"),
-      LocalizeValue.localizeTODO("Create and checkout new branch"),
-      PlatformIconGroup.generalAdd()
-    );
-    myRepositories = repositories;
-    myProject = project;
-  }
-
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
-      e.getPresentation().setEnabled(false);
-      e.getPresentation().setDescriptionValue(LocalizeValue.localizeTODO("Checkout of a new branch is not possible before the first commit"));
+    public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
+        super(
+            DistributedVcsLocalize.actionNewBranchText(),
+            DistributedVcsLocalize.actionNewBranchDescription(),
+            PlatformIconGroup.generalAdd()
+        );
+        myRepositories = repositories;
+        myProject = project;
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public abstract void actionPerformed(@Nonnull AnActionEvent e);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
+            e.getPresentation().setEnabled(false);
+            e.getPresentation().setDescriptionValue(DistributedVcsLocalize.actionNewBranchNoCommitsDescription());
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public abstract void actionPerformed(@Nonnull AnActionEvent e);
 }
