@@ -60,7 +60,7 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
 
     public static String createDimensionKey(@Nonnull Configurable configurable) {
         LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
-        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
+        return "#" + localizeKey.getLocalizationId() + "@" + localizeKey.getKey();
     }
 
     @Nonnull

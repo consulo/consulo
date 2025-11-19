@@ -28,16 +28,17 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEdi
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.setting.module.event.LibraryEditorListener;
+import consulo.localization.LocalizedValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
@@ -53,6 +54,9 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable {
+    private static final Comparator<Object> IGNORE_CASE_NODE_DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizedValue.CASE_INSENSITIVE_ORDER);
+
     @Nonnull
     protected final Project myProject;
     @Nonnull
@@ -155,11 +159,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         for (Library library : libraries) {
             myRoot.add(new MyNode(new LibraryConfigurable(myProject, modelProvider, library, getLibrariesConfigurator(), TREE_UPDATER)));
         }
-        TreeUtil.sort(myRoot, (o1, o2) -> {
-            MyNode node1 = (MyNode) o1;
-            MyNode node2 = (MyNode) o2;
-            return node1.getDisplayName().compareIgnoreCase(node2.getDisplayName());
-        });
+        TreeUtil.sort(myRoot, IGNORE_CASE_NODE_DISPLAY_NAME_COMPARATOR);
         ((DefaultTreeModel) myTree.getModel()).reload(myRoot);
     }
 
@@ -315,7 +315,8 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
                     return true;
                 }
             }
-            else */{
+            else */
+            {
                 getModelProvider().getModifiableModel().removeLibrary(library);
                 // todo myContext.getDaemonAnalyzer().removeElement(libraryElement);
                 return true;

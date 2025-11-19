@@ -19,12 +19,12 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.impl.internal.plugin.ConsuloSecurityManagerEnabler;
-import consulo.application.internal.StartupProgress;
-import consulo.application.internal.plugin.PluginsInitializeInfo;
-import consulo.application.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationStarterCore;
+import consulo.application.internal.StartupProgress;
+import consulo.application.internal.plugin.PluginsInitializeInfo;
+import consulo.application.internal.plugin.PluginsLoader;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
@@ -34,8 +34,8 @@ import consulo.container.internal.ShowErrorCaller;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
-import consulo.localize.LocalizeManager;
-import consulo.localize.internal.LocalizeManagerEx;
+import consulo.localization.LocalizationManager;
+import consulo.localization.internal.LocalizationManagerEx;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.platform.Platform;
@@ -90,16 +90,20 @@ public abstract class ApplicationStarter {
     }
 
     @Nonnull
-    protected abstract Application createApplication(ComponentBinding componentBinding,
-                                                     boolean isHeadlessMode,
-                                                     SimpleReference<StartupProgress> splashRef,
-                                                     CommandLineArgs args);
+    protected abstract Application createApplication(
+        ComponentBinding componentBinding,
+        boolean isHeadlessMode,
+        SimpleReference<StartupProgress> splashRef,
+        CommandLineArgs args
+    );
 
-    protected abstract void main(StatCollector stat,
-                                 Runnable appInitializeMark,
-                                 ApplicationEx app,
-                                 boolean newConfigFolder,
-                                 @Nonnull CommandLineArgs args);
+    protected abstract void main(
+        StatCollector stat,
+        Runnable appInitializeMark,
+        ApplicationEx app,
+        boolean newConfigFolder,
+        @Nonnull CommandLineArgs args
+    );
 
     protected boolean needSetVersionChecker() {
         return true;
@@ -121,7 +125,7 @@ public abstract class ApplicationStarter {
         myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
         StatCollector libraryStats = new StatCollector();
-        LocalizeManagerEx localizeManager = (LocalizeManagerEx) LocalizeManager.get();
+        LocalizationManagerEx localizationManager = (LocalizationManagerEx) LocalizationManager.get();
         BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
 
         Map<String, Set<String>> filesWithMarkers = new HashMap<>();
@@ -134,9 +138,11 @@ public abstract class ApplicationStarter {
 
         libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
-        libraryStats.markWith("localize.initialize", localizeManager::initialize);
-        libraryStats.markWith("icon.initialize",
-            () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
+        libraryStats.markWith("localize.initialize", localizationManager::initialize);
+        libraryStats.markWith(
+            "icon.initialize",
+            () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY))
+        );
 
         libraryStats.dump("Libraries", LOG::info);
 
@@ -144,14 +150,16 @@ public abstract class ApplicationStarter {
     }
 
     protected void analyzeLibraries(Map<String, Set<String>> filesWithMarkers) {
-        PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-            searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
-        });
+        PluginManager.forEachEnabledPlugin(
+            pluginDescriptor -> searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY)
+        );
     }
 
-    private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor,
-                                                 Map<String, Set<String>> filesWithMarkers,
-                                                 String libraryDir) {
+    private void searchMarkerInClassLoaderMarker(
+        PluginDescriptor pluginDescriptor,
+        Map<String, Set<String>> filesWithMarkers,
+        String libraryDir
+    ) {
         PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
 
         try {
@@ -194,24 +202,27 @@ public abstract class ApplicationStarter {
         }
     }
 
-    public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
+    public void run(StatCollector stat, Runnable appInitializationMark, boolean newConfigFolder) {
         try {
             ApplicationEx app = (ApplicationEx) Application.get();
-            stat.markWith("app.config.load", () -> {
-                try {
-                    app.load(ContainerPathManager.get().getOptionsPath());
+            stat.markWith(
+                "app.config.load",
+                () -> {
+                    try {
+                        app.load(ContainerPathManager.get().getOptionsPath());
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            );
 
             boolean enableSecurityManager = EarlyAccessProgramManager.is(PluginPermissionEarlyAccessProgramDescriptor.class);
             if (enableSecurityManager) {
                 ConsuloSecurityManagerEnabler.enableSecurityManager();
             }
 
-            main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
+            main(stat, appInitializationMark, app, newConfigFolder, myArgs);
 
             ApplicationStarterCore.ourLoaded = true;
         }

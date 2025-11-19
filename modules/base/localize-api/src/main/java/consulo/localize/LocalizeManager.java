@@ -15,70 +15,11 @@
  */
 package consulo.localize;
 
-import consulo.container.plugin.util.PlatformServiceLoader;
-import consulo.disposer.Disposable;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import java.util.Locale;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
+import consulo.localization.LocalizationManager;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public abstract class LocalizeManager {
-    private static LocalizeManager ourInstance = PlatformServiceLoader.findImplementation(LocalizeManager.class, ServiceLoader::load);
-
-    @Nonnull
-    public static LocalizeManager get() {
-        return ourInstance;
-    }
-
-    /**
-     * Parse localizeKeyInfo
-     *
-     * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
-     * @return localize value, if key not found, or parsing error return localize value like parameter
-     */
-    @Nonnull
-    public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
-
-    /**
-     * Return unformatted localize text
-     *
-     * @throws IllegalArgumentException if key is invalid
-     */
-    @Nonnull
-    public abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key);
-
-    @Nonnull
-    public abstract Locale parseLocale(@Nonnull String localeText);
-
-    public void setLocale(@Nullable Locale locale) {
-        setLocale(locale, true);
-    }
-
-    public abstract void setLocale(@Nullable Locale locale, boolean fireEvents);
-
-    @Nonnull
-    public abstract Locale getLocale();
-
-    @Nonnull
-    public abstract Locale getAutoDetectedLocale();
-
-    public abstract boolean isDefaultLocale();
-
-    @Nonnull
-    public abstract Set<Locale> getAvaliableLocales();
-
-    public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
-
-    public abstract byte getModificationCount();
-
-    @Nonnull
-    public abstract String formatText(String unformattedText, Locale locale, Object... args);
+public interface LocalizeManager extends LocalizationManager {
 }
