@@ -15,6 +15,7 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.SeparatorJoinedLocalizedValue2;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
@@ -23,44 +24,13 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2025-09-18
  */
-public final class SeparatorJoinedLocalizeValue2 extends BaseJoinedLocalizeValue {
-    private final LocalizeValue mySeparator;
-
-    public SeparatorJoinedLocalizeValue2(LocalizeValue separator, LocalizeValue[] values) {
-        super(values);
-        mySeparator = separator;
-    }
-
-    @Nonnull
-    @Override
-    public String getId() {
-        return super.getId() + '(' + mySeparator.getId() + ')';
-    }
-
-    @Nonnull
-    @Override
-    protected String calcValue(LocalizeManager manager) {
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < myArgs.length; i++) {
-            if (i != 0) {
-                builder.append(mySeparator.getValue());
-            }
-
-            Object ar = myArgs[i];
-
-            String value = ar instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(ar);
-
-            builder.append(value);
-        }
-        return builder.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o == this
-            || super.equals(o)
-            && o instanceof SeparatorJoinedLocalizeValue2 that
-            && mySeparator.equals(that.mySeparator);
+@SuppressWarnings("deprecation")
+public final class SeparatorJoinedLocalizeValue2 extends SeparatorJoinedLocalizedValue2 implements LocalizeValue {
+    public SeparatorJoinedLocalizeValue2(
+        @Nonnull LocalizeManager manager,
+        @Nonnull LocalizeValue separator,
+        @Nonnull LocalizeValue[] values
+    ) {
+        super(manager, separator, values);
     }
 }

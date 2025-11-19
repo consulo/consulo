@@ -148,9 +148,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Accessibility"), screenLayout));
 
             VerticalLayout localizeLayout = VerticalLayout.create();
-            Set<Locale> avaliableLocales = LocalizeManager.get().getAvaliableLocales();
+            Set<Locale> availableLocales = LocalizeManager.get().getAvailableLocales();
 
-            List<Locale> locales = new ArrayList<>(avaliableLocales);
+            List<Locale> locales = new ArrayList<>(availableLocales);
             locales.sort(Comparator.comparing(Locale::getDisplayName));
             locales.addFirst(Locale.ROOT);
 

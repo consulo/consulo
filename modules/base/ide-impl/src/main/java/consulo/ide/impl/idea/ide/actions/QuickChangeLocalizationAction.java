@@ -40,7 +40,7 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
         itemsAcceptor.accept(LocalizeValue.localizeTODO("<default>"), Locale.ROOT);
         LocalizeManager localizeManager = LocalizeManager.get();
 
-        for (Locale locale : localizeManager.getAvaliableLocales()) {
+        for (Locale locale : localizeManager.getAvailableLocales()) {
             itemsAcceptor.accept(LocalizeValue.ofNullable(locale.getDisplayName()), locale);
         }
     }

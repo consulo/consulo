@@ -76,7 +76,6 @@
     <module>modules/base/localization-api</module>
     <module>modules/base/localization-impl</module>
     <module>modules/base/localize-api</module>
-    <module>modules/base/localize-impl</module>
     <module>modules/base/remote-servers-agent-rt</module>
     <module>modules/base/test-impl</module>
     <module>modules/base/test-junit-impl</module>
