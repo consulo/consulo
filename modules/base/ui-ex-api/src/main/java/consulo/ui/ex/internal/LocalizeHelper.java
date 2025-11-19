@@ -19,8 +19,9 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.CommonBundle;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
+import consulo.localization.LocalizedValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -57,7 +58,7 @@ public interface LocalizeHelper {
         @Nonnull
         @Override
         public LocalizeValue getValue(@Nonnull String key) {
-            return LocalizeValue.of(key);
+            return LocalizedValue.of(key);
         }
     }
 
@@ -71,7 +72,7 @@ public interface LocalizeHelper {
         @Nonnull
         @Override
         public LocalizeValue getValue(@Nonnull String key) {
-            return LocalizeKey.of(myLocalize, key).getValue();
+            return LocalizationKey.of(myLocalize, key).getValue();
         }
     }
 
@@ -99,7 +100,7 @@ public interface LocalizeHelper {
         @Nonnull
         @Override
         public LocalizeValue getValue(@Nonnull String key) {
-            return LocalizeValue.of(getText(key));
+            return LocalizedValue.of(getText(key));
         }
     }
 

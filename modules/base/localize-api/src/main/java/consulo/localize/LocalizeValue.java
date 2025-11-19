@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,126 +16,103 @@
 package consulo.localize;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.localize.internal.*;
+import consulo.localization.LocalizedValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
 /**
- * @author VISTALL
- * @since 2019-04-11
+ * @author UNV
+ * @since 2025-11-18
  */
-public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
+public interface LocalizeValue extends LocalizedValue {
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
     @Nonnull
     static LocalizeValue empty() {
-        return SingleLocalizeValue.ourEmpty;
-    }
-
-    @Nonnull
-    static LocalizeValue space() {
-        return SingleLocalizeValue.ourSpace;
-    }
-
-    @Nonnull
-    static LocalizeValue colon() {
-        return SingleLocalizeValue.ourColon;
-    }
-
-    @Nonnull
-    static LocalizeValue dot() {
-        return SingleLocalizeValue.ourDot;
-    }
-
-    @Nonnull
-    static LocalizeValue questionMark() {
-        return SingleLocalizeValue.ourQuestionMark;
-    }
-
-    @Nonnull
-    static LocalizeValue of() {
-        return empty();
-    }
-
-    @Nonnull
-    static LocalizeValue localizeTODO(@Nonnull String text) {
-        return of(text);
-    }
-
-    @Nonnull
-    static LocalizeValue of(@Nonnull String text) {
-        return text.isEmpty() ? of() : new SingleLocalizeValue(text);
-    }
-
-    @Nonnull
-    static LocalizeValue of(char c) {
-        return new SingleLocalizeValue(String.valueOf(c));
-    }
-
-    @Nonnull
-    static LocalizeValue ofNullable(@Nullable String text) {
-        return text == null ? of() : of(text);
-    }
-
-    @Nonnull
-    static LocalizeValue join(@Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinLocalizeValue(values);
-    }
-
-    @Nonnull
-    static LocalizeValue join(@Nonnull String separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue(separator, values);
-    }
-
-    @Nonnull
-    static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue2(separator, values);
-    }
-
-    @Override
-    @Nonnull
-    default String get() {
-        return getValue();
-    }
-
-    @Nonnull
-    String getValue();
-
-    byte getModificationCount();
-
-    @Nonnull
-    default Optional<LocalizeKey> getKey() {
-        return Optional.empty();
-    }
-
-    @Nonnull
-    default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
-        return new MapLocalizeValue(this, mapper);
-    }
-
-    @Nonnull
-    default LocalizeValue toUpperCase() {
-        return map(DefaultMapFunctions.TO_UPPER_CASE);
-    }
-
-    @Nonnull
-    default LocalizeValue toLowerCase() {
-        return map(DefaultMapFunctions.TO_LOWER_CASE);
-    }
-
-    @Nonnull
-    default LocalizeValue capitalize() {
-        return map(DefaultMapFunctions.CAPITALIZE);
+        return LocalizedValue.empty();
     }
 
     @Deprecated
-    @DeprecationInfo("Use proper English word #capitalize()")
+    @DeprecationInfo("Use methods of LocalizedValue")
     @Nonnull
-    default LocalizeValue captilize() {
-        return capitalize();
+    static LocalizeValue space() {
+        return LocalizedValue.space();
     }
 
-    int compareIgnoreCase(@Nonnull LocalizeValue other);
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue colon() {
+        return LocalizedValue.colon();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue dot() {
+        return LocalizedValue.dot();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue questionMark() {
+        return LocalizedValue.questionMark();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue of() {
+        return LocalizedValue.of();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue localizeTODO(@Nonnull String text) {
+        return LocalizedValue.localizeTODO(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue of(@Nonnull String text) {
+        return LocalizedValue.of(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue of(char c) {
+        return LocalizedValue.of(c);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue ofNullable(@Nullable String text) {
+        return LocalizedValue.ofNullable(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue join(@Nonnull LocalizeValue... values) {
+        return LocalizedValue.join(values);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue join(@Nonnull String separator, @Nonnull LocalizeValue... values) {
+        return LocalizedValue.join(separator, values);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizedValue")
+    @Nonnull
+    static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
+        return LocalizedValue.joinWithSeparator(separator, values);
+    }
 }

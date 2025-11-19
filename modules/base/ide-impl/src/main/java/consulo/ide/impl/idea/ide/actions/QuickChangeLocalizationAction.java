@@ -16,8 +16,9 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeManager;
+import consulo.localization.LocalizationManager;
 import consulo.localize.LocalizeValue;
+import consulo.localization.LocalizedValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.action.NewQuickSwitchSchemeAction;
 import jakarta.annotation.Nonnull;
@@ -37,29 +38,23 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
 
     @Override
     public void fill(@Nonnull BiConsumer<LocalizeValue, Locale> itemsAcceptor) {
-        itemsAcceptor.accept(LocalizeValue.localizeTODO("<default>"), Locale.ROOT);
-        LocalizeManager localizeManager = LocalizeManager.get();
+        itemsAcceptor.accept(LocalizedValue.localizeTODO("<default>"), Locale.ROOT);
+        LocalizationManager localizationManager = LocalizationManager.get();
 
-        for (Locale locale : localizeManager.getAvaliableLocales()) {
-            itemsAcceptor.accept(LocalizeValue.ofNullable(locale.getDisplayName()), locale);
+        for (Locale locale : localizationManager.getAvailableLocales()) {
+            itemsAcceptor.accept(LocalizedValue.ofNullable(locale.getDisplayName()), locale);
         }
     }
 
     @Nonnull
     @Override
     public Locale getCurrentValue() {
-        LocalizeManager localizeManager = LocalizeManager.get();
-        return localizeManager.isDefaultLocale() ? Locale.ROOT : localizeManager.getLocale();
+        LocalizationManager localizationManager = LocalizationManager.get();
+        return localizationManager.isDefaultLocale() ? Locale.ROOT : localizationManager.getLocale();
     }
 
     @Override
     public void changeSchemeTo(@Nonnull Locale value) {
-        LocalizeManager localizeManager = LocalizeManager.get();
-
-        if (value == Locale.ROOT) {
-            localizeManager.setLocale(null);
-        } else {
-            localizeManager.setLocale(value);
-        }
+        LocalizationManager.get().setLocale(value == Locale.ROOT ? null : value);
     }
 }

@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.localize.LocalizeManager;
+import consulo.localization.LocalizationManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
@@ -94,7 +94,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     private final Map<String, DesktopStyleImpl> myStyles = new LinkedHashMap<>();
     private DesktopStyleImpl myCurrentStyle;
 
-    private final LocalizeManager myLocalizeManager;
+    private final LocalizationManager myLocalizationManager;
     private final IconLibraryManager myIconLibraryManager;
 
     private boolean myInitialLoadState = true;
@@ -106,7 +106,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Inject
     LafManagerImpl() {
-        myLocalizeManager = LocalizeManager.get();
+        myLocalizationManager = LocalizationManager.get();
         myIconLibraryManager = IconLibraryManager.get();
 
         List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
@@ -163,7 +163,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         updateUI();
 
         // refresh UI on localize change
-        LocalizeManager.get().addListener((oldLocale, newLocale) -> updateUI(), this);
+        myLocalizationManager.addListener((oldLocale, newLocale) -> updateUI(), this);
     }
 
     @Override
@@ -182,7 +182,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         String localeText = element.getChildText(ELEMENT_LOCALE);
         if (localeText != null) {
-            myLocalizeManager.setLocale(myLocalizeManager.parseLocale(localeText), false);
+            myLocalizationManager.setLocale(myLocalizationManager.parseLocale(localeText), false);
         }
 
         String iconId = element.getChildText(ELEMENT_ICON);
@@ -228,11 +228,11 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             element.addContent(child);
         }
 
-        if (!myLocalizeManager.isDefaultLocale()) {
+        if (!myLocalizationManager.isDefaultLocale()) {
             Element localeElement = new Element(ELEMENT_LOCALE);
             element.addContent(localeElement);
 
-            localeElement.setText(myLocalizeManager.getLocale().toString());
+            localeElement.setText(myLocalizationManager.getLocale().toString());
         }
 
         if (!myIconLibraryManager.isFromStyle()) {

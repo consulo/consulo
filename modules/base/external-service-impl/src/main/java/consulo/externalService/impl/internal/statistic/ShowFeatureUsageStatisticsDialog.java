@@ -22,8 +22,9 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.internal.ExternalServiceHelper;
 import consulo.externalService.statistic.*;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
+import consulo.localization.LocalizedValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -40,11 +41,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import java.util.*;
 
 public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ShowFeatureUsageStatisticsDialog.class);
@@ -202,10 +200,10 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
                         pluginDescriptor = PluginManager.getPlugin(Application.class);
                     }
 
-                    LocalizeValue tipRef = LocalizeValue.empty();
+                    LocalizeValue tipRef = LocalizedValue.empty();
                     List<String> values = StringUtil.split(tipFileName, "@");
                     if (values.size() == 2) {
-                        tipRef = LocalizeKey.of(values.get(0), values.get(1)).getValue();
+                        tipRef = LocalizationKey.of(values.get(0), values.get(1)).getValue();
                     }
 
                     ExternalServiceHelper helper = Application.get().getInstance(ExternalServiceHelper.class);

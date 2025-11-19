@@ -94,6 +94,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             return myConfigurable.getClass().getName();
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
             return myConfigurable.getDisplayName();

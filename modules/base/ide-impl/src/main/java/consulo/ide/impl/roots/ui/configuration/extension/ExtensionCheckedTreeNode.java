@@ -16,18 +16,19 @@
 package consulo.ide.impl.roots.ui.configuration.extension;
 
 import consulo.application.Application;
-import consulo.util.lang.Comparing;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.localization.LocalizedValue;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.TreeNode;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,19 +36,11 @@ import java.util.Vector;
 
 /**
  * @author VISTALL
- * @since 11:42/19.05.13
+ * @since 2013-05-19
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
-  private static class ExtensionProviderEPComparator implements Comparator<TreeNode> {
-    private static final Comparator<TreeNode> INSTANCE = new ExtensionProviderEPComparator();
-
-    @Override
-    public int compare(TreeNode o1, TreeNode o2) {
-      ModuleExtensionProvider i1 = ((ExtensionCheckedTreeNode)o1).myProvider;
-      ModuleExtensionProvider i2 = ((ExtensionCheckedTreeNode)o2).myProvider;
-      return i1.getName().compareIgnoreCase(i2.getName());
-    }
-  }
+  private static final Comparator<TreeNode> CASE_INSENSITIVE_EXTENSION_PROVIDER_NAME_COMPARATOR =
+      Comparator.comparing(tn -> ((ExtensionCheckedTreeNode)tn).myProvider.getName(), LocalizedValue.CASE_INSENSITIVE_ORDER);
 
   private final ModuleExtensionProvider myProvider;
   @Nonnull
@@ -81,7 +74,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
         child.add(e);
       }
     }
-    Collections.sort(child, ExtensionProviderEPComparator.INSTANCE);
+    Collections.sort(child, CASE_INSENSITIVE_EXTENSION_PROVIDER_NAME_COMPARATOR);
     setUserObject(myExtension);
     // at java 9 children is Vector<TreeNode>()
     //noinspection Convert2Diamond
@@ -105,7 +98,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
   @Override
   public boolean isEnabled() {
-    // if extension not found dont allow manage it
+    // If extension is not found, don't allow to manage it.
     if (myExtension == null) {
       return false;
     }

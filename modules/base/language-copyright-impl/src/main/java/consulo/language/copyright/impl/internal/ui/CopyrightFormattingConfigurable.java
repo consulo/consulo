@@ -32,6 +32,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -119,7 +120,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
             }
             list.add(updateCopyrightsProvider.createConfigurable(myProject, myPanel, fileType));
         }
-        Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
+        Collections.sort(list, Configurable.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
 
         return ContainerUtil.toArray(list, Configurable.ARRAY_FACTORY);
     }
