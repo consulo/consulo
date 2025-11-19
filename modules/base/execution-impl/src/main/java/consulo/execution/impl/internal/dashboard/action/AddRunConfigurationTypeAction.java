@@ -45,9 +45,6 @@ import java.util.function.Consumer;
  */
 @ActionImpl(id = "RunDashboard.AddType", parents = @ActionParentRef(@ActionRef(type = AddServiceActionGroup.class)))
 public class AddRunConfigurationTypeAction extends DumbAwareAction {
-    private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
-        (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
-
     public AddRunConfigurationTypeAction() {
         super(ActionLocalize.actionRundashboardAddtypeText());
     }
@@ -85,7 +82,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
             allTypes
         ));
 
-        configurationTypes.sort(IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
+        configurationTypes.sort(ConfigurationType.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
         var hiddenCount = allTypes.size() - configurationTypes.size();
         List<Object> popupList = new ArrayList<>(configurationTypes);
         if (hiddenCount > 0) {

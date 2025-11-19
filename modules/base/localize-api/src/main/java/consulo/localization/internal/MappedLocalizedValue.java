@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize.internal;
+package consulo.localization.internal;
 
+import consulo.localization.LocalizationManager;
+import consulo.localization.LocalizedValue;
 import consulo.localize.LocalizeManager;
-import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
@@ -28,38 +27,38 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 2020-07-30
  */
-public final class MapLocalizeValue extends BaseLocalizeValue {
-    private final LocalizeValue myDelegate;
+public final class MappedLocalizedValue extends CachingLocalizedValue {
+    @Nonnull
+    private final LocalizedValue myDelegate;
+    @Nonnull
     private final BiFunction<LocalizeManager, String, String> myMapper;
 
-    public MapLocalizeValue(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
-        super(ourEmptyArgs);
+    public MappedLocalizedValue(
+        @Nonnull LocalizationManager manager,
+        @Nonnull LocalizedValue delegate,
+        @Nonnull BiFunction<LocalizeManager, String, String> mapper
+    ) {
+        super(manager);
         myDelegate = delegate;
         myMapper = mapper;
     }
 
     @Nonnull
     @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        String value = myDelegate.getValue();
-        return Map.entry(localizeManager.getLocale(), myMapper.apply(localizeManager, value));
+    protected String calcValue() {
+        return myMapper.apply((LocalizeManager) myLocalizationManager, myDelegate.getValue());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MapLocalizeValue that = (MapLocalizeValue) o;
-        return Objects.equals(myDelegate, that.myDelegate) &&
-            Objects.equals(myMapper, that.myMapper);
+        return this == o
+            || o instanceof MappedLocalizedValue that
+            && Objects.equals(myDelegate, that.myDelegate)
+            && Objects.equals(myMapper, that.myMapper);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(myDelegate, myMapper);
+    public int calcHashCode() {
+        return myDelegate.hashCode() + 29 * myMapper.hashCode();
     }
 }
