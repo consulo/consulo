@@ -32,12 +32,12 @@ import consulo.language.editor.refactoring.changeSignature.inplace.InplaceChange
 import consulo.language.editor.refactoring.changeSignature.inplace.LanguageChangeSignatureDetector;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.Collections;
 
 @ExtensionImpl
@@ -48,6 +48,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
     }
 
     @Override
+    @RequiredReadAction
     public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
         LanguageChangeSignatureDetector<ChangeInfo> detector =
             LanguageChangeSignatureDetector.forLanguage(file.getLanguage());
@@ -59,8 +60,8 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
     }
 
     private static class ChangeSignaturePass extends TextEditorHighlightingPass {
-        @NonNls
-        private static final String SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED = "Signature change was detected";
+        private static final LocalizeValue SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED =
+            LocalizeValue.localizeTODO("Signature change was detected");
         private final Project myProject;
         private final PsiFile myFile;
         private final Editor myEditor;
@@ -72,12 +73,13 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
             myEditor = editor;
         }
 
-        @RequiredReadAction
         @Override
+        @RequiredReadAction
         public void doCollectInformation(@Nonnull ProgressIndicator progress) {
         }
 
         @Override
+        @RequiredUIAccess
         public void doApplyInformationToEditor() {
             HighlightInfo info = null;
             InplaceChangeSignature currentRefactoring = InplaceChangeSignature.getCurrentRefactoring(myEditor);
@@ -89,23 +91,35 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
                     return;
                 }
                 TextRange elementTextRange = element.getTextRange();
-                if (elementTextRange == null || !elementTextRange.contains(offset)) {
+                if (!elementTextRange.contains(offset)) {
                     return;
                 }
-                LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(changeInfo.getLanguage());
+                LanguageChangeSignatureDetector<ChangeInfo> detector =
+                    LanguageChangeSignatureDetector.forLanguage(changeInfo.getLanguage());
                 TextRange range = detector.getHighlightingRange(changeInfo);
-                TextAttributes attributes = new TextAttributes(null, null,
-                    myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES)
-                        .getEffectColor(),
-                    null, Font.PLAIN);
-                HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
-                builder.textAttributes(attributes);
-                builder.descriptionAndTooltip(SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED);
-                builder.registerFix(new ApplyChangeSignatureAction(currentRefactoring.getInitialName()), null, null, null, null);
-                info = builder.createUnconditionally();
+                TextAttributes attributes = new TextAttributes(
+                    null,
+                    null,
+                    myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES).getEffectColor(),
+                    null,
+                    Font.PLAIN
+                );
+                info = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+                    .range(range)
+                    .textAttributes(attributes)
+                    .descriptionAndTooltip(SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED)
+                    .registerFix(new ApplyChangeSignatureAction(currentRefactoring.getInitialName()))
+                    .createUnconditionally();
             }
-            Collection<HighlightInfo> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
-            UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
+            UpdateHighlightersUtil.setHighlightersToEditor(
+                myProject,
+                myDocument,
+                0,
+                myFile.getTextLength(),
+                info != null ? Collections.singletonList(info) : Collections.emptyList(),
+                getColorsScheme(),
+                getId()
+            );
         }
     }
 }

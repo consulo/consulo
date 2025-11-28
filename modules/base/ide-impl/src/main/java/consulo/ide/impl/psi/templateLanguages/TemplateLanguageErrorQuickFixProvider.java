@@ -42,40 +42,40 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider {
+    @Override
+    @RequiredReadAction
+    public void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo.Builder builder) {
+        PsiFile psiFile = errorElement.getContainingFile();
+        if (psiFile.getViewProvider() instanceof TemplateLanguageFileViewProvider provider
+            && psiFile.getLanguage() == provider.getTemplateDataLanguage()) {
+            builder.registerFix(createChangeTemplateDataLanguageFix(errorElement));
+        }
+    }
 
-  @RequiredReadAction
-  @Override
-  public void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo.Builder builder) {
-    PsiFile psiFile = errorElement.getContainingFile();
-    FileViewProvider provider = psiFile.getViewProvider();
-    if (!(provider instanceof TemplateLanguageFileViewProvider)) return;
-    if (psiFile.getLanguage() != ((TemplateLanguageFileViewProvider)provider).getTemplateDataLanguage()) return;
+    public static IntentionAction createChangeTemplateDataLanguageFix(PsiElement errorElement) {
+        PsiFile containingFile = errorElement.getContainingFile();
+        final VirtualFile virtualFile = containingFile.getVirtualFile();
+        final Language language = ((TemplateLanguageFileViewProvider) containingFile.getViewProvider()).getTemplateDataLanguage();
+        return new SyntheticIntentionAction() {
+            @Nonnull
+            @Override
+            public LocalizeValue getText() {
+                return LanguageLocalize.quickfixChangeTemplateDataLanguageText(language.getDisplayName());
+            }
 
-    builder.registerFix(createChangeTemplateDataLanguageFix(errorElement), null, null, null, null);
-  }
-
-  public static IntentionAction createChangeTemplateDataLanguageFix(PsiElement errorElement) {
-    PsiFile containingFile = errorElement.getContainingFile();
-    final VirtualFile virtualFile = containingFile.getVirtualFile();
-    final Language language = ((TemplateLanguageFileViewProvider)containingFile.getViewProvider()).getTemplateDataLanguage();
-    return new SyntheticIntentionAction() {
-
-      @Override
-      @Nonnull
-      public LocalizeValue getText() {
-        return LanguageLocalize.quickfixChangeTemplateDataLanguageText(language.getDisplayName());
-      }
-
-      @RequiredUIAccess
-      @Override
-      public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ShowSettingsUtil.getInstance().showAndSelect(project, TemplateDataLanguageConfigurable.class, configurable -> {
-          if (virtualFile != null) {
-            configurable.selectFile(virtualFile);
-          }
-        });
-      }
-    };
-  }
-
+            @Override
+            @RequiredUIAccess
+            public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+                ShowSettingsUtil.getInstance().showAndSelect(
+                    project,
+                    TemplateDataLanguageConfigurable.class,
+                    configurable -> {
+                        if (virtualFile != null) {
+                            configurable.selectFile(virtualFile);
+                        }
+                    }
+                );
+            }
+        };
+    }
 }
