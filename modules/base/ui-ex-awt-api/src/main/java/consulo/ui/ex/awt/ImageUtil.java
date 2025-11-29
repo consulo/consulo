@@ -16,6 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
+import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import jakarta.annotation.Nonnull;
@@ -43,7 +44,7 @@ public class ImageUtil {
      */
     @Nonnull
     public static BufferedImage createImage(int width, int height, int type) {
-        if (UIUtil.isJreHiDPIEnabled()) {
+        if (JreHiDpiUtil.isJreHiDPIEnabled()) {
             return RetinaImage.create(width, height, type);
         }
         //noinspection UndesirableClassUsage
@@ -90,8 +91,7 @@ public class ImageUtil {
      */
     @Nonnull
     public static BufferedImage createImage(Graphics g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
-        if (g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
+        if (g instanceof Graphics2D g2d) {
             if (UIUtil.isJreHiDPI(g2d)) {
                 return RetinaImage.create(g2d, width, height, type, rm);
             }
@@ -106,19 +106,18 @@ public class ImageUtil {
     }
 
     public static BufferedImage toBufferedImage(@Nonnull Image image, boolean inUserSize) {
-        if (image instanceof JBHiDPIScaledImage) {
-            JBHiDPIScaledImage jbImage = (JBHiDPIScaledImage) image;
-            Image img = jbImage.getDelegate();
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            Image img = scaledImage.getDelegate();
             if (img != null) {
                 if (inUserSize) {
-                    double scale = jbImage.getScale();
+                    double scale = scaledImage.getScale();
                     img = scaleImage(img, 1 / scale);
                 }
                 image = img;
             }
         }
-        if (image instanceof BufferedImage) {
-            return (BufferedImage) image;
+        if (image instanceof BufferedImage bufferedImage) {
+            return bufferedImage;
         }
 
         final int width = image.getWidth(null);
@@ -148,16 +147,24 @@ public class ImageUtil {
             };
         }
 
-        @SuppressWarnings("UndesirableClassUsage") BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        @SuppressWarnings("UndesirableClassUsage") BufferedImage bufferedImage =
+            new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = bufferedImage.createGraphics();
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return bufferedImage;
     }
 
+    public static double getImageScale(Image image) {
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            return scaledImage.getScale();
+        }
+        return 1;
+    }
+
     public static int getRealWidth(@Nonnull Image image) {
-        if (image instanceof JBHiDPIScaledImage) {
-            Image img = ((JBHiDPIScaledImage) image).getDelegate();
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            Image img = scaledImage.getDelegate();
             if (img != null) {
                 image = img;
             }
@@ -166,8 +173,8 @@ public class ImageUtil {
     }
 
     public static int getRealHeight(@Nonnull Image image) {
-        if (image instanceof JBHiDPIScaledImage) {
-            Image img = ((JBHiDPIScaledImage) image).getDelegate();
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            Image img = scaledImage.getDelegate();
             if (img != null) {
                 image = img;
             }
@@ -176,15 +183,15 @@ public class ImageUtil {
     }
 
     public static int getUserWidth(@Nonnull Image image) {
-        if (image instanceof JBHiDPIScaledImage) {
-            return ((JBHiDPIScaledImage) image).getUserWidth(null);
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            return scaledImage.getUserWidth(null);
         }
         return image.getWidth(null);
     }
 
     public static int getUserHeight(@Nonnull Image image) {
-        if (image instanceof JBHiDPIScaledImage) {
-            return ((JBHiDPIScaledImage) image).getUserHeight(null);
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            return scaledImage.getUserHeight(null);
         }
         return image.getHeight(null);
     }
@@ -204,8 +211,8 @@ public class ImageUtil {
             return image;
         }
 
-        if (image instanceof JBHiDPIScaledImage hiDPIScaledImage) {
-            return hiDPIScaledImage.scale(scale);
+        if (image instanceof JBHiDPIScaledImage scaledImage) {
+            return scaledImage.scale(scale);
         }
         int w = image.getWidth(null);
         int h = image.getHeight(null);
@@ -217,7 +224,14 @@ public class ImageUtil {
         // Using "QUALITY" instead of "ULTRA_QUALITY" results in images that are less blurry
         // because ultra quality performs a few more passes when scaling, which introduces blurriness
         // when the scaling factor is relatively small (i.e. <= 3.0f) -- which is the case here.
-        return Scalr.resize(ImageUtil.toBufferedImage(image), Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, width, height, (BufferedImageOp[]) null);
+        return Scalr.resize(
+            ImageUtil.toBufferedImage(image),
+            Scalr.Method.QUALITY,
+            Scalr.Mode.FIT_EXACT,
+            width,
+            height,
+            (BufferedImageOp[]) null
+        );
     }
 
     /**

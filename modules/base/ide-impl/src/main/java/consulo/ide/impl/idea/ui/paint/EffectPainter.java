@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ui.paint;
 
 import consulo.ui.ex.awt.RegionPainter;
 import consulo.colorScheme.EffectType;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -24,99 +25,99 @@ import java.awt.*;
  * @author Sergey.Malenkov
  */
 public enum EffectPainter implements RegionPainter<Font> {
-  /**
-   * @see EffectType#LINE_UNDERSCORE
-   */
-  LINE_UNDERSCORE {
     /**
-     * Draws a horizontal line under a text.
-     *
-     * @param g      the {@code Graphics2D} object to render to
-     * @param x      text position
-     * @param y      text baseline
-     * @param width  text width
-     * @param height available space under text
-     * @param font   optional font to calculate line metrics
+     * @see EffectType#LINE_UNDERSCORE
      */
-    @Override
-    public void paint(Graphics2D g, int x, int y, int width, int height, Font font) {
-      EffectPainter2D.LINE_UNDERSCORE.paint(g, x, y, width, height, font);
-    }
-  },
-  /**
-   * @see EffectType#BOLD_LINE_UNDERSCORE
-   */
-  BOLD_LINE_UNDERSCORE {
+    LINE_UNDERSCORE {
+        /**
+         * Draws a horizontal line under a text.
+         *
+         * @param g      the {@code Graphics2D} object to render to
+         * @param x      text position
+         * @param y      text baseline
+         * @param width  text width
+         * @param height available space under text
+         * @param font   optional font to calculate line metrics
+         */
+        @Override
+        public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, Font font) {
+            EffectPainter2D.LINE_UNDERSCORE.paint(g, x, y, width, height, font);
+        }
+    },
     /**
-     * Draws a bold horizontal line under a text.
-     *
-     * @param g      the {@code Graphics2D} object to render to
-     * @param x      text position
-     * @param y      text baseline
-     * @param width  text width
-     * @param height available space under text
-     * @param font   optional font to calculate line metrics
+     * @see EffectType#BOLD_LINE_UNDERSCORE
      */
-    @Override
-    public void paint(Graphics2D g, int x, int y, int width, int height, Font font) {
-      EffectPainter2D.BOLD_LINE_UNDERSCORE.paint(g, x, y, width, height, font);
-    }
-  },
-  /**
-   * @see EffectType#BOLD_DOTTED_LINE
-   */
-  BOLD_DOTTED_UNDERSCORE {
+    BOLD_LINE_UNDERSCORE {
+        /**
+         * Draws a bold horizontal line under a text.
+         *
+         * @param g      the {@code Graphics2D} object to render to
+         * @param x      text position
+         * @param y      text baseline
+         * @param width  text width
+         * @param height available space under text
+         * @param font   optional font to calculate line metrics
+         */
+        @Override
+        public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, Font font) {
+            EffectPainter2D.BOLD_LINE_UNDERSCORE.paint(g, x, y, width, height, font);
+        }
+    },
     /**
-     * Draws a bold horizontal line of dots under a text.
-     *
-     * @param g      the {@code Graphics2D} object to render to
-     * @param x      text position
-     * @param y      text baseline
-     * @param width  text width
-     * @param height available space under text
-     * @param font   optional font to calculate line metrics
+     * @see EffectType#BOLD_DOTTED_LINE
      */
-    @Override
-    public void paint(Graphics2D g, int x, int y, int width, int height, Font font) {
-      EffectPainter2D.BOLD_DOTTED_UNDERSCORE.paint(g, x, y, width, height, font);
-    }
-  },
-  /**
-   * @see EffectType#WAVE_UNDERSCORE
-   */
-  WAVE_UNDERSCORE {
+    BOLD_DOTTED_UNDERSCORE {
+        /**
+         * Draws a bold horizontal line of dots under a text.
+         *
+         * @param g      the {@code Graphics2D} object to render to
+         * @param x      text position
+         * @param y      text baseline
+         * @param width  text width
+         * @param height available space under text
+         * @param font   optional font to calculate line metrics
+         */
+        @Override
+        public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, Font font) {
+            EffectPainter2D.BOLD_DOTTED_UNDERSCORE.paint(g, x, y, width, height, font);
+        }
+    },
     /**
-     * Draws a horizontal wave under a text.
-     *
-     * @param g      the {@code Graphics2D} object to render to
-     * @param x      text position
-     * @param y      text baseline
-     * @param width  text width
-     * @param height available space under text
-     * @param font   optional font to calculate line metrics
+     * @see EffectType#WAVE_UNDERSCORE
      */
-    @Override
-    public void paint(Graphics2D g, int x, int y, int width, int height, Font font) {
-      EffectPainter2D.WAVE_UNDERSCORE.paint(g, x, y, width, height, font);
-    }
-  },
-  /**
-   * @see EffectType#STRIKEOUT
-   */
-  STRIKE_THROUGH {
+    WAVE_UNDERSCORE {
+        /**
+         * Draws a horizontal wave under a text.
+         *
+         * @param g      the {@code Graphics2D} object to render to
+         * @param x      text position
+         * @param y      text baseline
+         * @param width  text width
+         * @param height available space under text
+         * @param font   optional font to calculate line metrics
+         */
+        @Override
+        public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, Font font) {
+            EffectPainter2D.WAVE_UNDERSCORE.paint(g, x, y, width, height, font);
+        }
+    },
     /**
-     * Draws a horizontal line through a text.
-     *
-     * @param g      the {@code Graphics2D} object to render to
-     * @param x      text position
-     * @param y      text baseline
-     * @param width  text width
-     * @param height text height
-     * @param font   optional font to calculate line metrics
+     * @see EffectType#STRIKEOUT
      */
-    @Override
-    public void paint(Graphics2D g, int x, int y, int width, int height, Font font) {
-      EffectPainter2D.STRIKE_THROUGH.paint(g, x, y, width, height, font);
+    STRIKE_THROUGH {
+        /**
+         * Draws a horizontal line through a text.
+         *
+         * @param g      the {@code Graphics2D} object to render to
+         * @param x      text position
+         * @param y      text baseline
+         * @param width  text width
+         * @param height text height
+         * @param font   optional font to calculate line metrics
+         */
+        @Override
+        public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, Font font) {
+            EffectPainter2D.STRIKE_THROUGH.paint(g, x, y, width, height, font);
+        }
     }
-  }
 }

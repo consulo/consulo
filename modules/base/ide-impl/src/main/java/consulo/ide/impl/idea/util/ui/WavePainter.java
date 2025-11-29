@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
+import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 /**
@@ -25,14 +27,15 @@ import java.awt.*;
  * @see WavePainter2D
  */
 public abstract class WavePainter {
-  protected WavePainter() {}
+    protected WavePainter() {
+    }
 
-  /**
-   * Paints a wave in given coordinate range. {@code y} defines the lower boundary of painted wave.
-   */
-  public abstract void paint(Graphics2D g, int xStart, int xEnd, int y);
+    /**
+     * Paints a wave in given coordinate range. {@code y} defines the lower boundary of painted wave.
+     */
+    public abstract void paint(@Nonnull Graphics2D g, int xStart, int xEnd, int y);
 
-  public static WavePainter forColor(Color color) {
-    return WavePainter2D.forColor(color);
-  }
+    public static WavePainter forColor(Color color) {
+        return WavePainter2D.forColor(color);
+    }
 }
