@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.impl.ast.ForeignLeafType;
 import consulo.language.impl.ast.LeafElement;
@@ -27,55 +28,59 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class ForeignLeafPsiElement extends LeafPsiElement {
-  private ForeignLeafType myForeignType;
+    private ForeignLeafType myForeignType;
 
-  public ForeignLeafPsiElement(ForeignLeafType type, CharSequence text) {
-    super(dereferenceElementType(type.getDelegate()), text);
-    myForeignType = type;
-  }
+    public ForeignLeafPsiElement(ForeignLeafType type, CharSequence text) {
+        super(dereferenceElementType(type.getDelegate()), text);
+        myForeignType = type;
+    }
 
-  private static IElementType dereferenceElementType(IElementType type) {
-    while (type instanceof TokenWrapper) type = ((TokenWrapper)type).getDelegate();
+    private static IElementType dereferenceElementType(IElementType type) {
+        while (type instanceof TokenWrapper tokenWrapper) {
+            type = tokenWrapper.getDelegate();
+        }
 
-    return type;
-  }
+        return type;
+    }
 
-  @Override
-  public LeafElement findLeafElementAt(int offset) {
-    return null;
-  }
+    @Override
+    public LeafElement findLeafElementAt(int offset) {
+        return null;
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull CharSequence seq) {
-    return false;
-  }
+    @Override
+    public boolean textMatches(@Nonnull CharSequence seq) {
+        return false;
+    }
 
-  @Override
-  public int textMatches(@Nonnull CharSequence buffer, int start) {
-    return start;
-  }
+    @Override
+    public int textMatches(@Nonnull CharSequence buffer, int start) {
+        return start;
+    }
 
-  @Override
-  public boolean textMatches(@Nonnull PsiElement element) {
-    return false;
-  }
+    @Override
+    @RequiredReadAction
+    public boolean textMatches(@Nonnull PsiElement element) {
+        return false;
+    }
 
-  @Override
-  public int getTextLength() {
-    return 0;
-  }
+    @Override
+    @RequiredReadAction
+    public int getTextLength() {
+        return 0;
+    }
 
-  @Override
-  public int getStartOffset() {
-    return 0;
-  }
+    @Override
+    public int getStartOffset() {
+        return 0;
+    }
 
-  public ForeignLeafType getForeignType() {
-    return myForeignType;
-  }
+    public ForeignLeafType getForeignType() {
+        return myForeignType;
+    }
 
-  @Override
-  public String toString() {
-    return "ForeignLeaf(" + getElementType() + ": " + getText() + ")";
-  }
+    @Override
+    public String toString() {
+        return "ForeignLeaf(" + getElementType() + ": " + getText() + ")";
+    }
 }
