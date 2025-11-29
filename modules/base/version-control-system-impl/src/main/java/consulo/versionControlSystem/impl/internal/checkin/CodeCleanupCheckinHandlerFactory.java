@@ -19,9 +19,10 @@ package consulo.versionControlSystem.impl.internal.checkin;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
@@ -29,12 +30,11 @@ import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 @ExtensionImpl(id = "code-cleanup", order = "after todo")
@@ -54,33 +54,16 @@ public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
             myPanel = panel;
         }
 
+        @RequiredUIAccess
         @Override
         public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-            final JCheckBox cleanupCodeCb = new NonFocusableCheckBox(VcsLocalize.beforeCheckinCleanupCode().get());
-            return new RefreshableOnComponent() {
-                @Override
-                public JComponent getComponent() {
-                    JPanel cbPanel = new JPanel(new BorderLayout());
-                    cbPanel.add(cleanupCodeCb, BorderLayout.WEST);
-                    CheckinHandlerUtil
-                        .disableWhenDumb(myProject, cleanupCodeCb, "Code analysis is impossible until indices are up-to-date");
-                    return cbPanel;
-                }
-
-                @Override
-                public void refresh() {
-                }
-
-                @Override
-                public void saveState() {
-                    VcsConfiguration.getInstance(myProject).CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT = cleanupCodeCb.isSelected();
-                }
-
-                @Override
-                public void restoreState() {
-                    cleanupCodeCb.setSelected(VcsConfiguration.getInstance(myProject).CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT);
-                }
-            };
+            return new CheckBoxRefreshableOnComponent(
+                VcsLocalize.beforeCheckinCleanupCode(),
+                myProject,
+                LocalizeValue.localizeTODO("Code analysis is impossible until indices are up-to-date"),
+                () -> VcsConfiguration.getInstance(myProject).CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT,
+                value -> VcsConfiguration.getInstance(myProject).CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT = value
+            );
         }
 
         @Override

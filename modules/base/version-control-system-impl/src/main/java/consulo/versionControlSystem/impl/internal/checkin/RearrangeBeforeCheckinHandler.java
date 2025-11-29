@@ -18,14 +18,17 @@ package consulo.versionControlSystem.impl.internal.checkin;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.SharedLayoutProcessors;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -44,37 +47,19 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
         myPanel = panel;
     }
 
+    @RequiredUIAccess
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox rearrangeBox = new NonFocusableCheckBox(VcsLocalize.checkboxCheckinOptionsRearrangeCode().get());
-        CheckinHandlerUtil.disableWhenDumb(myProject, rearrangeBox, "Impossible until indices are up-to-date");
-        return new RefreshableOnComponent() {
-            @Override
-            public JComponent getComponent() {
-                JPanel panel = new JPanel(new GridLayout(1, 0));
-                panel.add(rearrangeBox);
-                return panel;
-            }
+        VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
 
-            @Override
-            public void refresh() {
-            }
-
-            @Override
-            public void saveState() {
-                getSettings().REARRANGE_BEFORE_PROJECT_COMMIT = rearrangeBox.isSelected();
-            }
-
-            @Override
-            public void restoreState() {
-                rearrangeBox.setSelected(getSettings().REARRANGE_BEFORE_PROJECT_COMMIT);
-            }
-        };
-    }
-
-    private VcsConfiguration getSettings() {
-        return VcsConfiguration.getInstance(myProject);
+        return new CheckBoxRefreshableOnComponent(
+            VcsLocalize.checkboxCheckinOptionsRearrangeCode(),
+            myProject,
+            LocalizeValue.localizeTODO("Impossible until indices are up-to-date"),
+            () -> configuration.REARRANGE_BEFORE_PROJECT_COMMIT,
+            value -> configuration.REARRANGE_BEFORE_PROJECT_COMMIT = value
+        );
     }
 
     @Override

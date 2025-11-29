@@ -59,6 +59,7 @@ public abstract class CheckinHandler {
      * "Before Check In" group.
      */
     @Nullable
+    @RequiredUIAccess
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return null;
     }

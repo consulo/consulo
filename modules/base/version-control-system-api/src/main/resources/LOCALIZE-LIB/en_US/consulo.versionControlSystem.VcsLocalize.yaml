@@ -207,7 +207,7 @@ apply.patch.summary.title:
 background.operations.title:
     text: Background Operations
 before.checkin.cleanup.code:
-    text: C&leanup
+    text: Code c&leanup
 before.checkin.new.todo.check:
     text: Check TODO ({0})
 before.checkin.new.todo.check.title:

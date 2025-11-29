@@ -18,18 +18,19 @@ package consulo.versionControlSystem.impl.internal.checkin;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Collection;
 
 public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
@@ -41,39 +42,20 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
         myPanel = panel;
     }
 
+    @RequiredUIAccess
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox optimizeBox = new JCheckBox(VcsLocalize.checkboxCheckinOptionsOptimizeImports().get());
-        CheckinHandlerUtil.disableWhenDumb(myProject, optimizeBox, "Impossible until indices are up-to-date");
-
-        return new RefreshableOnComponent() {
-            @Override
-            public JComponent getComponent() {
-                JPanel panel = new JPanel(new GridLayout(1, 0));
-                panel.add(optimizeBox);
-                return panel;
-            }
-
-            @Override
-            public void refresh() {
-            }
-
-            @Override
-            public void saveState() {
-                getSettings().OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT = optimizeBox.isSelected();
-            }
-
-            @Override
-            public void restoreState() {
-                optimizeBox.setSelected(getSettings().OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT);
-            }
-        };
-
-    }
-
-    protected VcsConfiguration getSettings() {
-        return VcsConfiguration.getInstance(myProject);
+        VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
+        return new CheckBoxRefreshableOnComponent(
+                VcsLocalize.checkboxCheckinOptionsOptimizeImports(),
+                myProject,
+                LocalizeValue.localizeTODO("Impossible until indices are up-to-date"),
+                () -> {
+                    return settings.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT;
+                },
+                value -> settings.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT = value
+        );
     }
 
     @Override

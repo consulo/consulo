@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.checkin;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
@@ -31,14 +32,12 @@ import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.checkin.CheckinHandler;
-import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -60,33 +59,17 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         myCheckinPanel = panel;
     }
 
+    @RequiredUIAccess
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox checkBox = new JCheckBox(VcsLocalize.beforeCheckinStandardOptionsCheckSmells().get());
-        return new RefreshableOnComponent() {
-            @Override
-            public JComponent getComponent() {
-                JPanel panel = new JPanel(new BorderLayout());
-                panel.add(checkBox);
-                CheckinHandlerUtil.disableWhenDumb(myProject, checkBox, "Code analysis is impossible until indices are up-to-date");
-                return panel;
-            }
-
-            @Override
-            public void refresh() {
-            }
-
-            @Override
-            public void saveState() {
-                getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = checkBox.isSelected();
-            }
-
-            @Override
-            public void restoreState() {
-                checkBox.setSelected(getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT);
-            }
-        };
+        return new CheckBoxRefreshableOnComponent(
+            VcsLocalize.beforeCheckinStandardOptionsCheckSmells(),
+            myProject,
+            LocalizeValue.localizeTODO("Code analysis is impossible until indices are up-to-date"),
+            () -> getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT,
+            value -> getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = value
+        );
     }
 
     private VcsConfiguration getSettings() {
@@ -126,9 +109,9 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
     private static int collectErrors(List<CodeSmellInfo> codeSmells) {
         int result = 0;
         for (CodeSmellInfo codeSmellInfo : codeSmells) {
-          if (codeSmellInfo.getSeverity() == HighlightSeverity.ERROR) {
-            result++;
-          }
+            if (codeSmellInfo.getSeverity() == HighlightSeverity.ERROR) {
+                result++;
+            }
         }
         return result;
     }

@@ -19,17 +19,17 @@ import consulo.document.FileDocumentManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Collection;
 
 public class ReformatBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
@@ -43,38 +43,17 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
         myPanel = panel;
     }
 
+    @RequiredUIAccess
     @Override
     @Nullable
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox reformatBox = new JCheckBox(VcsLocalize.checkboxCheckinOptionsReformatCode().get());
+        VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
 
-        return new RefreshableOnComponent() {
-            @Override
-            public JComponent getComponent() {
-                JPanel panel = new JPanel(new GridLayout(1, 0));
-                panel.add(reformatBox);
-                return panel;
-            }
-
-            @Override
-            public void refresh() {
-            }
-
-            @Override
-            public void saveState() {
-                getSettings().REFORMAT_BEFORE_PROJECT_COMMIT = reformatBox.isSelected();
-            }
-
-            @Override
-            public void restoreState() {
-                reformatBox.setSelected(getSettings().REFORMAT_BEFORE_PROJECT_COMMIT);
-            }
-        };
-
-    }
-
-    protected VcsConfiguration getSettings() {
-        return VcsConfiguration.getInstance(myProject);
+        return new CheckBoxRefreshableOnComponent(
+            VcsLocalize.checkboxCheckinOptionsReformatCode(),
+            () -> configuration.REFORMAT_BEFORE_PROJECT_COMMIT,
+            value -> configuration.REFORMAT_BEFORE_PROJECT_COMMIT = value
+        );
     }
 
     @Override

@@ -29,20 +29,21 @@ import consulo.language.editor.todo.impl.internal.TodoView;
 import consulo.language.editor.todo.impl.internal.action.SetTodoFilterAction;
 import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ModalityState;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -56,8 +57,6 @@ import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -82,51 +81,59 @@ public class TodoCheckinHandler extends CheckinHandler {
         myConfiguration = VcsConfiguration.getInstance(myProject);
     }
 
+    @RequiredUIAccess
     @Override
     public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        JCheckBox checkBox = new JCheckBox(VcsLocalize.beforeCheckinNewTodoCheck("").get());
+        CheckBox checkBox = CheckBox.create(VcsLocalize.beforeCheckinNewTodoCheck(""));
         return new RefreshableOnComponent() {
+            @RequiredUIAccess
+            @Nonnull
             @Override
-            public JComponent getComponent() {
-                JPanel panel = new JPanel(new BorderLayout(4, 0));
-                panel.add(checkBox, BorderLayout.WEST);
+            public Component getUIComponent() {
+                HorizontalLayout panel = HorizontalLayout.create();
+                panel.add(checkBox);
+
                 setFilterText(myConfiguration.myTodoPanelSettings.todoFilterName);
                 if (myConfiguration.myTodoPanelSettings.todoFilterName != null) {
                     myTodoFilter = TodoConfiguration.getInstance().getTodoFilter(myConfiguration.myTodoPanelSettings.todoFilterName);
                 }
 
-                Consumer<TodoFilter> consumer = todoFilter -> {
+                @RequiredUIAccess Consumer<TodoFilter> consumer = todoFilter -> {
                     myTodoFilter = todoFilter;
                     String name = todoFilter == null ? null : todoFilter.getName();
                     myConfiguration.myTodoPanelSettings.todoFilterName = name;
                     setFilterText(name);
                 };
-                LinkLabel linkLabel = new LinkLabel("Configure", null);
-                linkLabel.setListener(
-                    (aSource, aLinkData) -> {
-                        SetTodoFilterAction group = new SetTodoFilterAction(myProject, myConfiguration.myTodoPanelSettings, consumer);
-                        ActionPopupMenu popupMenu =
+
+                Button configureButton = Button.create(LocalizeValue.empty());
+                configureButton.setToolTipText(LocalizeValue.localizeTODO("Configure"));
+                configureButton.setIcon(PlatformIconGroup.generalGearplain());
+                configureButton.addStyle(ButtonStyle.TOOLBAR);
+
+                configureButton.addClickListener(event -> {
+                    SetTodoFilterAction group = new SetTodoFilterAction(myProject, myConfiguration.myTodoPanelSettings, consumer);
+                    ActionPopupMenu popupMenu =
                             ActionManager.getInstance().createActionPopupMenu(ActionPlaces.TODO_VIEW_TOOLBAR, group);
-                        popupMenu.getComponent().show(linkLabel, 0, linkLabel.getHeight());
-                    },
-                    null
-                );
-                panel.add(linkLabel, BorderLayout.CENTER);
+                    popupMenu.showUnder(configureButton);
+                });
+
+                panel.add(configureButton);
 
                 CheckinHandlerUtil.disableWhenDumb(
-                    myProject,
-                    checkBox,
-                    "TODO check is impossible until indices are up-to-date"
+                        myProject,
+                        checkBox,
+                        LocalizeValue.localizeTODO("TODO check is impossible until indices are up-to-date")
                 );
                 return panel;
             }
 
+            @RequiredUIAccess
             private void setFilterText(String filterName) {
                 if (filterName == null) {
-                    checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(LanguageTodoLocalize.actionTodoShowAll()).get());
+                    checkBox.setLabelText(VcsLocalize.beforeCheckinNewTodoCheck(LanguageTodoLocalize.actionTodoShowAll()));
                 }
                 else {
-                    checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck("Filter: " + filterName).get());
+                    checkBox.setLabelText(VcsLocalize.beforeCheckinNewTodoCheck("Filter: " + filterName));
                 }
             }
 
@@ -136,12 +143,13 @@ public class TodoCheckinHandler extends CheckinHandler {
 
             @Override
             public void saveState() {
-                myConfiguration.CHECK_NEW_TODO = checkBox.isSelected();
+                myConfiguration.CHECK_NEW_TODO = checkBox.getValueOrError();
             }
 
             @Override
+            @RequiredUIAccess
             public void restoreState() {
-                checkBox.setSelected(myConfiguration.CHECK_NEW_TODO);
+                checkBox.setValue(myConfiguration.CHECK_NEW_TODO);
             }
         };
     }
@@ -155,14 +163,14 @@ public class TodoCheckinHandler extends CheckinHandler {
         if (DumbService.getInstance(myProject).isDumb()) {
             LocalizeValue todoName = VcsLocalize.beforeCheckinNewTodoCheckTitle();
             if (Messages.showOkCancelDialog(
-                myProject,
-                todoName +
-                    " can't be performed while " + Application.get().getName().get() + " updates the indices in background.\n" +
-                    "You can commit the changes without running checks, or you can wait until indices are built.",
-                todoName + " is not possible right now",
-                "&Wait",
-                "&Commit",
-                null
+                    myProject,
+                    todoName +
+                            " can't be performed while " + Application.get().getName().get() + " updates the indices in background.\n" +
+                            "You can commit the changes without running checks, or you can wait until indices are built.",
+                    todoName + " is not possible right now",
+                    "&Wait",
+                    "&Commit",
+                    null
             ) == Messages.OK) {
                 return ReturnResult.CANCEL;
             }
@@ -173,22 +181,22 @@ public class TodoCheckinHandler extends CheckinHandler {
 
         SimpleReference<Boolean> completed = SimpleReference.create(Boolean.FALSE);
         ProgressManager.getInstance().run(
-            new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items..."), true) {
-                @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
-                    indicator.setIndeterminate(true);
-                    worker.execute();
-                }
+                new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items..."), true) {
+                    @Override
+                    public void run(@Nonnull ProgressIndicator indicator) {
+                        indicator.setIndeterminate(true);
+                        worker.execute();
+                    }
 
-                @Override
-                @RequiredUIAccess
-                public void onSuccess() {
-                    completed.set(Boolean.TRUE);
+                    @Override
+                    @RequiredUIAccess
+                    public void onSuccess() {
+                        completed.set(Boolean.TRUE);
+                    }
                 }
-            }
         );
         if (completed.get() && (worker.getAddedOrEditedTodos().isEmpty() && worker.getInChangedTodos().isEmpty() &&
-            worker.getSkipped().isEmpty())) {
+                worker.getSkipped().isEmpty())) {
             return ReturnResult.COMMIT;
         }
         if (!completed.get()) {
@@ -209,12 +217,12 @@ public class TodoCheckinHandler extends CheckinHandler {
             return askReviewOrCommit(worker, commitButtonText, text, title);
         }
         else if (YES == showYesNoDialog(
-            myProject,
-            text.get(),
-            title,
-            commitButtonText.get(),
-            CommonLocalize.buttonCancel().get(),
-            getWarningIcon()
+                myProject,
+                text.get(),
+                title,
+                commitButtonText.get(),
+                CommonLocalize.buttonCancel().get(),
+                getWarningIcon()
         )) {
             return ReturnResult.COMMIT;
         }
@@ -224,20 +232,20 @@ public class TodoCheckinHandler extends CheckinHandler {
     @Nonnull
     @RequiredUIAccess
     private ReturnResult askReviewOrCommit(
-        @Nonnull TodoCheckinHandlerWorker worker,
-        @Nonnull LocalizeValue commitButton,
-        @Nonnull LocalizeValue text,
-        @Nonnull String title
+            @Nonnull TodoCheckinHandlerWorker worker,
+            @Nonnull LocalizeValue commitButton,
+            @Nonnull LocalizeValue text,
+            @Nonnull String title
     ) {
         LocalizeValue yesButton = VcsLocalize.todoInNewReviewButton();
         int result = showYesNoCancelDialog(
-            myProject,
-            text.get(),
-            title,
-            yesButton.get(),
-            commitButton.get(),
-            getCancelButtonText(),
-            getWarningIcon()
+                myProject,
+                text.get(),
+                title,
+                yesButton.get(),
+                commitButton.get(),
+                getCancelButtonText(),
+                getWarningIcon()
         );
         return switch (result) {
             case YES -> {
@@ -252,9 +260,9 @@ public class TodoCheckinHandler extends CheckinHandler {
     private void showTodo(TodoCheckinHandlerWorker worker) {
         String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
         myProject.getInstance(TodoView.class).addCustomTodoView(
-            (tree, project) -> new CustomChangelistTodosTreeBuilder(tree, myProject, title, worker.inOneList()),
-            title,
-            new TodoPanelSettings(myConfiguration.myTodoPanelSettings)
+                (tree, project) -> new CustomChangelistTodosTreeBuilder(tree, myProject, title, worker.inOneList()),
+                title,
+                new TodoPanelSettings(myConfiguration.myTodoPanelSettings)
         );
 
         ApplicationManager.getApplication().invokeLater(() -> {

@@ -15,14 +15,19 @@
  */
 package consulo.versionControlSystem.checkin;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
+import consulo.ui.CheckBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
@@ -37,51 +42,64 @@ import java.util.List;
  * @author oleg
  */
 public class CheckinHandlerUtil {
-  public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(@Nonnull Collection<VirtualFile> files, @Nonnull Project project) {
-    ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
-    List<VirtualFile> result = new ArrayList<>(files.size());
-    for (VirtualFile file : files) {
-      if (!fileIndex.isExcluded(file) && !GeneratedSourcesFilter.isGenerated(project, file)) {
-        result.add(file);
-      }
-    }
-    return result;
-  }
-
-  public static PsiFile[] getPsiFiles(Project project, Collection<VirtualFile> selectedFiles) {
-    ArrayList<PsiFile> result = new ArrayList<>();
-    PsiManager psiManager = PsiManager.getInstance(project);
-
-    VirtualFile projectFileDir = null;
-    VirtualFile baseDir = project.getBaseDir();
-    if (baseDir != null) {
-      projectFileDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
-    }
-
-    for (VirtualFile file : selectedFiles) {
-      if (file.isValid()) {
-        if (isUnderProjectFileDir(projectFileDir, file) || !isFileUnderSourceRoot(project, file)) {
-          continue;
+    @RequiredReadAction
+    public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(@Nonnull Collection<VirtualFile> files, @Nonnull Project project) {
+        ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
+        List<VirtualFile> result = new ArrayList<>(files.size());
+        for (VirtualFile file : files) {
+            if (!fileIndex.isExcluded(file) && !GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project)) {
+                result.add(file);
+            }
         }
-        PsiFile psiFile = psiManager.findFile(file);
-        if (psiFile != null) result.add(psiFile);
-      }
+        return result;
     }
-    return PsiUtilCore.toPsiFileArray(result);
-  }
 
-  private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, @Nonnull VirtualFile file) {
-    return projectFileDir != null && VirtualFileUtil.isAncestor(projectFileDir, file, false);
-  }
+    @RequiredReadAction
+    public static PsiFile[] getPsiFiles(Project project, Collection<VirtualFile> selectedFiles) {
+        ArrayList<PsiFile> result = new ArrayList<>();
+        PsiManager psiManager = PsiManager.getInstance(project);
 
-  private static boolean isFileUnderSourceRoot(@Nonnull Project project, @Nonnull VirtualFile file) {
-    ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-    return index.isInContent(file) && !index.isInLibrarySource(file);
-  }
+        VirtualFile projectFileDir = null;
+        VirtualFile baseDir = project.getBaseDir();
+        if (baseDir != null) {
+            projectFileDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
+        }
 
-  public static void disableWhenDumb(@Nonnull Project project, @Nonnull JCheckBox checkBox, @Nonnull String tooltip) {
-    boolean dumb = DumbService.isDumb(project);
-    checkBox.setEnabled(!dumb);
-    checkBox.setToolTipText(dumb ? tooltip : "");
-  }
+        for (VirtualFile file : selectedFiles) {
+            if (file.isValid()) {
+                if (isUnderProjectFileDir(projectFileDir, file) || !isFileUnderSourceRoot(project, file)) {
+                    continue;
+                }
+                PsiFile psiFile = psiManager.findFile(file);
+                if (psiFile != null) {
+                    result.add(psiFile);
+                }
+            }
+        }
+        return PsiUtilCore.toPsiFileArray(result);
+    }
+
+    private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, @Nonnull VirtualFile file) {
+        return projectFileDir != null && VirtualFileUtil.isAncestor(projectFileDir, file, false);
+    }
+
+    private static boolean isFileUnderSourceRoot(@Nonnull Project project, @Nonnull VirtualFile file) {
+        ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+        return index.isInContent(file) && !index.isInLibrarySource(file);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #disableWhenDumb() with new UI")
+    public static void disableWhenDumb(@Nonnull Project project, @Nonnull JCheckBox checkBox, @Nonnull String tooltip) {
+        boolean dumb = DumbService.isDumb(project);
+        checkBox.setEnabled(!dumb);
+        checkBox.setToolTipText(dumb ? tooltip : "");
+    }
+
+    @RequiredUIAccess
+    public static void disableWhenDumb(@Nonnull Project project, @Nonnull CheckBox checkBox, @Nonnull LocalizeValue tooltip) {
+        boolean dumb = DumbService.isDumb(project);
+        checkBox.setEnabled(!dumb);
+        checkBox.setToolTipText(dumb ? tooltip : LocalizeValue.empty());
+    }
 }

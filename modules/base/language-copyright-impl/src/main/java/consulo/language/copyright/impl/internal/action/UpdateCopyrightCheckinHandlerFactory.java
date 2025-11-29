@@ -21,19 +21,19 @@ import consulo.document.FileDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,32 +49,14 @@ public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory 
     @Nonnull
     public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
         return new CheckinHandler() {
+            @RequiredUIAccess
             @Override
             public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-                final JCheckBox updateCopyrightCb = new JCheckBox("Update copyright");
-                return new RefreshableOnComponent() {
-                    @Override
-                    public JComponent getComponent() {
-                        JPanel panel = new JPanel(new BorderLayout());
-                        panel.add(updateCopyrightCb, BorderLayout.WEST);
-                        return panel;
-                    }
-
-                    @Override
-                    public void refresh() {
-                    }
-
-                    @Override
-                    public void saveState() {
-                        UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT =
-                            updateCopyrightCb.isSelected();
-                    }
-
-                    @Override
-                    public void restoreState() {
-                        updateCopyrightCb.setSelected(UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT);
-                    }
-                };
+                return new CheckBoxRefreshableOnComponent(
+                    LocalizeValue.localizeTODO("Update copyright"),
+                    () -> UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT,
+                    value -> UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT = value
+                );
             }
 
             @Override

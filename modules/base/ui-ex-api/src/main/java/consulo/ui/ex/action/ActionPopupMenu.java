@@ -65,5 +65,9 @@ public interface ActionPopupMenu {
 
     void show(Component component, int x, int y);
 
+    default void showUnder(Component component) {
+        show(component, 0, 0);
+    }
+
     void hide();
 }

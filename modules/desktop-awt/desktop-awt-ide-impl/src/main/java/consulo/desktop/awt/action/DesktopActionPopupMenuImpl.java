@@ -75,6 +75,12 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
     }
 
     @Override
+    public void showUnder(consulo.ui.Component component) {
+        Component awtComponent = TargetAWT.to(component);
+        show(component, 0, awtComponent.getHeight());
+    }
+
+    @Override
     public void hide() {
         myMenu.setVisible(false);
     }
