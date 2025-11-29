@@ -45,6 +45,18 @@ import java.util.function.Predicate;
  */
 public interface HighlightInfo extends Segment {
     public interface Builder {
+        public interface FixBuilder {
+            FixBuilder options(@Nonnull List<IntentionAction> options);
+
+            FixBuilder displayName(@Nonnull LocalizeValue displayName);
+
+            FixBuilder fixRange(@Nonnull TextRange fixRange);
+
+            FixBuilder key(@Nonnull HighlightDisplayKey key);
+
+            Builder register();
+        }
+
         // only one 'range' call allowed
         @Nonnull
         default Builder range(@Nonnull TextRange textRange) {
@@ -87,6 +99,7 @@ public interface HighlightInfo extends Segment {
         Builder description(@Nonnull LocalizeValue description);
 
         @Nonnull
+        @SuppressWarnings("deprecation")
         default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
             return descriptionAndTooltip(description.get());
         }
@@ -141,6 +154,8 @@ public interface HighlightInfo extends Segment {
             @Nullable HighlightDisplayKey key
         );
 
+        FixBuilder newFix(@Nonnull IntentionAction action);
+
         /**
          * @return null means filtered out
          */
@@ -162,6 +177,7 @@ public interface HighlightInfo extends Segment {
         @Nonnull
         @Deprecated
         @DeprecationInfo("Use #descriptionAndTooltip(LocalizeValue)")
+        @SuppressWarnings("deprecation")
         default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
             return description(description).unescapedToolTip(description);
         }
@@ -221,7 +237,7 @@ public interface HighlightInfo extends Segment {
     GutterMark getGutterIconRenderer();
 
     @Deprecated
-    @DeprecationInfo("HighlightInfo.Builder#registerFix")
+    @DeprecationInfo("Use HighlightInfo.Builder.registerFix() or HighlightInfo.Builder.newFix()...register()")
     void registerFix(
         @Nullable IntentionAction action,
         @Nullable List<IntentionAction> options,

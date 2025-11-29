@@ -41,6 +41,52 @@ import java.util.List;
  * @since 2024-03-09
  */
 class HighlightInfoBuilder implements HighlightInfo.Builder {
+    class MyFixBuilder implements FixBuilder {
+        @Nonnull
+        private final IntentionAction myAction;
+        @Nullable
+        private List<IntentionAction> myOptions = null;
+        @Nonnull
+        private LocalizeValue myDisplayName = LocalizeValue.empty();
+        @Nullable
+        private TextRange myFixRange;
+        @Nullable
+        private HighlightDisplayKey myKey;
+
+        public MyFixBuilder(@Nonnull IntentionAction action) {
+            myAction = action;
+        }
+
+        @Override
+        public FixBuilder options(@Nonnull List<IntentionAction> options) {
+            myOptions = options;
+            return this;
+        }
+
+        @Override
+        public FixBuilder displayName(@Nonnull LocalizeValue displayName) {
+            myDisplayName = displayName;
+            return this;
+        }
+
+        @Override
+        public FixBuilder fixRange(@Nonnull TextRange fixRange) {
+            myFixRange = fixRange;
+            return this;
+        }
+
+        @Override
+        public FixBuilder key(@Nonnull HighlightDisplayKey key) {
+            myKey = key;
+            return this;
+        }
+
+        @Override
+        public HighlightInfo.Builder register() {
+            return registerFix(myAction, myOptions, myDisplayName, myFixRange, myKey);
+        }
+    }
+
     private static final LocalizeValue UNSET = LocalizeValue.of("__UNSET__");
 
     private static final Logger LOG = Logger.getInstance(HighlightInfoBuilder.class);
@@ -251,6 +297,12 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         assertNotCreated();
         fixes.add(new FixInfo(action, options, displayName, fixRange, key));
         return this;
+    }
+
+    @Override
+    public FixBuilder newFix(@Nonnull IntentionAction action) {
+        assertNotCreated();
+        return new MyFixBuilder(action);
     }
 
     @Nullable
