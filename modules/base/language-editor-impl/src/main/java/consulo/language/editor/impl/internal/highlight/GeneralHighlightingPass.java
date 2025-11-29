@@ -33,6 +33,7 @@ import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.*;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -70,6 +71,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     protected final EditorColorsScheme myGlobalScheme;
     private volatile Supplier<List<HighlightVisitorFactory>> myHighlightVisitorProducer;
 
+    @RequiredReadAction
     public GeneralHighlightingPass(
         @Nonnull Project project,
         @Nonnull PsiFile file,
@@ -189,16 +191,15 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                 dividedElements::add
             );
             List<PsiElement> allInsideElements =
-                ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(dividedElements, dividedForRoot -> {
+                ContainerUtil.concat((List<List<PsiElement>>) ContainerUtil.map(dividedElements, dividedForRoot -> {
                     List<PsiElement> inside = dividedForRoot.inside;
-                    PsiElement lastInside = ContainerUtil.getLastItem(inside);
-                    return lastInside instanceof PsiFile && !(lastInside instanceof PsiCodeFragment)
+                    return ContainerUtil.getLastItem(inside) instanceof PsiFile lastInside && !(lastInside instanceof PsiCodeFragment)
                         ? inside.subList(0, inside.size() - 1)
                         : inside;
                 }));
 
 
-            List<ProperTextRange> allInsideRanges = ContainerUtil.concat((List<List<ProperTextRange>>)ContainerUtil.map(
+            List<ProperTextRange> allInsideRanges = ContainerUtil.concat((List<List<ProperTextRange>>) ContainerUtil.map(
                 dividedElements,
                 dividedForRoot -> {
                     List<ProperTextRange> insideRanges = dividedForRoot.insideRanges;
@@ -210,7 +211,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
             ));
 
             List<PsiElement> allOutsideElements =
-                ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(
+                ContainerUtil.concat((List<List<PsiElement>>) ContainerUtil.map(
                     dividedElements,
                     dividedForRoot -> {
                         List<PsiElement> outside = dividedForRoot.outside;
@@ -221,7 +222,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                     }
                 ));
             List<ProperTextRange> allOutsideRanges =
-                ContainerUtil.concat((List<List<ProperTextRange>>)ContainerUtil.map(
+                ContainerUtil.concat((List<List<ProperTextRange>>) ContainerUtil.map(
                     dividedElements,
                     dividedForRoot -> {
                         List<ProperTextRange> outsideRanges = dividedForRoot.outsideRanges;
@@ -294,7 +295,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         getFile().putUserData(HAS_ERROR_ELEMENT, myHasErrorElement);
 
         if (myUpdateAll) {
-            ((HighlightingSessionImpl)myHighlightingSession).applyInEDT(this::reportErrorsToWolf);
+            ((HighlightingSessionImpl) myHighlightingSession).applyInEDT(this::reportErrorsToWolf);
         }
     }
 
@@ -372,8 +373,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         // there can be extra highlights generated in PostHighlightVisitor
         for (int j = 0; j < holder.size(); j++) {
             HighlightInfo info = holder.get(j);
-            assert info != null;
-            postInfos.add((HighlightInfoImpl)info);
+            postInfos.add((HighlightInfoImpl) info);
         }
         myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(
             myHighlightingSession,
@@ -457,7 +457,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
             TextRange elementRange = ranges.get(i);
             List<HighlightInfo> infosForThisRange = holder.size() == 0 ? null : new ArrayList<>(holder.size());
             for (int j = 0; j < holder.size(); j++) {
-                HighlightInfoImpl info = (HighlightInfoImpl)holder.get(j);
+                HighlightInfoImpl info = (HighlightInfoImpl) holder.get(j);
 
                 if (!myRestrictRange.contains(info)) {
                     continue;
@@ -477,7 +477,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                 // if this highlight info range is exactly the same as the element range we are visiting
                 // that means we can clear this highlight as soon as visitors won't produce any highlights during visiting the same range next time.
                 // We also know that we can remove syntax error element.
-                info.setBijective(elementRange.equalsToRange(info.startOffset, info.endOffset) || isErrorElement);
+                info.setBijective(elementRange.equalsToRange(info.getStartOffset(), info.getEndOffset()) || isErrorElement);
 
                 myHighlightInfoProcessor.infoIsAvailable(myHighlightingSession, info, myPriorityRange, myRestrictRange, Pass.UPDATE_ALL);
                 infosForThisRange.add(info);
@@ -525,31 +525,27 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return RESTART_REQUESTS.get() > 0;
     }
 
-    private static void cancelAndRestartDaemonLater(
-        @Nonnull ProgressIndicator progress,
-        @Nonnull Project project
-    ) throws ProcessCanceledException {
+    private static void cancelAndRestartDaemonLater(@Nonnull ProgressIndicator progress, @Nonnull Project project)
+        throws ProcessCanceledException {
         RESTART_REQUESTS.incrementAndGet();
         progress.cancel();
         int delay = RESTART_DAEMON_RANDOM.nextInt(100);
-        project.getUIAccess().getScheduler().schedule(() -> {
-            RESTART_REQUESTS.decrementAndGet();
-            if (!project.isDisposed()) {
-                DaemonCodeAnalyzer.getInstance(project).restart();
-            }
-        }, delay, TimeUnit.MILLISECONDS);
+        project.getUIAccess().getScheduler().schedule(
+            () -> {
+                RESTART_REQUESTS.decrementAndGet();
+                if (!project.isDisposed()) {
+                    DaemonCodeAnalyzer.getInstance(project).restart();
+                }
+            },
+            delay,
+            TimeUnit.MILLISECONDS
+        );
         throw new ProcessCanceledException();
     }
 
     private boolean forceHighlightParents() {
-        boolean forceHighlightParents = false;
-        for (HighlightRangeExtension extension : HighlightRangeExtension.EP_NAME.getExtensionList()) {
-            if (extension.isForceHighlightParents(getFile())) {
-                forceHighlightParents = true;
-                break;
-            }
-        }
-        return forceHighlightParents;
+        return myProject.getApplication().getExtensionPoint(HighlightRangeExtension.class)
+            .anyMatchSafe(extension -> extension.isForceHighlightParents(getFile()));
     }
 
     @Nonnull
@@ -560,8 +556,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return new HighlightInfoHolder(file, filters) {
             int queued;
 
-            @Override
             @Nonnull
+            @Override
             public TextAttributesScheme getColorsScheme() {
                 return actualScheme;
             }
@@ -584,7 +580,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
-        int group = ((HighlightInfoImpl)info).getGroup() == 0 ? Pass.UPDATE_ALL : ((HighlightInfoImpl)info).getGroup();
+        HighlightInfoImpl infoImpl = (HighlightInfoImpl) info;
+        int group = infoImpl.getGroup() == 0 ? Pass.UPDATE_ALL : infoImpl.getGroup();
         myHighlightInfoProcessor.infoIsAvailable(myHighlightingSession, info, myPriorityRange, myRestrictRange, group);
     }
 
@@ -616,8 +613,11 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
             JBIterable.of(textRange)
                 .append(additionalRanges)
                 .forEach(range -> joiner.add(text.subSequence(range.getStartOffset(), range.getEndOffset())));
-            String description = joiner.toString();
-            String tooltip = XmlStringUtil.escapeString(StringUtil.shortenPathWithEllipsis(description, 1024)).replace("\n", "<br>");
+            LocalizeValue description = LocalizeValue.of(joiner.toString());
+            LocalizeValue tooltip = description.map(
+                (localizeManager, s) -> XmlStringUtil.escapeString(StringUtil.shortenPathWithEllipsis(s, 1024))
+                    .replace("\n", "<br>")
+            );
 
             TextAttributes attributes = TodoAttributesUtil.getTextAttributes(todoItem.getPattern().getAttributes());
             addTodoItem(startOffset, endOffset, priorityRange, insideResult, outsideResult, attributes, description, tooltip, textRange);
@@ -648,14 +648,14 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         @Nonnull Collection<? super HighlightInfoImpl> insideResult,
         @Nonnull Collection<? super HighlightInfoImpl> outsideResult,
         @Nonnull TextAttributes attributes,
-        @Nonnull String description,
-        @Nonnull String tooltip,
+        @Nonnull LocalizeValue description,
+        @Nonnull LocalizeValue tooltip,
         @Nonnull TextRange range
     ) {
         if (range.getStartOffset() >= restrictEndOffset || range.getEndOffset() <= restrictStartOffset) {
             return;
         }
-        HighlightInfoImpl info = (HighlightInfoImpl)HighlightInfoImpl.newHighlightInfo(HighlightInfoType.TODO)
+        HighlightInfoImpl info = (HighlightInfoImpl) HighlightInfoImpl.newHighlightInfo(HighlightInfoType.TODO)
             .range(range)
             .textAttributes(attributes)
             .description(description)
@@ -705,7 +705,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         List<Problem> problems = new SmartList<>();
         for (HighlightInfo info : infos) {
             if (info.getSeverity() == HighlightSeverity.ERROR) {
-                Problem problem = new ProblemImpl(file, (HighlightInfoImpl)info, hasErrorElement);
+                Problem problem = new ProblemImpl(file, (HighlightInfoImpl) info, hasErrorElement);
                 problems.add(problem);
             }
         }

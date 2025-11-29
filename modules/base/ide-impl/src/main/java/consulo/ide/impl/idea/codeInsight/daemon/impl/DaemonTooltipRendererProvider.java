@@ -6,18 +6,19 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
 import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,90 +27,106 @@ import java.util.List;
  * @author max
  */
 public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
-  private final Project myProject;
-  private final Editor myEditor;
+    private final Project myProject;
+    private final Editor myEditor;
 
-  public DaemonTooltipRendererProvider(Project project, Editor editor) {
-    myProject = project;
-    myEditor = editor;
-  }
+    public DaemonTooltipRendererProvider(Project project, Editor editor) {
+        myProject = project;
+        myEditor = editor;
+    }
 
-  @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
-    LineTooltipRenderer bigRenderer = null;
-    List<HighlightInfoImpl> infos = new SmartList<>();
-    Collection<String> tooltips = new HashSet<>(); //do not show same tooltip twice
-    for (RangeHighlighter marker : highlighters) {
-      Object tooltipObject = marker.getErrorStripeTooltip();
-      if (tooltipObject == null) continue;
-      if (tooltipObject instanceof HighlightInfoImpl) {
-        HighlightInfoImpl info = (HighlightInfoImpl)tooltipObject;
-        if (info.getToolTip() != null && tooltips.add(info.getToolTip())) {
-          infos.add(info);
+    @Override
+    public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
+        LineTooltipRenderer bigRenderer = null;
+        List<HighlightInfoImpl> infos = new SmartList<>();
+        Collection<LocalizeValue> tooltips = new HashSet<>(); //do not show same tooltip twice
+        for (RangeHighlighter marker : highlighters) {
+            Object tooltipObject = marker.getErrorStripeTooltip();
+            if (tooltipObject == null) {
+                continue;
+            }
+            if (tooltipObject instanceof HighlightInfoImpl info) {
+                if (info.getToolTip() != LocalizeValue.empty() && tooltips.add(info.getToolTip())) {
+                    infos.add(info);
+                }
+            }
+            else {
+                String text = tooltipObject.toString();
+                if (tooltips.add(LocalizeValue.ofNullable(text))) {
+                    if (bigRenderer == null) {
+                        bigRenderer = new DaemonTooltipRenderer(text, new Object[]{highlighters});
+                    }
+                    else {
+                        bigRenderer.addBelow(text);
+                    }
+                }
+            }
         }
-      }
-      else {
-        String text = tooltipObject.toString();
-        if (tooltips.add(text)) {
-          if (bigRenderer == null) {
-            bigRenderer = new DaemonTooltipRenderer(text, new Object[]{highlighters});
-          }
-          else {
-            bigRenderer.addBelow(text);
-          }
+        if (!infos.isEmpty()) {
+            // show errors first
+            Lists.quickSort(
+                infos,
+                (o1, o2) -> {
+                    int i = SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(o2.getSeverity(), o1.getSeverity());
+                    if (i != 0) {
+                        return i;
+                    }
+                    return o1.getToolTip().compareTo(o2.getToolTip());
+                }
+            );
+            HighlightInfoComposite composite = HighlightInfoComposite.create(infos);
+            LocalizeValue tooltip = composite.getToolTip();
+            DaemonTooltipRenderer myRenderer;
+            if (Registry.is("ide.tooltip.show.with.actions")) {
+                TooltipAction action = TooltipActionProvider.calcTooltipAction(composite, myEditor);
+                myRenderer = new DaemonTooltipWithActionRenderer(
+                    tooltip.get(),
+                    action,
+                    0,
+                    action == null ? new Object[]{tooltip.get()} : new Object[]{tooltip.get(), action}
+                );
+            }
+            else {
+                myRenderer = new DaemonTooltipRenderer(tooltip.get(), new Object[]{highlighters});
+            }
+            if (bigRenderer != null) {
+                myRenderer.addBelow(bigRenderer.getText());
+            }
+            bigRenderer = myRenderer;
         }
-      }
-    }
-    if (!infos.isEmpty()) {
-      // show errors first
-      ContainerUtil.quickSort(infos, (o1, o2) -> {
-        int i = SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(o2.getSeverity(), o1.getSeverity());
-        if (i != 0) return i;
-        return o1.getToolTip().compareTo(o2.getToolTip());
-      });
-      HighlightInfoComposite composite = HighlightInfoComposite.create(infos);
-      String toolTip = composite.getToolTip();
-      DaemonTooltipRenderer myRenderer;
-      if (Registry.is("ide.tooltip.show.with.actions")) {
-        TooltipAction action = TooltipActionProvider.calcTooltipAction(composite, myEditor);
-        myRenderer = new DaemonTooltipWithActionRenderer(toolTip, action, 0, action == null ? new Object[]{toolTip} : new Object[]{toolTip, action});
-      }
-      else {
-        myRenderer = new DaemonTooltipRenderer(toolTip, new Object[]{highlighters});
-      }
-      if (bigRenderer != null) {
-        myRenderer.addBelow(bigRenderer.getText());
-      }
-      bigRenderer = myRenderer;
-    }
-    return bigRenderer;
-  }
-
-  @Nonnull
-  @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
-    return new DaemonTooltipRenderer(text, new Object[]{text});
-  }
-
-  @Nonnull
-  @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
-    return new DaemonTooltipRenderer(text, width, new Object[]{text});
-  }
-
-  @Nonnull
-  @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
-    if (action != null || Registry.is("ide.tooltip.show.with.actions")) {
-      return new DaemonTooltipWithActionRenderer(text, action, width, action == null ? new Object[]{text} : new Object[]{text, action});
+        return bigRenderer;
     }
 
-    return ErrorStripTooltipRendererProvider.super.calcTooltipRenderer(text, action, width);
-  }
+    @Nonnull
+    @Override
+    public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
+        return new DaemonTooltipRenderer(text, new Object[]{text});
+    }
 
-  @Nonnull
-  @Override
-  public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor) {
-    return new TrafficTooltipRendererImpl(onHide, editor);
-  }
+    @Nonnull
+    @Override
+    public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
+        return new DaemonTooltipRenderer(text, width, new Object[]{text});
+    }
+
+    @Nonnull
+    @Override
+    public TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
+        if (action != null || Registry.is("ide.tooltip.show.with.actions")) {
+            return new DaemonTooltipWithActionRenderer(
+                text,
+                action,
+                width,
+                action == null ? new Object[]{text} : new Object[]{text, action}
+            );
+        }
+
+        return ErrorStripTooltipRendererProvider.super.calcTooltipRenderer(text, action, width);
+    }
+
+    @Nonnull
+    @Override
+    public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor) {
+        return new TrafficTooltipRendererImpl(onHide, editor);
+    }
 }

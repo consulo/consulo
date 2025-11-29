@@ -6,6 +6,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPoint;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -72,7 +73,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     @RequiredUIAccess
     private void showImports() {
         UIAccess.assertIsUIThread();
-        Application application = Application.get();
+        Application application = myProject.getApplication();
         if (!application.isHeadlessEnvironment() && !myEditor.getContentComponent().hasFocus()) {
             return;
         }
@@ -90,13 +91,13 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
         for (int i = visibleHighlights.size() - 1; i >= 0; i--) {
             HighlightInfoImpl info = visibleHighlights.get(i);
-            if (info.startOffset <= caretOffset && showAddImportHint(info)) {
+            if (info.getStartOffset() <= caretOffset && showAddImportHint(info)) {
                 return;
             }
         }
 
         for (HighlightInfoImpl visibleHighlight : visibleHighlights) {
-            if (visibleHighlight.startOffset > caretOffset && showAddImportHint(visibleHighlight)) {
+            if (visibleHighlight.getStartOffset() > caretOffset && showAddImportHint(visibleHighlight)) {
                 return;
             }
         }
@@ -120,7 +121,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
             0,
             document.getTextLength(),
             i -> {
-                HighlightInfoImpl info = (HighlightInfoImpl)i;
+                HighlightInfoImpl info = (HighlightInfoImpl) i;
 
                 if (info.hasHint() && info.getSeverity() == HighlightSeverity.ERROR && !info.getFixTextRange()
                     .containsOffset(caretOffset)) {
@@ -130,19 +131,18 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
             }
         );
 
-        List<ReferenceImporter> importers = ReferenceImporter.EP_NAME.getExtensionList();
+        ExtensionPoint<ReferenceImporter> referenceImporters = myProject.getApplication().getExtensionPoint(ReferenceImporter.class);
+
         for (HighlightInfoImpl info : infos) {
             for (HintAction action : extractHints(info)) {
                 if (action.isAvailable(myProject, myEditor, myFile) && action.fixSilently(myEditor)) {
                     break;
                 }
             }
-            for (ReferenceImporter importer : importers) {
-                //noinspection deprecation
-                if (importer.autoImportReferenceAt(myEditor, myFile, info.getActualStartOffset())) {
-                    break;
-                }
-            }
+            //noinspection deprecation
+            referenceImporters.anyMatchSafe(
+                importer -> importer.autoImportReferenceAt(myEditor, myFile, info.getActualStartOffset())
+            );
         }
     }
 
@@ -164,12 +164,12 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
             startOffset,
             endOffset,
             i -> {
-                HighlightInfoImpl info = (HighlightInfoImpl)i;
+                HighlightInfoImpl info = (HighlightInfoImpl) i;
                 //no changes after escape => suggest imports under caret only
                 if (!isDirty && !info.getFixTextRange().contains(offset)) {
                     return true;
                 }
-                if (info.hasHint() && !editor.getFoldingModel().isOffsetCollapsed(info.startOffset)) {
+                if (info.hasHint() && !editor.getFoldingModel().isOffsetCollapsed(info.getStartOffset())) {
                     highlights.add(info);
                 }
                 return true;
@@ -186,7 +186,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         if (!DaemonCodeAnalyzer.getInstance(myProject).isImportHintsEnabled(myFile)) {
             return false;
         }
-        PsiElement element = myFile.findElementAt(info.startOffset);
+        PsiElement element = myFile.findElementAt(info.getStartOffset());
         if (element == null || !element.isValid()) {
             return false;
         }
@@ -201,7 +201,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     @Nonnull
     private static List<HintAction> extractHints(@Nonnull HighlightInfoImpl info) {
-        List<Pair<IntentionActionDescriptor, TextRange>> list = info.quickFixActionRanges;
+        List<Pair<IntentionActionDescriptor, TextRange>> list = info.myQuickFixActionRanges;
         if (list == null) {
             return Collections.emptyList();
         }

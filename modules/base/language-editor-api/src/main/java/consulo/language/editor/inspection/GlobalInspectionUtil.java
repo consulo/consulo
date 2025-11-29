@@ -55,7 +55,7 @@ public class GlobalInspectionUtil {
       }
     });
 
-    ProblemDescriptor descriptor = manager.createProblemDescriptor(elt, range, createInspectionMessage(StringUtil.notNullize(info.getDescription())), ProblemHighlightType.from(info.getType()), false,
+    ProblemDescriptor descriptor = manager.createProblemDescriptor(elt, range, createInspectionMessage(info.getDescription().get()), ProblemHighlightType.from(info.getType()), false,
                                                                    fixes.isEmpty() ? null : fixes.toArray(new LocalQuickFix[fixes.size()]));
     descriptor.setProblemGroup(problemGroup);
     problemDescriptionsProcessor.addProblemElement(GlobalInspectionContextUtil.retrieveRefElement(elt, globalContext), descriptor);

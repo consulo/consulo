@@ -23,134 +23,142 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
-  public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
-  @Nullable
-  protected final Document myDocument;
-  @Nonnull
-  protected final Project myProject;
-  private final boolean myRunIntentionPassAfter;
-  private final long myInitialDocStamp;
-  private final long myInitialPsiStamp;
-  private volatile int[] myCompletionPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
-  private volatile int[] myStartingPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
-  private volatile int myId;
-  private volatile boolean myDumb;
-  private EditorColorsScheme myColorsScheme;
+    public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
+    @Nullable
+    protected final Document myDocument;
+    @Nonnull
+    protected final Project myProject;
+    private final boolean myRunIntentionPassAfter;
+    private final long myInitialDocStamp;
+    private final long myInitialPsiStamp;
+    private volatile int[] myCompletionPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
+    private volatile int[] myStartingPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
+    private volatile int myId;
+    private volatile boolean myDumb;
+    private EditorColorsScheme myColorsScheme;
 
-  protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document, boolean runIntentionPassAfter) {
-    myDocument = document;
-    myProject = project;
-    myRunIntentionPassAfter = runIntentionPassAfter;
-    myInitialDocStamp = document == null ? 0 : document.getModificationStamp();
-    myInitialPsiStamp = PsiModificationTracker.getInstance(myProject).getModificationCount();
-  }
-
-  protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document) {
-    this(project, document, true);
-  }
-
-  @RequiredReadAction
-  @Override
-  public final void collectInformation(@Nonnull ProgressIndicator progress) {
-    if (!isValid()) return; //Document has changed.
-    if (!(progress instanceof DaemonProgressIndicator)) {
-      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
-    }
-    myDumb = DumbService.getInstance(myProject).isDumb();
-    doCollectInformation(progress);
-  }
-
-  @Nullable
-  public EditorColorsScheme getColorsScheme() {
-    return myColorsScheme;
-  }
-
-  public void setColorsScheme(@Nullable EditorColorsScheme colorsScheme) {
-    myColorsScheme = colorsScheme;
-  }
-
-  protected boolean isDumbMode() {
-    return myDumb;
-  }
-
-  protected boolean isValid() {
-    if (isDumbMode() && !DumbService.isDumbAware(this)) {
-      return false;
+    protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document, boolean runIntentionPassAfter) {
+        myDocument = document;
+        myProject = project;
+        myRunIntentionPassAfter = runIntentionPassAfter;
+        myInitialDocStamp = document == null ? 0 : document.getModificationStamp();
+        myInitialPsiStamp = PsiModificationTracker.getInstance(myProject).getModificationCount();
     }
 
-    if (PsiModificationTracker.getInstance(myProject).getModificationCount() != myInitialPsiStamp) {
-      return false;
+    protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document) {
+        this(project, document, true);
     }
 
-    if (myDocument != null) {
-      if (myDocument.getModificationStamp() != myInitialDocStamp) return false;
-      PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
-      return file != null && file.isValid();
+    @RequiredReadAction
+    @Override
+    public final void collectInformation(@Nonnull ProgressIndicator progress) {
+        if (!isValid()) {
+            return; //Document has changed.
+        }
+        if (!(progress instanceof DaemonProgressIndicator)) {
+            throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
+        }
+        myDumb = DumbService.getInstance(myProject).isDumb();
+        doCollectInformation(progress);
     }
 
-    return true;
-  }
-
-  @Override
-  public final void applyInformationToEditor() {
-    if (!isValid()) return; // Document has changed.
-    if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(this)) {
-      Document document = getDocument();
-      PsiFile file = document == null ? null : PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-      if (file != null) {
-        DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(getDocument(), getId());
-      }
-      return;
+    @Nullable
+    public EditorColorsScheme getColorsScheme() {
+        return myColorsScheme;
     }
-    doApplyInformationToEditor();
-  }
 
-  public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
+    public void setColorsScheme(@Nullable EditorColorsScheme colorsScheme) {
+        myColorsScheme = colorsScheme;
+    }
 
-  public abstract void doApplyInformationToEditor();
+    protected boolean isDumbMode() {
+        return myDumb;
+    }
 
-  public final int getId() {
-    return myId;
-  }
+    @RequiredReadAction
+    protected boolean isValid() {
+        if (isDumbMode() && !DumbService.isDumbAware(this)) {
+            return false;
+        }
 
-  public final void setId(int id) {
-    myId = id;
-  }
+        if (PsiModificationTracker.getInstance(myProject).getModificationCount() != myInitialPsiStamp) {
+            return false;
+        }
 
-  @Nonnull
-  public List<HighlightInfo> getInfos() {
-    return Collections.emptyList();
-  }
+        if (myDocument != null) {
+            if (myDocument.getModificationStamp() != myInitialDocStamp) {
+                return false;
+            }
+            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
+            return file != null && file.isValid();
+        }
 
-  @Nonnull
-  public final int[] getCompletionPredecessorIds() {
-    return myCompletionPredecessorIds;
-  }
+        return true;
+    }
 
-  public final void setCompletionPredecessorIds(@Nonnull int[] completionPredecessorIds) {
-    myCompletionPredecessorIds = completionPredecessorIds;
-  }
+    @Override
+    @RequiredReadAction
+    public final void applyInformationToEditor() {
+        if (!isValid()) {
+            return; // Document has changed.
+        }
+        if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(this)) {
+            Document document = getDocument();
+            PsiFile file = document == null ? null : PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+            if (file != null) {
+                DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(getDocument(), getId());
+            }
+            return;
+        }
+        doApplyInformationToEditor();
+    }
 
-  @Nullable
-  public Document getDocument() {
-    return myDocument;
-  }
+    public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
 
-  @Nonnull
-  public final int[] getStartingPredecessorIds() {
-    return myStartingPredecessorIds;
-  }
+    public abstract void doApplyInformationToEditor();
 
-  public final void setStartingPredecessorIds(@Nonnull int[] startingPredecessorIds) {
-    myStartingPredecessorIds = startingPredecessorIds;
-  }
+    public final int getId() {
+        return myId;
+    }
 
-  @Override
-  public String toString() {
-    return (getClass().isAnonymousClass() ? getClass().getSuperclass() : getClass()).getSimpleName() + "; id=" + getId();
-  }
+    public final void setId(int id) {
+        myId = id;
+    }
 
-  public boolean isRunIntentionPassAfter() {
-    return myRunIntentionPassAfter;
-  }
+    @Nonnull
+    public List<HighlightInfo> getInfos() {
+        return Collections.emptyList();
+    }
+
+    @Nonnull
+    public final int[] getCompletionPredecessorIds() {
+        return myCompletionPredecessorIds;
+    }
+
+    public final void setCompletionPredecessorIds(@Nonnull int[] completionPredecessorIds) {
+        myCompletionPredecessorIds = completionPredecessorIds;
+    }
+
+    @Nullable
+    public Document getDocument() {
+        return myDocument;
+    }
+
+    @Nonnull
+    public final int[] getStartingPredecessorIds() {
+        return myStartingPredecessorIds;
+    }
+
+    public final void setStartingPredecessorIds(@Nonnull int[] startingPredecessorIds) {
+        myStartingPredecessorIds = startingPredecessorIds;
+    }
+
+    @Override
+    public String toString() {
+        return (getClass().isAnonymousClass() ? getClass().getSuperclass() : getClass()).getSimpleName() + "; id=" + getId();
+    }
+
+    public boolean isRunIntentionPassAfter() {
+        return myRunIntentionPassAfter;
+    }
 }

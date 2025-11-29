@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -50,6 +51,7 @@ import java.util.List;
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
   @Nullable
   @Override
+  @RequiredReadAction
   public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
     IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl)info, editor, psiFile);
 
@@ -59,18 +61,20 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
   }
 
   private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfoImpl info) {
-    Pair<IntentionActionDescriptor, RangeMarker> pair = ContainerUtil.find(info.quickFixActionMarkers, it -> it.getFirst().getAction() == intention);
+    Pair<IntentionActionDescriptor, RangeMarker> pair =
+        ContainerUtil.find(info.myQuickFixActionMarkers, it -> it.getFirst().getAction() == intention);
 
     int offset = pair != null && pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
 
      return new DaemonTooltipAction(intention.getText(), offset);
   }
 
+  @RequiredReadAction
   private static IntentionAction extractMostPriorityFixFromHighlightInfo(HighlightInfoImpl highlightInfo, Editor editor, PsiFile psiFile) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    Application.get().assertReadAccessAllowed();
 
     List<IntentionActionDescriptor> fixes = new ArrayList<>();
-    List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.quickFixActionRanges;
+    List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.myQuickFixActionRanges;
     if (quickFixActionMarkers == null || quickFixActionMarkers.isEmpty()) return null;
 
     fixes.addAll(ContainerUtil.map(quickFixActionMarkers, (it) -> it.getFirst()));

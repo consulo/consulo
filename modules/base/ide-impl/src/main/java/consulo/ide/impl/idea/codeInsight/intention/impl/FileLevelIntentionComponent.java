@@ -39,14 +39,16 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     private final Project myProject;
 
     @RequiredUIAccess
-    public FileLevelIntentionComponent(String description,
-                                       @Nonnull HighlightSeverity severity,
-                                       @Nullable GutterMark gutterMark,
-                                       @Nullable List<Pair<IntentionActionDescriptor, TextRange>> intentions,
-                                       @Nonnull Project project,
-                                       @Nonnull PsiFile psiFile,
-                                       @Nonnull Editor editor,
-                                       @Nullable String tooltip) {
+    public FileLevelIntentionComponent(
+        @Nonnull LocalizeValue description,
+        @Nonnull HighlightSeverity severity,
+        @Nullable GutterMark gutterMark,
+        @Nullable List<Pair<IntentionActionDescriptor, TextRange>> intentions,
+        @Nonnull Project project,
+        @Nonnull PsiFile psiFile,
+        @Nonnull Editor editor,
+        @Nonnull LocalizeValue tooltip
+    ) {
         super(getColor(project, severity));
         myProject = project;
 
@@ -61,15 +63,20 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                     continue;
                 }
                 LocalizeValue text = action.getText();
-                createActionLabel(text.get(), () -> {
-                    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                    ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text.get());
-                });
+                createActionLabel(
+                    text.get(),
+                    () -> {
+                        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+                        ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text.get());
+                    }
+                );
             }
         }
 
-        myLabel.setText(description);
-        myLabel.setToolTipText(tooltip);
+        myLabel.setText(description.get());
+        if (tooltip != LocalizeValue.empty()) {
+            myLabel.setToolTipText(tooltip.get());
+        }
         if (gutterMark != null) {
             myLabel.setIcon(TargetAWT.to(gutterMark.getIcon()));
         }
@@ -87,7 +94,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                 }
 
                 ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
-                
+
                 popup.showBy(event.getComponent(), Objects.requireNonNull(event.getInputDetails()));
             });
         }

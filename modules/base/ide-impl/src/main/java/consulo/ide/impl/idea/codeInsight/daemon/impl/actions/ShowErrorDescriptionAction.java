@@ -26,6 +26,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -67,7 +68,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
         DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
         HighlightInfoImpl info =
             ((DaemonCodeAnalyzerImpl) codeAnalyzer).findHighlightByOffset(editor.getDocument(), editor.getCaretModel().getOffset(), false);
-        return info != null && info.getDescription() != null;
+        return info != null && info.getDescription() != LocalizeValue.empty();
     }
 
     @RequiredUIAccess
