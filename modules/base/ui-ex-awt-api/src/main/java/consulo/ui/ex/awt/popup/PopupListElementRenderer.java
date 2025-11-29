@@ -60,7 +60,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
 
             @Override
             public boolean isSeparator(E value) {
-                return aPopup.getListModel().isSeparator(value);
+                return value != null && aPopup.getListModel().isSeparator(value);
             }
 
             @Nullable

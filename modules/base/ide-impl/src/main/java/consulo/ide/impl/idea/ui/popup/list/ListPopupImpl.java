@@ -900,7 +900,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
             ListPopupModel model = getListModel();
             for (int i = 0; i < model.getSize(); i++) {
                 Object o = model.getElementAt(i);
-                if (model.isSeparator(o)) {
+                if (o != null && model.isSeparator(o)) {
                     String textFor = model.getTextFor(o);
                     if (!StringUtil.isEmpty(textFor)) {
                         height -= JBUI.scale(12);
@@ -917,7 +917,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         @Override
         public void setSelectedIndex(int index) {
             Object o = getListModel().get(index);
-            if (getListModel().isSeparator(o)) {
+            if (o != null && getListModel().isSeparator(o)) {
                 return;
             }
             super.setSelectedIndex(index);

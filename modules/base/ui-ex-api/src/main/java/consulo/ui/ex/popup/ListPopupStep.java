@@ -80,7 +80,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
         return null;
     }
 
-    default boolean isSeparator(T value) {
+    default boolean isSeparator(@Nonnull T value) {
         return false;
     }
 

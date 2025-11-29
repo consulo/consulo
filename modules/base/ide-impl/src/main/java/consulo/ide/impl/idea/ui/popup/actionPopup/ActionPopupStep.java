@@ -220,7 +220,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
     }
 
     @Override
-    public boolean isSeparator(ActionPopupItem value) {
+    public boolean isSeparator(@Nonnull ActionPopupItem value) {
         return value.isSeparator();
     }
 
