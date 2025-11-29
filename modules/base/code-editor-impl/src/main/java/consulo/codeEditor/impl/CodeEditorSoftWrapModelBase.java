@@ -27,6 +27,7 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -133,13 +134,17 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         myEditor.getInlayModel().addListener(this, this);
     }
 
-    protected abstract SoftWrapApplianceManager createSoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage,
-                                                                               @Nonnull CodeEditorBase editor,
-                                                                               @Nonnull SoftWrapPainter painter,
-                                                                               CachingSoftWrapDataMapper dataMapper);
+    protected abstract SoftWrapApplianceManager createSoftWrapApplianceManager(
+        @Nonnull SoftWrapsStorage storage,
+        @Nonnull CodeEditorBase editor,
+        @Nonnull SoftWrapPainter painter,
+        CachingSoftWrapDataMapper dataMapper
+    );
 
     private boolean areSoftWrapsEnabledInEditor() {
-        return myEditor.getSettings().isUseSoftWraps() && !myEditor.isOneLineMode() && (!(myEditor.getDocument() instanceof DocumentImpl) || !((DocumentImpl) myEditor.getDocument()).acceptsSlashR());
+        return myEditor.getSettings().isUseSoftWraps()
+            && !myEditor.isOneLineMode()
+            && (!(myEditor.getDocument() instanceof DocumentImpl) || !myEditor.getDocument().acceptsSlashR());
     }
 
     /**
@@ -153,10 +158,11 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         myTabWidth = EditorUtil.getTabSize(myEditor);
 
         boolean fontsChanged = false;
-        if (!myFontPreferences.equals(myEditor.getColorsScheme().getFontPreferences()) && myEditorTextRepresentationHelper instanceof DefaultEditorTextRepresentationHelper) {
+        if (!myFontPreferences.equals(myEditor.getColorsScheme().getFontPreferences())
+            && myEditorTextRepresentationHelper instanceof DefaultEditorTextRepresentationHelper defaultTextHelper) {
             fontsChanged = true;
             myEditor.getColorsScheme().getFontPreferences().copyTo(myFontPreferences);
-            ((DefaultEditorTextRepresentationHelper) myEditorTextRepresentationHelper).clearSymbolWidthCache();
+            defaultTextHelper.clearSymbolWidthCache();
             myPainter.reinit();
         }
 
@@ -180,13 +186,15 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isSoftWrappingEnabled() {
         UIAccess.assertIsUIThread();
         return myUseSoftWraps && !myEditor.isPurePaintingMode();
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredUIAccess
     public SoftWrap getSoftWrap(int offset) {
         if (!isSoftWrappingEnabled()) {
             return null;
@@ -195,6 +203,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public int getSoftWrapIndex(int offset) {
         if (!isSoftWrappingEnabled()) {
             return -1;
@@ -204,6 +213,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
         if (!isSoftWrappingEnabled() || end < start) {
             return Collections.emptyList();
@@ -229,8 +239,9 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         }
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
         if (!isSoftWrappingEnabled() || documentLine < 0) {
             return Collections.emptyList();
@@ -241,8 +252,10 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         }
         int start = document.getLineStartOffset(documentLine);
         int end = document.getLineEndOffset(documentLine);
-        return getSoftWrapsForRange(start, end + 1/* it's theoretically possible that soft wrap is registered just before the line feed,
-         * hence, we add '1' here assuming that end line offset points to line feed symbol */);
+
+        // It's theoretically possible that soft wrap is registered just before the line feed,
+        // hence, we add '1' here assuming that end line offset points to line feed symbol
+        return getSoftWrapsForRange(start, end + 1);
     }
 
     /**
@@ -253,12 +266,13 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public List<? extends SoftWrap> getRegisteredSoftWraps() {
         if (!isSoftWrappingEnabled()) {
             return Collections.emptyList();
         }
         List<SoftWrapImpl> softWraps = myStorage.getSoftWraps();
-        if (!softWraps.isEmpty() && softWraps.get(softWraps.size() - 1).getStart() >= myEditor.getDocument().getTextLength()) {
+        if (!softWraps.isEmpty() && softWraps.getLast().getStart() >= myEditor.getDocument().getTextLength()) {
             LOG.error("Unexpected soft wrap location", AttachmentFactory.get().create("editorState.txt", myEditor.dumpState()));
         }
         return softWraps;
@@ -279,6 +293,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
         if (!isSoftWrappingEnabled()) {
             return 0;
@@ -307,6 +322,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
      * if soft wraps-aware processing should be used (e.g. there is no need to consider soft wraps if user configured them
      * not to be used).
      */
+    @RequiredUIAccess
     public void prepareToMapping() {
         if (myUpdateInProgress || myBulkUpdateInProgress || !isSoftWrappingEnabled()) {
             return;
@@ -330,6 +346,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
      * {@code false} otherwise
      */
     @Override
+    @RequiredUIAccess
     public boolean isInsideSoftWrap(@Nonnull VisualPosition visual) {
         return isInsideSoftWrap(visual, false);
     }
@@ -342,10 +359,12 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
      * {@code false} otherwise
      */
     @Override
+    @RequiredUIAccess
     public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
         return isInsideSoftWrap(visual, true);
     }
 
+    @RequiredUIAccess
     private boolean isInsideSoftWrap(@Nonnull VisualPosition visual, boolean countBeforeSoftWrap) {
         if (!isSoftWrappingEnabled()) {
             return false;
@@ -374,10 +393,13 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         }
 
         VisualPosition beforeSoftWrap = myEditor.offsetToVisualPosition(offset, true, true);
-        return visual.line > beforeSoftWrap.line || visual.column > beforeSoftWrap.column || visual.column == beforeSoftWrap.column && countBeforeSoftWrap;
+        return visual.line > beforeSoftWrap.line
+            || visual.column > beforeSoftWrap.column
+            || visual.column == beforeSoftWrap.column && countBeforeSoftWrap;
     }
 
     @Override
+    @RequiredUIAccess
     public void beforeDocumentChangeAtCaret() {
         CaretModel caretModel = myEditor.getCaretModel();
         VisualPosition visualCaretPosition = caretModel.getVisualPosition();
@@ -406,6 +428,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public void beforeDocumentChange(@Nonnull DocumentEvent event) {
         myAfterLineEndInlayUpdated = false;
         if (myBulkUpdateInProgress) {
@@ -420,6 +443,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public void documentChanged(@Nonnull DocumentEvent event) {
         if (myBulkUpdateInProgress) {
             return;
@@ -435,8 +459,10 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
             int srcOffset = event.getMoveOffset();
             int textLength = event.getDocument().getTextLength();
             // adding +1, as inlays at the end of the moved range stick to the following text (and impact its layout)
-            myApplianceManager.recalculate(Arrays.asList(new TextRange(srcOffset, Math.min(textLength, srcOffset + event.getNewLength() + 1)),
-                new TextRange(dstOffset, Math.min(textLength, dstOffset + event.getNewLength() + 1))));
+            myApplianceManager.recalculate(Arrays.asList(
+                new TextRange(srcOffset, Math.min(textLength, srcOffset + event.getNewLength() + 1)),
+                new TextRange(dstOffset, Math.min(textLength, dstOffset + event.getNewLength() + 1))
+            ));
         }
     }
 
@@ -444,12 +470,14 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         myBulkUpdateInProgress = true;
     }
 
+    @RequiredUIAccess
     public void onBulkDocumentUpdateFinished() {
         myBulkUpdateInProgress = false;
         recalculate();
     }
 
     @Override
+    @RequiredUIAccess
     public void onFoldRegionStateChange(@Nonnull FoldRegion region) {
         myUpdateInProgress = true;
         if (!isSoftWrappingEnabled() || !region.isValid()) {
@@ -463,6 +491,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public void onFoldProcessingEnd() {
         myUpdateInProgress = false;
         if (!isSoftWrappingEnabled()) {
@@ -479,8 +508,10 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
+    @RequiredUIAccess
     public void onUpdated(@Nonnull Inlay inlay) {
-        if (myEditor.getDocument().isInBulkUpdate() || inlay.getPlacement() != Inlay.Placement.INLINE && inlay.getPlacement() != Inlay.Placement.AFTER_LINE_END) {
+        if (myEditor.getDocument().isInBulkUpdate()
+            || inlay.getPlacement() != Inlay.Placement.INLINE && inlay.getPlacement() != Inlay.Placement.AFTER_LINE_END) {
             return;
         }
         if (!isSoftWrappingEnabled()) {
@@ -521,6 +552,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         myDeferredFoldRegions.clear();
     }
 
+    @RequiredUIAccess
     public void recalculate() {
         if (!isSoftWrappingEnabled()) {
             myDirty = true;
@@ -560,10 +592,21 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     @Nonnull
     @Override
     public String dumpState() {
-        return String.format("\nuse soft wraps: %b, tab width: %d, additional columns: %b, " +
+        return String.format(
+            "\nuse soft wraps: %b, tab width: %d, additional columns: %b, " +
                 "update in progress: %b, bulk update in progress: %b, dirty: %b, deferred regions: %s" +
-                "\nappliance manager state: %s\nsoft wraps mapping info: %s\nsoft wraps: %s", myUseSoftWraps, myTabWidth, myForceAdditionalColumns, myUpdateInProgress, myBulkUpdateInProgress,
-            myDirty, myDeferredFoldRegions.toString(), myApplianceManager.dumpState(), myDataMapper.dumpState(), myStorage.dumpState());
+                "\nappliance manager state: %s\nsoft wraps mapping info: %s\nsoft wraps: %s",
+            myUseSoftWraps,
+            myTabWidth,
+            myForceAdditionalColumns,
+            myUpdateInProgress,
+            myBulkUpdateInProgress,
+            myDirty,
+            myDeferredFoldRegions.toString(),
+            myApplianceManager.dumpState(),
+            myDataMapper.dumpState(),
+            myStorage.dumpState()
+        );
     }
 
     @Override
@@ -576,6 +619,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @TestOnly
+    @RequiredUIAccess
     public void validateState() {
         Document document = myEditor.getDocument();
         if (myEditor.getDocument().isInBulkUpdate()) {
@@ -590,8 +634,15 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
             LOG.assertTrue(softWrapOffset < document.getTextLength(), "Soft wrap is after document's end");
             FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(softWrapOffset);
             LOG.assertTrue(foldRegion == null || foldRegion.getStartOffset() == softWrapOffset, "Soft wrap is inside fold region");
-            LOG.assertTrue(softWrapOffset != DocumentUtil.getLineEndOffset(softWrapOffset, document) || foldRegion != null, "Soft wrap before line break");
-            LOG.assertTrue(softWrapOffset != DocumentUtil.getLineStartOffset(softWrapOffset, document) || foldingModel.isOffsetCollapsed(softWrapOffset - 1), "Soft wrap after line break");
+            LOG.assertTrue(
+                softWrapOffset != DocumentUtil.getLineEndOffset(softWrapOffset, document) || foldRegion != null,
+                "Soft wrap before line break"
+            );
+            LOG.assertTrue(
+                softWrapOffset != DocumentUtil.getLineStartOffset(softWrapOffset, document)
+                    || foldingModel.isOffsetCollapsed(softWrapOffset - 1),
+                "Soft wrap after line break"
+            );
             LOG.assertTrue(!DocumentUtil.isInsideSurrogatePair(document, softWrapOffset), "Soft wrap inside a surrogate pair");
             lastSoftWrapOffset = softWrapOffset;
         }

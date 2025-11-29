@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -26,39 +24,43 @@ import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement {
-  private final LocalizeValue myErrorDescription;
+    private final LocalizeValue myErrorDescription;
 
-  public PsiErrorElementImpl(@Nonnull LocalizeValue errorDescription) {
-    super(TokenType.ERROR_ELEMENT);
-    myErrorDescription = errorDescription;
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getErrorDescriptionValue() {
-    return myErrorDescription;
-  }
-
-  @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
-    visitor.visitErrorElement(this);
-  }
-
-  @Override
-  public String toString() {
-    return "PsiErrorElement:" + getErrorDescriptionValue();
-  }
-
-  @Override
-  @Nonnull
-  @RequiredReadAction
-  public Language getLanguage() {
-    PsiElement master = this;
-    while (true) {
-      master = master.getNextSibling();
-      if (master == null || master instanceof OuterLanguageElement) return getParent().getLanguage();
-      if (master instanceof PsiWhiteSpace || master instanceof PsiErrorElement) continue;
-      return master.getLanguage();
+    public PsiErrorElementImpl(@Nonnull LocalizeValue errorDescription) {
+        super(TokenType.ERROR_ELEMENT);
+        myErrorDescription = errorDescription;
     }
-  }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getErrorDescriptionValue() {
+        return myErrorDescription;
+    }
+
+    @Override
+    public void accept(@Nonnull PsiElementVisitor visitor) {
+        visitor.visitErrorElement(this);
+    }
+
+    @Override
+    public String toString() {
+        return "PsiErrorElement:" + getErrorDescriptionValue();
+    }
+
+    @Override
+    @Nonnull
+    @RequiredReadAction
+    public Language getLanguage() {
+        PsiElement master = this;
+        while (true) {
+            master = master.getNextSibling();
+            if (master == null || master instanceof OuterLanguageElement) {
+                return getParent().getLanguage();
+            }
+            if (master instanceof PsiWhiteSpace || master instanceof PsiErrorElement) {
+                continue;
+            }
+            return master.getLanguage();
+        }
+    }
 }

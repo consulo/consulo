@@ -16,6 +16,7 @@
 
 package consulo.language.impl.parser;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.language.BracePair;
 import consulo.language.Language;
@@ -1217,6 +1218,7 @@ public class GeneratedParserUtilBase {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public Language getLanguage() {
       return getParent().getLanguage();
     }
