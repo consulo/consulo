@@ -88,7 +88,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
                 return !s.endsWith(".") ? s + '.' : s;
             }));
         }
-        return result.isEmpty() ? LocalizeValue.empty() : LocalizeValue.join(result.toArray(new LocalizeValue[0]));
+        return result.isEmpty() ? LocalizeValue.empty() : LocalizeValue.join(result.toArray(LocalizeValue[]::new));
     }
 
     @Nonnull
@@ -111,6 +111,6 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         if (empty) {
             return LocalizeValue.empty();
         }
-        return LocalizeValue.join(result.toArray(new LocalizeValue[0]));
+        return LocalizeValue.join(result.toArray(LocalizeValue[]::new));
     }
 }
