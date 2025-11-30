@@ -3,7 +3,6 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
@@ -53,7 +52,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     private volatile boolean myActionsChanged;
 
     /**
-     * @param queryIntentionActions true if {@link IntentionManager} must be asked for all registered {@link IntentionAction} and {@link IntentionAction#isAvailable(Project, Editor, PsiFile)} must be called on each
+     * @param queryIntentionActions true if {@link IntentionManager} must be asked for all registered {@link IntentionAction}
+     *                              and {@link IntentionAction#isAvailable(Project, Editor, PsiFile)} must be called on each
      *                              Usually, this expensive process should be executed only once per highlighting session
      */
     @RequiredUIAccess
@@ -110,7 +110,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         );
         boolean removed = false;
         for (HighlightInfo info : infos) {
-            List<Pair<IntentionActionDescriptor, RangeMarker>> list = ((HighlightInfoImpl)info).quickFixActionMarkers;
+            List<Pair<IntentionActionDescriptor, RangeMarker>> list = ((HighlightInfoImpl) info).myQuickFixActionMarkers;
             if (list != null) {
                 for (Pair<IntentionActionDescriptor, RangeMarker> pair : list) {
                     IntentionActionDescriptor actionInGroup = pair.first;
@@ -132,8 +132,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         int group,
         int offset
     ) {
-        HighlightInfoImpl info = (HighlightInfoImpl)i;
-        if (info.quickFixActionMarkers == null) {
+        HighlightInfoImpl info = (HighlightInfoImpl) i;
+        if (info.myQuickFixActionMarkers == null) {
             return;
         }
         if (group != -1 && group != info.getGroup()) {
@@ -142,7 +142,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         boolean fixRangeIsNotEmpty = !info.getFixTextRange().isEmpty();
         Editor injectedEditor = null;
         PsiFile injectedFile = null;
-        for (Pair<IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
+        for (Pair<IntentionActionDescriptor, RangeMarker> pair : info.myQuickFixActionMarkers) {
             IntentionActionDescriptor actionInGroup = pair.first;
             RangeMarker range = pair.second;
             if (!range.isValid() || fixRangeIsNotEmpty && isEmpty(range)) {
@@ -186,7 +186,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     @Override
     @RequiredReadAction
     public void doCollectInformation(@Nonnull ProgressIndicator progress) {
-        if (!Application.get().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) {
+        if (!myProject.getApplication().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) {
             return;
         }
         TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
@@ -287,7 +287,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
             getAvailableFixes(hostEditor, hostFile, passIdToShowIntentionsFor, offset);
         DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
         Document hostDocument = hostEditor.getDocument();
-        HighlightInfoImpl infoAtCursor = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(hostDocument, offset, true);
+        HighlightInfoImpl infoAtCursor = ((DaemonCodeAnalyzerImpl) codeAnalyzer).findHighlightByOffset(hostDocument, offset, true);
         if (infoAtCursor == null) {
             intentions.errorFixesToShow.addAll(fixes);
         }
@@ -298,28 +298,28 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         if (queryIntentionActions) {
             PsiFile injectedFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(hostFile, offset);
             for (IntentionAction action : IntentionManager.getInstance().getAvailableIntentionActions()) {
-                Pair<PsiFile, Editor> place =
-                    ShowIntentionActionsHandler.chooseBetweenHostAndInjected(
-                        hostFile,
-                        hostEditor,
-                        injectedFile,
-                        (psiFile, editor) -> ShowIntentionActionsHandler.availableFor(psiFile, editor, action)
-                    );
+                Pair<PsiFile, Editor> place = ShowIntentionActionsHandler.chooseBetweenHostAndInjected(
+                    hostFile,
+                    hostEditor,
+                    injectedFile,
+                    (psiFile, editor) -> ShowIntentionActionsHandler.availableFor(psiFile, editor, action)
+                );
 
                 if (place != null) {
                     List<IntentionAction> enableDisableIntentionAction = new ArrayList<>();
                     enableDisableIntentionAction.add(new EnableDisableIntentionAction(action));
                     enableDisableIntentionAction.add(new EditIntentionSettingsAction(action));
-                    IntentionActionDescriptor descriptor = new IntentionActionDescriptor(action, enableDisableIntentionAction, LocalizeValue.of());
+                    IntentionActionDescriptor descriptor =
+                        new IntentionActionDescriptor(action, enableDisableIntentionAction, LocalizeValue.of());
                     if (!fixes.contains(descriptor)) {
                         intentions.intentionsToShow.add(descriptor);
                     }
                 }
             }
 
-            for (IntentionMenuContributor extension : IntentionMenuContributor.EP_NAME.getExtensionList()) {
-                extension.collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, offset);
-            }
+            project.getApplication().getExtensionPoint(IntentionMenuContributor.class).forEach(
+                extension -> extension.collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, offset)
+            );
         }
 
         intentions.filterActions(hostFile);

@@ -30,7 +30,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
@@ -40,17 +39,18 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
-import consulo.language.editor.internal.DaemonProgressIndicator;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.internal.EditorTracker;
 import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
@@ -207,7 +207,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             List<HighlightInfoImpl> infosToRemove = new ArrayList<>();
             for (HighlightInfoImpl info : infos) {
                 if (info.getGroup() == group) {
-                    manager.removeTopComponent(fileEditor, info.fileLevelComponent);
+                    manager.removeTopComponent(fileEditor, info.myFileLevelComponent);
                     infosToRemove.add(info);
                 }
             }
@@ -233,7 +233,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                     info.getDescription(),
                     info.getSeverity(),
                     info.getGutterIconRenderer(),
-                    info.quickFixActionRanges,
+                    info.myQuickFixActionRanges,
                     project,
                     psiFile,
                     textEditor.getEditor(),
@@ -245,7 +245,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                     fileLevelInfos = new ArrayList<>();
                     fileEditor.putUserData(FILE_LEVEL_HIGHLIGHTS, fileLevelInfos);
                 }
-                info.fileLevelComponent = component;
+                info.myFileLevelComponent = component;
                 info.setGroup(group);
                 fileLevelInfos.add(info);
             }
@@ -548,6 +548,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
+    @RequiredReadAction
     public void setHighlightingEnabled(@Nonnull PsiFile file, boolean value) {
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
         if (value) {
@@ -559,6 +560,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
+    @RequiredReadAction
     public boolean isHighlightingAvailable(@Nullable PsiFile file) {
         if (file == null || !file.isPhysical()) {
             return false;
@@ -577,11 +579,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
+    @RequiredReadAction
     public boolean isImportHintsEnabled(@Nonnull PsiFile file) {
         return isAutohintsAvailable(file) && !myDisabledHintsFiles.contains(file.getVirtualFile());
     }
 
     @Override
+    @RequiredReadAction
     public boolean isAutohintsAvailable(PsiFile file) {
         return isHighlightingAvailable(file) && !(file instanceof PsiCompiledElement);
     }
@@ -784,7 +788,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         if (!includeFixRange) {
             return false;
         }
-        RangeMarker fixMarker = ((HighlightInfoImpl)info).fixMarker;
+        RangeMarker fixMarker = ((HighlightInfoImpl)info).myFixMarker;
         if (fixMarker != null) {  // null means its range is the same as highlighter
             if (!fixMarker.isValid()) {
                 return false;
@@ -861,7 +865,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         }
     }
 
-    // made this class static and fields cleareable to avoid leaks when this object stuck in invokeLater queue
+    // made this class static and fields clearable to avoid leaks when this object stuck in invokeLater queue
     private static class UpdateRunnable implements Runnable {
         private Project myProject;
 
@@ -1005,11 +1009,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     public void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file) {
-        for (ReferenceImporter importer : ReferenceImporter.EP_NAME.getExtensionList()) {
-            if (importer.autoImportReferenceAtCursor(editor, file)) {
-                break;
-            }
-        }
+        file.getApplication().getExtensionPoint(ReferenceImporter.class)
+            .anyMatchSafe(importer -> importer.autoImportReferenceAtCursor(editor, file));
     }
 
     @TestOnly
@@ -1025,7 +1026,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
         // editors in modal context
         EditorTracker editorTracker = EditorTracker.getInstance(myProject);// myProject.getServiceIfCreated(EditorTracker.class);
-        List<Editor> editors = editorTracker == null ? Collections.emptyList() : editorTracker.getActiveEditors();
+        List<Editor> editors = editorTracker.getActiveEditors();
         Collection<FileEditor> activeTextEditors;
         if (editors.isEmpty()) {
             activeTextEditors = Collections.emptyList();
