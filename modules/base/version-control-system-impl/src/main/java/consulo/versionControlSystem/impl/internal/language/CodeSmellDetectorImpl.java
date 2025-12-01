@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.language;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
@@ -38,6 +37,7 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -49,7 +49,7 @@ import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory;
 import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.CodeSmellDetector;
 import consulo.versionControlSystem.CodeSmellInfo;
@@ -71,11 +71,12 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
+    @Nonnull
     private final Project myProject;
     private static final Logger LOG = Logger.getInstance(CodeSmellDetectorImpl.class);
 
     @Inject
-    public CodeSmellDetectorImpl(Project project) {
+    public CodeSmellDetectorImpl(@Nonnull Project project) {
         myProject = project;
     }
 
@@ -91,7 +92,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
                 return;
             }
 
-            NewErrorTreeViewPanel errorTreeView = myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
+            NewErrorTreeViewPanel errorTreeView =
+                myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
             errorTreeView.setCanHideWarningsOrInfos(false);
 
             AbstractVcsHelperImpl helper = (AbstractVcsHelperImpl) AbstractVcsHelper.getInstance(myProject);
@@ -112,12 +114,20 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
                 String rendererPrefix =
                     NewErrorTreeViewPanel.createRendererPrefix(smellInfo.getStartLine() + 1, smellInfo.getStartColumn() + 1);
                 if (smellInfo.getSeverity() == HighlightSeverity.ERROR) {
-                    errorTreeView.addMessage(MessageCategory.ERROR, new String[]{smellInfo.getDescription()}, file.getPresentableUrl(), navigatable,
-                        exportPrefix, rendererPrefix, null);
+                    errorTreeView.addMessage(
+                        MessageCategory.ERROR,
+                        new String[]{smellInfo.getDescription()},
+                        file.getPresentableUrl(),
+                        navigatable,
+                        exportPrefix,
+                        rendererPrefix,
+                        null
+                    );
                 }
                 else {//if (smellInfo.getSeverity() == HighlightSeverity.WARNING) {
                     errorTreeView.addMessage(MessageCategory.WARNING, new String[]{smellInfo.getDescription()}, file.getPresentableUrl(),
-                        navigatable, exportPrefix, rendererPrefix, null);
+                        navigatable, exportPrefix, rendererPrefix, null
+                    );
                 }
 
             }
@@ -132,11 +142,11 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         UIAccess.assertIsUIThread();
         final List<CodeSmellInfo> result = new ArrayList<>();
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-        if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+        if (myProject.getApplication().isWriteAccessAllowed()) {
             throw new RuntimeException("Must not run under write action");
         }
 
-        final Ref<Exception> exception = Ref.create();
+        final SimpleReference<Exception> exception = SimpleReference.create();
         ProgressManager.getInstance().run(new Task.Modal(myProject, VcsLocalize.checkingCodeSmellsProgressTitle(), true) {
             @Override
             public void run(@Nonnull ProgressIndicator progress) {
@@ -171,10 +181,10 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     }
 
     @Nonnull
-    private List<CodeSmellInfo> findCodeSmells(@Nonnull final VirtualFile file, @Nonnull ProgressIndicator progress) {
-        final List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
+    private List<CodeSmellInfo> findCodeSmells(@Nonnull VirtualFile file, @Nonnull ProgressIndicator progress) {
+        List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
 
-        final DaemonCodeAnalyzerInternal codeAnalyzer = (DaemonCodeAnalyzerInternal) DaemonCodeAnalyzer.getInstance(myProject);
+        DaemonCodeAnalyzerInternal codeAnalyzer = (DaemonCodeAnalyzerInternal) DaemonCodeAnalyzer.getInstance(myProject);
         final ProgressIndicator daemonIndicator = new DaemonProgressIndicator();
         ((ProgressIndicatorEx) progress).addStateDelegate(new AbstractProgressIndicatorExBase() {
             @Override
@@ -183,46 +193,48 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
                 daemonIndicator.cancel();
             }
         });
-        ProgressManager.getInstance().runProcess(new Runnable() {
-            @Override
-            public void run() {
-                DumbService.getInstance(myProject).runReadActionInSmartMode(new Runnable() {
-                    @Override
-                    public void run() {
-                        PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
-                        Document document = FileDocumentManager.getInstance().getDocument(file);
-                        if (psiFile == null || document == null) {
-                            return;
-                        }
-                        List<HighlightInfo> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
-                        convertErrorsAndWarnings(infos, result, document);
-                    }
-                });
-            }
-        }, daemonIndicator);
+        ProgressManager.getInstance().runProcess(
+            () -> DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
+                PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+                Document document = FileDocumentManager.getInstance().getDocument(file);
+                if (psiFile == null || document == null) {
+                    return;
+                }
+                List<HighlightInfo> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
+                convertErrorsAndWarnings(infos, result, document);
+            }),
+            daemonIndicator
+        );
 
         return result;
     }
 
-    private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfo> highlights,
-                                          @Nonnull List<CodeSmellInfo> result,
-                                          @Nonnull Document document) {
+    private void convertErrorsAndWarnings(
+        @Nonnull Collection<HighlightInfo> highlights,
+        @Nonnull List<CodeSmellInfo> result,
+        @Nonnull Document document
+    ) {
         for (HighlightInfo highlightInfo : highlights) {
             HighlightSeverity severity = highlightInfo.getSeverity();
             if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
-                result.add(new CodeSmellInfo(document, getDescription(highlightInfo),
-                    new TextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()), severity));
+                result.add(new CodeSmellInfo(
+                    document,
+                    getDescription(highlightInfo).get(),
+                    new TextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()),
+                    severity
+                ));
             }
         }
     }
 
-    private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
-        String description = highlightInfo.getDescription();
+    @Nonnull
+    private static LocalizeValue getDescription(@Nonnull HighlightInfo highlightInfo) {
+        LocalizeValue description = highlightInfo.getDescription();
         HighlightInfoType type = highlightInfo.getType();
-        if (type instanceof HighlightInfoTypeSeverityByKey) {
-            HighlightDisplayKey severityKey = ((HighlightInfoTypeSeverityByKey) type).getSeverityKey();
+        if (type instanceof HighlightInfoTypeSeverityByKey highlightInfoTypeSeverityByKey) {
+            HighlightDisplayKey severityKey = highlightInfoTypeSeverityByKey.getSeverityKey();
             String id = severityKey.getID();
-            return "[" + id + "] " + description;
+            return LocalizeValue.join(LocalizeValue.of("[" + id + "] "), description);
         }
         return description;
     }

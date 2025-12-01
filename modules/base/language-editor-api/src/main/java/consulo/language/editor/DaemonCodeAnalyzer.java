@@ -104,24 +104,31 @@ public abstract class DaemonCodeAnalyzer {
      * @return
      */
     @RequiredReadAction
-    public static boolean processHighlights(@Nonnull Document document,
-                                            @Nonnull Project project,
-                                            @Nullable HighlightSeverity minSeverity,
-                                            int startOffset,
-                                            int endOffset,
-                                            @Nonnull Predicate<HighlightInfo> processor) {
+    public static boolean processHighlights(
+        @Nonnull Document document,
+        @Nonnull Project project,
+        @Nullable HighlightSeverity minSeverity,
+        int startOffset,
+        int endOffset,
+        @Nonnull Predicate<HighlightInfo> processor
+    ) {
         Application.get().assertReadAccessAllowed();
 
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
-        return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
-            Object tt = marker.getErrorStripeTooltip();
-            if (!(tt instanceof HighlightInfo)) {
-                return true;
+        return model.processRangeHighlightersOverlappingWith(
+            startOffset,
+            endOffset,
+            marker -> {
+                //noinspection SimplifiableIfStatement
+                if (!(marker.getErrorStripeTooltip() instanceof HighlightInfo info)) {
+                    return true;
+                }
+                return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
+                    || info.getHighlighter() == null
+                    || processor.test(info);
             }
-            HighlightInfo info = (HighlightInfo) tt;
-            return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.test(info);
-        });
+        );
     }
 
     /**
@@ -134,24 +141,31 @@ public abstract class DaemonCodeAnalyzer {
      * @return
      */
     @RequiredReadAction
-    public static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
-                                                              @Nonnull Project project,
-                                                              @Nullable HighlightSeverity minSeverity,
-                                                              int startOffset,
-                                                              int endOffset,
-                                                              @Nonnull Predicate<HighlightInfo> processor) {
+    public static boolean processHighlightsOverlappingOutside(
+        @Nonnull Document document,
+        @Nonnull Project project,
+        @Nullable HighlightSeverity minSeverity,
+        int startOffset,
+        int endOffset,
+        @Nonnull Predicate<HighlightInfo> processor
+    ) {
         Application.get().assertReadAccessAllowed();
 
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
-        return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
-            Object tt = marker.getErrorStripeTooltip();
-            if (!(tt instanceof HighlightInfo)) {
-                return true;
+        return model.processRangeHighlightersOutside(
+            startOffset,
+            endOffset,
+            marker -> {
+                //noinspection SimplifiableIfStatement
+                if (!(marker.getErrorStripeTooltip() instanceof HighlightInfo info)) {
+                    return true;
+                }
+                return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
+                    || info.getHighlighter() == null
+                    || processor.test(info);
             }
-            HighlightInfo info = (HighlightInfo) tt;
-            return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.test(info);
-        });
+        );
     }
 
     @RequiredReadAction

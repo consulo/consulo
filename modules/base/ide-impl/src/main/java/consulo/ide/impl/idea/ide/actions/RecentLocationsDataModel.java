@@ -16,39 +16,31 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.fileEditor.history.PlaceInfo;
-import consulo.fileEditor.history.RecentPlacesListener;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.application.ui.UISettings;
-import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.application.util.SynchronizedClearableLazy;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.codeEditor.LightHighlighterClient;
-import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
-import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
-import consulo.ide.localize.IdeLocalize;
-import consulo.project.Project;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.util.lang.StringUtil;
 import consulo.document.util.DocumentUtil;
-import consulo.application.util.SynchronizedClearableLazy;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-
+import consulo.document.util.TextRange;
+import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.history.PlaceInfo;
+import consulo.fileEditor.history.RecentPlacesListener;
+import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -62,20 +54,21 @@ import java.util.stream.Collectors;
  * from kotlin
  */
 public class RecentLocationsDataModel {
-    private final Project project;
-    private final List<Editor> editorsToRelease;
+    @Nonnull
+    private final Project myProject;
+    private final List<Editor> myEditorsToRelease;
 
-    private final MessageBusConnection projectConnection;
+    private final MessageBusConnection myProjectConnection;
 
-    private final SynchronizedClearableLazy<List<RecentLocationItem>> navigationPlaces;
-    private final SynchronizedClearableLazy<List<RecentLocationItem>> changedPlaces;
+    private final SynchronizedClearableLazy<List<RecentLocationItem>> myNavigationPlaces;
+    private final SynchronizedClearableLazy<List<RecentLocationItem>> myChangedPlaces;
 
-    public RecentLocationsDataModel(Project project, List<Editor> editorsToRelease) {
-        this.project = project;
-        this.editorsToRelease = editorsToRelease;
-        projectConnection = this.project.getMessageBus().connect();
+    public RecentLocationsDataModel(@Nonnull Project project, List<Editor> editorsToRelease) {
+        this.myProject = project;
+        this.myEditorsToRelease = editorsToRelease;
+        myProjectConnection = this.myProject.getMessageBus().connect();
 
-        projectConnection.subscribe(RecentPlacesListener.class, new RecentPlacesListener() {
+        myProjectConnection.subscribe(RecentPlacesListener.class, new RecentPlacesListener() {
             @Override
             public void recentPlaceAdded(@Nonnull PlaceInfo changePlace, boolean isChanged) {
                 resetPlaces(isChanged);
@@ -88,31 +81,31 @@ public class RecentLocationsDataModel {
 
             private void resetPlaces(boolean isChanged) {
                 if (isChanged) {
-                    changedPlaces.drop();
+                    myChangedPlaces.drop();
                 }
                 else {
-                    navigationPlaces.drop();
+                    myNavigationPlaces.drop();
                 }
             }
         });
 
 
-        navigationPlaces = calculateItems(project, false);
-        changedPlaces = calculateItems(project, true);
+        myNavigationPlaces = calculateItems(false);
+        myChangedPlaces = calculateItems(true);
     }
 
-    private SynchronizedClearableLazy<List<RecentLocationItem>> calculateItems(Project project, boolean changed) {
+    private SynchronizedClearableLazy<List<RecentLocationItem>> calculateItems(boolean changed) {
         return new SynchronizedClearableLazy<>(() -> {
-            List<RecentLocationItem> items = createPlaceLinePairs(project, changed);
-            editorsToRelease.addAll(ContainerUtil.map(items, RecentLocationItem::getEditor));
+            List<RecentLocationItem> items = createPlaceLinePairs(changed);
+            myEditorsToRelease.addAll(ContainerUtil.map(items, RecentLocationItem::getEditor));
             return items;
         });
     }
 
     @Nonnull
-    private List<RecentLocationItem> createPlaceLinePairs(Project project, boolean changed) {
-        return getPlaces(project, changed).stream().map(placeInfo -> {
-            EditorEx editor = createEditor(project, placeInfo);
+    private List<RecentLocationItem> createPlaceLinePairs(boolean changed) {
+        return getPlaces(myProject, changed).stream().map(placeInfo -> {
+            EditorEx editor = createEditor(placeInfo);
             if (editor == null) {
                 return null;
             }
@@ -121,7 +114,8 @@ public class RecentLocationsDataModel {
     }
 
     @Nullable
-    private EditorEx createEditor(Project project, PlaceInfo placeInfo) {
+    @RequiredReadAction
+    private EditorEx createEditor(PlaceInfo placeInfo) {
         RangeMarker positionOffset = placeInfo.getCaretPosition();
         if (positionOffset == null || !positionOffset.isValid()) {
             return null;
@@ -139,7 +133,7 @@ public class RecentLocationsDataModel {
 
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document editorDocument = editorFactory.createDocument(documentText);
-        EditorEx editor = (EditorEx)editorFactory.createEditor(editorDocument, project);
+        EditorEx editor = (EditorEx) editorFactory.createEditor(editorDocument, myProject);
 
         EditorGutterComponentEx gutterComponentEx = editor.getGutterComponentEx();
         int linesShift = fileDocument.getLineNumber(actualTextRange.getStartOffset());
@@ -152,13 +146,13 @@ public class RecentLocationsDataModel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         fillEditorSettings(editor.getSettings());
-        setHighlighting(project, editor, fileDocument, placeInfo, actualTextRange);
+        setHighlighting(editor, fileDocument, placeInfo, actualTextRange);
 
         return editor;
     }
 
+    @RequiredReadAction
     private void setHighlighting(
-        Project project,
         EditorEx editor,
         Document document,
         PlaceInfo placeInfo,
@@ -166,12 +160,11 @@ public class RecentLocationsDataModel {
     ) {
         EditorColorsScheme colorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
 
-        applySyntaxHighlighting(project, editor, document, colorsScheme, textRange, placeInfo);
-        applyHighlightingPasses(project, editor, document, colorsScheme, textRange);
+        applySyntaxHighlighting(editor, document, colorsScheme, textRange, placeInfo);
+        applyHighlightingPasses(editor, document, colorsScheme, textRange);
     }
 
     private void applySyntaxHighlighting(
-        Project project,
         EditorEx editor,
         Document document,
         EditorColorsScheme colorsScheme,
@@ -179,8 +172,8 @@ public class RecentLocationsDataModel {
         PlaceInfo placeInfo
     ) {
         EditorHighlighter editorHighlighter =
-            EditorHighlighterFactory.getInstance().createEditorHighlighter(placeInfo.getFile(), colorsScheme, project);
-        editorHighlighter.setEditor(new LightHighlighterClient(document, project));
+            EditorHighlighterFactory.getInstance().createEditorHighlighter(placeInfo.getFile(), colorsScheme, myProject);
+        editorHighlighter.setEditor(new LightHighlighterClient(document, myProject));
         editorHighlighter.setText(document.getText(TextRange.create(0, textRange.getEndOffset())));
         int startOffset = textRange.getStartOffset();
 
@@ -200,7 +193,6 @@ public class RecentLocationsDataModel {
 
     @RequiredReadAction
     private void applyHighlightingPasses(
-        Project project,
         EditorEx editor,
         Document document,
         EditorColorsScheme colorsScheme,
@@ -208,34 +200,41 @@ public class RecentLocationsDataModel {
     ) {
         int startOffset = rangeMarker.getStartOffset();
         int endOffset = rangeMarker.getEndOffset();
-        DaemonCodeAnalyzerInternal.processHighlights(document, project, null, startOffset, endOffset, i -> {
-            HighlightInfoImpl info = (HighlightInfoImpl)i;
+        DaemonCodeAnalyzerInternal.processHighlights(
+            document,
+            myProject,
+            null,
+            startOffset,
+            endOffset,
+            i -> {
+                HighlightInfoImpl info = (HighlightInfoImpl) i;
 
-            if (info.getStartOffset() >= startOffset && info.getEndOffset() <= endOffset) {
-                HighlightSeverity highlightSeverity = info.getSeverity();
-                if (highlightSeverity == HighlightSeverity.ERROR ||
-                    highlightSeverity == HighlightSeverity.WARNING ||
-                    highlightSeverity == HighlightSeverity.WEAK_WARNING ||
-                    highlightSeverity == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING) {
+                if (info.getStartOffset() >= startOffset && info.getEndOffset() <= endOffset) {
+                    HighlightSeverity highlightSeverity = info.getSeverity();
+                    if (highlightSeverity == HighlightSeverity.ERROR ||
+                        highlightSeverity == HighlightSeverity.WARNING ||
+                        highlightSeverity == HighlightSeverity.WEAK_WARNING ||
+                        highlightSeverity == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING) {
+                        return true;
+                    }
+
+                    TextAttributes textAttributes = info.myForcedTextAttributes != null
+                        ? info.myForcedTextAttributes
+                        : colorsScheme.getAttributes(info.myForcedTextAttributesKey);
+                    editor.getMarkupModel().addRangeHighlighter(
+                        info.getActualStartOffset() - rangeMarker.getStartOffset(),
+                        info.getActualEndOffset() - rangeMarker.getStartOffset(),
+                        1000,
+                        textAttributes,
+                        HighlighterTargetArea.EXACT_RANGE
+                    );
                     return true;
                 }
-
-                TextAttributes textAttributes = info.forcedTextAttributes != null
-                    ? info.forcedTextAttributes
-                    : colorsScheme.getAttributes(info.forcedTextAttributesKey);
-                editor.getMarkupModel().addRangeHighlighter(
-                    info.getActualStartOffset() - rangeMarker.getStartOffset(),
-                    info.getActualEndOffset() - rangeMarker.getStartOffset(),
-                    1000,
-                    textAttributes,
-                    HighlighterTargetArea.EXACT_RANGE
-                );
-                return true;
+                else {
+                    return true;
+                }
             }
-            else {
-                return true;
-            }
-        });
+        );
     }
 
     private TextRange getTrimmedRange(Document document, int lineNumber) {
@@ -316,14 +315,14 @@ public class RecentLocationsDataModel {
     }
 
     public List<RecentLocationItem> getPlaces(boolean changed) {
-        return changed ? this.changedPlaces.getValue() : this.navigationPlaces.getValue();
+        return changed ? this.myChangedPlaces.getValue() : this.myNavigationPlaces.getValue();
     }
 
     public List<Editor> getEditorsToRelease() {
-        return editorsToRelease;
+        return myEditorsToRelease;
     }
 
     public MessageBusConnection getProjectConnection() {
-        return projectConnection;
+        return myProjectConnection;
     }
 }

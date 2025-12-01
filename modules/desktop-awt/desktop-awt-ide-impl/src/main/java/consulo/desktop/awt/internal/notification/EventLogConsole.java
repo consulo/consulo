@@ -354,7 +354,7 @@ class EventLogConsole {
 
     private void highlightNotification(
         Notification notification,
-        String message,
+        @Nonnull String message,
         int startLine,
         int endLine,
         int titleOffset,
@@ -375,7 +375,7 @@ class EventLogConsole {
             case INFORMATION -> StandardColors.GREEN;
         };
         colorHighlighter.setErrorStripeMarkColor(color);
-        colorHighlighter.setErrorStripeTooltip(message);
+        colorHighlighter.setErrorStripeTooltip(LocalizeValue.of(message));
 
         Runnable removeHandler = () -> {
             if (colorHighlighter.isValid()) {

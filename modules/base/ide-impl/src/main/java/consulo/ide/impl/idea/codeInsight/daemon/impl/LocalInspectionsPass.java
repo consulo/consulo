@@ -60,6 +60,7 @@ import consulo.language.editor.rawHighlight.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
@@ -318,7 +319,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         List<InspectionContext> init = new ArrayList<>();
         List<Map.Entry<LocalInspectionToolWrapper, Set<String>>> entries = new ArrayList<>(toolToSpecifiedLanguageIds.entrySet());
 
-        Processor<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
+        Predicate<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
             LocalInspectionToolWrapper toolWrapper = pair.getKey();
             Set<String> dialectIdsSpecifiedForTool = pair.getValue();
             ((ApplicationEx)Application.get()).executeByImpatientReader(() -> runToolOnElements(
@@ -425,6 +426,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
     }
 
+    @RequiredReadAction
     void inspectInjectedPsi(
         @Nonnull List<PsiElement> elements,
         boolean onTheFly,
@@ -460,8 +462,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     private HighlightInfoImpl highlightInfoFromDescriptor(
         @Nonnull ProblemDescriptor problemDescriptor,
         @Nonnull HighlightInfoType highlightInfoType,
-        @Nonnull String message,
-        String toolTip,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue toolTip,
         PsiElement psiElement
     ) {
         TextRange textRange = ((ProblemDescriptorBase)problemDescriptor).getTextRange();
@@ -476,7 +478,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             .range(psiElement, textRange.getStartOffset(), textRange.getEndOffset())
             .description(message)
             .severity(severity);
-        if (toolTip != null) {
+        if (toolTip != LocalizeValue.empty()) {
             b.escapedToolTip(toolTip);
         }
         if (attributes != null) {
@@ -701,22 +703,22 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
         // todo we got to separate our "internal" prefixes/suffixes from user-defined ones
         // todo in the latter case the errors should be highlighted, otherwise not
-        List<TextRange> editables = ilManager.intersectWithAllEditableFragments(file, new TextRange(info.startOffset, info.endOffset));
+        List<TextRange> editables = ilManager.intersectWithAllEditableFragments(file, new TextRange(info.getStartOffset(), info.getEndOffset()));
         for (TextRange editable : editables) {
             TextRange hostRange = ((DocumentWindow)documentRange).injectedToHost(editable);
             int start = hostRange.getStartOffset();
             int end = hostRange.getEndOffset();
-            HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(info.type).range(element, start, end);
-            String description = info.getDescription();
-            if (description != null) {
+            HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(info.getType()).range(element, start, end);
+            LocalizeValue description = info.getDescription();
+            if (description != LocalizeValue.empty()) {
                 builder.description(description);
             }
-            String toolTip = info.getToolTip();
-            if (toolTip != null) {
-                builder.escapedToolTip(toolTip);
+            LocalizeValue tooltip = info.getToolTip();
+            if (tooltip != LocalizeValue.empty()) {
+                builder.escapedToolTip(tooltip);
             }
             HighlightInfoImpl patched = (HighlightInfoImpl)builder.createUnconditionally();
-            if (patched.startOffset != patched.endOffset || info.startOffset == info.endOffset) {
+            if (patched.getStartOffset() != patched.getEndOffset() || info.getStartOffset() == info.getEndOffset()) {
                 patched.setFromInjection(true);
                 registerQuickFixes(toolWrapper, descriptor, patched, emptyActionRegistered);
                 outInfos.add(patched);
@@ -752,8 +754,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(message).replaceAll("<[^>]*>", ""))
             : message;
         String link = " <a href=\"#inspection/" + tool.getShortName() + "\"" +
-            (StyleManager.get().getCurrentStyle().isDark() ? " color=\"7AB4C9\" " : "") +
-            ">" +
+            (StyleManager.get().getCurrentStyle().isDark() ? " color=\"7AB4C9\" " : "") + ">" +
             DaemonLocalize.inspectionExtendedDescription().get() +
             "</a> " +
             myShortcutText;
@@ -764,7 +765,13 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 (message.startsWith("<html>") ? XmlStringUtil.stripHtml(message) : XmlStringUtil.escapeString(message)) + link
             );
         }
-        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, plainMessage, tooltip, element);
+        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(
+            descriptor,
+            type,
+            LocalizeValue.of(plainMessage),
+            LocalizeValue.ofNullable(tooltip),
+            element
+        );
         if (highlightInfo != null) {
             registerQuickFixes(tool, descriptor, highlightInfo, emptyActionRegistered);
         }

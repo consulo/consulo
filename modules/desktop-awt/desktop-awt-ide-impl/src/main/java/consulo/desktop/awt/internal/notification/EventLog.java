@@ -458,8 +458,11 @@ public class EventLog {
     }
 
     public static class LogEntry {
+        @Nonnull
         public final String message;
+        @Nonnull
         public final String status;
+        @Nonnull
         public final List<Pair<TextRange, HyperlinkInfo>> links;
         public final int titleLength;
 

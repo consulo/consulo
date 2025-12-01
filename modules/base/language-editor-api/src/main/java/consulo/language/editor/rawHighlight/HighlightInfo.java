@@ -50,9 +50,9 @@ public interface HighlightInfo extends Segment {
 
             FixBuilder displayName(@Nonnull LocalizeValue displayName);
 
-            FixBuilder fixRange(@Nonnull TextRange fixRange);
+            FixBuilder fixRange(@Nullable TextRange fixRange);
 
-            FixBuilder key(@Nonnull HighlightDisplayKey key);
+            FixBuilder key(@Nullable HighlightDisplayKey key);
 
             Builder register();
         }
@@ -220,15 +220,16 @@ public interface HighlightInfo extends Segment {
 
     int getActualEndOffset();
 
-    String getDescription();
+    @Nonnull
+    LocalizeValue getDescription();
 
     HighlightInfoType getType();
 
     @Nullable
     PsiElement getPsiElement();
 
-    @Nullable
-    String getToolTip();
+    @Nonnull
+    LocalizeValue getToolTip();
 
     @Nullable
     TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme);

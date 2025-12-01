@@ -34,56 +34,57 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 class SequentialCleanupTask implements SequentialTask {
-  private static final Logger LOG = Logger.getInstance(SequentialCleanupTask.class);
+    private static final Logger LOG = Logger.getInstance(SequentialCleanupTask.class);
 
-  private final Project myProject;
-  private final LinkedHashMap<PsiFile, List<HighlightInfo>> myResults;
-  private Iterator<PsiFile> myFileIterator;
-  private final SequentialModalProgressTask myProgressTask;
-  private int myCount = 0;
+    private final Project myProject;
+    private final LinkedHashMap<PsiFile, List<HighlightInfo>> myResults;
+    private Iterator<PsiFile> myFileIterator;
+    private final SequentialModalProgressTask myProgressTask;
+    private int myCount = 0;
 
-  public SequentialCleanupTask(Project project, LinkedHashMap<PsiFile, List<HighlightInfo>> results, SequentialModalProgressTask task) {
-    myProject = project;
-    myResults = results;
-    myProgressTask = task;
-    myFileIterator = myResults.keySet().iterator();
-  }
-
-  @Override
-  public void prepare() {}
-
-  @Override
-  public boolean isDone() {
-    return myFileIterator == null || !myFileIterator.hasNext();
-  }
-
-  @Override
-  public boolean iteration() {
-    ProgressIndicator indicator = myProgressTask.getIndicator();
-    if (indicator != null) {
-      indicator.setFraction((double) myCount++/myResults.size());
+    public SequentialCleanupTask(Project project, LinkedHashMap<PsiFile, List<HighlightInfo>> results, SequentialModalProgressTask task) {
+        myProject = project;
+        myResults = results;
+        myProgressTask = task;
+        myFileIterator = myResults.keySet().iterator();
     }
-    PsiFile file = myFileIterator.next();
-    List<HighlightInfo> infos = myResults.get(file);
-    Collections.reverse(infos); //sort bottom - top
-    for (HighlightInfo info : infos) {
-      for (Pair<IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl)info).quickFixActionRanges) {
-        try {
-          actionRange.getFirst().getAction().invoke(myProject, null, file);
-        }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (Exception e) {
-          LOG.error(e);
-        }
-      }
-    }
-    return true;
-  }
 
-  @Override
-  public void stop() {
-    myFileIterator = null;
-  }
+    @Override
+    public void prepare() {
+    }
+
+    @Override
+    public boolean isDone() {
+        return myFileIterator == null || !myFileIterator.hasNext();
+    }
+
+    @Override
+    public boolean iteration() {
+        ProgressIndicator indicator = myProgressTask.getIndicator();
+        if (indicator != null) {
+            indicator.setFraction((double) myCount++ / myResults.size());
+        }
+        PsiFile file = myFileIterator.next();
+        List<HighlightInfo> infos = myResults.get(file);
+        Collections.reverse(infos); //sort bottom - top
+        for (HighlightInfo info : infos) {
+            for (Pair<IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl) info).myQuickFixActionRanges) {
+                try {
+                    actionRange.getFirst().getAction().invoke(myProject, null, file);
+                }
+                catch (ProcessCanceledException e) {
+                    throw e;
+                }
+                catch (Exception e) {
+                    LOG.error(e);
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        myFileIterator = null;
+    }
 }

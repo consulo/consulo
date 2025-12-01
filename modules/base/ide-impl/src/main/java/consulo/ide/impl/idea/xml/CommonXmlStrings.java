@@ -19,17 +19,17 @@ package consulo.ide.impl.idea.xml;
  * @author gregsh
  */
 public interface CommonXmlStrings {
-  String CDATA_START = "<![CDATA[";
-  String CDATA_END = "]]>";
+    String CDATA_START = "<![CDATA[";
+    String CDATA_END = "]]>";
 
-  String QUOT = "&quot;";
-  String LT = "&lt;";
-  String GT = "&gt;";
-  String AMP = "&amp;";
-  String NBSP = "&nbsp;";
+    String QUOT = "&quot;";
+    String LT = "&lt;";
+    String GT = "&gt;";
+    String AMP = "&amp;";
+    String NBSP = "&nbsp;";
 
-  String HTML_START = "<html>";
-  String BODY_START = "<body>";
-  String HTML_END = "</html>";
-  String BODY_END = "</body>";
+    String HTML_START = "<html>";
+    String BODY_START = "<body>";
+    String HTML_END = "</html>";
+    String BODY_END = "</body>";
 }
