@@ -372,8 +372,9 @@ public final class SyntaxInfoBuilder {
                 }
                 ColorValue foreground = attributes.getForegroundColor();
                 ColorValue background = attributes.getBackgroundColor();
-                if ((foreground == null || myDefaultForeground.equals(foreground)) && (background == null || myDefaultBackground.equals(
-                    background)) && attributes.getFontType() == Font.PLAIN) {
+                if ((foreground == null || myDefaultForeground.equals(foreground))
+                    && (background == null || myDefaultBackground.equals(background))
+                    && attributes.getFontType() == Font.PLAIN) {
                     continue;
                 }
                 myNextAttributes = attributes;

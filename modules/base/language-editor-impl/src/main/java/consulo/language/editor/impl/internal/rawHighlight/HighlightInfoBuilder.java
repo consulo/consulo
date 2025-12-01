@@ -70,13 +70,13 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         }
 
         @Override
-        public FixBuilder fixRange(@Nonnull TextRange fixRange) {
+        public FixBuilder fixRange(@Nullable TextRange fixRange) {
             myFixRange = fixRange;
             return this;
         }
 
         @Override
-        public FixBuilder key(@Nonnull HighlightDisplayKey key) {
+        public FixBuilder key(@Nullable HighlightDisplayKey key) {
             myKey = key;
             return this;
         }

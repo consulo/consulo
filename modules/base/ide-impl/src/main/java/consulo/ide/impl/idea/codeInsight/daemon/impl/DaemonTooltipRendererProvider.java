@@ -18,6 +18,8 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,6 +29,8 @@ import java.util.List;
  * @author max
  */
 public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
+    private static final Logger LOG = LoggerFactory.getLogger(DaemonTooltipRendererProvider.class);
+
     private final Project myProject;
     private final Editor myEditor;
 
@@ -42,24 +46,23 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         Collection<LocalizeValue> tooltips = new HashSet<>(); //do not show same tooltip twice
         for (RangeHighlighter marker : highlighters) {
             Object tooltipObject = marker.getErrorStripeTooltip();
-            if (tooltipObject == null) {
-                continue;
-            }
             if (tooltipObject instanceof HighlightInfoImpl info) {
                 if (info.getToolTip() != LocalizeValue.empty() && tooltips.add(info.getToolTip())) {
                     infos.add(info);
                 }
             }
-            else {
-                String text = tooltipObject.toString();
-                if (tooltips.add(LocalizeValue.ofNullable(text))) {
+            else if (tooltipObject instanceof LocalizeValue tooltip) {
+                if (tooltips.add(tooltip)) {
                     if (bigRenderer == null) {
-                        bigRenderer = new DaemonTooltipRenderer(text, new Object[]{highlighters});
+                        bigRenderer = new DaemonTooltipRenderer(tooltip.get(), new Object[]{highlighters});
                     }
                     else {
-                        bigRenderer.addBelow(text);
+                        bigRenderer.addBelow(tooltip.get());
                     }
                 }
+            }
+            else if (tooltipObject != null) {
+                LOG.warn("Expected HighlightInfo or LocalizeValue, got {}", tooltipObject.getClass());
             }
         }
         if (!infos.isEmpty()) {
@@ -88,9 +91,6 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
             }
             else {
                 myRenderer = new DaemonTooltipRenderer(tooltip.get(), new Object[]{highlighters});
-            }
-            if (bigRenderer != null) {
-                myRenderer.addBelow(bigRenderer.getText());
             }
             bigRenderer = myRenderer;
         }
