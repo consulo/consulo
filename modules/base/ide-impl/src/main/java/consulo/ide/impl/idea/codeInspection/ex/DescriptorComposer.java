@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -33,6 +32,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,186 +42,198 @@ import java.util.List;
  * @author max
  */
 public class DescriptorComposer extends HTMLComposerBase {
-  private static final Logger LOG = Logger.getInstance(DescriptorComposer.class);
-  private final InspectionToolPresentation myTool;
+    private static final Logger LOG = Logger.getInstance(DescriptorComposer.class);
+    private final InspectionToolPresentation myTool;
 
-  public DescriptorComposer(@Nonnull InspectionToolPresentation tool) {
-    myTool = tool;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void compose(StringBuffer buf, RefEntity refEntity) {
-    genPageHeader(buf, refEntity);
-    if (myTool.getDescriptions(refEntity) != null) {
-      appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
-
-      CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refEntity);
-
-      LOG.assertTrue(descriptions != null);
-
-      startList(buf);
-      for (int i = 0; i < descriptions.length; i++) {
-        CommonProblemDescriptor description = descriptions[i];
-
-        startListItem(buf);
-        composeDescription(description, i, buf, refEntity);
-        doneListItem(buf);
-      }
-
-      doneList(buf);
-
-      appendResolution(buf,refEntity, quickFixTexts(refEntity, myTool));
+    public DescriptorComposer(@Nonnull InspectionToolPresentation tool) {
+        myTool = tool;
     }
-    else {
-      appendNoProblems(buf);
-    }
-  }
 
-  public static String[] quickFixTexts(RefEntity where, @Nonnull InspectionToolPresentation toolPresentation){
-    QuickFixAction[] quickFixes = toolPresentation.getQuickFixes(new RefEntity[] {where});
-    if (quickFixes == null) {
-      return null;
-    }
-    List<String> texts = new ArrayList<>();
-    for (QuickFixAction quickFix : quickFixes) {
-      LocalizeValue text = quickFix.getText(where);
-      if (text == LocalizeValue.of()) continue;
-      texts.add(text.get());
-    }
-    return ArrayUtil.toStringArray(texts);
-  }
+    @RequiredReadAction
+    @Override
+    public void compose(StringBuffer buf, RefEntity refEntity) {
+        genPageHeader(buf, refEntity);
+        if (myTool.getDescriptions(refEntity) != null) {
+            appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
 
-  protected void composeAdditionalDescription(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity) {}
+            CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refEntity);
 
-  @RequiredReadAction
-  @Override
-  public void compose(StringBuffer buf, RefEntity refElement, CommonProblemDescriptor descriptor) {
-    CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refElement);
+            LOG.assertTrue(descriptions != null);
 
-    int problemIdx = 0;
-    if (descriptions != null) { //server-side inspections
-      problemIdx = -1;
-      for (int i = 0; i < descriptions.length; i++) {
-        CommonProblemDescriptor description = descriptions[i];
-        if (description == descriptor) {
-          problemIdx = i;
-          break;
+            startList(buf);
+            for (int i = 0; i < descriptions.length; i++) {
+                CommonProblemDescriptor description = descriptions[i];
+
+                startListItem(buf);
+                composeDescription(description, i, buf, refEntity);
+                doneListItem(buf);
+            }
+
+            doneList(buf);
+
+            appendResolution(buf, refEntity, quickFixTexts(refEntity, myTool));
         }
-      }
-      if (problemIdx == -1) return;
+        else {
+            appendNoProblems(buf);
+        }
     }
 
-    genPageHeader(buf, refElement);
-    appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
-    //noinspection HardCodedStringLiteral
-    buf.append("<br>");
-    appendAfterHeaderIndention(buf);
+    public static String[] quickFixTexts(RefEntity where, @Nonnull InspectionToolPresentation toolPresentation) {
+        QuickFixAction[] quickFixes = toolPresentation.getQuickFixes(new RefEntity[]{where});
+        if (quickFixes == null) {
+            return null;
+        }
+        List<String> texts = new ArrayList<>();
+        for (QuickFixAction quickFix : quickFixes) {
+            LocalizeValue text = quickFix.getText(where);
+            if (text == LocalizeValue.of()) {
+                continue;
+            }
+            texts.add(text.get());
+        }
+        return ArrayUtil.toStringArray(texts);
+    }
 
-    composeDescription(descriptor, problemIdx, buf, refElement);
+    protected void composeAdditionalDescription(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity) {
+    }
 
-    if (refElement instanceof RefElement && !refElement.isValid()) return;
+    @RequiredReadAction
+    @Override
+    public void compose(StringBuffer buf, RefEntity refElement, CommonProblemDescriptor descriptor) {
+        CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refElement);
 
-    QuickFix[] fixes = descriptor.getFixes();
-    if (fixes != null && fixes.length > 0) {
-      //noinspection HardCodedStringLiteral
-      buf.append("<br><br>");
-      appendHeading(buf, InspectionLocalize.inspectionProblemResolution());
-      //noinspection HardCodedStringLiteral
-      buf.append("<br>");
-      appendAfterHeaderIndention(buf);
+        int problemIdx = 0;
+        if (descriptions != null) { //server-side inspections
+            problemIdx = -1;
+            for (int i = 0; i < descriptions.length; i++) {
+                CommonProblemDescriptor description = descriptions[i];
+                if (description == descriptor) {
+                    problemIdx = i;
+                    break;
+                }
+            }
+            if (problemIdx == -1) {
+                return;
+            }
+        }
 
-      int idx = 0;
-      for (QuickFix fix : fixes) {
-        //noinspection HardCodedStringLiteral
-        //noinspection HardCodedStringLiteral
-        buf.append("<a HREF=\"file://bred.txt#invokelocal:").append(idx++);
-        buf.append("\">");
-        buf.append(fix.getName());
-        //noinspection HardCodedStringLiteral
-        buf.append("</a>");
+        genPageHeader(buf, refElement);
+        appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
         //noinspection HardCodedStringLiteral
         buf.append("<br>");
         appendAfterHeaderIndention(buf);
-      }
+
+        composeDescription(descriptor, problemIdx, buf, refElement);
+
+        if (refElement instanceof RefElement && !refElement.isValid()) {
+            return;
+        }
+
+        QuickFix[] fixes = descriptor.getFixes();
+        if (fixes != null && fixes.length > 0) {
+            //noinspection HardCodedStringLiteral
+            buf.append("<br><br>");
+            appendHeading(buf, InspectionLocalize.inspectionProblemResolution());
+            //noinspection HardCodedStringLiteral
+            buf.append("<br>");
+            appendAfterHeaderIndention(buf);
+
+            int idx = 0;
+            for (QuickFix fix : fixes) {
+                //noinspection HardCodedStringLiteral
+                //noinspection HardCodedStringLiteral
+                buf.append("<a HREF=\"file://bred.txt#invokelocal:").append(idx++);
+                buf.append("\">");
+                buf.append(fix.getName());
+                //noinspection HardCodedStringLiteral
+                buf.append("</a>");
+                //noinspection HardCodedStringLiteral
+                buf.append("<br>");
+                appendAfterHeaderIndention(buf);
+            }
+        }
     }
-  }
 
-  @RequiredReadAction
-  protected void composeDescription(@Nonnull CommonProblemDescriptor description, int i, @Nonnull StringBuffer buf, @Nonnull RefEntity refElement) {
-    PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getPsiElement() : null;
-    StringBuilder anchor = new StringBuilder();
-    VirtualFile vFile = null;
+    @RequiredReadAction
+    protected void composeDescription(
+        @Nonnull CommonProblemDescriptor description,
+        int i,
+        @Nonnull StringBuffer buf,
+        @Nonnull RefEntity refElement
+    ) {
+        PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor) description).getPsiElement() : null;
+        StringBuilder anchor = new StringBuilder();
+        VirtualFile vFile = null;
 
-    if (expression != null) {
-      vFile = expression.getContainingFile().getVirtualFile();
-      if (vFile instanceof VirtualFileWindow) vFile = ((VirtualFileWindow)vFile).getDelegate();
+        if (expression != null) {
+            vFile = expression.getContainingFile().getVirtualFile();
+            if (vFile instanceof VirtualFileWindow virtualFileWindow) {
+                vFile = virtualFileWindow.getDelegate();
+            }
 
-      //noinspection HardCodedStringLiteral
-      anchor.append("<a HREF=\"");
-      try {
-        if (myExporter == null){
-          //noinspection HardCodedStringLiteral
-          anchor.append(new URL(vFile.getUrl() + "#descr:" + i));
+            //noinspection HardCodedStringLiteral
+            anchor.append("<a HREF=\"");
+            try {
+                if (myExporter == null) {
+                    //noinspection HardCodedStringLiteral
+                    anchor.append(new URL(vFile.getUrl() + "#descr:" + i));
+                }
+                else {
+                    anchor.append(myExporter.getURL(refElement));
+                }
+            }
+            catch (MalformedURLException e) {
+                LOG.error(e);
+            }
+
+            anchor.append("\">");
+            anchor.append(ProblemDescriptorUtil.extractHighlightedText(description, expression).replaceAll("\\$", "\\\\\\$"));
+            //noinspection HardCodedStringLiteral
+            anchor.append("</a>");
         }
         else {
-          anchor.append(myExporter.getURL(refElement));
+            //noinspection HardCodedStringLiteral
+            anchor.append("<font style=\"font-weight:bold; color:#FF0000\";>");
+            anchor.append(InspectionLocalize.inspectionExportResultsInvalidatedItem());
+            //noinspection HardCodedStringLiteral
+            anchor.append("</font>");
         }
-      }
-      catch (MalformedURLException e) {
-        LOG.error(e);
-      }
 
-      anchor.append("\">");
-      anchor.append(ProblemDescriptorUtil.extractHighlightedText(description, expression).replaceAll("\\$", "\\\\\\$"));
-      //noinspection HardCodedStringLiteral
-      anchor.append("</a>");
-    }
-    else {
-      //noinspection HardCodedStringLiteral
-      anchor.append("<font style=\"font-weight:bold; color:#FF0000\";>");
-      anchor.append(InspectionLocalize.inspectionExportResultsInvalidatedItem());
-      //noinspection HardCodedStringLiteral
-      anchor.append("</font>");
-    }
-
-    String descriptionTemplate = description.getDescriptionTemplate();
-    //noinspection HardCodedStringLiteral
-    String reference = "#ref";
-    boolean containsReference = descriptionTemplate.contains(reference);
-    String res = descriptionTemplate.replaceAll(reference, anchor.toString());
-    int lineNumber = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getLineNumber() : -1;
-    StringBuffer lineAnchor = new StringBuffer();
-    if (expression != null && lineNumber > 0) {
-      Document doc = FileDocumentManager.getInstance().getDocument(vFile);
-      lineAnchor.append(InspectionLocalize.inspectionExportResultsAtLine()).append(" ");
-      if (myExporter == null) {
+        String descriptionTemplate = description.getDescriptionTemplate().get();
         //noinspection HardCodedStringLiteral
-        lineAnchor.append("<a HREF=\"");
-        try {
-          int offset = doc.getLineStartOffset(lineNumber - 1);
-          offset = CharArrayUtil.shiftForward(doc.getCharsSequence(), offset, " \t");
-          lineAnchor.append(new URL(vFile.getUrl() + "#" + offset));
+        String reference = "#ref";
+        boolean containsReference = descriptionTemplate.contains(reference);
+        String res = descriptionTemplate.replaceAll(reference, anchor.toString());
+        int lineNumber = description instanceof ProblemDescriptor ? ((ProblemDescriptor) description).getLineNumber() : -1;
+        StringBuffer lineAnchor = new StringBuffer();
+        if (expression != null && lineNumber > 0) {
+            Document doc = FileDocumentManager.getInstance().getDocument(vFile);
+            lineAnchor.append(InspectionLocalize.inspectionExportResultsAtLine()).append(" ");
+            if (myExporter == null) {
+                //noinspection HardCodedStringLiteral
+                lineAnchor.append("<a HREF=\"");
+                try {
+                    int offset = doc.getLineStartOffset(lineNumber - 1);
+                    offset = CharArrayUtil.shiftForward(doc.getCharsSequence(), offset, " \t");
+                    lineAnchor.append(new URL(vFile.getUrl() + "#" + offset));
+                }
+                catch (MalformedURLException e) {
+                    LOG.error(e);
+                }
+                lineAnchor.append("\">");
+            }
+            lineAnchor.append(Integer.toString(lineNumber));
+            //noinspection HardCodedStringLiteral
+            lineAnchor.append("</a>");
+            //noinspection HardCodedStringLiteral
+            String location = "#loc";
+            if (!res.contains(location)) {
+                res += " (" + location + ")";
+            }
+            res = res.replaceAll(location, lineAnchor.toString());
         }
-        catch (MalformedURLException e) {
-          LOG.error(e);
-        }
-        lineAnchor.append("\">");
-      }
-      lineAnchor.append(Integer.toString(lineNumber));
-      //noinspection HardCodedStringLiteral
-      lineAnchor.append("</a>");
-      //noinspection HardCodedStringLiteral
-      String location = "#loc";
-      if (!res.contains(location)) {
-        res += " (" + location + ")";
-      }
-      res = res.replaceAll(location, lineAnchor.toString());
+        buf.append(res);
+        buf.append(BR).append(BR);
+        composeAdditionalDescription(buf, refElement);
     }
-    buf.append(res);
-    buf.append(BR).append(BR);
-    composeAdditionalDescription(buf, refElement);
-  }
-
-
 }

@@ -18,21 +18,22 @@ package consulo.language.editor.impl.internal.inspection;
 import consulo.language.editor.inspection.CommonProblemDescriptorBase;
 import consulo.language.editor.inspection.ModuleProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 
 import jakarta.annotation.Nonnull;
 
 public class ModuleProblemDescriptorImpl extends CommonProblemDescriptorBase implements ModuleProblemDescriptor {
-  private final Module myModule;
+    private final Module myModule;
 
-  public ModuleProblemDescriptorImpl(@Nonnull Module module, @Nonnull String descriptionTemplate, QuickFix<?> [] fixes) {
-    super(fixes, descriptionTemplate);
-    myModule = module;
-  }
+    public ModuleProblemDescriptorImpl(@Nonnull Module module, @Nonnull LocalizeValue descriptionTemplate, QuickFix<?>[] fixes) {
+        super(fixes, descriptionTemplate);
+        myModule = module;
+    }
 
-  @Nonnull
-  @Override
-  public Module getModule() {
-    return myModule;
-  }
+    @Nonnull
+    @Override
+    public Module getModule() {
+        return myModule;
+    }
 }

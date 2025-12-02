@@ -52,7 +52,15 @@ public interface HighlightInfo extends Segment {
 
             FixBuilder fixRange(@Nullable TextRange fixRange);
 
+            default FixBuilder optionalFixRange(@Nullable TextRange fixRange) {
+                return fixRange == null ? this : fixRange(fixRange);
+            }
+
             FixBuilder key(@Nullable HighlightDisplayKey key);
+
+            default FixBuilder optionalKey(@Nullable HighlightDisplayKey key) {
+                return key == null ? this : key(key);
+            }
 
             Builder register();
         }

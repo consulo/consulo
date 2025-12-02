@@ -16,11 +16,12 @@
 
 package consulo.ide.impl.idea.codeInspection.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
@@ -36,110 +37,128 @@ import static consulo.language.editor.inspection.ProblemDescriptorUtil.TRIM_AT_T
  * @author max
  */
 public class ProblemDescriptionNode extends InspectionTreeNode {
-  protected RefEntity myElement;
-  private final CommonProblemDescriptor myDescriptor;
-  protected final InspectionToolWrapper myToolWrapper;
-  @Nonnull
-  protected final InspectionToolPresentation myPresentation;
+    protected RefEntity myElement;
+    private final CommonProblemDescriptor myDescriptor;
+    protected final InspectionToolWrapper myToolWrapper;
+    @Nonnull
+    protected final InspectionToolPresentation myPresentation;
 
-  public ProblemDescriptionNode(@Nonnull Object userObject,
-                                @Nonnull InspectionToolWrapper toolWrapper,
-                                @Nonnull InspectionToolPresentation presentation) {
-    this(userObject, null, null, toolWrapper, presentation);
-  }
-
-  public ProblemDescriptionNode(@Nonnull RefEntity element,
-                                @Nonnull CommonProblemDescriptor descriptor,
-                                @Nonnull InspectionToolWrapper toolWrapper,
-                                @Nonnull InspectionToolPresentation presentation) {
-    this(descriptor, element, descriptor, toolWrapper, presentation);
-  }
-
-  private ProblemDescriptionNode(@Nonnull Object userObject,
-                                 RefEntity element,
-                                 CommonProblemDescriptor descriptor,
-                                 @Nonnull InspectionToolWrapper toolWrapper,
-                                 @Nonnull InspectionToolPresentation presentation) {
-    super(userObject);
-    myElement = element;
-    myDescriptor = descriptor;
-    myToolWrapper = toolWrapper;
-    myPresentation = presentation;
-  }
-
-  @Nullable
-  public RefEntity getElement() {
-    return myElement;
-  }
-
-  @Nullable
-  public CommonProblemDescriptor getDescriptor() {
-    return myDescriptor;
-  }
-
-  @Override
-  public Image getIcon() {
-    if (myDescriptor instanceof ProblemDescriptorBase) {
-      ProblemHighlightType problemHighlightType = ((ProblemDescriptorBase)myDescriptor).getHighlightType();
-      if (problemHighlightType == ProblemHighlightType.ERROR) return AllIcons.General.Error;
-      if (problemHighlightType == ProblemHighlightType.GENERIC_ERROR_OR_WARNING) return AllIcons.General.Warning;
+    public ProblemDescriptionNode(
+        @Nonnull Object userObject,
+        @Nonnull InspectionToolWrapper toolWrapper,
+        @Nonnull InspectionToolPresentation presentation
+    ) {
+        this(userObject, null, null, toolWrapper, presentation);
     }
-    return AllIcons.General.Information;
-  }
 
-  @Override
-  public int getProblemCount() {
-    return 1;
-  }
-
-  @Override
-  public boolean isValid() {
-    if (myElement instanceof RefElement && !myElement.isValid()) return false;
-    CommonProblemDescriptor descriptor = getDescriptor();
-    if (descriptor instanceof ProblemDescriptor) {
-      PsiElement psiElement = ((ProblemDescriptor)descriptor).getPsiElement();
-      return psiElement != null && psiElement.isValid();
+    public ProblemDescriptionNode(
+        @Nonnull RefEntity element,
+        @Nonnull CommonProblemDescriptor descriptor,
+        @Nonnull InspectionToolWrapper toolWrapper,
+        @Nonnull InspectionToolPresentation presentation
+    ) {
+        this(descriptor, element, descriptor, toolWrapper, presentation);
     }
-    return true;
-  }
 
-
-  @Override
-  public boolean isResolved() {
-    return myElement instanceof RefElement && getPresentation().isProblemResolved(myElement, getDescriptor());
-  }
-
-  @Override
-  public void ignoreElement() {
-    InspectionToolPresentation presentation = getPresentation();
-    presentation.ignoreCurrentElementProblem(getElement(), getDescriptor());
-  }
-
-  @Override
-  public void amnesty() {
-    InspectionToolPresentation presentation = getPresentation();
-    presentation.amnesty(getElement());
-  }
-
-  @Nonnull
-  private InspectionToolPresentation getPresentation() {
-    return myPresentation;
-  }
-
-  @Override
-  public FileStatus getNodeStatus() {
-    if (myElement instanceof RefElement){
-      return getPresentation().getProblemStatus(myDescriptor);
+    private ProblemDescriptionNode(
+        @Nonnull Object userObject,
+        RefEntity element,
+        CommonProblemDescriptor descriptor,
+        @Nonnull InspectionToolWrapper toolWrapper,
+        @Nonnull InspectionToolPresentation presentation
+    ) {
+        super(userObject);
+        myElement = element;
+        myDescriptor = descriptor;
+        myToolWrapper = toolWrapper;
+        myPresentation = presentation;
     }
-    return FileStatus.NOT_CHANGED;
-  }
 
-  public String toString() {
-    CommonProblemDescriptor descriptor = getDescriptor();
-    if (descriptor == null) return "";
-    PsiElement element = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : null;
+    @Nullable
+    public RefEntity getElement() {
+        return myElement;
+    }
 
-    return XmlStringUtil.stripHtml(ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element,
-                                                                                  APPEND_LINE_NUMBER | TRIM_AT_TREE_END));
-  }
+    @Nullable
+    public CommonProblemDescriptor getDescriptor() {
+        return myDescriptor;
+    }
+
+    @Override
+    public Image getIcon() {
+        if (myDescriptor instanceof ProblemDescriptor problemDescriptor) {
+            ProblemHighlightType problemHighlightType = problemDescriptor.getHighlightType();
+            if (problemHighlightType == ProblemHighlightType.ERROR) {
+                return PlatformIconGroup.generalError();
+            }
+            if (problemHighlightType == ProblemHighlightType.GENERIC_ERROR_OR_WARNING) {
+                return PlatformIconGroup.generalWarning();
+            }
+        }
+        return PlatformIconGroup.generalInformation();
+    }
+
+    @Override
+    public int getProblemCount() {
+        return 1;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isValid() {
+        if (myElement instanceof RefElement && !myElement.isValid()) {
+            return false;
+        }
+        if (getDescriptor() instanceof ProblemDescriptor descriptor) {
+            PsiElement psiElement = descriptor.getPsiElement();
+            return psiElement != null && psiElement.isValid();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isResolved() {
+        return myElement instanceof RefElement && getPresentation().isProblemResolved(myElement, getDescriptor());
+    }
+
+    @Override
+    public void ignoreElement() {
+        InspectionToolPresentation presentation = getPresentation();
+        presentation.ignoreCurrentElementProblem(getElement(), getDescriptor());
+    }
+
+    @Override
+    public void amnesty() {
+        InspectionToolPresentation presentation = getPresentation();
+        presentation.amnesty(getElement());
+    }
+
+    @Nonnull
+    private InspectionToolPresentation getPresentation() {
+        return myPresentation;
+    }
+
+    @Override
+    public FileStatus getNodeStatus() {
+        if (myElement instanceof RefElement) {
+            return getPresentation().getProblemStatus(myDescriptor);
+        }
+        return FileStatus.NOT_CHANGED;
+    }
+
+    @Override
+    @RequiredReadAction
+    public String toString() {
+        CommonProblemDescriptor descriptor = getDescriptor();
+        if (descriptor == null) {
+            return "";
+        }
+        PsiElement element = descriptor instanceof ProblemDescriptor descriptor1 ? descriptor1.getPsiElement() : null;
+
+        return ProblemDescriptorUtil.renderDescriptionMessage(
+            descriptor,
+            element,
+            APPEND_LINE_NUMBER | TRIM_AT_TREE_END
+        ).map((localizeManager, string) -> XmlStringUtil.stripHtml(string)).get();
+    }
 }

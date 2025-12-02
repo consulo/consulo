@@ -339,6 +339,7 @@ public class InspectionEngine {
         return Collections.emptyList();
     }
 
+    @RequiredReadAction
     private static void convertToProblemDescriptors(
         @Nonnull PsiElement element,
         @Nonnull CommonProblemDescriptor[] commonProblemDescriptors,

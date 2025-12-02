@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayFactory;
 
 import jakarta.annotation.Nonnull;
@@ -40,7 +41,7 @@ public interface CommonProblemDescriptor {
    * @return the template for the problem description.
    */
   @Nonnull
-  String getDescriptionTemplate();
+  LocalizeValue getDescriptionTemplate();
 
   /**
    * Returns the quickfixes for the problem.

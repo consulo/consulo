@@ -25,7 +25,6 @@ import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
@@ -41,7 +40,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -134,15 +132,16 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     }
 
     public static void sortDescriptions(@Nonnull List<ProblemDescriptor> descriptions) {
-        Collections.sort(descriptions, (o1, o2) -> {
-            ProblemDescriptorBase d1 = (ProblemDescriptorBase)o1;
-            ProblemDescriptorBase d2 = (ProblemDescriptorBase)o2;
-            int elementsDiff = PsiUtilCore.compareElementsByPosition(d1.getPsiElement(), d2.getPsiElement());
-            if (elementsDiff == 0) {
-                return Comparing.compare(d1.getDescriptionTemplate(), d2.getDescriptionTemplate());
+        Collections.sort(
+            descriptions,
+            (o1, o2) -> {
+                int elementsDiff = PsiUtilCore.compareElementsByPosition(o1.getPsiElement(), o2.getPsiElement());
+                if (elementsDiff == 0) {
+                    return o1.getDescriptionTemplate().compareTo(o2.getDescriptionTemplate());
+                }
+                return -elementsDiff;
             }
-            return -elementsDiff;
-        });
+        );
     }
 
     @Override
@@ -178,7 +177,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
             if (fixes != null && fixes.length > 0) {
                 for (QuickFix fix : fixes) {
                     if (fix != null && (myQuickfixClass == null || fix.getClass().isAssignableFrom(myQuickfixClass))) {
-                        ProblemDescriptor problemDescriptor = (ProblemDescriptor)descriptor;
+                        ProblemDescriptor problemDescriptor = (ProblemDescriptor) descriptor;
                         PsiElement element = problemDescriptor.getPsiElement();
                         if (element != null && element.isValid()) {
                             collectFix(fix, problemDescriptor, project);
@@ -221,7 +220,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
                     LOG.assertTrue(representative.getFixes() != null);
                     for (QuickFix fix : representative.getFixes()) {
                         if (fix != null && fix.getClass().isAssignableFrom(myQuickfixClass)) {
-                            ((BatchQuickFix)fix).applyFix(
+                            ((BatchQuickFix) fix).applyFix(
                                 myProject,
                                 myBatchModeDescriptors.toArray(new ProblemDescriptor[myBatchModeDescriptors.size()]),
                                 new ArrayList<>(),
