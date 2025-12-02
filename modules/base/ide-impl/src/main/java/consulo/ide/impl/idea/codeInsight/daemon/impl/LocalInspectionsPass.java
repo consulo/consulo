@@ -747,11 +747,6 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
 
         HighlightInfoType type = new HighlightInfoTypeImpl(level.getSeverity(element), level.getAttributesKey());
-        LocalizeValue plainMessage = message.map(
-            (localizeManager, string) -> string.startsWith("<html>")
-                ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(string).replaceAll("<[^>]*>", ""))
-                : string
-        );
         String link = " <a href=\"#inspection/" + tool.getShortName() + "\"" +
             (StyleManager.get().getCurrentStyle().isDark() ? " color=\"7AB4C9\" " : "") + ">" +
             DaemonLocalize.inspectionExtendedDescription() +
@@ -764,7 +759,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 (string.startsWith("<html>") ? XmlStringUtil.stripHtml(string) : XmlStringUtil.escapeString(string)) + link
             ));
         }
-        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, plainMessage, tooltip, element);
+        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element);
         if (highlightInfo != null) {
             registerQuickFixes(tool, descriptor, highlightInfo, emptyActionRegistered);
         }

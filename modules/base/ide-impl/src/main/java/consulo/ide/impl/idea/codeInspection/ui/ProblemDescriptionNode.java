@@ -155,10 +155,6 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
         }
         PsiElement element = descriptor instanceof ProblemDescriptor descriptor1 ? descriptor1.getPsiElement() : null;
 
-        return ProblemDescriptorUtil.renderDescriptionMessage(
-            descriptor,
-            element,
-            APPEND_LINE_NUMBER | TRIM_AT_TREE_END
-        ).map((localizeManager, string) -> XmlStringUtil.stripHtml(string)).get();
+        return ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element, APPEND_LINE_NUMBER | TRIM_AT_TREE_END).get();
     }
 }
