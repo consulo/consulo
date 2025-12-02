@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
@@ -23,12 +24,15 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,6 +40,68 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class InspectionManager {
+    public interface ProblemDescriptorBuilder {
+        @Nonnull
+        default ProblemDescriptorBuilder range(@Nonnull PsiElement element) {
+            return range(element, element);
+        }
+
+        @Nonnull
+        ProblemDescriptorBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement);
+
+        @Nonnull
+        ProblemDescriptorBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement);
+
+        @Nonnull
+        ProblemDescriptorBuilder highlightType(@Nonnull ProblemHighlightType highlightType);
+
+        @Nonnull
+        ProblemDescriptorBuilder afterEndOfLine();
+
+        @Nonnull
+        default ProblemDescriptorBuilder afterEndOfLine(boolean isAfterEndOfLine) {
+            return isAfterEndOfLine ? afterEndOfLine() : this;
+        }
+
+        @Nonnull
+        ProblemDescriptorBuilder onTheFly();
+
+        @Nonnull
+        default ProblemDescriptorBuilder onTheFly(boolean onTheFly) {
+            return onTheFly ? onTheFly() : this;
+        }
+
+        @Nonnull
+        default ProblemDescriptorBuilder hideTooltip() {
+            return showTooltip(false);
+        }
+
+        @Nonnull
+        ProblemDescriptorBuilder showTooltip(boolean showTooltip);
+
+        @Nonnull
+        ProblemDescriptorBuilder withFix(@Nonnull LocalQuickFix fix);
+
+        default ProblemDescriptorBuilder withOptionalFix(@Nullable LocalQuickFix fix) {
+            return fix != null ? withFix(fix) : this;
+        }
+
+        @Nonnull
+        default ProblemDescriptorBuilder withFixes(LocalQuickFix... fixes) {
+            if (fixes == null || fixes.length == 0) {
+                return this;
+            }
+            return fixes.length == 1 ? withFix(fixes[0]) : withFixes(Arrays.asList(fixes));
+        }
+
+        @Nonnull
+        ProblemDescriptorBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes);
+
+        @Nonnull
+        @RequiredReadAction
+        ProblemDescriptor create();
+    }
+
     public static InspectionManager getInstance(Project project) {
         return project.getInstance(InspectionManager.class);
     }
@@ -49,11 +115,18 @@ public abstract class InspectionManager {
     @Nonnull
     @UsedInPlugin
     @RequiredReadAction
-    public abstract List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state);
+    public abstract List<ProblemDescriptor> runLocalToolLocaly(
+        @Nonnull LocalInspectionTool tool,
+        @Nonnull PsiFile file,
+        @Nonnull Object state
+    );
 
     @Nonnull
     @UsedInPlugin
     public abstract ProblemsHolder createProblemsHolder(@Nonnull PsiFile file, boolean onTheFly);
+
+    @Contract(pure = true)
+    public abstract ProblemDescriptorBuilder newProblemDescriptor(@Nonnull LocalizeValue descriptionTemplate);
 
     @Contract(pure = true)
     public abstract ModuleProblemDescriptor createProblemDescriptor(
@@ -74,139 +147,233 @@ public abstract class InspectionManager {
      * @param fix                 should be null if no fix is provided.
      * @param onTheFly            for local tools on batch run
      */
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix fix,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .onTheFly(onTheFly)
+            .withOptionalFix(fix)
+            .create();
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         boolean onTheFly,
         LocalQuickFix[] fixes,
         @Nonnull ProblemHighlightType highlightType
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .onTheFly(onTheFly)
+            .withFixes(fixes)
+            .create();
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix[] fixes,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
         boolean isAfterEndOfLine
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .afterEndOfLine(isAfterEndOfLine)
+            .onTheFly(onTheFly)
+            .withFixes(fixes)
+            .create();
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement startElement,
         @Nonnull PsiElement endElement,
         @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(startElement, endElement)
+            .highlightType(highlightType)
+            .onTheFly(onTheFly)
+            .withFixes(fixes)
+            .create();
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nullable TextRange rangeInElement,
         @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement, rangeInElement)
+            .highlightType(highlightType)
+            .onTheFly(onTheFly)
+            .withFixes(fixes)
+            .create();
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         boolean showTooltip,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .showTooltip(showTooltip)
+            .onTheFly(onTheFly)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix, ProblemHighlightType)} instead
-     */
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix fix,
         @Nonnull ProblemHighlightType highlightType
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .withOptionalFix(fix)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix[], ProblemHighlightType)} instead
-     */
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix[] fixes,
         @Nonnull ProblemHighlightType highlightType
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, String, LocalQuickFix[], ProblemHighlightType, boolean, boolean)} instead
-     */
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix[] fixes,
         @Nonnull ProblemHighlightType highlightType,
         boolean isAfterEndOfLine
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .afterEndOfLine(isAfterEndOfLine)
+            .highlightType(highlightType)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, PsiElement, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
-     */
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement startElement,
         @Nonnull PsiElement endElement,
         @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         LocalQuickFix... fixes
-    );
-
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(startElement, endElement)
+            .highlightType(highlightType)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, TextRange, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
-     */
-    public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         TextRange rangeInElement,
         @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         LocalQuickFix... fixes
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement, rangeInElement)
+            .highlightType(highlightType)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Deprecated
+    @DeprecationInfo("Use #newProblemDescriptor()...create()")
     @Nonnull
-    /**
-     * use {@link #createProblemDescriptor(PsiElement, String, boolean, ProblemHighlightType, boolean, LocalQuickFix...)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+    @RequiredReadAction
+    public ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         boolean showTooltip,
         @Nonnull ProblemHighlightType highlightType,
         LocalQuickFix... fixes
-    );
+    ) {
+        return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .highlightType(highlightType)
+            .showTooltip(showTooltip)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Nonnull
     public abstract GlobalInspectionContext createNewGlobalContext(boolean reuse);

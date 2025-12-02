@@ -16,12 +16,12 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -39,9 +39,9 @@ public abstract class InspectionManagerBase extends InspectionManager {
         myProject = project;
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state) {
         ProblemsHolder holder = new ProblemsHolderImpl(this, file, false);
         LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
@@ -70,16 +70,21 @@ public abstract class InspectionManagerBase extends InspectionManager {
         return new ProblemsHolderImpl(this, file, onTheFly);
     }
 
-    @Override
     @Nonnull
+    @Override
     public Project getProject() {
         return myProject;
     }
 
     @Override
+    public ProblemDescriptorBuilder newProblemDescriptor(@Nonnull LocalizeValue descriptionTemplate) {
+        return new ProblemDescriptorBuilderImpl(descriptionTemplate);
+    }
+
+    @Override
     @Nonnull
     public CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes) {
-        return new CommonProblemDescriptorBase(fixes, descriptionTemplate);
+        return new CommonProblemDescriptorBase(fixes, LocalizeValue.of(descriptionTemplate));
     }
 
     @Override
@@ -88,191 +93,7 @@ public abstract class InspectionManagerBase extends InspectionManager {
         @Nonnull Module module,
         QuickFix<?>... fixes
     ) {
-        return new ModuleProblemDescriptorImpl(module, descriptionTemplate, fixes);
-    }
-
-    @Override
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        LocalQuickFix fix,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean onTheFly
-    ) {
-        LocalQuickFix[] quickFixes = fix != null ? new LocalQuickFix[]{fix} : null;
-        return createProblemDescriptor(psiElement, descriptionTemplate, onTheFly, quickFixes, highlightType);
-    }
-
-    @Override
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        boolean onTheFly,
-        LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType
-    ) {
-        return createProblemDescriptor(psiElement, descriptionTemplate, fixes, highlightType, onTheFly, false);
-    }
-
-    @Override
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean onTheFly,
-        boolean isAfterEndOfLine
-    ) {
-        return new ProblemDescriptorBase(
-            psiElement,
-            psiElement,
-            descriptionTemplate,
-            fixes,
-            highlightType,
-            isAfterEndOfLine,
-            null,
-            true,
-            onTheFly
-        );
-    }
-
-    @Override
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean onTheFly,
-        LocalQuickFix... fixes
-    ) {
-        return new ProblemDescriptorBase(startElement, endElement, descriptionTemplate, fixes, highlightType, false, null, true, onTheFly);
-    }
-
-    @Nonnull
-    @Override
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        TextRange rangeInElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean onTheFly,
-        LocalQuickFix... fixes
-    ) {
-        return new ProblemDescriptorBase(
-            psiElement,
-            psiElement,
-            descriptionTemplate,
-            fixes,
-            highlightType,
-            false,
-            rangeInElement,
-            true,
-            onTheFly
-        );
-    }
-
-    @Nonnull
-    @Override
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        boolean showTooltip,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean onTheFly,
-        LocalQuickFix... fixes
-    ) {
-        return new ProblemDescriptorBase(
-            psiElement,
-            psiElement,
-            descriptionTemplate,
-            fixes,
-            highlightType,
-            false,
-            null,
-            showTooltip,
-            onTheFly
-        );
-    }
-
-    @Override
-    @Deprecated
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        LocalQuickFix fix,
-        @Nonnull ProblemHighlightType highlightType
-    ) {
-        LocalQuickFix[] quickFixes = fix != null ? new LocalQuickFix[]{fix} : null;
-        return createProblemDescriptor(psiElement, descriptionTemplate, false, quickFixes, highlightType);
-    }
-
-    @Override
-    @Deprecated
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType
-    ) {
-        return createProblemDescriptor(psiElement, descriptionTemplate, fixes, highlightType, false, false);
-    }
-
-    @Override
-    @Deprecated
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
-        boolean isAfterEndOfLine
-    ) {
-        return createProblemDescriptor(psiElement, descriptionTemplate, fixes, highlightType, true, isAfterEndOfLine);
-    }
-
-    @Override
-    @Deprecated
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
-        LocalQuickFix... fixes
-    ) {
-        return createProblemDescriptor(startElement, endElement, descriptionTemplate, highlightType, true, fixes);
-    }
-
-    @Nonnull
-    @Override
-    @Deprecated
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        TextRange rangeInElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
-        LocalQuickFix... fixes
-    ) {
-        return createProblemDescriptor(psiElement, rangeInElement, descriptionTemplate, highlightType, true, fixes);
-    }
-
-    @Nonnull
-    @Deprecated
-    @Override
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        boolean showTooltip,
-        @Nonnull ProblemHighlightType highlightType,
-        LocalQuickFix... fixes
-    ) {
-        return createProblemDescriptor(psiElement, descriptionTemplate, showTooltip, highlightType, true, fixes);
+        return new ModuleProblemDescriptorImpl(module, LocalizeValue.of(descriptionTemplate), fixes);
     }
 
     @Override

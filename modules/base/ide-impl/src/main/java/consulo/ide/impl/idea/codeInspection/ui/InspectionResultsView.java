@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
@@ -128,6 +127,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     private AnAction myIncludeAction;
     private AnAction myExcludeAction;
 
+    @RequiredUIAccess
     public InspectionResultsView(
         @Nonnull Project project,
         InspectionProfile inspectionProfile,
@@ -445,6 +445,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         }
     }
 
+    @RequiredReadAction
     private void showInBrowser(RefEntity refEntity) {
         Cursor currentCursor = getCursor();
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -459,6 +460,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         setCursor(currentCursor);
     }
 
+    @RequiredReadAction
     private void showInBrowser(RefEntity refEntity, CommonProblemDescriptor descriptor) {
         Cursor currentCursor = getCursor();
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -589,7 +591,6 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return myTree.getRoot();
     }
 
-
     private OccurenceNavigator getOccurenceNavigator() {
         return myOccurenceNavigator;
     }
@@ -709,6 +710,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     }
 
     @Nullable
+    @RequiredReadAction
     private Navigatable getSelectedNavigatable(CommonProblemDescriptor descriptor, PsiElement psiElement) {
         if (descriptor instanceof ProblemDescriptorBase problemDescriptor) {
             Navigatable navigatable = problemDescriptor.getNavigatable();
@@ -738,6 +740,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return null;
     }
 
+    @RequiredReadAction
     private PsiElement[] collectPsiElements() {
         RefEntity[] refElements = myTree.getSelectedElements();
         List<PsiElement> psiElements = new ArrayList<>();
@@ -857,7 +860,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
     private class CloseAction extends AnAction implements DumbAware {
         private CloseAction() {
-            super(CommonLocalize.actionClose(), LocalizeValue.empty(), AllIcons.Actions.Cancel);
+            super(CommonLocalize.actionClose(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         }
 
         @Override
@@ -889,24 +892,21 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
             if (toolWrapper != null) {
                 HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
-                if (key != null) {
-                    new EditInspectionToolsSettingsAction(key).editToolSettings(
-                        myProject,
-                        (InspectionProfileImpl) inspectionProfile, profileIsDefined
-                    ).doWhenDone(() -> {
-                        if (profileIsDefined) {
-                            updateCurrentProfile();
-                        }
-                    });
-                }
+                new EditInspectionToolsSettingsAction(key).editToolSettings(
+                    myProject,
+                    (InspectionProfileImpl) inspectionProfile, profileIsDefined
+                ).doWhenDone(() -> {
+                    if (profileIsDefined) {
+                        updateCurrentProfile();
+                    }
+                });
             }
             else {
-                EditInspectionToolsSettingsAction.editToolSettings(myProject, inspectionProfile, profileIsDefined, null)
-                    .doWhenDone(() -> {
-                        if (profileIsDefined) {
-                            updateCurrentProfile();
-                        }
-                    });
+                EditInspectionToolsSettingsAction.editToolSettings(myProject, inspectionProfile, profileIsDefined, null).doWhenDone(() -> {
+                    if (profileIsDefined) {
+                        updateCurrentProfile();
+                    }
+                });
             }
         }
     }

@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.actions.SuppressActionWrapper;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.*;
@@ -44,11 +43,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -67,10 +66,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Browser extends JPanel {
-    private final List<ClickListener> myClickListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    private final List<ClickListener> myClickListeners = Lists.newLockFreeCopyOnWriteList();
     private RefEntity myCurrentEntity;
     private JEditorPane myHTMLViewer;
     private final InspectionResultsView myView;
+    @RequiredUIAccess
     private final HyperlinkListener myHyperLinkListener;
     private CommonProblemDescriptor myCurrentDescriptor;
 
@@ -125,6 +125,7 @@ class Browser extends JPanel {
         void referenceClicked(ClickEvent e);
     }
 
+    @RequiredReadAction
     private void showPageFromHistory(@Nonnull RefEntity newEntity) {
         InspectionToolWrapper toolWrapper = getToolWrapper(newEntity);
         try {
@@ -142,6 +143,7 @@ class Browser extends JPanel {
         }
     }
 
+    @RequiredReadAction
     public void showPageFor(RefEntity refEntity, CommonProblemDescriptor descriptor) {
         try {
             String html = generateHTML(refEntity, descriptor);
@@ -158,6 +160,7 @@ class Browser extends JPanel {
         }
     }
 
+    @RequiredReadAction
     public void showPageFor(RefEntity newEntity) {
         if (newEntity == null) {
             showEmpty();
@@ -190,20 +193,20 @@ class Browser extends JPanel {
         if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
             return;
         }
-        JEditorPane pane = (JEditorPane)e.getSource();
+        JEditorPane pane = (JEditorPane) e.getSource();
         if (e instanceof HTMLFrameHyperlinkEvent) {
-            HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent)e;
-            HTMLDocument doc = (HTMLDocument)pane.getDocument();
+            HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
+            HTMLDocument doc = (HTMLDocument) pane.getDocument();
             doc.processHTMLFrameHyperlinkEvent(evt);
             return;
         }
         try {
             URL url = e.getURL();
-            @NonNls String ref = url.getRef();
+            String ref = url.getRef();
             if (ref.startsWith("pos:")) {
-                int delimeterPos = ref.indexOf(':', "pos:".length() + 1);
-                String startPosition = ref.substring("pos:".length(), delimeterPos);
-                String endPosition = ref.substring(delimeterPos + 1);
+                int delimiterPos = ref.indexOf(':', "pos:".length() + 1);
+                String startPosition = ref.substring("pos:".length(), delimiterPos);
+                String endPosition = ref.substring(delimiterPos + 1);
                 int textStartOffset = Integer.parseInt(startPosition);
                 int textEndOffset = Integer.parseInt(endPosition);
                 String fileURL = url.toExternalForm();
@@ -214,14 +217,14 @@ class Browser extends JPanel {
                 }
             }
             else if (ref.startsWith("descr:")) {
-                if (myCurrentDescriptor instanceof ProblemDescriptor) {
-                    PsiElement psiElement = ((ProblemDescriptor)myCurrentDescriptor).getPsiElement();
+                if (myCurrentDescriptor instanceof ProblemDescriptor problemDescriptor) {
+                    PsiElement psiElement = problemDescriptor.getPsiElement();
                     if (psiElement == null) {
                         return;
                     }
                     VirtualFile vFile = psiElement.getContainingFile().getVirtualFile();
                     if (vFile != null) {
-                        TextRange range = ((ProblemDescriptorBase)myCurrentDescriptor).getTextRange();
+                        TextRange range = ((ProblemDescriptorBase) myCurrentDescriptor).getTextRange();
                         fireClickEvent(vFile, range.getStartOffset(), range.getEndOffset());
                     }
                 }
@@ -230,8 +233,8 @@ class Browser extends JPanel {
                 int actionNumber = Integer.parseInt(ref.substring("invoke:".length()));
                 InspectionToolWrapper toolWrapper = getToolWrapper();
                 InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-                QuickFixAction fixAction = presentation.getQuickFixes(new RefElement[]{(RefElement)myCurrentEntity})[actionNumber];
-                fixAction.doApplyFix(new RefElement[]{(RefElement)myCurrentEntity}, myView);
+                QuickFixAction fixAction = presentation.getQuickFixes(new RefElement[]{(RefElement) myCurrentEntity})[actionNumber];
+                fixAction.doApplyFix(new RefElement[]{(RefElement) myCurrentEntity}, myView);
             }
             else if (ref.startsWith("invokelocal:")) {
                 int actionNumber = Integer.parseInt(ref.substring("invokelocal:".length()));
@@ -241,11 +244,8 @@ class Browser extends JPanel {
             }
             else if (ref.startsWith("suppress:")) {
                 SuppressActionWrapper.SuppressTreeAction[] suppressTreeActions =
-                    new SuppressActionWrapper(
-                        myView.getProject(),
-                        getToolWrapper(),
-                        myView.getTree().getSelectionPaths()
-                    ).getChildren(null);
+                    new SuppressActionWrapper(myView.getProject(), getToolWrapper(), myView.getTree().getSelectionPaths())
+                        .getChildren(null);
                 List<AnAction> activeActions = new ArrayList<>();
                 for (SuppressActionWrapper.SuppressTreeAction suppressTreeAction : suppressTreeActions) {
                     if (suppressTreeAction.isAvailable()) {
@@ -283,7 +283,7 @@ class Browser extends JPanel {
             return;
         }
 
-        StyledDocument styledDocument = (StyledDocument)document;
+        StyledDocument styledDocument = (StyledDocument) document;
 
         EditorColorsManager colorsManager = EditorColorsManager.getInstance();
         EditorColorsScheme scheme = colorsManager.getGlobalScheme();
@@ -338,6 +338,7 @@ class Browser extends JPanel {
         buf.append("</BODY></HTML>");
     }
 
+    @RequiredReadAction
     private String generateHTML(RefEntity refEntity, CommonProblemDescriptor descriptor) {
         StringBuffer buf = new StringBuffer();
         Runnable action = () -> {
@@ -360,8 +361,8 @@ class Browser extends JPanel {
         InspectionToolWrapper toolWrapper = getToolWrapper();
         assert toolWrapper != null;
         GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
-        if (refEntity instanceof RefElement) {
-            PsiElement element = ((RefElement)refEntity).getPsiElement();
+        if (refEntity instanceof RefElement refElem) {
+            PsiElement element = refElem.getPsiElement();
             if (element == null) {
                 return toolWrapper;
             }
@@ -372,6 +373,7 @@ class Browser extends JPanel {
         return toolWrapper;
     }
 
+    @RequiredReadAction
     private void appendSuppressSection(StringBuffer buf) {
         InspectionToolWrapper toolWrapper = getToolWrapper();
         if (toolWrapper != null) {
@@ -387,7 +389,7 @@ class Browser extends JPanel {
                 }
                 if (!activeSuppressActions.isEmpty()) {
                     int idx = 0;
-                    @NonNls String br = "<br>";
+                    String br = "<br>";
                     buf.append(br);
                     HTMLComposerBase.appendHeading(buf, InspectionLocalize.inspectionExportResultsSuppress());
                     for (AnAction suppressAction : activeSuppressActions) {
@@ -396,7 +398,7 @@ class Browser extends JPanel {
                             buf.append(br);
                         }
                         HTMLComposer.appendAfterHeaderIndention(buf);
-                        @NonNls String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
+                        String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
                             suppressAction.getTemplatePresentation().getText() + "</a>";
                         buf.append(href);
                         idx++;
@@ -430,7 +432,7 @@ class Browser extends JPanel {
             showEmpty();
             return;
         }
-        @NonNls StringBuffer page = new StringBuffer();
+        StringBuffer page = new StringBuffer();
         page.append("<table border='0' cellspacing='0' cellpadding='0' width='100%'>");
         page.append("<tr><td colspan='2'>");
         HTMLComposer.appendHeading(page, InspectionLocalize.inspectionToolInBrowserIdTitle());
@@ -443,10 +445,10 @@ class Browser extends JPanel {
         HTMLComposer.appendHeading(page, InspectionLocalize.inspectionToolInBrowserDescriptionTitle());
         page.append("</td></tr>");
         page.append("<tr><td width='37'></td><td>");
-        @NonNls String underConstruction =
+        String underConstruction =
             "<b>" + InspectionLocalize.inspectionToolDescriptionUnderConstructionText() + "</b></html>";
         try {
-            @NonNls String description = toolWrapper.loadDescription();
+            String description = toolWrapper.loadDescription();
             if (description == null) {
                 description = underConstruction;
             }
@@ -466,19 +468,18 @@ class Browser extends JPanel {
         return myView.getTree().getSelectedToolWrapper();
     }
 
+    @RequiredUIAccess
     public void invokeLocalFix(int idx) {
         if (myView.getTree().getSelectionCount() != 1) {
             return;
         }
-        InspectionTreeNode node = (InspectionTreeNode)myView.getTree().getSelectionPath().getLastPathComponent();
-        if (node instanceof ProblemDescriptionNode) {
-            ProblemDescriptionNode problemNode = (ProblemDescriptionNode)node;
+        InspectionTreeNode node = (InspectionTreeNode) myView.getTree().getSelectionPath().getLastPathComponent();
+        if (node instanceof ProblemDescriptionNode problemNode) {
             CommonProblemDescriptor descriptor = problemNode.getDescriptor();
             RefEntity element = problemNode.getElement();
             invokeFix(element, descriptor, idx);
         }
-        else if (node instanceof RefElementNode) {
-            RefElementNode elementNode = (RefElementNode)node;
+        else if (node instanceof RefElementNode elementNode) {
             RefEntity element = elementNode.getElement();
             CommonProblemDescriptor descriptor = elementNode.getProblem();
             if (descriptor != null) {
@@ -487,11 +488,12 @@ class Browser extends JPanel {
         }
     }
 
+    @RequiredUIAccess
     private void invokeFix(RefEntity element, CommonProblemDescriptor descriptor, int idx) {
         QuickFix[] fixes = descriptor.getFixes();
         if (fixes != null && fixes.length > idx && fixes[idx] != null) {
-            if (element instanceof RefElement) {
-                PsiElement psiElement = ((RefElement)element).getPsiElement();
+            if (element instanceof RefElement refElem) {
+                PsiElement psiElement = refElem.getPsiElement();
                 if (psiElement != null && psiElement.isValid()) {
                     if (!FileModificationService.getInstance().preparePsiElementForWrite(psiElement)) {
                         return;

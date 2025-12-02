@@ -22,7 +22,6 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
@@ -36,7 +35,6 @@ import consulo.ide.impl.idea.codeInspection.ex.LocalDescriptorsUtil;
 import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
@@ -68,6 +66,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
@@ -136,7 +135,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         myProfileWrapper = custom == null ? new InspectionProfileWrapper(profile) : custom.apply(profile);
         assert myProfileWrapper != null;
         mySeverityRegistrar =
-            (SeverityRegistrarImpl)((SeverityProvider)myProfileWrapper.getInspectionProfile().getProfileManager()).getSeverityRegistrar();
+            (SeverityRegistrarImpl) ((SeverityProvider) myProfileWrapper.getInspectionProfile().getProfileManager()).getSeverityRegistrar();
 
         // initial guess
         setProgressLimit(300 * 2);
@@ -212,7 +211,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             if (file == getFile()) {
                 continue; // not injected
             }
-            DocumentWindow documentRange = (DocumentWindow)documentManager.getDocument(file);
+            DocumentWindow documentRange = (DocumentWindow) documentManager.getDocument(file);
             List<InspectionResult> resultList = entry.getValue();
             for (InspectionResult inspectionResult : resultList) {
                 LocalInspectionToolWrapper toolWrapper = inspectionResult.tool;
@@ -225,7 +224,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                         continue;
                     }
                     List<TextRange> editables =
-                        ilManager.intersectWithAllEditableFragments(file, ((ProblemDescriptorBase)descriptor).getTextRange());
+                        ilManager.intersectWithAllEditableFragments(file, ((ProblemDescriptorBase) descriptor).getTextRange());
                     for (TextRange editable : editables) {
                         TextRange hostRange = documentRange.injectedToHost(editable);
                         QuickFix[] fixes = descriptor.getFixes();
@@ -234,17 +233,15 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                             localFixes = new LocalQuickFix[fixes.length];
                             for (int k = 0; k < fixes.length; k++) {
                                 QuickFix fix = fixes[k];
-                                localFixes[k] = (LocalQuickFix)fix;
+                                localFixes[k] = (LocalQuickFix) fix;
                             }
                         }
-                        ProblemDescriptor patchedDescriptor = iManager.createProblemDescriptor(
-                            getFile(),
-                            hostRange,
-                            descriptor.getDescriptionTemplate(),
-                            descriptor.getHighlightType(),
-                            true,
-                            localFixes
-                        );
+                        ProblemDescriptor patchedDescriptor = iManager.newProblemDescriptor(descriptor.getDescriptionTemplate())
+                            .range(getFile(), hostRange)
+                            .highlightType(descriptor.getHighlightType())
+                            .onTheFly(true)
+                            .withFixes(localFixes)
+                            .create();
                         addDescriptors(toolWrapper, patchedDescriptor, context);
                     }
                 }
@@ -273,9 +270,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             SHOULD_INSPECT_FILTER,
             allDivided::add
         );
-        List<PsiElement> inside = ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(allDivided, d -> d.inside));
+        List<PsiElement> inside = ContainerUtil.concat((List<List<PsiElement>>) ContainerUtil.map(allDivided, d -> d.inside));
         List<PsiElement> outside =
-            ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(allDivided, d -> ContainerUtil.concat(d.outside, d.parents)));
+            ContainerUtil.concat((List<List<PsiElement>>) ContainerUtil.map(allDivided, d -> ContainerUtil.concat(d.outside, d.parents)));
 
         Set<String> elementDialectIds = InspectionEngine.calcElementDialectIds(inside, outside);
         Map<LocalInspectionToolWrapper, Set<String>> toolToSpecifiedLanguageIds =
@@ -322,7 +319,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         Predicate<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
             LocalInspectionToolWrapper toolWrapper = pair.getKey();
             Set<String> dialectIdsSpecifiedForTool = pair.getValue();
-            ((ApplicationEx)Application.get()).executeByImpatientReader(() -> runToolOnElements(
+            ((ApplicationEx) Application.get()).executeByImpatientReader(() -> runToolOnElements(
                 toolWrapper,
                 dialectIdsSpecifiedForTool,
                 iManager,
@@ -437,7 +434,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     ) {
         Set<PsiFile> injected = new HashSet<>();
         for (PsiElement element : elements) {
-            InjectedLanguageManager.getInstance(myProject).enumerateEx(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
+            InjectedLanguageManager.getInstance(myProject)
+                .enumerateEx(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
         }
         if (injected.isEmpty()) {
             return;
@@ -466,7 +464,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull LocalizeValue toolTip,
         PsiElement psiElement
     ) {
-        TextRange textRange = ((ProblemDescriptorBase)problemDescriptor).getTextRange();
+        TextRange textRange = ((ProblemDescriptorBase) problemDescriptor).getTextRange();
         if (textRange == null || psiElement == null) {
             return null;
         }
@@ -477,10 +475,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         HighlightInfoImpl.Builder b = HighlightInfoImpl.newHighlightInfo(highlightInfoType)
             .range(psiElement, textRange.getStartOffset(), textRange.getEndOffset())
             .description(message)
-            .severity(severity);
-        if (toolTip != LocalizeValue.empty()) {
-            b.escapedToolTip(toolTip);
-        }
+            .severity(severity)
+            .escapedToolTip(toolTip);
         if (attributes != null) {
             b.textAttributes(attributes);
         }
@@ -494,14 +490,14 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             b.problemGroup(problemDescriptor.getProblemGroup());
         }
 
-        return (HighlightInfoImpl)b.create();
+        return (HighlightInfoImpl) b.create();
     }
 
     private final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>();
     private final TransferToEDTQueue<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>> myTransferToEDTQueue =
         new TransferToEDTQueue<>(
             "Apply inspection results",
-            new Processor<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>>() {
+            new Predicate<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>>() {
                 private final InspectionProfile inspectionProfile =
                     InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
                 private final InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
@@ -510,7 +506,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
                 @Override
                 @RequiredReadAction
-                public boolean process(Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator> trinity) {
+                public boolean test(Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator> trinity) {
                     ProgressIndicator indicator = trinity.getThird();
                     if (indicator.isCanceled()) {
                         return false;
@@ -548,7 +544,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                             getFile(),
                             myRestrictRange.getStartOffset(),
                             myRestrictRange.getEndOffset(),
-                            (HighlightInfoImpl)info,
+                            (HighlightInfoImpl) info,
                             colorsScheme,
                             getId(),
                             ranges2markersCache
@@ -596,7 +592,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     private void appendResult(@Nonnull PsiFile file, @Nonnull InspectionResult result) {
         List<InspectionResult> resultList = this.result.get(file);
         if (resultList == null) {
-            resultList = ConcurrencyUtil.cacheOrGet(this.result, file, new ArrayList<>());
+            resultList = Maps.cacheOrGet(this.result, file, new ArrayList<>());
         }
         synchronized (resultList) {
             resultList.add(result);
@@ -703,9 +699,10 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
         // todo we got to separate our "internal" prefixes/suffixes from user-defined ones
         // todo in the latter case the errors should be highlighted, otherwise not
-        List<TextRange> editables = ilManager.intersectWithAllEditableFragments(file, new TextRange(info.getStartOffset(), info.getEndOffset()));
+        List<TextRange> editables =
+            ilManager.intersectWithAllEditableFragments(file, new TextRange(info.getStartOffset(), info.getEndOffset()));
         for (TextRange editable : editables) {
-            TextRange hostRange = ((DocumentWindow)documentRange).injectedToHost(editable);
+            TextRange hostRange = ((DocumentWindow) documentRange).injectedToHost(editable);
             int start = hostRange.getStartOffset();
             int end = hostRange.getEndOffset();
             HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(info.getType()).range(element, start, end);
@@ -717,7 +714,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             if (tooltip != LocalizeValue.empty()) {
                 builder.escapedToolTip(tooltip);
             }
-            HighlightInfoImpl patched = (HighlightInfoImpl)builder.createUnconditionally();
+            HighlightInfoImpl patched = (HighlightInfoImpl) builder.createUnconditionally();
             if (patched.getStartOffset() != patched.getEndOffset() || info.getStartOffset() == info.getEndOffset()) {
                 patched.setFromInjection(true);
                 registerQuickFixes(toolWrapper, descriptor, patched, emptyActionRegistered);
@@ -741,7 +738,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered,
         @Nonnull PsiElement element
     ) {
-        String message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
+        LocalizeValue message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
 
         HighlightDisplayKey key = tool.getHighlightDisplayKey();
         InspectionProfile inspectionProfile = myProfileWrapper.getInspectionProfile();
@@ -750,28 +747,24 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
 
         HighlightInfoType type = new HighlightInfoTypeImpl(level.getSeverity(element), level.getAttributesKey());
-        String plainMessage = message.startsWith("<html>")
-            ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(message).replaceAll("<[^>]*>", ""))
-            : message;
+        LocalizeValue plainMessage = message.map(
+            (localizeManager, string) -> string.startsWith("<html>")
+                ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(string).replaceAll("<[^>]*>", ""))
+                : string
+        );
         String link = " <a href=\"#inspection/" + tool.getShortName() + "\"" +
             (StyleManager.get().getCurrentStyle().isDark() ? " color=\"7AB4C9\" " : "") + ">" +
-            DaemonLocalize.inspectionExtendedDescription().get() +
+            DaemonLocalize.inspectionExtendedDescription() +
             "</a> " +
             myShortcutText;
 
-        String tooltip = null;
+        LocalizeValue tooltip = LocalizeValue.empty();
         if (descriptor.showTooltip()) {
-            tooltip = XmlStringUtil.wrapInHtml(
-                (message.startsWith("<html>") ? XmlStringUtil.stripHtml(message) : XmlStringUtil.escapeString(message)) + link
-            );
+            tooltip = message.map((localizeManager, string) -> XmlStringUtil.wrapInHtml(
+                (string.startsWith("<html>") ? XmlStringUtil.stripHtml(string) : XmlStringUtil.escapeString(string)) + link
+            ));
         }
-        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(
-            descriptor,
-            type,
-            LocalizeValue.of(plainMessage),
-            LocalizeValue.ofNullable(tooltip),
-            element
-        );
+        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, plainMessage, tooltip, element);
         if (highlightInfo != null) {
             registerQuickFixes(tool, descriptor, highlightInfo, emptyActionRegistered);
         }
@@ -800,7 +793,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             QuickFixAction.registerQuickFixAction(highlightInfo, hintAction, key);
             needEmptyAction = false;
         }
-        if (((ProblemDescriptorBase)descriptor).getEnforcedTextAttributes() != null) {
+        if (((ProblemDescriptorBase) descriptor).getEnforcedTextAttributes() != null) {
             needEmptyAction = false;
         }
         if (needEmptyAction && emptyActionRegistered.add(Pair.create(highlightInfo.getFixTextRange(), tool.getShortName()))) {
@@ -843,7 +836,6 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
         return new ArrayList<>(result);
     }
-
 
     @Nonnull
     List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {

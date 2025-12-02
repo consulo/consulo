@@ -61,7 +61,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
             registerProblem(new ProblemDescriptorBase(
                 myStartElement,
                 myEndElement,
-                myDescriptionTemplate.get(),
+                myDescriptionTemplate,
                 myLocalQuickFixes == null ? LocalQuickFix.EMPTY_ARRAY : myLocalQuickFixes.toArray(LocalQuickFix.EMPTY_ARRAY),
                 myHighlightType,
                 myIsAfterEndOfLine,
@@ -116,7 +116,8 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         VirtualFile vFile = original.getContainingFile().getVirtualFile();
         assert vFile != null;
         String path = FileUtil.toSystemIndependentName(vFile.getPath());
-        String description = XmlStringUtil.stripHtml(problem.getDescriptionTemplate());
+        LocalizeValue description =
+            problem.getDescriptionTemplate().map((localizeManager, string) -> XmlStringUtil.stripHtml(string));
 
         LocalizeValue descriptionTemplate =
             InspectionLocalize.inspectionRedirectTemplate(description, path, original.getTextRange().getStartOffset(), vFile.getName());

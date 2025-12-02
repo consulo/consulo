@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -23,6 +23,7 @@ import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,47 +31,66 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public class ProblemDescriptorImpl extends ProblemDescriptorBase implements ProblemDescriptor {
-  private final HintAction myHintAction;
+    private final HintAction myHintAction;
 
-  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
-                               @Nonnull PsiElement endElement,
-                               String descriptionTemplate,
-                               LocalQuickFix[] fixes,
-                               @Nonnull ProblemHighlightType highlightType,
-                               boolean isAfterEndOfLine,
-                               @Nullable TextRange rangeInElement,
-                               boolean onTheFly) {
-    this(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, null, onTheFly);
-  }
+    @RequiredReadAction
+    public ProblemDescriptorImpl(
+        @Nonnull PsiElement startElement,
+        @Nonnull PsiElement endElement,
+        @Nonnull LocalizeValue descriptionTemplate,
+        LocalQuickFix[] fixes,
+        @Nonnull ProblemHighlightType highlightType,
+        boolean isAfterEndOfLine,
+        @Nullable TextRange rangeInElement,
+        boolean onTheFly
+    ) {
+        this(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, null, onTheFly);
+    }
 
-  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
-                               @Nonnull PsiElement endElement,
-                               String descriptionTemplate,
-                               LocalQuickFix[] fixes,
-                               @Nonnull ProblemHighlightType highlightType,
-                               boolean isAfterEndOfLine,
-                               @Nullable TextRange rangeInElement,
-                               @Nullable HintAction hintAction,
-                               boolean onTheFly) {
-    this(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, true, hintAction, onTheFly);
-  }
+    @RequiredReadAction
+    public ProblemDescriptorImpl(
+        @Nonnull PsiElement startElement,
+        @Nonnull PsiElement endElement,
+        @Nonnull LocalizeValue descriptionTemplate,
+        LocalQuickFix[] fixes,
+        @Nonnull ProblemHighlightType highlightType,
+        boolean isAfterEndOfLine,
+        @Nullable TextRange rangeInElement,
+        @Nullable HintAction hintAction,
+        boolean onTheFly
+    ) {
+        this(
+            startElement,
+            endElement,
+            descriptionTemplate,
+            fixes,
+            highlightType,
+            isAfterEndOfLine,
+            rangeInElement,
+            true,
+            hintAction,
+            onTheFly
+        );
+    }
 
-  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
-                               @Nonnull PsiElement endElement,
-                               String descriptionTemplate,
-                               LocalQuickFix[] fixes,
-                               @Nonnull ProblemHighlightType highlightType,
-                               boolean isAfterEndOfLine,
-                               @Nullable TextRange rangeInElement,
-                               boolean tooltip,
-                               @Nullable HintAction hintAction,
-                               boolean onTheFly) {
+    @RequiredReadAction
+    public ProblemDescriptorImpl(
+        @Nonnull PsiElement startElement,
+        @Nonnull PsiElement endElement,
+        @Nonnull LocalizeValue descriptionTemplate,
+        LocalQuickFix[] fixes,
+        @Nonnull ProblemHighlightType highlightType,
+        boolean isAfterEndOfLine,
+        @Nullable TextRange rangeInElement,
+        boolean tooltip,
+        @Nullable HintAction hintAction,
+        boolean onTheFly
+    ) {
+        super(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, tooltip, onTheFly);
+        myHintAction = hintAction;
+    }
 
-    super(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, tooltip, onTheFly);
-    myHintAction = hintAction;
-  }
-
-  public HintAction getHintAction() {
-    return myHintAction;
-  }
+    public HintAction getHintAction() {
+        return myHintAction;
+    }
 }

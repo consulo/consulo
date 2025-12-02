@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.NotNullLazyValue;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
@@ -32,6 +31,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -66,6 +66,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         myContentManager = new NotNullLazyValue<>() {
             @Nonnull
             @Override
+            @RequiredUIAccess
             protected ContentManager compute() {
                 ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
                 ToolWindow toolWindow =
@@ -81,8 +82,8 @@ public class InspectionManagerImpl extends InspectionManagerBase {
     @Nullable
     public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
         InspectionTool tool = toolWrapper.getTool();
-        if (tool instanceof CustomSuppressableInspectionTool) {
-            return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
+        if (tool instanceof CustomSuppressableInspectionTool customSuppressableInspectionTool) {
+            return customSuppressableInspectionTool.getSuppressActions(null);
         }
         List<LocalQuickFix> actions = new ArrayList<>(Arrays.asList(tool.getBatchSuppressActions(null)));
         if (actions.isEmpty()) {
@@ -107,7 +108,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         @Nonnull InspectionToolWrapper tool,
         @Nonnull SearchableOptionsRegistrar myOptionsRegistrar
     ) {
-        if (ApplicationManager.getApplication().isDisposed()) {
+        if (Application.get().isDisposed()) {
             return;
         }
         Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
@@ -116,8 +117,8 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
         GlobalInspectionContextImpl inspectionContext;
         if (reuse) {
@@ -150,25 +151,22 @@ public class InspectionManagerImpl extends InspectionManagerBase {
 
     public void buildInspectionSearchIndexIfNecessary() {
         if (!myToolsAreInitialized.getAndSet(true)) {
-            Application app = ApplicationManager.getApplication();
+            Application app = Application.get();
             if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
                 return;
             }
 
-            app.executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+            app.executeOnPooledThread((Runnable) () -> {
+                SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
 
-                    InspectionCache cache = app.getInstance(InspectionCacheService.class).get();
-                    for (InspectionToolWrapper toolWrapper : cache.wrapTools()) {
-                        processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
+                InspectionCache cache = app.getInstance(InspectionCacheService.class).get();
+                for (InspectionToolWrapper toolWrapper : cache.wrapTools()) {
+                    processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
 
-                        String description = toolWrapper.loadDescription();
-                        if (description != null) {
-                            String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
-                            processText(descriptionText, toolWrapper, optionsRegistrar);
-                        }
+                    String description = toolWrapper.loadDescription();
+                    if (description != null) {
+                        String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
+                        processText(descriptionText, toolWrapper, optionsRegistrar);
                     }
                 }
             });
