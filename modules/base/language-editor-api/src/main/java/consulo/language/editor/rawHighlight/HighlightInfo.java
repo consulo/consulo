@@ -50,13 +50,13 @@ public interface HighlightInfo extends Segment {
 
             FixBuilder displayName(@Nonnull LocalizeValue displayName);
 
-            FixBuilder fixRange(@Nullable TextRange fixRange);
+            FixBuilder fixRange(@Nonnull TextRange fixRange);
 
             default FixBuilder optionalFixRange(@Nullable TextRange fixRange) {
                 return fixRange == null ? this : fixRange(fixRange);
             }
 
-            FixBuilder key(@Nullable HighlightDisplayKey key);
+            FixBuilder key(@Nonnull HighlightDisplayKey key);
 
             default FixBuilder optionalKey(@Nullable HighlightDisplayKey key) {
                 return key == null ? this : key(key);
@@ -146,11 +146,6 @@ public interface HighlightInfo extends Segment {
         @Nonnull
         default Builder registerFix(@Nonnull IntentionAction action) {
             return registerFix(action, null, LocalizeValue.of(), null, null);
-        }
-
-        @Nonnull
-        default Builder registerFix(@Nonnull IntentionAction action, @Nonnull TextRange textRange) {
-            return registerFix(action, null, LocalizeValue.of(), textRange, null);
         }
 
         @Nonnull
