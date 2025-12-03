@@ -45,8 +45,8 @@ public class ProblemDescriptorUtil {
             return "";
         }
         String ref = psiElement.getText();
-        if (descriptor instanceof ProblemDescriptorBase problemDescriptorBase) {
-            TextRange textRange = problemDescriptorBase.getTextRange();
+        if (descriptor instanceof ProblemDescriptorBase descriptorBase) {
+            TextRange textRange = descriptorBase.getTextRange();
             TextRange elementRange = psiElement.getTextRange();
             if (textRange != null) {
                 textRange = textRange.shiftRight(-elementRange.getStartOffset());
@@ -93,6 +93,7 @@ public class ProblemDescriptorUtil {
     }
 
     @Nonnull
+    @SuppressWarnings("deprecation")
     public static HighlightInfoType highlightTypeFromDescriptor(
         @Nonnull ProblemDescriptor problemDescriptor,
         @Nonnull HighlightSeverity severity,
