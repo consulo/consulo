@@ -20,21 +20,14 @@ import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
 
 public class ProblemDescriptorUtil {
     public static final int NONE = 0x00000000;
@@ -46,16 +39,14 @@ public class ProblemDescriptorUtil {
     @interface FlagConstant {
     }
 
-    public static Couple<String> XML_CODE_MARKER = Couple.of("<xml-code>", "</xml-code>");
-
     @RequiredReadAction
     public static String extractHighlightedText(@Nonnull CommonProblemDescriptor descriptor, PsiElement psiElement) {
         if (psiElement == null || !psiElement.isValid()) {
             return "";
         }
         String ref = psiElement.getText();
-        if (descriptor instanceof ProblemDescriptorBase problemDescriptorBase) {
-            TextRange textRange = problemDescriptorBase.getTextRange();
+        if (descriptor instanceof ProblemDescriptorBase descriptorBase) {
+            TextRange textRange = descriptorBase.getTextRange();
             TextRange elementRange = psiElement.getTextRange();
             if (textRange != null) {
                 textRange = textRange.shiftRight(-elementRange.getStartOffset());
@@ -71,95 +62,6 @@ public class ProblemDescriptorUtil {
 
     @Nonnull
     @RequiredReadAction
-    public static LocalizeValue renderDescriptionMessage(
-        @Nonnull CommonProblemDescriptor descriptor,
-        PsiElement element,
-        boolean appendLineNumber
-    ) {
-        return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
-    }
-
-    private record DescriptionRenderingMapper(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags)
-        implements BiFunction<LocalizeManager, String, String> {
-
-        @Override
-        @RequiredReadAction
-        public String apply(LocalizeManager localizeManager, @Nonnull String message) {
-            if ((flags & APPEND_LINE_NUMBER) != 0
-                && descriptor instanceof ProblemDescriptor problemDescriptor
-                && !message.contains("#ref")
-                && message.contains("#loc")) {
-                int lineNumber = problemDescriptor.getLineNumber();
-                if (lineNumber >= 0) {
-                    message = StringUtil.replace(
-                        message,
-                        "#loc",
-                        "(" + InspectionLocalize.inspectionExportResultsAtLine() + " " + lineNumber + ")"
-                    );
-                }
-            }
-            message = StringUtil.replace(message, "<code>", "'");
-            message = StringUtil.replace(message, "</code>", "'");
-            message = StringUtil.replace(message, "#loc ", "");
-            message = StringUtil.replace(message, " #loc", "");
-            message = StringUtil.replace(message, "#loc", "");
-            if (message.contains("#ref")) {
-                String ref = extractHighlightedText(descriptor, element);
-                message = StringUtil.replace(message, "#ref", ref);
-            }
-
-            int endIndex =
-                (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
-            if (endIndex > 0) {
-                message = message.substring(0, endIndex);
-            }
-            message = StringUtil.replace(message, "#end", "");
-            message = StringUtil.replace(message, "#treeend", "");
-
-            if (message.contains(XML_CODE_MARKER.first)) {
-                message = unescapeXmlCode(message);
-            }
-            else {
-                message = StringUtil.unescapeXml(message).trim();
-            }
-            return message;
-        }
-    }
-
-    @Nonnull
-    @RequiredReadAction
-    public static LocalizeValue renderDescriptionMessage(
-        @Nonnull CommonProblemDescriptor descriptor,
-        PsiElement element,
-        @FlagConstant int flags
-    ) {
-        return descriptor.getDescriptionTemplate().map(new DescriptionRenderingMapper(descriptor, element, flags));
-    }
-
-    private static String unescapeXmlCode(String message) {
-        List<String> strings = new ArrayList<>();
-        for (String string : StringUtil.split(message, XML_CODE_MARKER.first)) {
-            if (string.contains(XML_CODE_MARKER.second)) {
-                strings.addAll(StringUtil.split(string, XML_CODE_MARKER.second, false));
-            }
-            else {
-                strings.add(string);
-            }
-        }
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            if (string.contains(XML_CODE_MARKER.second)) {
-                builder.append(string.replace(XML_CODE_MARKER.second, ""));
-            }
-            else {
-                builder.append(StringUtil.unescapeXml(string));
-            }
-        }
-        return builder.toString();
-    }
-
-    @Nonnull
-    @RequiredReadAction
     public static LocalizeValue renderDescriptionMessage(@Nonnull ProblemDescriptor descriptor) {
         return renderDescriptionMessage(descriptor, descriptor.getPsiElement());
     }
@@ -171,6 +73,27 @@ public class ProblemDescriptorUtil {
     }
 
     @Nonnull
+    @RequiredReadAction
+    public static LocalizeValue renderDescriptionMessage(
+        @Nonnull CommonProblemDescriptor descriptor,
+        PsiElement element,
+        boolean appendLineNumber
+    ) {
+        return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    public static LocalizeValue renderDescriptionMessage(
+        @Nonnull CommonProblemDescriptor descriptor,
+        PsiElement element,
+        @FlagConstant int flags
+    ) {
+        return descriptor.getDescriptionTemplate().map(new ProblemDescriptionTextRenderer(descriptor, element, flags));
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public static HighlightInfoType highlightTypeFromDescriptor(
         @Nonnull ProblemDescriptor problemDescriptor,
         @Nonnull HighlightSeverity severity,
