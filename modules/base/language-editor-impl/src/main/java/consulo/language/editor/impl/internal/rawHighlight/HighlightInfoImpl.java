@@ -49,6 +49,17 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class HighlightInfoImpl implements HighlightInfo {
+    private class MyFixBuilder extends AbstractHighlightInfoFixBuilder<FixBuilder> implements FixBuilder {
+        public MyFixBuilder(@Nonnull IntentionAction action) {
+            super(action);
+        }
+
+        @Override
+        public void register() {
+            registerFix(myAction, myOptions, myDisplayName, myFixRange, myKey);
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(HighlightInfoImpl.class);
 
     private static final byte BIJECTIVE_MASK = 0x1;
@@ -527,6 +538,12 @@ public class HighlightInfoImpl implements HighlightInfo {
             return "";
         }
         return highlighter.getDocument().getText(TextRange.create(highlighter));
+    }
+
+    @Nonnull
+    @Override
+    public FixBuilder newFix(@Nonnull IntentionAction action) {
+        return new MyFixBuilder(action);
     }
 
     @Override
