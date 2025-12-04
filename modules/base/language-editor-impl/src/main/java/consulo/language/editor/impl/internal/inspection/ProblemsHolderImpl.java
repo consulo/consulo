@@ -132,7 +132,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     @RequiredReadAction
     public void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
         newProblem(LocalizeValue.of(descriptionTemplate))
-            .range(reference)
+            .rangeByRef(reference)
             .highlightType(highlightType)
             .withFixes(collectQuickFixes(reference))
             .create();
@@ -142,7 +142,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     @RequiredReadAction
     public void registerProblem(@Nonnull PsiReference reference) {
         newProblem(LocalizeValue.of(ProblemsHolder.unresolvedReferenceMessage(reference).get()))
-            .range(reference)
+            .rangeByRef(reference)
             .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
             .withFixes(collectQuickFixes(reference))
             .create();

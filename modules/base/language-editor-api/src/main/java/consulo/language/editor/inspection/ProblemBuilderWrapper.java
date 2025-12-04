@@ -46,7 +46,7 @@ public class ProblemBuilderWrapper implements ProblemBuilder {
     @Override
     @RequiredReadAction
     public ProblemBuilder range(@Nonnull PsiReference reference) {
-        return rewrap(mySubBuilder.range(reference));
+        return rewrap(mySubBuilder.rangeByRef(reference));
     }
 
     @Nonnull

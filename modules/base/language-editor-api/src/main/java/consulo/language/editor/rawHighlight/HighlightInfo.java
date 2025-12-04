@@ -44,24 +44,39 @@ import java.util.function.Predicate;
  * @since 2022-02-13
  */
 public interface HighlightInfo extends Segment {
+    public interface FixBuilderBase<THIS extends FixBuilderBase<THIS>> {
+        @Nonnull
+        THIS options(@Nonnull List<IntentionAction> options);
+
+        @Nonnull
+        THIS displayName(@Nonnull LocalizeValue displayName);
+
+        @Nonnull
+        THIS fixRange(@Nonnull TextRange fixRange);
+
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        default THIS optionalFixRange(@Nullable TextRange fixRange) {
+            return fixRange == null ? (THIS) this : fixRange(fixRange);
+        }
+
+        @Nonnull
+        THIS key(@Nonnull HighlightDisplayKey key);
+
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        default THIS optionalKey(@Nullable HighlightDisplayKey key) {
+            return key == null ? (THIS) this : key(key);
+        }
+    }
+
+    public interface FixBuilder extends FixBuilderBase<FixBuilder> {
+        void register();
+    }
+
     public interface Builder {
-        public interface FixBuilder {
-            FixBuilder options(@Nonnull List<IntentionAction> options);
-
-            FixBuilder displayName(@Nonnull LocalizeValue displayName);
-
-            FixBuilder fixRange(@Nonnull TextRange fixRange);
-
-            default FixBuilder optionalFixRange(@Nullable TextRange fixRange) {
-                return fixRange == null ? this : fixRange(fixRange);
-            }
-
-            FixBuilder key(@Nonnull HighlightDisplayKey key);
-
-            default FixBuilder optionalKey(@Nullable HighlightDisplayKey key) {
-                return key == null ? this : key(key);
-            }
-
+        public interface FixBuilder extends FixBuilderBase<FixBuilder> {
+            @Nonnull
             Builder register();
         }
 
@@ -109,7 +124,7 @@ public interface HighlightInfo extends Segment {
         @Nonnull
         @SuppressWarnings("deprecation")
         default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
-            return descriptionAndTooltip(description.get());
+            return description(description).unescapedToolTip(description);
         }
 
         // only one allowed
@@ -144,10 +159,15 @@ public interface HighlightInfo extends Segment {
         Builder group(int group);
 
         @Nonnull
+        FixBuilder newFix(@Nonnull IntentionAction action);
+
+        @Nonnull
         default Builder registerFix(@Nonnull IntentionAction action) {
             return registerFix(action, null, LocalizeValue.of(), null, null);
         }
 
+        @Deprecated
+        @DeprecationInfo("Use HighlightInfo.Builder.newFix()...register()")
         @Nonnull
         Builder registerFix(
             @Nonnull IntentionAction action,
@@ -156,8 +176,6 @@ public interface HighlightInfo extends Segment {
             @Nullable TextRange fixRange,
             @Nullable HighlightDisplayKey key
         );
-
-        FixBuilder newFix(@Nonnull IntentionAction action);
 
         /**
          * @return null means filtered out
@@ -182,7 +200,7 @@ public interface HighlightInfo extends Segment {
         @DeprecationInfo("Use #descriptionAndTooltip(LocalizeValue)")
         @SuppressWarnings("deprecation")
         default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
-            return description(description).unescapedToolTip(description);
+            return descriptionAndTooltip(LocalizeValue.of(description));
         }
 
         // only one allowed
@@ -239,6 +257,18 @@ public interface HighlightInfo extends Segment {
 
     @Nullable
     GutterMark getGutterIconRenderer();
+
+    @Deprecated
+    @DeprecationInfo("Use HighlightInfo.Builder.newFix()...register()")
+    @Nonnull
+    FixBuilder newFix(@Nonnull IntentionAction action);
+
+    @Deprecated
+    @DeprecationInfo("Use HighlightInfo.Builder.registerFix() or HighlightInfo.Builder.newFix()...register()")
+    @SuppressWarnings("deprecation")
+    default void registerFix(@Nullable IntentionAction action) {
+        registerFix(action, null, LocalizeValue.empty(), null, null);
+    }
 
     @Deprecated
     @DeprecationInfo("Use HighlightInfo.Builder.registerFix() or HighlightInfo.Builder.newFix()...register()")
