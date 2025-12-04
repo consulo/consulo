@@ -86,7 +86,7 @@ public interface ProblemsHolder {
         @Nullable LocalQuickFix... fixes
     ) {
         newProblem(LocalizeValue.of(descriptionTemplate))
-            .range(reference)
+            .rangeByRef(reference)
             .highlightType(highlightType)
             .withFixes(fixes)
             .create();
