@@ -143,7 +143,7 @@ public class InjectLanguageAction implements IntentionAction {
             if (TemporaryPlacesRegistry.getInstance(project).getLanguageInjectionSupport().addInjectionInPlace(language, host)) {
                 Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
                 LocalizeValue text = LanguageInjectAdvancedLocalize.temporarilyInjected(
-                    language.getDisplayName().map((localizeManager, string) -> StringUtil.escapeXml(string))
+                    language.getDisplayName().map(StringUtil::escapeXml)
                 );
                 if (data != null) {
                     SmartPsiElementPointer<PsiLanguageInjectionHost> pointer =

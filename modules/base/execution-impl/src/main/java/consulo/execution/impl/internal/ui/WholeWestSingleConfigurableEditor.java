@@ -143,7 +143,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     private static LocalizeValue createTitleString(Configurable configurable) {
         LocalizeValue displayName = configurable.getDisplayName();
         LOG.assertTrue(displayName != LocalizeValue.of(), configurable.getClass().getName());
-        return displayName.map((localizeManager, s) -> s.replaceAll("\n", " "));
+        return displayName.map(text -> text.replaceAll("\n", " "));
     }
 
     @Override

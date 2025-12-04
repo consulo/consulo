@@ -32,7 +32,7 @@ import static consulo.language.editor.todo.impl.internal.TodoPanel.TODO_PANEL_DA
 public class TodoGroupByFlattenPackages extends TodoGroupByOptionAction {
     public TodoGroupByFlattenPackages() {
         super(
-            LanguageTodoLocalize.actionFlattenView().map((localizeManager, text) -> "   " + text),
+            LanguageTodoLocalize.actionFlattenView().map(text -> "   " + text),
             PlatformIconGroup.objectbrowserFlattenpackages(),
             TodoPanel::isFlattenPackages,
             TodoPanel::setFlattenPackages

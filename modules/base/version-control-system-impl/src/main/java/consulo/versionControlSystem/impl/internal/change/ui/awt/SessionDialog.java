@@ -61,7 +61,7 @@ public class SessionDialog extends DialogWrapper {
             myConfigurationComponent != null ? (String) myConfigurationComponent.getClientProperty(VCS_CONFIGURATION_UI_TITLE) : null;
         setTitle(
             StringUtil.isEmptyOrSpaces(configurationComponentName)
-                ? title.map((localizeManager, string) -> CommitChangeListDialog.trimEllipsis(string))
+                ? title.map(CommitChangeListDialog::trimEllipsis)
                 : LocalizeValue.localizeTODO(configurationComponentName)
         );
         init();

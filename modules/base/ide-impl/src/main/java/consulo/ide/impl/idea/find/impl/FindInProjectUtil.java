@@ -381,7 +381,7 @@ public class FindInProjectUtil {
 
     public static void setupViewPresentation(UsageViewPresentation presentation, boolean toOpenInNewTab, @Nonnull FindModel findModel) {
         LocalizeValue scope = getTitleForScope(findModel);
-        scope = scope.map((localizeManager, value) -> Character.toLowerCase(value.charAt(0)) + value.substring(1));
+        scope = scope.map(value -> Character.toLowerCase(value.charAt(0)) + value.substring(1));
         String stringToFind = findModel.getStringToFind();
         presentation.setScopeText(scope);
         if (stringToFind.isEmpty()) {

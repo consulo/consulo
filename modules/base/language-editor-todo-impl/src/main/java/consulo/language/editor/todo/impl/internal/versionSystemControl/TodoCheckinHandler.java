@@ -208,7 +208,7 @@ public class TodoCheckinHandler extends CheckinHandler {
     @RequiredUIAccess
     private ReturnResult showResults(TodoCheckinHandlerWorker worker, CommitExecutor executor) {
         LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName();
-        commitButtonText = commitButtonText.map((localizeManager, string) -> StringUtil.trimEnd(string, "..."));
+        commitButtonText = commitButtonText.map(text -> StringUtil.trimEnd(text, "..."));
 
         LocalizeValue text = createMessage(worker);
         boolean thereAreTodoFound = worker.getAddedOrEditedTodos().size() + worker.getInChangedTodos().size() > 0;

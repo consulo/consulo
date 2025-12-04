@@ -21,10 +21,10 @@ import consulo.ui.LabelOptions;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel {
   public DesktopHtmlLabelImpl(LocalizeValue localizeValue, LabelOptions options) {
-    super(localizeValue.map((localizeManager, value) -> "<html><body>" + value + "</body></html>"), options);
+    super(localizeValue.map(value -> "<html><body>" + value + "</body></html>"), options);
   }
 }

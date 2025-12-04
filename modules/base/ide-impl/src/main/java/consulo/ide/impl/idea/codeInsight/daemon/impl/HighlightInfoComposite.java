@@ -83,9 +83,9 @@ class HighlightInfoComposite extends HighlightInfoImpl {
             if (!result.isEmpty()) {
                 result.add(LocalizeValue.space());
             }
-            result.add(itemDescription.map((localizeManager, s) -> {
-                s = s.trim();
-                return !s.endsWith(".") ? s + '.' : s;
+            result.add(itemDescription.map(text -> {
+                text = text.trim();
+                return !text.endsWith(".") ? text + '.' : text;
             }));
         }
         return result.isEmpty() ? LocalizeValue.empty() : LocalizeValue.join(result.toArray(LocalizeValue[]::new));
@@ -105,7 +105,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
                 result.add(LINE_BREAK);
             }
             empty = false;
-            result.add(tooltip.map((localizeManager, s) -> XmlStringUtil.stripHtml(s)));
+            result.add(tooltip.map(XmlStringUtil::stripHtml));
         }
         result.add(HTML_END);
         if (empty) {

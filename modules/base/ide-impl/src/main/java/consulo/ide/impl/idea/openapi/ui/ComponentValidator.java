@@ -263,7 +263,7 @@ public class ComponentValidator {
             ? String.format(
                 "<html><body><div width=%d>%s</div><body></html>",
                 MAX_WIDTH.get(),
-                info.message.map((localizeManager, value) -> trimMessage(value, tipComponent))
+                info.message.map(value -> trimMessage(value, tipComponent))
             )
             : String.format("<html><body><div>%s</div></body></html>", info.message);
 

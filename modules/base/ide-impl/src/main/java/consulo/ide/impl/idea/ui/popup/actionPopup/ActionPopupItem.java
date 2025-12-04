@@ -119,7 +119,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         LocalizeValue textValue = presentation.getTextValue();
         if (myMnemonicsEnabled) {
             if (myMnemonicChar != null) {
-                textValue = textValue.map((localizeManager, text) -> "&" + myMnemonicChar + ". " + text);
+                textValue = textValue.map(text -> "&" + myMnemonicChar + ". " + text);
             }
         }
         else if (presentation.isDisabledMnemonic()) {

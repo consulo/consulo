@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options;
 
 import consulo.application.PowerSaveMode;
@@ -85,7 +84,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
 
     String basicShortcut = KeymapUtil.getFirstKeyboardShortcutText(actionManager.getAction(IdeActions.ACTION_CODE_COMPLETION));
     if (StringUtil.isNotEmpty(basicShortcut)) {
-      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteBasic().map((localizeManager, s) -> s + " (" + basicShortcut + ")");
+      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteBasic().map(text -> text + " (" + basicShortcut + ")");
       myCbOnCodeCompletion2 = CheckBox.create(value);
     }
     else {
@@ -94,7 +93,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
 
     String smartShortcut = KeymapUtil.getFirstKeyboardShortcutText(actionManager.getAction(IdeActions.ACTION_SMART_TYPE_COMPLETION));
     if (StringUtil.isNotEmpty(smartShortcut)) {
-      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteSmartType().map((localizeManager, s) -> s + " (" + smartShortcut + ")");
+      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteSmartType().map(text -> text + " (" + smartShortcut + ")");
       myCbOnSmartTypeCompletion2 = CheckBox.create(value);
     }
     else {

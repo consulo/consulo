@@ -18,12 +18,11 @@ package consulo.language.editor.inspection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeManager;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import static consulo.language.editor.inspection.ProblemDescriptorUtil.FlagConstant;
@@ -33,13 +32,13 @@ import static consulo.language.editor.inspection.ProblemDescriptorUtil.FlagConst
  * @since 2025-12-03
  */
 public record ProblemDescriptionTextRenderer(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags)
-    implements BiFunction<LocalizeManager, String, String> {
+    implements Function<String, String> {
 
     private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<(?:[^'\">]+|\"[^\"]*+\"|'[^']*+')*+>");
 
     @Override
     @RequiredReadAction
-    public String apply(LocalizeManager localizeManager, @Nonnull String message) {
+    public String apply(@Nonnull String message) {
         if ((flags & ProblemDescriptorUtil.APPEND_LINE_NUMBER) != 0
             && descriptor instanceof ProblemDescriptor problemDescriptor
             && !message.contains("#ref")

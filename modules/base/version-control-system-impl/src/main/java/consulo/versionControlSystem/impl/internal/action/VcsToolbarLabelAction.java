@@ -34,7 +34,7 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
             return ProjectLevelVcsManager.getInstance(project)
                 .getConsolidatedVcsName()
                 .map(Presentation.NO_MNEMONIC)
-                .map((l, s) -> s + ":");
+                .map(text -> text + ":");
         }
         return VcsLocalize.vcsCommonLabelsVcs();
     }

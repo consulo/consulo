@@ -615,8 +615,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                 .forEach(range -> joiner.add(text.subSequence(range.getStartOffset(), range.getEndOffset())));
             LocalizeValue description = LocalizeValue.of(joiner.toString());
             LocalizeValue tooltip = description.map(
-                (localizeManager, s) -> XmlStringUtil.escapeString(StringUtil.shortenPathWithEllipsis(s, 1024))
-                    .replace("\n", "<br>")
+                s -> XmlStringUtil.escapeString(StringUtil.shortenPathWithEllipsis(s, 1024)).replace("\n", "<br>")
             );
 
             TextAttributes attributes = TodoAttributesUtil.getTextAttributes(todoItem.getPattern().getAttributes());

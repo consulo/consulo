@@ -22,7 +22,6 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
@@ -30,11 +29,11 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 class AnnotationBuilderImpl implements AnnotationBuilder {
-    private static final BiFunction<LocalizeManager, String, String> TOOLTIP_ESCAPE =
-        (localizeManager, message) -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+    private static final Function<String, String> TOOLTIP_ESCAPE =
+        message -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
 
     @Nonnull
     private final AnnotationHolderImpl myHolder;
@@ -411,7 +410,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             range = myCurrentElement.getTextRange();
         }
 
-        if (myTooltip == LocalizeValue.of() && myMessage != LocalizeValue.of()) {
+        if (myTooltip == LocalizeValue.empty() && myMessage != LocalizeValue.empty()) {
             myTooltip = myMessage.map(TOOLTIP_ESCAPE);
         }
 
