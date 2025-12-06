@@ -292,7 +292,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
                 myServerType.getPresentableName().get(),
                 s -> {
                     for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
-                        if (configurable.getDisplayName().equals(s)) {
+                        if (configurable.getDisplayName().get().equals(s)) {
                             return false;
                         }
                     }
