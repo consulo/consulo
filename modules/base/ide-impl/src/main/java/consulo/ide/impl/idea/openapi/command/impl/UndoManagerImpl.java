@@ -519,7 +519,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     @RequiredUIAccess
     private Couple<LocalizeValue> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
         LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.empty();
-        LocalizeValue shortActionName = desc.map((localizeManager, value) -> StringUtil.first(value, 30, true));
+        LocalizeValue shortActionName = desc.map(text -> StringUtil.first(text, 30, true));
 
         if (desc == LocalizeValue.empty()) {
             desc = undo

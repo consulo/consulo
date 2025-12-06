@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -755,8 +754,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
         LocalizeValue tooltip = LocalizeValue.empty();
         if (descriptor.showTooltip()) {
-            tooltip = message.map((localizeManager, string) -> XmlStringUtil.wrapInHtml(
-                (string.startsWith("<html>") ? XmlStringUtil.stripHtml(string) : XmlStringUtil.escapeString(string)) + link
+            tooltip = message.map(text -> XmlStringUtil.wrapInHtml(
+                (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeString(text)) + link
             ));
         }
         HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element);

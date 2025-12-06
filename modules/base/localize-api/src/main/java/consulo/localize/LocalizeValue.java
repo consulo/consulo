@@ -22,6 +22,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -111,8 +112,13 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
-    default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
+    default LocalizeValue map(@Nonnull Function<String, String> mapper) {
         return new MapLocalizeValue(this, mapper);
+    }
+
+    @Nonnull
+    default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
+        return new MapLocalizeValue2(this, mapper);
     }
 
     @Nonnull

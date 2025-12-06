@@ -155,7 +155,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     public HighlightInfo.Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip) {
         assertNotCreated();
         assert myEscapedToolTip == LocalizeValue.empty() : "Tooltip was already set";
-        myEscapedToolTip = unescapedToolTip.map((m, text) -> HighlightInfoImpl.htmlEscapeToolTip(text));
+        myEscapedToolTip = unescapedToolTip.map(HighlightInfoImpl::htmlEscapeToolTip);
         return this;
     }
 

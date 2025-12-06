@@ -81,8 +81,7 @@ public class OverrideFileTypeAction extends AnAction {
             }
 
             String finalDupHint = dupHint;
-            LocalizeValue displayText = type.getDisplayName()
-                .map((localizeManager, s) -> s + StringUtil.notNullize(finalDupHint));
+            LocalizeValue displayText = type.getDisplayName().map(text -> text + StringUtil.notNullize(finalDupHint));
             group.add(new ChangeToThisFileTypeAction(displayText, files, type));
         }
         JBPopupFactory.getInstance()

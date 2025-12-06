@@ -44,13 +44,6 @@ public class ProblemBuilderWrapper implements ProblemBuilder {
 
     @Nonnull
     @Override
-    @RequiredReadAction
-    public ProblemBuilder range(@Nonnull PsiReference reference) {
-        return rewrap(mySubBuilder.rangeByRef(reference));
-    }
-
-    @Nonnull
-    @Override
     public ProblemBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement) {
         return rewrap(mySubBuilder.range(element, rangeInElement));
     }
@@ -59,6 +52,13 @@ public class ProblemBuilderWrapper implements ProblemBuilder {
     @Override
     public ProblemBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
         return rewrap(mySubBuilder.range(startElement, endElement));
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public ProblemBuilder rangeByRef(@Nonnull PsiReference reference) {
+        return rewrap(mySubBuilder.rangeByRef(reference));
     }
 
     @Nonnull

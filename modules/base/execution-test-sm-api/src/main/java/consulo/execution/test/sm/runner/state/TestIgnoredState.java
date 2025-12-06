@@ -34,7 +34,7 @@ public class TestIgnoredState extends AbstractState {
         LocalizeValue ignoredMsg = StringUtil.isEmpty(ignoredComment)
             ? SMTestLocalize.smTestRunnerStatesTestIsIgnored()
             : LocalizeValue.of(ignoredComment);
-        myText = ignoredMsg.map((localizeManager, value) -> CompositePrintable.NEW_LINE + value);
+        myText = ignoredMsg.map(value -> CompositePrintable.NEW_LINE + value);
         myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
     }
 

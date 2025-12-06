@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
@@ -45,14 +44,6 @@ public interface ProblemBuilder {
     @Nonnull
     @RequiredReadAction
     default ProblemBuilder rangeByRef(@Nonnull PsiReference reference) {
-        return range(reference.getElement(), reference.getRangeInElement());
-    }
-
-    @Deprecated(forRemoval = true)
-    @DeprecationInfo("Inconveniently clashes with #range(PsiElement). Use #rangeByRef")
-    @Nonnull
-    @RequiredReadAction
-    default ProblemBuilder range(@Nonnull PsiReference reference) {
         return range(reference.getElement(), reference.getRangeInElement());
     }
 

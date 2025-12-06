@@ -18,7 +18,6 @@ package consulo.ui.ex.action;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ComponentManager;
-import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -26,14 +25,14 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
-  protected static final BiFunction<LocalizeManager, String, String> HTML_STRIP = (localizeManager, s) -> StringUtil.stripHtml(s, false);
+  protected static final Function<String, String> HTML_STRIP = text -> StringUtil.stripHtml(text, false);
 
   @Nonnull
   public abstract Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project);

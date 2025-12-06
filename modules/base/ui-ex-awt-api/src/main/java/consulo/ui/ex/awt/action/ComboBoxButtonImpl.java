@@ -55,9 +55,9 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
             @Override
             protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
                 if (myPresentation.isDisabledMnemonic()) {
-                    append(myPresentation.getTextValue().get());
+                    append(myPresentation.getTextValue());
                 } else {
-                    append(myPresentation.getTextValue().map(Presentation.NO_MNEMONIC).get());
+                    append(myPresentation.getTextValue().map(Presentation.NO_MNEMONIC));
                 }
                 setIcon(myPresentation.getIcon());
             }

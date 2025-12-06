@@ -531,7 +531,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         setTitle(
             myShowVcsCommit
                 ? myActionName
-                : myExecutors.get(0).getActionText().map((localizeManager, string) -> trimEllipsis(string))
+                : myExecutors.get(0).getActionText().map(CommitChangeListDialog::trimEllipsis)
         );
 
         restoreState();

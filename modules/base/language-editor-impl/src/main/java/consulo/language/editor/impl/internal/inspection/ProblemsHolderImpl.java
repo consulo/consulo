@@ -116,8 +116,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         VirtualFile vFile = original.getContainingFile().getVirtualFile();
         assert vFile != null;
         String path = FileUtil.toSystemIndependentName(vFile.getPath());
-        LocalizeValue description =
-            problem.getDescriptionTemplate().map((localizeManager, string) -> XmlStringUtil.stripHtml(string));
+        LocalizeValue description = problem.getDescriptionTemplate().map(XmlStringUtil::stripHtml);
 
         LocalizeValue descriptionTemplate =
             InspectionLocalize.inspectionRedirectTemplate(description, path, original.getTextRange().getStartOffset(), vFile.getName());
@@ -141,7 +140,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     @Override
     @RequiredReadAction
     public void registerProblem(@Nonnull PsiReference reference) {
-        newProblem(LocalizeValue.of(ProblemsHolder.unresolvedReferenceMessage(reference).get()))
+        newProblem(ProblemsHolder.unresolvedReferenceMessage(reference))
             .rangeByRef(reference)
             .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
             .withFixes(collectQuickFixes(reference))

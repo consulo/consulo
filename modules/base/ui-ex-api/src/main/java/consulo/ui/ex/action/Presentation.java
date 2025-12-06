@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -46,7 +47,7 @@ import java.util.function.BiFunction;
 public final class Presentation implements Cloneable {
     private static final Logger LOG = Logger.getInstance(Presentation.class);
 
-    public static final BiFunction<LocalizeManager, String, String> NO_MNEMONIC = (localizeManager, text) -> TextWithMnemonic.parse(text).getText();
+    public static final Function<String, String> NO_MNEMONIC = text -> TextWithMnemonic.parse(text).getText();
 
     @Nonnull
     public static Presentation newTemplatePresentation() {
