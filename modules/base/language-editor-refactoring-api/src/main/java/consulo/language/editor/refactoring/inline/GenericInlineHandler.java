@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.inline;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.Language;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -69,8 +71,8 @@ public class GenericInlineHandler {
     public static void collectConflicts(
         PsiReference reference,
         PsiElement element,
-        Map<Language, InlineHandler.Inliner> inliners,
-        MultiMap<PsiElement, String> conflicts
+        @Nonnull Map<Language, InlineHandler.Inliner> inliners,
+        @Nonnull MultiMap<PsiElement, LocalizeValue> conflicts
     ) {
         PsiElement referenceElement = reference.getElement();
         if (referenceElement == null) {
@@ -79,7 +81,7 @@ public class GenericInlineHandler {
         Language language = referenceElement.getLanguage();
         InlineHandler.Inliner inliner = inliners.get(language);
         if (inliner != null) {
-            MultiMap<PsiElement, String> refConflicts = inliner.getConflicts(reference, element);
+            MultiMap<PsiElement, LocalizeValue> refConflicts = inliner.getConflicts(reference, element);
             if (refConflicts != null) {
                 for (PsiElement psiElement : refConflicts.keySet()) {
                     conflicts.putValues(psiElement, refConflicts.get(psiElement));
@@ -87,7 +89,7 @@ public class GenericInlineHandler {
             }
         }
         else {
-            conflicts.putValue(referenceElement, "Cannot inline reference from " + language.getID());
+            conflicts.putValue(referenceElement, RefactoringLocalize.dialogMessageCannotInlineReferenceFrom0(language.getDisplayName()));
         }
     }
 
@@ -122,3 +124,4 @@ public class GenericInlineHandler {
         return usages;
     }
 }
+

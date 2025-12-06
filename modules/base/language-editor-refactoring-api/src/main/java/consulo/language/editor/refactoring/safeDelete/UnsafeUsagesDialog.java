@@ -16,6 +16,7 @@
 package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LocalizeAction;
@@ -26,88 +27,90 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 /**
  * @author Jeka
  * @since 2001-09-12
  */
 public class UnsafeUsagesDialog extends DialogWrapper {
-  private JEditorPane myMessagePane;
-  private final String[] myConflictDescriptions;
-  public static final int VIEW_USAGES_EXIT_CODE = NEXT_USER_EXIT_CODE;
+    private JEditorPane myMessagePane;
+    @Nonnull
+    private final Collection<LocalizeValue> myConflictDescriptions;
+    public static final int VIEW_USAGES_EXIT_CODE = NEXT_USER_EXIT_CODE;
 
-  public UnsafeUsagesDialog(String[] conflictDescriptions, Project project) {
-    super(project, true);
-    myConflictDescriptions = conflictDescriptions;
-    setTitle(RefactoringLocalize.usagesDetected());
-    setOKButtonText(RefactoringLocalize.deleteAnywayButton());
-    init();
-  }
-
-  @Override
-  @Nonnull
-  protected Action[] createActions() {
-    ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
-
-    Action ignoreAction = getOKAction();
-    ignoreAction.putValue(DialogWrapper.DEFAULT_ACTION, null);
-
-    return new Action[]{viewUsagesAction, ignoreAction, new CancelAction()};
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    JPanel panel = new JPanel(new BorderLayout());
-    myMessagePane = new JEditorPane(UIUtil.HTML_MIME, "");
-    myMessagePane.setEditable(false);
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myMessagePane);
-    scrollPane.setPreferredSize(new Dimension(500, 400));
-    panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
-    panel.add(scrollPane, BorderLayout.CENTER);
-
-    StringBuilder buf = new StringBuilder();
-    for (String description : myConflictDescriptions) {
-      buf.append(description);
-      buf.append("<br><br>");
-    }
-    myMessagePane.setText(buf.toString());
-    return panel;
-  }
-
-  @Override
-  protected String getDimensionServiceKey() {
-    return "#consulo.language.editor.refactoring.safeDelete.UnsafeUsagesDialog";
-  }
-
-/*
-  protected JComponent createSouthPanel() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(super.createSouthPanel(), BorderLayout.CENTER);
-//    panel.add(new JLabel("Do you wish to ignore them and continue?"), BorderLayout.WEST);
-    return panel;
-  }
-*/
-
-  private class CancelAction extends LocalizeAction {
-    public CancelAction() {
-      super(RefactoringLocalize.cancelButton());
+    public UnsafeUsagesDialog(@Nonnull Collection<LocalizeValue> conflictDescriptions, Project project) {
+        super(project, true);
+        myConflictDescriptions = conflictDescriptions;
+        setTitle(RefactoringLocalize.usagesDetected());
+        setOKButtonText(RefactoringLocalize.deleteAnywayButton());
+        init();
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      doCancelAction();
-    }
-  }
+    @Nonnull
+    protected Action[] createActions() {
+        ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
 
-  private class ViewUsagesAction extends LocalizeAction {
-    public ViewUsagesAction() {
-      super(RefactoringLocalize.viewUsages());
-      putValue(DialogWrapper.DEFAULT_ACTION, Boolean.TRUE);
+        Action ignoreAction = getOKAction();
+        ignoreAction.putValue(DialogWrapper.DEFAULT_ACTION, null);
+
+        return new Action[]{viewUsagesAction, ignoreAction, new CancelAction()};
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      close(VIEW_USAGES_EXIT_CODE);
+    protected JComponent createCenterPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        myMessagePane = new JEditorPane(UIUtil.HTML_MIME, "");
+        myMessagePane.setEditable(false);
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myMessagePane);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
+        panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        StringBuilder buf = new StringBuilder();
+        for (LocalizeValue description : myConflictDescriptions) {
+            buf.append(description);
+            buf.append("<br><br>");
+        }
+        myMessagePane.setText(buf.toString());
+        return panel;
     }
-  }
+
+    @Override
+    protected String getDimensionServiceKey() {
+        return "#consulo.language.editor.refactoring.safeDelete.UnsafeUsagesDialog";
+    }
+
+    /*
+    protected JComponent createSouthPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(super.createSouthPanel(), BorderLayout.CENTER);
+        //panel.add(new JLabel("Do you wish to ignore them and continue?"), BorderLayout.WEST);
+        return panel;
+    }
+    */
+
+    private class CancelAction extends LocalizeAction {
+        public CancelAction() {
+            super(RefactoringLocalize.cancelButton());
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            doCancelAction();
+        }
+    }
+
+    private class ViewUsagesAction extends LocalizeAction {
+        public ViewUsagesAction() {
+            super(RefactoringLocalize.viewUsages());
+            putValue(DialogWrapper.DEFAULT_ACTION, Boolean.TRUE);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            close(VIEW_USAGES_EXIT_CODE);
+        }
+    }
 }

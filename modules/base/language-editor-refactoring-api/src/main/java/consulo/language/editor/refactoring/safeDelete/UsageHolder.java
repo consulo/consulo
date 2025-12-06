@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -23,6 +22,7 @@ import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.UsageInfo;
@@ -33,48 +33,54 @@ import jakarta.annotation.Nonnull;
  * @author dsl
  */
 class UsageHolder {
-  private final SmartPsiElementPointer myElementPointer;
-  private int myUnsafeUsages;
-  private int myNonCodeUnsafeUsages;
+    private final SmartPsiElementPointer myElementPointer;
+    private int myUnsafeUsages;
+    private int myNonCodeUnsafeUsages;
 
-  public UsageHolder(PsiElement element, UsageInfo[] usageInfos) {
-    Project project = element.getProject();
-    myElementPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
+    @RequiredReadAction
+    public UsageHolder(PsiElement element, UsageInfo[] usageInfos) {
+        Project project = element.getProject();
+        myElementPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
 
-    for (UsageInfo usageInfo : usageInfos) {
-      if (!(usageInfo instanceof SafeDeleteReferenceUsageInfo)) continue;
-      SafeDeleteReferenceUsageInfo usage = (SafeDeleteReferenceUsageInfo)usageInfo;
-      if (usage.getReferencedElement() != element) continue;
+        for (UsageInfo usageInfo : usageInfos) {
+            if (!(usageInfo instanceof SafeDeleteReferenceUsageInfo usage && usage.getReferencedElement() == element)) {
+                continue;
+            }
 
-      if (!usage.isSafeDelete()) {
-        myUnsafeUsages++;
-        if (usage.isNonCodeUsage || isInGeneratedCode(usage, project)) {
-          myNonCodeUnsafeUsages++;
+            if (!usage.isSafeDelete()) {
+                myUnsafeUsages++;
+                if (usage.isNonCodeUsage || isInGeneratedCode(usage, project)) {
+                    myNonCodeUnsafeUsages++;
+                }
+            }
         }
-      }
     }
-  }
 
-  @RequiredReadAction
-  private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project) {
-    VirtualFile file = usage.getVirtualFile();
-    return file != null && GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project);
-  }
-
-  @Nonnull
-  public String getDescription() {
-    PsiElement element = myElementPointer.getElement();
-    String message = RefactoringLocalize.zeroHas1UsagesThatAreNotSafeToDelete(
-      RefactoringUIUtil.getDescription(element, true),
-      myUnsafeUsages
-    ).get();
-    if (myNonCodeUnsafeUsages > 0) {
-      message += "<br>" + RefactoringLocalize.safeDeleteOfThose0InCommentsStringsNonCode(myNonCodeUnsafeUsages);
+    @RequiredReadAction
+    private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project) {
+        VirtualFile file = usage.getVirtualFile();
+        return file != null && GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project);
     }
-    return message;
-  }
 
-  public boolean hasUnsafeUsagesInCode() {
-    return myUnsafeUsages != myNonCodeUnsafeUsages;
-  }
+    @Nonnull
+    @RequiredReadAction
+    public LocalizeValue getDescription() {
+        PsiElement element = myElementPointer.getElement();
+        LocalizeValue message = RefactoringLocalize.zeroHas1UsagesThatAreNotSafeToDelete(
+            RefactoringUIUtil.getDescription(element, true),
+            myUnsafeUsages
+        );
+        if (myNonCodeUnsafeUsages > 0) {
+            message = LocalizeValue.join(
+                message,
+                LocalizeValue.of("<br>"),
+                RefactoringLocalize.safeDeleteOfThose0InCommentsStringsNonCode(myNonCodeUnsafeUsages)
+            );
+        }
+        return message;
+    }
+
+    public boolean hasUnsafeUsagesInCode() {
+        return myUnsafeUsages != myNonCodeUnsafeUsages;
+    }
 }

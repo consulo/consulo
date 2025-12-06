@@ -15,10 +15,14 @@
  */
 package consulo.language.editor.refactoring.ui;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -36,8 +40,10 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -47,20 +53,21 @@ import java.util.regex.Pattern;
 public class ConflictsDialog extends DialogWrapper {
     private static final int SHOW_CONFLICTS_EXIT_CODE = 4;
 
-    private String[] myConflictDescriptions;
-    private MultiMap<PsiElement, String> myElementConflictDescription;
+    @Nonnull
+    private Collection<LocalizeValue> myConflictDescriptions;
+    private MultiMap<PsiElement, LocalizeValue> myElementConflictDescription;
     private final Project myProject;
     private Runnable myDoRefactoringRunnable;
     private final boolean myCanShowConflictsInView;
     private String myCommandName;
 
-    public ConflictsDialog(@Nonnull Project project, @Nonnull MultiMap<PsiElement, String> conflictDescriptions) {
+    public ConflictsDialog(@Nonnull Project project, @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions) {
         this(project, conflictDescriptions, null, true, true);
     }
 
     public ConflictsDialog(
         @Nonnull Project project,
-        @Nonnull MultiMap<PsiElement, String> conflictDescriptions,
+        @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
         @Nullable Runnable doRefactoringRunnable
     ) {
         this(project, conflictDescriptions, doRefactoringRunnable, true, true);
@@ -68,7 +75,7 @@ public class ConflictsDialog extends DialogWrapper {
 
     public ConflictsDialog(
         @Nonnull Project project,
-        @Nonnull MultiMap<PsiElement, String> conflictDescriptions,
+        @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
         @Nullable Runnable doRefactoringRunnable,
         boolean alwaysShowOkButton,
         boolean canShowConflictsInView
@@ -77,12 +84,12 @@ public class ConflictsDialog extends DialogWrapper {
         myProject = project;
         myDoRefactoringRunnable = doRefactoringRunnable;
         myCanShowConflictsInView = canShowConflictsInView;
-        LinkedHashSet<String> conflicts = new LinkedHashSet<>();
+        Set<LocalizeValue> conflicts = new LinkedHashSet<>();
 
-        for (String conflict : conflictDescriptions.values()) {
+        for (LocalizeValue conflict : conflictDescriptions.values()) {
             conflicts.add(conflict);
         }
-        myConflictDescriptions = ArrayUtil.toStringArray(conflicts);
+        myConflictDescriptions = conflicts;
         myElementConflictDescription = conflictDescriptions;
         setTitle(RefactoringLocalize.problemsDetectedTitle());
         setOKButtonText(RefactoringLocalize.continueButton());
@@ -90,14 +97,8 @@ public class ConflictsDialog extends DialogWrapper {
         init();
     }
 
-    @SuppressWarnings("deprecation")
     @Deprecated
-    public ConflictsDialog(Project project, Collection<String> conflictDescriptions) {
-        this(project, ArrayUtil.toStringArray(conflictDescriptions));
-    }
-
-    @Deprecated
-    public ConflictsDialog(Project project, String... conflictDescriptions) {
+    public ConflictsDialog(Project project, @Nonnull Collection<LocalizeValue> conflictDescriptions) {
         super(project, true);
         myProject = project;
         myConflictDescriptions = conflictDescriptions;
@@ -105,6 +106,12 @@ public class ConflictsDialog extends DialogWrapper {
         setTitle(RefactoringLocalize.problemsDetectedTitle());
         setOKButtonText(RefactoringLocalize.continueButton());
         init();
+    }
+
+    @Deprecated
+    @SuppressWarnings("deprecation")
+    public ConflictsDialog(Project project, @Nonnull LocalizeValue... conflictDescriptions) {
+        this(project, Arrays.asList(conflictDescriptions));
     }
 
     @Override
@@ -134,7 +141,7 @@ public class ConflictsDialog extends DialogWrapper {
         panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
 
         StringBuilder buf = new StringBuilder();
-        for (String description : myConflictDescriptions) {
+        for (LocalizeValue description : myConflictDescriptions) {
             buf.append(description);
             buf.append("<br><br>");
         }
@@ -172,13 +179,12 @@ public class ConflictsDialog extends DialogWrapper {
     }
 
     private class MyShowConflictsInUsageViewAction extends AbstractAction {
-
-
         public MyShowConflictsInUsageViewAction() {
             super("Show conflicts in view");
         }
 
         @Override
+        @RequiredReadAction
         public void actionPerformed(ActionEvent e) {
             UsageViewPresentation presentation = new UsageViewPresentation();
             String codeUsagesString = "Conflicts";
@@ -189,30 +195,32 @@ public class ConflictsDialog extends DialogWrapper {
 
             Usage[] usages = new Usage[myElementConflictDescription.size()];
             int i = 0;
+            ExtensionPoint<ReadWriteAccessDetector> rwDetectors = Application.get().getExtensionPoint(ReadWriteAccessDetector.class);
             for (PsiElement element : myElementConflictDescription.keySet()) {
                 if (element == null) {
                     usages[i++] = new DescriptionOnlyUsage();
                     continue;
                 }
+                ReadWriteAccessDetector.Access access = rwDetectors.computeSafeIfAny(
+                    detector -> detector.isReadWriteAccessible(element) ? detector.getExpressionAccess(element) : null
+                );
                 boolean isRead = false;
                 boolean isWrite = false;
-                for (ReadWriteAccessDetector detector : ReadWriteAccessDetector.EP_NAME.getExtensionList()) {
-                    if (detector.isReadWriteAccessible(element)) {
-                        ReadWriteAccessDetector.Access access = detector.getExpressionAccess(element);
-                        isRead = access != ReadWriteAccessDetector.Access.Write;
-                        isWrite = access != ReadWriteAccessDetector.Access.Read;
-                        break;
-                    }
+                if (access != null) {
+                    isRead = access != ReadWriteAccessDetector.Access.Write;
+                    isWrite = access != ReadWriteAccessDetector.Access.Read;
                 }
 
-                usages[i++] = isRead || isWrite ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
+                usages[i++] = isRead || isWrite
+                    ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
                     @Nonnull
                     @Override
                     public UsagePresentation getPresentation() {
                         UsagePresentation usagePresentation = super.getPresentation();
                         return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
                     }
-                } : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
+                }
+                    : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
                     @Nonnull
                     @Override
                     public UsagePresentation getPresentation() {
@@ -236,7 +244,7 @@ public class ConflictsDialog extends DialogWrapper {
         }
 
         private UsagePresentation getPresentation(UsagePresentation usagePresentation, PsiElement element) {
-            Collection<String> elementConflicts = new LinkedHashSet<>(myElementConflictDescription.get(element));
+            Collection<LocalizeValue> elementConflicts = new LinkedHashSet<>(myElementConflictDescription.get(element));
             String conflictDescription =
                 " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
             return new UsagePresentation() {
@@ -306,11 +314,13 @@ public class ConflictsDialog extends DialogWrapper {
             }
 
             @Override
+            @RequiredReadAction
             public boolean canNavigateToSource() {
                 return false;
             }
 
             @Override
+            @RequiredReadAction
             public boolean canNavigate() {
                 return false;
             }

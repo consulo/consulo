@@ -21,6 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.usage.UsageInfo;
 
@@ -62,7 +63,7 @@ public interface SafeDeleteProcessorDelegate {
     );
 
     @Nullable
-    Collection<String> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
+    Collection<LocalizeValue> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
 
     /**
      * Called after the user has confirmed the refactoring. Can filter out some of the usages

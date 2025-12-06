@@ -1,3 +1,5 @@
+dialog.message.cannot.inline.reference.from.0:
+    text: Cannot inline reference from {0}
 0.already.contains.a.1:
     text: '{0} already contains a {1}'
 0.already.contains.field.1:

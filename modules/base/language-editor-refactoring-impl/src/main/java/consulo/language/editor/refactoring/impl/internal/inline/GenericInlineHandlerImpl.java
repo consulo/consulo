@@ -29,6 +29,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.ReferencesSearch;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -65,14 +66,14 @@ public class GenericInlineHandlerImpl {
             SimpleReference<Collection<? extends PsiReference>> usagesRef = new SimpleReference<>();
             ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
-                "Find Usages",
+                LocalizeValue.localizeTODO("Find Usages"),
                 false,
                 element.getProject()
             );
             allReferences = usagesRef.get();
         }
 
-        MultiMap<PsiElement, String> conflicts = new MultiMap<>();
+        MultiMap<PsiElement, LocalizeValue> conflicts = new MultiMap<>();
         Map<Language, InlineHandler.Inliner> inliners = GenericInlineHandler.initializeInliners(element, settings, allReferences);
 
         for (PsiReference reference : allReferences) {
