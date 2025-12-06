@@ -17,8 +17,8 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
@@ -55,7 +55,7 @@ import java.util.*;
 public class RenameProcessor extends BaseRefactoringProcessor {
     private static final Logger LOG = Logger.getInstance(RenameProcessor.class);
 
-    protected final LinkedHashMap<PsiElement, String> myAllRenames = new LinkedHashMap<>();
+    protected final Map<PsiElement, String> myAllRenames = new LinkedHashMap<>();
 
     @Nonnull
     private PsiElement myPrimaryElement;
@@ -124,7 +124,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     public void prepareRenaming(
         @Nonnull PsiElement element,
         String newName,
-        LinkedHashMap<PsiElement, String> allRenames
+        Map<PsiElement, String> allRenames
     ) {
         List<RenamePsiElementProcessor> processors = RenamePsiElementProcessor.allForElement(element);
         myForceShowPreview = false;
@@ -145,7 +145,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     @RequiredUIAccess
     public boolean preprocessUsages(@Nonnull SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usagesIn = refUsages.get();
-        MultiMap<PsiElement, String> conflicts = new MultiMap<>();
+        MultiMap<PsiElement, LocalizeValue> conflicts = new MultiMap<>();
 
         RenameUtil.addConflictDescriptions(usagesIn, conflicts);
         RenamePsiElementProcessor.forElement(myPrimaryElement)
@@ -174,7 +174,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             if (!findRenamedVariables(variableUsages)) {
                 return false;
             }
-            LinkedHashMap<PsiElement, String> renames = new LinkedHashMap<>();
+            Map<PsiElement, String> renames = new LinkedHashMap<>();
             for (AutomaticRenamer renamer : myRenamers) {
                 List<? extends PsiNamedElement> variables = renamer.getElements();
                 for (PsiNamedElement variable : variables) {
@@ -192,7 +192,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                 myAllRenames.putAll(renames);
                 Runnable runnable = () -> {
                     for (Map.Entry<PsiElement, String> entry : renames.entrySet()) {
-                        UsageInfo[] usages = AccessRule.read(() -> RenameUtil.findUsages(
+                        UsageInfo[] usages = ReadAction.compute(() -> RenameUtil.findUsages(
                             entry.getKey(),
                             entry.getValue(),
                             mySearchInComments,
@@ -310,8 +310,9 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         ).get();
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
         return new RenameViewDescriptor(myAllRenames);
     }
@@ -361,7 +362,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         myPrimaryElement = elements[0];
 
         Iterator<String> newNames = myAllRenames.values().iterator();
-        LinkedHashMap<PsiElement, String> newAllRenames = new LinkedHashMap<>();
+        Map<PsiElement, String> newAllRenames = new LinkedHashMap<>();
         for (PsiElement resolved : elements) {
             newAllRenames.put(resolved, newNames.next());
         }
@@ -399,6 +400,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredUIAccess
+    @RequiredWriteAction
     public void performRefactoring(@Nonnull UsageInfo[] usages) {
         List<Runnable> postRenameCallbacks = new ArrayList<>();
 
@@ -441,6 +443,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                         IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
                         if (ideFrame != null) {
                             StatusBar statusBar = ideFrame.getStatusBar();
+                            @RequiredUIAccess
                             HyperlinkListener listener = e -> {
                                 if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
                                     return;

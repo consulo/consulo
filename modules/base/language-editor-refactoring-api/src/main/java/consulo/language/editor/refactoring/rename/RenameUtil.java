@@ -203,6 +203,7 @@ public class RenameUtil {
     }
 
     @RequiredUIAccess
+    @RequiredWriteAction
     public static void doRename(
         PsiElement element,
         String newName,
@@ -211,7 +212,8 @@ public class RenameUtil {
         @Nullable RefactoringElementListener listener
     ) throws IncorrectOperationException {
         RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-        String fqn = element instanceof PsiFile file ? file.getVirtualFile().getPath()
+        String fqn = element instanceof PsiFile file
+            ? file.getVirtualFile().getPath()
             : QualifiedNameProviderUtil.elementToFqn(element, null);
         if (fqn != null) {
             UndoableAction action = new BasicUndoableAction() {
@@ -312,8 +314,7 @@ public class RenameUtil {
     public static List<UnresolvableCollisionUsageInfo> removeConflictUsages(Set<UsageInfo> usages) {
         List<UnresolvableCollisionUsageInfo> result = new ArrayList<>();
         for (Iterator<UsageInfo> iterator = usages.iterator(); iterator.hasNext(); ) {
-            UsageInfo usageInfo = iterator.next();
-            if (usageInfo instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
+            if (iterator.next() instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
                 result.add(unresolvableCollisionUsageInfo);
                 iterator.remove();
             }
@@ -322,10 +323,10 @@ public class RenameUtil {
     }
 
     @RequiredReadAction
-    public static void addConflictDescriptions(UsageInfo[] usages, MultiMap<PsiElement, String> conflicts) {
+    public static void addConflictDescriptions(UsageInfo[] usages, MultiMap<PsiElement, LocalizeValue> conflicts) {
         for (UsageInfo usage : usages) {
             if (usage instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
-                conflicts.putValue(usage.getElement(), unresolvableCollisionUsageInfo.getDescription());
+                conflicts.putValue(usage.getElement(), LocalizeValue.ofNullable(unresolvableCollisionUsageInfo.getDescription()));
             }
         }
     }

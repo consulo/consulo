@@ -5,6 +5,7 @@ package consulo.language.editor.refactoring;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
@@ -60,6 +61,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     private static final Logger LOG = Logger.getInstance(BaseRefactoringProcessor.class);
     private static boolean PREVIEW_IN_TESTS = true;
 
+    @Nonnull
     protected final Project myProject;
     protected final SearchScope myRefactoringScope;
 
@@ -406,7 +408,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
      * @return true if refactoring could proceed or false if refactoring should be cancelled
      */
     @RequiredUIAccess
-    public static boolean processConflicts(@Nonnull Project project, @Nonnull MultiMap<PsiElement, String> conflicts) {
+    public static boolean processConflicts(@Nonnull Project project, @Nonnull MultiMap<PsiElement, LocalizeValue> conflicts) {
         if (conflicts.isEmpty()) {
             return true;
         }
@@ -434,7 +436,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         SimpleReference<Usage[]> convertUsagesRef = new SimpleReference<>();
         if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> myProject.getApplication().runReadAction(() -> convertUsagesRef.set(UsageInfo2UsageAdapter.convert(usageInfos))),
-            "Preprocess Usages",
+            LocalizeValue.localizeTODO("Preprocess Usages"),
             true,
             myProject
         )) {
@@ -454,7 +456,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
         else {
             myUsageView.removeUsagesBulk(myUsageView.getUsages());
-            ((UsageViewEx)myUsageView).appendUsagesInBulk(Arrays.asList(usages));
+            ((UsageViewEx) myUsageView).appendUsagesInBulk(Arrays.asList(usages));
         }
         Set<UnloadedModuleDescription> unloadedModules = computeUnloadedModulesFromUseScope(viewDescriptor);
         if (!unloadedModules.isEmpty()) {
@@ -514,17 +516,21 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         UsageInfo[] writableUsageInfos = usageInfoSet.toArray(UsageInfo.EMPTY_ARRAY);
         try {
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-            RefactoringListenerManagerEx listenerManager = (RefactoringListenerManagerEx)RefactoringListenerManager.getInstance(myProject);
+            ApplicationEx app = (ApplicationEx) myProject.getApplication();
+            RefactoringListenerManagerEx listenerManager = (RefactoringListenerManagerEx) RefactoringListenerManager.getInstance(myProject);
             myTransaction = listenerManager.startTransaction();
             Map<RefactoringHelper, Object> preparedData = new LinkedHashMap<>();
-            Runnable prepareHelpersRunnable = () -> {
-                for (RefactoringHelper helper : RefactoringHelper.EP_NAME.getExtensionList()) {
-                    Object operation = AccessRule.read(() -> helper.prepareOperation(writableUsageInfos));
-                    preparedData.put(helper, operation);
-                }
-            };
+            Runnable prepareHelpersRunnable = () -> app.getExtensionPoint(RefactoringHelper.class).forEach(helper -> {
+                Object operation = ReadAction.compute(() -> helper.prepareOperation(writableUsageInfos));
+                preparedData.put(helper, operation);
+            });
 
-            ProgressManager.getInstance().runProcessWithProgressSynchronously(prepareHelpersRunnable, "Prepare ...", false, myProject);
+            ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                prepareHelpersRunnable,
+                LocalizeValue.localizeTODO("Prepare ..."),
+                false,
+                myProject
+            );
 
             Runnable performRefactoringRunnable = () -> {
                 String refactoringId = getRefactoringId();
@@ -552,7 +558,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                     }
                 }
             };
-            ApplicationEx app = (ApplicationEx)Application.get();
             if (Registry.is("run.refactorings.under.progress")) {
                 app.runWriteActionWithNonCancellableProgressInDispatchThread(
                     commandName,
@@ -642,11 +647,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     public static class ConflictsInTestsException extends RuntimeException {
-        private final Collection<? extends String> messages;
+        private final Collection<? extends LocalizeValue> messages;
 
         private static boolean myTestIgnore;
 
-        public ConflictsInTestsException(@Nonnull Collection<? extends String> messages) {
+        public ConflictsInTestsException(@Nonnull Collection<? extends LocalizeValue> messages) {
             this.messages = messages;
         }
 
@@ -666,19 +671,19 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
 
         @Nonnull
-        public Collection<String> getMessages() {
-            List<String> result = new ArrayList<>(messages);
+        public Collection<LocalizeValue> getMessages() {
+            List<LocalizeValue> result = new ArrayList<>(messages);
             for (int i = 0; i < messages.size(); i++) {
-                result.set(i, result.get(i).replaceAll("<[^>]+>", ""));
+                result.set(i, result.get(i).map(text -> text.replaceAll("<[^>]+>", "")));
             }
             return result;
         }
 
         @Override
         public String getMessage() {
-            List<String> result = new ArrayList<>(messages);
+            List<LocalizeValue> result = new ArrayList<>(messages);
             Collections.sort(result);
-            return StringUtil.join(result, "\n");
+            return LocalizeValue.join("\n", result.toArray(LocalizeValue[]::new)).get();
         }
     }
 
@@ -687,12 +692,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
      */
     @Deprecated
     @RequiredUIAccess
-    protected boolean showConflicts(@Nonnull MultiMap<PsiElement, String> conflicts) {
+    protected boolean showConflicts(@Nonnull MultiMap<PsiElement, LocalizeValue> conflicts) {
         return showConflicts(conflicts, null);
     }
 
     @RequiredUIAccess
-    protected boolean showConflicts(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable UsageInfo[] usages) {
+    protected boolean showConflicts(@Nonnull MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
         if (!conflicts.isEmpty() && myProject.getApplication().isUnitTestMode()) {
             if (!ConflictsInTestsException.isTestIgnore()) {
                 throw new ConflictsInTestsException(conflicts.values());
@@ -721,7 +726,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     @Nonnull
-    protected ConflictsDialog prepareConflictsDialog(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable UsageInfo[] usages) {
+    protected ConflictsDialog prepareConflictsDialog(@Nonnull MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
         ConflictsDialog conflictsDialog = createConflictsDialog(conflicts, usages);
         conflictsDialog.setCommandName(getCommandName());
         return conflictsDialog;
@@ -743,7 +748,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     @Nonnull
-    protected ConflictsDialog createConflictsDialog(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable UsageInfo[] usages) {
+    protected ConflictsDialog createConflictsDialog(@Nonnull MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
         return new ConflictsDialog(myProject, conflicts, usages == null ? null : () -> execute(usages), false, true);
     }
 

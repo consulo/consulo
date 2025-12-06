@@ -21,6 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -32,6 +33,7 @@ import java.util.Collections;
  */
 public abstract class RenamePsiFileProcessorBase extends RenamePsiElementProcessor {
     @Override
+    @RequiredUIAccess
     public RenameDialog createRenameDialog(Project project, PsiElement element, PsiElement nameSuggestionContext, Editor editor) {
         return new PsiFileRenameDialog(project, element, nameSuggestionContext, editor);
     }
