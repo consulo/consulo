@@ -1653,7 +1653,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             myHoverIcon = hoverIcon;
             myListener = listener;
 
-            setToolTipText(hint == LocalizeValue.empty() ? null : hint.get());
+            setToolTipText(hint.getOrNull());
 
             myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
                 @Override
@@ -1714,7 +1714,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     private class CloseButton extends ActionButton {
         private CloseButton(@Nonnull Consumer<? super MouseEvent> listener) {
-            super(getCloseButton(), null, LocalizeValue.empty(), listener);
+            super(getCloseButton(), null, LocalizeValue.absent(), listener);
             setVisible(myEnableButtons);
         }
 

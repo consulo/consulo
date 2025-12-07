@@ -323,7 +323,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
 
         myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageUpdatingCaches());
-        myContext.getProgressIndicator().setText2Value(LocalizeValue.empty());
+        myContext.getProgressIndicator().setText2Value(LocalizeValue.absent());
         for (String path : writtenPaths) {
             consumer.addFileToRefresh(new File(path));
         }

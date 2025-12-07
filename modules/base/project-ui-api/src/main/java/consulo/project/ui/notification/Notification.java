@@ -92,11 +92,11 @@ public class Notification {
         final NotificationType myType;
 
         @Nonnull
-        private LocalizeValue myTitle = LocalizeValue.empty();
+        private LocalizeValue myTitle = LocalizeValue.absent();
         @Nonnull
-        private LocalizeValue mySubtitle = LocalizeValue.empty();
+        private LocalizeValue mySubtitle = LocalizeValue.absent();
         @Nonnull
-        private LocalizeValue myContent = LocalizeValue.empty();
+        private LocalizeValue myContent = LocalizeValue.absent();
         @Nullable
         private Image myIcon = null;
         @Nullable
@@ -127,7 +127,7 @@ public class Notification {
         }
 
         public Builder title(@Nonnull LocalizeValue title) {
-            if (myTitle != LocalizeValue.empty()) {
+            if (myTitle.isPresent()) {
                 throw new IllegalArgumentException("Title is already initialized");
             }
             myTitle = title;
@@ -135,7 +135,7 @@ public class Notification {
         }
 
         public Builder subtitle(@Nonnull LocalizeValue subtitle) {
-            if (mySubtitle != LocalizeValue.empty()) {
+            if (mySubtitle.isPresent()) {
                 throw new IllegalArgumentException("Subtitle is already initialized");
             }
             mySubtitle = subtitle;
@@ -143,7 +143,7 @@ public class Notification {
         }
 
         public Builder content(@Nonnull LocalizeValue content) {
-            if (myContent != LocalizeValue.empty()) {
+            if (myContent.isPresent()) {
                 throw new IllegalArgumentException("Content is already initialized");
             }
             myContent = content;
@@ -307,11 +307,11 @@ public class Notification {
     @Nullable
     private Image myIcon;
     @Nonnull
-    private LocalizeValue myTitle = LocalizeValue.empty();
+    private LocalizeValue myTitle = LocalizeValue.absent();
     @Nonnull
-    private LocalizeValue mySubtitle = LocalizeValue.empty();
+    private LocalizeValue mySubtitle = LocalizeValue.absent();
     @Nonnull
-    private LocalizeValue myContent = LocalizeValue.empty();
+    private LocalizeValue myContent = LocalizeValue.absent();
 
     private NotificationListener myListener;
     private String myDropDownText;
@@ -464,7 +464,7 @@ public class Notification {
     }
 
     public boolean hasTitle() {
-        return myTitle != LocalizeValue.empty() || mySubtitle != LocalizeValue.empty();
+        return myTitle.isPresent() || mySubtitle.isPresent();
     }
 
     @Nonnull
@@ -506,7 +506,7 @@ public class Notification {
     }
 
     public boolean hasContent() {
-        return myContent != LocalizeValue.empty();
+        return myContent.isPresent();
     }
 
     @Nonnull

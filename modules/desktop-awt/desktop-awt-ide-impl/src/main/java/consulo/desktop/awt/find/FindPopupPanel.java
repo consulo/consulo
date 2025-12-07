@@ -827,9 +827,9 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         
         splitter.setFirstComponent(scrollPane);
 
-        myOKHintLabel = Label.create(LocalizeValue.empty());
+        myOKHintLabel = Label.create(LocalizeValue.absent());
         myOKHintLabel.setEnabled(false);
-        myNavigationHintLabel = Label.create(LocalizeValue.empty());
+        myNavigationHintLabel = Label.create(LocalizeValue.absent());
         myNavigationHintLabel.setEnabled(false);
 
         DockLayout bottomLayout = DockLayout.create();
@@ -1101,7 +1101,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         AtomicBoolean state,
         Producer<Boolean> enableStateProvider
     ) {
-        return new DumbAwareToggleAction(message, LocalizeValue.empty(), icon) {
+        return new DumbAwareToggleAction(message, LocalizeValue.absent(), icon) {
             {
                 getTemplatePresentation().setHoveredIcon(hoveredIcon);
                 getTemplatePresentation().setSelectedIcon(selectedIcon);
@@ -1217,14 +1217,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         mySearchTextArea.updateExtraActions();
         myReplaceTextArea.updateExtraActions();
         if (myNavigationHintLabel.isVisible()) {
-            myNavigationHintLabel.setText("");
+            myNavigationHintLabel.setText(LocalizeValue.absent());
             KeymapManager keymapManager = KeymapManager.getInstance();
             Keymap activeKeymap = keymapManager.getActiveKeymap();
             if (activeKeymap != null) {
                 String findNextText = KeymapUtil.getFirstKeyboardShortcutText("FindNext");
                 String findPreviousText = KeymapUtil.getFirstKeyboardShortcutText("FindPrevious");
                 if (!StringUtil.isEmpty(findNextText) && !StringUtil.isEmpty(findPreviousText)) {
-                    myNavigationHintLabel.setText(FindLocalize.labelUse0And1ToSelectUsages(findNextText, findPreviousText).get());
+                    myNavigationHintLabel.setText(FindLocalize.labelUse0And1ToSelectUsages(findNextText, findPreviousText));
                 }
             }
         }
@@ -1435,7 +1435,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                     return new Continuation(
                         () -> {
                             if (!isCancelled() && resultsCount.get() == 0) {
-                                showEmptyText(LocalizeValue.empty());
+                                showEmptyText(LocalizeValue.absent());
                             }
                             onStop(hash);
                         },
@@ -1468,7 +1468,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         StatusText emptyText = myResultsPreviewTable.getEmptyText();
         emptyText.clear();
         emptyText.setText(
-            message != LocalizeValue.empty()
+            message.isPresent()
                 ? UILocalize.messageNothingtoshowWithProblem(message)
                 : UILocalize.messageNothingtoshow()
         );
@@ -1492,7 +1492,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     private void onStop(int hash) {
-        onStop(hash, LocalizeValue.empty());
+        onStop(hash, LocalizeValue.absent());
     }
 
     private void onStop(int hash, LocalizeValue message) {
@@ -1737,7 +1737,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         private final FindPopupScopeUI.ScopeType myScope;
 
         MySelectScopeToggleAction(FindPopupScopeUI.ScopeType scope) {
-            super(scope.text, LocalizeValue.empty(), null);
+            super(scope.text, LocalizeValue.absent(), null);
             myScope = scope;
         }
 

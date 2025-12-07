@@ -569,8 +569,8 @@ public class AnalysisScope {
     if (myFilesSet == null) initFilesSet();
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) { //clear text after building analysis scope set
-      indicator.setTextValue(LocalizeValue.empty());
-      indicator.setText2Value(LocalizeValue.empty());
+      indicator.setTextValue(LocalizeValue.absent());
+      indicator.setText2Value(LocalizeValue.absent());
     }
     return myFilesSet.size();
   }

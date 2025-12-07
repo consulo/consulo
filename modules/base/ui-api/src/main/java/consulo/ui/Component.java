@@ -196,7 +196,7 @@ public interface Component extends UserDataHolder {
 
     @Nonnull
     default LocalizeValue getToolTipText() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull

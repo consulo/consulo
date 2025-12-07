@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJBCheckBox> implements CheckBox {
     class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
-        private LocalizeValue myLabelText = LocalizeValue.empty();
+        private LocalizeValue myLabelText = LocalizeValue.absent();
 
         @Override
         public void updateUI() {

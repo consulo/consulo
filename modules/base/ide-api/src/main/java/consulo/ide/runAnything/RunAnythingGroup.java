@@ -112,7 +112,7 @@ public abstract class RunAnythingGroup {
      */
     @Nonnull
     public static LocalizeValue getTitle(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
-        return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(LocalizeValue.empty());
+        return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(LocalizeValue.absent());
     }
 
     /**

@@ -1839,7 +1839,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         GutterIconRenderer renderer = getGutterRenderer(e);
         if (renderer == null) {
             TextAnnotationGutterProvider provider = getProviderAtPoint(e.getPoint());
-            LocalizeValue toolTip = LocalizeValue.empty();
+            LocalizeValue toolTip = LocalizeValue.absent();
             if (provider == null) {
                 ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
                 if (lineRenderer != null) {
@@ -1895,7 +1895,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         myBackgroundIndicator.cancel();
         myBackgroundIndicator = new ProgressIndicatorBase();
         myBackgroundIndicator.setModalityProgress(null);
-        AtomicReference<LocalizeValue> tooltip = new AtomicReference<>(LocalizeValue.empty());
+        AtomicReference<LocalizeValue> tooltip = new AtomicReference<>(LocalizeValue.absent());
         ProgressManager.getInstance().runProcessWithProgressAsynchronously(
             new Task.Backgroundable(myEditor.getProject(), "Constructing Tooltip") {
                 @Override
@@ -1916,7 +1916,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     void tooltipAvailable(@Nonnull LocalizeValue toolTip, @Nonnull MouseEvent e, @Nullable GutterMark renderer) {
         myCalculatingInBackground = null;
         TooltipController controller = TooltipController.getInstance();
-        if (toolTip == LocalizeValue.empty() || myEditor.isDisposed()) {
+        if (toolTip == LocalizeValue.absent() || myEditor.isDisposed()) {
             controller.cancelTooltip(GUTTER_TOOLTIP_GROUP, e, false);
         }
         else {

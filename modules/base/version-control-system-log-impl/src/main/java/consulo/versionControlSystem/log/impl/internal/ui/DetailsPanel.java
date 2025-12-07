@@ -162,7 +162,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
   }
 
   private void rebuildCommitPanels(int[] selection) {
-    myEmptyText.setText(LocalizeValue.empty());
+    myEmptyText.setText(LocalizeValue.absent());
 
     int selectionLength = selection.length;
 

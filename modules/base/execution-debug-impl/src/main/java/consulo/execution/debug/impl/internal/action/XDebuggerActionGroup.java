@@ -56,6 +56,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class XDebuggerActionGroup extends DefaultActionGroup implements DumbAware {
     public XDebuggerActionGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

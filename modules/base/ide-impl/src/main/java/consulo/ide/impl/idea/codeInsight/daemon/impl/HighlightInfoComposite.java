@@ -23,8 +23,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
 
     static HighlightInfoComposite create(@Nonnull List<? extends HighlightInfoImpl> infos) {
         // derive composite's offsets from an info with tooltip, if present
-        HighlightInfoImpl anchorInfo =
-            ContainerUtil.find(infos, info -> info.getToolTip() != LocalizeValue.empty());
+        HighlightInfoImpl anchorInfo = ContainerUtil.find(infos, info -> info.getToolTip().isPresent());
         if (anchorInfo == null) {
             anchorInfo = infos.get(0);
         }
@@ -77,7 +76,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         List<LocalizeValue> result = new ArrayList<>();
         for (HighlightInfoImpl info : infos) {
             LocalizeValue itemDescription = info.getDescription();
-            if (itemDescription == LocalizeValue.empty()) {
+            if (itemDescription.isAbsent()) {
                 continue;
             }
             if (!result.isEmpty()) {
@@ -88,7 +87,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
                 return !text.endsWith(".") ? text + '.' : text;
             }));
         }
-        return result.isEmpty() ? LocalizeValue.empty() : LocalizeValue.join(result.toArray(LocalizeValue[]::new));
+        return result.isEmpty() ? LocalizeValue.absent() : LocalizeValue.join(result.toArray(LocalizeValue[]::new));
     }
 
     @Nonnull
@@ -98,7 +97,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         boolean empty = true;
         for (HighlightInfoImpl info : infos) {
             LocalizeValue tooltip = info.getToolTip();
-            if (tooltip == LocalizeValue.empty()) {
+            if (tooltip == LocalizeValue.absent()) {
                 continue;
             }
             if (!empty) {
@@ -109,7 +108,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         }
         result.add(HTML_END);
         if (empty) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
         return LocalizeValue.join(result.toArray(LocalizeValue[]::new));
     }

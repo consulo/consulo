@@ -82,7 +82,7 @@ public abstract class ReorderableListController<T> {
     }
 
     public void addMoveUpAction() {
-        addAction(new AnAction(UILocalize.moveUpActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMoveup()) {
+        addAction(new AnAction(UILocalize.moveUpActionName(), LocalizeValue.absent(), PlatformIconGroup.actionsMoveup()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -97,7 +97,7 @@ public abstract class ReorderableListController<T> {
     }
 
     public void addMoveDownAction() {
-        addAction(new AnAction(UILocalize.moveDownActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMovedown()) {
+        addAction(new AnAction(UILocalize.moveDownActionName(), LocalizeValue.absent(), PlatformIconGroup.actionsMovedown()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {

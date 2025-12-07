@@ -474,7 +474,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
         private class SuspendAction extends DumbAwareAction {
             public SuspendAction() {
-                super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsPause());
+                super(LocalizeValue.absent(), LocalizeValue.absent(), PlatformIconGroup.actionsPause());
             }
 
             @Override
@@ -490,7 +490,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                     suspender.resumeProcess();
                 }
                 else {
-                    suspender.suspendProcess(LocalizeValue.empty());
+                    suspender.suspendProcess(LocalizeValue.absent());
                 }
                 //UIEventLogger.logUIEvent(suspender.isSuspended() ? UIEventId.ProgressPaused : UIEventId.ProgressResumed);
             }

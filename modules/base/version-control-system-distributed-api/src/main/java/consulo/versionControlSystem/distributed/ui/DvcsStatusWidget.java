@@ -37,7 +37,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Nullable
     private String myText;
     @Nonnull
-    private LocalizeValue myTooltip = LocalizeValue.empty();
+    private LocalizeValue myTooltip = LocalizeValue.absent();
     @Nullable
     private Image myIcon;
 
@@ -166,7 +166,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     private void update() {
         myText = null;
-        myTooltip = LocalizeValue.empty();
+        myTooltip = LocalizeValue.absent();
         myIcon = null;
 
         if (isDisposed()) {
@@ -189,7 +189,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Nonnull
     private LocalizeValue getToolTip(@Nullable T repository) {
         if (repository == null) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
         LocalizeValue message = DistributedVcsLocalize.tooltipBranchWidgetVcsBranchNameText(myVcsName, getFullBranchName(repository));
         if (isMultiRoot(repository.getProject())) {

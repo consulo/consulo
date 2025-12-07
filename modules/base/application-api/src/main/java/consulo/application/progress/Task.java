@@ -380,7 +380,7 @@ public abstract class Task implements TaskInfo, Progressive {
         ) {
             super(project, null, title, canBeCancelled);
             myBackgroundOption = backgroundOption;
-            if (title == LocalizeValue.empty()) {
+            if (title.isAbsent()) {
                 LOG.warn("Empty title for backgroundable task.", new Throwable());
             }
         }

@@ -101,7 +101,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
 
     protected void canRun() throws ConfigurationException {
         if (!areButtonsValid()) {
-            throw new ConfigurationException(LocalizeValue.empty());
+            throw new ConfigurationException(LocalizeValue.absent());
         }
     }
 

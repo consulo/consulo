@@ -391,7 +391,7 @@ public class FindInProjectUtil {
         }
         else {
             FindSearchContext searchContext = findModel.getSearchContext();
-            LocalizeValue contextText = LocalizeValue.empty();
+            LocalizeValue contextText = LocalizeValue.absent();
             if (searchContext != FindSearchContext.ANY) {
                 contextText = FindLocalize.findContextPresentationScopeLabel(searchContext.getName());
             }

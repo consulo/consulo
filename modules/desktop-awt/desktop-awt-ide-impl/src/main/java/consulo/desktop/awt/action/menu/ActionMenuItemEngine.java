@@ -173,7 +173,7 @@ public class ActionMenuItemEngine {
     private final boolean myEnableMnemonics;
     private final boolean myEnableIcons;
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
+    private LocalizeValue myTextValue = LocalizeValue.absent();
 
     public ActionMenuItemEngine(AbstractButton button,
                                 AnAction action,

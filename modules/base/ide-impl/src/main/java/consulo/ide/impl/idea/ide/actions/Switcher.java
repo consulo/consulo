@@ -622,7 +622,7 @@ public class Switcher extends AnAction implements DumbAware {
                 .createPopup();
 
             if (isPinnedMode()) {
-                new DumbAwareAction(LocalizeValue.empty(), LocalizeValue.empty(), null) {
+                new DumbAwareAction(LocalizeValue.absent(), LocalizeValue.absent(), null) {
                     @RequiredUIAccess
                     @Override
                     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -1394,7 +1394,7 @@ public class Switcher extends AnAction implements DumbAware {
                 ((NameFilteringListModel) myComponent.files.getModel()).refilter();
                 ((NameFilteringListModel) myComponent.toolWindows.getModel()).refilter();
                 if (myComponent.files.getModel().getSize() + myComponent.toolWindows.getModel().getSize() == 0) {
-                    myComponent.toolWindows.getEmptyText().setText(LocalizeValue.empty());
+                    myComponent.toolWindows.getEmptyText().setText(LocalizeValue.absent());
                     myComponent.files.getEmptyText().setText("Press 'Enter' to search in Project");
                 }
                 else {

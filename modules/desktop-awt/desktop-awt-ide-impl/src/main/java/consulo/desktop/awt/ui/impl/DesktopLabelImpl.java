@@ -43,7 +43,8 @@ import javax.swing.*;
  */
 class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel> implements Label {
     public class MyJLabel extends JBLabel implements FromSwingComponentWrapper {
-        private LocalizeValue myTextValue;
+        @Nonnull
+        private LocalizeValue myTextValue = LocalizeValue.absent();
 
         private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
 
@@ -118,7 +119,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         }
 
         private void updateText() {
-            if (myTextValue == null) {
+            if (myTextValue.isAbsent()) {
                 return;
             }
 

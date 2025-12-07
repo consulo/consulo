@@ -26,7 +26,7 @@ public class GotoTaskAction extends AnAction implements DumbAware {
 
     @Inject
     public GotoTaskAction() {
-        super(TaskLocalize.openTaskActionMenuText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        super(TaskLocalize.openTaskActionMenuText(), LocalizeValue.absent(), PlatformIconGroup.generalAdd());
     }
 
     @Override

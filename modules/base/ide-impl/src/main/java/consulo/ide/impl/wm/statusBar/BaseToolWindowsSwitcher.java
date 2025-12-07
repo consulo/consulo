@@ -65,7 +65,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
 
   @RequiredUIAccess
   public void update() {
-    myLabel.setToolTipText(LocalizeValue.empty());
+    myLabel.setToolTipText(LocalizeValue.absent());
     if (isActive()) {
       boolean changes = false;
 
@@ -86,7 +86,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
     }
     else {
       myLabel.setVisible(false);
-      myLabel.setToolTipText(LocalizeValue.empty());
+      myLabel.setToolTipText(LocalizeValue.absent());
     }
   }
 

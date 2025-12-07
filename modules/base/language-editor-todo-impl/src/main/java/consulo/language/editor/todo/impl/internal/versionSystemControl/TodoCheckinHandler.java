@@ -105,7 +105,7 @@ public class TodoCheckinHandler extends CheckinHandler {
                     setFilterText(name);
                 };
 
-                Button configureButton = Button.create(LocalizeValue.empty());
+                Button configureButton = Button.create(LocalizeValue.absent());
                 configureButton.setToolTipText(LocalizeValue.localizeTODO("Configure"));
                 configureButton.setIcon(PlatformIconGroup.generalGearplain());
                 configureButton.addStyle(ButtonStyle.TOOLBAR);

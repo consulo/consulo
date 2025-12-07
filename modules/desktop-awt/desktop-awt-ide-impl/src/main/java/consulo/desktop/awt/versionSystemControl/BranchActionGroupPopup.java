@@ -108,7 +108,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         };
         AnAction restoreSizeButton = new AnAction(
             DistributedVcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.generalCollapsecomponent()
         ) {
             @Override

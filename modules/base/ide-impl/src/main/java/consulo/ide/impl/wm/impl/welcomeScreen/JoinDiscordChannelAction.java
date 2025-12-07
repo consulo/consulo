@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "Help.JoinDiscordChannel")
 public class JoinDiscordChannelAction extends DumbAwareAction {
     public JoinDiscordChannelAction() {
-        super(ActionLocalize.actionHelpJoindiscordchannelText(), LocalizeValue.empty(), PlatformIconGroup.actionsDiscord());
+        super(ActionLocalize.actionHelpJoindiscordchannelText(), LocalizeValue.absent(), PlatformIconGroup.actionsDiscord());
     }
 
     @Override

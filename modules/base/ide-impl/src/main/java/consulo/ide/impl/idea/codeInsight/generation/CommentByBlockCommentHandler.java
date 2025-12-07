@@ -84,7 +84,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         myEditor = editor;
         myCaret = caret;
         myFile = file;
-        myWarning = LocalizeValue.empty();
+        myWarning = LocalizeValue.absent();
         myWarningLocation = null;
 
         myDocument = editor.getDocument();
@@ -173,7 +173,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
 
     @RequiredUIAccess
     private void showMessageIfNeeded() {
-        if (myWarning != LocalizeValue.empty()) {
+        if (myWarning.isPresent()) {
             myEditor.getScrollingModel().disableAnimation();
             myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
             myEditor.getScrollingModel().enableAnimation();

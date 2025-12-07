@@ -511,7 +511,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
         @Nonnull
         private static ColumnInfo[] cols(int cols) {
-            ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>(LocalizeValue.empty()) {
+            ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>(LocalizeValue.absent()) {
                 @Nullable
                 @Override
                 public UsageNode valueOf(UsageNode node) {
@@ -606,7 +606,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         final int maxUsages,
         @Nonnull final Runnable cancelAction
     ) {
-        return new DumbAwareAction(LocalizeValue.localizeTODO("Settings"), LocalizeValue.empty(), PlatformIconGroup.generalGearplain()) {
+        return new DumbAwareAction(LocalizeValue.localizeTODO("Settings"), LocalizeValue.absent(), PlatformIconGroup.generalGearplain()) {
             {
                 KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut();
                 if (shortcut != null) {
@@ -1288,7 +1288,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull FindUsagesOptions options
     ) {
         usage.navigate(true);
-        if (hint == LocalizeValue.empty()) {
+        if (hint.isAbsent()) {
             return;
         }
         Editor newEditor = getEditorFor(usage);

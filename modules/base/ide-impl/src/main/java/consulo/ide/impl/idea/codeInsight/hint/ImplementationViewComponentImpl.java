@@ -569,7 +569,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
 
     private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         public BackAction() {
-            super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
+            super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.absent(), PlatformIconGroup.actionsBack());
         }
 
         @Override
@@ -587,7 +587,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
 
     private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         public ForwardAction() {
-            super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
+            super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.absent(), PlatformIconGroup.actionsForward());
         }
 
         @Override
@@ -627,7 +627,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         private final boolean myFocusEditor;
 
         public EditSourceActionBase(boolean focusEditor, Image icon, LocalizeValue text) {
-            super(text, LocalizeValue.empty(), icon);
+            super(text, LocalizeValue.absent(), icon);
             myFocusEditor = focusEditor;
         }
 

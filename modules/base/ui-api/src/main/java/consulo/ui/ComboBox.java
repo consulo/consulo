@@ -119,7 +119,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
         public ComboBox<K> build() {
             K[] objects = (K[])myValues.keySet().toArray();
             ComboBox<K> comboBox = ComboBox.create(objects);
-            comboBox.setRender((render, index, item) -> render.append(item == null ? LocalizeValue.empty() : myValues.get(item)));
+            comboBox.setRender((render, index, item) -> render.append(item == null ? LocalizeValue.absent() : myValues.get(item)));
             return comboBox;
         }
     }

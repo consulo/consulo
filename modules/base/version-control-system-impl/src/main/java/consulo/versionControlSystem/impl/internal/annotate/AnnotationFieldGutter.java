@@ -65,7 +65,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     @Nonnull
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

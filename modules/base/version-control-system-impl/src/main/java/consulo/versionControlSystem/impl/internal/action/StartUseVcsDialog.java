@@ -83,7 +83,7 @@ class StartUseVcsDialog extends DialogWrapper {
         myVcsComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, AbstractVcs value, int index, boolean selected, boolean hasFocus) {
-                append(value == null ? LocalizeValue.empty() : value.getDisplayName());
+                append(value == null ? LocalizeValue.absent() : value.getDisplayName());
             }
         });
         mainPanel.add(myVcsComboBox, gb);

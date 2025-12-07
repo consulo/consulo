@@ -228,7 +228,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
             }
         }
 
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

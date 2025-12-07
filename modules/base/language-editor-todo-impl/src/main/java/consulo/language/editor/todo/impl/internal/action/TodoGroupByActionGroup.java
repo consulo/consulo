@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 )
 public class TodoGroupByActionGroup extends DefaultActionGroup {
     public TodoGroupByActionGroup() {
-        super(LanguageTodoLocalize.groupGroupBy(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupby());
+        super(LanguageTodoLocalize.groupGroupBy(), LocalizeValue.absent(), PlatformIconGroup.actionsGroupby());
         setPopup(true);
     }
 

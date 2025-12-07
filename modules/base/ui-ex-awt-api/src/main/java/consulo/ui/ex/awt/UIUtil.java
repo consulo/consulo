@@ -2931,7 +2931,7 @@ public class UIUtil {
         }
 
         public TextPainter appendLine(@Nonnull LocalizeValue text) {
-            if (text == LocalizeValue.empty()) {
+            if (text.isAbsent()) {
                 return this;
             }
             myLines.add(Pair.create(text.get(), new LineInfo()));

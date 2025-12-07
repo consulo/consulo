@@ -32,7 +32,7 @@ public class ConfigurableAdapter implements Configurable {
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @RequiredUIAccess

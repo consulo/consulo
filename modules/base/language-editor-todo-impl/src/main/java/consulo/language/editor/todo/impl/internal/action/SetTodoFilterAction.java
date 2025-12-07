@@ -52,7 +52,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
         TodoPanelSettings toDoSettings,
         Consumer<TodoFilter> todoFilterConsumer
     ) {
-        super(LanguageTodoLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
+        super(LanguageTodoLocalize.actionFilterTodoItems(), LocalizeValue.absent(), PlatformIconGroup.generalFilter());
         setPopup(true);
         myProject = project;
         myToDoSettings = toDoSettings;
@@ -72,7 +72,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
             myTodoFilterConsumer
         ));
         for (TodoFilter filter : filters) {
-            group.add(new TodoFilterApplier(LocalizeValue.ofNullable(filter.getName()), LocalizeValue.empty(), filter, myToDoSettings, myTodoFilterConsumer));
+            group.add(new TodoFilterApplier(LocalizeValue.ofNullable(filter.getName()), LocalizeValue.absent(), filter, myToDoSettings, myTodoFilterConsumer));
         }
         group.add(AnSeparator.create());
         group.add(

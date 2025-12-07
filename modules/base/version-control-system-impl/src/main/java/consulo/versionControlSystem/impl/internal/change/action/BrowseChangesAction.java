@@ -73,7 +73,7 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
             }
         }
 
-        AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, LocalizeValue.empty());
+        AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, LocalizeValue.absent());
     }
 
     @Override

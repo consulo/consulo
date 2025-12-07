@@ -160,7 +160,7 @@ public class BuildViewServiceImpl implements BuildViewService {
         }
         progressIndicatorEx.addStateDelegate(new DummyProgressIndicator() {
             private final Map<String, Set<String>> mySeenMessages = new HashMap<>();
-            private LocalizeValue lastMessage = LocalizeValue.empty();
+            private LocalizeValue lastMessage = LocalizeValue.absent();
             private Stack<LocalizeValue> myTextStack;
 
             @Override

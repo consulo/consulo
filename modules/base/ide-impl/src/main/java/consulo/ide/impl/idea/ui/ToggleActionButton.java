@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
     public ToggleActionButton(@Nonnull LocalizeValue text, Image icon) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
     }
 
     @Deprecated

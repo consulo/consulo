@@ -28,7 +28,7 @@ import java.util.function.Function;
  * @since 2024-12-23
  */
 public enum PluginSorter {
-    AS_IS(LocalizeValue.empty(), pluginDescriptor -> {
+    AS_IS(LocalizeValue.absent(), pluginDescriptor -> {
         throw new IllegalArgumentException();
     }),
     NAME(ExternalServiceLocalize.columnPluginsName(), pluginDescriptor -> {

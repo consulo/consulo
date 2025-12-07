@@ -29,7 +29,7 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
     private final FileTemplate myTemplate;
 
     public CreateFromTemplateAction(FileTemplate template) {
-        super(LocalizeValue.ofNullable(template.getName()), LocalizeValue.empty(), FileTemplateUtil.getIcon(template));
+        super(LocalizeValue.ofNullable(template.getName()), LocalizeValue.absent(), FileTemplateUtil.getIcon(template));
         myTemplate = template;
     }
 

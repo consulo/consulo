@@ -201,7 +201,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             return List.of();
         }
 
-        if (files.size() == 1 && singleFilePromptGenerator != LocalizeValue.empty()) {
+        if (files.size() == 1 && singleFilePromptGenerator != LocalizeValue.absent()) {
             LocalizeValue filePrompt = singleFilePromptGenerator.apply(files.get(0).getPresentableUrl());
             return ConfirmationDialog.requestForConfirmation(
                 confirmationOption,
@@ -288,8 +288,8 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             singleFileTitle,
             singleFilePromptGenerator,
             confirmationOption,
-            LocalizeValue.empty(),
-            LocalizeValue.empty()
+            LocalizeValue.absent(),
+            LocalizeValue.absent()
         );
     }
 
@@ -300,15 +300,17 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     @RequiredUIAccess
     @Override
-    public boolean commitChanges(Project project,
-                                 List<Change> changes,
-                                 LocalChangeList initialSelection,
-                                 List<CommitExecutor> executors,
-                                 boolean showVcsCommit,
-                                 @Nullable AbstractVcs singleVcs,
-                                 String comment,
-                                 @Nullable CommitResultHandler customResultHandler,
-                                 boolean cancelIfNoChanges) {
+    public boolean commitChanges(
+        Project project,
+        List<Change> changes,
+        LocalChangeList initialSelection,
+        List<CommitExecutor> executors,
+        boolean showVcsCommit,
+        @Nullable AbstractVcs singleVcs,
+        String comment,
+        @Nullable CommitResultHandler customResultHandler,
+        boolean cancelIfNoChanges
+    ) {
         return CommitChangeListDialog.commitChanges(
             project,
             changes,
@@ -542,7 +544,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     @Override
     @RequiredUIAccess
     public void showChangesBrowser(List<CommittedChangeList> changelists) {
-        showChangesBrowser(changelists, LocalizeValue.empty());
+        showChangesBrowser(changelists, LocalizeValue.absent());
     }
 
     @Override
@@ -562,7 +564,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangesBrowserDialog dlg = parent != null
             ? new ChangesBrowserDialog(myProject, parent, changelists, mode, initRunnable)
             : new ChangesBrowserDialog(myProject, changelists, mode, initRunnable);
-        if (title != LocalizeValue.empty()) {
+        if (title.isPresent()) {
             dlg.setTitle(title);
         }
         return dlg;
@@ -579,7 +581,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangesBrowserDialog dlg = parent != null
             ? new ChangesBrowserDialog(myProject, parent, changelists, mode, null)
             : new ChangesBrowserDialog(myProject, changelists, mode, null);
-        if (title != LocalizeValue.empty()) {
+        if (title.isPresent()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -589,7 +591,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     @RequiredUIAccess
     public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, @Nonnull LocalizeValue title) {
         ChangeListViewerDialog dlg = new ChangeListViewerDialog(myProject, changelist, toSelect);
-        if (title != LocalizeValue.empty()) {
+        if (title.isPresent()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -607,7 +609,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangeListViewerDialog dlg = parent != null
             ? new ChangeListViewerDialog(parent, myProject, changes, false)
             : new ChangeListViewerDialog(myProject, changes, false);
-        if (title != LocalizeValue.empty()) {
+        if (title.isPresent()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -623,70 +625,66 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     ) {
         ChangesBrowserSettingsEditor filterUI = provider.createFilterUI(true);
         ChangeBrowserSettings settings = provider.createDefaultSettings();
-        boolean ok;
-        if (filterUI != null) {
-            CommittedChangesFilterDialog dlg = new CommittedChangesFilterDialog(myProject, filterUI, settings);
+
+        CommittedChangesFilterDialog committedChangesFilterDialog = new CommittedChangesFilterDialog(myProject, filterUI, settings);
+        committedChangesFilterDialog.show();
+        if (committedChangesFilterDialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
+            return;
+        }
+
+        settings = committedChangesFilterDialog.getSettings();
+
+        if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0)
+            || (!ModalityState.nonModal().equals(Application.get().getCurrentModalityState()))) {
+            List<CommittedChangeList> versions = new ArrayList<>();
+
+            if (parent == null || !parent.isValid()) {
+                parent = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
+            }
+            CommittedChangesTableModel model = new CommittedChangesTableModel(versions, true);
+            AsynchronousListsLoader[] task = new AsynchronousListsLoader[1];
+            ChangeBrowserSettings finalSettings = settings;
+            ChangesBrowserDialog dlg = createChangesBrowserDialog(
+                model,
+                title,
+                true,
+                parent,
+                changesBrowserDialog -> {
+                    task[0] = new AsynchronousListsLoader(myProject, provider, location, finalSettings, changesBrowserDialog);
+                    ProgressManager.getInstance().run(task[0]);
+                }
+            );
+
+            dlg.startLoading();
             dlg.show();
-            ok = dlg.getExitCode() == DialogWrapper.OK_EXIT_CODE;
-            settings = dlg.getSettings();
+            if (task[0] != null) {
+                task[0].cancel();
+                List<VcsException> exceptions = task[0].getExceptions();
+                if (!exceptions.isEmpty()) {
+                    Messages.showErrorDialog(
+                        myProject,
+                        VcsLocalize.browseChangesErrorMessage(exceptions.get(0).getMessage()).get(),
+                        VcsLocalize.browseChangesErrorTitle().get()
+                    );
+                    return;
+                }
+
+                if (!task[0].isRevisionsReturned()) {
+                    Messages.showInfoMessage(
+                        myProject,
+                        VcsLocalize.browseChangesNothingFound().get(),
+                        VcsLocalize.browseChangesNothingFoundTitle().get()
+                    );
+                }
+            }
         }
         else {
-            ok = true;
-        }
-
-        if (ok) {
-            if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0)
-                || (!ModalityState.nonModal().equals(Application.get().getCurrentModalityState()))) {
-                List<CommittedChangeList> versions = new ArrayList<>();
-
-                if (parent == null || !parent.isValid()) {
-                    parent = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
-                }
-                CommittedChangesTableModel model = new CommittedChangesTableModel(versions, true);
-                AsynchronousListsLoader[] task = new AsynchronousListsLoader[1];
-                ChangeBrowserSettings finalSettings = settings;
-                ChangesBrowserDialog dlg = createChangesBrowserDialog(
-                    model,
-                    title,
-                    filterUI != null,
-                    parent,
-                    changesBrowserDialog -> {
-                        task[0] = new AsynchronousListsLoader(myProject, provider, location, finalSettings, changesBrowserDialog);
-                        ProgressManager.getInstance().run(task[0]);
-                    }
-                );
-
-                dlg.startLoading();
-                dlg.show();
-                if (task[0] != null) {
-                    task[0].cancel();
-                    List<VcsException> exceptions = task[0].getExceptions();
-                    if (!exceptions.isEmpty()) {
-                        Messages.showErrorDialog(
-                            myProject,
-                            VcsLocalize.browseChangesErrorMessage(exceptions.get(0).getMessage()).get(),
-                            VcsLocalize.browseChangesErrorTitle().get()
-                        );
-                        return;
-                    }
-
-                    if (!task[0].isRevisionsReturned()) {
-                        Messages.showInfoMessage(
-                            myProject,
-                            VcsLocalize.browseChangesNothingFound().get(),
-                            VcsLocalize.browseChangesNothingFoundTitle().get()
-                        );
-                    }
-                }
-            }
-            else {
-                openCommittedChangesTab(provider, location, settings, 0, title);
-            }
+            openCommittedChangesTab(provider, location, settings, 0, title);
         }
     }
 
-    @Override
     @Nullable
+    @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
@@ -754,7 +752,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         panel.setMaxCount(maxCount);
         panel.refreshChanges(false);
         ContentFactory factory = ContentFactory.getInstance();
-        if (title == LocalizeValue.empty() && location != null) {
+        if (title.isAbsent() && location != null) {
             title = VcsLocalize.browseChangesContentTitle(location.toPresentableString());
         }
         final Content content = factory.createContent(panel, title.get(), false);
@@ -777,7 +775,13 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     }
 
     @Override
-    public void showSubmittedFiles(VcsRevisionNumber revision, VirtualFile virtualFile, VcsKey vcsKey, RepositoryLocation location, boolean isNonLocal) {
+    public void showSubmittedFiles(
+        VcsRevisionNumber revision,
+        VirtualFile virtualFile,
+        VcsKey vcsKey,
+        RepositoryLocation location,
+        boolean isNonLocal
+    ) {
         ShowAllAffectedGenericAction.showSubmittedFiles(myProject, revision, virtualFile, vcsKey, location, isNonLocal);
     }
 

@@ -151,7 +151,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     @Override
     @RequiredUIAccess
     public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, @Nonnull LocalizeValue title) {
-        ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, LocalizeValue.empty());
+        ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, LocalizeValue.absent());
         dialog.show();
         return dialog.isOK() ? dialog.getChosenElements() : Collections.<Artifact>emptyList();
     }
@@ -188,7 +188,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     @Override
     @RequiredUIAccess
     public List<Module> chooseModules(List<Module> modules, @Nonnull LocalizeValue title) {
-        return new ChooseModulesDialog(getProject(), modules, title, LocalizeValue.empty()).showAndGetResult();
+        return new ChooseModulesDialog(getProject(), modules, title, LocalizeValue.absent()).showAndGetResult();
     }
 
     @Override

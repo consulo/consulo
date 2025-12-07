@@ -351,7 +351,7 @@ public interface PsiBuilder extends UserDataHolder {
     LighterASTNode getLatestDoneMarker();
 
     /**
-     * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#empty()}
+     * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#absent()}
      */
     @Nonnull
     LocalizeValue getErrorMessage(@Nonnull LighterASTNode node);

@@ -68,7 +68,7 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         return isAvailable()
             ? myAnnotation.getToolTipValue(line).map((Function<String, String>) XmlStringUtil::escapeString)
-            : LocalizeValue.empty();
+            : LocalizeValue.absent();
     }
 
     @Override

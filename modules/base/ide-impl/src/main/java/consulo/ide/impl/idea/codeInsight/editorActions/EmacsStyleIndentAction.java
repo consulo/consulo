@@ -94,7 +94,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
     private static final Logger LOG = Logger.getInstance(EmacsStyleIndentAction.class);
 
     public EmacsStyleIndentAction() {
-        super(ActionLocalize.actionEmacsstyleindentText(), LocalizeValue.empty());
+        super(ActionLocalize.actionEmacsstyleindentText(), LocalizeValue.absent());
     }
 
     @Nonnull

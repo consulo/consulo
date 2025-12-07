@@ -43,7 +43,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         }
     }
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
+    private LocalizeValue myTextValue = LocalizeValue.absent();
 
     public WebButtonImpl(LocalizeValue text) {
         Vaadin component = toVaadinComponent();

@@ -68,7 +68,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     public abstract ProgressIndicator getProgressIndicator();
 
     public static void progress(@Nonnull LocalizeValue text) throws ProcessCanceledException {
-        progress(text, LocalizeValue.empty());
+        progress(text, LocalizeValue.absent());
     }
 
     public static void progress2(@Nonnull LocalizeValue text) throws ProcessCanceledException {
@@ -91,7 +91,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public static void progress(@Nonnull String text) throws ProcessCanceledException {
-        progress(LocalizeValue.of(text), LocalizeValue.empty());
+        progress(LocalizeValue.of(text), LocalizeValue.absent());
     }
 
     @Deprecated

@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "WelcomeScreen.NewGroup")
 public class CreateNewProjectGroupAction extends RecentProjectsWelcomeScreenActionBase {
     public CreateNewProjectGroupAction() {
-        super(ProjectUILocalize.actionRecentProjectsNewGroupText(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
+        super(ProjectUILocalize.actionRecentProjectsNewGroupText(), LocalizeValue.absent(), PlatformIconGroup.nodesFolder());
     }
 
     @Override

@@ -41,6 +41,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class WelcomeScreenConfigureGroup extends DefaultActionGroup implements DumbAware {
     public WelcomeScreenConfigureGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

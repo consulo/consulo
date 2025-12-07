@@ -358,7 +358,7 @@ public class DialogBuilder implements Disposable {
     }
 
     private abstract static class BuiltinAction implements ActionDescriptor, CustomizableAction {
-        protected LocalizeValue myText = LocalizeValue.empty();
+        protected LocalizeValue myText = LocalizeValue.absent();
 
         @Override
         public void setText(@Nonnull LocalizeValue text) {
@@ -368,7 +368,7 @@ public class DialogBuilder implements Disposable {
         @Override
         public Action getAction(DialogWrapper dialogWrapper) {
             LocalizeAction builtinAction = getBuiltinAction((MyDialogWrapper)dialogWrapper);
-            if (myText != LocalizeValue.empty()) {
+            if (myText.isPresent()) {
                 builtinAction.setText(myText);
             }
             return builtinAction;

@@ -41,42 +41,42 @@ public final class EmptyLocalizeKey implements LocalizeKey {
     @Nonnull
     @Override
     public LocalizeValue getValue() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object arg) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object arg0, Object arg1) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object arg0, Object arg1, Object arg2) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getValue(Object[] args) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 }

@@ -52,7 +52,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     public PinActiveTabAction() {
-        super(IdeLocalize.actionPinTab(), LocalizeValue.empty(), PlatformIconGroup.generalPin_tab());
+        super(IdeLocalize.actionPinTab(), LocalizeValue.absent(), PlatformIconGroup.generalPin_tab());
     }
 
     @Override

@@ -34,7 +34,7 @@ public abstract class GutterIconDescriptor {
   /**
    * Human-readable provider name for UI.
    *
-   * @return {@link LocalizeValue#empty()} if no configuration needed
+   * @return {@link LocalizeValue#absent()} if no configuration needed
    */
   @Nonnull
   public abstract LocalizeValue getName();

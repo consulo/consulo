@@ -39,7 +39,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         RunAnythingGroup.shiftIndexes(getGroups(), baseIndex, shift);
     }
 
-    @Nullable
+    @Nonnull
     LocalizeValue getTitle(int titleIndex) {
         return RunAnythingGroup.getTitle(getGroups(), titleIndex);
     }

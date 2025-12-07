@@ -37,7 +37,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = XDebuggerActions.XCOPY_WATCH)
 public class XCopyWatchAction extends XWatchesTreeActionBase {
     public XCopyWatchAction() {
-        super(XDebuggerLocalize.actionCopyWatchText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
+        super(XDebuggerLocalize.actionCopyWatchText(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy());
     }
 
     @Override

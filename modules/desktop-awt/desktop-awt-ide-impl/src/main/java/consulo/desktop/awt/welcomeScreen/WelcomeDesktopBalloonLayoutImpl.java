@@ -126,7 +126,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, LocalizeValue.empty(), event -> {});
+          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, LocalizeValue.absent(), event -> {});
           return Collections.singletonList(myAction);
         }
 

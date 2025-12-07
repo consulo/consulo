@@ -35,6 +35,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class RunContextGroup extends DefaultActionGroup implements DumbAware {
     public RunContextGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

@@ -50,7 +50,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         @Nonnull TextDiffSettingsHolder.TextDiffSettings settings,
         @Nonnull List<? extends Editor> editors
     ) {
-        super(DiffLocalize.editorSettings(), LocalizeValue.empty(), AllIcons.General.GearPlain);
+        super(DiffLocalize.editorSettings(), LocalizeValue.absent(), AllIcons.General.GearPlain);
         setPopup(true);
         myTextSettings = settings;
         myEditors = editors;
@@ -246,7 +246,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
             private final HighlightingLevel myLayer;
 
             public OptionAction(@Nonnull HighlightingLevel layer) {
-                super(layer.getText(), LocalizeValue.empty(), layer.getIcon());
+                super(layer.getText(), LocalizeValue.absent(), layer.getIcon());
                 myLayer = layer;
             }
 

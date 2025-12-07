@@ -98,7 +98,7 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
     }
 
     @Nonnull
-    private LocalizeValue myTitleValue = LocalizeValue.empty();
+    private LocalizeValue myTitleValue = LocalizeValue.absent();
 
     public DesktopFoldoutLayoutImpl(LocalizeValue titleValue, Component component, boolean state) {
         myTitleValue = titleValue;

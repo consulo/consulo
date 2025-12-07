@@ -44,7 +44,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
 
     private Image myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideIncomingchangeson());
     @Nonnull
-    private LocalizeValue myToolTipText = LocalizeValue.empty();
+    private LocalizeValue myToolTipText = LocalizeValue.absent();
     private final StatusBarWidgetFactory myFactory;
     private final IncomingChangesIndicator myIncomingChangesIndicator;
 

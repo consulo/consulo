@@ -56,8 +56,7 @@ public interface TextAnnotationGutterProvider {
     @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     default String getToolTip(int line, Editor editor) {
-        LocalizeValue toolTipValue = getToolTipValue(line, editor);
-        return toolTipValue == LocalizeValue.empty() ? null : toolTipValue.get();
+        return getToolTipValue(line, editor).getOrNull();
     }
 
     EditorFontType getStyle(int line, Editor editor);

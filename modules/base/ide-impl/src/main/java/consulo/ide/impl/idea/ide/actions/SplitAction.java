@@ -48,7 +48,7 @@ public abstract class SplitAction extends AnAction implements DumbAware {
     private final Orientation myOrientation;
 
     protected SplitAction(@Nonnull LocalizeValue text, @Nonnull Image icon, @Nonnull Orientation orientation) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
         myOrientation = orientation;
     }
 

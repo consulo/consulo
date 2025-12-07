@@ -275,7 +275,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   }
 
   public void disableEmptyText() {
-    getEmptyText().setText(LocalizeValue.empty());
+    getEmptyText().setText(LocalizeValue.absent());
   }
 
   public static class StripedListCellRenderer extends DefaultListCellRenderer {

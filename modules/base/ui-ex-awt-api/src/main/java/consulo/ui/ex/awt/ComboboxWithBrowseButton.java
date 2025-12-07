@@ -47,8 +47,8 @@ public class ComboboxWithBrowseButton extends ComponentWithBrowseButton<JComboBo
 
   public void addBrowseFolderListener(ComponentManager project, FileChooserDescriptor descriptor) {
     addBrowseFolderListener(
-      LocalizeValue.empty(),
-      LocalizeValue.empty(),
+      LocalizeValue.absent(),
+      LocalizeValue.absent(),
       project,
       descriptor,
       TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT

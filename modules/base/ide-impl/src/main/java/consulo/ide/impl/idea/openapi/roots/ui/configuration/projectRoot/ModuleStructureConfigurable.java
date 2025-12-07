@@ -544,7 +544,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     private class MyGroupAction extends ToggleAction implements DumbAware {
 
         public MyGroupAction() {
-            super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.objectbrowserCompactemptypackages());
+            super(LocalizeValue.absent(), LocalizeValue.absent(), PlatformIconGroup.objectbrowserCompactemptypackages());
         }
 
         @RequiredUIAccess
@@ -667,7 +667,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         private final boolean myImport;
 
         public AddModuleAction(boolean anImport) {
-            super(ProjectLocalize.addNewModuleTextFull(), LocalizeValue.empty(), PlatformIconGroup.nodesModule());
+            super(ProjectLocalize.addNewModuleTextFull(), LocalizeValue.absent(), PlatformIconGroup.nodesModule());
             myImport = anImport;
         }
 

@@ -40,7 +40,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
         }
 
         Pair<Charset, LocalizeValue> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
-        LocalizeValue failReason = check == null ? LocalizeValue.empty() : check.getSecond();
+        LocalizeValue failReason = check == null ? LocalizeValue.absent() : check.getSecond();
         Charset charset = ObjectUtil.notNull(Pair.getFirst(check), file.getCharset());
         LocalizeValue charsetName = StringUtil.isNotEmpty(charset.displayName())
             ? LocalizeValue.of(charset.displayName())

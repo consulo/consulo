@@ -480,7 +480,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         @Nullable
         private Info calcInfo(@Nonnull Editor editor) {
             HighlightInfo info = getHighlightInfo();
-            if (info != null && (info.getDescription() == LocalizeValue.empty() || info.getToolTip() == LocalizeValue.empty())) {
+            if (info != null && (info.getDescription().isAbsent() || info.getToolTip().isAbsent())) {
                 info = null;
             }
 

@@ -51,7 +51,7 @@ final class ActionToolbarSeparator extends JComponent {
         int height = JBUIScale.scale(24);
 
         if (myActionToolbar.getStyle().isHorizontal()) {
-            if (myTextValue != LocalizeValue.empty()) {
+            if (myTextValue != LocalizeValue.absent()) {
                 FontMetrics fontMetrics = getFontMetrics(getFont());
 
                 int textWidth = getTextWidth(fontMetrics, myTextValue.get(), getGraphics());
@@ -90,7 +90,7 @@ final class ActionToolbarSeparator extends JComponent {
             int y2 = myActionToolbar.getHeight() - gap * 2 - offset;
             LinePainter2D.paint((Graphics2D) g, center, gap, center, y2);
 
-            if (myTextValue != LocalizeValue.empty()) {
+            if (myTextValue != LocalizeValue.absent()) {
                 FontMetrics fontMetrics = getFontMetrics(getFont());
                 int top = (getHeight() - fontMetrics.getHeight()) / 2;
                 UISettingsUtil.setupAntialiasing(g);

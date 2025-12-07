@@ -37,6 +37,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class WelcomeQuickStartGroup extends DefaultActionGroup implements DumbAware {
     public WelcomeQuickStartGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

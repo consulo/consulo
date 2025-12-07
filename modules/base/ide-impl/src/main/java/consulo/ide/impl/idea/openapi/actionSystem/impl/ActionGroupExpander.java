@@ -75,11 +75,11 @@ public class ActionGroupExpander {
         while (listed.hasNext()) {
             AnAction action = listed.next();
 
-            if (action instanceof AnSeparator separ
-                && separ.getTextValue() == LocalizeValue.empty()
+            if (action instanceof AnSeparator separator
+                && separator.getTextValue().isAbsent()
                 && listed.nextIndex() < actions.size()
-                && actions.get(listed.nextIndex()) instanceof AnSeparator separNext
-                && separNext.getTextValue() != LocalizeValue.empty()) {
+                && actions.get(listed.nextIndex()) instanceof AnSeparator nextSeparator
+                && nextSeparator.getTextValue().isPresent()) {
                 listed.remove();
             }
         }

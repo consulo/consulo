@@ -413,7 +413,7 @@ public class DualView extends JPanel {
     }
 
     public AnAction getExpandAllAction() {
-        return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
+        return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.absent(), PlatformIconGroup.actionsExpandall()) {
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
@@ -430,7 +430,7 @@ public class DualView extends JPanel {
     }
 
     public AnAction getCollapseAllAction() {
-        return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
+        return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.absent(), PlatformIconGroup.actionsCollapseall()) {
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();

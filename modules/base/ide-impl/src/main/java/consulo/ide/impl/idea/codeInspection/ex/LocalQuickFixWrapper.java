@@ -45,7 +45,7 @@ import java.util.Set;
  */
 public class LocalQuickFixWrapper extends QuickFixAction {
   private final QuickFix myFix;
-  private LocalizeValue myText = LocalizeValue.empty();
+  private LocalizeValue myText = LocalizeValue.absent();
 
   public LocalQuickFixWrapper(@Nonnull QuickFix fix, @Nonnull InspectionToolWrapper toolWrapper) {
     super(fix.getName(), toolWrapper);

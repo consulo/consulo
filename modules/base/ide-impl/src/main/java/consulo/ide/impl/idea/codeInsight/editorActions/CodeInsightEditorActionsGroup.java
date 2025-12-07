@@ -45,6 +45,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class CodeInsightEditorActionsGroup extends DefaultActionGroup implements DumbAware {
     public CodeInsightEditorActionsGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

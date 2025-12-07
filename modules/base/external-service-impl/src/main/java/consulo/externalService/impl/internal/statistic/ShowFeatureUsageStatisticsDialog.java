@@ -202,7 +202,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
                         pluginDescriptor = PluginManager.getPlugin(Application.class);
                     }
 
-                    LocalizeValue tipRef = LocalizeValue.empty();
+                    LocalizeValue tipRef = LocalizeValue.absent();
                     List<String> values = StringUtil.split(tipFileName, "@");
                     if (values.size() == 2) {
                         tipRef = LocalizeKey.of(values.get(0), values.get(1)).getValue();

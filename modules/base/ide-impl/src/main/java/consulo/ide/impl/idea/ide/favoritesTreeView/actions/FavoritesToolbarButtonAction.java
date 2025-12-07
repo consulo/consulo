@@ -41,7 +41,7 @@ public abstract class FavoritesToolbarButtonAction extends AnActionButton implem
     }
 
     public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, LocalizeValue name, Image icon) {
-        super(name, LocalizeValue.empty(), icon);
+        super(name, LocalizeValue.absent(), icon);
         myBuilder = builder;
         mySettings = FavoritesManagerImpl.getInstance(project).getViewSettings();
         setContextComponent(myBuilder.getTree());

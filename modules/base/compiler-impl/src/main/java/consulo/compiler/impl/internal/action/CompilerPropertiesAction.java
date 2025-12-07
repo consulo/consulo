@@ -33,7 +33,7 @@ import consulo.ui.ex.action.AnActionEvent;
 @ActionImpl(id = "CompilerPropertiesAction")
 public class CompilerPropertiesAction extends AnAction {
     public CompilerPropertiesAction() {
-        super(CompilerLocalize.actionCompilerPropertiesText(), LocalizeValue.empty(), PlatformIconGroup.generalSettings());
+        super(CompilerLocalize.actionCompilerPropertiesText(), LocalizeValue.absent(), PlatformIconGroup.generalSettings());
     }
 
     @Override

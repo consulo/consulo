@@ -80,7 +80,7 @@ public class RunAnythingContext {
         public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
 
         public BrowseRecentDirectoryContext() {
-            super(IdeLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
+            super(IdeLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.absent(), PlatformIconGroup.nodesFolder());
         }
     }
 
@@ -91,7 +91,7 @@ public class RunAnythingContext {
         public RecentDirectoryContext(@Nonnull String path) {
             super(
                 LocalizeValue.ofNullable(UserHomeFileUtil.getLocationRelativeToUserHome(path)),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.nodesFolder()
             );
             myPath = path;
@@ -190,7 +190,7 @@ public class RunAnythingContext {
     protected final Image icon;
 
     private RunAnythingContext(@Nonnull LocalizeValue label) {
-        this(label, LocalizeValue.empty(), null);
+        this(label, LocalizeValue.absent(), null);
     }
 
     private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description) {

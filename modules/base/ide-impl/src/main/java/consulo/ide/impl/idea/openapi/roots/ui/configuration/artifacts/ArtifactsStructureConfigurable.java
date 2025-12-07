@@ -444,7 +444,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
             @Nonnull LocalizeValue actionText,
             Image icon
         ) {
-            super(actionText, LocalizeValue.empty(), icon);
+            super(actionText, LocalizeValue.absent(), icon);
             myType = type;
             myArtifactTemplate = artifactTemplate;
         }

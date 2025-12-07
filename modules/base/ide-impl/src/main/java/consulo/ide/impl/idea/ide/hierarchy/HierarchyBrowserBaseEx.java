@@ -545,10 +545,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Nonnull
     protected LocalizeValue getCurrentScopeName() {
         if (myCurrentViewType == null) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
         HierarchyScope scope = myType2ScopeMap.get(myCurrentViewType);
-        return scope != null ? scope.getPresentableName() : LocalizeValue.empty();
+        return scope != null ? scope.getPresentableName() : LocalizeValue.absent();
     }
 
     @Deprecated
@@ -669,7 +669,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             presentation.setEnabled(isEnabled(browser, selectedElement));
 
             LocalizeValue nonDefaultText = getNonDefaultText(browser, selectedElement);
-            if (nonDefaultText != LocalizeValue.empty()) {
+            if (nonDefaultText.isPresent()) {
                 presentation.setTextValue(nonDefaultText);
             }
         }
@@ -681,7 +681,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Nonnull
         protected LocalizeValue getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
     }
 

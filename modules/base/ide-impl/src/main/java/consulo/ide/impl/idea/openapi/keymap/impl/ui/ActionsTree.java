@@ -119,7 +119,7 @@ public class ActionsTree {
     private DefaultMutableTreeNode myRoot;
     private final JScrollPane myComponent;
     private Keymap myKeymap;
-    private KeymapGroupImpl myMainGroup = new KeymapGroupImpl(LocalizeValue.empty());
+    private KeymapGroupImpl myMainGroup = new KeymapGroupImpl(LocalizeValue.absent());
     private boolean myShowBoundActions = Registry.is("keymap.show.alias.actions");
 
     private static final String ROOT = "ROOT";

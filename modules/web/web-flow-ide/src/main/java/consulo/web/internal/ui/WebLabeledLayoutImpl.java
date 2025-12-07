@@ -36,7 +36,7 @@ import jakarta.annotation.Nullable;
  */
 public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
     public class Vaadin extends VerticalLayout implements FromVaadinComponentWrapper {
-        private LocalizeValue myLabelValue = LocalizeValue.empty();
+        private LocalizeValue myLabelValue = LocalizeValue.absent();
 
         private final Span myCaption;
 

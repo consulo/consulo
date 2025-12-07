@@ -177,7 +177,7 @@ public class RollbackWorker {
                         }
                         environment.rollbackChanges(changes, myExceptions, new RollbackProgressModifier(changes.size(), myIndicator));
                         if (myIndicator != null) {
-                            myIndicator.setText2Value(LocalizeValue.empty());
+                            myIndicator.setText2Value(LocalizeValue.absent());
                             myIndicator.checkCanceled();
                         }
 
@@ -194,7 +194,7 @@ public class RollbackWorker {
             if (myIndicator != null) {
                 myIndicator.startNonCancelableSection();
                 myIndicator.setIndeterminate(true);
-                myIndicator.setText2Value(LocalizeValue.empty());
+                myIndicator.setText2Value(LocalizeValue.absent());
                 myIndicator.setTextValue(VcsLocalize.progressTextSynchronizingFiles());
             }
 
@@ -271,7 +271,7 @@ public class RollbackWorker {
                 }
             }
             if (myIndicator != null) {
-                myIndicator.setText2Value(LocalizeValue.empty());
+                myIndicator.setText2Value(LocalizeValue.absent());
             }
         }
     }

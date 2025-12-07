@@ -95,7 +95,7 @@ public interface ProgressIndicator {
   @Deprecated
   @DeprecationInfo("Use setTextValue(LocalizeValue) instead")
   default void setText(String text) {
-    setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+    setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.absent() : LocalizeValue.of(text));
   }
 
   /**
@@ -111,11 +111,7 @@ public interface ProgressIndicator {
    */
   @Nullable
   default String getText() {
-    LocalizeValue value = getTextValue();
-    if (value == LocalizeValue.empty()) {
-      return null;
-    }
-    return value.get();
+    return getTextValue().getOrNull();
   }
 
   @Nonnull
@@ -130,7 +126,7 @@ public interface ProgressIndicator {
   @Deprecated
   @DeprecationInfo("Use setText2Value(LocalizeValue) instead")
   default void setText2(String text) {
-    setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+    setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.absent() : LocalizeValue.of(text));
   }
 
   /**
@@ -146,11 +142,7 @@ public interface ProgressIndicator {
    */
   @Nullable
   default String getText2() {
-    LocalizeValue value = getText2Value();
-    if (value == LocalizeValue.empty()) {
-      return null;
-    }
-    return value.get();
+    return getText2Value().getOrNull();
   }
 
   @Nonnull

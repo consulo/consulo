@@ -1213,7 +1213,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     private class MyShowAsTreeAction extends ToggleAction implements DumbAware {
         public MyShowAsTreeAction() {
-            super(VcsLocalize.actionNameShowFilesAsTree(), LocalizeValue.empty(), PlatformIconGroup.actionsShowastree());
+            super(VcsLocalize.actionNameShowFilesAsTree(), LocalizeValue.absent(), PlatformIconGroup.actionsShowastree());
         }
 
         @Override

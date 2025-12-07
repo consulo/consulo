@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
  */
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
     public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
-        private LocalizeValue myLabelText = LocalizeValue.empty();
+        private LocalizeValue myLabelText = LocalizeValue.absent();
 
         public void setLabelText(LocalizeValue labelText) {
             myLabelText = labelText;

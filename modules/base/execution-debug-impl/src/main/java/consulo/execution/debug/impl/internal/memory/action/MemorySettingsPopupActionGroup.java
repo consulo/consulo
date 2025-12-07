@@ -41,7 +41,7 @@ import jakarta.annotation.Nullable;
 })
 public class MemorySettingsPopupActionGroup extends DefaultActionGroup implements DumbAware {
     public MemorySettingsPopupActionGroup() {
-        super(XDebuggerLocalize.actionMemoryViewSettingsText(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
+        super(XDebuggerLocalize.actionMemoryViewSettingsText(), LocalizeValue.absent(), PlatformIconGroup.generalGearplain());
         setPopup(true);
     }
 

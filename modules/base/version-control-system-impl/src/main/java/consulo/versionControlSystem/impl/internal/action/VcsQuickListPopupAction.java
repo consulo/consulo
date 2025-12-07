@@ -100,7 +100,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         });
 
         // basic operations
-        addSeparator(group, vcs != null ? vcs.getDisplayName(): LocalizeValue.empty());
+        addSeparator(group, vcs != null ? vcs.getDisplayName(): LocalizeValue.absent());
         addAction("ChangesView.AddUnversioned", group);
         addAction("CheckinProject", group);
         addAction("CheckinFiles", group);

@@ -27,7 +27,7 @@ public class ConfigurationException extends Exception {
     private Runnable myQuickFix;
 
     public ConfigurationException(@Nonnull LocalizeValue message) {
-        this(message, LocalizeValue.empty());
+        this(message, LocalizeValue.absent());
     }
 
     public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue titleValue) {
@@ -56,8 +56,7 @@ public class ConfigurationException extends Exception {
     @Deprecated
     @DeprecationInfo("Use getTitleValue()")
     public String getTitle() {
-        LocalizeValue titleValue = getTitleValue();
-        return titleValue == LocalizeValue.empty() ? null : titleValue.get();
+        return getTitleValue().getOrNull();
     }
 
     public void setQuickFix(Runnable quickFix) {

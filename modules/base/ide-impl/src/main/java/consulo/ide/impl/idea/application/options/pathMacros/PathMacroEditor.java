@@ -60,8 +60,8 @@ public class PathMacroEditor extends DialogWrapper {
         myNameField.getDocument().addDocumentListener(documentListener);
         myValueField.setText(value);
         myValueField.addBrowseFolderListener(
-            LocalizeValue.empty(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
+            LocalizeValue.absent(),
             null,
             new FileChooserDescriptor(false, true, true, false, true, false),
             new TextComponentAccessor<>() {

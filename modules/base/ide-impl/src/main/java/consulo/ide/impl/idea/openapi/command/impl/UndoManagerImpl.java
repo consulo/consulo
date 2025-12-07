@@ -168,7 +168,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
                     }
                     if (myStarted) {
                         myStarted = false;
-                        onCommandFinished(myProject, LocalizeValue.empty(), null);
+                        onCommandFinished(myProject, LocalizeValue.absent(), null);
                     }
                 }
             },
@@ -316,7 +316,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
             );
             commandStarted(UndoConfirmationPolicy.DEFAULT, false);
             myCurrentMerger.addAction(action);
-            commandFinished(LocalizeValue.empty(), null);
+            commandFinished(LocalizeValue.absent(), null);
             return;
         }
 
@@ -518,10 +518,10 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     @Nonnull
     @RequiredUIAccess
     private Couple<LocalizeValue> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
-        LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.empty();
+        LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.absent();
         LocalizeValue shortActionName = desc.map(text -> StringUtil.first(text, 30, true));
 
-        if (desc == LocalizeValue.empty()) {
+        if (desc.isAbsent()) {
             desc = undo
                 ? ActionLocalize.actionUndoDescriptionEmpty()
                 : ActionLocalize.actionRedoDescriptionEmpty();
@@ -537,7 +537,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     private LocalizeValue doFormatAvailableUndoRedoAction(Object editor, boolean isUndo) {
         Collection<DocumentReference> refs = getDocRefs(editor);
         if (refs == null) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
         if (isUndo && myMerger.isUndoAvailable(refs)) {
             return LocalizeValue.ofNullable(myMerger.getCommandName());

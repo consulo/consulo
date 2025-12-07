@@ -34,7 +34,7 @@ public class AddToWatchesAction extends XDebuggerActionBase {
     public AddToWatchesAction() {
         super(
             XDebuggerLocalize.actionAddToWatchText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             ExecutionDebugIconGroup.actionAddtowatch(),
             true
         );

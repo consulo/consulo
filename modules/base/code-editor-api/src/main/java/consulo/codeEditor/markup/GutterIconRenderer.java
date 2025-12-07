@@ -68,7 +68,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
     @Nonnull
     @Override
     public LocalizeValue getTooltipValue() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     /**

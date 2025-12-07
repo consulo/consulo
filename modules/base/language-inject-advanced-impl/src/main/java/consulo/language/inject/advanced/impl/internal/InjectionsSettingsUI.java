@@ -256,7 +256,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             group.addSeparator();
             AnAction shareAction = new AnAction(
                 LocalizeValue.localizeTODO("Make Global"),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.actionsImport()
             ) {
                 @Override

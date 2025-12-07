@@ -707,6 +707,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     private static class DoneWithErrorMarker extends DoneMarker {
+        @Nonnull
         private final LocalizeValue myMessage;
 
         private DoneWithErrorMarker(@Nonnull StartMarker marker, int currentLexeme, @Nonnull LocalizeValue message) {
@@ -1520,8 +1521,10 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     private static CompositeElement createComposite(@Nonnull StartMarker marker) {
         IElementType type = marker.myType;
         if (type == TokenType.ERROR_ELEMENT) {
-            LocalizeValue message = marker.myDoneMarker instanceof DoneWithErrorMarker doneErrorMarker ? doneErrorMarker.myMessage : null;
-            return Factory.createErrorElement(message == null ? LocalizeValue.empty() : message);
+            LocalizeValue message = marker.myDoneMarker instanceof DoneWithErrorMarker doneErrorMarker
+                ? doneErrorMarker.myMessage
+                : LocalizeValue.absent();
+            return Factory.createErrorElement(message);
         }
 
         if (type == null) {
@@ -1553,7 +1556,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             return doneMarker.myMessage;
         }
 
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

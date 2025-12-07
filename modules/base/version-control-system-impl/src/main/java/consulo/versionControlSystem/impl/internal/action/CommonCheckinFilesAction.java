@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 @ActionImpl(id = "CheckinFiles")
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
     public CommonCheckinFilesAction() {
-        super(VcsLocalize.actionCheckInFilesText(), LocalizeValue.empty(), null);
+        super(VcsLocalize.actionCheckInFilesText(), LocalizeValue.absent(), null);
     }
 
     @Nonnull

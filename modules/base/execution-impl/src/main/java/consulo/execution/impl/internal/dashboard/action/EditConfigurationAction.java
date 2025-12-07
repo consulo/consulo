@@ -17,7 +17,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "RunDashboard.EditConfiguration")
 public final class EditConfigurationAction extends AnAction {
     public EditConfigurationAction() {
-        super(ActionLocalize.actionRundashboardEditconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsEditsource());
+        super(ActionLocalize.actionRundashboardEditconfigurationText(), LocalizeValue.absent(), PlatformIconGroup.actionsEditsource());
     }
 
     @Nonnull

@@ -348,9 +348,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         }
         if (!myInterruptedCommands.isEmpty()) {
             Command command = myInterruptedCommands.peek();
-            return command != null ? command.getDescriptor().name() : LocalizeValue.empty();
+            return command != null ? command.getDescriptor().name() : LocalizeValue.absent();
         }
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

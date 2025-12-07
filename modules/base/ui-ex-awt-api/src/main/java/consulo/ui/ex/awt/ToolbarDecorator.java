@@ -594,7 +594,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         }
 
         protected ElementActionButton(@Nonnull LocalizeValue text, @Nullable Image image) {
-            super(text, LocalizeValue.empty(), image);
+            super(text, LocalizeValue.absent(), image);
         }
 
         public ElementActionButton() {

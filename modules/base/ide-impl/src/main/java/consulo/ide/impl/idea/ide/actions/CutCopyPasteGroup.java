@@ -37,6 +37,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class CutCopyPasteGroup extends DefaultActionGroup implements DumbAware {
     public CutCopyPasteGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

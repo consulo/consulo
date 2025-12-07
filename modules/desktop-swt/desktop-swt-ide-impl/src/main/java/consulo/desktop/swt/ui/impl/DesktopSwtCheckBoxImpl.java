@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * @since 29/04/2021
  */
 public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> implements CheckBox {
-    private LocalizeValue myText = LocalizeValue.empty();
+    private LocalizeValue myText = LocalizeValue.absent();
 
     private boolean myValue;
 

@@ -317,7 +317,7 @@ class LookupUi {
 
     private class HintAction extends DumbAwareAction {
         private HintAction() {
-            super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
+            super(LocalizeValue.absent(), LocalizeValue.absent(), PlatformIconGroup.actionsIntentionbulb());
 
             AnAction showIntentionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
             if (showIntentionAction != null) {

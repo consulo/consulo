@@ -26,7 +26,7 @@ import consulo.language.editor.PlatformDataKeys;
 @ActionImpl(id = "ExpandAll")
 public class ExpandAllAction extends TreeExpandAllActionBase {
     public ExpandAllAction() {
-        super(ActionLocalize.actionExpandallText(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall());
+        super(ActionLocalize.actionExpandallText(), LocalizeValue.absent(), PlatformIconGroup.actionsExpandall());
     }
 
     @Override

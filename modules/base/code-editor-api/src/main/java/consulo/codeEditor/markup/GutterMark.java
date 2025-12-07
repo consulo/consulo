@@ -61,7 +61,6 @@ public interface GutterMark {
     @DeprecationInfo("Use getTooltipValue()")
     @Nullable
     default String getTooltipText() {
-        LocalizeValue tooltipValue = getTooltipValue();
-        return tooltipValue == LocalizeValue.empty() ? null : tooltipValue.get();
+        return getTooltipValue().getOrNull();
     }
 }

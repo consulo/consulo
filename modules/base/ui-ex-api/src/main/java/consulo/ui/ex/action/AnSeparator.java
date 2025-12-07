@@ -44,13 +44,13 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     public static AnSeparator create(@Nullable String text) {
-        return create(StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+        return create(StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.absent() : LocalizeValue.of(text));
     }
 
     @Nonnull
     @SuppressWarnings("deprecation")
     public static AnSeparator create(@Nonnull LocalizeValue textValue) {
-        return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
+        return textValue.isAbsent() ? ourInstance : new AnSeparator(textValue);
     }
 
     @Nonnull
@@ -59,13 +59,13 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Deprecated
     @DeprecationInfo("Use #create()")
     public AnSeparator() {
-        this(LocalizeValue.empty());
+        this(LocalizeValue.absent());
     }
 
     @Deprecated
     @DeprecationInfo("Use #create()")
     public AnSeparator(@Nullable String text) {
-        myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text);
+        myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.absent() : LocalizeValue.of(text);
     }
 
     @Deprecated

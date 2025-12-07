@@ -61,7 +61,7 @@ public class RunInspectionAction extends GotoActionBase {
 
     @Inject
     public RunInspectionAction(Application application) {
-        super(IdeLocalize.gotoInspectionActionText(), LocalizeValue.empty());
+        super(IdeLocalize.gotoInspectionActionText(), LocalizeValue.absent());
         myApplication = application;
     }
 

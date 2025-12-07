@@ -36,7 +36,7 @@ import java.util.List;
 @ActionImpl(id = XDebuggerActions.XREMOVE_WATCH, shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class XRemoveWatchAction extends XWatchesTreeActionBase {
     public XRemoveWatchAction() {
-        super(XDebuggerLocalize.actionRemoveWatchText(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
+        super(XDebuggerLocalize.actionRemoveWatchText(), LocalizeValue.absent(), PlatformIconGroup.actionsCancel());
     }
 
     @Override

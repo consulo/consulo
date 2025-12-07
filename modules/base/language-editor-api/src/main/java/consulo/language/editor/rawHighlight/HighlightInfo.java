@@ -267,7 +267,7 @@ public interface HighlightInfo extends Segment {
     @DeprecationInfo("Use HighlightInfo.Builder.registerFix() or HighlightInfo.Builder.newFix()...register()")
     @SuppressWarnings("deprecation")
     default void registerFix(@Nullable IntentionAction action) {
-        registerFix(action, null, LocalizeValue.empty(), null, null);
+        registerFix(action, null, LocalizeValue.absent(), null, null);
     }
 
     @Deprecated

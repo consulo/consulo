@@ -263,8 +263,8 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return doCreateAnnotation(
             severity,
             range,
-            message == null ? LocalizeValue.empty() : LocalizeValue.of(message),
-            tooltip == null ? LocalizeValue.empty() : LocalizeValue.of(tooltip),
+            LocalizeValue.ofNullable(message),
+            LocalizeValue.ofNullable(tooltip),
             callerClass,
             methodName,
             myCurrentLanguage
@@ -344,7 +344,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return new AnnotationBuilderImpl(
             this,
             severity,
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             myCurrentElement,
             ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator)
         );

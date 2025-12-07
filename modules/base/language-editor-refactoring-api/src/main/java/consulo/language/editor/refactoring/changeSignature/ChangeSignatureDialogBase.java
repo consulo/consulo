@@ -344,7 +344,7 @@ public abstract class ChangeSignatureDialogBase<
 
         myPropagateParamChangesButton = new AnActionButton(
             RefactoringLocalize.changesignaturePropagateParametersTitle(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.nodesParameter()
         ) {
             @Override

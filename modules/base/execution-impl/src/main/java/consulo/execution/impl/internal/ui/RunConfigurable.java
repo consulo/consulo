@@ -1499,7 +1499,7 @@ public class RunConfigurable extends BaseConfigurable {
         public MySaveAction() {
             super(
                 ExecutionLocalize.actionNameSaveConfiguration(),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.actionsMenu_saveall()
             );
         }

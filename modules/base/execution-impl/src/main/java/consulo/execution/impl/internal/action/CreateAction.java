@@ -33,7 +33,7 @@ import java.util.List;
 
 public class CreateAction extends BaseRunConfigurationAction {
     public CreateAction() {
-        super(ExecutionLocalize.createRunConfigurationActionName(), LocalizeValue.empty(), null);
+        super(ExecutionLocalize.createRunConfigurationActionName(), LocalizeValue.absent(), null);
     }
 
     @Override

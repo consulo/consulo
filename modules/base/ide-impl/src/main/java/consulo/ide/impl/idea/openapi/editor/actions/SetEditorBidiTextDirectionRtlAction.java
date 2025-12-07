@@ -23,6 +23,6 @@ import consulo.localize.LocalizeValue;
 @ActionImpl(id = "EditorSetRtlBidiTextDirection")
 public class SetEditorBidiTextDirectionRtlAction extends SetEditorBidiTextDirectionAction {
     public SetEditorBidiTextDirectionRtlAction() {
-        super(CodeEditorLocalize.actionSetRtlBidiTextDirectionText(), LocalizeValue.empty(), BidiTextDirection.RTL);
+        super(CodeEditorLocalize.actionSetRtlBidiTextDirectionText(), LocalizeValue.absent(), BidiTextDirection.RTL);
     }
 }

@@ -110,7 +110,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         mySearchablePackageManagement = ObjectUtil.tryCast(packageManagementService, SearchablePackageManagementService.class);
 
         AnActionButton reloadButton =
-            new AnActionButton(IdeLocalize.actionPackagesReloadText(), LocalizeValue.empty(), PlatformIconGroup.actionsRefresh()) {
+            new AnActionButton(IdeLocalize.actionPackagesReloadText(), LocalizeValue.absent(), PlatformIconGroup.actionsRefresh()) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {

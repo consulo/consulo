@@ -131,7 +131,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     @Override
     public void setPlaceholder(@Nonnull LocalizeValue text) {
         MyJBTextField field = toAWTComponent();
-        field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
+        field.putClientProperty("JTextField.placeholderText", text.getOrNull());
     }
 
     @Override

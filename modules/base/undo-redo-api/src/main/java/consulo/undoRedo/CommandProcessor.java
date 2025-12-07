@@ -143,7 +143,7 @@ public abstract class CommandProcessor {
     }
 
     public void setCurrentCommandName(@Nonnull LocalizeValue name) {
-        setCurrentCommandName(name == LocalizeValue.empty() ? null : name.get());
+        setCurrentCommandName(name.getOrNull());
     }
 
     @Deprecated
@@ -173,8 +173,7 @@ public abstract class CommandProcessor {
     @DeprecationInfo("Use #getCurrentCommandNameValue()")
     @Nullable
     public String getCurrentCommandName() {
-        LocalizeValue currentCommandName = getCurrentCommandNameValue();
-        return currentCommandName == LocalizeValue.empty() ? null : currentCommandName.get();
+        return getCurrentCommandNameValue().getOrNull();
     }
 
     @Nullable

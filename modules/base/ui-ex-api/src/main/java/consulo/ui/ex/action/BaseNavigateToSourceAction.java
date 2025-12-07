@@ -74,12 +74,8 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
         LocalizeValue navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
             ? navigatableWithText.getNavigateActionText(true)
-            : LocalizeValue.empty();
-        e.getPresentation().setTextValue(
-            navigateActionText == LocalizeValue.empty()
-                ? getTemplatePresentation().getTextValue()
-                : navigateActionText
-        );
+            : LocalizeValue.absent();
+        e.getPresentation().setTextValue(navigateActionText.isAbsent() ? getTemplatePresentation().getTextValue() : navigateActionText);
     }
 
     @Nullable

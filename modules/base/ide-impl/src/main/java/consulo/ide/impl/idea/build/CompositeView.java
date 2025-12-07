@@ -159,7 +159,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     SwitchViewAction() {
       super(
         IdeLocalize.actionToggleactionTextToggleView(),
-        LocalizeValue.empty(),
+        LocalizeValue.absent(),
         PlatformIconGroup.actionsChangeview()
       );
     }

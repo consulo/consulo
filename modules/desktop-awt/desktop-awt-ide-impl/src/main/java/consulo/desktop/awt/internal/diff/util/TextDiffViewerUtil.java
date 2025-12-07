@@ -367,7 +367,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ReadOnlyLockAction(@Nonnull DiffContext context) {
-            super(LocalizeValue.localizeTODO("Disable Editing"), LocalizeValue.empty(), PlatformIconGroup.ideReadonly());
+            super(LocalizeValue.localizeTODO("Disable Editing"), LocalizeValue.absent(), PlatformIconGroup.ideReadonly());
             myContext = context;
             mySettings = getTextSettings(context);
             setEnabledInModalContext(true);

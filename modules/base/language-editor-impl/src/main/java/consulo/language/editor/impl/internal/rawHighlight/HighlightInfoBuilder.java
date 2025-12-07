@@ -72,8 +72,8 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     private int myStartOffset = -1;
     private int myEndOffset = -1;
 
-    private LocalizeValue myEscapedDescription = LocalizeValue.empty();
-    private LocalizeValue myEscapedToolTip = LocalizeValue.empty();
+    private LocalizeValue myEscapedDescription = LocalizeValue.absent();
+    private LocalizeValue myEscapedToolTip = LocalizeValue.absent();
     private HighlightSeverity mySeverity;
 
     private boolean myIsAfterEndOfLine;
@@ -127,7 +127,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     @Override
     public HighlightInfo.Builder description(@Nonnull LocalizeValue description) {
         assertNotCreated();
-        assert myEscapedDescription == LocalizeValue.empty() : "description already set";
+        assert myEscapedDescription.isAbsent() : "description already set";
         myEscapedDescription = description;
         return this;
     }
@@ -154,7 +154,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     @Override
     public HighlightInfo.Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip) {
         assertNotCreated();
-        assert myEscapedToolTip == LocalizeValue.empty() : "Tooltip was already set";
+        assert myEscapedToolTip.isAbsent() : "Tooltip was already set";
         myEscapedToolTip = unescapedToolTip.map(HighlightInfoImpl::htmlEscapeToolTip);
         return this;
     }
@@ -163,7 +163,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     @Override
     public HighlightInfo.Builder escapedToolTip(@Nonnull LocalizeValue escapedToolTip) {
         assertNotCreated();
-        assert this.myEscapedToolTip == LocalizeValue.empty() : "Tooltip was already set";
+        assert this.myEscapedToolTip.isAbsent(): "Tooltip was already set";
         this.myEscapedToolTip = escapedToolTip;
         return this;
     }
