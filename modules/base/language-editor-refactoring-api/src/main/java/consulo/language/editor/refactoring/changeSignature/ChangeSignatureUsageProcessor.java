@@ -20,9 +20,9 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
-import consulo.util.lang.ref.Ref;
 
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -40,7 +40,7 @@ public interface ChangeSignatureUsageProcessor {
     UsageInfo[] findUsages(@Nonnull ChangeInfo info);
 
     @Nonnull
-    MultiMap<PsiElement, String> findConflicts(@Nonnull ChangeInfo info, SimpleReference<UsageInfo[]> refUsages);
+    MultiMap<PsiElement, LocalizeValue> findConflicts(@Nonnull ChangeInfo info, SimpleReference<UsageInfo[]> refUsages);
 
     boolean processUsage(
         @Nonnull ChangeInfo changeInfo,
