@@ -22,7 +22,7 @@ public class ConfigureServersAction extends BaseTaskAction {
 
     @Inject
     public ConfigureServersAction(@Nonnull Application application) {
-        super(LocalizeValue.localizeTODO("Configure Servers..."), LocalizeValue.empty(), PlatformIconGroup.generalSettings());
+        super(LocalizeValue.localizeTODO("Configure Servers..."), LocalizeValue.absent(), PlatformIconGroup.generalSettings());
         myApplication = application;
     }
 

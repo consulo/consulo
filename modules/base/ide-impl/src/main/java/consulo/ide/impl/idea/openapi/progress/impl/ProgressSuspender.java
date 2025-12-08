@@ -101,7 +101,7 @@ public class ProgressSuspender implements AutoCloseable {
     @Nonnull
     public LocalizeValue getSuspendedText() {
         synchronized (myLock) {
-            return myTempReason != LocalizeValue.empty() ? myTempReason : mySuspendedText;
+            return myTempReason.or(mySuspendedText);
         }
     }
 

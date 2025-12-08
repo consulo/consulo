@@ -128,7 +128,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         return switch (type) {
             case EDIT -> BookmarkLocalize.actionBookmarkEditDescription();
             case REMOVE -> BookmarkLocalize.actionBookmarkDelete();
-            default -> LocalizeValue.empty();
+            default -> LocalizeValue.absent();
         };
     }
 

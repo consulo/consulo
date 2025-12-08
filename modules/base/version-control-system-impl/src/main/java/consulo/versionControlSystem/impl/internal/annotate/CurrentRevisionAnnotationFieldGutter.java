@@ -70,11 +70,11 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         LocalizeValue aspectTooltip = myAspect.getTooltipValue(line);
-        if (aspectTooltip != LocalizeValue.empty()) {
+        if (aspectTooltip != LocalizeValue.absent()) {
             return aspectTooltip;
         }
         String text = getLineText(line, editor);
-        return StringUtil.isEmpty(text) ? LocalizeValue.empty() : VcsLocalize.annotationOriginalRevisionText(text);
+        return StringUtil.isEmpty(text) ? LocalizeValue.absent() : VcsLocalize.annotationOriginalRevisionText(text);
     }
 
     @Override

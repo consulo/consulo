@@ -291,7 +291,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
     private class NewLineAction extends DumbAwareAction {
         NewLineAction() {
-            super(FindLocalize.findNewLine(), LocalizeValue.empty(), AllIcons.Actions.SearchNewLine);
+            super(FindLocalize.findNewLine(), LocalizeValue.absent(), AllIcons.Actions.SearchNewLine);
             setShortcutSet(new CustomShortcutSet(NEW_LINE_KEYSTROKE));
             getTemplatePresentation().setHoveredIcon(AllIcons.Actions.SearchNewLineHover);
         }

@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
     private Image myCurrentIcon;
     @Nonnull
-    private LocalizeValue myToolTipText = LocalizeValue.empty();
+    private LocalizeValue myToolTipText = LocalizeValue.absent();
 
     public TogglePopupHintsPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
         super(project, factory);
@@ -115,7 +115,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
     public void clear() {
         myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
-        myToolTipText = LocalizeValue.empty();
+        myToolTipText = LocalizeValue.absent();
         myStatusBar.updateWidget(getId());
     }
 
@@ -151,7 +151,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         }
         else {
             myCurrentIcon = file != null ? ImageEffects.grayed(PlatformIconGroup.ideHectoroff()) : null;
-            myToolTipText = LocalizeValue.empty();
+            myToolTipText = LocalizeValue.absent();
         }
 
         if (!myProject.getApplication().isUnitTestMode() && myStatusBar != null) {

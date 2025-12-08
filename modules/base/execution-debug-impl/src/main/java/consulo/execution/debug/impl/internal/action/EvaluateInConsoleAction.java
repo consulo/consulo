@@ -28,7 +28,7 @@ final class EvaluateInConsoleAction extends XDebuggerActionBase {
     public EvaluateInConsoleAction() {
         super(
             XDebuggerLocalize.actionEvaluateInConsoleText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             null,
             true
         );

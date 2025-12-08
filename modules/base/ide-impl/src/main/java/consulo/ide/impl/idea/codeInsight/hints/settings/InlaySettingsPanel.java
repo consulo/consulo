@@ -163,7 +163,7 @@ public class InlaySettingsPanel extends JPanel {
         if (obj instanceof ImmediateConfigurable.Case) {
             return ((ImmediateConfigurable.Case) obj).getName();
         }
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     private DefaultMutableTreeNode addModelNode(InlayProviderSettingsModel model,

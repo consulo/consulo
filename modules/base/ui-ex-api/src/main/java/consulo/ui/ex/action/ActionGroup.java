@@ -27,7 +27,7 @@ public abstract class ActionGroup extends AnAction {
     public abstract static class Builder {
         protected final List<AnAction> myActions = new ArrayList<>();
         protected boolean myPopup;
-        protected LocalizeValue myText = LocalizeValue.empty();
+        protected LocalizeValue myText = LocalizeValue.absent();
 
         protected Builder() {
         }
@@ -94,7 +94,7 @@ public abstract class ActionGroup extends AnAction {
             myChildren = chilren;
             myPopup = popup;
 
-            if (actionText != LocalizeValue.empty()) {
+            if (actionText.isPresent()) {
                 getTemplatePresentation().setTextValue(actionText);
             }
         }

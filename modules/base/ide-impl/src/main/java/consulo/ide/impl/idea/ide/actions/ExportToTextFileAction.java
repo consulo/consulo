@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = IdeActions.ACTION_EXPORT_TO_TEXT_FILE)
 public class ExportToTextFileAction extends AnAction {
     public ExportToTextFileAction() {
-        super(ActionLocalize.actionExporttotextfileText(), LocalizeValue.empty(), PlatformIconGroup.actionsExport());
+        super(ActionLocalize.actionExporttotextfileText(), LocalizeValue.absent(), PlatformIconGroup.actionsExport());
     }
 
     @Override

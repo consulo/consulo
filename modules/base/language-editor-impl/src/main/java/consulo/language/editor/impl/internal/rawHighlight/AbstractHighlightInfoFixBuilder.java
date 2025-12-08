@@ -36,7 +36,7 @@ public abstract class AbstractHighlightInfoFixBuilder<THIS extends FixBuilderBas
     @Nullable
     protected List<IntentionAction> myOptions = null;
     @Nonnull
-    protected LocalizeValue myDisplayName = LocalizeValue.empty();
+    protected LocalizeValue myDisplayName = LocalizeValue.absent();
     @Nullable
     protected TextRange myFixRange;
     @Nullable

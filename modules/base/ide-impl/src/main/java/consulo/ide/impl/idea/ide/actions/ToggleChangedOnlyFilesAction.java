@@ -25,6 +25,6 @@ import consulo.localize.LocalizeValue;
 @ActionImpl(id = "SwitcherRecentEditedChangedToggleCheckBox")
 public class ToggleChangedOnlyFilesAction extends Switcher.ToggleCheckBoxAction {
     public ToggleChangedOnlyFilesAction() {
-        super(LocalizeValue.localizeTODO("Toggle Changed Only Files"), LocalizeValue.empty());
+        super(LocalizeValue.localizeTODO("Toggle Changed Only Files"), LocalizeValue.absent());
     }
 }

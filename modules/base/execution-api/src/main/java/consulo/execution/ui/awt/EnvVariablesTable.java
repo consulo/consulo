@@ -142,7 +142,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     @Nonnull
     @Override
     protected AnAction[] createExtraActions() {
-        AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -169,7 +169,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         };
         AnAction pasteButton = new AnAction(
             CodeEditorLocalize.actionPasteText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsMenu_paste()
         ) {
             @Override

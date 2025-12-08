@@ -61,7 +61,7 @@ public final class ActionMenu extends JMenu {
     // protector for update inside setMnemonic
     private boolean myMnemonicUpdate;
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
+    private LocalizeValue myTextValue = LocalizeValue.absent();
 
     private boolean myComponentMnemonicEnabled;
     private boolean myPresentationMnemonicDisabled;

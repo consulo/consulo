@@ -115,8 +115,8 @@ public final class Presentation implements Cloneable {
     @Nullable
     private PropertyChangeSupport myChangeSupport;
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
-    private LocalizeValue myDescriptionValue = LocalizeValue.empty();
+    private LocalizeValue myTextValue = LocalizeValue.absent();
+    private LocalizeValue myDescriptionValue = LocalizeValue.absent();
 
     private int myFlags = IS_ENABLED | IS_VISIBLE | IS_DISABLE_GROUP_IF_EMPTY | IS_DEFAULT_ICON;
 
@@ -215,7 +215,7 @@ public final class Presentation implements Cloneable {
             }
         }
         else {
-            setTextValue(LocalizeValue.empty());
+            setTextValue(LocalizeValue.absent());
         }
     }
 
@@ -239,7 +239,7 @@ public final class Presentation implements Cloneable {
     @Deprecated
     @DeprecationInfo("Use #setDescriptionValue() with localize value parameter")
     public void setDescription(@Nullable String description) {
-        LocalizeValue value = StringUtil.isEmpty(description) ? LocalizeValue.empty() : LocalizeValue.of(description);
+        LocalizeValue value = StringUtil.isEmpty(description) ? LocalizeValue.absent() : LocalizeValue.of(description);
         setDescriptionValue(value);
     }
 

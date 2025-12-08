@@ -48,7 +48,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     public DeleteFromFavoritesAction() {
         super(
             IdeLocalize.actionRemoveFromCurrentFavorites(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.generalRemove()
         );
 

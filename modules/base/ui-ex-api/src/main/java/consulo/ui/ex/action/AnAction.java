@@ -97,7 +97,7 @@ public abstract class AnAction implements PossiblyDumbAware {
         @Nullable Image image,
         @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
     ) {
-        return new AnAction(text, description == null ? LocalizeValue.empty() : description, image) {
+        return new AnAction(text, description == null ? LocalizeValue.absent() : description, image) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -130,7 +130,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
      */
     public AnAction(@Nullable Image icon) {
-        this(LocalizeValue.empty(), LocalizeValue.empty(), icon);
+        this(LocalizeValue.absent(), LocalizeValue.absent(), icon);
     }
 
     /**
@@ -158,7 +158,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     }
 
     public AnAction(@Nonnull LocalizeValue text) {
-        this(text, LocalizeValue.empty(), null);
+        this(text, LocalizeValue.absent(), null);
     }
 
     public AnAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {

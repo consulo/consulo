@@ -860,7 +860,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
     private class CloseAction extends AnAction implements DumbAware {
         private CloseAction() {
-            super(CommonLocalize.actionClose(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
+            super(CommonLocalize.actionClose(), LocalizeValue.absent(), PlatformIconGroup.actionsCancel());
         }
 
         @Override

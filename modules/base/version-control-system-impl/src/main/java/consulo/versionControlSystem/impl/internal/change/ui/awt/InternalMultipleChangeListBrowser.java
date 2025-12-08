@@ -364,7 +364,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
         toolBarGroup.add(new AnAction(
             LocalizeValue.localizeTODO("Refresh Changes"),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsRefresh()
         ) {
             @Override
@@ -497,7 +497,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     private class ShowHideUnversionedFilesAction extends ToggleAction {
 
         private ShowHideUnversionedFilesAction() {
-            super(LocalizeValue.localizeTODO("Show Unversioned Files"), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
+            super(LocalizeValue.localizeTODO("Show Unversioned Files"), LocalizeValue.absent(), PlatformIconGroup.actionsCancel());
         }
 
         @Override

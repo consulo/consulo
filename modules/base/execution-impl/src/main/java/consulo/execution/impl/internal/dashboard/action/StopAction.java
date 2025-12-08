@@ -26,7 +26,7 @@ import static consulo.execution.impl.internal.dashboard.action.RunDashboardActio
 @ActionImpl(id = "RunDashboard.Stop")
 public final class StopAction extends DumbAwareAction {
   public StopAction() {
-    super(ActionLocalize.actionRundashboardStopText(), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
+    super(ActionLocalize.actionRundashboardStopText(), LocalizeValue.absent(), PlatformIconGroup.actionsSuspend());
   }
 
 //  @Override

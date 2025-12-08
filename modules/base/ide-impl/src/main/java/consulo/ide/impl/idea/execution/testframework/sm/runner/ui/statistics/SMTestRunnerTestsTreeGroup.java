@@ -35,6 +35,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class SMTestRunnerTestsTreeGroup extends DefaultActionGroup implements DumbAware {
     public SMTestRunnerTestsTreeGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

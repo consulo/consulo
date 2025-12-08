@@ -149,7 +149,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     private static String createTitleString(Configurable configurable) {
         LocalizeValue displayName = configurable.getDisplayName();
-        LOG.assertTrue(displayName != LocalizeValue.empty(), configurable.getClass().getName());
+        LOG.assertTrue(displayName.isPresent(), configurable.getClass().getName());
         return displayName.get().replaceAll("\n", " ");
     }
 

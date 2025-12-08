@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = XDebuggerActions.XNEW_WATCH)
 public class XNewWatchAction extends XWatchesTreeActionBase {
     public XNewWatchAction() {
-        super(XDebuggerLocalize.actionNewWatchText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionAddtowatch());
+        super(XDebuggerLocalize.actionNewWatchText(), LocalizeValue.absent(), ExecutionDebugIconGroup.actionAddtowatch());
     }
 
     @Override

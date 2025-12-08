@@ -120,7 +120,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     public void navigate(@Nullable MouseEvent event, @Nullable PsiElement elt) {
         List<PsiElement> list = getTargetElements();
         if (list.isEmpty()) {
-            if (myEmptyText != LocalizeValue.empty() && event != null) {
+            if (myEmptyText.isPresent() && event != null) {
                 JComponent label = HintUtil.createErrorLabel(myEmptyText.get());
                 label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
                 JBPopupFactory.getInstance()

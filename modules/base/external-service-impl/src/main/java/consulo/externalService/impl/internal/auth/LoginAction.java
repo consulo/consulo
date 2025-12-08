@@ -48,7 +48,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
 
   public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
+    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.absent(), PlatformIconGroup.actionsLoginavatar());
     myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
   }
 

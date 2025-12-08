@@ -1097,12 +1097,12 @@ public class UsageViewImpl implements UsageViewEx {
     private class ShowSettings extends AnAction {
         @RequiredUIAccess
         private ShowSettings() {
-            super(UsageLocalize.actionTextUsageViewSettings(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
+            super(UsageLocalize.actionTextUsageViewSettings(), LocalizeValue.absent(), PlatformIconGroup.generalGearplain());
             ConfigurableUsageTarget configurableUsageTarget = UsageViewUtil.getConfigurableTarget(myTargets);
             LocalizeValue description = null;
             try {
                 description = configurableUsageTarget == null
-                    ? LocalizeValue.empty()
+                    ? LocalizeValue.absent()
                     : UsageLocalize.actionShowsettingsShowSettingsForDescription(configurableUsageTarget.getLongDescriptiveName());
             }
             catch (IndexNotReadyException ignored) {

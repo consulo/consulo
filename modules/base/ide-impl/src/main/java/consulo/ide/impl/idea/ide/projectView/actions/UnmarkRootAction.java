@@ -36,7 +36,7 @@ public class UnmarkRootAction extends MarkRootAction {
     public UnmarkRootAction() {
         super(
             ActionLocalize.actionUnmarkrootText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsCancel(),
             null
         );

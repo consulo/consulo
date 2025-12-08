@@ -325,7 +325,7 @@ public class XFramesView extends XDebugView {
     private class StackFramesListBuilder implements XStackFrameContainerEx {
         private XExecutionStack myExecutionStack;
         private final List<XStackFrame> myStackFrames;
-        private LocalizeValue myErrorMessage = LocalizeValue.empty();
+        private LocalizeValue myErrorMessage = LocalizeValue.absent();
         private int myNextFrameIndex = 0;
         private volatile boolean myRunning;
         private boolean myAllFramesLoaded;
@@ -387,7 +387,7 @@ public class XFramesView extends XDebugView {
                 if (isObsolete()) {
                     return;
                 }
-                if (myErrorMessage == LocalizeValue.empty()) {
+                if (myErrorMessage == LocalizeValue.absent()) {
                     myErrorMessage = errorMessage;
                     addFrameListElements(Collections.singletonList(errorMessage), true);
                     myRunning = false;
@@ -432,7 +432,7 @@ public class XFramesView extends XDebugView {
         }
 
         public boolean start() {
-            if (myExecutionStack == null || myErrorMessage != LocalizeValue.empty()) {
+            if (myExecutionStack == null || myErrorMessage.isPresent()) {
                 return false;
             }
             myRunning = true;
@@ -472,7 +472,7 @@ public class XFramesView extends XDebugView {
         public void initModel(DefaultListModel model) {
             model.removeAllElements();
             myStackFrames.forEach(model::addElement);
-            if (myErrorMessage != LocalizeValue.empty()) {
+            if (myErrorMessage.isPresent()) {
                 model.addElement(myErrorMessage.get());
             }
             else if (!myAllFramesLoaded) {

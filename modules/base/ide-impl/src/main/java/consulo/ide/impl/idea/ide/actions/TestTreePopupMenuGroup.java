@@ -45,6 +45,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class TestTreePopupMenuGroup extends DefaultActionGroup implements DumbAware {
     public TestTreePopupMenuGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

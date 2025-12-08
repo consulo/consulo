@@ -95,7 +95,7 @@ public abstract class Language extends UserDataHolderBase {
         return versions;
     });
 
-    private LocalizeValue myDisplayNameFromId = LocalizeValue.empty();
+    private LocalizeValue myDisplayNameFromId = LocalizeValue.absent();
 
     protected Language(@Nonnull String id) {
         this(id, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -291,7 +291,7 @@ public abstract class Language extends UserDataHolderBase {
     @Nonnull
     public LocalizeValue getDisplayName() {
         LocalizeValue value = myDisplayNameFromId;
-        if (value == LocalizeValue.empty()) {
+        if (value.isAbsent()) {
             myDisplayNameFromId = value = LocalizeValue.of(getID());
         }
         return value;

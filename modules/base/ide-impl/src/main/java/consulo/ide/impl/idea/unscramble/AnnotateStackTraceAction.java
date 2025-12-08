@@ -336,7 +336,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                         VcsUtil.trimCommitMessageToSaneSize(revision.getMessage()))
                 );
             }
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
 
         @Override

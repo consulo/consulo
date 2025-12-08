@@ -1328,7 +1328,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         ScrollEditorToTheEndAction(@Nonnull ConsoleViewHandler handler) {
             super(
                 ActionLocalize.actionEditorconsolescrolltotheendText(),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.runconfigurationsScroll_down()
             );
             myConsoleViewHandler = handler;

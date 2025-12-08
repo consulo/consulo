@@ -56,7 +56,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
 
         toolWindow.setTitleActions(new AnAction(
             LocalizeValue.localizeTODO("Expand All"),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsExpandall()
         ) {
             @RequiredUIAccess
@@ -71,7 +71,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
             (content1, s) -> {
             }));
 
-        toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
+        toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.absent(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

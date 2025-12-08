@@ -33,13 +33,13 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
     private boolean myState;
 
     public RuleAction(@Nonnull LocalizeValue text, @Nonnull Image icon) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
         myState = getOptionValue();
     }
 
     @Deprecated
     public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
         myState = getOptionValue();
     }
 

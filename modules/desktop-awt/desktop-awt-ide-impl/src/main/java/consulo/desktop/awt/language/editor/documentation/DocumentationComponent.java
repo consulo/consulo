@@ -1342,7 +1342,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         BackAction() {
-            super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
+            super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.absent(), PlatformIconGroup.actionsBack());
         }
 
         @Override
@@ -1363,7 +1363,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         ForwardAction() {
-            super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
+            super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.absent(), PlatformIconGroup.actionsForward());
         }
 
         @Override
@@ -1420,7 +1420,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         private ExternalDocAction() {
-            super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
+            super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.absent(), PlatformIconGroup.actionsPreviousoccurence());
             registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
         }
 

@@ -78,7 +78,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     public ExportHTMLAction(InspectionResultsView view) {
         super(
             InspectionLocalize.inspectionActionExportHtml(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             AllIcons.Actions.Export
         );
         myView = view;

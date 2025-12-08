@@ -70,7 +70,7 @@ public class MoveModuleToGroup extends ActionGroup {
         });
 
         List<AnAction> result = new ArrayList<>();
-        result.add(new MoveModulesToGroupAction(myModuleGroup, IdeLocalize.actionMoveModuleToThisGroup(), LocalizeValue.empty()));
+        result.add(new MoveModulesToGroupAction(myModuleGroup, IdeLocalize.actionMoveModuleToThisGroup(), LocalizeValue.absent()));
         result.add(new MoveModulesToSubGroupAction(myModuleGroup));
         result.add(AnSeparator.getInstance());
         for (ModuleGroup child : children) {

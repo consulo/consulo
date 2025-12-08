@@ -706,11 +706,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             int end = hostRange.getEndOffset();
             HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(info.getType()).range(element, start, end);
             LocalizeValue description = info.getDescription();
-            if (description != LocalizeValue.empty()) {
+            if (description.isPresent()) {
                 builder.description(description);
             }
             LocalizeValue tooltip = info.getToolTip();
-            if (tooltip != LocalizeValue.empty()) {
+            if (tooltip.isPresent()) {
                 builder.escapedToolTip(tooltip);
             }
             HighlightInfoImpl patched = (HighlightInfoImpl) builder.createUnconditionally();
@@ -752,7 +752,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             "</a> " +
             myShortcutText;
 
-        LocalizeValue tooltip = LocalizeValue.empty();
+        LocalizeValue tooltip = LocalizeValue.absent();
         if (descriptor.showTooltip()) {
             tooltip = message.map(text -> XmlStringUtil.wrapInHtml(
                 (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeString(text)) + link

@@ -25,7 +25,7 @@ public class SetEditorBidiTextDirectionLtrAction extends SetEditorBidiTextDirect
     public SetEditorBidiTextDirectionLtrAction() {
         super(
             CodeEditorLocalize.actionSetLtrBidiTextDirectionText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             BidiTextDirection.LTR
         );
     }

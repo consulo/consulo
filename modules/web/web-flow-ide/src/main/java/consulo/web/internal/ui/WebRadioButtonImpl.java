@@ -60,7 +60,7 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         }
     }
 
-    private LocalizeValue myText = LocalizeValue.empty();
+    private LocalizeValue myText = LocalizeValue.absent();
 
     @RequiredUIAccess
     public WebRadioButtonImpl(boolean selected, LocalizeValue text) {

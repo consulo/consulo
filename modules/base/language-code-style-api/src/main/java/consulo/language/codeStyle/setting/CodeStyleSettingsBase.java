@@ -43,7 +43,7 @@ public interface CodeStyleSettingsBase {
     @Nonnull
     default LocalizeValue getConfigurableDisplayName() {
         Language lang = getLanguage();
-        return lang == null ? LocalizeValue.empty() : lang.getDisplayName();
+        return lang == null ? LocalizeValue.absent() : lang.getDisplayName();
     }
 
     default boolean hasSettingsPage() {

@@ -152,7 +152,7 @@ class AccessibleGutterLine extends JPanel {
                     @Nonnull
                     @Override
                     public LocalizeValue getAccessibleTooltipValue() {
-                        return LocalizeValue.empty();
+                        return LocalizeValue.absent();
                     }
                 },
                 myGutter.getLineNumberAreaOffset(),
@@ -166,11 +166,11 @@ class AccessibleGutterLine extends JPanel {
         if (myGutter.isAnnotationsShown()) {
             int x = myGutter.getAnnotationsAreaOffset();
             int width = 0;
-            LocalizeValue tooltipText = LocalizeValue.empty();
+            LocalizeValue tooltipText = LocalizeValue.absent();
             StringBuilder buf = new StringBuilder("annotation: ");
             for (int i = 0; i < myGutter.myTextAnnotationGutters.size(); i++) {
                 TextAnnotationGutterProvider gutterProvider = myGutter.myTextAnnotationGutters.get(i);
-                if (tooltipText == LocalizeValue.empty()) {
+                if (tooltipText.isAbsent()) {
                     tooltipText = gutterProvider.getToolTipValue(myLogicalLineNum, editor); // [tav] todo: take first non-null?
                 }
                 int annotationSize = myGutter.myTextAnnotationGutterSizes.get(i);
@@ -271,7 +271,7 @@ class AccessibleGutterLine extends JPanel {
                     @Nonnull
                     @Override
                     public LocalizeValue getAccessibleTooltipValue() {
-                        return LocalizeValue.empty();
+                        return LocalizeValue.absent();
                     }
                 },
                 0,

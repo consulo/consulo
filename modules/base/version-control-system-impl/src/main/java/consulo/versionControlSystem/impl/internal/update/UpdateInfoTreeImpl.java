@@ -442,7 +442,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
 
     private class MyGroupByPackagesAction extends ToggleAction implements DumbAware {
         public MyGroupByPackagesAction() {
-            super(VcsLocalize.actionNameGroupByPackages(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbypackage());
+            super(VcsLocalize.actionNameGroupByPackages(), LocalizeValue.absent(), PlatformIconGroup.actionsGroupbypackage());
         }
 
         @Override
@@ -467,7 +467,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
 
     private class GroupByChangeListAction extends ToggleAction implements DumbAware {
         public GroupByChangeListAction() {
-            super(VcsLocalize.updateInfoGroupByChangelist(), LocalizeValue.empty(), PlatformIconGroup.actionsShowastree());
+            super(VcsLocalize.updateInfoGroupByChangelist(), LocalizeValue.absent(), PlatformIconGroup.actionsShowastree());
         }
 
         @Override

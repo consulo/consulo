@@ -96,7 +96,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         JPanel panel = ToolbarDecorator.createDecorator(myLocalTable)
             .addExtraAction(new AnAction(
                 LocalizeValue.localizeTODO("Share"),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.actionsShow()
             ) {
                 @Override
@@ -137,7 +137,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
             .addExtraAction(new AnAction(
                 LocalizeValue.localizeTODO("Unshare"),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.actionsCancel()
             ) {
                 @Override

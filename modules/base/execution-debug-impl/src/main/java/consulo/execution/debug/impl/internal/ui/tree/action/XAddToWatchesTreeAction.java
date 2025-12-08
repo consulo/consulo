@@ -43,7 +43,7 @@ import jakarta.inject.Inject;
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
     @Inject
     public XAddToWatchesTreeAction() {
-        super(XDebuggerLocalize.actionTreeAddToWatchesText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionAddtowatch());
+        super(XDebuggerLocalize.actionTreeAddToWatchesText(), LocalizeValue.absent(), ExecutionDebugIconGroup.actionAddtowatch());
     }
 
     protected XAddToWatchesTreeAction(@Nonnull LocalizeValue text) {

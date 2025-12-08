@@ -29,7 +29,7 @@ public class CommandEvent extends EventObject {
         Project project,
         @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
     ) {
-        this(processor, command, LocalizeValue.empty(), null, project, undoConfirmationPolicy);
+        this(processor, command, LocalizeValue.absent(), null, project, undoConfirmationPolicy);
     }
 
     public CommandEvent(

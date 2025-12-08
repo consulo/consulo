@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  */
 public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements CommandBuilder<THIS> {
     @Nonnull
-    private LocalizeValue myName = LocalizeValue.empty();
+    private LocalizeValue myName = LocalizeValue.absent();
     private Object myGroupId = null;
     private Project myProject = null;
     private Document myDocument = null;

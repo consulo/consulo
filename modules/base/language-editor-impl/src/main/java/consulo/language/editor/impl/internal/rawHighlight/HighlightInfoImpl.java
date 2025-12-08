@@ -382,7 +382,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         if (myHighlighter != null) {
             s += " text='" + getText() + "'";
         }
-        if (getDescription() != LocalizeValue.empty()) {
+        if (getDescription().isPresent()) {
             s += ", description='" + getDescription() + "'";
         }
         s += " severity=" + getSeverity();

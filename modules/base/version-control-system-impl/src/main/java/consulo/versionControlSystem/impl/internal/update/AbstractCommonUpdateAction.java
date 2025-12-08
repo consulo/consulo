@@ -397,7 +397,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                     processed++;
                     if (progressIndicator != null) {
                         progressIndicator.setFraction((double) processed / (double) toBeProcessed);
-                        progressIndicator.setText2Value(LocalizeValue.empty());
+                        progressIndicator.setText2Value(LocalizeValue.absent());
                     }
                     List<VcsException> exceptionList = updateSession.getExceptions();
                     gatherExceptions(vcs, exceptionList);

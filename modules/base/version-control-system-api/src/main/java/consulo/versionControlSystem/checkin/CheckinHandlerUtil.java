@@ -100,6 +100,6 @@ public class CheckinHandlerUtil {
     public static void disableWhenDumb(@Nonnull Project project, @Nonnull CheckBox checkBox, @Nonnull LocalizeValue tooltip) {
         boolean dumb = DumbService.isDumb(project);
         checkBox.setEnabled(!dumb);
-        checkBox.setToolTipText(dumb ? tooltip : LocalizeValue.empty());
+        checkBox.setToolTipText(dumb ? tooltip : LocalizeValue.absent());
     }
 }

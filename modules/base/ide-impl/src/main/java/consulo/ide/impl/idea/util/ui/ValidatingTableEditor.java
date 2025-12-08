@@ -201,7 +201,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
             }
         });
 
-        myRemoveButton = new AnActionButton(ApplicationLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        myRemoveButton = new AnActionButton(ApplicationLocalize.buttonRemove(), LocalizeValue.absent(), PlatformIconGroup.generalRemove()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {

@@ -211,7 +211,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
                             IndentStatusBarUIContributor.getIndentInfo(discardedOptions),
                             ColorUtil.toHex(JBColor.GRAY)
                         ),
-                        LocalizeValue.empty(),
+                        LocalizeValue.absent(),
                         null,
                         e -> {
                             myDiscardedOptions.remove(virtualFile);

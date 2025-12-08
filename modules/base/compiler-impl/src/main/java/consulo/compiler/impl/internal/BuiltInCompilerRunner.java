@@ -463,7 +463,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
                             indicator.pushState();
                             indicator.setTextValue(CompilerLocalize.progressUpdatingCaches());
-                            indicator.setText2Value(LocalizeValue.empty());
+                            indicator.setText2Value(LocalizeValue.absent());
 
                             cache.update();
 

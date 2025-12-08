@@ -39,7 +39,7 @@ import java.awt.datatransfer.StringSelection;
 @ActionImpl(id = "QuickDocCopy", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COPY))
 public class CopyQuickDocAction extends AnAction implements DumbAware, HintManagerImpl.ActionToIgnore {
     public CopyQuickDocAction() {
-        super(ActionLocalize.actionQuickdoccopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
+        super(ActionLocalize.actionQuickdoccopyText(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy());
         setEnabledInModalContext(true);
     }
 

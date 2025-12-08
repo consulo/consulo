@@ -2108,7 +2108,7 @@ public abstract class DialogWrapper {
 
     public void setErrorText(@Nonnull LocalizeValue text, @Nullable JComponent component) {
         setErrorInfoAll(
-            text == LocalizeValue.empty()
+            text.isAbsent()
                 ? Collections.EMPTY_LIST
                 : Collections.singletonList(new ValidationInfo(text, component))
         );

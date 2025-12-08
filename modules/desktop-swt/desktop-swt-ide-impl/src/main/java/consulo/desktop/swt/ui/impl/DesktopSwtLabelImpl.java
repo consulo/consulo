@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
  * @since 29/04/2021
  */
 public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Label> implements Label {
-  private LocalizeValue myText = LocalizeValue.empty();
+  private LocalizeValue myText = LocalizeValue.absent();
   private Component myLabeledComponent;
 
   public DesktopSwtLabelImpl(LocalizeValue text) {

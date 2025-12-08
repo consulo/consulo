@@ -38,7 +38,7 @@ public class ViewBreakpointsAction extends AnAction implements DumbAware {
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {
-        super(XDebuggerLocalize.actionViewBreakpointsText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionViewbreakpoints());
+        super(XDebuggerLocalize.actionViewBreakpointsText(), LocalizeValue.absent(), ExecutionDebugIconGroup.actionViewbreakpoints());
     }
 
     @Override

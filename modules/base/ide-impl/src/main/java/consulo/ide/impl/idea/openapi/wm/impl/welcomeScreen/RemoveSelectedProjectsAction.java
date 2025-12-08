@@ -36,7 +36,7 @@ import javax.swing.*;
 @ActionImpl(id = "WelcomeScreen.RemoveSelected")
 public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenActionBase {
     public RemoveSelectedProjectsAction() {
-      super(ProjectUILocalize.actionRecentProjectsRemoveSelectedText(), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+      super(ProjectUILocalize.actionRecentProjectsRemoveSelectedText(), LocalizeValue.absent(), PlatformIconGroup.generalRemove());
     }
 
     @Override

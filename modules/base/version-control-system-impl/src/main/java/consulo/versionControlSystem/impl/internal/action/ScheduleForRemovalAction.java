@@ -59,7 +59,7 @@ public class ScheduleForRemovalAction extends AbstractMissingFilesAction {
     @Nonnull
     @Override
     protected LocalizeValue getName() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

@@ -41,6 +41,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class RecentProjectsActionGroup extends DefaultActionGroup implements DumbAware {
     public RecentProjectsActionGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

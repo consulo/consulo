@@ -64,7 +64,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         @Nonnull BaseLibrariesConfigurable librariesConfigurable,
         @Nonnull Project project
     ) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
         myType = type;
         myLibrariesConfigurable = librariesConfigurable;
         myProject = project;

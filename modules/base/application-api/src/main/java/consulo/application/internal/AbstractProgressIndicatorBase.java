@@ -29,9 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AbstractProgressIndicatorBase extends UserDataHolderBase implements ProgressIndicator {
   private static final Logger LOG = Logger.getInstance(AbstractProgressIndicatorBase.class);
 
-  private volatile LocalizeValue myText = LocalizeValue.empty();
+  private volatile LocalizeValue myText = LocalizeValue.absent();
   private volatile double myFraction;
-  private volatile LocalizeValue myText2 = LocalizeValue.empty();
+  private volatile LocalizeValue myText2 = LocalizeValue.absent();
 
   private volatile boolean myCanceled;
   private volatile boolean myRunning;
@@ -64,9 +64,9 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
         myFinished = false;
       }
 
-      myText = LocalizeValue.empty();
+      myText = LocalizeValue.absent();
       myFraction = 0;
-      myText2 = LocalizeValue.empty();
+      myText2 = LocalizeValue.absent();
       startSystemActivity();
       myRunning = true;
     }

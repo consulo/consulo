@@ -260,7 +260,7 @@ public class SeverityEditorDialog extends DialogWrapper {
 
   private void apply(SeverityBasedTextAttributes info) {
     MyTextAttributesDescription description =
-            new MyTextAttributesDescription(LocalizeValue.of(info.getType().toString()), LocalizeValue.empty(), new TextAttributes(), info.getType().getAttributesKey());
+            new MyTextAttributesDescription(LocalizeValue.of(info.getType().toString()), LocalizeValue.absent(), new TextAttributes(), info.getType().getAttributesKey());
     myOptionsPanel.apply(description, null);
     Element textAttributes = new Element("temp");
     try {
@@ -274,7 +274,7 @@ public class SeverityEditorDialog extends DialogWrapper {
 
   private void reset(SeverityBasedTextAttributes info) {
     MyTextAttributesDescription description =
-            new MyTextAttributesDescription(LocalizeValue.of(info.getType().toString()), LocalizeValue.empty(), info.getAttributes(), info.getType().getAttributesKey());
+            new MyTextAttributesDescription(LocalizeValue.of(info.getType().toString()), LocalizeValue.absent(), info.getAttributes(), info.getType().getAttributesKey());
     Element textAttributes = new Element("temp");
     try {
       info.getAttributes().writeExternal(textAttributes);

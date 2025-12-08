@@ -300,12 +300,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             targetIndicator = progressIndicator;
             if (progressIndicator != null) {
                 progressIndicator.setTextValue(ModuleLocalize.messageLoadingModules());
-                progressIndicator.setText2Value(LocalizeValue.empty());
+                progressIndicator.setText2Value(LocalizeValue.absent());
             }
         }
         else {
             indicator.setTextValue(ModuleLocalize.messageLoadingModules());
-            indicator.setText2Value(LocalizeValue.empty());
+            indicator.setText2Value(LocalizeValue.absent());
 
             indicator.setFraction(0);
             indicator.setIndeterminate(false);

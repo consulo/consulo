@@ -121,7 +121,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
                 if (i > 0 && i < actions.size() - 1) {
                     add(
                         SEPARATOR_CONSTRAINT,
-                        new ActionToolbarSeparator(this, LocalizeValue.empty())
+                        new ActionToolbarSeparator(this, LocalizeValue.absent())
                     );
                     isLastElementSeparator = true;
                     continue;

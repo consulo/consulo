@@ -44,8 +44,8 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
         combobox.setEditable(true);
         descriptor.withShowHiddenFiles(true);
         addActionListener(new BrowseFolderActionListener<ComboBox<String>>(
-            LocalizeValue.empty(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
+            LocalizeValue.absent(),
             this,
             project,
             descriptor,

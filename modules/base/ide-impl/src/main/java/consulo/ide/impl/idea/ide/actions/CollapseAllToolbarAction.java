@@ -29,7 +29,7 @@ public class CollapseAllToolbarAction extends TreeCollapseAllActionBase {
     private TreeExpander myTreeExpander;
 
     public CollapseAllToolbarAction(TreeExpander treeExpander) {
-        this(treeExpander, LocalizeValue.empty());
+        this(treeExpander, LocalizeValue.absent());
     }
 
     @Deprecated

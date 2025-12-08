@@ -149,10 +149,10 @@ public class LineMarkerInfo<T extends PsiElement> {
     @Nonnull
     public LocalizeValue getLineMarkerTooltipValue() {
         if (myTooltipProvider == null) {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
         T element = getElement();
-        return element == null || !element.isValid() ? LocalizeValue.empty() : LocalizeValue.ofNullable(myTooltipProvider.apply(element));
+        return element == null || !element.isValid() ? LocalizeValue.absent() : LocalizeValue.ofNullable(myTooltipProvider.apply(element));
     }
 
     @Nullable
@@ -217,7 +217,7 @@ public class LineMarkerInfo<T extends PsiElement> {
                 return myInfo.getLineMarkerTooltipValue();
             }
             catch (IndexNotReadyException ignored) {
-                return LocalizeValue.empty();
+                return LocalizeValue.absent();
             }
         }
 

@@ -41,7 +41,7 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
 
   @Override
   public LocalizeValue getTextValue() {
-    return LocalizeValue.empty();
+    return LocalizeValue.absent();
   }
 
   @Override
@@ -50,7 +50,7 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
 
   @Override
   public LocalizeValue getText2Value() {
-    return LocalizeValue.empty();
+    return LocalizeValue.absent();
   }
 
   @Override

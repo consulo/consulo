@@ -27,6 +27,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(id = "CopyExternalReferenceGroup")
 public class CopyExternalReferenceGroup extends DefaultActionGroup implements DumbAware {
     public CopyExternalReferenceGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

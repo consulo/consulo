@@ -62,13 +62,13 @@ public class NavigationGutterIconBuilder<T> {
     protected Supplier<Collection<? extends T>> myTargets;
     protected boolean myLazy;
     @Nonnull
-    private LocalizeValue myTooltipText = LocalizeValue.empty();
+    private LocalizeValue myTooltipText = LocalizeValue.absent();
     @Nonnull
-    private LocalizeValue myPopupTitle = LocalizeValue.empty();
+    private LocalizeValue myPopupTitle = LocalizeValue.absent();
     @Nonnull
-    private LocalizeValue myEmptyText = LocalizeValue.empty();
+    private LocalizeValue myEmptyText = LocalizeValue.absent();
     @Nonnull
-    private LocalizeValue myTooltipTitle = LocalizeValue.empty();
+    private LocalizeValue myTooltipTitle = LocalizeValue.absent();
     private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
     private Supplier<PsiElementListCellRenderer> myCellRenderer;
     private Function<T, String> myNamer = createDefaultNamer();
@@ -227,7 +227,7 @@ public class NavigationGutterIconBuilder<T> {
             element.getTextRange(),
             renderer.getIcon(),
             Pass.LINE_MARKERS,
-            tooltip == LocalizeValue.empty() ? null : i -> tooltip.get(),
+            tooltip.isAbsent() ? null : i -> tooltip.get(),
             renderer.isNavigateAction() ? renderer : null,
             renderer.getAlignment(),
             gotoTargets
@@ -258,7 +258,7 @@ public class NavigationGutterIconBuilder<T> {
 
         boolean empty = isEmpty();
 
-        if (myTooltipText == LocalizeValue.empty() && !myLazy) {
+        if (myTooltipText.isAbsent() && !myLazy) {
             SortedSet<String> names = new TreeSet<>();
             for (T t : myTargets.get()) {
                 String text = myNamer.apply(t);

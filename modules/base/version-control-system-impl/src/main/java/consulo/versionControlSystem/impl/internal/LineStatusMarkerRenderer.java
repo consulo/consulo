@@ -53,7 +53,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     @Nonnull
     @Override
     public LocalizeValue getTooltipValue() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Nonnull

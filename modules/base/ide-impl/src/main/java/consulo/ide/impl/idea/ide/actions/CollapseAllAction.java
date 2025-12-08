@@ -26,7 +26,7 @@ import consulo.ui.ex.TreeExpander;
 @ActionImpl(id = "CollapseAll")
 public class CollapseAllAction extends TreeCollapseAllActionBase {
     public CollapseAllAction() {
-        super(ActionLocalize.actionCollapseallText(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall());
+        super(ActionLocalize.actionCollapseallText(), LocalizeValue.absent(), PlatformIconGroup.actionsCollapseall());
     }
 
     @Override

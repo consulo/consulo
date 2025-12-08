@@ -359,7 +359,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         private Image icon;
 
         private WidgetState() {
-            this(LocalizeValue.empty(), LocalizeValue.empty(), false);
+            this(LocalizeValue.absent(), LocalizeValue.absent(), false);
         }
 
         public WidgetState(@Nonnull LocalizeValue toolTip, @Nonnull LocalizeValue text, boolean actionEnabled) {

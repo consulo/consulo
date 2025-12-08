@@ -98,7 +98,7 @@ public class SelectExternalProjectStep<C extends AbstractImportFromExternalSyste
         FileChooserDescriptor fileChooserDescriptor = manager.getExternalProjectDescriptor();
         myLinkedProjectPathField = new TextFieldWithBrowseButton();
         myLinkedProjectPathField.addBrowseFolderListener(
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             ExternalSystemLocalize.settingsLabelSelectProject(externalSystemId.getDisplayName()),
             null,
             fileChooserDescriptor,

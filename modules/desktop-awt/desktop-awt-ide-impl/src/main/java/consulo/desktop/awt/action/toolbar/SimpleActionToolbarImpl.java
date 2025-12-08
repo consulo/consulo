@@ -219,7 +219,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
                 if (i > 0 && i < actions.size() - 1) {
                     add(
                         SEPARATOR_CONSTRAINT,
-                        new ActionToolbarSeparator(this, myShowSeparatorTitles ? separator.getTextValue() : LocalizeValue.empty())
+                        new ActionToolbarSeparator(this, myShowSeparatorTitles ? separator.getTextValue() : LocalizeValue.absent())
                     );
                     isLastElementSeparator = true;
                     continue;

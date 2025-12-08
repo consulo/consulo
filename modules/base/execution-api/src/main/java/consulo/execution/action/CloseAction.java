@@ -40,7 +40,7 @@ public class CloseAction extends AnAction implements DumbAware {
         Presentation templatePresentation = getTemplatePresentation();
         templatePresentation.setIcon(PlatformIconGroup.actionsCancel());
         templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
-        templatePresentation.setDescriptionValue(LocalizeValue.empty());
+        templatePresentation.setDescriptionValue(LocalizeValue.absent());
     }
 
     @Override

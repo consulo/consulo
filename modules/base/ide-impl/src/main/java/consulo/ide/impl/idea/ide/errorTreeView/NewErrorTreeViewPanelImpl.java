@@ -593,7 +593,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         private final Runnable myRerunAction;
 
         public RerunAction(@Nonnull Runnable rerunAction) {
-            super(IdeLocalize.actionRefresh(), LocalizeValue.empty(), AllIcons.Actions.Rerun);
+            super(IdeLocalize.actionRefresh(), LocalizeValue.absent(), AllIcons.Actions.Rerun);
             myRerunAction = rerunAction;
         }
 
@@ -615,7 +615,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     private class StopAction extends AnAction {
         public StopAction() {
-            super(IdeLocalize.actionStop(), LocalizeValue.empty(), AllIcons.Actions.Suspend);
+            super(IdeLocalize.actionStop(), LocalizeValue.absent(), AllIcons.Actions.Suspend);
         }
 
         @RequiredUIAccess
@@ -647,7 +647,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     private class ShowInfosAction extends ToggleAction {
         public ShowInfosAction() {
-            super(IdeLocalize.actionHideInfos(), LocalizeValue.empty(), AllIcons.General.BalloonInformation);
+            super(IdeLocalize.actionHideInfos(), LocalizeValue.absent(), AllIcons.General.BalloonInformation);
         }
 
         @Override
@@ -673,7 +673,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     private class ShowWarningsAction extends ToggleAction {
         public ShowWarningsAction() {
-            super(IdeLocalize.actionHideWarnings(), LocalizeValue.empty(), AllIcons.General.BalloonWarning);
+            super(IdeLocalize.actionHideWarnings(), LocalizeValue.absent(), AllIcons.General.BalloonWarning);
         }
 
         @Override
