@@ -15,57 +15,26 @@
  */
 package consulo.localize;
 
-import consulo.localize.internal.DefaultLocalizeKey;
-import consulo.localize.internal.EmptyLocalizeKey;
+import consulo.annotation.DeprecationInfo;
+import consulo.localization.LocalizationKey;
 import jakarta.annotation.Nonnull;
-
-import java.util.Locale;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2017-11-09
  */
-public interface LocalizeKey {
+public interface LocalizeKey extends LocalizationKey {
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizationKey")
     @Nonnull
-    static LocalizeKey empty() {
-        return EmptyLocalizeKey.INSTANCE;
+    static LocalizeKey of(@Nonnull String localizationId, @Nonnull String key) {
+        return LocalizationKey.of(localizationId, key);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use methods of LocalizationKey")
     @Nonnull
-    static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key) {
-        return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
+    static LocalizeKey of(@Nonnull String localizationId, @Nonnull String key, int argumentsCount) {
+        return LocalizationKey.of(localizationId, key, argumentsCount);
     }
-
-    @Nonnull
-    static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key, int argumentsCount) {
-        // TODO [VISTALL] make optimization for future use on call #getValue()
-        return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
-    }
-
-    @Nonnull
-    String getLocalizeId();
-
-    @Nonnull
-    String getKey();
-
-    @Nonnull
-    LocalizeValue getValue();
-
-    @Nonnull
-    LocalizeValue getValue(Object arg);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4);
-
-    @Nonnull
-    LocalizeValue getValue(Object... args);
 }

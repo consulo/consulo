@@ -28,8 +28,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2024-12-30
  */
-public class LocalizeTextFromFile extends LocalizeLoader<String> implements Supplier<String> {
-    public LocalizeTextFromFile(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
+public class LocalizationTextFromFile extends LocalizationLoader<String> implements Supplier<String> {
+    public LocalizationTextFromFile(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
         super(localizeId, pluginDescriptor, resourcePath);
     }
 

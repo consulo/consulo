@@ -15,15 +15,11 @@
  */
 package consulo.localize;
 
-import jakarta.annotation.Nullable;
-
-import java.util.EventListener;
-import java.util.Locale;
+import consulo.localization.LocalizationManagerListener;
 
 /**
  * @author VISTALL
  * @since 2020-05-20
  */
-public interface LocalizeManagerListener extends EventListener {
-    void localeChanged(@Nullable Locale oldLocale, @Nullable Locale newLocale);
+public interface LocalizeManagerListener extends LocalizationManagerListener {
 }

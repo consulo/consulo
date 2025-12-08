@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 13/01/2022
+ * @since 2022-01-13
  */
 module consulo.localize.impl {
     requires consulo.container.api;
@@ -13,5 +13,5 @@ module consulo.localize.impl {
     requires org.yaml.snakeyaml;
     requires com.ibm.icu;
 
-    provides consulo.localize.LocalizeManager with consulo.localize.impl.LocalizeManagerImpl;
+    provides consulo.localize.LocalizeManager with consulo.localize.impl.LocalizationManagerImpl;
 }

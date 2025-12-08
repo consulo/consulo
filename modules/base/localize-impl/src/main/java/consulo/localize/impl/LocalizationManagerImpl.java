@@ -20,11 +20,11 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeKey;
-import consulo.localize.LocalizeManager;
-import consulo.localize.LocalizeManagerListener;
-import consulo.localize.LocalizeValue;
-import consulo.localize.internal.LocalizeManagerEx;
+import consulo.localization.LocalizationKey;
+import consulo.localization.LocalizationManagerListener;
+import consulo.localization.LocalizedValue;
+import consulo.localize.*;
+import consulo.localization.internal.LocalizationManagerEx;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.io.URLUtil;
@@ -38,17 +38,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public class LocalizeManagerImpl extends LocalizeManager implements LocalizeManagerEx {
+public class LocalizationManagerImpl implements LocalizeManager, LocalizationManagerEx {
     private record PluginFileInfo(String id, PluginDescriptor descriptor, String path, Set<String> files) {
     }
 
-    private static final Logger LOG = Logger.getInstance(LocalizeManagerImpl.class);
+    private static final Logger LOG = Logger.getInstance(LocalizationManagerImpl.class);
 
     private static final Locale ourDefaultLocale = Locale.US;
 
@@ -58,11 +57,12 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private static final String YAML_EXTENSION = ".yaml";
 
-    private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
+    private final Map<Locale, Map<String, LocalizationFileState>> myLocalizes = new HashMap<>();
 
     private Locale myCurrentLocale;
 
-    private final EventDispatcher<LocalizeManagerListener> myEventDispatcher = EventDispatcher.create(LocalizeManagerListener.class);
+    private final EventDispatcher<LocalizationManagerListener> myEventDispatcher =
+        EventDispatcher.create(LocalizationManagerListener.class);
 
     private volatile byte myModificationCount;
 
@@ -98,7 +98,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                 LOG.error("Fail to initialize", e);
             }
 
-            myModificationCount ++;
+            myModificationCount++;
         }
     }
 
@@ -164,7 +164,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if (c == symbol) {
-                visited ++;
+                visited++;
 
                 if (visited == atCount) {
                     return i;
@@ -224,9 +224,9 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         // -5 - its '.yaml' prefix
         String localizeId = fullFilePath.substring(localeStr.length() + 1, fullFilePath.length() - YAML_EXTENSION.length());
 
-        Map<String, LocalizeFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+        Map<String, LocalizationFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
 
-        LocalizeFileState state = new LocalizeFileState(localizeId, fileInfo.descriptor(), zipEntryName);
+        LocalizationFileState state = new LocalizationFileState(localizeId, fileInfo.descriptor(), zipEntryName);
 
         mapByLocalizeId.put(localizeId, state);
 
@@ -244,7 +244,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
                 String fileLocalizeId = fileId.replace('/', '.').toLowerCase(Locale.ROOT);
 
-                state.putTextFromFile(fileLocalizeId, new LocalizeTextFromFile(localizeId, fileInfo.descriptor(), subFile));
+                state.putTextFromFile(fileLocalizeId, new LocalizationTextFromFile(localizeId, fileInfo.descriptor(), subFile));
             }
         }
     }
@@ -261,7 +261,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     @Nonnull
     @Override
-    public Set<Locale> getAvaliableLocales() {
+    public Set<Locale> getAvailableLocales() {
         return Collections.unmodifiableSet(myLocalizes.keySet());
     }
 
@@ -271,7 +271,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
         myCurrentLocale = locale;
 
-        myModificationCount ++;
+        myModificationCount++;
 
         if (fireEvents) {
             myEventDispatcher.getMulticaster().localeChanged(oldLocale, locale);
@@ -326,16 +326,16 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     public LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
         if (values.size() != 2) {
-            return LocalizeValue.of(localizeKeyInfo);
+            return LocalizedValue.of(localizeKeyInfo);
         }
 
-        LocalizeKey localizeKey = LocalizeKey.of(values.get(0), values.get(1));
+        LocalizationKey localizeKey = LocalizationKey.of(values.get(0), values.get(1));
         return localizeKey.getValue();
     }
 
     @Nonnull
     @Override
-    public Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key) {
+    public Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizationKey key) {
         if (!myInitialized.get()) {
             throw new IllegalArgumentException("not initialized");
         }
@@ -368,10 +368,10 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     @Nullable
-    private String getValue(LocalizeKey key, Locale locale) {
-        Map<String, LocalizeFileState> map = myLocalizes.get(locale);
+    private String getValue(LocalizationKey key, Locale locale) {
+        Map<String, LocalizationFileState> map = myLocalizes.get(locale);
         if (map != null) {
-            LocalizeFileState fileInfo = map.get(key.getLocalizeId());
+            LocalizationFileState fileInfo = map.get(key.getLocalizationId());
             if (fileInfo != null) {
                 String value = fileInfo.getValue(key);
                 if (value != null) {

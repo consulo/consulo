@@ -108,7 +108,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     for (PostfixTemplateProvider postfixTemplateProvider : providers) {
       list.add(new PostfixTemplatesChildConfigurable(postfixTemplateProvider));
     }
-    Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
+    Collections.sort(list, Configurable.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
     return list.toArray(new Configurable[list.size()]);
   }
 

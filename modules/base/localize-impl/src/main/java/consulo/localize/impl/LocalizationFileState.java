@@ -16,7 +16,7 @@
 package consulo.localize.impl;
 
 import consulo.container.plugin.PluginDescriptor;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
@@ -32,16 +32,16 @@ import java.util.Map;
  * @author VISTALL
  * @since 2020-05-20
  */
-class LocalizeFileState extends LocalizeLoader<Map<String, LocalizeKeyText>> {
-    private static final Logger LOG = Logger.getInstance(LocalizeFileState.class);
+class LocalizationFileState extends LocalizationLoader<Map<String, LocalizationKeyText>> {
+    private static final Logger LOG = Logger.getInstance(LocalizationFileState.class);
 
-    private Map<String, LocalizeTextFromFile> myTextFromFiles;
+    private Map<String, LocalizationTextFromFile> myTextFromFiles;
 
-    public LocalizeFileState(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
+    public LocalizationFileState(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
         super(localizeId, pluginDescriptor, resourcePath);
     }
 
-    public void putTextFromFile(String localizeId, LocalizeTextFromFile textFromFile) {
+    public void putTextFromFile(String localizeId, LocalizationTextFromFile textFromFile) {
         if (myTextFromFiles == null) {
             myTextFromFiles = new HashMap<>();
         }
@@ -50,47 +50,47 @@ class LocalizeFileState extends LocalizeLoader<Map<String, LocalizeKeyText>> {
     }
 
     @Nullable
-    public String getValue(LocalizeKey key) {
+    public String getValue(LocalizationKey key) {
         if (myTextFromFiles != null) {
-            LocalizeTextFromFile text = myTextFromFiles.get(key.getKey());
+            LocalizationTextFromFile text = myTextFromFiles.get(key.getKey());
             if (text != null) {
                 return text.get();
             }
         }
 
-        LocalizeKeyText text = getValue().get(key.getKey());
+        LocalizationKeyText text = getValue().get(key.getKey());
         return text == null ? null : text.get();
     }
 
     @Override
-    protected Map<String, LocalizeKeyText> getInvalidValue() {
+    protected Map<String, LocalizationKeyText> getInvalidValue() {
         return Map.of();
     }
 
     @Override
-    protected Map<String, LocalizeKeyText> load() {
+    protected Map<String, LocalizationKeyText> load() {
         long time = System.currentTimeMillis();
 
-        Map<String, LocalizeKeyText> loaded = super.load();
+        Map<String, LocalizationKeyText> loaded = super.load();
 
-        if (loaded != Map.<String, LocalizeKeyText>of()) {
+        if (loaded != Map.<String, LocalizationKeyText>of()) {
             LOG.info(myLocalizeId + " parsed in " + (System.currentTimeMillis() - time) + " ms. Size: " + loaded.size());
         }
         return loaded;
     }
 
     @Override
-    protected Map<String, LocalizeKeyText> load(InputStream stream) throws IOException {
+    protected Map<String, LocalizationKeyText> load(InputStream stream) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Map<String, String>> o = yaml.load(stream);
 
-        Map<String, LocalizeKeyText> map = new HashMap<>();
+        Map<String, LocalizationKeyText> map = new HashMap<>();
 
         for (Map.Entry<String, Map<String, String>> entry : o.entrySet()) {
             String key = entry.getKey();
             Map<String, String> value = entry.getValue();
 
-            LocalizeKeyText instance = new LocalizeKeyText(StringUtil.notNullize(value.get("text")));
+            LocalizationKeyText instance = new LocalizationKeyText(StringUtil.notNullize(value.get("text")));
 
             map.put(key.toLowerCase(Locale.ROOT), instance);
         }

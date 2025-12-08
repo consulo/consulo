@@ -28,8 +28,9 @@ import consulo.externalService.impl.internal.plugin.ui.action.PluginSortFilterGr
 import consulo.externalService.impl.internal.plugin.ui.action.PluginSorterAction;
 import consulo.externalService.impl.internal.plugin.ui.action.PluginTagFilterGroup;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
+import consulo.localization.LocalizedValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
@@ -45,7 +46,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -308,12 +308,12 @@ public abstract class PluginTab implements Disposable {
             return tags.stream().map(PluginTab::getTagLocalizeValue).collect(Collectors.toList());
         }
 
-        return List.of(LocalizeValue.of(pluginDescriptor.getCategory()));
+        return List.of(LocalizedValue.of(pluginDescriptor.getCategory()));
     }
 
     @Nonnull
     public static LocalizeValue getTagLocalizeValue(@Nonnull String tagId) {
-        return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
+        return LocalizationKey.of(RepositoryTagLocalize.ID, tagId).getValue();
     }
 
     private static boolean isAccepted(Set<String> search, @Nonnull String filter, @Nonnull String description) {
@@ -347,8 +347,8 @@ public abstract class PluginTab implements Disposable {
         message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
         NotificationService.getInstance()
             .newInfo(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
-            .title(LocalizeValue.localizeTODO(title))
-            .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
+            .title(LocalizedValue.localizeTODO(title))
+            .content(LocalizedValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
             .hyperlinkListener((notification, event) -> {
                 notification.expire();
                 if (restartCapable) {

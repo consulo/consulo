@@ -19,9 +19,12 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.localize.LocalizeValue;
+import consulo.localization.LocalizedValue;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.Comparator;
 
 /**
  * The type of a run configuration.
@@ -30,6 +33,9 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType extends PossiblyDumbAware {
+    public static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(ConfigurationType::getDisplayName, LocalizedValue.CASE_INSENSITIVE_ORDER);
+
     /**
      * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run
      * configurations tree, and also as the name of the action used to create the configuration.

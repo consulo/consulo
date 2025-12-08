@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize.internal;
+package consulo.localize.impl;
+
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 2024-09-01
+ * @since 2020-05-20
+ * <p>
+ * TODO [VISTALL] condition support
  */
-public interface LocalizeManagerEx {
-    void initialize();
+public class LocalizationKeyText implements Supplier<String> {
+    private final String myText;
+
+    public LocalizationKeyText(String text) {
+        myText = text;
+    }
+
+    public String getText() {
+        return myText;
+    }
+
+    @Override
+    public String get() {
+        return myText;
+    }
 }
