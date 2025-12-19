@@ -23,95 +23,104 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
 public class SimpleRefGroup implements RefGroup {
-  @Nonnull
-  private final String myName;
-  @Nonnull
-  private final List<VcsRef> myRefs;
+    @Nonnull
+    private final String myName;
+    @Nonnull
+    private final List<VcsRef> myRefs;
 
-  public SimpleRefGroup(@Nonnull String name, @Nonnull List<VcsRef> refs) {
-    myName = name;
-    myRefs = refs;
-  }
-
-  @Override
-  public boolean isExpanded() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Nonnull
-  @Override
-  public List<VcsRef> getRefs() {
-    return myRefs;
-  }
-
-  @Nonnull
-  @Override
-  public List<Color> getColors() {
-    return getColors(myRefs);
-  }
-
-  @Nonnull
-  public static List<Color> getColors(@Nonnull Collection<VcsRef> refs) {
-    MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
-    if (referencesByType.size() == 1) {
-      Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
-              ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(referencesByType.entrySet()));
-      boolean multiple = firstItem.getValue().size() > 1;
-      Color color = firstItem.getKey().getBackgroundColor();
-      return multiple ? Arrays.asList(color, color) : Collections.singletonList(color);
+    public SimpleRefGroup(@Nonnull String name, @Nonnull List<VcsRef> refs) {
+        myName = name;
+        myRefs = refs;
     }
-    else {
-      List<Color> colorsList = ContainerUtil.newArrayList();
-      for (VcsRefType type : referencesByType.keySet()) {
-        if (referencesByType.get(type).size() > 1) {
-          colorsList.add(type.getBackgroundColor());
-        }
-        colorsList.add(type.getBackgroundColor());
-      }
-      return colorsList;
-    }
-  }
 
-  public static void buildGroups(@Nonnull MultiMap<VcsRefType, VcsRef> groupedRefs,
-                                 boolean compact,
-                                 boolean showTagNames,
-                                 @Nonnull List<RefGroup> result) {
-    if (groupedRefs.isEmpty()) return;
-
-    if (compact) {
-      VcsRef firstRef = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
-      RefGroup group = ContainerUtil.getFirstItem(result);
-      if (group == null) {
-        result.add(new SimpleRefGroup(firstRef.getType().isBranch() || showTagNames ? firstRef.getName() : "",
-                                      ContainerUtil.newArrayList(groupedRefs.values())));
-      }
-      else {
-        group.getRefs().addAll(groupedRefs.values());
-      }
+    @Override
+    public boolean isExpanded() {
+        return false;
     }
-    else {
-      for (Map.Entry<VcsRefType, Collection<VcsRef>> entry : groupedRefs.entrySet()) {
-        if (entry.getKey().isBranch()) {
-          for (VcsRef ref : entry.getValue()) {
-            result.add(new SimpleRefGroup(ref.getName(), ContainerUtil.newArrayList(ref)));
-          }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Nonnull
+    @Override
+    public List<VcsRef> getRefs() {
+        return myRefs;
+    }
+
+    @Nonnull
+    @Override
+    public List<Color> getColors() {
+        return getColors(myRefs);
+    }
+
+    @Nonnull
+    public static List<Color> getColors(@Nonnull Collection<VcsRef> refs) {
+        MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
+        if (referencesByType.size() == 1) {
+            Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
+                ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(referencesByType.entrySet()));
+            boolean multiple = firstItem.getValue().size() > 1;
+            Color color = firstItem.getKey().getBackgroundColor();
+            return multiple ? Arrays.asList(color, color) : Collections.singletonList(color);
         }
         else {
-          result.add(new SimpleRefGroup(showTagNames ? ObjectUtil.notNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
-                                        ContainerUtil.newArrayList(entry.getValue())));
+            List<Color> colorsList = new ArrayList<>();
+            for (VcsRefType type : referencesByType.keySet()) {
+                if (referencesByType.get(type).size() > 1) {
+                    colorsList.add(type.getBackgroundColor());
+                }
+                colorsList.add(type.getBackgroundColor());
+            }
+            return colorsList;
         }
-      }
     }
-  }
+
+    public static void buildGroups(
+        @Nonnull MultiMap<VcsRefType, VcsRef> groupedRefs,
+        boolean compact,
+        boolean showTagNames,
+        @Nonnull List<RefGroup> result
+    ) {
+        if (groupedRefs.isEmpty()) {
+            return;
+        }
+
+        if (compact) {
+            VcsRef firstRef = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
+            RefGroup group = ContainerUtil.getFirstItem(result);
+            if (group == null) {
+                result.add(new SimpleRefGroup(
+                    firstRef.getType().isBranch() || showTagNames ? firstRef.getName() : "",
+                    new ArrayList<>(groupedRefs.values())
+                ));
+            }
+            else {
+                group.addRefs(groupedRefs.values());
+            }
+        }
+        else {
+            for (Map.Entry<VcsRefType, Collection<VcsRef>> entry : groupedRefs.entrySet()) {
+                if (entry.getKey().isBranch()) {
+                    for (VcsRef ref : entry.getValue()) {
+                        result.add(new SimpleRefGroup(ref.getName(), ContainerUtil.newArrayList(ref)));
+                    }
+                }
+                else {
+                    result.add(new SimpleRefGroup(
+                        showTagNames ? ObjectUtil.notNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
+                        new ArrayList<>(entry.getValue())
+                    ));
+                }
+            }
+        }
+    }
 }

@@ -251,11 +251,12 @@ public class LabelPainter {
         String separator = ", ";
         int remainderWidth = fontMetrics.stringWidth(remainder);
         int separatorWidth = fontMetrics.stringWidth(separator);
-        for (int i = 0; i < group.getRefs().size(); i++) {
-            boolean lastRef = i == group.getRefs().size() - 1;
+        List<VcsRef> refs = group.getRefs();
+        for (int i = 0, n = refs.size(); i < n; i++) {
+            boolean lastRef = i == n - 1;
             boolean firstRef = i == 0;
             int width = availableWidth - (lastRef ? 0 : remainderWidth) - (firstRef ? 0 : separatorWidth);
-            String refName = shortenRefName(group.getRefs().get(i).getName(), fontMetrics, width);
+            String refName = shortenRefName(refs.get(i).getName(), fontMetrics, width);
             int refNameWidth = fontMetrics.stringWidth(refName);
             if (width - refNameWidth < 0 && !firstRef) {
                 text += remainder;
