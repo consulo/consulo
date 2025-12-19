@@ -878,16 +878,8 @@ inspection.reference.anonymous:
     text: anonymous
 inspection.reference.anonymous.name:
     text: anonymous ({0})
-inspection.reference.default.package:
-    text: default package
-inspection.reference.implicit.constructor.name:
-    text: implicit constructor of {0}
 inspection.reference.invalid:
     text: invalid
-inspection.reference.jsp.holder.method.anonymous.name:
-    text: <% page content %>
-inspection.reference.noname:
-    text: noname
 inspection.replace.ternary.quickfix:
     text: Replace with ''{0} != null ?:''
 inspection.required.attributes.display.name:
