@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
     public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title) {
-        super(parent, items, title, LocalizeValue.empty(), true);
+        super(parent, items, title, LocalizeValue.absent(), true);
     }
 
     public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title, @Nonnull LocalizeValue description) {

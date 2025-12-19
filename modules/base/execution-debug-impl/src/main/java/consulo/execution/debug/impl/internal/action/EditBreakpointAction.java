@@ -52,7 +52,7 @@ public class EditBreakpointAction extends XDebuggerActionBase {
     }
 
     public EditBreakpointAction() {
-        super(XDebuggerLocalize.actionEditBreakpointText(), LocalizeValue.empty(), null);
+        super(XDebuggerLocalize.actionEditBreakpointText(), LocalizeValue.absent(), null);
     }
 
     @Nonnull

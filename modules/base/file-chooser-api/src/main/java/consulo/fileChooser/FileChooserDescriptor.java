@@ -55,7 +55,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   @Nonnull
   private LocalizeValue myTitleValue = FileChooserLocalize.fileChooserDefaultTitle();
   @Nonnull
-  private LocalizeValue myDescriptionValue = LocalizeValue.empty();
+  private LocalizeValue myDescriptionValue = LocalizeValue.absent();
 
   private boolean myHideIgnored = true;
   private final List<VirtualFile> myRoots = new ArrayList<>();
@@ -149,7 +149,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   @Deprecated
   @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
   public FileChooserDescriptor withTitle(@Nullable String title) {
-    myTitleValue = title == null ? LocalizeValue.empty() : LocalizeValue.of(title);
+    myTitleValue = LocalizeValue.ofNullable(title);
     return this;
   }
 
@@ -169,7 +169,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   @Deprecated
   @DeprecationInfo("Use #withDescription(LocalizeValue)")
   public FileChooserDescriptor withDescription(@Nullable String description) {
-    myDescriptionValue = description == null ? LocalizeValue.empty() : LocalizeValue.of(description);
+    myDescriptionValue = LocalizeValue.ofNullable(description);
     return this;
   }
 

@@ -357,7 +357,7 @@ public class RenameDialog extends RefactoringDialog {
     @Override
     protected void canRun() throws ConfigurationException {
         if (Comparing.strEqual(getNewName(), myOldName)) {
-            throw new ConfigurationException(LocalizeValue.empty());
+            throw new ConfigurationException(LocalizeValue.absent());
         }
         if (!areButtonsValid()) {
             throw new ConfigurationException(LanguageLocalize.dialogMessageValidIdentifier(getNewName()));

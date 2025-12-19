@@ -172,7 +172,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
     public static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
         public BaseOnThisTypeAction() {
-            super(LocalizeValue.empty(), IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
+            super(LocalizeValue.absent(), IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
         }
 
         @Override

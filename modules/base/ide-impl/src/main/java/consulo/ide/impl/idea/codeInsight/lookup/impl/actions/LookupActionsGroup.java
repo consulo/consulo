@@ -44,6 +44,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class LookupActionsGroup extends DefaultActionGroup implements DumbAware {
     public LookupActionsGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

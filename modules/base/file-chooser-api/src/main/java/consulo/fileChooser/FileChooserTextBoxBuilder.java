@@ -144,7 +144,7 @@ public final class FileChooserTextBoxBuilder {
 
     private LocalizeValue myDialogTitle = UILocalize.fileChooserDefaultTitle();
 
-    private LocalizeValue myDialogDescription = LocalizeValue.empty();
+    private LocalizeValue myDialogDescription = LocalizeValue.absent();
 
     private FileChooserDescriptor myFileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false);
 

@@ -78,7 +78,7 @@ public class ActionUtil {
         if (StringUtil.isEmpty(p1.getText())) {
             p1.setTextValue(p2.getTextValue());
         }
-        p1.setDescriptionValue(p1.getDescriptionValue() == LocalizeValue.empty() ? p2.getDescriptionValue() : p1.getDescriptionValue());
+        p1.setDescriptionValue(p1.getDescriptionValue().isAbsent() ? p2.getDescriptionValue() : p1.getDescriptionValue());
         ShortcutSet ss1 = a1.getShortcutSet();
         if (ss1 == null || ss1 == CustomShortcutSet.EMPTY) {
             a1.copyShortcutFrom(a2);

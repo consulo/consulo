@@ -224,7 +224,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         builder.setResizable(false)
             .setMovable(true) // fit the screen automatically
             .setRequestFocus(false)
-            .setTitle(LocalizeValue.empty())
+            .setTitle(LocalizeValue.absent())
             .setCancelOnClickOutside(true)
             .setCancelOnOtherWindowOpen(true)
             .setCancelCallback(() -> {

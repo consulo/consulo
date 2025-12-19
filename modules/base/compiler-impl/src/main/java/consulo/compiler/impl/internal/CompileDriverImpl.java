@@ -596,7 +596,7 @@ public class CompileDriverImpl implements CompileDriver {
                 ProgressIndicator indicator = compileContext.getProgressIndicator();
                 indicator.setTextValue(LocalizeValue.localizeTODO("Synchronizing output directories..."));
                 lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
-                indicator.setTextValue(LocalizeValue.empty());
+                indicator.setTextValue(LocalizeValue.absent());
             }
 
             Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);

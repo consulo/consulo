@@ -222,7 +222,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private class ForwardAction extends AnAction implements DumbAware {
         public ForwardAction() {
-            super(LocalizeValue.localizeTODO("Next"), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
+            super(LocalizeValue.localizeTODO("Next"), LocalizeValue.absent(), PlatformIconGroup.actionsForward());
             AnAction forward = ActionManager.getInstance().getAction("Forward");
             if (forward != null) {
                 registerCustomShortcutSet(forward.getShortcutSet(), getRootPane(), getDisposable());
@@ -244,7 +244,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private class BackAction extends AnAction implements DumbAware {
         public BackAction() {
-            super(LocalizeValue.localizeTODO("Previous"), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
+            super(LocalizeValue.localizeTODO("Previous"), LocalizeValue.absent(), PlatformIconGroup.actionsBack());
             AnAction back = ActionManager.getInstance().getAction("Back");
             if (back != null) {
                 registerCustomShortcutSet(back.getShortcutSet(), getRootPane(), getDisposable());

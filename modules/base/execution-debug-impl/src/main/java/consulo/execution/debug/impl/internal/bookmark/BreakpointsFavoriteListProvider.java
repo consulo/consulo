@@ -179,7 +179,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         return switch (type) {
             case EDIT -> ActionLocalize.actionEditbreakpointText();
             case REMOVE -> XDebuggerLocalize.xdebuggerRemoveLineBreakpointActionText();
-            default -> LocalizeValue.empty();
+            default -> LocalizeValue.absent();
         };
     }
 

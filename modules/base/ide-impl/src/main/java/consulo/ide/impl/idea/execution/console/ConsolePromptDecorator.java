@@ -112,7 +112,7 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
     @Nonnull
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

@@ -118,7 +118,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
     private final class ShowImplementationsOnlyAction extends ToggleAction {
         private ShowImplementationsOnlyAction() {
-            super(IdeLocalize.actionHideNonImplementations(), LocalizeValue.empty(), PlatformIconGroup.gutterImplementedmethod());
+            super(IdeLocalize.actionHideNonImplementations(), LocalizeValue.absent(), PlatformIconGroup.gutterImplementedmethod());
         }
 
         @Override

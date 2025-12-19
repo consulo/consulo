@@ -95,7 +95,7 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
         @Nonnull Project project
     ) {
         LocalizeValue message = checkSelectedTarget(target, file, editor, project);
-        if (message != LocalizeValue.empty()) {
+        if (message != LocalizeValue.absent()) {
             showErrorHint(message, editor, project);
         }
         else {
@@ -165,7 +165,7 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     ) {
         List<UsageInfo> usages = collectUsages(target, scope);
         LocalizeValue message = checkUsages(usages);
-        if (message != LocalizeValue.empty()) {
+        if (message.isPresent()) {
             showErrorHint(message, editor, project);
             return;
         }

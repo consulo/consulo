@@ -41,7 +41,7 @@ import javax.swing.*;
  */
 class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButton> implements Button {
     class MyButton extends JButton implements FromSwingComponentWrapper {
-        private LocalizeValue myTextValue = LocalizeValue.empty();
+        private LocalizeValue myTextValue = LocalizeValue.absent();
 
         private Boolean myDefaultButton;
 

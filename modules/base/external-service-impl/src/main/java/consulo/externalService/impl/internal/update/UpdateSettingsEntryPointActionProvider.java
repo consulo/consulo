@@ -66,7 +66,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
         private RestartConsuloAction(UpdateSettings updateSettings) {
             super(
                 ExternalServiceLocalize.actionRestartAppText(Application.get().getName()),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.ideNotificationRestartrequiredupdate()
             );
             myUpdateSettings = updateSettings;

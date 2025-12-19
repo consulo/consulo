@@ -77,7 +77,7 @@ import java.util.*;
 
 public class LiveTemplateSettingsEditor extends JPanel {
     private static enum ExpandByKey {
-        DEFAULT(TemplateSettingsImpl.DEFAULT_CHAR, LocalizeValue.empty()) {
+        DEFAULT(TemplateSettingsImpl.DEFAULT_CHAR, LocalizeValue.absent()) {
             @Override
             public LocalizeValue getTitle(String defaultShortcut) {
                 return CodeInsightLocalize.dialogEditTemplateShortcutDefault(defaultShortcut);

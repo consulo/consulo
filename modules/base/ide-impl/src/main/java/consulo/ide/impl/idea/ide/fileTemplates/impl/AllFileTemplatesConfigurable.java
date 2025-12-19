@@ -233,7 +233,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myTabbedPane.addChangeListener(e -> onTabChanged());
 
         DefaultActionGroup group = new DefaultActionGroup();
-        AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.absent(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -249,7 +249,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                     .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
             }
         };
-        AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
+        AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.absent(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -263,7 +263,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
             }
         };
-        AnAction cloneAction = new AnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction cloneAction = new AnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -281,7 +281,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 );
             }
         };
-        AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), PlatformIconGroup.generalReset()) {
+        AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.absent(), PlatformIconGroup.generalReset()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -501,7 +501,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         List<String> allNames = new ArrayList<>();
         FileTemplate itemWithError = null;
         boolean errorInName = true;
-        LocalizeValue errorMessage = LocalizeValue.empty();
+        LocalizeValue errorMessage = LocalizeValue.absent();
         for (FileTemplate template : templates) {
             String currName = template.getName();
             if (currName.isEmpty()) {

@@ -53,7 +53,7 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
         return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
-            ? LocalizeValue.empty()
+            ? LocalizeValue.absent()
             : myDelegate.getToolTipValue(currentLine, editor);
     }
 

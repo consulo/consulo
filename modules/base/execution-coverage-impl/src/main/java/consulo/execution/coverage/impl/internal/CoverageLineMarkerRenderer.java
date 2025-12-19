@@ -310,7 +310,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
-            if (nextChange != LocalizeValue.empty()) {
+            if (nextChange.isPresent()) {
                 e.getPresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
             }
         }
@@ -337,7 +337,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
-            if (nextChange != LocalizeValue.empty()) {
+            if (nextChange.isPresent()) {
                 e.getPresentation().setTextValue(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
             }
         }
@@ -408,7 +408,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
                     }
                 }
             }
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
 
         @Override

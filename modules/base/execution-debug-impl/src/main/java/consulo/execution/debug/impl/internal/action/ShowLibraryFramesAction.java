@@ -47,7 +47,7 @@ public final class ShowLibraryFramesAction extends ToggleAction {
 
   @Inject
   public ShowLibraryFramesAction(Provider<XDebuggerSettingsManager> provider) {
-    super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
+    super(LocalizeValue.absent(), LocalizeValue.absent(), PlatformIconGroup.generalFilter());
     myXDebuggerSettingsManagerProvider = provider;
   }
 

@@ -54,7 +54,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     private TextAttributesKey textAttributesKey;
     private ProblemHighlightType highlightType;
     private Boolean needsUpdateOnTyping;
-    private LocalizeValue myTooltip = LocalizeValue.empty();
+    private LocalizeValue myTooltip = LocalizeValue.absent();
     private List<FixB> fixes;
     private boolean created;
     private final Throwable myDebugCreationPlace;
@@ -410,7 +410,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             range = myCurrentElement.getTextRange();
         }
 
-        if (myTooltip == LocalizeValue.empty() && myMessage != LocalizeValue.empty()) {
+        if (myTooltip.isAbsent() && myMessage.isPresent()) {
             myTooltip = myMessage.map(TOOLTIP_ESCAPE);
         }
 

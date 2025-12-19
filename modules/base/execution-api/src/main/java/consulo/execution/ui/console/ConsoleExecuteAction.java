@@ -72,7 +72,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
         @Nonnull String emptyExecuteActionId,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
-        super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());
+        super(LocalizeValue.absent(), LocalizeValue.absent(), PlatformIconGroup.actionsExecute());
 
         myConsoleView = consoleView;
         myExecuteActionHandler = executeActionHandler;

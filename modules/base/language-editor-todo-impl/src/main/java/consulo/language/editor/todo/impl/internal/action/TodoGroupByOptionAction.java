@@ -43,7 +43,7 @@ public abstract class TodoGroupByOptionAction extends ToggleAction {
         Function<TodoPanel, Boolean> getter,
         @RequiredUIAccess BiConsumer<TodoPanel, Boolean> setter
     ) {
-        super(text, LocalizeValue.empty(), icon);
+        super(text, LocalizeValue.absent(), icon);
         myGetter = getter;
         mySetter = setter;
     }

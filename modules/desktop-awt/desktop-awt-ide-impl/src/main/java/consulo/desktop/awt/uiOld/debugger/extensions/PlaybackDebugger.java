@@ -185,7 +185,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     private class SaveAction extends AnAction {
         private SaveAction() {
-            super(LocalizeValue.localizeTODO("Save"), LocalizeValue.empty(), PlatformIconGroup.actionsMenu_saveall());
+            super(LocalizeValue.localizeTODO("Save"), LocalizeValue.absent(), PlatformIconGroup.actionsMenu_saveall());
         }
 
         @Override
@@ -313,7 +313,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     private class StopAction extends AnAction {
         private StopAction() {
-            super(LocalizeValue.localizeTODO("Stop"), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
+            super(LocalizeValue.localizeTODO("Stop"), LocalizeValue.absent(), PlatformIconGroup.actionsSuspend());
         }
 
         @Override
@@ -333,7 +333,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     private class ActivateFrameAndRun extends AnAction {
         private ActivateFrameAndRun() {
-            super(LocalizeValue.localizeTODO("Activate Frame And Run"), LocalizeValue.empty(), PlatformIconGroup.nodesDeploy());
+            super(LocalizeValue.localizeTODO("Activate Frame And Run"), LocalizeValue.absent(), PlatformIconGroup.nodesDeploy());
         }
 
         @Override
@@ -351,7 +351,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     private class RunOnFameActivationAction extends AnAction {
 
         private RunOnFameActivationAction() {
-            super(LocalizeValue.localizeTODO("Run On Frame Activation"), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());
+            super(LocalizeValue.localizeTODO("Run On Frame Activation"), LocalizeValue.absent(), PlatformIconGroup.actionsExecute());
         }
 
         @Override

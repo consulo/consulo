@@ -50,7 +50,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     private InspectionConfigTreeNode myRoot;
 
     public AdvancedSettingsAction(Project project, InspectionConfigTreeNode root) {
-        super(LocalizeValue.localizeTODO("Advanced Settings"), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
+        super(LocalizeValue.localizeTODO("Advanced Settings"), LocalizeValue.absent(), PlatformIconGroup.generalGearplain());
         myProject = project;
         myRoot = root;
         myCheckBoxIndent = calculateCheckBoxIndent();

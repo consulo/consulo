@@ -65,7 +65,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     }
   }
 
-  protected LocalizeValue myText = LocalizeValue.empty();
+  protected LocalizeValue myText = LocalizeValue.absent();
   // FIXME [VISTALL] usage Application.getName();
   protected LocalizeValue myTitle = LocalizeValue.localizeTODO("Consulo");
   protected NotificationType myType = NotificationType.INFO;

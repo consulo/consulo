@@ -404,7 +404,7 @@ public class ActionUpdater {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
             if (child instanceof AnSeparator separator) {
-                if (separator.getTextValue() != LocalizeValue.empty()
+                if (separator.getTextValue().isPresent()
                     || (!result.isEmpty() && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }

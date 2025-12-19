@@ -34,6 +34,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class LanguageSpecificFoldingGroup extends DefaultActionGroup implements DumbAware {
     public LanguageSpecificFoldingGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

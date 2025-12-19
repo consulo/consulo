@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "RunDashboard.CopyConfiguration")
 public final class CopyConfigurationAction extends AnAction {
     public CopyConfigurationAction() {
-        super(ActionLocalize.actionRundashboardCopyconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
+        super(ActionLocalize.actionRundashboardCopyconfigurationText(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy());
     }
 
 //  @Override

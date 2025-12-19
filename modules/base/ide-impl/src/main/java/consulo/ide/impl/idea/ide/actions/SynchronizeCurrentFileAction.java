@@ -24,7 +24,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     public SynchronizeCurrentFileAction() {
         super(
             ActionLocalize.actionSynchronizecurrentfileText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsRefresh()
         );
     }

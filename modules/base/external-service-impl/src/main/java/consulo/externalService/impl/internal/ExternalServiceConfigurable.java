@@ -124,7 +124,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
           case NO:
             return LocalizeValue.localizeTODO("Disabled");
           default:
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
       });
 

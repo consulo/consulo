@@ -65,7 +65,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      */
     @Nonnull
     public LocalizeValue getLanguageName() {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     /**
@@ -169,8 +169,8 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     @Nonnull
     public static LocalizeValue getLanguageName(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
-        LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.empty();
-        return providerLangName != LocalizeValue.empty() ? providerLangName : lang.getDisplayName();
+        LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.absent();
+        return providerLangName.isPresent() ? providerLangName : lang.getDisplayName();
     }
 
     @Nullable

@@ -72,7 +72,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         DumbAwareToggleAction toggleSortAction =
             new DumbAwareToggleAction(
                 UsageLocalize.sortAlphabeticallyActionText(),
-                LocalizeValue.empty(),
+                LocalizeValue.absent(),
                 PlatformIconGroup.objectbrowserSorted()
             ) {
                 @Override

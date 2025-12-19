@@ -44,7 +44,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
     @Nonnull
     @Override
     public LocalizeValue getTooltipValue(int line) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

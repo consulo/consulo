@@ -24,7 +24,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 @ActionImpl(id = "Compare.SameVersion")
 public class CompareWithTheSameVersionAction extends AbstractShowDiffAction {
     public CompareWithTheSameVersionAction() {
-        super(VcsLocalize.actionCompareSameVersionText(), LocalizeValue.empty(), PlatformIconGroup.actionsDiff());
+        super(VcsLocalize.actionCompareSameVersionText(), LocalizeValue.absent(), PlatformIconGroup.actionsDiff());
     }
 
     @Override

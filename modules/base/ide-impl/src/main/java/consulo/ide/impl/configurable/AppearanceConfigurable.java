@@ -120,7 +120,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
                     StyleManager.get().setCurrentStyle(event.getValue());
                 }
             });
-            myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
+            myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.absent() : LocalizeValue.of(style.getName()));
             uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myStyleComboBox));
 
             List<Object> iconThemes = new ArrayList<>();

@@ -674,7 +674,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         final Project myProject;
 
         MyBasePopupStep(@Nonnull Project project, @Nonnull LocalizeValue title, List<T> values) {
-            super(title != LocalizeValue.empty() ? title.get() : null, values);
+            super(title.getOrNull(), values);
             myProject = project;
         }
 
@@ -755,7 +755,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
                     @Override
                     public PopupStep call() {
                         List<AttachItem> attachItems = new ArrayList<>(attachHostItem.getSubItems());
-                        return new AttachListStep(attachItems, LocalizeValue.empty(), myProject);
+                        return new AttachListStep(attachItems, LocalizeValue.absent(), myProject);
                     }
                 };
             }

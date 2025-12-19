@@ -84,7 +84,7 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
     @Nonnull
     @Override
     public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

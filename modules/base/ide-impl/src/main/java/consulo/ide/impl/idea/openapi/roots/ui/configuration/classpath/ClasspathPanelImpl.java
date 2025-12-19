@@ -179,7 +179,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
         myEditButton = new DumbAwareAction(
             ProjectLocalize.moduleClasspathButtonEdit(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsEdit()
         ) {
             @RequiredUIAccess
@@ -244,7 +244,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             myEntryTable
         );
         actionGroup.add(myEditButton);
-        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.absent(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

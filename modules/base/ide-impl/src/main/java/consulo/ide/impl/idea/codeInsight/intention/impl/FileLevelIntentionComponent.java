@@ -74,7 +74,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
         }
 
         myLabel.setText(description.get());
-        if (tooltip != LocalizeValue.empty()) {
+        if (tooltip.isPresent()) {
             myLabel.setToolTipText(tooltip.get());
         }
         if (gutterMark != null) {

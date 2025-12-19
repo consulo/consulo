@@ -131,7 +131,7 @@ public abstract class CommandLineState implements RunProfileState {
         private final ProcessHandler myProcessHandler;
 
         public PauseOutputAction(ConsoleView console, ProcessHandler processHandler) {
-            super(ExecutionLocalize.runConfigurationPauseOutputActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsPause());
+            super(ExecutionLocalize.runConfigurationPauseOutputActionName(), LocalizeValue.absent(), PlatformIconGroup.actionsPause());
             myConsole = console;
             myProcessHandler = processHandler;
         }

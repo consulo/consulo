@@ -232,7 +232,7 @@ public class ComponentValidator {
                     component.repaint();
                 }
 
-                if (validationInfo.message != LocalizeValue.empty()) {
+                if (validationInfo.message.isPresent()) {
                     popupBuilder = createPopupBuilder(
                         validationInfo,
                         tipComponent -> {

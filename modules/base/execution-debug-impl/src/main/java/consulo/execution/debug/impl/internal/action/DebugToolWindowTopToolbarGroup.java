@@ -43,6 +43,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class DebugToolWindowTopToolbarGroup extends DefaultActionGroup implements DumbAware {
     public DebugToolWindowTopToolbarGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

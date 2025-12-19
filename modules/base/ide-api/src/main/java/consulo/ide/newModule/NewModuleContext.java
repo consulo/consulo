@@ -94,7 +94,7 @@ public class NewModuleContext extends NewModuleContextGroup {
   }
 
   public NewModuleContext() {
-    super("", LocalizeValue.empty(), null);
+    super("", LocalizeValue.absent(), null);
   }
 
   @Nonnull

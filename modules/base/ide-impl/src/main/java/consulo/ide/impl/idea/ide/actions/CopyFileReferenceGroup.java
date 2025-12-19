@@ -39,6 +39,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class CopyFileReferenceGroup extends DefaultActionGroup implements DumbAware {
     public CopyFileReferenceGroup() {
-        super(LocalizeValue.empty(), false);
+        super(LocalizeValue.absent(), false);
     }
 }

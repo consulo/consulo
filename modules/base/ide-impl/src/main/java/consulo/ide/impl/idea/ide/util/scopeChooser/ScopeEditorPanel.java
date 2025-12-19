@@ -750,13 +750,13 @@ public class ScopeEditorPanel {
         @Nonnull
         @Override
         public LocalizeValue getTextValue() { //just show non-blocking progress
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
 
         @Nonnull
         @Override
         public LocalizeValue getText2Value() {
-            return LocalizeValue.empty();
+            return LocalizeValue.absent();
         }
     }
 }

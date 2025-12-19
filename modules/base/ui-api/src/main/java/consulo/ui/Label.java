@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
 public interface Label extends Component, HasMnemonic, HasFocus {
   @Nonnull
   static Label create() {
-    return create(LocalizeValue.empty());
+    return create(LocalizeValue.absent());
   }
 
   @Nonnull

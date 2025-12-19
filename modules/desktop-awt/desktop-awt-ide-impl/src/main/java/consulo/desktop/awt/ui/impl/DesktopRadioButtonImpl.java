@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  */
 class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonImpl.MyJBRadioButton> implements RadioButton {
     class MyJBRadioButton extends JBRadioButton implements FromSwingComponentWrapper {
-        private LocalizeValue myLabelText = LocalizeValue.empty();
+        private LocalizeValue myLabelText = LocalizeValue.absent();
 
         public MyJBRadioButton() {
 

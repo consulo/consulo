@@ -156,7 +156,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
         group.add(new ToggleAction(
             AnalysisScopeLocalize.actionModuleDependenciesDirection(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             isForwardDirection() ? PlatformIconGroup.actionsMoveup() : PlatformIconGroup.actionsMovedown()
         ) {
             @Override

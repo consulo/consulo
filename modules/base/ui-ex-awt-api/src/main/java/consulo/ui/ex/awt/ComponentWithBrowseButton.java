@@ -322,8 +322,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             TextComponentAccessor<T> accessor
         ) {
             this(
-                title == null ? LocalizeValue.empty() : LocalizeValue.of(title),
-                description == null ? LocalizeValue.empty() : LocalizeValue.of(description),
+                LocalizeValue.ofNullable(title),
+                LocalizeValue.ofNullable(description),
                 textField,
                 project,
                 fileChooserDescriptor,
@@ -344,12 +344,12 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             FileChooserDescriptor fileChooserDescriptor = myFileChooserDescriptor;
-            if (myTitle != LocalizeValue.empty() || myDescription != LocalizeValue.empty()) {
+            if (myTitle.isPresent() || myDescription.isPresent()) {
                 fileChooserDescriptor = (FileChooserDescriptor) myFileChooserDescriptor.clone();
-                if (myTitle != LocalizeValue.empty()) {
+                if (myTitle.isPresent()) {
                     fileChooserDescriptor.withTitleValue(myTitle);
                 }
-                if (myDescription != LocalizeValue.empty()) {
+                if (myDescription.isPresent()) {
                     fileChooserDescriptor.withDescriptionValue(myDescription);
                 }
             }

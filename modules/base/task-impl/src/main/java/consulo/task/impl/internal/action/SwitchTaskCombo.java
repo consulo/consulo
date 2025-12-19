@@ -49,7 +49,7 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
         Project project = e.getData(Project.KEY);
         if (project == null || project.isDefault() || project.isDisposed()) {
             presentation.setEnabled(false);
-            presentation.setTextValue(LocalizeValue.empty());
+            presentation.setTextValue(LocalizeValue.absent());
             presentation.setIcon(null);
         }
         else {

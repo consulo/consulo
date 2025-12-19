@@ -51,7 +51,7 @@ public class CacheUtils {
         dependencyCache.findDependentFiles(context, new SimpleReference<>(), filter, dependentFiles, compiledWithErrors);
 
         context.getProgressIndicator().setTextValue(
-            dependentFiles.size() > 0 ? CompilerLocalize.progressFoundDependentFiles(dependentFiles.size()) : LocalizeValue.empty()
+            dependentFiles.size() > 0 ? CompilerLocalize.progressFoundDependentFiles(dependentFiles.size()) : LocalizeValue.absent()
         );
 
         return dependentFiles;

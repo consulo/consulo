@@ -595,7 +595,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
         public boolean process() {
             myCountingIterator.processAll(file -> {
-                updateIndicatorText(ApplicationLocalize.bulkReformatPrepareProgressText(), LocalizeValue.empty());
+                updateIndicatorText(ApplicationLocalize.bulkReformatPrepareProgressText(), LocalizeValue.absent());
                 countingIteration();
                 return !isDone();
             });

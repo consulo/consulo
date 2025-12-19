@@ -32,7 +32,7 @@ public class DeleteLayerAction extends AnAction {
     private ModuleEditor myModuleEditor;
 
     public DeleteLayerAction(ModuleEditor moduleEditor) {
-        super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+        super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.absent(), PlatformIconGroup.generalRemove());
         myModuleEditor = moduleEditor;
     }
 

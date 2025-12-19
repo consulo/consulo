@@ -52,7 +52,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
     @Inject
     public SearchEverywhereAction(KeyMapSetting keyMapSetting,
                                   ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
-        super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
+        super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.absent(), PlatformIconGroup.actionsFind());
         myKeyMapSetting = keyMapSetting;
         setEnabledInModalContext(false);
 

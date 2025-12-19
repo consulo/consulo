@@ -155,7 +155,7 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         secondaryGroup.addSeparator();
         secondaryGroup.add(new DumbAwareToggleBooleanProperty(
             ExecutionTestLocalize.actionSelectFirstFailedText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             null,
             properties,
             TestConsoleProperties.SELECT_FIRST_DEFECT

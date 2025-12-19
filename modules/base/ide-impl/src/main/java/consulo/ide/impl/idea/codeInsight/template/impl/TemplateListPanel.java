@@ -675,7 +675,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             .setRemoveAction(e -> removeRows())
             .disableDownAction()
             .disableUpAction()
-            .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+            .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.absent(), PlatformIconGroup.actionsCopy()) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {

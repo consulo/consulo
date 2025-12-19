@@ -89,7 +89,7 @@ public class InstalledPackagesPanel extends JPanel {
 
         myUpgradeButton = new DumbAwareActionButton(
             IdeLocalize.actionPackagesUpgradeText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.actionsMoveup()
         ) {
             @Override
@@ -101,7 +101,7 @@ public class InstalledPackagesPanel extends JPanel {
         };
         myInstallButton = new DumbAwareActionButton(
             IdeLocalize.actionPackagesInstallText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.generalAdd()
         ) {
             @Override
@@ -117,7 +117,7 @@ public class InstalledPackagesPanel extends JPanel {
         myInstallButton.setShortcut(CommonShortcuts.getNew());
         myUninstallButton = new DumbAwareActionButton(
             IdeLocalize.actionPackagesUninstallText(),
-            LocalizeValue.empty(),
+            LocalizeValue.absent(),
             PlatformIconGroup.generalRemove()
         ) {
             @Override

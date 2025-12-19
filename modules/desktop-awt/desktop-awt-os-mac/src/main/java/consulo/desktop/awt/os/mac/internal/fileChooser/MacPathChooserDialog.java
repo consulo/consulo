@@ -75,8 +75,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     @Nonnull
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        LocalizeValue title = descriptor.getTitleValue();
-        return title != LocalizeValue.empty() ? title : UILocalize.fileChooserDefaultTitle();
+        return descriptor.getTitleValue().or(UILocalize.fileChooserDefaultTitle());
     }
 
     @Nonnull

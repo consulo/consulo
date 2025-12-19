@@ -29,7 +29,7 @@ public class ExpandAllToolbarAction extends TreeExpandAllActionBase {
     private TreeExpander myTreeExpander;
 
     public ExpandAllToolbarAction(TreeExpander treeExpander) {
-        this(treeExpander, LocalizeValue.empty());
+        this(treeExpander, LocalizeValue.absent());
     }
 
     @Deprecated

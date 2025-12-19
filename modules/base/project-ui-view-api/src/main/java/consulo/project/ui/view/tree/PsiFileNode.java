@@ -136,7 +136,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         if (isNavigatableLibraryRoot()) {
             return ProjectUIViewLocalize.actionOpenLibrarySettingsText();
         }
-        return LocalizeValue.empty();
+        return LocalizeValue.absent();
     }
 
     @Override

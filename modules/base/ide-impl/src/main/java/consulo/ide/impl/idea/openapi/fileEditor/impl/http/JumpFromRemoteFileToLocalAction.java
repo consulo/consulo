@@ -49,7 +49,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
     private final Project myProject;
 
     public JumpFromRemoteFileToLocalAction(HttpVirtualFile file, Project project) {
-        super(LocalizeValue.localizeTODO("Find Local File"), LocalizeValue.empty(), PlatformIconGroup.generalAutoscrolltosource());
+        super(LocalizeValue.localizeTODO("Find Local File"), LocalizeValue.absent(), PlatformIconGroup.generalAutoscrolltosource());
         myFile = file;
         myProject = project;
     }

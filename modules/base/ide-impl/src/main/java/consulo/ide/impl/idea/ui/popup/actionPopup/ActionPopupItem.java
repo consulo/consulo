@@ -44,8 +44,8 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
     private final int myMaxIconWidth;
     private final int myMaxIconHeight;
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
-    private LocalizeValue myDescription = LocalizeValue.empty();
+    private LocalizeValue myTextValue = LocalizeValue.absent();
+    private LocalizeValue myDescription = LocalizeValue.absent();
 
     private Image myIcon;
     private Image mySelectedIcon;
@@ -157,7 +157,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         if (icon == null) {
             icon = selectedIcon != null ? selectedIcon : getEmptyIconIfCan();
         }
-        assert textValue != LocalizeValue.empty() : myAction + " has no presentation";
+        assert textValue.isPresent() : myAction + " has no presentation";
 
         myTextValue = textValue;
         myDescription = presentation.getDescriptionValue();

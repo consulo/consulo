@@ -137,8 +137,7 @@ public abstract class FileAnnotation {
     @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     public String getToolTip(int lineNumber) {
-        LocalizeValue toolTipValue = getToolTipValue(lineNumber);
-        return toolTipValue == LocalizeValue.empty() ? null : toolTipValue.get();
+        return getToolTipValue(lineNumber).getOrNull();
     }
 
     /**

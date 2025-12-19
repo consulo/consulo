@@ -65,7 +65,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     }
 
     public ChooseElementsDialog(Component parent, Collection<T> items, @Nonnull LocalizeValue title) {
-        this(parent, items, title, LocalizeValue.empty(), false);
+        this(parent, items, title, LocalizeValue.absent(), false);
     }
 
     public ChooseElementsDialog(
@@ -95,7 +95,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public ChooseElementsDialog(Component parent, Collection<T> items, String title) {
-        this(parent, items, LocalizeValue.ofNullable(title), LocalizeValue.empty(), false);
+        this(parent, items, LocalizeValue.ofNullable(title), LocalizeValue.absent(), false);
     }
 
     @Deprecated
@@ -175,7 +175,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(ScrollPaneFactory.createScrollPane(myChooser.getComponent()), BorderLayout.CENTER);
-        if (myDescription != LocalizeValue.empty()) {
+        if (myDescription != LocalizeValue.absent()) {
             panel.add(new JLabel(myDescription.get()), BorderLayout.NORTH);
         }
         return panel;

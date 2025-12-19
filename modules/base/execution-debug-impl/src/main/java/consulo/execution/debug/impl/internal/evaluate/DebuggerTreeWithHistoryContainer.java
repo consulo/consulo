@@ -104,7 +104,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
     private class GoForwardAction extends AnAction {
         public GoForwardAction() {
-            super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
+            super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.absent(), PlatformIconGroup.actionsForward());
         }
 
         @Override
@@ -124,7 +124,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
     private class GoBackwardAction extends AnAction {
         public GoBackwardAction() {
-            super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
+            super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.absent(), PlatformIconGroup.actionsBack());
         }
 
         @Override

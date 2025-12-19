@@ -126,7 +126,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
 
   private class ShowWriteAccessUsagesAction extends ToggleAction implements DumbAware {
     private ShowWriteAccessUsagesAction() {
-      super(UsageLocalize.actionShowWriteAccess(), LocalizeValue.empty(), PlatformIconGroup.actionsShowwriteaccess());
+      super(UsageLocalize.actionShowWriteAccess(), LocalizeValue.absent(), PlatformIconGroup.actionsShowwriteaccess());
     }
 
     @Override
