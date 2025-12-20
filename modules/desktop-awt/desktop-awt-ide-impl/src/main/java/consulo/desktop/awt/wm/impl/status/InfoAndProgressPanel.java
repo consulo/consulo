@@ -474,7 +474,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
         private class SuspendAction extends DumbAwareAction {
             public SuspendAction() {
-                super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsPause());
+                super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.generalInspectionspause());
             }
 
             @Override

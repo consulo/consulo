@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.progressBar.SpinnerProgress;
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
@@ -29,7 +30,15 @@ import javax.swing.*;
  * @since 2020-05-11
  */
 class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implements ProgressBar {
-    private class ProgressBar extends JProgressBar implements FromSwingComponentWrapper {
+    private class BaseProgressBar extends JProgressBar implements FromSwingComponentWrapper {
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopProgressBarImpl.this;
+        }
+    }
+
+    private class SpinnerProgressBar extends SpinnerProgress implements FromSwingComponentWrapper {
         @Nonnull
         @Override
         public Component toUIComponent() {
@@ -42,13 +51,17 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
     @Override
     protected JProgressBar createComponent() {
         if (mySpinner) {
-            return new ProgressBar();
+            return new SpinnerProgressBar();
         }
-        return new ProgressBar();
+        return new BaseProgressBar();
     }
 
     @Override
     public void addStyle(ProgressBarStyle style) {
+        if (isInitialized()) {
+            throw new IllegalArgumentException("Can't change after initialized");
+        }
+
         switch (style) {
             case SPINNER:
                 mySpinner = true;

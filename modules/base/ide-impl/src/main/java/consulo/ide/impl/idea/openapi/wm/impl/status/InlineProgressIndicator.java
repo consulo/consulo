@@ -4,6 +4,8 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
+import consulo.ui.ProgressBar;
+import consulo.ui.ProgressBarStyle;
 import consulo.ui.ex.awt.CaptionPanel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -12,6 +14,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import net.miginfocom.layout.AC;
@@ -30,7 +33,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
     private class CancelAction extends DumbAwareAction {
         public CancelAction(LocalizeValue text, LocalizeValue description) {
-            super(text, description, PlatformIconGroup.actionsCancel());
+            super(text, description, PlatformIconGroup.actionsClose());
         }
 
         @Override
@@ -48,7 +51,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     protected final JLabel myText = new JLabel();
     private final JLabel myText2 = new JLabel();
 
-    protected JProgressBar myProgress;
+    protected ProgressBar myProgress;
 
     private JPanel myComponent;
 
@@ -63,24 +66,26 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myCompact = compact;
         myInfo = processInfo;
 
-        myProgress = new JProgressBar(SwingConstants.HORIZONTAL);
-        myProgress.setStringPainted(false);
-
         List<AnAction> actions = createEastButtons();
 
         ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
-        myToolbar = ActionManager.getInstance().createActionToolbar("InlineProgressBar", group, true);
+
+        ActionToolbar.Style style = myCompact ? ActionToolbar.Style.INPLACE : ActionToolbar.Style.HORIZONTAL;
+        
+        myToolbar = ActionToolbarFactory.getInstance().createActionToolbar("InlineProgressBar", group, style);
         myToolbar.setTargetComponent(myComponent);
         myToolbar.updateActionsAsync();
-        myToolbar.setMiniMode(true);
 
         JComponent toolbar = myToolbar.getComponent();
 
+        myProgress = ProgressBar.create();
         if (myCompact) {
+            myProgress.addStyle(ProgressBarStyle.SPINNER);
+
             myComponent = new JPanel(new HorizontalLayout(JBUI.scale(5), SwingConstants.CENTER));
 
+            myComponent.add(TargetAWT.to(myProgress));
             myComponent.add(myText);
-            myComponent.add(myProgress);
             myComponent.add(toolbar);
 
             myComponent.setToolTipText(processInfo.getTitle() + ". " + IdeLocalize.progressTextClicktoviewprogresswindow());
@@ -115,7 +120,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
                     .noVisualPadding(),
                 new AC().gap("0")
             ));
-            progressWrapper.add(myProgress, new CC().growX().alignY("center"));
+            progressWrapper.add(TargetAWT.to(myProgress), new CC().growX().alignY("center"));
 
             content.add(progressWrapper, BorderLayout.CENTER);
             content.add(myText2, BorderLayout.SOUTH);

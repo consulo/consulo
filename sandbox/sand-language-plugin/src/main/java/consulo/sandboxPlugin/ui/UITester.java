@@ -143,6 +143,14 @@ public class UITester {
 
       layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
 
+      ProgressBar spinnerBar = ProgressBar.create();
+      spinnerBar.addStyle(ProgressBarStyle.SPINNER);
+      spinnerBar.setIndeterminate(true);
+
+      layout.add(HorizontalLayout.create()
+          .add(Label.create(LocalizeValue.of("Spinner Progress")))
+          .add(spinnerBar));
+
       IntSlider intSlider = IntSlider.create(3);
       intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
       layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));

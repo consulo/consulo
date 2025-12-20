@@ -87,6 +87,10 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         }
     }
 
+    public boolean isInitialized() {
+        return myInitializedComponent != null;
+    }
+
     @Nonnull
     @Override
     public Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
