@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class SimpleRefGroup implements RefGroup {
     @Nonnull
@@ -34,9 +35,9 @@ public class SimpleRefGroup implements RefGroup {
     @Nonnull
     private final List<VcsRef> myRefs;
 
-    public SimpleRefGroup(@Nonnull String name, @Nonnull List<VcsRef> refs) {
+    public SimpleRefGroup(@Nonnull String name, @Nonnull Collection<VcsRef> refs) {
         myName = name;
-        myRefs = refs;
+        myRefs = new ArrayList<>(refs);
     }
 
     @Override
@@ -84,43 +85,47 @@ public class SimpleRefGroup implements RefGroup {
         }
     }
 
-    public static void buildGroups(
+    public static List<RefGroup> buildGroups(
+        @Nonnull List<RefGroup> refGroups,
         @Nonnull MultiMap<VcsRefType, VcsRef> groupedRefs,
         boolean compact,
-        boolean showTagNames,
-        @Nonnull List<RefGroup> result
+        boolean showTagNames
     ) {
         if (groupedRefs.isEmpty()) {
-            return;
+            return refGroups;
         }
 
         if (compact) {
-            VcsRef firstRef = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
-            RefGroup group = ContainerUtil.getFirstItem(result);
-            if (group == null) {
-                result.add(new SimpleRefGroup(
+            if (refGroups.isEmpty()) {
+                VcsRef firstRef = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
+                return List.of(new SimpleRefGroup(
                     firstRef.getType().isBranch() || showTagNames ? firstRef.getName() : "",
-                    new ArrayList<>(groupedRefs.values())
+                    groupedRefs.values()
                 ));
             }
-            else {
-                group.addRefs(groupedRefs.values());
-            }
+            List<VcsRef> allRefs = Stream.concat(
+                refGroups.stream().flatMap(thisGroup -> thisGroup.getRefs().stream()),
+                groupedRefs.values().stream()
+            ).toList();
+
+            return List.of(new SimpleRefGroup(refGroups.getFirst().getName(), allRefs));
         }
         else {
+            List<RefGroup> result = new ArrayList<>(refGroups);
             for (Map.Entry<VcsRefType, Collection<VcsRef>> entry : groupedRefs.entrySet()) {
                 if (entry.getKey().isBranch()) {
                     for (VcsRef ref : entry.getValue()) {
-                        result.add(new SimpleRefGroup(ref.getName(), ContainerUtil.newArrayList(ref)));
+                        result.add(new SingletonRefGroup(ref));
                     }
                 }
                 else {
                     result.add(new SimpleRefGroup(
-                        showTagNames ? ObjectUtil.notNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
-                        new ArrayList<>(entry.getValue())
+                        showTagNames ? Objects.requireNonNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
+                        entry.getValue()
                     ));
                 }
             }
+            return result;
         }
     }
 }

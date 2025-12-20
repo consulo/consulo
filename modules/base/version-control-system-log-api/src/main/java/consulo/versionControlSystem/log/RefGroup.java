@@ -11,7 +11,6 @@ import java.util.List;
  * Grouping decision is made by the concrete {@link VcsLogRefManager}.
  */
 public interface RefGroup {
-
     /**
      * If a group is not-expanded, its references won't be displayed until
      * Otherwise, if a group is expanded, its references will be displayed immediately,
@@ -30,13 +29,6 @@ public interface RefGroup {
      */
     @Nonnull
     List<VcsRef> getRefs();
-
-    /**
-     * Adds references to this group.
-     */
-    default void addRefs(Collection<VcsRef> refs) {
-        getRefs().addAll(refs);
-    }
 
     /**
      * Returns the colors of this ref group, which will be used to paint it in the table.

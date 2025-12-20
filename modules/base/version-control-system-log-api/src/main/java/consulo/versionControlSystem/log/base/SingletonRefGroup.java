@@ -27,32 +27,33 @@ import java.util.List;
  * {@link RefGroup} containing only one {@link VcsRef}.
  */
 public class SingletonRefGroup implements RefGroup {
-  private final VcsRef myRef;
+    @Nonnull
+    private final VcsRef myRef;
 
-  public SingletonRefGroup(VcsRef ref) {
-    myRef = ref;
-  }
+    public SingletonRefGroup(@Nonnull VcsRef ref) {
+        myRef = ref;
+    }
 
-  @Override
-  public boolean isExpanded() {
-    return false;
-  }
+    @Override
+    public boolean isExpanded() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myRef.getName();
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myRef.getName();
+    }
 
-  @Nonnull
-  @Override
-  public List<VcsRef> getRefs() {
-    return Collections.singletonList(myRef);
-  }
+    @Nonnull
+    @Override
+    public List<VcsRef> getRefs() {
+        return Collections.singletonList(myRef);
+    }
 
-  @Nonnull
-  @Override
-  public List<Color> getColors() {
-    return Collections.singletonList(myRef.getType().getBackgroundColor());
-  }
+    @Nonnull
+    @Override
+    public List<Color> getColors() {
+        return Collections.singletonList(myRef.getType().getBackgroundColor());
+    }
 }
