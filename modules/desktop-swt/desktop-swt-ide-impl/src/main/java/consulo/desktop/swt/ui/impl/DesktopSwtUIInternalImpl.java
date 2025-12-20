@@ -182,7 +182,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Hyperlink _Components_hyperlink(String text) {
+  public Hyperlink _Components_hyperlink(LocalizeValue text) {
     return new DesktopSwtHyperlinkImpl(text);
   }
 
@@ -242,12 +242,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public MenuItem _MenuItem_create(String text) {
-    return null;
-  }
-
-  @Override
-  public Menu _Menu_create(String text) {
+  public Menu _Menu_create(LocalizeValue text) {
     return null;
   }
 

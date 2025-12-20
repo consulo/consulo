@@ -553,7 +553,7 @@ public class RunConfigurable extends BaseConfigurable {
         panel.setBorder(new EmptyBorder(7, 10, 0, 0));
         panel.add(new JLabel("Press the"));
 
-        Hyperlink hyperlink = Hyperlink.create("", event -> myAddAction.showAddPopup(true));
+        Hyperlink hyperlink = Hyperlink.create(LocalizeValue.empty(), event -> myAddAction.showAddPopup(true));
         hyperlink.setIcon(PlatformIconGroup.generalAdd());
         hyperlink.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 5);
         hyperlink.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);

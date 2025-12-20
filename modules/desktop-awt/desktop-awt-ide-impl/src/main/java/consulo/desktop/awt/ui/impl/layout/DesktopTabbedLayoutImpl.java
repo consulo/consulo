@@ -55,8 +55,9 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         }
     }
 
-    public DesktopTabbedLayoutImpl() {
-        initialize(new MyJTabbedPane());
+    @Override
+    protected JBEditorTabs createComponent() {
+        return new MyJTabbedPane();
     }
 
     @Override

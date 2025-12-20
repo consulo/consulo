@@ -147,7 +147,7 @@ public class UITester {
       intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
       layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
 
-      layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()));
+      layout.add(Hyperlink.create(LocalizeValue.localizeTODO("Some Link"), (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()));
 
       HtmlView component = HtmlView.create();
       component.render(new HtmlView.RenderData("<html><body><b>Some Bold Text</b> Test</body></html>"));

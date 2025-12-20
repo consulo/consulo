@@ -59,10 +59,23 @@ public class DesktopTextBoxWithExpandAction {
             }
         }
 
-        private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
-            ExpandableTextField field = new MyExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
+        private final Function<String, List<String>> myParser;
+        private final Function<List<String>, String> myJoiner;
+        private final SupportTextBoxWithExpandActionExtender myLookAndFeel;
+
+        private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser,
+                                                 Function<List<String>, String> joiner,
+                                                 SupportTextBoxWithExpandActionExtender lookAndFeel) {
+
+            myParser = parser;
+            myJoiner = joiner;
+            myLookAndFeel = lookAndFeel;
+        }
+
+        @Override
+        protected ExpandableTextField createComponent() {
+            ExpandableTextField field = new MyExpandableTextField(myParser, myJoiner, myLookAndFeel);
             TextFieldPlaceholderFunction.install(field);
-            initialize(field);
             addDocumentListenerForValidator(field.getDocument());
 
             field.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -73,6 +86,7 @@ public class DesktopTextBoxWithExpandAction {
                     getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(SupportedTextBoxWithExpandAction.this, getValue()));
                 }
             });
+            return field;
         }
 
         @Nonnull

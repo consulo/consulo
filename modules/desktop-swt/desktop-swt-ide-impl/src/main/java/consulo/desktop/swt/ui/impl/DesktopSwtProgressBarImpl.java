@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.ProgressBarStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -24,33 +25,38 @@ import org.eclipse.swt.widgets.ProgressBar;
  * @since 11/12/2021
  */
 public class DesktopSwtProgressBarImpl extends SWTComponentDelegate<ProgressBar> implements consulo.ui.ProgressBar {
-  @Override
-  protected ProgressBar createSWT(Composite parent) {
-    return new ProgressBar(parent, SWT.DEFAULT);
-  }
+    @Override
+    protected ProgressBar createSWT(Composite parent) {
+        return new ProgressBar(parent, SWT.DEFAULT);
+    }
 
-  @Override
-  public void setIndeterminate(boolean value) {
-    // SWT.INDETERMINATE - todo not supported change
-  }
+    @Override
+    public void setIndeterminate(boolean value) {
+        // SWT.INDETERMINATE - todo not supported change
+    }
 
-  @Override
-  public boolean isIndeterminate() {
-    return false;
-  }
+    @Override
+    public boolean isIndeterminate() {
+        return false;
+    }
 
-  @Override
-  public void setMinimum(int value) {
-   toSWTComponent().setMinimum(value);
-  }
+    @Override
+    public void setMinimum(int value) {
+        toSWTComponent().setMinimum(value);
+    }
 
-  @Override
-  public void setMaximum(int value) {
-    toSWTComponent().setMaximum(value);
-  }
+    @Override
+    public void setMaximum(int value) {
+        toSWTComponent().setMaximum(value);
+    }
 
-  @Override
-  public void setValue(int value) {
-    toSWTComponent().setSelection(value);
-  }
+    @Override
+    public void setValue(int value) {
+        toSWTComponent().setSelection(value);
+    }
+
+    @Override
+    public void addStyle(ProgressBarStyle style) {
+
+    }
 }

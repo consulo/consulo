@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
@@ -32,9 +33,9 @@ import org.eclipse.swt.widgets.Link;
  * @since 29/04/2021
  */
 public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implements Hyperlink {
-  private String myText;
+  private LocalizeValue myText = LocalizeValue.of();
 
-  public DesktopSwtHyperlinkImpl(String text) {
+  public DesktopSwtHyperlinkImpl(LocalizeValue text) {
     myText = text;
   }
 
@@ -57,13 +58,13 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return myText;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
+  public void setText(@Nonnull LocalizeValue text) {
     myText = text;
   }
 

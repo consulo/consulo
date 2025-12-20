@@ -88,7 +88,7 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
     propertyBuilder.add(dateFormatBox, dateTimeFormatManager::getDateFormatPattern, dateTimeFormatManager::setDateFormatPattern);
     CheckBox use24HoursBox = CheckBox.create(LocalizeValue.localizeTODO("Use 24-hour time"));
     propertyBuilder.add(use24HoursBox, dateTimeFormatManager::isUse24HourTime, dateTimeFormatManager::setUse24HourTime);
-    Hyperlink formatLink = Hyperlink.create("(info)");
+    Hyperlink formatLink = Hyperlink.create(LocalizeValue.localizeTODO("(info)"));
     formatLink.addHyperlinkListener(event -> Platform.current().openInBrowser("https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/SimpleDateFormat.html"));
 
     overrideFormatBox.addValueListener(event -> {

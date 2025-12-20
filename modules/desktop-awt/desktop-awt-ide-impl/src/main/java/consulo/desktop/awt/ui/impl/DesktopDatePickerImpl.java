@@ -39,13 +39,21 @@ public class DesktopDatePickerImpl extends SwingComponentDelegate<DesktopDatePic
         }
     }
 
-    public DesktopDatePickerImpl(String datePattern) {
-        DatePickerImpl picker = new DatePickerImpl();
-        initialize(picker);
+    private final String myDatePattern;
 
-        if (datePattern != null) {
-            picker.setFormats(datePattern);
+    public DesktopDatePickerImpl(String datePattern) {
+        myDatePattern = datePattern;
+    }
+
+    @Override
+    protected DatePickerImpl createComponent() {
+        DatePickerImpl picker = new DatePickerImpl();
+
+        if (myDatePattern != null) {
+            picker.setFormats(myDatePattern);
         }
+
+        return picker;
     }
 
     @Nullable

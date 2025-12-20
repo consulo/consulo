@@ -15,15 +15,19 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ui.*;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.Menu;
+import consulo.ui.MenuItem;
+import consulo.ui.MenuSeparator;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -43,13 +47,20 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
     }
   }
 
-  public DesktopMenuImpl(String text) {
-    myComponent = new MyJMenu(text);
+  private LocalizeValue myLabelText = LocalizeValue.of();
+
+  public DesktopMenuImpl(LocalizeValue text) {
+    myLabelText = text;
+  }
+
+  @Override
+  protected JMenu createComponent() {
+    return new MyJMenu(myLabelText.get());
   }
 
   @Override
   public void setIcon(@Nullable Image icon) {
-    myComponent.setIcon(TargetAWT.to(icon));
+    toAWTComponent().setIcon(TargetAWT.to(icon));
   }
 
   @RequiredUIAccess
@@ -57,16 +68,16 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
   @Override
   public Menu add(@Nonnull MenuItem menuItem) {
     if (menuItem instanceof MenuSeparator) {
-      myComponent.addSeparator();
+      toAWTComponent().addSeparator();
       return this;
     }
-    myComponent.add((JMenuItem)TargetAWT.to(menuItem));
+    toAWTComponent().add((JMenuItem)TargetAWT.to(menuItem));
     return this;
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return myComponent.getText();
+  public LocalizeValue getText() {
+    return myLabelText;
   }
 }

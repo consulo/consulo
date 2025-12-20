@@ -84,13 +84,21 @@ public class DesktopTextBoxWithExtensions {
             }
         }
 
+        private final String myInitText;
+
         public Supported(String text) {
-            initialize(new MyExtendableTextField(text));
-            TextFieldPlaceholderFunction.install(toAWTComponent());
+            myInitText = text;
+        }
 
-            addDocumentListenerForValidator(toAWTComponent().getDocument());
+        @Override
+        protected MyExtendableTextField createComponent() {
+            MyExtendableTextField field = new MyExtendableTextField(myInitText);
 
-            toAWTComponent().getDocument().addDocumentListener(new DocumentAdapter() {
+            TextFieldPlaceholderFunction.install(field);
+
+            addDocumentListenerForValidator(field.getDocument());
+
+            field.getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override
                 @SuppressWarnings("unchecked")
                 @RequiredUIAccess
@@ -98,6 +106,8 @@ public class DesktopTextBoxWithExtensions {
                     getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(Supported.this, getValue()));
                 }
             });
+
+            return field;
         }
 
         @Override
@@ -114,7 +124,7 @@ public class DesktopTextBoxWithExtensions {
             }
             return null;
         }
-        
+
         @Nonnull
         @Override
         public JTextField getTextField() {
@@ -165,7 +175,7 @@ public class DesktopTextBoxWithExtensions {
                 @Override
                 public Consumer<AWTEvent> getActionOnClick() {
                     var clickListener = extension.getClickListener();
-                    return clickListener == null ? null : (e) -> clickListener.onEvent(new ClickEvent(Supported.this, DesktopAWTInputDetails.convert(myComponent, e)));
+                    return clickListener == null ? null : (e) -> clickListener.onEvent(new ClickEvent(Supported.this, DesktopAWTInputDetails.convert(toAWTComponent(), e)));
                 }
             };
         }

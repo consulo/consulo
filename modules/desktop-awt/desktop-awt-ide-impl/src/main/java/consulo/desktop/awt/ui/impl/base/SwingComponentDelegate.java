@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.desktop.awt.facade.ToSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
@@ -55,22 +54,19 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 27-Oct-17
  */
-public class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
-    @Deprecated
-    @DeprecationInfo("Use #initialize() method")
-    protected T myComponent;
+public abstract class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
+    private T myInitializedComponent;
 
-    @SuppressWarnings("deprecation")
-    protected void initialize(T component) {
-        myComponent = component;
+    protected abstract T createComponent();
 
-        myComponent.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
-        myComponent.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));
+    protected void init(T component) {
+        component.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
+        component.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));
 
         if (this instanceof HasFocus) {
-            myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((HasFocus) this, getListenerDispatcher(FocusEvent.class)));
-            
-            myComponent.addFocusListener(new AWTFocusAdapterAsBlurListener((HasFocus) this, getListenerDispatcher(BlurEvent.class)));
+            component.addFocusListener(new AWTFocusAdapterAsFocusListener((HasFocus) this, getListenerDispatcher(FocusEvent.class)));
+
+            component.addFocusListener(new AWTFocusAdapterAsBlurListener((HasFocus) this, getListenerDispatcher(BlurEvent.class)));
         }
     }
 
@@ -137,9 +133,13 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public T toAWTComponent() {
-        return myComponent;
+        if (myInitializedComponent == null) {
+            T component = createComponent();
+            myInitializedComponent = component;
+            init(component);
+        }
+        return myInitializedComponent;
     }
 
     @Override
@@ -276,7 +276,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     @Nonnull
     protected UIDataObject dataObject() {
-        javax.swing.JComponent component = (javax.swing.JComponent) toAWTComponent();
+        JComponent component = (JComponent) toAWTComponent();
         UIDataObject dataObject = (UIDataObject) component.getClientProperty(UIDataObject.class);
         if (dataObject == null) {
             component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());

@@ -178,6 +178,8 @@ label.proxy.exceptions.text:
     text: 'Example: *.domain.com, 192.168.*'
 label.system.proxy.used:
     text: <html>You have JVM property 'java.net.useSystemProxies' set to true.<br>This will cause some network calls to go through operating system-defined proxy.<br>If you didn't intend to use system-defined proxy, disable this property
+link.reset:
+    text: Reset
 local.vcs.action.name.redo.command:
     text: Redo {0}
 local.vcs.action.name.undo.command:

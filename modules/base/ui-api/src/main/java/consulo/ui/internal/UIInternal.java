@@ -115,7 +115,9 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract Hyperlink _Components_hyperlink(String text);
+    public Hyperlink _Components_hyperlink(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract ImageBox _Components_imageBox(Image image);
 
@@ -173,9 +175,13 @@ public abstract class UIInternal {
         return _ImageEffects_resize(original, width, height);
     }
 
-    public abstract MenuItem _MenuItem_create(String text);
+    public MenuItem _MenuItem_create(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
 
-    public abstract Menu _Menu_create(String text);
+    public Menu _Menu_create(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract MenuSeparator _MenuSeparator_create();
 

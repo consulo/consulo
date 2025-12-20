@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -64,9 +65,16 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         }
     }
 
-    @SuppressWarnings("unchecked")
+    private LayoutManager myLayoutManager;
+
     protected void initDefaultPanel(LayoutManager layoutManager) {
-        initialize((T) new MyJPanel(layoutManager));
+        myLayoutManager = layoutManager;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected T createComponent() {
+        return (T) new MyJPanel(Objects.requireNonNull(myLayoutManager));
     }
 
     @Nonnull

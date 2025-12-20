@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
+import consulo.ui.ProgressBarStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
@@ -27,43 +28,47 @@ import jakarta.annotation.Nullable;
  * @since 2020-05-11
  */
 public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarImpl.Vaadin> implements ProgressBar {
-  public  class Vaadin extends com.vaadin.flow.component.progressbar.ProgressBar implements FromVaadinComponentWrapper {
+    public class Vaadin extends com.vaadin.flow.component.progressbar.ProgressBar implements FromVaadinComponentWrapper {
 
-    @Nullable
-    @Override
-    public Component toUIComponent() {
-      return WebProgressBarImpl.this;
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebProgressBarImpl.this;
+        }
     }
+
+  @Override
+  public void addStyle(ProgressBarStyle style) {
   }
 
   @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 
-  @Override
-  public void setIndeterminate(boolean value) {
-    getVaadinComponent().setIndeterminate(value);
-  }
+    @Override
+    public void setIndeterminate(boolean value) {
+        getVaadinComponent().setIndeterminate(value);
+    }
 
-  @Override
-  public boolean isIndeterminate() {
-    return getVaadinComponent().isIndeterminate();
-  }
+    @Override
+    public boolean isIndeterminate() {
+        return getVaadinComponent().isIndeterminate();
+    }
 
-  @Override
-  public void setMinimum(int value) {
-    getVaadinComponent().setMin(value);
-  }
+    @Override
+    public void setMinimum(int value) {
+        getVaadinComponent().setMin(value);
+    }
 
-  @Override
-  public void setMaximum(int value) {
-    getVaadinComponent().setMax(value);
-  }
+    @Override
+    public void setMaximum(int value) {
+        getVaadinComponent().setMax(value);
+    }
 
-  @Override
-  public void setValue(int value) {
-    getVaadinComponent().setValue(value / 100d);
-  }
+    @Override
+    public void setValue(int value) {
+        getVaadinComponent().setValue(value / 100d);
+    }
 }

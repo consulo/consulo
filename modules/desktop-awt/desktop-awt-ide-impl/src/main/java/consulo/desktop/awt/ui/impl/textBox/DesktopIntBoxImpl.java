@@ -45,14 +45,21 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
         }
     }
 
+    private final int startValue;
+
     public DesktopIntBoxImpl(int value) {
+        this.startValue = value;
+    }
+
+    @Override
+    protected MyJSpinner createComponent() {
         MyJSpinner field = new MyJSpinner();
-        field.setRange(value, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        field.setRange(startValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
         field.addChangeListener(e -> {
             MyJSpinner source = (MyJSpinner) e.getSource();
             valueChanged(getValue(source));
         });
-        initialize(field);
+        return field;
     }
 
     private static int getValue(JSpinner spinner) {

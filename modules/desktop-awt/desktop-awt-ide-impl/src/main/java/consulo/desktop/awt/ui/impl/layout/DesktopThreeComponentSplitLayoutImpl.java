@@ -33,8 +33,15 @@ import javax.swing.*;
  * @since 2019-02-18
  */
 public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate<ThreeComponentsSplitter> implements ThreeComponentSplitLayout {
+    private final SplitLayoutPosition myPosition;
+
     public DesktopThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
-        initialize(new ThreeComponentsSplitter(position == SplitLayoutPosition.VERTICAL));
+        myPosition = position;
+    }
+
+    @Override
+    protected ThreeComponentsSplitter createComponent() {
+        return new ThreeComponentsSplitter(myPosition == SplitLayoutPosition.VERTICAL);
     }
 
     @Override

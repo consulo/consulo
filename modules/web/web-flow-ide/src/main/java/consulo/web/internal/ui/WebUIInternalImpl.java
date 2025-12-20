@@ -171,7 +171,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Hyperlink _Components_hyperlink(String text) {
+  public Hyperlink _Components_hyperlink(LocalizeValue text) {
     WebHyperlinkImpl hyperlink = new WebHyperlinkImpl();
     hyperlink.setText(text);
     return hyperlink;
@@ -255,12 +255,12 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public MenuItem _MenuItem_create(String text) {
+  public MenuItem _MenuItem_create(LocalizeValue text) {
     return new WebMenuItemImpl(text);
   }
 
   @Override
-  public Menu _Menu_create(String text) {
+  public Menu _Menu_create(LocalizeValue text) {
     return new WebMenuImpl(text);
   }
 

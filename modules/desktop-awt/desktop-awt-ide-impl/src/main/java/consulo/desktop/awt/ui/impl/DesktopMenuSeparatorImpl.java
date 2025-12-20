@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.Size2D;
@@ -42,8 +43,8 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
     @Nonnull
     @Override
-    public String getText() {
-        return "";
+    public LocalizeValue getText() {
+        return LocalizeValue.of();
     }
 
     @Override

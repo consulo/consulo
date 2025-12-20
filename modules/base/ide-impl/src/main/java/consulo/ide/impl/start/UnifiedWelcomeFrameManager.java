@@ -23,6 +23,7 @@ import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.IdeFrame;
@@ -116,10 +117,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
             Presentation presentation = e.getPresentation();
             if (presentation.isVisible()) {
-                String text = presentation.getText();
-                if (text != null && text.endsWith("...")) {
-                    text = text.substring(0, text.length() - 3);
-                }
+                LocalizeValue text = presentation.getTextValue();
 
                 Hyperlink component = Hyperlink.create(text, (event) -> action.actionPerformed(e));
 

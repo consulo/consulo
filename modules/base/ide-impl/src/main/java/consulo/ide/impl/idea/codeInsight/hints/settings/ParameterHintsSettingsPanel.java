@@ -12,7 +12,7 @@ public class ParameterHintsSettingsPanel extends JPanel {
     public ParameterHintsSettingsPanel(Language language, boolean excludeListSupported) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         if (excludeListSupported) {
-            Hyperlink hyperlink = Hyperlink.create(LanguageEditorLocalize.settingsInlayJavaExcludeList().get());
+            Hyperlink hyperlink = Hyperlink.create(LanguageEditorLocalize.settingsInlayJavaExcludeList());
             hyperlink.addHyperlinkListener(event -> {
                 new ExcludeListDialog(language).show();
             });

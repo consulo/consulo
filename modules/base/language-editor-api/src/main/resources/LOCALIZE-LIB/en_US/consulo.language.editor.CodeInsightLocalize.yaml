@@ -937,6 +937,8 @@ set.language.level:
     text: Set language level
 set.language.level.to.0:
     text: Set language level to {0}
+settings.inlay.parameter.hints.exclude.list:
+    text: Parameter Name Hints Exclude List
 static.class.initializer:
     text: '{0}class initializer'
 status.bar.exit.points.highlighted.message:

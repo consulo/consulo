@@ -15,9 +15,9 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -25,12 +25,12 @@ import jakarta.annotation.Nonnull;
  * @since 14-Jun-16
  */
 public interface Menu extends MenuItem {
-  @Nonnull
-  static Menu create(@Nonnull String text) {
-    return UIInternal.get()._Menu_create(text);
-  }
+    @Nonnull
+    static Menu create(@Nonnull LocalizeValue text) {
+        return UIInternal.get()._Menu_create(text);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  Menu add(@Nonnull MenuItem menuItem);
+    @RequiredUIAccess
+    @Nonnull
+    Menu add(@Nonnull MenuItem menuItem);
 }

@@ -21,7 +21,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2020-05-11
  */
-public interface ProgressBar extends Component {
+public interface ProgressBar extends Component, HasComponentStyle<ProgressBarStyle> {
   static ProgressBar create() {
     return UIInternal.get()._Components_progressBar();
   }

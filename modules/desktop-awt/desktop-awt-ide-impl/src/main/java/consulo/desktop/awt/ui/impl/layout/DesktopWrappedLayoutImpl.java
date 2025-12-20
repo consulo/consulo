@@ -72,8 +72,14 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
     }
 
     public DesktopWrappedLayoutImpl() {
-        myComponent = new MyJPanel(new BorderLayout());
-        myComponent.setOpaque(false);
+
+    }
+
+    @Override
+    protected JPanel createComponent() {
+        JPanel panel = new MyJPanel(new BorderLayout());
+        panel.setOpaque(false);
+        return panel;
     }
 
     @Override
@@ -94,20 +100,22 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
             return;
         }
 
-        myComponent.removeAll();
-        myComponent.setLayout(new BorderLayout());
+        JPanel component = toAWTComponent();
+        component.removeAll();
+        component.setLayout(new BorderLayout());
         if (wrapped != null) {
-            myComponent.add(wrapped, BorderLayout.CENTER);
+            component.add(wrapped, BorderLayout.CENTER);
         }
-        myComponent.validate();
+        component.validate();
     }
 
     public JComponent getTargetComponent() {
-        if (myComponent.getComponentCount() == 1) {
-            return (JComponent) myComponent.getComponent(0);
+        JPanel component = toAWTComponent();
+        if (component.getComponentCount() == 1) {
+            return (JComponent) component.getComponent(0);
         }
         else {
-            return myComponent;
+            return component;
         }
     }
 }

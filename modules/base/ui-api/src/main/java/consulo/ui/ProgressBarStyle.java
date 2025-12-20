@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,10 @@
  */
 package consulo.ui;
 
-import consulo.localize.LocalizeValue;
-import consulo.ui.image.Image;
-import consulo.ui.internal.UIInternal;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 20/12/2025
  */
-public interface MenuItem extends Component {
-  @Nonnull
-  static MenuItem create(@Nonnull LocalizeValue text) {
-    return UIInternal.get()._MenuItem_create(text);
-  }
-
-  @Nonnull
-  LocalizeValue getText();
-
-  void setIcon(@Nullable Image icon);
+public enum ProgressBarStyle implements ComponentStyle {
+    SPINNER
 }

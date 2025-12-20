@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.image.Image;
@@ -30,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
   public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private String myText = "";
+    private LocalizeValue myText = LocalizeValue.of();
     private Image myIcon;
 
     @Nullable
@@ -40,13 +41,13 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
     }
   }
 
-  public WebMenuItemImpl(String text) {
+  public WebMenuItemImpl(LocalizeValue text) {
     getVaadinComponent().myText = text;
   }
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return toVaadinComponent().myText;
   }
 

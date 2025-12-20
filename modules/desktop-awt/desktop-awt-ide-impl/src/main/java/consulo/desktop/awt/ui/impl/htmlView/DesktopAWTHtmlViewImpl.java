@@ -78,8 +78,9 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         }
     }
 
-    public DesktopAWTHtmlViewImpl() {
-        initialize(new MyHtmlPanel());
+    @Override
+    protected MyHtmlPanel createComponent() {
+        return new MyHtmlPanel();
     }
 
     @Override

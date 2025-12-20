@@ -82,10 +82,17 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         }
     }
 
-    public DesktopButtonImpl(LocalizeValue text) {
-        initialize(new MyButton(text));
+    private final LocalizeValue myInitText;
 
-        toAWTComponent().addActionListener(e -> invoke(DesktopAWTInputDetails.convert(toAWTComponent(), e)));
+    public DesktopButtonImpl(LocalizeValue text) {
+        myInitText = text;
+    }
+
+    @Override
+    protected MyButton createComponent() {
+        MyButton button = new MyButton(myInitText);
+        button.addActionListener(e -> invoke(DesktopAWTInputDetails.convert(toAWTComponent(), e)));
+        return button;
     }
 
     @Nonnull

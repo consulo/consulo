@@ -39,10 +39,16 @@ import java.util.function.Supplier;
  */
 public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDelegate<AWTLoadingPanel> implements LoadingLayout<L> {
     private final L myInnerLayout;
+    private final Disposable myParent;
 
     public DesktopAWTLoadingLayout(L inner, Disposable parent) {
         myInnerLayout = inner;
-        initialize(new AWTLoadingPanel(this, (JComponent) TargetAWT.to(inner), parent));
+        myParent = parent;
+    }
+
+    @Override
+    protected AWTLoadingPanel createComponent() {
+        return new AWTLoadingPanel(this, (JComponent) TargetAWT.to(myInnerLayout), myParent);
     }
 
     @Override

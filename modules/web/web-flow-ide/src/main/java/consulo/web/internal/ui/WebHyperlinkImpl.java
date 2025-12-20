@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.HasText;
 import com.vaadin.flow.component.Tag;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,48 +35,48 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-17
  */
 public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.Vaadin> implements Hyperlink {
-  @Tag("a")
-  public class Vaadin extends SimpleComponent implements ClickNotifier<Vaadin>, HasText, FromVaadinComponentWrapper {
+    @Tag("a")
+    public class Vaadin extends SimpleComponent implements ClickNotifier<Vaadin>, HasText, FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebHyperlinkImpl.this;
+        }
+    }
+
+    public WebHyperlinkImpl() {
+        toVaadinComponent().addClickListener(event -> {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
+        });
+    }
+
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        return LocalizeValue.of(getVaadinComponent().getText());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        getVaadinComponent().setText(text.get());
+    }
+
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        // TODO getVaadinComponent().setImage(icon);
+    }
+
     @Nullable
     @Override
-    public Component toUIComponent() {
-      return WebHyperlinkImpl.this;
+    public Image getIcon() {
+        return null;
+        // TODO return getVaadinComponent().myImage;
     }
-  }
-
-  public WebHyperlinkImpl() {
-    toVaadinComponent().addClickListener(event -> {
-      getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
-    });
-  }
-
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @Nonnull
-  @Override
-  public String getText() {
-    return getVaadinComponent().getText();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull String text) {
-    getVaadinComponent().setText(text);
-  }
-
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    // TODO getVaadinComponent().setImage(icon);
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return null;
-    // TODO return getVaadinComponent().myImage;
-  }
 }

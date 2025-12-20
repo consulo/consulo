@@ -16,14 +16,14 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.ui.Component;
 import consulo.ui.PasswordBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -31,31 +31,38 @@ import javax.swing.*;
  * @since 22/03/2021
  */
 public class DesktopPasswordBoxImpl extends SwingValidableComponent<String, DesktopPasswordBoxImpl.MyPasswordField> implements PasswordBox {
-  public class MyPasswordField extends JPasswordField implements FromSwingComponentWrapper {
-    public MyPasswordField(String text) {
-      super(text, 16);
+    public class MyPasswordField extends JPasswordField implements FromSwingComponentWrapper {
+        public MyPasswordField(String text) {
+            super(text, 16);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopPasswordBoxImpl.this;
+        }
     }
 
-    @Nonnull
+    private final String myInitPassword;
+
+    public DesktopPasswordBoxImpl(String password) {
+        myInitPassword = StringUtil.notNullize(password);
+    }
+
     @Override
-    public Component toUIComponent() {
-      return DesktopPasswordBoxImpl.this;
+    protected MyPasswordField createComponent() {
+        return new MyPasswordField(myInitPassword);
     }
-  }
 
-  public DesktopPasswordBoxImpl(String password) {
-    initialize(new MyPasswordField(StringUtil.notNullize(password)));
-  }
+    @Nullable
+    @Override
+    public String getValue() {
+        return StringUtil.nullize(toAWTComponent().getText());
+    }
 
-  @Nullable
-  @Override
-  public String getValue() {
-    return StringUtil.nullize(toAWTComponent().getText());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(String value, boolean fireListeners) {
-    toAWTComponent().setText(value);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(String value, boolean fireListeners) {
+        toAWTComponent().setText(value);
+    }
 }

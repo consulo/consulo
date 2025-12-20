@@ -15,13 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ui.*;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.Component;
+import consulo.ui.Menu;
+import consulo.ui.MenuBar;
+import consulo.ui.MenuItem;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -29,35 +32,36 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> implements MenuBar {
-  class MyJMenu extends JMenuBar implements FromSwingComponentWrapper {
+    class MyJMenu extends JMenuBar implements FromSwingComponentWrapper {
 
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopMenuBarImpl.this;
+        }
+    }
+
+    @Override
+    protected JMenuBar createComponent() {
+        return new MyJMenu();
+    }
+
+    @Override
+    public void clear() {
+        toAWTComponent().removeAll();
+    }
+
+    @RequiredUIAccess
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopMenuBarImpl.this;
+    public MenuBar add(@Nonnull MenuItem menuItem) {
+        if (menuItem instanceof Menu) {
+            toAWTComponent().add((JMenu) TargetAWT.to(menuItem));
+        }
+        else {
+            DesktopMenuImpl menu = new DesktopMenuImpl(menuItem.getText());
+            toAWTComponent().add((JMenu) TargetAWT.to(menu));
+        }
+        return this;
     }
-  }
-
-  public DesktopMenuBarImpl() {
-    myComponent = new MyJMenu();
-  }
-
-  @Override
-  public void clear() {
-    myComponent.removeAll();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public MenuBar add(@Nonnull MenuItem menuItem) {
-    if (menuItem instanceof Menu) {
-      myComponent.add((JMenu)TargetAWT.to(menuItem));
-    }
-    else {
-      DesktopMenuImpl menu = new DesktopMenuImpl(menuItem.getText());
-      myComponent.add((JMenu)TargetAWT.to(menu));
-    }
-    return this;
-  }
 }

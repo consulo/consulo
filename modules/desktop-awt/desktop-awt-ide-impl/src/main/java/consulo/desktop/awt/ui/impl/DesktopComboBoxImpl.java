@@ -39,16 +39,19 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
         }
     }
 
-    private ListModel<E> myModel;
+    private final ListModel<E> myModel;
     private TextItemRender<E> myRender = ListItemRenders.defaultRender();
 
     public DesktopComboBoxImpl(ListModel<E> model) {
-        DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
         myModel = model;
+    }
 
-        myComponent = new MyComboBox<>();
-        myComponent.setModel(wrapper);
+    @Override
+    protected MyComboBox createComponent() {
+        MyComboBox<E> myComponent = new MyComboBox<>();
+        myComponent.setModel(new DesktopComboBoxModelWrapper<>(myModel));
         myComponent.setRenderer(new DesktopListRender<>(() -> myRender));
+        return myComponent;
     }
 
     @Nonnull
@@ -64,27 +67,27 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
 
     @Override
     public void setValueByIndex(int index) {
-        myComponent.setSelectedIndex(index);
+        toAWTComponent().setSelectedIndex(index);
     }
 
     @RequiredUIAccess
     @Override
     public void setValue(E value, boolean fireListeners) {
-        myComponent.setSelectedItem(value);
+        toAWTComponent().setSelectedItem(value);
     }
 
     @Nonnull
     @Override
     public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
         DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
-        myComponent.addItemListener(listener);
-        return () -> myComponent.removeItemListener(listener);
+        toAWTComponent().addItemListener(listener);
+        return () -> toAWTComponent().removeItemListener(listener);
     }
 
     @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public E getValue() {
-        return (E) myComponent.getSelectedItem();
+        return (E) toAWTComponent().getSelectedItem();
     }
 }

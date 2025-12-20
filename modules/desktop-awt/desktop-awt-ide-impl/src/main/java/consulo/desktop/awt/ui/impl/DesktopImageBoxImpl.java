@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.ui.Component;
 import consulo.ui.ImageBox;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,28 +28,32 @@ import jakarta.annotation.Nonnull;
  * @since 12-Sep-17
  */
 class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> implements ImageBox {
-  class MyScalableIconComponent extends ScalableIconComponent implements FromSwingComponentWrapper {
-    MyScalableIconComponent(Image icon) {
-      super(icon);
+    class MyScalableIconComponent extends ScalableIconComponent implements FromSwingComponentWrapper {
+        MyScalableIconComponent(Image icon) {
+            super(icon);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopImageBoxImpl.this;
+        }
+    }
+
+    private final Image myIcon;
+
+    public DesktopImageBoxImpl(@Nonnull Image image) {
+        myIcon = image;
+    }
+
+    @Override
+    protected ScalableIconComponent createComponent() {
+        return new MyScalableIconComponent(myIcon);
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopImageBoxImpl.this;
+    public Image getImage() {
+        return myIcon;
     }
-  }
-
-  private Image myIcon;
-
-  public DesktopImageBoxImpl(@Nonnull Image image) {
-    initialize(new MyScalableIconComponent(image));
-    myIcon = image;
-  }
-
-  @Nonnull
-  @Override
-  public Image getImage() {
-    return myIcon;
-  }
 }

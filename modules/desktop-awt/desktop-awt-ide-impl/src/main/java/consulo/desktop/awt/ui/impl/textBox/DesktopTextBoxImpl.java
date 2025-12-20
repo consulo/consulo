@@ -85,15 +85,23 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
         }
     }
 
+    private final String myText;
+
     @RequiredUIAccess
     public DesktopTextBoxImpl(String text) {
+        myText = text;
+    }
+
+    @Override
+    protected MyJBTextField createComponent() {
         MyJBTextField field = new MyJBTextField();
         TextFieldPlaceholderFunction.install(field);
-        initialize(field);
+
         addDocumentListenerForValidator(field.getDocument());
 
         field.getDocument().addDocumentListener(new Listener(this));
-        setValue(text);
+        field.setText(myText);
+        return field;
     }
 
     @Override

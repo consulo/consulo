@@ -63,10 +63,12 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
         }
     }
 
-    public DesktopCheckBoxImpl() {
+    @RequiredUIAccess
+    @Override
+    protected MyJBCheckBox createComponent() {
         MyJBCheckBox component = new MyJBCheckBox();
-        initialize(component);
         component.addActionListener(e -> fireListeners());
+        return component;
     }
 
     @Override

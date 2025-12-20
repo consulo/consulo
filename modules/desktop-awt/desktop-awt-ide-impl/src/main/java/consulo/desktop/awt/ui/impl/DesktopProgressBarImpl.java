@@ -16,11 +16,12 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.ProgressBarStyle;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -28,40 +29,55 @@ import javax.swing.*;
  * @since 2020-05-11
  */
 class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implements ProgressBar {
-  private class ProgressBar extends JProgressBar implements FromSwingComponentWrapper {
-    @Nonnull
-    @Override
-    public Component toUIComponent() {
-      return DesktopProgressBarImpl.this;
+    private class ProgressBar extends JProgressBar implements FromSwingComponentWrapper {
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopProgressBarImpl.this;
+        }
     }
-  }
 
-  public DesktopProgressBarImpl() {
-    initialize(new ProgressBar());
-  }
+    private boolean mySpinner;
 
-  @Override
-  public void setIndeterminate(boolean value) {
-    toAWTComponent().setIndeterminate(value);
-  }
+    @Override
+    protected JProgressBar createComponent() {
+        if (mySpinner) {
+            return new ProgressBar();
+        }
+        return new ProgressBar();
+    }
 
-  @Override
-  public boolean isIndeterminate() {
-    return toAWTComponent().isIndeterminate();
-  }
+    @Override
+    public void addStyle(ProgressBarStyle style) {
+        switch (style) {
+            case SPINNER:
+                mySpinner = true;
+                break;
+        }
+    }
 
-  @Override
-  public void setMinimum(int value) {
-    toAWTComponent().setMinimum(value);
-  }
+    @Override
+    public void setIndeterminate(boolean value) {
+        toAWTComponent().setIndeterminate(value);
+    }
 
-  @Override
-  public void setMaximum(int value) {
-    toAWTComponent().setMaximum(value);
-  }
+    @Override
+    public boolean isIndeterminate() {
+        return toAWTComponent().isIndeterminate();
+    }
 
-  @Override
-  public void setValue(int value) {
-    toAWTComponent().setValue(value);
-  }
+    @Override
+    public void setMinimum(int value) {
+        toAWTComponent().setMinimum(value);
+    }
+
+    @Override
+    public void setMaximum(int value) {
+        toAWTComponent().setMaximum(value);
+    }
+
+    @Override
+    public void setValue(int value) {
+        toAWTComponent().setValue(value);
+    }
 }

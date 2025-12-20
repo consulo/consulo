@@ -45,13 +45,13 @@ public class UnifiedActionUtil {
         actionAdded.accept(MenuSeparator.create());
       }
       else if (action instanceof ActionGroup) {
-        MenuItem menu = Menu.create(presentation.getText());
+        MenuItem menu = Menu.create(presentation.getTextValue());
         menu.setIcon(presentation.getIcon());
         actionAdded.accept(menu);
         expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, ((Menu)menu)::add);
       }
       else {
-        MenuItem menu = MenuItem.create(presentation.getText());
+        MenuItem menu = MenuItem.create(presentation.getTextValue());
         menu.addClickListener(event -> {
           DataContext dataContext = DataManager.getInstance().getDataContext();
 

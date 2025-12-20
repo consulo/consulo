@@ -99,11 +99,20 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
 
     @Nonnull
     private LocalizeValue myTitleValue = LocalizeValue.empty();
+    private final Component myComponent;
+    private final boolean myState;
 
-    public DesktopFoldoutLayoutImpl(LocalizeValue titleValue, Component component, boolean state) {
+    public DesktopFoldoutLayoutImpl(@Nonnull LocalizeValue titleValue, Component component, boolean state) {
         myTitleValue = titleValue;
-        initialize(new HideableTitledPanel(titleValue.getValue(), (JComponent) TargetAWT.to(component), this));
-        toAWTComponent().setOn(state);
+        myComponent = component;
+        myState = state;
+    }
+
+    @Override
+    protected HideableTitledPanel createComponent() {
+        HideableTitledPanel panel = new HideableTitledPanel(myTitleValue.getValue(), (JComponent) TargetAWT.to(myComponent), this);
+        panel.setOn(myState);
+        return panel;
     }
 
     @RequiredUIAccess

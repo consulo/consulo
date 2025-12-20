@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
@@ -30,22 +31,22 @@ import jakarta.annotation.Nullable;
  */
 public interface Hyperlink extends Component {
   @Nonnull
-  static Hyperlink create(@Nonnull String text) {
+  static Hyperlink create(@Nonnull LocalizeValue text) {
     return UIInternal.get()._Components_hyperlink(text);
   }
 
   @Nonnull
-  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
+  static Hyperlink create(@Nonnull LocalizeValue text, @Nonnull @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
     Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
     hyperlink.addHyperlinkListener(listener);
     return hyperlink;
   }
 
   @Nonnull
-  String getText();
+  LocalizeValue getText();
 
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  void setText(@Nonnull LocalizeValue text);
 
   void setIcon(@Nullable Image icon);
 

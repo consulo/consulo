@@ -49,10 +49,15 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     public DesktopListBoxImpl(ListModel<E> model) {
         myModel = model;
-        DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
+    }
 
-        myComponent = new MyJBList<>(wrapper);
-        myComponent.setCellRenderer(new DesktopListRender<>(() -> myRender));
+    @Override
+    protected JBList<E> createComponent() {
+        DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(myModel);
+
+        MyJBList<E> component = new MyJBList<>(wrapper);
+        component.setCellRenderer(new DesktopListRender<>(() -> myRender));
+        return  component;
     }
 
     @Nonnull
@@ -68,27 +73,27 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     @Override
     public void setValueByIndex(int index) {
-        myComponent.setSelectedIndex(index);
+        toAWTComponent().setSelectedIndex(index);
     }
 
     @RequiredUIAccess
     @Override
     public void setValue(E value, boolean fireListeners) {
-        myComponent.setSelectedValue(value, true);
+        toAWTComponent().setSelectedValue(value, true);
     }
 
     @Nonnull
     @Override
     public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
-        DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myComponent, valueListener);
-        myComponent.addListSelectionListener(listener);
-        return () -> myComponent.removeListSelectionListener(listener);
+        DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
+        toAWTComponent().addListSelectionListener(listener);
+        return () -> toAWTComponent().removeListSelectionListener(listener);
     }
 
     @SuppressWarnings("unchecked")
     @Nonnull
     @Override
     public E getValue() {
-        return myComponent.getSelectedValue();
+        return toAWTComponent().getSelectedValue();
     }
 }

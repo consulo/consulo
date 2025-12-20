@@ -15,16 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.uiOld.ColorPanel;
-import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.uiOld.ColorPanel;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,50 +32,57 @@ import jakarta.annotation.Nullable;
  * @since 2018-06-09
  */
 class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyColorPanel> implements ColorBox {
-  class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {
-    @Nonnull
+    class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopColorBoxImpl.this;
+        }
+    }
+
+    private final ColorValue myInitValue;
+
+    public DesktopColorBoxImpl(ColorValue colorValue) {
+        myInitValue = colorValue;
+    }
+
     @Override
-    public Component toUIComponent() {
-      return DesktopColorBoxImpl.this;
+    protected MyColorPanel createComponent() {
+        MyColorPanel panel = new MyColorPanel();
+        panel.setSelectedColor(TargetAWT.to(myInitValue));
+        panel.addActionListener(e -> fireListeners());
+        return panel;
     }
-  }
 
-  public DesktopColorBoxImpl(ColorValue colorValue) {
-    MyColorPanel component = new MyColorPanel();
-    initialize(component);
-    component.setSelectedColor(TargetAWT.to(colorValue));
-    component.addActionListener(e -> fireListeners());
-  }
-
-  @Nullable
-  @Override
-  public ColorValue getValue() {
-    return TargetAWT.from(toAWTComponent().getSelectedColor());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(ColorValue value, boolean fireListeners) {
-    toAWTComponent().setSelectedColor(TargetAWT.to(value));
-
-    if(fireListeners) {
-      fireListeners();
+    @Nullable
+    @Override
+    public ColorValue getValue() {
+        return TargetAWT.from(toAWTComponent().getSelectedColor());
     }
-  }
 
-  @Override
-  public void setEditable(boolean editable) {
-    toAWTComponent().setEditable(editable);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(ColorValue value, boolean fireListeners) {
+        toAWTComponent().setSelectedColor(TargetAWT.to(value));
 
-  @Override
-  public boolean isEditable() {
-    return toAWTComponent().isEditable();
-  }
+        if (fireListeners) {
+            fireListeners();
+        }
+    }
 
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  private void fireListeners() {
-    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
-  }
+    @Override
+    public void setEditable(boolean editable) {
+        toAWTComponent().setEditable(editable);
+    }
+
+    @Override
+    public boolean isEditable() {
+        return toAWTComponent().isEditable();
+    }
+
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    private void fireListeners() {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+    }
 }

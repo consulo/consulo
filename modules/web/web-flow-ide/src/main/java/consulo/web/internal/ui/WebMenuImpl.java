@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,7 +37,7 @@ import java.util.List;
  */
 public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
   public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private String myText = "";
+    private LocalizeValue myText = LocalizeValue.of();
     private List<Component> myMenuItems = new ArrayList<>();
 
     public void add(@Nonnull MenuItem menuItem) {
@@ -53,7 +54,7 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
     }
   }
 
-  public WebMenuImpl(String text) {
+  public WebMenuImpl(LocalizeValue text) {
     getVaadinComponent().myText = text;
   }
 
@@ -80,7 +81,7 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     return getVaadinComponent().myText;
   }
 }

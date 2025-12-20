@@ -7,9 +7,7 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPassFactory;
-import consulo.language.LangBundle;
 import consulo.language.Language;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.impl.internal.inlay.param.HintUtils;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.internal.ParameterNameHintsSettings;
@@ -17,6 +15,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Hyperlink;
 import consulo.ui.ex.awt.BorderLayoutPanel;
@@ -49,7 +48,7 @@ public class ExcludeListDialog extends DialogWrapper {
         super((Project) null);
         this.language = language;
         this.patternToAdd = patternToAdd;
-        setTitle(CodeInsightBundle.message("settings.inlay.parameter.hints.exclude.list"));
+        setTitle(CodeInsightLocalize.settingsInlayParameterHintsExcludeList());
         init();
     }
 
@@ -79,7 +78,7 @@ public class ExcludeListDialog extends DialogWrapper {
         myEditor = field;
 
         BorderLayoutPanel layoutPanel = new BorderLayoutPanel();
-        Hyperlink hyperlink = Hyperlink.create(LangBundle.message("action.link.reset"), (e) -> {
+        Hyperlink hyperlink = Hyperlink.create(CommonLocalize.linkReset(), (e) -> {
             setLanguageExcludeListToDefault(language);
         });
 

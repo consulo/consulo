@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.image.Image;
@@ -46,7 +47,7 @@ public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparat
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getText() {
     throw new UnsupportedOperationException();
   }
 

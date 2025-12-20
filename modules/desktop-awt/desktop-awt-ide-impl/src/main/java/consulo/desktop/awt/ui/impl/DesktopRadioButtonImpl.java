@@ -66,16 +66,23 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
         }
     }
 
+    private final LocalizeValue myInitText;
+
+    private final boolean myInitSelected;
+
     public DesktopRadioButtonImpl(LocalizeValue textValue, boolean selected) {
+        myInitSelected = selected;
+        myInitText = textValue;
+    }
+
+    @Override
+    protected MyJBRadioButton createComponent() {
         MyJBRadioButton component = new MyJBRadioButton();
-
-        component.setSelected(selected);
-
-        initialize(component);
-
-        setLabelText(textValue);
-
+        component.setSelected(myInitSelected);
+        component.setLabelText(myInitText);
+        component.updateLabelText();
         component.addChangeListener(e -> fireListeners());
+        return component;
     }
 
     @Nonnull

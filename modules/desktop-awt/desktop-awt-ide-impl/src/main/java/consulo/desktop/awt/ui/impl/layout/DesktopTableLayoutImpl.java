@@ -49,30 +49,39 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
 
     private JPanel myGridPanel;
 
+    private final StaticPosition myPosition;
+
     public DesktopTableLayoutImpl(StaticPosition position) {
-        if (position == StaticPosition.CENTER) {
-            myComponent = myGridPanel = new MyJPanel(new GridBagLayout());
+        myPosition = position;
+    }
+
+    @Override
+    protected JPanel createComponent() {
+        JPanel panel;
+        if (myPosition == StaticPosition.CENTER) {
+            panel = myGridPanel = new MyJPanel(new GridBagLayout());
         }
         else {
-            myComponent = new MyJPanel(new BorderLayout());
+            panel = new MyJPanel(new BorderLayout());
             myGridPanel = new JPanel(new GridBagLayout());
-            switch (position) {
+            switch (myPosition) {
                 case TOP:
-                    myComponent.add(myGridPanel, BorderLayout.NORTH);
+                    panel.add(myGridPanel, BorderLayout.NORTH);
                     break;
                 case BOTTOM:
-                    myComponent.add(myGridPanel, BorderLayout.SOUTH);
+                    panel.add(myGridPanel, BorderLayout.SOUTH);
                     break;
                 case LEFT:
-                    myComponent.add(myGridPanel, BorderLayout.WEST);
+                    panel.add(myGridPanel, BorderLayout.WEST);
                     break;
                 case RIGHT:
-                    myComponent.add(myGridPanel, BorderLayout.EAST);
+                    panel.add(myGridPanel, BorderLayout.EAST);
                     break;
                 default:
                     throw new UnsupportedOperationException();
             }
         }
+        return panel;
     }
 
     @Override
@@ -82,6 +91,8 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
 
     @Override
     public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+        toAWTComponent(); // initialize root
+
         JPanel component = myGridPanel; // grid is owner of of children, not myComponent
 
         for (int i = 0; i < component.getComponentCount(); i++) {
@@ -97,6 +108,8 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
     @Nonnull
     @Override
     public TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell) {
+        toAWTComponent(); // initialize root
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridwidth = 1;
         constraints.anchor = GridBagConstraints.WEST;

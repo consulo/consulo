@@ -51,11 +51,18 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
         return null;
     }
 
+    private final String myInitText;
+
     public DesktopTextBoxWithHistoryImpl(String text) {
+        myInitText = text;
+    }
+
+    @Override
+    protected MyTextFieldWithHistory createComponent() {
         MyTextFieldWithHistory component = new MyTextFieldWithHistory();
         component.setHistorySize(-1);
-        component.setText(text);
-        initialize(component);
+        component.setText(myInitText);
+        return component;
     }
 
     @Nonnull

@@ -43,10 +43,19 @@ public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSlide
         }
     }
 
+    private final int myMin, myMax, myValue;
+
     public DesktopIntSliderImpl(int min, int max, int value) {
-        MyJSlider slider = new MyJSlider(min, max, value);
-        initialize(slider);
+        myMin = min;
+        myMax = max;
+        myValue = value;
+    }
+
+    @Override
+    protected MyJSlider createComponent() {
+        MyJSlider slider = new MyJSlider(myMin, myMax, myValue);
         slider.addChangeListener(e -> fireListeners());
+        return slider;
     }
 
     @Override

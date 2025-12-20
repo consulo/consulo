@@ -34,6 +34,8 @@ import javax.swing.*;
  * @since 13-Jun-16
  */
 public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<Splitter> implements TwoComponentSplitLayout {
+    private final SplitLayoutPosition myPosition;
+
     class MySplitter extends OnePixelSplitter implements FromSwingComponentWrapper {
         MySplitter(boolean vertical) {
             super(vertical);
@@ -47,7 +49,12 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
     }
 
     public DesktopTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
-        initialize(new MySplitter(position == SplitLayoutPosition.VERTICAL));
+        myPosition = position;
+    }
+
+    @Override
+    protected Splitter createComponent() {
+        return new MySplitter(myPosition == SplitLayoutPosition.VERTICAL);
     }
 
     @Override

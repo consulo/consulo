@@ -36,51 +36,59 @@ import java.awt.event.ActionEvent;
  * @since 16/07/2021
  */
 public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlinkImpl.MyLinkLabel> implements Hyperlink {
-  public class MyLinkLabel extends JXHyperlink implements FromSwingComponentWrapper {
-    public MyLinkLabel(String text, @Nullable Image icon) {
-      super(new LocalizeAction(LocalizeValue.of(text)) {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-              getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopHyperlinkImpl.this, ""));
-          }
-      });
+    public class MyLinkLabel extends JXHyperlink implements FromSwingComponentWrapper {
+        public MyLinkLabel(String text, @Nullable Image icon) {
+            super(new LocalizeAction(LocalizeValue.of(text)) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopHyperlinkImpl.this, ""));
+                }
+            });
 
-      setFocusPainted(false);
-      setIcon(TargetAWT.to(icon));
+            setFocusPainted(false);
+            setIcon(TargetAWT.to(icon));
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopHyperlinkImpl.this;
+        }
+    }
+
+    private LocalizeValue myText = LocalizeValue.of();
+
+    public DesktopHyperlinkImpl(LocalizeValue text) {
+        myText = text;
+    }
+
+    @Override
+    protected MyLinkLabel createComponent() {
+        return new MyLinkLabel(myText.get(), null);
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopHyperlinkImpl.this;
+    public LocalizeValue getText() {
+        return myText;
     }
-  }
 
-  public DesktopHyperlinkImpl(String text) {
-    MyLinkLabel label = new MyLinkLabel(text, null);
-    initialize(label);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        myText = text;
 
-  @Nonnull
-  @Override
-  public String getText() {
-    return toAWTComponent().getText();
-  }
+        toAWTComponent().setText(text.get());
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull String text) {
-    toAWTComponent().setText(text);
-  }
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        toAWTComponent().setIcon(TargetAWT.to(icon));
+    }
 
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    toAWTComponent().setIcon(TargetAWT.to(icon));
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return TargetAWT.from(toAWTComponent().getIcon());
-  }
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return TargetAWT.from(toAWTComponent().getIcon());
+    }
 }

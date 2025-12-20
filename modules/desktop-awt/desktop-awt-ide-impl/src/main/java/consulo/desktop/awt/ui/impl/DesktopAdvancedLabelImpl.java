@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.TextItemPresentation;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
@@ -28,20 +28,21 @@ import java.util.function.Consumer;
  * @since 12/10/2021
  */
 public class DesktopAdvancedLabelImpl extends SwingComponentDelegate<DesktopAdvancedLabelImpl.MySimpleColoredComponent> implements AdvancedLabel {
-  public static class MySimpleColoredComponent extends SimpleColoredComponent {
+    public static class MySimpleColoredComponent extends SimpleColoredComponent {
 
-  }
+    }
 
-  public DesktopAdvancedLabelImpl() {
-    initialize(new MySimpleColoredComponent());
-  }
+    @Override
+    protected MySimpleColoredComponent createComponent() {
+        return new MySimpleColoredComponent();
+    }
 
-  @Nonnull
-  @Override
-  public AdvancedLabel updatePresentation(@Nonnull Consumer<TextItemPresentation> consumer) {
-    toAWTComponent().clear();
+    @Nonnull
+    @Override
+    public AdvancedLabel updatePresentation(@Nonnull Consumer<TextItemPresentation> consumer) {
+        toAWTComponent().clear();
 
-    consumer.accept(new DesktopTextItemPresentationImpl(toAWTComponent()));
-    return this;
-  }
+        consumer.accept(new DesktopTextItemPresentationImpl(toAWTComponent()));
+        return this;
+    }
 }

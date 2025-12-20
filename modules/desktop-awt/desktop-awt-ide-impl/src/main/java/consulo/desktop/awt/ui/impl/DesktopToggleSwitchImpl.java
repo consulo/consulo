@@ -37,11 +37,18 @@ public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggl
         }
     }
 
+    private boolean myInitValue;
+
     public DesktopToggleSwitchImpl(boolean enabled) {
+        myInitValue = enabled;
+    }
+
+    @Override
+    protected MyOnOffButton createComponent() {
         MyOnOffButton component = new MyOnOffButton();
-        initialize(component);
-        component.setSelected(enabled);
+        component.setSelected(myInitValue);
         component.addActionListener(e -> fireListeners());
+        return component;
     }
 
     @Nonnull

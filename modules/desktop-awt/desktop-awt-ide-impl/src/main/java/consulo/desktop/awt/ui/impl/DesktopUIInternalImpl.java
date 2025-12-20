@@ -210,12 +210,12 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public MenuItem _MenuItem_create(String text) {
+    public MenuItem _MenuItem_create(LocalizeValue text) {
         return new DesktopMenuItemImpl(text);
     }
 
     @Override
-    public Menu _Menu_create(String text) {
+    public Menu _Menu_create(LocalizeValue text) {
         return new DesktopMenuImpl(text);
     }
 
@@ -388,7 +388,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public Hyperlink _Components_hyperlink(String text) {
+    public Hyperlink _Components_hyperlink(LocalizeValue text) {
         return new DesktopHyperlinkImpl(text);
     }
 

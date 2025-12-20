@@ -34,6 +34,8 @@ import javax.swing.*;
  * @since 2019-02-16
  */
 public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollPane> implements ScrollableLayout {
+
+
     class MyJBScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
         MyJBScrollPane(java.awt.Component view) {
             super(view);
@@ -46,14 +48,23 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         }
     }
 
+    @Nullable
+    private final Component myComponent;
+    private final ScrollableLayoutOptions myOptions;
+
     public DesktopScrollableLayoutImpl(@Nullable Component component, ScrollableLayoutOptions options) {
-        MyJBScrollPane pane = new MyJBScrollPane(TargetAWT.to(component));
-        initialize(pane);
+        myComponent = component;
+        myOptions = options;
+    }
+
+    @Override
+    protected JScrollPane createComponent() {
+        MyJBScrollPane pane = new MyJBScrollPane(TargetAWT.to(myComponent));
 
         pane.setBorder(IdeBorderFactory.createEmptyBorder());
         pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
 
-        switch (options.getHorizontalScrollPolicy()) {
+        switch (myOptions.getHorizontalScrollPolicy()) {
             case ALWAYS:
                 pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 break;
@@ -65,7 +76,7 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
                 break;
         }
 
-        switch (options.getVerticalScrollPolicy()) {
+        switch (myOptions.getVerticalScrollPolicy()) {
             case ALWAYS:
                 pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
                 break;
@@ -76,6 +87,8 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
                 pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
                 break;
         }
+
+        return pane;
     }
 
     @Override

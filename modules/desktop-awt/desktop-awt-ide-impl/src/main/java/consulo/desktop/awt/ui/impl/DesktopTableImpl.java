@@ -15,17 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.model.TableModel;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,33 +35,48 @@ import java.util.List;
  * @since 2020-09-15
  */
 class DesktopTableImpl<Item> extends SwingComponentDelegate<DesktopTableImpl.MyTableView> implements Table<Item> {
-  class MyTableView<K> extends TableView<K> implements FromSwingComponentWrapper {
-    MyTableView(ListTableModel<K> model) {
-      super(model);
-      setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+    class MyTableView<K> extends TableView<K> implements FromSwingComponentWrapper {
+        MyTableView(ListTableModel<K> model) {
+            super(model);
+            setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopTableImpl.this;
+        }
     }
 
     @Nonnull
+    private final Iterable<? extends TableColumn> myColumns;
+    @Nonnull
+    private final TableModel<Item> myModel;
+
+    @SuppressWarnings("unchecked")
+    public DesktopTableImpl(@Nonnull Iterable<? extends TableColumn> columns,
+                            @Nonnull TableModel<Item> model) {
+
+        myColumns = columns;
+        myModel = model;
+    }
+
     @Override
-    public Component toUIComponent() {
-      return DesktopTableImpl.this;
+    @SuppressWarnings("unchecked")
+    protected MyTableView createComponent() {
+        List<ColumnInfo<Item, ?>> cols = new ArrayList<>();
+        for (TableColumn column : myColumns) {
+            cols.add((ColumnInfo<Item, ?>) column);
+        }
+
+        ColumnInfo<Item, ?>[] array = cols.toArray(new ColumnInfo[cols.size()]);
+
+        DesktopTableModelImpl tableModel = (DesktopTableModelImpl) myModel;
+        tableModel.setColumnInfos(array);
+
+        MyTableView<Item> tableView = new MyTableView<>(tableModel);
+
+        return tableView;
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  public DesktopTableImpl(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<Item> model) {
-    List<ColumnInfo<Item, ?>> cols = new ArrayList<>();
-    for (TableColumn column : columns) {
-      cols.add((ColumnInfo<Item, ?>)column);
-    }
-
-    ColumnInfo<Item, ?>[] array = cols.toArray(new ColumnInfo[cols.size()]);
-
-    DesktopTableModelImpl tableModel = (DesktopTableModelImpl)model;
-    tableModel.setColumnInfos(array);
-
-    MyTableView<Item> tableView = new MyTableView<>(tableModel);
-
-    initialize(tableView);
-  }
 }

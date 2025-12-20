@@ -136,8 +136,17 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         }
     }
 
+    private final LocalizeValue myInitText;
+    private final LabelOptions myLabelOptions;
+
     public DesktopLabelImpl(LocalizeValue text, LabelOptions options) {
-        initialize(new MyJLabel(text, options));
+        myInitText = text;
+        myLabelOptions = options;
+    }
+
+    @Override
+    protected MyJLabel createComponent() {
+        return new MyJLabel(myInitText, myLabelOptions);
     }
 
     @Override

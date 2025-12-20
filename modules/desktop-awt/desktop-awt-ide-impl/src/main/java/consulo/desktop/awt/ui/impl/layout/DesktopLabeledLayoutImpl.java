@@ -53,10 +53,17 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
         }
     }
 
+    private final LocalizeValue myLabel;
+
     public DesktopLabeledLayoutImpl(LocalizeValue label) {
-        LabelJPanel component = new LabelJPanel(new BorderLayout(), label);
+        myLabel = label;
+    }
+
+    @Override
+    protected JPanel createComponent() {
+        LabelJPanel component = new LabelJPanel(new BorderLayout(), myLabel);
         component.updateBorder();
-        initialize(component);
+        return component;
     }
 
     @Nonnull

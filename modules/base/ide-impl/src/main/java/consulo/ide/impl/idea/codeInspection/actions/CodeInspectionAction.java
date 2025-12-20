@@ -134,7 +134,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
 
         Hyperlink hyperlink = Hyperlink.create(
-            IdeLocalize.buttonConfigureE().get(),
+            IdeLocalize.buttonConfigureE(),
             event -> {
                 IDEInspectionToolsConfigurable errorConfigurable = createConfigurable(projectProfileManager, profileManager);
                 MySingleConfigurableEditor editor = new MySingleConfigurableEditor(project, errorConfigurable, manager);
