@@ -129,11 +129,6 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public Hyperlink _Components_hyperlink(String text) {
-    return null;
-  }
-
-  @Override
   public ImageBox _Components_imageBox(Image image) {
     return null;
   }
@@ -185,16 +180,6 @@ public class LightUIInternal extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return null;
-  }
-
-  @Override
-  public MenuItem _MenuItem_create(String text) {
-    return null;
-  }
-
-  @Override
-  public Menu _Menu_create(String text) {
     return null;
   }
 
