@@ -78,8 +78,7 @@ public class ActionGroupExpander {
             if (action instanceof AnSeparator separ
                 && separ.getTextValue() == LocalizeValue.empty()
                 && listed.nextIndex() < actions.size()
-                && actions.get(listed.nextIndex()) instanceof AnSeparator separNext
-                && separNext.getTextValue() != LocalizeValue.empty()) {
+                && actions.get(listed.nextIndex()) instanceof AnSeparator separNext) {
                 listed.remove();
             }
         }
