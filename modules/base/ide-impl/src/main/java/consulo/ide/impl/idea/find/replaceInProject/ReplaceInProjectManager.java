@@ -366,7 +366,7 @@ public class ReplaceInProjectManager {
         boolean[] success = {true};
 
         success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
-            FindLocalize.findReplaceAllConfirmationTitle().get(),
+            FindLocalize.findReplaceAllConfirmationTitle(),
             myProject,
             null,
             indicator -> {
@@ -382,7 +382,7 @@ public class ReplaceInProjectManager {
                     if (usage instanceof UsageInFile usageInFile) {
                         VirtualFile virtualFile = usageInFile.getFile();
                         if (virtualFile != null && !virtualFile.equals(lastFile)) {
-                            indicator.setText2(virtualFile.getPresentableUrl());
+                            indicator.setText2Value(LocalizeValue.of(virtualFile.getPresentableUrl()));
                             lastFile = virtualFile;
                         }
                     }

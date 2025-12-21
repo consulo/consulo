@@ -81,9 +81,9 @@ public interface UsageView extends Disposable {
     void setAdditionalComponent(@Nullable JComponent component);
 
     default void addPerformOperationAction(
-        @Nonnull Runnable processRunnable,
-        @Nonnull String commandName,
-        String cannotMakeString,
+        @Nonnull @RequiredUIAccess Runnable processRunnable,
+        @Nonnull LocalizeValue commandName,
+        @Nonnull LocalizeValue cannotMakeString,
         @Nonnull LocalizeValue actionText
     ) {
         addPerformOperationAction(processRunnable, commandName, cannotMakeString, actionText, true);
@@ -94,8 +94,8 @@ public interface UsageView extends Disposable {
      */
     void addPerformOperationAction(
         @Nonnull Runnable processRunnable,
-        @Nonnull String commandName,
-        String cannotMakeString,
+        @Nonnull LocalizeValue commandName,
+        @Nonnull LocalizeValue cannotMakeString,
         @Nonnull LocalizeValue actionText,
         boolean checkReadOnlyStatus
     );

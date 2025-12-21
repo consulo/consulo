@@ -16,15 +16,16 @@
 package consulo.language.editor.refactoring.rename;
 
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author dsl
  * @since 2002-06-05
  */
 public abstract class UnresolvableCollisionUsageInfo extends CollisionUsageInfo {
-  public UnresolvableCollisionUsageInfo(PsiElement element, PsiElement referencedElement) {
-    super(element, referencedElement);
-  }
+    public UnresolvableCollisionUsageInfo(PsiElement element, PsiElement referencedElement) {
+        super(element, referencedElement);
+    }
 
-  public abstract String getDescription();
+    public abstract LocalizeValue getDescription();
 }

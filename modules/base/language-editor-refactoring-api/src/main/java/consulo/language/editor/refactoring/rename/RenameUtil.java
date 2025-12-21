@@ -326,7 +326,7 @@ public class RenameUtil {
     public static void addConflictDescriptions(UsageInfo[] usages, MultiMap<PsiElement, LocalizeValue> conflicts) {
         for (UsageInfo usage : usages) {
             if (usage instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
-                conflicts.putValue(usage.getElement(), LocalizeValue.ofNullable(unresolvableCollisionUsageInfo.getDescription()));
+                conflicts.putValue(usage.getElement(), unresolvableCollisionUsageInfo.getDescription());
             }
         }
     }

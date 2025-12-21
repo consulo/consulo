@@ -280,8 +280,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         UsageView usageView = showUsages(usages, presentation, manager);
         usageView.addPerformOperationAction(
             new RerunSafeDelete(myProject, myElements, usageView),
-            RefactoringLocalize.retryCommand().get(),
-            null,
+            RefactoringLocalize.retryCommand(),
+            LocalizeValue.empty(),
             RefactoringLocalize.rerunSafeDelete()
         );
         usageView.addPerformOperationAction(
@@ -299,8 +299,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
                 UsageInfo[] filteredUsages = UsageViewUtil.removeDuplicatedUsages(preprocessedUsages.get());
                 execute(filteredUsages);
             },
-            "Delete Anyway",
-            RefactoringLocalize.usageviewNeedRerun().get(),
+            LocalizeValue.localizeTODO("Delete Anyway"),
+            RefactoringLocalize.usageviewNeedRerun(),
             RefactoringLocalize.usageviewDoaction()
         );
     }
@@ -449,21 +449,21 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         }
     }
 
-    private String calcCommandName() {
-        return RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(myElements)).get();
+    private LocalizeValue calcCommandName() {
+        return RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(myElements));
     }
 
-    private String myCachedCommandName = null;
+    @Nonnull
+    private LocalizeValue myCachedCommandName = LocalizeValue.empty();
 
     @Nonnull
     @Override
-    protected String getCommandName() {
-        if (myCachedCommandName == null) {
+    protected LocalizeValue getCommandName() {
+        if (myCachedCommandName == LocalizeValue.empty()) {
             myCachedCommandName = calcCommandName();
         }
         return myCachedCommandName;
     }
-
 
     public static void addNonCodeUsages(
         PsiElement element,

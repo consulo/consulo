@@ -165,7 +165,7 @@ public interface ApplicationEx extends Application {
     }
 
     default boolean runWriteActionWithCancellableProgressInDispatchThread(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
@@ -174,7 +174,7 @@ public interface ApplicationEx extends Application {
     }
 
     default boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
