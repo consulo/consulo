@@ -119,6 +119,9 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         LocalizeValue textValue = presentation.getTextValue();
         if (myMnemonicsEnabled) {
             if (myMnemonicChar != null) {
+                // we need remove mnemonics due they will anyway not showing
+                textValue = textValue.map(Presentation.NO_MNEMONIC);
+                
                 textValue = textValue.map(text -> "&" + myMnemonicChar + ". " + text);
             }
         }
@@ -126,7 +129,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
             // do nothing, in this case we will show '_' as part of action item
         }
         else if (!myHonorActionMnemonics) {
-            textValue = presentation.getTextValue().map(Presentation.NO_MNEMONIC);
+            textValue = textValue.map(Presentation.NO_MNEMONIC);
         }
 
         boolean hideIcon = Boolean.TRUE.equals(presentation.getClientProperty(MenuItemPresentationFactory.HIDE_ICON));
