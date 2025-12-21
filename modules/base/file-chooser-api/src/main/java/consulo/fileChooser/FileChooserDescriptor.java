@@ -376,12 +376,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     myForceOperateDialogProviderId = FileOperateDialogProvider.APPLICATION_ID;
   }
 
-  @Deprecated
-  @DeprecationInfo("Use #setUseApplicationDialog()")
-  public void setForcedToUseIdeaFileChooser(boolean forcedToUseIdeaFileChooser) {
-    setForceOperateDialogProviderId(forcedToUseIdeaFileChooser ? FileOperateDialogProvider.APPLICATION_ID : null);
-  }
-
   private boolean acceptAsJarFile(VirtualFile file) {
     return myChooseJars && FileChooserUtil.isArchive(file);
   }

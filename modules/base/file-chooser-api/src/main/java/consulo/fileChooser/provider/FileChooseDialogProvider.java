@@ -18,11 +18,9 @@ package consulo.fileChooser.provider;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,8 +32,6 @@ import java.awt.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileChooseDialogProvider extends FileOperateDialogProvider {
-    ExtensionPointName<FileChooseDialogProvider> EP_NAME = ExtensionPointName.create(FileChooseDialogProvider.class);
-
     @Nonnull
     FileChooserDialog createFileChooser(
         @Nonnull FileChooserDescriptor descriptor,

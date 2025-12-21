@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.uiOld.win;
+package consulo.desktop.awt.fileChooser.impl.system;
 
+import com.formdev.flatlaf.util.SystemFileChooser;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.ComponentManager;
-import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -36,6 +36,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,37 +50,32 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * @author Denis Fokin
+ * @author VISTALL
+ * @since 21/12/2025
  */
-public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialog {
-    private FileDialog myFileDialog;
+public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDialog {
     private final FileChooserDescriptor myFileChooserDescriptor;
     private final WeakReference<Component> myParent;
     private final Project myProject;
-    private final String myTitle;
+    private final LocalizeValue myTitle;
     private VirtualFile[] virtualFiles;
 
-    public WinPathChooserDialog(FileChooserDescriptor descriptor, Component parent, Project project) {
+    public NativeFileChooseDialog(FileChooserDescriptor descriptor, Component parent, Project project) {
 
         myFileChooserDescriptor = descriptor;
         myParent = new WeakReference<>(parent);
         myProject = project;
         myTitle = getChooserTitle(descriptor);
-
-        Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle, FileDialog.LOAD);
-        Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle, FileDialog.LOAD);
-
-        OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    private static String getChooserTitle(FileChooserDescriptor descriptor) {
-        String title = descriptor.getTitle();
-        return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
+    private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
+        LocalizeValue title = descriptor.getTitleValue();
+        return title != LocalizeValue.of() ? title : UILocalize.fileChooserDefaultTitle();
     }
 
     @Nonnull
-    private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
-        List<VirtualFile> virtualFiles = new ArrayList<>();
+    private java.util.List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
+        java.util.List<VirtualFile> virtualFiles = new ArrayList<>();
 
         streamOfFiles.forEach(file -> {
             VirtualFile virtualFile = fileToVirtualFile(file);
@@ -98,9 +94,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     @Override
     @RequiredUIAccess
-    public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+    public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<java.util.List<VirtualFile>> callback) {
+        SystemFileChooser fileChooser = new SystemFileChooser();
         if (toSelect != null && toSelect.getParent() != null) {
-
             String directoryName;
             String fileName = null;
             if (toSelect.isDirectory()) {
@@ -110,41 +106,53 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 directoryName = toSelect.getParent().getCanonicalPath();
                 fileName = toSelect.getPath();
             }
-            myFileDialog.setDirectory(directoryName);
-            myFileDialog.setFile(fileName);
+
+            if (directoryName != null) {
+                fileChooser.setCurrentDirectory(new File(directoryName));
+            }
+
+            if (fileName != null) {
+                fileChooser.setSelectedFile(new File(fileName));
+            }
         }
 
-        myFileDialog.setFilenameFilter((dir, name) -> {
-            File file = new File(dir, name);
-            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
-        });
+        if (myFileChooserDescriptor.isChooseFolders()) {
+            fileChooser.setFileSelectionMode(SystemFileChooser.DIRECTORIES_ONLY);
+        } else if (myFileChooserDescriptor.isChooseFiles()) {
+            fileChooser.setFileSelectionMode(SystemFileChooser.FILES_ONLY);
+        }
+// TODO
+//        fileChooser.setFilenameFilter((dir, name) -> {
+//            File file = new File(dir, name);
+//            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
+//        });
 
-        myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
+        fileChooser.setMultiSelectionEnabled(myFileChooserDescriptor.isChooseMultiple());
 
         CommandProcessorEx commandProcessor =
-            ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+            ApplicationManager.getApplication() != null ? (CommandProcessorEx) CommandProcessor.getInstance() : null;
         boolean appStarted = commandProcessor != null;
 
         if (appStarted) {
             commandProcessor.enterModal();
-            LaterInvocator.enterModal(myFileDialog);
+            LaterInvocator.enterModal(fileChooser);
         }
 
         Component parent = myParent.get();
         try {
-            myFileDialog.setVisible(true);
+            fileChooser.showOpenDialog(parent);
         }
         finally {
             if (appStarted) {
                 commandProcessor.leaveModal();
-                LaterInvocator.leaveModal(myFileDialog);
+                LaterInvocator.leaveModal(fileChooser);
                 if (parent != null) {
                     parent.requestFocus();
                 }
             }
         }
 
-        File[] files = myFileDialog.getFiles();
+        File[] files = fileChooser.getSelectedFiles();
         List<VirtualFile> virtualFileList = getChosenFiles(Stream.of(files));
         virtualFiles = virtualFileList.toArray(VirtualFile.EMPTY_ARRAY);
 
@@ -157,10 +165,10 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
             }
             catch (Exception e) {
                 if (parent == null) {
-                    Messages.showErrorDialog(myProject, e.getMessage(), myTitle);
+                    Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
                 }
                 else {
-                    Messages.showErrorDialog(parent, e.getMessage(), myTitle);
+                    Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
                 }
 
                 return;
@@ -179,8 +187,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
     @Override
     @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
-        if (toSelect != null && toSelect.getParent() != null) {
+        SystemFileChooser fileChooser = new SystemFileChooser();
 
+        if (toSelect != null && toSelect.getParent() != null) {
             String directoryName;
             String fileName = null;
             if (toSelect.isDirectory()) {
@@ -190,44 +199,56 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 directoryName = toSelect.getParent().getCanonicalPath();
                 fileName = toSelect.getPath();
             }
-            myFileDialog.setDirectory(directoryName);
-            myFileDialog.setFile(fileName);
+
+            if (directoryName != null) {
+                fileChooser.setCurrentDirectory(new File(directoryName));
+            }
+
+            if (fileName != null) {
+                fileChooser.setSelectedFile(new File(fileName));
+            }
         }
 
+        if (myFileChooserDescriptor.isChooseFolders()) {
+            fileChooser.setFileSelectionMode(SystemFileChooser.DIRECTORIES_ONLY);
+        }
+        else if (myFileChooserDescriptor.isChooseFiles()) {
+            fileChooser.setFileSelectionMode(SystemFileChooser.FILES_ONLY);
+        }
+// TODO
+//        fileChooser.setFilenameFilter((dir, name) -> {
+//            File file = new File(dir, name);
+//            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
+//        });
 
-        myFileDialog.setFilenameFilter((dir, name) -> {
-            File file = new File(dir, name);
-            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
-        });
-
-        myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
+        fileChooser.setMultiSelectionEnabled(myFileChooserDescriptor.isChooseMultiple());
 
         AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
         SwingUtilities.invokeLater(() -> {
             CommandProcessorEx commandProcessor =
-                ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+                ApplicationManager.getApplication() != null ? (CommandProcessorEx) CommandProcessor.getInstance() : null;
             boolean appStarted = commandProcessor != null;
 
             if (appStarted) {
                 commandProcessor.enterModal();
-                LaterInvocator.enterModal(myFileDialog);
+                LaterInvocator.enterModal(fileChooser);
             }
 
             Component parent = myParent.get();
             try {
-                myFileDialog.setVisible(true);
+                fileChooser.showOpenDialog(parent);
             }
             finally {
                 if (appStarted) {
                     commandProcessor.leaveModal();
-                    LaterInvocator.leaveModal(myFileDialog);
+                    LaterInvocator.leaveModal(fileChooser);
                     if (parent != null) {
                         parent.requestFocus();
                     }
                 }
             }
 
-            File[] files = myFileDialog.getFiles();
+            File[] files = fileChooser.getSelectedFiles();
             List<VirtualFile> virtualFileList = getChosenFiles(Stream.of(files));
             virtualFiles = virtualFileList.toArray(VirtualFile.EMPTY_ARRAY);
 
@@ -240,10 +261,10 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 }
                 catch (Exception e) {
                     if (parent == null) {
-                        Messages.showErrorDialog(myProject, e.getMessage(), myTitle);
+                        Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
                     }
                     else {
-                        Messages.showErrorDialog(parent, e.getMessage(), myTitle);
+                        Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
                     }
 
                     result.setRejected();
@@ -251,7 +272,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 }
 
                 if (!ArrayUtil.isEmpty(files)) {
-                    result.setDone(VfsUtil.toVirtualFileArray(virtualFileList));
+                    result.setDone(VirtualFileUtil.toVirtualFileArray(virtualFileList));
                 }
                 else {
                     result.setRejected();
