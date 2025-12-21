@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
  *
  * For advanced version of label {@link AdvancedLabel}
  */
-public interface Label extends Component, HasMnemonic, HasFocus {
+public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelStyle>, HasFocus {
   @Nonnull
   static Label create() {
     return create(LocalizeValue.empty());

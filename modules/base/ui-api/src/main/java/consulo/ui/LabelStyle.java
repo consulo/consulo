@@ -17,9 +17,8 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 20/12/2025
+ * @since 21/12/2025
  */
-public enum ProgressBarStyle implements ComponentStyle {
-    SPINNER,
+public enum LabelStyle implements ComponentStyle {
     TRANSPARENT_BACKGROUND
 }

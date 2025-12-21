@@ -42,7 +42,7 @@ public class ProgressStatusBarWidgetFactory implements StatusBarWidgetFactory {
     @Nonnull
     @Override
     public StatusBarWidget createWidget(@Nonnull Project project) {
-        return new InfoAndProgressPanel(() -> project);
+        return new InfoAndProgressPanel();
     }
 
     @Override

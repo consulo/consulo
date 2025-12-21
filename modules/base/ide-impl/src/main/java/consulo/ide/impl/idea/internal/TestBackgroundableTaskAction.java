@@ -27,6 +27,7 @@ import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -52,17 +53,17 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action..."))
             .cancelable()
             .execute(progressIndicator -> {
+                long millis = TimeUnit.MINUTES.toMillis(1);
                 progressIndicator.checkCanceled();
-                TimeoutUtil.sleep(5000L);
-                progressIndicator.checkCanceled();
-                progressIndicator.setTextValue(LocalizeValue.of("After 5 seconds"));
-                progressIndicator.checkCanceled();
-                TimeoutUtil.sleep(5000L);
-                progressIndicator.checkCanceled();
-                progressIndicator.setTextValue(LocalizeValue.of("After 10 seconds"));
-                progressIndicator.checkCanceled();
-                TimeoutUtil.sleep(5000L);
-                progressIndicator.checkCanceled();
+                while (!progressIndicator.isCanceled()) {
+                    long l = 1000L;
+                    millis -= l;
+                    TimeoutUtil.sleep(l);
+
+                    if (millis <= 0) {
+                        break;
+                    }
+                }
                 return "Success Result";
             });
 

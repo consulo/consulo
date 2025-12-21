@@ -21,22 +21,26 @@ import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.Label;
+import consulo.ui.LabelStyle;
+import consulo.ui.ProgressBar;
+import consulo.ui.ProgressBarStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
+import consulo.ui.layout.LayoutStyle;
 import consulo.util.collection.*;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -52,7 +56,6 @@ import java.awt.event.MouseEvent;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class InfoAndProgressPanel extends JPanel implements Disposable, CustomStatusBarWidget {
     private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
@@ -85,10 +88,12 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
         }
     };
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
-    private LinkLabel<Object> myMultiProcessLink;
 
-    public InfoAndProgressPanel(@Nonnull Supplier<Project> getProjectSupplier) {
+    private final JComponent myLayoutComponent;
+    private final Label myMultiProcessLink;
+
+    @RequiredUIAccess
+    public InfoAndProgressPanel() {
         super(new HorizontalLayout(0, SwingConstants.CENTER));
         setOpaque(false);
         setBorder(StatusWidgetBorders.DEFAULT_BORDER);
@@ -96,6 +101,22 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
         myUpdateQueue = new MergingUpdateQueue("Progress indicator", 50, true, MergingUpdateQueue.ANY_COMPONENT);
         myPopup = new ProcessPopup(this);
+
+        ProgressBar progressBar = ProgressBar.create();
+        progressBar.addStyle(ProgressBarStyle.SPINNER);
+        progressBar.addStyle(ProgressBarStyle.TRANSPARENT_BACKGROUND);
+        progressBar.setIndeterminate(true);
+
+        consulo.ui.layout.HorizontalLayout layout = consulo.ui.layout.HorizontalLayout.create();
+        layout.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+
+        layout.add(progressBar);
+        layout.add(myMultiProcessLink = Label.create());
+
+        myMultiProcessLink.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
+        myLayoutComponent = (JComponent) TargetAWT.to(layout);
+
+        addClickListener(myLayoutComponent);
     }
 
     private void runOnProgressRelatedChange(@Nonnull Runnable runnable, Disposable parentDisposable) {
@@ -291,7 +312,9 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 buildInInlineIndicator(createInlineDelegate(myInfos.get(0), myOriginals.get(0), true));
             }
             else if (!hasProgressIndicators()) {
-                // nothing?
+                removeAll();
+                revalidate();
+                repaint();
             }
             else {
                 buildInProcessCount();
@@ -299,12 +322,13 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     private void buildInProcessCount() {
         removeAll();
 
-        myMultiProcessLink = new LinkLabel<>(getMultiProgressLinkText(), null, (aSource, aLinkData) -> triggerPopupShowing());
+        myMultiProcessLink.setText(LocalizeValue.localizeTODO(getMultiProgressLinkText()));
 
-        add(myMultiProcessLink);
+        add(myLayoutComponent);
 
         revalidate();
 
@@ -316,10 +340,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         ProgressIndicatorEx latest = getLatestProgress();
         String latestText = latest == null ? null : latest.getText();
         if (StringUtil.isEmptyOrSpaces(latestText) || myPopup.isShowing()) {
-            return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running...";
+            return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running…";
         }
         int others = myOriginals.size() - 1;
-        String trimmed = latestText.length() > 55 ? latestText.substring(0, 50) + "..." : latestText;
+        String trimmed = latestText.length() > 55 ? latestText.substring(0, 50) + "…" : latestText;
         return trimmed + " (" + others + " more" + pluralizeProcess(others) + ")";
     }
 
@@ -329,12 +353,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     private ProgressIndicatorEx getLatestProgress() {
         return ContainerUtil.getLastItem(myOriginals);
-    }
-
-    @Override
-    public void removeAll() {
-        myMultiProcessLink = null;
-        super.removeAll();
     }
 
     @RequiredUIAccess
@@ -413,32 +431,26 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         myOriginal2Inlines.put(original, inline);
 
         if (compact) {
-            inline.getComponent().addMouseListener(new MouseAdapter() {
-                @Override
-                @RequiredUIAccess
-                public void mousePressed(MouseEvent e) {
-                    handle(e);
-                }
-
-                @Override
-                @RequiredUIAccess
-                public void mouseReleased(MouseEvent e) {
-                    handle(e);
-                }
-            });
+            addClickListener(inline.getComponent());
         }
 
         return inline;
     }
 
-    @RequiredUIAccess
-    private void triggerPopupShowing() {
-        if (myPopup.isShowing()) {
-            hideProcessPopup();
-        }
-        else {
-            openProcessPopup(true);
-        }
+    private void addClickListener(JComponent component) {
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            @RequiredUIAccess
+            public void mousePressed(MouseEvent e) {
+                handle(e);
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void mouseReleased(MouseEvent e) {
+                handle(e);
+            }
+        });
     }
 
     public boolean isProcessWindowOpen() {
@@ -603,8 +615,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         public void updateProgressNow() {
             myProgress.setVisible(!PowerSaveMode.isEnabled() || !isPaintingIndeterminate());
             super.updateProgressNow();
-            if (myOriginal == getLatestProgress() && myMultiProcessLink != null) {
-                myMultiProcessLink.setText(getMultiProgressLinkText());
+            if (myOriginal == getLatestProgress()) {
+                myMultiProcessLink.setText(LocalizeValue.localizeTODO(getMultiProgressLinkText()));
             }
         }
     }

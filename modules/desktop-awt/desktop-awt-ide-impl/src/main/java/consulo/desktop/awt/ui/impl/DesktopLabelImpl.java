@@ -145,6 +145,15 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     }
 
     @Override
+    public void addStyle(LabelStyle style) {
+        switch (style) {
+            case TRANSPARENT_BACKGROUND:
+                toAWTComponent().setOpaque(false);
+                break;
+        }
+    }
+
+    @Override
     protected MyJLabel createComponent() {
         return new MyJLabel(myInitText, myLabelOptions);
     }

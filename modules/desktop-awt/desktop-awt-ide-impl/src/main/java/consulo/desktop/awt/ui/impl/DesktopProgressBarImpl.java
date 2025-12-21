@@ -66,6 +66,9 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
             case SPINNER:
                 mySpinner = true;
                 break;
+            case TRANSPARENT_BACKGROUND:
+                toAWTComponent().setOpaque(false);
+                break;
         }
     }
 

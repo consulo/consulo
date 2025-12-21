@@ -18,67 +18,72 @@ package consulo.desktop.swt.ui.impl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Label> implements Label {
-  private LocalizeValue myText = LocalizeValue.empty();
-  private Component myLabeledComponent;
+    private LocalizeValue myText = LocalizeValue.empty();
+    private Component myLabeledComponent;
 
-  public DesktopSwtLabelImpl(LocalizeValue text) {
-    myText = text;
-  }
+    public DesktopSwtLabelImpl(LocalizeValue text) {
+        myText = text;
+    }
 
-  @Override
-  protected org.eclipse.swt.widgets.Label createSWT(Composite parent) {
-    return new org.eclipse.swt.widgets.Label(parent, SWT.NONE);
-  }
+    @Override
+    protected org.eclipse.swt.widgets.Label createSWT(Composite parent) {
+        return new org.eclipse.swt.widgets.Label(parent, SWT.NONE);
+    }
 
-  @Override
-  protected void initialize(org.eclipse.swt.widgets.Label component) {
-    component.setText(myText.get());
-  }
+    @Override
+    protected void initialize(org.eclipse.swt.widgets.Label component) {
+        component.setText(myText.get());
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    return myText;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        return myText;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    myText = text;
-  }
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        myText = text;
+    }
 
-  @Override
-  public void setImage(@Nullable Image icon) {
+    @Override
+    public void setImage(@Nullable Image icon) {
 
-  }
+    }
 
-  @Nullable
-  @Override
-  public Image getImage() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public Image getImage() {
+        return null;
+    }
 
-  @Override
-  public void setTarget(@Nullable Component component) {
-    myLabeledComponent = component;
-  }
+    @Override
+    public void setTarget(@Nullable Component component) {
+        myLabeledComponent = component;
+    }
 
-  @Nullable
-  @Override
-  public Component getTarget() {
-    return myLabeledComponent;
-  }
+    @Nullable
+    @Override
+    public Component getTarget() {
+        return myLabeledComponent;
+    }
+
+    @Override
+    public void addStyle(LabelStyle style) {
+
+    }
 }

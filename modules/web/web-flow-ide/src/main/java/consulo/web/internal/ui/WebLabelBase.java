@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.LabelOptions;
+import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -32,48 +33,52 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends VaadinComponentDelegate<V> implements Label {
-  private Component myLabeledComponent;
+    private Component myLabeledComponent;
 
-  public WebLabelBase(LocalizeValue text, LabelOptions options) {
-    setText(text);
-    getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());
-  }
+    public WebLabelBase(LocalizeValue text, LabelOptions options) {
+        setText(text);
+        getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());
+    }
 
-  @Override
-  public void setForegroundColor(@Nullable ColorValue foreground) {
-    getVaadinComponent().setForegroundColor(foreground);
-  }
+    @Override
+    public void setForegroundColor(@Nullable ColorValue foreground) {
+        getVaadinComponent().setForegroundColor(foreground);
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    return getVaadinComponent().getTextValue();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        return getVaadinComponent().getTextValue();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    getVaadinComponent().setTextValue(text);
-  }
+    @Override
+    public void addStyle(LabelStyle style) {
+    }
 
-  @Override
-  public void setImage(@Nullable Image icon) {
-    toVaadinComponent().setImage(icon);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        getVaadinComponent().setTextValue(text);
+    }
 
-  @Override
-  public Image getImage() {
-    return toVaadinComponent().getImage();
-  }
+    @Override
+    public void setImage(@Nullable Image icon) {
+        toVaadinComponent().setImage(icon);
+    }
 
-  @Override
-  public void setTarget(@Nullable Component component) {
-    myLabeledComponent = component;
-  }
+    @Override
+    public Image getImage() {
+        return toVaadinComponent().getImage();
+    }
 
-  @Nullable
-  @Override
-  public Component getTarget() {
-    return myLabeledComponent;
-  }
+    @Override
+    public void setTarget(@Nullable Component component) {
+        myLabeledComponent = component;
+    }
+
+    @Nullable
+    @Override
+    public Component getTarget() {
+        return myLabeledComponent;
+    }
 }
