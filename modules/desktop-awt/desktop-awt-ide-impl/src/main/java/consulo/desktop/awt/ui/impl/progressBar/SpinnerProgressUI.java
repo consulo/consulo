@@ -26,7 +26,7 @@ public class SpinnerProgressUI extends FlatProgressBarUI {
     protected void installDefaults() {
         super.installDefaults();
         progressBar.setOpaque(true);
-        render = new RingSpinner(3);
+        render = new RingSpinner(2.5f);
     }
 
     @Override

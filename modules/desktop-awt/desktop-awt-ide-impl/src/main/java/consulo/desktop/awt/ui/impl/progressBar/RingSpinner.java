@@ -9,15 +9,10 @@ import java.awt.geom.Point2D;
 
 public class RingSpinner implements SpinnerRender {
 
-    private final int size;
+    private final float size;
 
-    public RingSpinner(int size) {
+    public RingSpinner(float size) {
         this.size = size;
-    }
-
-    @Override
-    public boolean isDisplayStringAble() {
-        return true;
     }
 
     @Override
@@ -54,11 +49,6 @@ public class RingSpinner implements SpinnerRender {
         g2.fill(createShape(rec, 0, 360));
         g2.setColor(component.getForeground());
         g2.fill(createShape(rec, 0, (p * 360)));
-    }
-
-    @Override
-    public int getInsets() {
-        return UIScale.scale(size + 5);
     }
 
     private Shape createShape(Rectangle rec, double start, double end) {
