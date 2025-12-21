@@ -17,16 +17,15 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.project.Project;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
-import consulo.project.ui.action.QuickSwitchSchemeAction;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,7 +33,9 @@ import jakarta.annotation.Nonnull;
  */
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     @Override
-    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+    protected void fillActions(Project project,
+                               @Nonnull ActionGroup.Builder group,
+                               @Nonnull DataContext dataContext) {
         CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
         if (manager.PER_PROJECT_SETTINGS != null) {
             //noinspection HardCodedStringLiteral
@@ -58,7 +59,7 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     }
 
     private static void addScheme(
-        DefaultActionGroup group,
+        ActionGroup.Builder group,
         CodeStyleSettingsManager manager,
         CodeStyleScheme currentScheme,
         CodeStyleScheme scheme,

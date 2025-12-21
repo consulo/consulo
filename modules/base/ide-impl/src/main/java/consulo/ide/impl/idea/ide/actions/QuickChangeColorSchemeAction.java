@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,7 +32,9 @@ import jakarta.annotation.Nullable;
  */
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
     @Override
-    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+    protected void fillActions(Project project,
+                               @Nonnull ActionGroup.Builder group,
+                               @Nonnull DataContext dataContext) {
         EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
         for (EditorColorsScheme scheme : EditorColorsManager.getInstance().getAllSchemes()) {
             addScheme(group, current, scheme, false);
@@ -40,7 +42,7 @@ public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
     }
 
     private static void addScheme(
-        DefaultActionGroup group,
+        ActionGroup.Builder group,
         EditorColorsScheme current,
         EditorColorsScheme scheme,
         boolean addScheme

@@ -2,10 +2,9 @@ package consulo.versionControlSystem.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.AbstractVcs;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -17,8 +16,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsQuickListContentProvider {
-    ExtensionPointName<VcsQuickListContentProvider> EP_NAME = ExtensionPointName.create(VcsQuickListContentProvider.class);
-
     /**
      * Allows to customise VCS actions popup for both custom VCS and general list
      *

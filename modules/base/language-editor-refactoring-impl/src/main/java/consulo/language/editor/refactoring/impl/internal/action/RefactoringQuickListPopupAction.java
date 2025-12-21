@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
@@ -39,7 +40,9 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
 
     @Override
     @RequiredUIAccess
-    protected void fillActions(@Nullable Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+    protected void fillActions(@Nullable Project project,
+                               @Nonnull ActionGroup.Builder group,
+                               @Nonnull DataContext dataContext) {
         if (project == null) {
             return;
         }
@@ -52,7 +55,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     @RequiredUIAccess
     private static void collectEnabledChildren(
         AnAction action,
-        @Nonnull DefaultActionGroup destinationGroup,
+        @Nonnull ActionGroup.Builder destinationGroup,
         @Nonnull DataContext dataContext,
         @Nonnull ActionManager actionManager,
         boolean popup
@@ -110,7 +113,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     }
 
     @Override
-    protected String getPopupTitle(AnActionEvent e) {
-        return "Refactor This";
+    protected LocalizeValue getPopupTitle(AnActionEvent e) {
+        return LocalizeValue.localizeTODO("Refactor This");
     }
 }

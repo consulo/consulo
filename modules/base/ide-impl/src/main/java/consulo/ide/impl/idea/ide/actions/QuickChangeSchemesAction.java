@@ -37,7 +37,9 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
     }
 
     @Override
-    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+    protected void fillActions(Project project,
+                               @Nonnull ActionGroup.Builder group,
+                               @Nonnull DataContext dataContext) {
         AnAction[] actions = getGroup().getChildren(null);
         for (AnAction action : actions) {
             group.add(action);

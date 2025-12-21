@@ -150,7 +150,9 @@ public class QuickListsManager {
         }
 
         @Override
-        protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+        protected void fillActions(Project project,
+                                   @Nonnull ActionGroup.Builder group,
+                                   @Nonnull DataContext dataContext) {
             ActionManager actionManager = ActionManager.getInstance();
             for (String actionId : myQuickList.getActionIds()) {
                 if (QuickList.SEPARATOR_ID.equals(actionId)) {

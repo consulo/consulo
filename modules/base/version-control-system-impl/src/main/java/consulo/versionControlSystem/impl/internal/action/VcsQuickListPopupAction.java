@@ -35,7 +35,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     @Override
     protected void fillActions(
         @Nullable Project project,
-        @Nonnull DefaultActionGroup group,
+        @Nonnull ActionGroup.Builder group,
         @Nonnull DataContext dataContext
     ) {
         if (project == null) {
@@ -59,7 +59,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
     private void fillVcsPopup(
         @Nonnull Project project,
-        @Nonnull DefaultActionGroup group,
+        @Nonnull ActionGroup.Builder group,
         @Nullable DataContext dataContext,
         @Nullable AbstractVcs vcs
     ) {
@@ -86,7 +86,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
     private void fillGeneralVcsPopup(
         @Nonnull Project project,
-        @Nonnull DefaultActionGroup group,
+        @Nonnull ActionGroup.Builder group,
         @Nullable DataContext dataContext,
         @Nullable AbstractVcs vcs
     ) {
@@ -126,7 +126,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
     private void fillNonInVcsActions(
         @Nonnull Project project,
-        @Nonnull DefaultActionGroup group,
+        @Nonnull ActionGroup.Builder group,
         @Nullable DataContext dataContext
     ) {
         // add custom vcs actions
@@ -144,16 +144,16 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         addLocalHistoryActions(group);
     }
 
-    private void addLocalHistoryActions(DefaultActionGroup group) {
+    private void addLocalHistoryActions(ActionGroup.Builder group) {
         addSeparator(group, VcsLocalize.vcsQuicklistPupupSectionLocalHistory());
 
         addAction("LocalHistory.ShowHistory", group);
         addAction("LocalHistory.PutLabel", group);
     }
 
-    private void addActions(@Nonnull List<AnAction> actions, @Nonnull DefaultActionGroup toGroup) {
+    private void addActions(@Nonnull List<AnAction> actions, @Nonnull ActionGroup.Builder toGroup) {
         for (AnAction action : actions) {
-            toGroup.addAction(action);
+            toGroup.add(action);
         }
     }
 
@@ -185,7 +185,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         return vcsManager.getAllActiveVcss();
     }
 
-    private void addAction(String actionId, DefaultActionGroup toGroup) {
+    private void addAction(String actionId, ActionGroup.Builder toGroup) {
         AnAction action = ActionManager.getInstance().getAction(actionId);
 
         // add action to group if it is available
@@ -194,17 +194,17 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         }
     }
 
-    private void addSeparator(DefaultActionGroup toGroup) {
+    private void addSeparator(ActionGroup.Builder toGroup) {
         toGroup.add(AnSeparator.create());
     }
 
-    private void addSeparator(DefaultActionGroup toGroup, @Nonnull LocalizeValue text) {
+    private void addSeparator(ActionGroup.Builder toGroup, @Nonnull LocalizeValue text) {
         toGroup.add(AnSeparator.create(text));
     }
 
     @Override
-    protected String getPopupTitle(AnActionEvent e) {
-        return VcsLocalize.vcsQuicklistPopupTitle().get();
+    protected LocalizeValue getPopupTitle(AnActionEvent e) {
+        return VcsLocalize.vcsQuicklistPopupTitle();
     }
 
     public enum SupportedVCS {

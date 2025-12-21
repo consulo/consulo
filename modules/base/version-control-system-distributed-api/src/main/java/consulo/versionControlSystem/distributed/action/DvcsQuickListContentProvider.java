@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.action;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
@@ -30,6 +31,7 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@UsedInPlugin
 public abstract class DvcsQuickListContentProvider implements VcsQuickListContentProvider {
     @Nullable
     @Override
