@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.editor.refactoring;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
@@ -163,7 +161,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     protected abstract void performRefactoring(@Nonnull UsageInfo[] usages);
 
     @Nonnull
-    protected abstract String getCommandName();
+    protected abstract LocalizeValue getCommandName();
 
     @RequiredUIAccess
     protected void doRun() {
@@ -179,7 +177,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
         Runnable findUsagesRunnable = () -> {
             try {
-                refUsages.set(AccessRule.read(this::findUsages));
+                refUsages.set(ReadAction.compute(this::findUsages));
             }
             catch (UnknownReferenceTypeException e) {
                 refErrorLanguage.set(e.getElementLanguage());
@@ -322,7 +320,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     protected void execute(@Nonnull UsageInfo[] usages) {
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
-            .name(LocalizeValue.ofNullable(getCommandName()))
+            .name(getCommandName())
             .undoConfirmationPolicy(getUndoConfirmationPolicy())
             .inGlobalUndoActionIf(isGlobalUndoAction())
             .run(() -> doRefactoring(new LinkedHashSet<>(Arrays.asList(usages))));
@@ -383,10 +381,9 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         if (commentReferencesText != null) {
             presentation.setNonCodeUsagesString(commentReferencesText);
         }
-        presentation.setDynamicUsagesString("Dynamic " + StringUtil.decapitalize(descriptor.getCodeReferencesText(
-            dynamicUsagesCount,
-            dynamicUsagesCodeFiles.size()
-        )));
+        presentation.setDynamicUsagesString(
+            "Dynamic " + StringUtil.decapitalize(descriptor.getCodeReferencesText(dynamicUsagesCount, dynamicUsagesCodeFiles.size()))
+        );
         String generatedCodeString;
         if (codeReferencesText.contains("in code")) {
             generatedCodeString = StringUtil.replace(codeReferencesText, "in code", "in generated code");
@@ -476,7 +473,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
         LocalizeValue canNotMakeString = RefactoringLocalize.usageviewNeedRerun();
 
-        addDoRefactoringAction(usageView, refactoringRunnable, canNotMakeString.get());
+        addDoRefactoringAction(usageView, refactoringRunnable, canNotMakeString);
         usageView.setRerunAction(new AbstractAction() {
             @Override
             @RequiredUIAccess
@@ -489,7 +486,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     private void addDoRefactoringAction(
         @Nonnull UsageView usageView,
         @Nonnull Runnable refactoringRunnable,
-        @Nonnull String canNotMakeString
+        @Nonnull LocalizeValue canNotMakeString
     ) {
         usageView.addPerformOperationAction(
             refactoringRunnable,
@@ -510,7 +507,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             }
         }
 
-        String commandName = getCommandName();
+        LocalizeValue commandName = getCommandName();
         LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName);
 
         UsageInfo[] writableUsageInfos = usageInfoSet.toArray(UsageInfo.EMPTY_ARRAY);

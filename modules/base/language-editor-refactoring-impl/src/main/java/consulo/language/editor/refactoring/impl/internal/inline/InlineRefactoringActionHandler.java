@@ -73,24 +73,25 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
         if (element == null) {
             element = BaseRefactoringAction.getElementAtCaret(editor, file);
         }
-        if (element != null) {
-            PsiElement finalElement = element;
-            project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
-                if (handler.canInlineElementInEditor(finalElement, editor)) {
-                    handler.inlineElement(project, editor, finalElement);
-                    return ExtensionPoint.Flow.CONTINUE;
-                }
-                return ExtensionPoint.Flow.CONTINUE;
-            });
-
-            if (invokeInliner(editor, element)) {
-                return;
-            }
-
-            LocalizeValue message =
-                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
+        if (element == null) {
+            return;
         }
+        PsiElement finalElement = element;
+        project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
+            if (handler.canInlineElementInEditor(finalElement, editor)) {
+                handler.inlineElement(project, editor, finalElement);
+                return ExtensionPoint.Flow.CONTINUE;
+            }
+            return ExtensionPoint.Flow.CONTINUE;
+        });
+
+        if (invokeInliner(editor, element)) {
+            return;
+        }
+
+        LocalizeValue message =
+            RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
+        CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
     }
 
     @RequiredUIAccess

@@ -59,7 +59,8 @@ public class ConflictsDialog extends DialogWrapper {
     private final Project myProject;
     private Runnable myDoRefactoringRunnable;
     private final boolean myCanShowConflictsInView;
-    private String myCommandName;
+    @Nonnull
+    private LocalizeValue myCommandName;
 
     public ConflictsDialog(@Nonnull Project project, @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions) {
         this(project, conflictDescriptions, null, true, true);
@@ -162,7 +163,7 @@ public class ConflictsDialog extends DialogWrapper {
         return panel;
     }
 
-    public void setCommandName(String commandName) {
+    public void setCommandName(@Nonnull LocalizeValue commandName) {
         myCommandName = commandName;
     }
 
@@ -233,10 +234,10 @@ public class ConflictsDialog extends DialogWrapper {
             if (myDoRefactoringRunnable != null) {
                 usageView.addPerformOperationAction(
                     myDoRefactoringRunnable,
-                    myCommandName != null
+                    myCommandName != LocalizeValue.empty()
                         ? myCommandName
-                        : RefactoringLocalize.retryCommand().get(),
-                    "Unable to perform refactoring. There were changes in code after the usages have been found.",
+                        : RefactoringLocalize.retryCommand(),
+                    LocalizeValue.localizeTODO("Unable to perform refactoring. There were changes in code after the usages have been found."),
                     RefactoringLocalize.usageviewDoaction()
                 );
             }

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.move;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
@@ -26,121 +27,135 @@ import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FileReferenceContextUtil {
-  private static final Logger LOG = Logger.getInstance(FileReferenceContextUtil.class);
-  private static final Key<PsiFileSystemItem> REF_FILE_SYSTEM_ITEM_KEY = Key.create("REF_FILE_SYSTEM_ITEM_KEY");
+    private static final Logger LOG = Logger.getInstance(FileReferenceContextUtil.class);
+    private static final Key<PsiFileSystemItem> REF_FILE_SYSTEM_ITEM_KEY = Key.create("REF_FILE_SYSTEM_ITEM_KEY");
 
-  private FileReferenceContextUtil() {
-  }
-
-  public static Map<String, PsiFileSystemItem> encodeFileReferences(PsiElement element) {
-    final Map<String, PsiFileSystemItem> map = new HashMap<>();
-    if (element == null || element instanceof PsiCompiledElement || isBinary(element)) return map;
-    element.accept(new PsiRecursiveElementWalkingVisitor(true) {
-      @Override
-      public void visitElement(PsiElement element) {
-        if (element instanceof PsiLanguageInjectionHost) {
-          InjectedLanguageManager.getInstance(element.getProject()).enumerate(element, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-            @Override
-            public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
-              encodeFileReferences(injectedPsi);
-            }
-          });
-        }
-
-        PsiReference[] refs = element.getReferences();
-        if (refs.length > 0 && refs[0] instanceof FileReferenceOwner) {
-          PsiFileReference ref = ((FileReferenceOwner)refs[0]).getLastFileReference();
-          if (ref != null) {
-            ResolveResult[] results = ref.multiResolve(false);
-            for (ResolveResult result : results) {
-              if (result.getElement() instanceof PsiFileSystemItem) {
-                PsiFileSystemItem fileSystemItem = (PsiFileSystemItem)result.getElement();
-                element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, fileSystemItem);
-                map.put(element.getText(), fileSystemItem);
-                break;
-              }
-            }
-          }
-        }
-        super.visitElement(element);
-      }
-    });
-    return map;
-  }
-
-  private static boolean isBinary(PsiElement element) {
-    PsiFile containingFile = element.getContainingFile();
-    if (containingFile == null || containingFile.getFileType().isBinary()) return true;
-    return false;
-  }
-
-  public static void decodeFileReferences(PsiElement element) {
-    if (element == null || element instanceof PsiCompiledElement || isBinary(element)) return;
-    element.accept(new PsiRecursiveElementVisitor(true) {
-      @Override
-      public void visitElement(PsiElement element) {
-        PsiFileSystemItem item = element.getCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY);
-        element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, null);
-        element = bindElement(element, item);
-        if (element != null) {
-          element.acceptChildren(this);
-        }
-
-        if (element instanceof PsiLanguageInjectionHost) {
-          InjectedLanguageManager.getInstance(element.getProject()).enumerate(element, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-            @Override
-            public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
-              decodeFileReferences(injectedPsi);
-            }
-          });
-        }
-      }
-    });
-  }
-
-  public static void decodeFileReferences(PsiElement element, final Map<String, PsiFileSystemItem> map, final TextRange range) {
-    if (element == null || element instanceof PsiCompiledElement || isBinary(element)) return;
-    element.accept(new PsiRecursiveElementVisitor(true) {
-      @Override
-      public void visitElement(PsiElement element) {
-        if (!range.intersects(element.getTextRange())) return;
-        String text = element.getText();
-        PsiFileSystemItem item = map.get(text);
-        element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, item);
-        element.acceptChildren(this);
-      }
-    });
-    decodeFileReferences(element);
-  }
-
-  private static PsiElement bindElement(PsiElement element, PsiFileSystemItem item) {
-    if (item != null && item.isValid() && item.getVirtualFile() != null) {
-      PsiReference[] refs = element.getReferences();
-      for (PsiReference ref : refs) {
-        if (ref instanceof FileReferenceOwner) {
-          PsiFileReference fileReference = ((FileReferenceOwner)refs[0]).getLastFileReference();
-          if (fileReference != null) {
-            try {
-              PsiElement newElement = fileReference.bindToElement(item);
-              if (newElement != null) {
-                // assertion for troubles like IDEA-59540
-                LOG.assertTrue(element.getClass() == newElement.getClass(), "Reference " + ref + " violated contract of bindToElement()");
-              }
-              return newElement;
-            }
-            catch (IncorrectOperationException e) {
-              LOG.error(e);
-            }
-          }
-          break;
-        }
-      }
+    private FileReferenceContextUtil() {
     }
-    return element;
-  }
+
+    public static Map<String, PsiFileSystemItem> encodeFileReferences(PsiElement element) {
+        final Map<String, PsiFileSystemItem> map = new HashMap<>();
+        if (element == null || element instanceof PsiCompiledElement || isBinary(element)) {
+            return map;
+        }
+        element.accept(new PsiRecursiveElementWalkingVisitor(true) {
+            @Override
+            @RequiredReadAction
+            public void visitElement(PsiElement element) {
+                if (element instanceof PsiLanguageInjectionHost) {
+                    InjectedLanguageManager.getInstance(element.getProject()).enumerate(
+                        element,
+                        new PsiLanguageInjectionHost.InjectedPsiVisitor() {
+                            @Override
+                            @RequiredReadAction
+                            public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
+                                encodeFileReferences(injectedPsi);
+                            }
+                        }
+                    );
+                }
+
+                PsiReference[] refs = element.getReferences();
+                if (refs.length > 0 && refs[0] instanceof FileReferenceOwner referenceOwner) {
+                    PsiFileReference ref = referenceOwner.getLastFileReference();
+                    if (ref != null) {
+                        ResolveResult[] results = ref.multiResolve(false);
+                        for (ResolveResult result : results) {
+                            if (result.getElement() instanceof PsiFileSystemItem fileSystemItem) {
+                                element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, fileSystemItem);
+                                map.put(element.getText(), fileSystemItem);
+                                break;
+                            }
+                        }
+                    }
+                }
+                super.visitElement(element);
+            }
+        });
+        return map;
+    }
+
+    private static boolean isBinary(PsiElement element) {
+        PsiFile containingFile = element.getContainingFile();
+        return containingFile == null || containingFile.getFileType().isBinary();
+    }
+
+    public static void decodeFileReferences(PsiElement element) {
+        if (element == null || element instanceof PsiCompiledElement || isBinary(element)) {
+            return;
+        }
+        element.accept(new PsiRecursiveElementVisitor(true) {
+            @Override
+            @RequiredWriteAction
+            public void visitElement(PsiElement element) {
+                PsiFileSystemItem item = element.getCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY);
+                element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, null);
+                element = bindElement(element, item);
+                if (element != null) {
+                    element.acceptChildren(this);
+                }
+
+                if (element instanceof PsiLanguageInjectionHost injectionHost) {
+                    InjectedLanguageManager.getInstance(injectionHost.getProject())
+                        .enumerate(injectionHost, (injectedPsi, places) -> decodeFileReferences(injectedPsi));
+                }
+            }
+        });
+    }
+
+    public static void decodeFileReferences(PsiElement element, final Map<String, PsiFileSystemItem> map, final TextRange range) {
+        if (element == null || element instanceof PsiCompiledElement || isBinary(element)) {
+            return;
+        }
+        element.accept(new PsiRecursiveElementVisitor(true) {
+            @Override
+            @RequiredReadAction
+            public void visitElement(PsiElement element) {
+                if (!range.intersects(element.getTextRange())) {
+                    return;
+                }
+                String text = element.getText();
+                PsiFileSystemItem item = map.get(text);
+                element.putCopyableUserData(REF_FILE_SYSTEM_ITEM_KEY, item);
+                element.acceptChildren(this);
+            }
+        });
+        decodeFileReferences(element);
+    }
+
+    @RequiredWriteAction
+    private static PsiElement bindElement(PsiElement element, PsiFileSystemItem item) {
+        if (item != null && item.isValid() && item.getVirtualFile() != null) {
+            PsiReference[] refs = element.getReferences();
+            for (PsiReference ref : refs) {
+                if (ref instanceof FileReferenceOwner) {
+                    PsiFileReference fileReference = ((FileReferenceOwner) refs[0]).getLastFileReference();
+                    if (fileReference != null) {
+                        try {
+                            PsiElement newElement = fileReference.bindToElement(item);
+                            if (newElement != null) {
+                                // assertion for troubles like IDEA-59540
+                                LOG.assertTrue(
+                                    element.getClass() == newElement.getClass(),
+                                    "Reference " + ref + " violated contract of bindToElement()"
+                                );
+                            }
+                            return newElement;
+                        }
+                        catch (IncorrectOperationException e) {
+                            LOG.error(e);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return element;
+    }
 }

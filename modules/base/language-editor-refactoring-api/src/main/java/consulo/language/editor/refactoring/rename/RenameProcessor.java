@@ -65,7 +65,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     private boolean mySearchTextOccurrences;
     protected boolean myForceShowPreview;
 
-    private String myCommandName;
+    @Nonnull
+    private LocalizeValue myCommandName;
 
     private NonCodeUsageInfo[] myNonCodeUsages = new NonCodeUsageInfo[0];
     private final List<AutomaticRenamerFactory> myRenamerFactories = new ArrayList<>();
@@ -307,7 +308,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             UsageViewUtil.getType(myPrimaryElement),
             DescriptiveNameUtil.getDescriptiveName(myPrimaryElement),
             newName
-        ).get();
+        );
     }
 
     @Nonnull
@@ -452,7 +453,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                                     "<html>Following usages were safely skipped:<br>" +
                                         StringUtil.join(
                                             mySkippedUsages,
-                                            unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription(),
+                                            unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription().get(),
                                             "<br>"
                                         ) +
                                         "</html>",
@@ -482,7 +483,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     @Nonnull
     @Override
-    protected String getCommandName() {
+    protected LocalizeValue getCommandName() {
         return myCommandName;
     }
 
@@ -537,7 +538,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return mySearchTextOccurrences;
     }
 
-    public void setCommandName(String commandName) {
+    public void setCommandName(@Nonnull LocalizeValue commandName) {
         myCommandName = commandName;
     }
 }

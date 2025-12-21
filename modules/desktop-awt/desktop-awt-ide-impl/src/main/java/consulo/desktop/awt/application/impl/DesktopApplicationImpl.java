@@ -20,11 +20,15 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.*;
+import consulo.application.impl.internal.BaseApplication;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.application.internal.StartupProgress;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
@@ -43,7 +47,6 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
@@ -75,7 +78,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -423,19 +425,18 @@ public class DesktopApplicationImpl extends BaseApplication {
 
             @Nonnull
             @Override
-            @NonNls
             public LocalizeValue getDoNotShowMessage() {
                 return LocalizeValue.localizeTODO("Do not ask me again");
             }
         };
 
         if (hasUnsafeBgTasks || option.isToBeShown()) {
-            String message = hasUnsafeBgTasks
-                ? ApplicationLocalize.exitConfirmPromptTasks(Application.get().getName()).get()
-                : ApplicationLocalize.exitConfirmPrompt(Application.get().getName()).get();
+            LocalizeValue message = hasUnsafeBgTasks
+                ? ApplicationLocalize.exitConfirmPromptTasks(Application.get().getName())
+                : ApplicationLocalize.exitConfirmPrompt(Application.get().getName());
 
             if (
-                MessageDialogBuilder.yesNo(ApplicationLocalize.exitConfirmTitle().get(), message)
+                MessageDialogBuilder.yesNo(ApplicationLocalize.exitConfirmTitle().get(), message.get())
                     .yesText(ApplicationLocalize.commandExit().get())
                     .noText(CommonLocalize.buttonCancel().get())
                     .doNotAsk(option)
@@ -449,7 +450,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
@@ -459,7 +460,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean runWriteActionWithCancellableProgressInDispatchThread(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
@@ -468,7 +469,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     private boolean runEdtProgressWriteAction(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
         @Nonnull LocalizeValue cancelText,
@@ -476,7 +477,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     ) {
         // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
         return runWriteActionWithClass(action.getClass(), () -> {
-            PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
+            PotemkinProgress indicator = new PotemkinProgress(title.get(), (Project)project, parentComponent, cancelText);
             indicator.runInSwingThread(() -> action.accept(indicator));
             return !indicator.isCanceled();
         });

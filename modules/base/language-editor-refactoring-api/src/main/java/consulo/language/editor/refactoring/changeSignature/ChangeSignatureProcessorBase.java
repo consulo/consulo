@@ -28,6 +28,7 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.undoRedo.BasicUndoableAction;
@@ -211,8 +212,8 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
     @Nonnull
     @Override
     @RequiredReadAction
-    protected String getCommandName() {
-        return RefactoringLocalize.changingSignatureOf0(DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod())).get();
+    protected LocalizeValue getCommandName() {
+        return RefactoringLocalize.changingSignatureOf0(DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod()));
     }
 
     public ChangeInfo getChangeInfo() {

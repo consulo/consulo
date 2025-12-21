@@ -15,19 +15,19 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
-import consulo.language.codeStyle.internal.FormatterEx;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.internal.FormatterEx;
 import consulo.language.editor.action.JoinLinesHandlerDelegate;
 import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
@@ -36,7 +36,10 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -57,6 +60,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
     }
 
     @Override
+    @RequiredUIAccess
     public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret != null;
 
@@ -68,7 +72,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             myOriginalHandler.execute(editor, caret, dataContext);
             return;
         }
-        DocumentEx doc = (DocumentEx)editor.getDocument();
+        DocumentEx doc = (DocumentEx) editor.getDocument();
         Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
         if (project == null) {
             return;
@@ -100,11 +104,16 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         int lineCount = endLine - startLine;
         int line = startLine;
 
-        ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread("Join Lines", project, null, indicator -> {
-            indicator.setIndeterminate(false);
-            JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
-            processor.process(editor, caret, lineCount);
-        });
+        ((ApplicationEx) Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
+            LocalizeValue.localizeTODO("Join Lines"),
+            project,
+            null,
+            indicator -> {
+                indicator.setIndeterminate(false);
+                JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
+                processor.process(editor, caret, lineCount);
+            }
+        );
     }
 
     @Override
@@ -143,7 +152,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         }
 
         void process(@Nonnull Editor editor, @Nonnull Caret caret, int lineCount) {
-            myStyleManager.performActionWithFormatterDisabled((Runnable)() -> doProcess(lineCount));
+            myStyleManager.performActionWithFormatterDisabled((Runnable) () -> doProcess(lineCount));
             positionCaret(editor, caret);
         }
 
@@ -205,7 +214,8 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
          */
         private int processRawJoiners(int lineCount) {
             int startLine = myLine;
-            List<JoinLinesHandlerDelegate> list = JoinLinesHandlerDelegate.EP_NAME.getExtensionList();
+            ExtensionPoint<JoinLinesHandlerDelegate> joinLinesDelegates =
+                myFile.getApplication().getExtensionPoint(JoinLinesHandlerDelegate.class);
             int beforeLines = myDoc.getLineCount();
             CharSequence text = myDoc.getCharsSequence();
             int finalLine = myLine + lineCount;
@@ -214,27 +224,29 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
                 myIndicator.checkCanceled();
                 myIndicator.setFraction(0.1 + 0.2 * (startLine - myLine) / Math.max(1, finalLine - myLine));
 
-                int rc = CANNOT_JOIN;
+                SimpleReference<Integer> rc = SimpleReference.create(CANNOT_JOIN);
 
                 int lineEndOffset = myDoc.getLineEndOffset(startLine);
                 int start = StringUtil.skipWhitespaceBackward(text, lineEndOffset);
                 int end = CharArrayUtil.shiftForward(text, lineEndOffset, finalOffset, " \t\n");
                 int linesToJoin = myDoc.getLineNumber(end) - startLine;
-                JoinRawLinesHandlerDelegate rawJoiner = null;
+                SimpleReference<JoinRawLinesHandlerDelegate> rawJoiner = SimpleReference.create();
                 if (end < finalOffset && start > 0 && text.charAt(start - 1) != '\n') {
                     // Skip raw joiners if either of first or last lines is empty
-                    for (JoinLinesHandlerDelegate delegate : list) {
+                    joinLinesDelegates.forEachBreakable(delegate -> {
                         if (delegate instanceof JoinRawLinesHandlerDelegate rj) {
-                            rawJoiner = rj;
-                            rc = rawJoiner.tryJoinRawLines(myDoc, myFile, start, end);
-                            if (rc != CANNOT_JOIN) {
-                                myCaretRestoreOffset = checkOffset(rc, delegate, myDoc);
-                                break;
+                            rawJoiner.set(rj);
+                            int rcValue = rj.tryJoinRawLines(myDoc, myFile, start, end);
+                            rc.set(rcValue);
+                            if (rcValue != CANNOT_JOIN) {
+                                myCaretRestoreOffset = checkOffset(rcValue, delegate, myDoc);
+                                return ExtensionPoint.Flow.BREAK;
                             }
                         }
-                    }
+                        return ExtensionPoint.Flow.CONTINUE;
+                    });
                 }
-                if (rc == CANNOT_JOIN) {
+                if (rc.get() == CANNOT_JOIN) {
                     startLine += linesToJoin;
                 }
                 else {
@@ -316,16 +328,15 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             int lineEndOffset = marker.getStartOffset();
             int start = StringUtil.skipWhitespaceBackward(text, lineEndOffset) - 1;
             int end = StringUtil.skipWhitespaceForward(text, lineEndOffset);
-            int rc = CANNOT_JOIN;
-            for (JoinLinesHandlerDelegate delegate : JoinLinesHandlerDelegate.EP_NAME.getExtensionList()) {
-                rc = checkOffset(delegate.tryJoinLines(myDoc, myFile, start, end), delegate, myDoc);
-                if (rc != CANNOT_JOIN) {
-                    break;
-                }
-            }
+            SimpleReference<Integer> rc = SimpleReference.create(CANNOT_JOIN);
+            myFile.getApplication().getExtensionPoint(JoinLinesHandlerDelegate.class).forEachBreakable(delegate -> {
+                int rcValue = checkOffset(delegate.tryJoinLines(myDoc, myFile, start, end), delegate, myDoc);
+                rc.set(rcValue);
+                return rcValue != CANNOT_JOIN ? ExtensionPoint.Flow.BREAK : ExtensionPoint.Flow.CONTINUE;
+            });
 
-            if (rc != CANNOT_JOIN) {
-                RangeMarker posMarker = myDoc.createRangeMarker(rc, rc);
+            if (rc.get() != CANNOT_JOIN) {
+                RangeMarker posMarker = myDoc.createRangeMarker(rc.get(), rc.get());
                 myManager.doPostponedOperationsAndUnblockDocument(myDoc);
                 if (myCaretRestoreOffset == CANNOT_JOIN && posMarker.isValid()) {
                     myCaretRestoreOffset = posMarker.getStartOffset();
@@ -335,6 +346,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             return false;
         }
 
+        @RequiredWriteAction
         private void adjustWhiteSpace(List<RangeMarker> markers) {
             int size = markers.size();
             if (size == 0) {
