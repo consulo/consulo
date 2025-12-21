@@ -46,7 +46,7 @@
         <jaxb.version>4.0.0</jaxb.version>
         <jetty.version>11.0.15</jetty.version>
         <swt.version>3.120.0</swt.version>
-        <flatlaf.version>3.6</flatlaf.version>
+        <flatlaf.version>3.7</flatlaf.version>
 
         <vaadin.flow.version>24.7.3</vaadin.flow.version>
 
