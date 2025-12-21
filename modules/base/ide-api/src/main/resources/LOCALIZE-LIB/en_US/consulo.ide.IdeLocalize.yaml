@@ -1275,10 +1275,6 @@ label.font.size:
     text: 'Size:'
 label.icon.path:
     text: '&Icon Path:'
-label.implements.method.of_class_or_interface.name:
-    text: implements {0} {1} {2}.
-label.implements.method.of_interfaces:
-    text: 'implements methods of the following classes/interfaces:'
 label.inactive.timeout.sec:
     text: sec.
 label.java.source.files.have.been.found:
@@ -1294,8 +1290,6 @@ label.macro.preview:
     text: Macro preview
 label.macros:
     text: Macros
-label.method:
-    text: Method {0}
 label.missed.libraries.prefix:
     text: 'The following libraries are missing:'
 label.missed.libraries.text:
@@ -1342,8 +1336,6 @@ label.option.window:
     text: 'Window: {0}'
 label.override.laf.font:
     text: 'Font:'
-label.overrides.method.of_class_or_interface.name:
-    text: overrides {0} {1} {2}.
 label.path.to.module.file:
     text: 'Path to {0} module file (.iml):'
 label.please.enter.project.name:
@@ -1930,8 +1922,6 @@ prompt.delete.type.parameter:
     text: '{0,choice,1#type parameter|2#type parameters}'
 prompt.directory.contains.read.only.files:
     text: Directory {0} contains read-only file(s). Delete it anyway?
-prompt.do.you.want.to.action_verb.the.method.from_class:
-    text: Do you want {0} the base {1,choice,1#method|2#methods}?
 prompt.download.and.install.plugin:
     text: Would you like to download and install plugin ''{0}''?
 prompt.enter.a.new.package.name:
