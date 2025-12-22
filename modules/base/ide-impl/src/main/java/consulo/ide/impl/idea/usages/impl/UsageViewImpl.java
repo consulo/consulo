@@ -1215,9 +1215,9 @@ public class UsageViewImpl implements UsageViewEx {
         return result;
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public UsageNode doAppendUsage(@Nonnull Usage usage) {
-        UIAccess.assertIsUIThread();
+        UIAccess.assetIsNotUIThread();
         // invoke in ReadAction to be be sure that usages are not invalidated while the tree is being built
         myProject.getApplication().assertReadAccessAllowed();
         if (!usage.isValid()) {
