@@ -95,7 +95,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         }
       }
     };
-    
+    list.setBorder(JBUI.Borders.empty(4));
+
     list.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

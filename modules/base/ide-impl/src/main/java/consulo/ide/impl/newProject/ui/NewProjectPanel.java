@@ -127,6 +127,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         myTree.setBackground(MorphColor.of(UIUtil::getPanelBackground));
         myTree.setRootVisible(false);
         myTree.setRowHeight(JBUI.scale(24));
+        myTree.setBorder(JBUI.Borders.empty(8));
 
         TreeUtil.expandAll(myTree);
         return ScrollPaneFactory.createScrollPane(myTree, true);
