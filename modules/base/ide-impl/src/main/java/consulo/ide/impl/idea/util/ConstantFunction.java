@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("JVM anyway optimize lambdas while compile")
 public class ConstantFunction<Param, Result> implements NotNullFunction<Param, Result> {
   private final Result value;
 
