@@ -9,6 +9,8 @@ module consulo.module.content.api {
 
     requires static consulo.index.io;
 
+    requires static consulo.ui.ex.api;
+
     exports consulo.module.content;
     exports consulo.module.content.scope;
     exports consulo.module.content.util;
@@ -30,5 +32,6 @@ module consulo.module.content.api {
         consulo.compiler.artifact.impl,
         consulo.external.system.impl,
         consulo.module.ui.api,
-        consulo.module.content.impl;
+        consulo.module.content.impl,
+        consulo.language.editor.impl;
 }

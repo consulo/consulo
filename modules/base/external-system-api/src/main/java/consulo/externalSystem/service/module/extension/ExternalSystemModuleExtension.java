@@ -15,6 +15,7 @@
  */
 package consulo.externalSystem.service.module.extension;
 
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.extension.ModuleExtension;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -24,6 +25,9 @@ import jakarta.annotation.Nullable;
  * @since 03-Jun-17
  */
 public interface ExternalSystemModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ModuleExtension<T> {
-  @Nullable
-  String getOption(@Nonnull String key);
+    @Nullable
+    String getOption(@Nonnull String key);
+
+    @Nonnull
+    ProjectSystemId getProjectSystemId();
 }

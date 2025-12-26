@@ -37,6 +37,9 @@ public class ProjectSystemId implements Serializable {
     @Nonnull
     private final Image myIcon;
 
+    @Nonnull
+    private final Image myModuleIcon;
+
     @Deprecated
     public ProjectSystemId(@Nonnull String id) {
         this(id, LocalizeValue.of(StringUtil.capitalize(id.toLowerCase(Locale.ROOT))));
@@ -47,11 +50,21 @@ public class ProjectSystemId implements Serializable {
         this(id, displayName, PlatformIconGroup.actionsHelp());
     }
 
-    public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+    public ProjectSystemId(@Nonnull String id,
+                           @Nonnull LocalizeValue displayName,
+                           @Nonnull Image icon) {
+        this(id, displayName, icon, PlatformIconGroup.nodesModule());
+    }
+
+    public ProjectSystemId(@Nonnull String id,
+                           @Nonnull LocalizeValue displayName,
+                           @Nonnull Image icon,
+                           @Nonnull Image moduleIcon) {
         myId = id;
         myCapitalizedId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
         myDisplayName = displayName;
         myIcon = icon;
+        myModuleIcon = moduleIcon;
     }
 
     @Nonnull
@@ -60,8 +73,13 @@ public class ProjectSystemId implements Serializable {
     }
 
     @Nonnull
-    public Image getIcon() {
+    public final Image getIcon() {
         return myIcon;
+    }
+
+    @Nonnull
+    public final Image getModuleIcon() {
+        return myModuleIcon;
     }
 
     @Nonnull

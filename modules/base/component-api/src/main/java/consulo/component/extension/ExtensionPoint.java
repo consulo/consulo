@@ -62,6 +62,8 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer safe iteration")
     List<E> getExtensionList();
 
     @Nonnull

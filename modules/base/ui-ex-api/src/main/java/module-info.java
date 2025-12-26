@@ -59,6 +59,7 @@ module consulo.ui.ex.api {
         consulo.version.control.system.impl,
         consulo.code.editor.impl,
         consulo.project.ui.impl,
+        consulo.module.content.api,
         consulo.desktop.awt.os.mac;
 
     exports consulo.ui.ex.awtUnsafe.internal to

@@ -16,11 +16,11 @@
 package consulo.externalSystem.service.module.extension;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
-import org.jdom.Element;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,48 +29,48 @@ import java.util.Map;
  * @author VISTALL
  * @since 03-Jun-17
  */
-public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
-        implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
-  protected final Map<String, String> myOptions = new LinkedHashMap<>();
+public abstract class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
+    implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
+    protected final Map<String, String> myOptions = new LinkedHashMap<>();
 
-  public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
-    super(id, moduleRootLayer);
-  }
-
-  @RequiredReadAction
-  @Override
-  public void commit(@Nonnull ExternalSystemModuleExtensionImpl mutableModuleExtension) {
-    super.commit(mutableModuleExtension);
-    myOptions.clear();
-    myOptions.putAll(mutableModuleExtension.myOptions);
-  }
-
-  @RequiredReadAction
-  @Override
-  protected void loadStateImpl(@Nonnull Element element) {
-    for (Element option : element.getChildren("option")) {
-      String name = option.getAttributeValue("name");
-      if (name == null) {
-        continue;
-      }
-      myOptions.put(name, option.getValue());
+    public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+        super(id, moduleRootLayer);
     }
-  }
 
-  @Override
-  protected void getStateImpl(@Nonnull Element element) {
-    for (Map.Entry<String, String> entry : myOptions.entrySet()) {
-      Element option = new Element("option");
-      option.setAttribute("name", entry.getKey());
-      option.setText(entry.getValue());
-
-      element.addContent(option);
+    @RequiredReadAction
+    @Override
+    public void commit(@Nonnull ExternalSystemModuleExtensionImpl mutableModuleExtension) {
+        super.commit(mutableModuleExtension);
+        myOptions.clear();
+        myOptions.putAll(mutableModuleExtension.myOptions);
     }
-  }
 
-  @Nullable
-  @Override
-  public String getOption(@Nonnull String key) {
-    return myOptions.get(key);
-  }
+    @RequiredReadAction
+    @Override
+    protected void loadStateImpl(@Nonnull Element element) {
+        for (Element option : element.getChildren("option")) {
+            String name = option.getAttributeValue("name");
+            if (name == null) {
+                continue;
+            }
+            myOptions.put(name, option.getValue());
+        }
+    }
+
+    @Override
+    protected void getStateImpl(@Nonnull Element element) {
+        for (Map.Entry<String, String> entry : myOptions.entrySet()) {
+            Element option = new Element("option");
+            option.setAttribute("name", entry.getKey());
+            option.setText(entry.getValue());
+
+            element.addContent(option);
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getOption(@Nonnull String key) {
+        return myOptions.get(key);
+    }
 }

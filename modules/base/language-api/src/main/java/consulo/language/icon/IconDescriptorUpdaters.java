@@ -26,8 +26,8 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,105 +36,121 @@ import java.util.function.Supplier;
  * @since 2013-07-19
  */
 public final class IconDescriptorUpdaters {
-  private static final Supplier<Image> ourVisibilityIconPlaceholder =
-          LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
+    private static final Supplier<Image> ourVisibilityIconPlaceholder =
+        LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
 
-  private static final Function<ElementIconRequest, Image> ourIconCompute = request -> {
-    PsiElement element = request.myPointer.getElement();
-    if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
+    private static final Function<ElementIconRequest, Image> ourIconCompute = request -> {
+        PsiElement element = request.myPointer.getElement();
+        if (element == null || !element.isValid() || element.getProject().isDisposed()) {
+            return null;
+        }
 
-    Image icon = getIconWithoutCache(element, request.myFlags);
-    Iconable.LastComputedIcon.put(element, icon, request.myFlags);
-    return icon;
-  };
+        Image icon = getIconWithoutCache(element, request.myFlags);
+        Iconable.LastComputedIcon.put(element, icon, request.myFlags);
+        return icon;
+    };
 
-  private static class ElementIconRequest {
-    private final SmartPsiElementPointer<?> myPointer;
-    @Iconable.IconFlags
-    private final int myFlags;
+    private static class ElementIconRequest {
+        private final SmartPsiElementPointer<?> myPointer;
+        @Iconable.IconFlags
+        private final int myFlags;
 
-    public ElementIconRequest(PsiElement element, @Iconable.IconFlags int flags) {
-      myPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
-      myFlags = flags;
+        public ElementIconRequest(PsiElement element, @Iconable.IconFlags int flags) {
+            myPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
+            myFlags = flags;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ElementIconRequest)) {
+                return false;
+            }
+
+            ElementIconRequest request = (ElementIconRequest) o;
+
+            if (myFlags != request.myFlags) {
+                return false;
+            }
+            if (!myPointer.equals(request.myPointer)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return myPointer.toString() + "/" + myFlags;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = myPointer.hashCode();
+            result = 31 * result + myFlags;
+            return result;
+        }
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof ElementIconRequest)) return false;
+    @Nonnull
+    @RequiredReadAction
+    public static Image getIcon(@Nonnull PsiElement element, @Iconable.IconFlags int flags) {
+        if (!element.isValid()) {
+            return PlatformIconGroup.nodesNodeplaceholder();
+        }
 
-      ElementIconRequest request = (ElementIconRequest)o;
-
-      if (myFlags != request.myFlags) return false;
-      if (!myPointer.equals(request.myPointer)) return false;
-
-      return true;
+        Image baseIcon = Iconable.LastComputedIcon.get(element, flags);
+        if (baseIcon == null) {
+            baseIcon = computeBaseIcon(element, flags);
+        }
+        return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
     }
 
-    @Override
-    public String toString() {
-      return myPointer.toString() + "/" + myFlags;
+    @Nonnull
+    private static Image computeBaseIcon(@Nonnull PsiElement element, int flags) {
+        Image icon = computeBaseIcon(element);
+        if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
+            return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.get());
+        }
+        return icon;
     }
 
-    @Override
-    public int hashCode() {
-      int result = myPointer.hashCode();
-      result = 31 * result + myFlags;
-      return result;
-    }
-  }
+    @Nonnull
+    private static Image computeBaseIcon(@Nonnull PsiElement element) {
+        if (element instanceof PsiFileSystemItem) {
+            VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
+            if (file != null) {
+                return VirtualFileManager.getInstance().getBaseFileIcon(file);
+            }
+            return PlatformIconGroup.nodesNodeplaceholder();
+        }
 
-  @Nonnull
-  @RequiredReadAction
-  public static Image getIcon(@Nonnull PsiElement element, @Iconable.IconFlags int flags) {
-    if (!element.isValid()) return AllIcons.Nodes.NodePlaceholder;
-
-    Image baseIcon = Iconable.LastComputedIcon.get(element, flags);
-    if (baseIcon == null) {
-      baseIcon = computeBaseIcon(element, flags);
-    }
-    return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
-  }
-
-  @Nonnull
-  private static Image computeBaseIcon(@Nonnull PsiElement element, int flags) {
-    Image icon = computeBaseIcon(element);
-    if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
-      return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.get());
-    }
-    return icon;
-  }
-
-  @Nonnull
-  private static Image computeBaseIcon(@Nonnull PsiElement element) {
-    if(element instanceof PsiFileSystemItem) {
-      VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
-      if(file != null) {
-        return VirtualFileManager.getInstance().getBaseFileIcon(file);
-      }
-      return PlatformIconGroup.nodesNodeplaceholder();
+        PsiFile containingFile = element.getContainingFile();
+        if (containingFile != null) {
+            VirtualFile virtualFile = containingFile.getVirtualFile();
+            if (virtualFile != null) {
+                return virtualFile.getFileType().getIcon();
+            }
+        }
+        return PlatformIconGroup.nodesNodeplaceholder();
     }
 
-    PsiFile containingFile = element.getContainingFile();
-    if (containingFile != null) {
-      VirtualFile virtualFile = containingFile.getVirtualFile();
-      if (virtualFile != null) {
-        return virtualFile.getFileType().getIcon();
-      }
+    @Nonnull
+    @RequiredReadAction
+    public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
+        IconDescriptor iconDescriptor = new IconDescriptor(null);
+        element
+            .getProject()
+            .getExtensionPoint(IconDescriptorUpdater.class).forEachExtensionSafe(it -> it.updateIcon(iconDescriptor, element, flags));
+        return iconDescriptor.toIcon();
     }
-    return PlatformIconGroup.nodesNodeplaceholder();
-  }
 
-  @Nonnull
-  @RequiredReadAction
-  public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
-    IconDescriptor iconDescriptor = new IconDescriptor(null);
-    IconDescriptorUpdater.EP.forEachExtensionSafe(element.getProject(), it -> it.updateIcon(iconDescriptor, element, flags));
-    return iconDescriptor.toIcon();
-  }
-
-  @RequiredReadAction
-  public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-    IconDescriptorUpdater.EP.forEachExtensionSafe(element.getProject(), it -> it.updateIcon(iconDescriptor, element, flags));
-  }
+    @RequiredReadAction
+    public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+        element
+            .getProject()
+            .getExtensionPoint(IconDescriptorUpdater.class).forEachExtensionSafe(it -> it.updateIcon(iconDescriptor, element, flags));
+    }
 }

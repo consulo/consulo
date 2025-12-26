@@ -36,6 +36,7 @@ import consulo.module.Module;
 import consulo.module.*;
 import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.internal.ModuleIconService;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
@@ -1025,7 +1026,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         if (module == null) {
             return PlatformIconGroup.actionsHelp();
         }
-        return PlatformIconGroup.nodesModule();
+        return ModuleIconService.getInstance(myProject).getIcon(module);
     }
 
     public void setModuleGroupPath(Module module, String[] groupPath) {

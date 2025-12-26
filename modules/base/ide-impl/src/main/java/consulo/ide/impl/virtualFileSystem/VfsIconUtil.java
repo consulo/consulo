@@ -16,8 +16,9 @@
 package consulo.ide.impl.virtualFileSystem;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.util.AnyIconKey;
+import consulo.ui.ex.internal.AnyIconKey;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -101,15 +102,19 @@ public class VfsIconUtil {
             icon = VirtualFilePresentation.getIcon(file);
         }
 
-        return IconDeferrer.getInstance().defer(icon, new AnyIconKey<>(file, project, flags), k -> requestIcon(k.getProject(), k.getObject(), k.getFlags()));
+        return IconDeferrer.getInstance().defer(
+            icon,
+            new AnyIconKey<>(file, project, flags),
+            k -> requestIcon((Project) k.getProject(), k.getObject(), k.getFlags())
+        );
     }
 
     @Nonnull
     @RequiredReadAction
-    public static Image getIconNoDefer(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable Project project) {
+    public static Image getIconNoDefer(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable ComponentManager project) {
         UIAccess.assetIsNotUIThread();
 
-        Image image = requestIcon(project, file, flags);
+        Image image = requestIcon((Project) project, file, flags);
         if (image == null) {
             return Image.empty(Image.DEFAULT_ICON_SIZE);
         }

@@ -15,6 +15,7 @@
  */
 package consulo.module;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
@@ -184,5 +185,6 @@ public abstract class ModuleManager {
   }
 
   @Nonnull
+  @UsedInPlugin
   public abstract Image getModuleIcon(@Nullable Module module);
 }

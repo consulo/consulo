@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.internal.ModuleIconService;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -127,7 +128,7 @@ public class RunAnythingContext {
             super(
                 LocalizeValue.ofNullable(module.getName()),
                 LocalizeValue.ofNullable(calcDescription(module)),
-                PlatformIconGroup.nodesModule()
+                ModuleIconService.getInstance(module.getProject()).getIcon(module)
             );
             myModule = module;
         }

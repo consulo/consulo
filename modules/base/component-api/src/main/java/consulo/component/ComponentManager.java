@@ -96,6 +96,8 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     MessageBus getMessageBus();
 
     @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer safe iteration via methods of ExtensionPoint")
     default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
         return getExtensionPoint(extensionPointName).getExtensionList();
     }

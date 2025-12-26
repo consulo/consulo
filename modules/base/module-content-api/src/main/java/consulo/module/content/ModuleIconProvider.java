@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.icon;
+package consulo.module.content;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.language.psi.PsiElement;
+import consulo.module.Module;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2013-07-19
+ * @since 26/12/2025
  */
 @ExtensionAPI(ComponentScope.PROJECT)
-public interface IconDescriptorUpdater {
-    @RequiredReadAction
-    void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags);
+public interface ModuleIconProvider {
+    @Nullable
+    Image getIcon(@Nonnull Module module);
 }

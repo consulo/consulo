@@ -26,45 +26,45 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 03-Jun-17
  */
-public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
-  public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
-    super(id, moduleRootLayer);
-  }
-
-  @Override
-  public void setOption(@Nonnull String key, @Nullable String value) {
-    if (value == null) {
-      myOptions.remove(key);
+public abstract class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
+    public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+        super(id, moduleRootLayer);
     }
-    else {
-      myOptions.put(key, value);
+
+    @Override
+    public void setOption(@Nonnull String key, @Nullable String value) {
+        if (value == null) {
+            myOptions.remove(key);
+        }
+        else {
+            myOptions.put(key, value);
+        }
     }
-  }
 
-  @Override
-  public void removeOption(@Nonnull String key) {
-    myOptions.remove(key);
-  }
+    @Override
+    public void removeOption(@Nonnull String key) {
+        myOptions.remove(key);
+    }
 
-  @Override
-  public void removeAllOptions() {
-    myOptions.clear();
-  }
+    @Override
+    public void removeAllOptions() {
+        myOptions.clear();
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
-    return null;
-  }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+        return null;
+    }
 
-  @Override
-  public void setEnabled(boolean val) {
-    myIsEnabled = val;
-  }
+    @Override
+    public void setEnabled(boolean val) {
+        myIsEnabled = val;
+    }
 
-  @Override
-  public boolean isModified(@Nonnull ExternalSystemModuleExtensionImpl originalExtension) {
-    return myIsEnabled != originalExtension.isEnabled() || !myOptions.equals(originalExtension.myOptions);
-  }
+    @Override
+    public boolean isModified(@Nonnull ExternalSystemModuleExtensionImpl originalExtension) {
+        return myIsEnabled != originalExtension.isEnabled() || !myOptions.equals(originalExtension.myOptions);
+    }
 }
