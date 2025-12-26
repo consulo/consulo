@@ -16,6 +16,7 @@
 package consulo.externalSystem.service.module.extension;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import jakarta.annotation.Nonnull;
@@ -29,12 +30,21 @@ import java.util.Map;
  * @author VISTALL
  * @since 03-Jun-17
  */
-public abstract class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
+public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
     implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
     protected final Map<String, String> myOptions = new LinkedHashMap<>();
+    @Nonnull
+    private final ProjectSystemId myProjectSystemId;
 
-    public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+    public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer, @Nonnull ProjectSystemId projectSystemId) {
         super(id, moduleRootLayer);
+        myProjectSystemId = projectSystemId;
+    }
+
+    @Override
+    @Nonnull
+    public ProjectSystemId getProjectSystemId() {
+        return myProjectSystemId;
     }
 
     @RequiredReadAction

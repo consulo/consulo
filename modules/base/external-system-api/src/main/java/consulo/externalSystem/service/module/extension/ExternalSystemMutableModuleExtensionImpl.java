@@ -16,6 +16,7 @@
 package consulo.externalSystem.service.module.extension;
 
 import consulo.disposer.Disposable;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,9 +27,11 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 03-Jun-17
  */
-public abstract class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
-    public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
-        super(id, moduleRootLayer);
+public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
+    public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id,
+                                                    @Nonnull ModuleRootLayer moduleRootLayer,
+                                                    @Nonnull ProjectSystemId projectSystemId) {
+        super(id, moduleRootLayer, projectSystemId);
     }
 
     @Override
