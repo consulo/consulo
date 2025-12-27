@@ -42,12 +42,12 @@
                         <annotationProcessorPath>
                             <groupId>consulo.internal</groupId>
                             <artifactId>compiler.apt.java</artifactId>
-                            <version>2.0-SNAPSHOT</version>
+                            <version>${compiler.apt.version}</version>
                         </annotationProcessorPath>
                         <annotationProcessorPath>
                             <groupId>consulo.internal</groupId>
                             <artifactId>compiler.apt.java.generation</artifactId>
-                            <version>2.0-SNAPSHOT</version>
+                            <version>${compiler.apt.version}</version>
                         </annotationProcessorPath>
                     </annotationProcessorPaths>
                 </configuration>
@@ -68,7 +68,7 @@
                     <dependency>
                         <groupId>consulo.internal</groupId>
                         <artifactId>compiler.apt.java.generation</artifactId>
-                        <version>2.0-SNAPSHOT</version>
+                        <version>${compiler.apt.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
