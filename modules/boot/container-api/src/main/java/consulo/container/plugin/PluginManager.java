@@ -16,8 +16,11 @@
 package consulo.container.plugin;
 
 import consulo.container.internal.PluginManagerInternal;
+import consulo.container.internal.plugin.classloader.JoinPluginClassLoader;
+import consulo.container.internal.plugin.classloader.PluginClassLoaderImpl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;

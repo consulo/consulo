@@ -40,6 +40,7 @@ module consulo.container.api {
 
     exports consulo.container.internal.plugin.classloader to
         consulo.application.api,
+        consulo.component.api,
         consulo.desktop.awt.bootstrap,
         consulo.desktop.swt.bootstrap,
         consulo.proxy;

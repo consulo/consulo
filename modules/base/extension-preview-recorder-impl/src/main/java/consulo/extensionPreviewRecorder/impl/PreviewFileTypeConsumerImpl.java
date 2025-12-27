@@ -72,7 +72,7 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
   }
 
   private void record(@Nonnull FileNameMatcher fileNameMatcher) {
-    String id = buildMatcherIdentificator(fileNameMatcher);
+    String id = buildMatcherIdentify(fileNameMatcher);
     if (id == null) {
       return;
     }
@@ -81,7 +81,7 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
   }
 
   @Nullable
-  private String buildMatcherIdentificator(FileNameMatcher fileNameMatcher) {
+  private String buildMatcherIdentify(FileNameMatcher fileNameMatcher) {
     if (fileNameMatcher instanceof ExactFileNameMatcher) {
       if (((ExactFileNameMatcher)fileNameMatcher).isIgnoreCase()) {
         return "!|" + ((ExactFileNameMatcher)fileNameMatcher).getFileName();
