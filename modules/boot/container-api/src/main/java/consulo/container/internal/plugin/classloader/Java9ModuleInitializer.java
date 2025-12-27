@@ -81,6 +81,7 @@ public class Java9ModuleInitializer {
         Module ideImpl = controller.layer().findModule("consulo.ide.impl").get();
         Module applicationApi = controller.layer().findModule("consulo.application.api").get();
         Module applicationImpl = controller.layer().findModule("consulo.application.impl").get();
+        Module componentApi = controller.layer().findModule("consulo.component.api").get();
         Module componentImpl = controller.layer().findModule("consulo.component.impl").get();
         Module proxy = controller.layer().findModule("consulo.proxy").get();
         Module externalServiceImpl = controller.layer().findModule("consulo.external.service.impl").get();
@@ -101,6 +102,7 @@ public class Java9ModuleInitializer {
         containerApi.addExports("consulo.container.internal.plugin.classloader", ideImpl);
         containerApi.addExports("consulo.container.internal.plugin.classloader", proxy);
         containerApi.addExports("consulo.container.internal.plugin.classloader", applicationImpl);
+        containerApi.addExports("consulo.container.internal.plugin.classloader", componentApi);
 
         containerApi.addExports("consulo.container.internal.plugin", componentImpl);
         containerApi.addExports("consulo.container.internal.plugin", applicationImpl);
