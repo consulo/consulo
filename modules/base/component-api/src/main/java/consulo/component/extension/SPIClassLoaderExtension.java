@@ -17,13 +17,8 @@ package consulo.component.extension;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.ComponentManager;
-import consulo.container.internal.plugin.classloader.JoinPluginClassLoader;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
 import jakarta.annotation.Nonnull;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,18 +31,6 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SPIClassLoaderExtension {
-    @SuppressWarnings("GetExtensionPoint")
-    static ClassLoader createJoinedClassLoader(@Nonnull ComponentManager componentManager, @Nonnull Class<?> targetClass) {
-        ExtensionPoint<SPIClassLoaderExtension> extensions = componentManager.getExtensionPoint(SPIClassLoaderExtension.class);
-        List<PluginDescriptor> descriptors = extensions.collectMapped(spiExt -> {
-            if (spiExt.getTargetClass() == targetClass) {
-                return PluginManager.getPlugin(spiExt.getClass());
-            }
-            return null;
-        });
-        return JoinPluginClassLoader.createJoinedClassLoader(descriptors);
-    }
-
     @Nonnull
     Class<?> getTargetClass();
 
