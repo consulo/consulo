@@ -318,11 +318,6 @@
                 <version>2.1.0</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-imaging</artifactId>
-                <version>1.0-alpha3</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jvnet.winp</groupId>
                 <artifactId>winp</artifactId>
                 <version>1.29-SNAPSHOT</version>
