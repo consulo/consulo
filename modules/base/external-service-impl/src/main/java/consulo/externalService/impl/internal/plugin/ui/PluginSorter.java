@@ -18,7 +18,7 @@ package consulo.externalService.impl.internal.plugin.ui;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.localize.LocalizeManager;
+import consulo.localization.LocalizationManager;
 import consulo.localize.LocalizeValue;
 
 import java.util.function.Function;
@@ -33,7 +33,7 @@ public enum PluginSorter {
     }),
     NAME(ExternalServiceLocalize.columnPluginsName(), pluginDescriptor -> {
         String name = pluginDescriptor.getName();
-        name = name.toLowerCase(LocalizeManager.get().getLocale());
+        name = name.toLowerCase(LocalizationManager.get().getLocale());
 
         if (!Character.isAlphabetic(name.charAt(0))) {
             // find first alphabetic symbol

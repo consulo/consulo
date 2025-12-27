@@ -137,8 +137,8 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         Configurable[] mergedRootConfigurables = rootConfigurables.toArray(new Configurable[rootConfigurables.size()]);
         // move unnamed to top
         Arrays.sort(mergedRootConfigurables, (o1, o2) -> {
-            boolean c1e = StringUtil.isEmpty(o1.getDisplayName().get());
-            return c1e == StringUtil.isEmpty(o2.getDisplayName().get()) ? 0 : (c1e ? -1 : 1);
+            boolean c1e = o1.getDisplayName().get().isEmpty();
+            return c1e == o2.getDisplayName().get().isEmpty() ? 0 : (c1e ? -1 : 1);
         });
         return new MergedCompositeConfigurable("", LocalizeValue.of(), mergedRootConfigurables);
     }

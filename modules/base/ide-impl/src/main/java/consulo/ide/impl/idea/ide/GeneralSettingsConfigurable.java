@@ -25,7 +25,7 @@ import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeManager;
+import consulo.localization.LocalizationManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.*;
@@ -148,9 +148,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Accessibility"), screenLayout));
 
             VerticalLayout localizeLayout = VerticalLayout.create();
-            Set<Locale> avaliableLocales = LocalizeManager.get().getAvaliableLocales();
+            Set<Locale> availableLocales = LocalizationManager.get().getAvailableLocales();
 
-            List<Locale> locales = new ArrayList<>(avaliableLocales);
+            List<Locale> locales = new ArrayList<>(availableLocales);
             locales.sort(Comparator.comparing(Locale::getDisplayName));
             locales.addFirst(Locale.ROOT);
 
@@ -158,7 +158,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             localeBox.setValue(Locale.ROOT);
             localeBox.setTextRender(locale -> {
                 if (locale == null || locale == Locale.ROOT) {
-                    Locale detectedLocale = LocalizeManager.get().getAutoDetectedLocale();
+                    Locale detectedLocale = LocalizationManager.get().getAutoDetectedLocale();
                     return IdeLocalize.optionsLocaleAutoLocale(detectedLocale.getDisplayName());
                 }
 
@@ -168,7 +168,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
                 myLocaleChanged = true;
 
                 if (myEventBlocker.get() == 0) {
-                    LocalizeManager.get().setLocale(event.getValue());
+                    LocalizationManager.get().setLocale(event.getValue());
                 }
             });
 
@@ -279,13 +279,13 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
 
     private boolean isLocaleChanged(@Nonnull Locale locale) {
-        LocalizeManager localizeManager = LocalizeManager.get();
+        LocalizationManager localizationManager = LocalizationManager.get();
 
-        if (locale == Locale.ROOT && localizeManager.isDefaultLocale()) {
+        if (locale == Locale.ROOT && localizationManager.isDefaultLocale()) {
             return false;
         }
 
-        return !Objects.equals(locale, localizeManager.getLocale());
+        return !Objects.equals(locale, localizationManager.getLocale());
     }
 
     private boolean isModified(@Nullable String id, ComboBox<FileOperateDialogProvider> comboBox) {
@@ -315,9 +315,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         generalSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
         recentProjectsManager.setRecentProjectsLimit(component.myRecentProjectsLimit.getValueOrError());
 
-        LocalizeManager localizeManager = LocalizeManager.get();
+        LocalizationManager localizationManager = LocalizationManager.get();
         Locale locale = component.myLocaleBox.getValueOrError();
-        localizeManager.setLocale(locale == Locale.ROOT ? null : locale);
+        localizationManager.setLocale(locale == Locale.ROOT ? null : locale);
 
         generalSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
         try {
@@ -353,22 +353,22 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     protected void disposeUIResources(@Nonnull MyComponent component) {
         super.disposeUIResources(component);
 
-        LocalizeManager localizeManager = LocalizeManager.get();
+        LocalizationManager localizationManager = LocalizationManager.get();
 
         if (!component.myApplied
             && component.myLocaleChanged
             && component.myInitialLocale != null
-            && !Objects.equals(component.myInitialLocale.locale(), localizeManager.getLocale())) {
-            localizeManager.setLocale(component.myInitialLocale.setValue());
+            && !Objects.equals(component.myInitialLocale.locale(), localizationManager.getLocale())) {
+            localizationManager.setLocale(component.myInitialLocale.setValue());
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void reset(@Nonnull MyComponent component) {
-        LocalizeManager localizeManager = LocalizeManager.get();
+        LocalizationManager localizationManager = LocalizationManager.get();
 
-        component.myInitialLocale = new LocaleInfo(localizeManager.getLocale(), localizeManager.isDefaultLocale());
+        component.myInitialLocale = new LocaleInfo(localizationManager.getLocale(), localizationManager.isDefaultLocale());
 
         RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
         GeneralSettings settings = GeneralSettings.getInstance();
@@ -414,7 +414,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         try {
             component.myEventBlocker.incrementAndGet();
 
-            component.myLocaleBox.setValue(localizeManager.isDefaultLocale() ? Locale.ROOT : localizeManager.getLocale());
+            component.myLocaleBox.setValue(localizationManager.isDefaultLocale() ? Locale.ROOT : localizationManager.getLocale());
         }
         finally {
             component.myEventBlocker.decrementAndGet();
