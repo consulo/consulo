@@ -373,22 +373,6 @@
         </dependency>
         
         <dependency>
-            <groupId>consulo.internal.sound</groupId>
-            <artifactId>jogg</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>consulo.internal.sound</groupId>
-            <artifactId>jvorbis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>consulo.internal.sound</groupId>
-            <artifactId>javazoom.jlayer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>consulo.internal.sound</groupId>
-            <artifactId>javazoom.mp3</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-awt-hacking</artifactId>
             <version>${project.version}</version>
