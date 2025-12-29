@@ -28,8 +28,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2024-12-30
  */
-public abstract class LocalizeLoader<V> {
-    private static final Logger LOG = Logger.getInstance(LocalizeLoader.class);
+public abstract class LocalizationLoader<V> {
+    private static final Logger LOG = Logger.getInstance(LocalizationLoader.class);
 
     protected final String myLocalizeId;
     protected final PluginDescriptor myPluginDescriptor;
@@ -37,7 +37,7 @@ public abstract class LocalizeLoader<V> {
 
     private volatile Supplier<V> myValue;
 
-    public LocalizeLoader(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
+    public LocalizationLoader(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
         myLocalizeId = localizeId;
         myPluginDescriptor = pluginDescriptor;
         myResourcePath = resourcePath;

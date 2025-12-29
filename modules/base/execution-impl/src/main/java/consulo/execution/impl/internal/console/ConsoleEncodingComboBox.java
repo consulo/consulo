@@ -15,8 +15,8 @@
  */
 package consulo.execution.impl.internal.console;
 
-import consulo.execution.ExecutionBundle;
-import consulo.localize.LocalizeManager;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.localization.LocalizationManager;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
@@ -51,11 +51,11 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
 
         @Override
         public String getDisplayName() {
-            Locale locale = LocalizeManager.get().getLocale();
+            Locale locale = LocalizationManager.get().getLocale();
             
             Charset charset = myReference.getCharset();
             if (charset == null) {
-                return ExecutionBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName(locale));
+                return ExecutionLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName(locale)).get();
             } else {
                 return charset.displayName(locale);
             }
@@ -102,13 +102,13 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
         }
     }
 
-    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionBundle.message("combobox.console.favorites.separator.label"));
-    private static final SeparatorItem MORE = new SeparatorItem(ExecutionBundle.message("combobox.console.more.separator.label"));
+    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionLocalize.comboboxConsoleFavoritesSeparatorLabel().get());
+    private static final SeparatorItem MORE = new SeparatorItem(ExecutionLocalize.comboboxConsoleMoreSeparatorLabel().get());
 
     private static final CharsetItem DEFAULT = new CharsetItem(EncodingReference.DEFAULT);
 
     public ConsoleEncodingComboBox() {
-        setRenderer(new ColoredListCellRenderer<EncodingItem>() {
+        setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, EncodingItem value, int index, boolean selected, boolean hasFocus) {
                 if (value == null) {
