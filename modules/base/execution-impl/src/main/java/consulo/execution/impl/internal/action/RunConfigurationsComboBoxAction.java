@@ -52,6 +52,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -321,6 +322,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         );
 
         popup.getListModel().syncModel();
+
+        popup.setMinimumSize(new Dimension(270, 0));
 
         return popup;
     }
