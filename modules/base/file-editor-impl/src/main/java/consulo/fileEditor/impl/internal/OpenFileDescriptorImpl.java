@@ -155,7 +155,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         }
 
         if (type instanceof INativeFileType) {
-            return ((INativeFileType) type).openFileInAssociatedApplication(project, myFile);
+            ((INativeFileType) type).openFileInAssociatedApplication(project, myFile);
+            return true;
         }
 
         return navigateInEditor(project, requestFocus);

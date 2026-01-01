@@ -15,80 +15,94 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
-import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.process.ProcessHandlerBuilderFactory;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author yole
  */
 public class NativeFileType implements INativeFileType {
-  public static final NativeFileType INSTANCE = new NativeFileType();
+    private static final Logger LOG = Logger.getInstance(NativeFileType.class);
 
-  private NativeFileType() { }
+    public static final NativeFileType INSTANCE = new NativeFileType();
 
-  @Override
-  @Nonnull
-  public String getId() {
-    return "Native";
-  }
+    private static final Image ICON = ImageEffects.layered(PlatformIconGroup.filetypesAny_type(), PlatformIconGroup.nodesSymlink());
 
-  @Override
-  @Nonnull
-  public LocalizeValue getDescription() {
-    return FileTypeLocalize.nativeFileTypeDescription();
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.FileTypes.Custom;
-  }
-
-  @Override
-  public boolean isBinary() {
-    return true;
-  }
-
-  @Override
-  public boolean openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file) {
-    return openAssociatedApplication(file);
-  }
-
-  public static boolean openAssociatedApplication(@Nonnull VirtualFile file) {
-    List<String> commands = new ArrayList<>();
-    if (Platform.current().os().isWindows()) {
-      commands.add("rundll32.exe");
-      commands.add("url.dll,FileProtocolHandler");
+    private NativeFileType() {
     }
-    else if (Platform.current().os().isMac()) {
-      commands.add("/usr/bin/open");
-    }
-    else if (SystemInfo.hasXdgOpen()) {
-      commands.add("xdg-open");
-    }
-    else {
-      return false;
-    }
-    commands.add(file.getPath());
 
-    try {
-      new GeneralCommandLine(commands).createProcess();
-      return true;
+    @Override
+    @Nonnull
+    public String getId() {
+        return "Native";
     }
-    catch (Exception e) {
-      return false;
+
+    @Override
+    @Nonnull
+    public LocalizeValue getDescription() {
+        return FileTypeLocalize.nativeFileTypeDescription();
     }
-  }
+
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return ICON;
+    }
+
+    @Override
+    public boolean isBinary() {
+        return true;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file) {
+        Application application = ((Project)project).getApplication();
+
+        application.executeOnPooledThread(() -> openAssociatedApplication(application, file));
+    }
+
+    public static void openAssociatedApplication(@Nonnull Application application, @Nonnull VirtualFile file) {
+        UIAccess.assetIsNotUIThread();
+
+        GeneralCommandLine cmd = new GeneralCommandLine();
+        if (Platform.current().os().isWindows()) {
+            cmd.setExePath("rundll32.exe");
+            cmd.addParameter("url.dll,FileProtocolHandler");
+        }
+        else if (Platform.current().os().isMac()) {
+            cmd.setExePath("/usr/bin/open");
+        }
+        else if (SystemInfo.hasXdgOpen()) {
+            cmd.setExePath("xdg-open");
+        }
+        else {
+            return;
+        }
+
+        cmd.addParameter(file.getPath());
+
+        try {
+            application.getInstance(ProcessHandlerBuilderFactory.class).newBuilder(cmd).build();
+        }
+        catch (Exception e) {
+            LOG.warn("Failed to open: " + file.getPath(), e);
+        }
+    }
 }

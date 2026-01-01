@@ -15,18 +15,14 @@
  */
 package consulo.virtualFileSystem.fileType;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface INativeFileType extends FileType {
-  boolean openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file);
-
-  @Deprecated
-  @DeprecationInfo("Unused")
-  default boolean useNativeIcon() {
-    return false;
-  }
+    @RequiredUIAccess
+    void openFileInAssociatedApplication(@Nullable ComponentManager project,
+                                         @Nonnull VirtualFile file);
 }

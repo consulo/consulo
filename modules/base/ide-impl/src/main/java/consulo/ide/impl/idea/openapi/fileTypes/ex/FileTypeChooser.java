@@ -22,12 +22,11 @@ import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.idea.openapi.fileTypes.FileTypesBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeRenderer;
-import consulo.language.internal.FileTypeManagerEx;
-import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.language.internal.FileTypeManagerEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,7 +36,9 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -109,7 +110,7 @@ public class FileTypeChooser extends DialogWrapper {
 
         DefaultListModel<FileType> model = new DefaultListModel<>();
         for (FileType type : fileTypes) {
-            if (!type.isReadOnly() && type != UnknownFileType.INSTANCE && !(type instanceof NativeFileType)) {
+            if (!type.isReadOnly() && type != UnknownFileType.INSTANCE && !(type instanceof INativeFileType)) {
                 model.addElement(type);
             }
         }
