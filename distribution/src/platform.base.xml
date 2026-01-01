@@ -238,6 +238,7 @@
                 <include>com.google.code.gson:gson</include>
                 <include>net.bytebuddy:byte-buddy</include>
                 <include>org.apache.commons:commons-compress</include>
+                <include>org.tukaani:xz</include>
                 <include>commons-codec:commons-codec</include>
                 <include>org.apache.velocity:velocity-engine-core</include>
                 <include>org.jvnet.winp:winp</include>
