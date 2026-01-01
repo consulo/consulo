@@ -40,9 +40,8 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
   protected final JTree myTree;
 
   protected ContentEntryEditingAction(JTree tree, @Nonnull LocalizeValue text, @Nullable Image image) {
-    super(text, LocalizeValue.of(), image);
+    super(text, text, image);
     myTree = tree;
-    getTemplatePresentation().setEnabled(true);
   }
 
   @Override
