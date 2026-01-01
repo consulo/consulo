@@ -217,8 +217,13 @@ public class BaseProjectViewDirectoryHelper {
             return true;
         }
 
-        return Objects.equals(settings.getViewOption(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY), Boolean.TRUE)
-            && directoryInfo.isExcluded(dir);
+        if (directoryInfo.isExcluded(dir)
+            && Objects.equals(settings.getViewOption(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY), Boolean.TRUE)) {
+            return true;
+        }
+
+        VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(dir);
+        return localFile != null && shouldBeShown(directoryIndex, localFile, settings);
     }
 
     // used only for non-flatten packages mode
