@@ -46,6 +46,7 @@ module consulo.version.control.system.impl {
     opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.action to consulo.component.impl;
+    opens consulo.versionControlSystem.impl.internal.change.ui.awt to consulo.proxy;
 
     requires com.google.common;
 
