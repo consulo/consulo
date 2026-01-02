@@ -30,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jna.version>5.16.0</jna.version>
-        <jdom.version>3.0-SNAPSHOT</jdom.version>
+        <jdom.version>3.1</jdom.version>
         <logback.version>1.5.7</logback.version>
         <guava.version>30.1.1-jre</guava.version>
         <!--please exclude common logging library from dependency-->
@@ -995,7 +995,7 @@
                 <plugin>
                     <groupId>consulo.maven</groupId>
                     <artifactId>maven-consulo-plugin</artifactId>
-                    <version>3.7.7</version>
+                    <version>3.8</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>
@@ -1024,7 +1024,7 @@
             <plugin>
                 <groupId>consulo.maven</groupId>
                 <artifactId>ui-designer-maven-plugin</artifactId>
-                <version>2.3-SNAPSHOT</version>
+                <version>2.4</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -1038,7 +1038,7 @@
             <plugin>
                 <groupId>consulo.maven</groupId>
                 <artifactId>notnull-maven-plugin</artifactId>
-                <version>2.3-SNAPSHOT</version>
+                <version>2.4</version>
                 <executions>
                     <execution>
                         <id>production</id>
