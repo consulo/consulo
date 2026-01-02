@@ -240,6 +240,7 @@
                 <include>org.apache.commons:commons-compress</include>
                 <include>org.tukaani:xz</include>
                 <include>commons-codec:commons-codec</include>
+                <include>commons-io:commons-io</include>
                 <include>org.apache.velocity:velocity-engine-core</include>
                 <include>org.jvnet.winp:winp</include>
                 <include>org.apache.commons:commons-lang3</include>
