@@ -40,7 +40,7 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>java9-maven-plugin</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.2</version>
         <extensions>true</extensions>
         <executions>
           <execution>
