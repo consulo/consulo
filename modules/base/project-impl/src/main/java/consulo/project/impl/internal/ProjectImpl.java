@@ -377,6 +377,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public String toString() {
-    return "Project" + (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
+    return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
   }
 }

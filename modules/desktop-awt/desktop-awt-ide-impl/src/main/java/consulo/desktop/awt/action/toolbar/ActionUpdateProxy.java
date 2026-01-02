@@ -26,8 +26,6 @@ import java.util.concurrent.CompletableFuture;
  * @since 2025-06-23
  */
 public interface ActionUpdateProxy {
-    void update();
-
     @RequiredUIAccess
     CompletableFuture<List<? extends AnAction>> updateAsync();
 }

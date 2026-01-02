@@ -121,9 +121,10 @@ public class ToolbarNotifier implements Activatable {
         }
     }
 
+    @RequiredUIAccess
     protected void updateActionsImpl() {
         if (myApplication.getDisposeState().get() == ThreeState.NO) {
-            myUpdateActionsNotifier.update();
+            myUpdateActionsNotifier.updateAsync();
         }
     }
 

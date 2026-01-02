@@ -63,8 +63,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private InjectingContainer myInjectingContainer;
 
-    protected volatile boolean temporarilyDisposed = false;
-
     private MessageBusImpl myMessageBus;
 
     protected final ComponentManager myParent;
@@ -90,6 +88,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     @Nonnull
     private final ComponentBinding myComponentBinding;
+
+    private Supplier<ThreeState> myDisposedState = () -> {
+        return myDisposeState;
+    };
 
     protected BaseComponentManager(@Nullable ComponentManager parent,
                                    @Nonnull String name,
@@ -151,16 +153,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     @Nonnull
     @Override
-    public Supplier<ThreeState> getDisposeState() {
-        return this::getDisposeStateImpl;
-    }
-
-    @Nonnull
-    private ThreeState getDisposeStateImpl() {
-        if (temporarilyDisposed) {
-            return ThreeState.YES;
-        }
-        return myDisposeState;
+    public final Supplier<ThreeState> getDisposeState() {
+        return myDisposedState;
     }
 
     @Nonnull
@@ -377,11 +371,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         }
         
         return myExtensionArea.getExtensionPoint(extensionClass);
-    }
-
-    @TestOnly
-    public void setTemporarilyDisposed(boolean disposed) {
-        temporarilyDisposed = disposed;
     }
 
     @Override

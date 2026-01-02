@@ -16,7 +16,6 @@
 package consulo.desktop.awt.action.toolbar;
 
 import consulo.application.Application;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
@@ -51,8 +50,6 @@ public abstract class ActionToolbarEngine {
 
     private final PresentationFactory myPresentationFactory = new BasePresentationFactory();
 
-    private boolean myAlreadyUpdated;
-
     private List<? extends AnAction> myVisibleActions = List.of();
 
     @Nonnull
@@ -70,18 +67,7 @@ public abstract class ActionToolbarEngine {
         myActionToolbar = actionToolbar;
         myActionManager = actionManager;
 
-        myUpdater = new ToolbarNotifier(application, keymapManager, actionManager, component, new ActionUpdateProxy() {
-            @Override
-            public void update() {
-                updateActionsImpl();
-            }
-
-            @RequiredUIAccess
-            @Override
-            public CompletableFuture<List<? extends AnAction>> updateAsync() {
-                return ActionToolbarEngine.this.updateAsync();
-            }
-        });
+        myUpdater = new ToolbarNotifier(application, keymapManager, actionManager, component, ActionToolbarEngine.this::updateAsync);
     }
 
     protected abstract DataContext getDataContext();
@@ -101,11 +87,10 @@ public abstract class ActionToolbarEngine {
     @RequiredUIAccess
     private CompletableFuture<List<? extends AnAction>> updateAsync() {
         DataContext dataContext = getDataContext();
-        boolean async = myAlreadyUpdated && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
         ActionUpdater updater = new ActionUpdater(
             myActionManager,
             myPresentationFactory,
-            async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
+            DataManager.getInstance().createAsyncDataContext(dataContext),
             myPlace,
             false,
             true,
@@ -121,36 +106,6 @@ public abstract class ActionToolbarEngine {
             }
         });
         return myLastUpdate;
-    }
-
-    @Deprecated
-    @RequiredUIAccess
-    private void updateActionsImpl() {
-        DataContext dataContext = getDataContext();
-        boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
-        ActionUpdater updater = new ActionUpdater(
-            myActionManager,
-            myPresentationFactory,
-            async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
-            myPlace,
-            false,
-            true,
-            UIAccess.current()
-        );
-        if (async) {
-            myLastUpdate.cancel(false);
-
-            myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
-            myLastUpdate.whenComplete((result, throwable) -> {
-                if (result != null) {
-                    actionsUpdated(result);
-                }
-            });
-        }
-        else {
-            actionsUpdated(updater.expandActionGroupWithTimeout(myActionGroup, false));
-            myAlreadyUpdated = true;
-        }
     }
 
     private void actionsUpdated(@Nonnull List<? extends AnAction> newVisibleActions) {
