@@ -217,19 +217,10 @@ public abstract class VirtualFileManager implements ModificationTracker {
         return url.substring(index + URLUtil.SCHEME_SEPARATOR.length());
     }
 
-    /**
-     * @deprecated Use {@link #VFS_CHANGES} message bus topic.
-     */
     public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
 
-    /**
-     * @deprecated Use {@link #VFS_CHANGES} message bus topic.
-     */
     public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable);
 
-    /**
-     * @deprecated Use {@link #VFS_CHANGES} message bus topic.
-     */
     public abstract void removeVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
 
     /**

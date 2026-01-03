@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.ApplicationProperties;
 import consulo.application.event.ApplicationListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.internal.BatchUpdateListener;
@@ -32,11 +33,9 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.internal.ModuleRootEventImpl;
 import consulo.module.content.internal.ModuleScopeProviderInternal;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.internal.ProjectRootManagerImpl;
-import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
@@ -54,7 +53,6 @@ import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -72,10 +70,9 @@ import java.util.Set;
 @ServiceImpl
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements Disposable {
     private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
-    private static final boolean LOG_CACHES_UPDATE = Application.get().isInternal() && !Application.get().isUnitTestMode();
 
     private boolean myPointerChangesDetected = false;
-    private int myInsideRefresh = 0;
+    private int myInsideWriteAction = 0;
 
     private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<>();
     private final boolean myDoLogCachesUpdate;
@@ -83,6 +80,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     @Inject
     public ProjectRootManagerComponent(Project project, VirtualFileManager virtualFileManager) {
         super(project);
+
+        myDoLogCachesUpdate = ApplicationProperties.isInSandbox();
+
+        if (project.isDefault()) {
+            return;
+        }
 
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
@@ -121,16 +124,14 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
             }
         };
 
-        connection.subscribe(VirtualFilePointerListener.class, new MyVirtualFilePointerListener());
-        myDoLogCachesUpdate = project.getApplication().isInternal() && !project.getApplication().isUnitTestMode();
-
         connection.subscribe(BatchUpdateListener.class, handler);
     }
 
     @RequiredReadAction
     public void projectOpened() {
         addRootsToWatch();
-        myProject.getApplication().addApplicationListener(new AppListener(), myProject);
+        Application application = myProject.getApplication();
+        application.addApplicationListener(new AppListener(), myProject);
         myStartupActivityPerformed = true;
     }
 
@@ -180,57 +181,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
     }
 
-    @RequiredReadAction
-    private boolean affectsRoots(VirtualFilePointer[] pointers) {
-        Couple<Set<String>> roots = getAllRoots(true);
-        if (roots == null) {
-            return false;
-        }
-
-        for (VirtualFilePointer pointer : pointers) {
-            String path = url2path(pointer.getUrl());
-            if (roots.first.contains(path) || roots.second.contains(path)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void fireBeforeRootsChangeEvent(boolean fileTypes) {
-        isFiringEvent = true;
-        try {
-            myProject.getMessageBus()
-                .syncPublisher(ModuleRootListener.class)
-                .beforeRootsChange(new ModuleRootEventImpl(myProject, fileTypes));
-        }
-        finally {
-            isFiringEvent = false;
-        }
-    }
-
-    @Override
-    protected void fireRootsChangedEvent(boolean fileTypes) {
-        isFiringEvent = true;
-        try {
-            myProject.getMessageBus().syncPublisher(ModuleRootListener.class).rootsChanged(new ModuleRootEventImpl(myProject, fileTypes));
-        }
-        finally {
-            isFiringEvent = false;
-        }
-    }
-
-    private static String url2path(String url) {
-        String path = VirtualFileUtil.urlToPath(url);
-
-        int separatorIndex = path.indexOf(StandardFileSystems.JAR_SEPARATOR);
-        if (separatorIndex < 0) {
-            return path;
-        }
-        return path.substring(0, separatorIndex);
-    }
-
     @Nullable
     @RequiredReadAction
     private Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
@@ -242,7 +192,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         Set<String> flat = new HashSet<>();
 
         String projectFilePath = myProject.getProjectFilePath();
-        File projectDirFile = projectFilePath == null ? null : new File(projectFilePath).getParentFile();
+        File projectDirFile = new File(projectFilePath).getParentFile();
         if (projectDirFile != null && projectDirFile.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
             recursive.add(projectDirFile.getAbsolutePath());
         }
@@ -363,65 +313,15 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     private class AppListener implements ApplicationListener {
         @Override
         public void beforeWriteActionStart(@Nonnull Object action) {
-            myInsideRefresh++;
+            myInsideWriteAction++;
         }
 
         @Override
-        @RequiredReadAction
+        @RequiredWriteAction
         public void writeActionFinished(@Nonnull Object action) {
-            if (--myInsideRefresh == 0) {
-                if (myPointerChangesDetected) {
-                    myPointerChangesDetected = false;
-                    myProject.getMessageBus()
-                        .syncPublisher(ModuleRootListener.class)
-                        .rootsChanged(new ModuleRootEventImpl(myProject, false));
-
-                    doSynchronizeRoots();
-
-                    addRootsToWatch();
-                }
-            }
-        }
-    }
-
-    private class MyVirtualFilePointerListener implements VirtualFilePointerListener {
-        @Override
-        @RequiredWriteAction
-        public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
-            if (!myProject.isDisposed()) {
-                if (myInsideRefresh == 0) {
-                    if (affectsRoots(pointers)) {
-                        beforeRootsChange(false);
-                        if (myDoLogCachesUpdate) {
-                            LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
-                        }
-                    }
-                }
-                else if (!myPointerChangesDetected) {
-                    //this is the first pointer changing validity
-                    if (affectsRoots(pointers)) {
-                        myPointerChangesDetected = true;
-                        myProject.getMessageBus()
-                            .syncPublisher(ModuleRootListener.class)
-                            .beforeRootsChange(new ModuleRootEventImpl(myProject, false));
-                        if (myDoLogCachesUpdate) {
-                            LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
-                        }
-                    }
-                }
-            }
-        }
-
-        @Override
-        @RequiredWriteAction
-        public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
-            if (!myProject.isDisposed()) {
-                if (myInsideRefresh > 0) {
-                    clearScopesCaches();
-                }
-                else if (affectsRoots(pointers)) {
-                    rootsChanged(false);
-                }
+            if (--myInsideWriteAction == 0 && myPointerChangesDetected) {
+                myPointerChangesDetected = false;
+                myRootsChanged.levelDown();
             }
         }
     }
@@ -434,21 +334,15 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
                 return;
             }
 
-            if (myInsideRefresh == 0) {
-                beforeRootsChange(false);
-                if (LOG_CACHES_UPDATE || LOG.isDebugEnabled()) {
-                    LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
-                }
-            }
-            else if (!myPointerChangesDetected) {
-                //this is the first pointer changing validity
+            if (!isInsideWriteAction() && !myPointerChangesDetected) {
                 myPointerChangesDetected = true;
-                myProject.getMessageBus()
-                    .syncPublisher(ModuleRootListener.class)
-                    .beforeRootsChange(new ModuleRootEventImpl(myProject, false));
-                if (LOG_CACHES_UPDATE || LOG.isDebugEnabled()) {
-                    LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
-                }
+                //this is the first pointer changing validity
+                myRootsChanged.levelUp();
+            }
+
+            myRootsChanged.beforeRootsChanged();
+            if (myDoLogCachesUpdate || LOG.isTraceEnabled()) {
+                LOG.trace(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
             }
         }
 
@@ -459,15 +353,19 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
                 return;
             }
 
-            if (myInsideRefresh > 0) {
-                clearScopesCaches();
+            if (isInsideWriteAction()) {
+                myRootsChanged.rootsChanged();
             }
             else {
-                rootsChanged(false);
+                clearScopesCaches();
             }
         }
-    };
 
+        private boolean isInsideWriteAction() {
+            return myInsideWriteAction == 0;
+        }
+    };
+    
     @Nonnull
     @Override
     public VirtualFilePointerListener getRootsValidityChangedListener() {

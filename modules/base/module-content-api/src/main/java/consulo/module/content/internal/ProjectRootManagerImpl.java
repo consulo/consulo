@@ -28,6 +28,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.OrderEnumerator;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
@@ -270,13 +271,13 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return filetypes ? myFileTypesChanged : myRootsChanged;
     }
 
-    protected boolean isFiringEvent = false;
+    protected boolean myFiringEvent = false;
 
     @RequiredWriteAction
     private boolean fireBeforeRootsChanged(boolean filetypes) {
         ApplicationManager.getApplication().assertWriteAccessAllowed();
 
-        LOG.assertTrue(!isFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
+        LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
 
         if (myMergedCallStarted) {
             LOG.assertTrue(!filetypes, "Filetypes change is not supported inside merged call");
@@ -294,18 +295,27 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return false;
     }
 
-    protected void fireBeforeRootsChangeEvent(boolean filetypes) {
+    protected void fireBeforeRootsChangeEvent(boolean fileTypes) {
+        myFiringEvent = true;
+        try {
+            myProject.getMessageBus()
+                .syncPublisher(ModuleRootListener.class)
+                .beforeRootsChange(new ModuleRootEventImpl(myProject, fileTypes));
+        }
+        finally {
+            myFiringEvent = false;
+        }
     }
 
     @RequiredWriteAction
-    private boolean fireRootsChanged(boolean filetypes) {
+    protected boolean fireRootsChanged(boolean filetypes) {
         if (myProject.isDisposed()) {
             return false;
         }
 
         ApplicationManager.getApplication().assertWriteAccessAllowed();
 
-        LOG.assertTrue(!isFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
+        LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
 
         if (myMergedCallStarted) {
             LOG.assertTrue(!filetypes, "Filetypes change is not supported inside merged call");
@@ -329,7 +339,14 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return true;
     }
 
-    protected void fireRootsChangedEvent(boolean filetypes) {
+    protected void fireRootsChangedEvent(boolean fileTypes) {
+        myFiringEvent = true;
+        try {
+            myProject.getMessageBus().syncPublisher(ModuleRootListener.class).rootsChanged(new ModuleRootEventImpl(myProject, fileTypes));
+        }
+        finally {
+            myFiringEvent = false;
+        }
     }
 
     protected void addRootsToWatch() {
