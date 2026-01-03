@@ -23,10 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.*;
-import consulo.execution.configuration.CompatibilityAwareRunProfile;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
-import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.*;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
@@ -190,15 +187,27 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                 result.doWhenRejected(() -> uiAccess.give(onCancelRunnable));
             }
 
-            result.doWhenDone(() -> {
-                // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
-                // and execution of startRunnable could be skipped if modality state check fails
-                uiAccess.give(() -> {
-                    if (!myProject.isDisposed()) {
-                        DumbService.getInstance(myProject).runWhenSmart(startRunnable);
-                    }
-                });
-            });
+            result.doWhenDone(() -> uiAccess.give(() -> {
+                if (myProject.isDisposed()) {
+                    return;
+                }
+
+                RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
+                ConfigurationType configurationType = settings == null ? null : settings.getType();
+
+                boolean canRunAnyway = configurationType == null
+                    || configurationType.isDumbAware()
+                    || !DumbService.isDumb(myProject);
+
+                if (canRunAnyway) {
+                    startRunnable.run();
+                }
+                else {
+                    // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
+                    // and execution of startRunnable could be skipped if modality state check fails
+                    DumbService.getInstance(myProject).runWhenSmart(startRunnable);
+                }
+            }));
         }
     }
 

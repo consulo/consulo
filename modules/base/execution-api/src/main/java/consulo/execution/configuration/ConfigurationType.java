@@ -74,4 +74,12 @@ public interface ConfigurationType extends PossiblyDumbAware {
      * @return the run configuration factories.
      */
     ConfigurationFactory[] getConfigurationFactories();
+
+    /**
+     * Mark all configurations as dumb aware
+     */
+    @Override
+    default boolean isDumbAware() {
+        return true;
+    }
 }
