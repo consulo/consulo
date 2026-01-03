@@ -23,15 +23,15 @@ import consulo.util.dataholder.UserDataHolder;
  * @since 26-Apr-22
  */
 public class NavigationUtil {
-  public static final Key<Boolean> USE_CURRENT_WINDOW = Key.create("OpenFile.searchForOpen");
+    public static final Key<Boolean> USE_CURRENT_WINDOW = Key.create("OpenFile.searchForOpen");
 
-  public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {
-    if (item instanceof UserDataHolder) {
-      ((UserDataHolder)item).putUserData(USE_CURRENT_WINDOW, useCurrentWindow);
+    public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {
+        if (item instanceof UserDataHolder) {
+            ((UserDataHolder) item).putUserData(USE_CURRENT_WINDOW, useCurrentWindow);
+        }
+        item.navigate(requestFocus);
+        if (item instanceof UserDataHolder) {
+            ((UserDataHolder) item).putUserData(USE_CURRENT_WINDOW, null);
+        }
     }
-    item.navigate(requestFocus);
-    if (item instanceof UserDataHolder) {
-      ((UserDataHolder)item).putUserData(USE_CURRENT_WINDOW, null);
-    }
-  }
 }

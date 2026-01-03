@@ -16,61 +16,35 @@
 
 package consulo.language.psi.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.PsiNavigationSupport;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
-import consulo.navigation.OpenFileDescriptorFactory;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nullable;
 
 public class EditSourceUtil {
-  private EditSourceUtil() {
-  }
-
-  @Nullable
-  @RequiredReadAction
-  public static Navigatable getDescriptor(PsiElement element) {
-    if (!canNavigate(element)) {
-      return null;
-    }
-    if (element instanceof PomTargetPsiElement) {
-      return ((PomTargetPsiElement)element).getTarget();
-    }
-    PsiElement navigationElement = element.getNavigationElement();
-    if (navigationElement instanceof PomTargetPsiElement) {
-      return ((PomTargetPsiElement)navigationElement).getTarget();
-    }
-    int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
-    if (virtualFile == null || !virtualFile.isValid()) {
-      return null;
+    private EditSourceUtil() {
     }
 
-    OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile);
-    builder.offset(offset);
-    builder.useCurrentWindow(NavigationUtil.USE_CURRENT_WINDOW.isIn(navigationElement));
-    return builder.build();
-  }
-
-  @RequiredReadAction
-  public static boolean canNavigate(PsiElement element) {
-    if (element == null || !element.isValid()) {
-      return false;
+    @Nullable
+    @RequiredReadAction
+    @Deprecated
+    @DeprecationInfo("Use PsiNavigationSupport")
+    public static Navigatable getDescriptor(PsiElement element) {
+        return PsiNavigationSupport.getInstance().getDescriptor(element);
     }
 
-    VirtualFile file = PsiUtilCore.getVirtualFile(element.getNavigationElement());
-    return file != null && file.isValid() && !file.is(VFileProperty.SPECIAL) && !VirtualFileUtil.isBrokenLink(file);
-  }
+    @RequiredReadAction
+    @Deprecated
+    @DeprecationInfo("Use PsiNavigationSupport")
+    public static boolean canNavigate(PsiElement element) {
+        return PsiNavigationSupport.getInstance().canNavigate(element);
+    }
 
-  public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {
-    NavigationUtil.navigate(item, requestFocus, useCurrentWindow);
-  }
+    public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {
+        NavigationUtil.navigate(item, requestFocus, useCurrentWindow);
+    }
 }

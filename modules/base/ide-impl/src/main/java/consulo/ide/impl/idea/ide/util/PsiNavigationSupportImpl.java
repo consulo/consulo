@@ -1,47 +1,70 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.psi.PsiNavigationSupport;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.pom.PomTargetPsiElement;
+import consulo.language.psi.*;
 import consulo.navigation.Navigatable;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import jakarta.inject.Singleton;
-
+import consulo.navigation.NavigationUtil;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
  */
 @Singleton
 @ServiceImpl
-public class PsiNavigationSupportImpl extends PsiNavigationSupport {
-  @Nullable
-  @Override
-  public Navigatable getDescriptor(@Nonnull PsiElement element) {
-    return EditSourceUtil.getDescriptor(element);
-  }
+public class PsiNavigationSupportImpl implements PsiNavigationSupport {
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public Navigatable getDescriptor(@Nonnull PsiElement element) {
+        if (!canNavigate(element)) {
+            return null;
+        }
 
-  @Nonnull
-  @Override
-  public Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
-    return new OpenFileDescriptorImpl(project, vFile, offset);
-  }
+        if (element instanceof PomTargetPsiElement) {
+            return ((PomTargetPsiElement) element).getTarget();
+        }
 
-  @Override
-  public boolean canNavigate(@Nonnull PsiElement element) {
-    return EditSourceUtil.canNavigate(element);
-  }
+        PsiElement navigationElement = element.getNavigationElement();
+        if (navigationElement instanceof PomTargetPsiElement) {
+            return ((PomTargetPsiElement) navigationElement).getTarget();
+        }
 
-  @Override
-  public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
-    ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPaneImpl.ID, null, psiDirectory.getVirtualFile(), requestFocus);
-  }
+        int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
+        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
+        if (virtualFile == null || !virtualFile.isValid()) {
+            return null;
+        }
+
+        OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).newBuilder(virtualFile);
+        builder.offset(offset);
+        builder.useCurrentWindow(NavigationUtil.USE_CURRENT_WINDOW.isIn(navigationElement));
+        return builder.build();
+    }
+
+    @RequiredReadAction
+    @Override
+    public boolean canNavigate(@Nullable PsiElement element) {
+        if (element == null || !element.isValid()) {
+            return false;
+        }
+
+        VirtualFile file = PsiUtilCore.getVirtualFile(element.getNavigationElement());
+        return file != null && file.isValid() && !file.is(VFileProperty.SPECIAL) && !VirtualFileUtil.isBrokenLink(file);
+    }
+
+    @Override
+    public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
+        ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPaneImpl.ID, null, psiDirectory.getVirtualFile(), requestFocus);
+    }
 }

@@ -622,9 +622,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         CheckUtil.checkDelete(myFile);
     }
 
-    /**
-     * @not_implemented
-     */
     @Override
     @RequiredWriteAction
     public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {

@@ -6,39 +6,44 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
  * @author yole
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class PsiNavigationSupport {
-  public static PsiNavigationSupport getInstance() {
-    return Application.get().getInstance(PsiNavigationSupport.class);
-  }
+public interface PsiNavigationSupport {
+    public static PsiNavigationSupport getInstance() {
+        return Application.get().getInstance(PsiNavigationSupport.class);
+    }
 
-  @Nullable
-  public abstract Navigatable getDescriptor(@Nonnull PsiElement element);
+    @Nullable
+    @RequiredReadAction
+    Navigatable getDescriptor(@Nonnull PsiElement element);
 
-  @Nonnull
-  public abstract Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset);
+    @Nonnull
+    @Deprecated
+    default Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
+        return OpenFileDescriptorFactory.getInstance(project).newBuilder(vFile).offset(offset).build();
+    }
 
-  @RequiredReadAction
-  public abstract boolean canNavigate(@Nonnull PsiElement element);
+    @RequiredReadAction
+    boolean canNavigate(@Nullable PsiElement element);
 
-  public abstract void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
+    void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
 
-  @Deprecated
-  @RequiredUIAccess
-  public void openDirectoryInSystemFileManager(@Nonnull File file) {
-    Platform.current().openDirectoryInFileManager(file, UIAccess.current());
-  }
+    @Deprecated
+    @RequiredUIAccess
+    default void openDirectoryInSystemFileManager(@Nonnull File file) {
+        Platform.current().openDirectoryInFileManager(file, UIAccess.current());
+    }
 }

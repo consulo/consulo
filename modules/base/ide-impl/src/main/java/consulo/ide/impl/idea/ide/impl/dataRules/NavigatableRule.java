@@ -21,37 +21,46 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.util.EditSourceUtil;
+import consulo.language.psi.PsiNavigationSupport;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 @ExtensionImpl
 public class NavigatableRule implements GetDataRule<Navigatable> {
-  @Nonnull
-  @Override
-  public Key<Navigatable> getKey() {
-    return Navigatable.KEY;
-  }
+    private final PsiNavigationSupport myPsiNavigationSupport;
 
-  @Override
-  public Navigatable getData(@Nonnull DataProvider dataProvider) {
-    Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
-    if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
-      if (openFileDescriptor.getFile().isValid()) {
-        return openFileDescriptor;
-      }
-    }
-    PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
-    if (element instanceof Navigatable navElem) {
-      return navElem;
-    }
-    if (element != null) {
-      return EditSourceUtil.getDescriptor(element);
+    @Inject
+    public NavigatableRule(PsiNavigationSupport psiNavigationSupport) {
+        myPsiNavigationSupport = psiNavigationSupport;
     }
 
-    Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
-    return selection instanceof Navigatable navSel ? navSel : null;
-  }
+    @Nonnull
+    @Override
+    public Key<Navigatable> getKey() {
+        return Navigatable.KEY;
+    }
+
+    @Override
+    public Navigatable getData(@Nonnull DataProvider dataProvider) {
+        Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
+        if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+            if (openFileDescriptor.getFile().isValid()) {
+                return openFileDescriptor;
+            }
+        }
+        PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+        if (element instanceof Navigatable navElem) {
+            return navElem;
+        }
+        
+        if (element != null) {
+            return myPsiNavigationSupport.getDescriptor(element);
+        }
+
+        Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
+        return selection instanceof Navigatable navSel ? navSel : null;
+    }
 }
