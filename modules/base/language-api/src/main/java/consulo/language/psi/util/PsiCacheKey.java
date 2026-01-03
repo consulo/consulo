@@ -80,12 +80,6 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
     long fileStamp = file == null || file.isPhysical() ? 0 : file.getModificationStamp();
     PsiModificationTracker tracker = file == null ? element.getManager().getModificationTracker() : file.getManager().getModificationTracker();
 
-    if (myModifyCause.equals(PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT)) {
-      return fileStamp + tracker.getJavaStructureModificationCount();
-    }
-    if (myModifyCause.equals(PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT)) {
-      return fileStamp + tracker.getOutOfCodeBlockModificationCount();
-    }
     if (myModifyCause.equals(PsiModificationTracker.MODIFICATION_COUNT)) {
       return fileStamp + tracker.getModificationCount();
     }
@@ -109,7 +103,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
   }
 
   /**
-   * Creates cache key value using {@link PsiModificationTracker#JAVA_STRUCTURE_MODIFICATION_COUNT} as
+   * Creates cache key value using {@link PsiModificationTracker#MODIFICATION_COUNT} as
    * modification count to flush cache
    *
    * @param name     key name
@@ -118,7 +112,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
    * @param <H>      key type
    * @return instance
    */
-  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@NonNls @Nonnull String name, @Nonnull Function<H, T> function) {
-    return create(name, function, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
+  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@Nonnull String name, @Nonnull Function<H, T> function) {
+    return create(name, function, PsiModificationTracker.MODIFICATION_COUNT);
   }
 }
