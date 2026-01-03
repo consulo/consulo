@@ -68,8 +68,8 @@ public interface PsiModificationTracker extends ModificationTracker {
      * @see #getOutOfCodeBlockModificationCount()
      * @deprecated rarely supported by language plugins; also a wrong way for optimisations
      */
-    @Deprecated
-    Key OUT_OF_CODE_BLOCK_MODIFICATION_COUNT = Key.create("OUT_OF_CODE_BLOCK_MODIFICATION_COUNT");
+    @Deprecated(forRemoval = true)
+    Key OUT_OF_CODE_BLOCK_MODIFICATION_COUNT = MODIFICATION_COUNT;
 
     /**
      * This key can be passed as a dependency in a {@link CachedValueProvider}.
@@ -78,8 +78,8 @@ public interface PsiModificationTracker extends ModificationTracker {
      * @see #getJavaStructureModificationCount()
      * @deprecated rarely supported by JVM language plugins; also a wrong way for optimisations
      */
-    @Deprecated
-    Key JAVA_STRUCTURE_MODIFICATION_COUNT = Key.create("JAVA_STRUCTURE_MODIFICATION_COUNT");
+    @Deprecated(forRemoval = true)
+    Key JAVA_STRUCTURE_MODIFICATION_COUNT = MODIFICATION_COUNT;
 
     /**
      * Tracks any PSI modification.
