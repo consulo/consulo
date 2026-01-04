@@ -1,72 +1,74 @@
 all:
-  text: '<all>'
-database:
-  text: Database
-custom.language:
-  text: Programming Language
-grammar.language:
-  text: Grammar Language
-markup.language:
-  text: Markup Language
-template.language:
-  text: Template Language
+    text: <all>
 build.framework:
-  text: Build Framework
-software.framework:
-  text: Software Framework
-game.framework:
-  text: Game Framework
-test.framework:
-  text: Test Framework
-web.framework:
-  text: Web Framework
-ide.framework:
-  text: IDE Framework
-ui.framework:
-  text: UI Framework
-library:
-  text: Library
-language.extension:
-  text: Language Extension
-vcs:
-  text: Version Control
-project.import:
-  text: Project Import
-run.debugger:
-  text: Debugging
-run.coverage:
-  text: Coverage
-experimental:
-  text: Experimental
-web.server:
-  text: Web Server
-web.tool:
-  text: Web Tool
-tools:
-  text: Tools
+    text: Build Framework
 cloud:
-  text: Cloud
-ide.theme:
-  text: IDE Theme
-icon.theme:
-  text: Icon Theme
-ide.extension:
-  text: IDE Extension
-script.language:
-  text: Script Language
-pattern.language:
-  text: Pattern Language
-issue.managment:
-  text: Issue Managment
+    text: Cloud
+custom.language:
+    text: Programming Language
+database:
+    text: Database
 editor:
-  text: Editor
-editor.extension:
-  text: Editor Extension
-editor.spelling:
-  text: Editor Spelling
-serialize.framework:
-  text: Serialize Framework
+    text: Editor
 editor.color.scheme:
-  text: Editor Color Scheme
+    text: Editor Color Scheme
+editor.extension:
+    text: Editor Extension
+editor.spelling:
+    text: Editor Spelling
+experimental:
+    text: Experimental
+game.framework:
+    text: Game Framework
+grammar.language:
+    text: Grammar Language
+icon.theme:
+    text: Icon Theme
+ide.extension:
+    text: IDE Extension
+ide.framework:
+    text: IDE Framework
+ide.theme:
+    text: IDE Theme
+issue.managment:
+    text: Issue Managment
+language.extension:
+    text: Language Extension
+library:
+    text: Library
 localization:
-  text: Localization
+    text: Localization
+markup.language:
+    text: Markup Language
+pattern.language:
+    text: Pattern Language
+project.import:
+    text: Project Import
+run.coverage:
+    text: Coverage
+run.debugger:
+    text: Debugging
+script.language:
+    text: Script Language
+serialize.framework:
+    text: Serialize Framework
+software.framework:
+    text: Software Framework
+template.language:
+    text: Template Language
+template.plugin:
+    text: Template Plugin (Plugin Group)
+test.framework:
+    text: Test Framework
+tools:
+    text: Tools
+ui.framework:
+    text: UI Framework
+vcs:
+    text: Version Control
+web.framework:
+    text: Web Framework
+web.server:
+    text: Web Server
+web.tool:
+    text: Web Tool
