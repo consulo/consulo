@@ -15,7 +15,6 @@
  */
 package consulo.container.internal.plugin;
 
-import consulo.container.internal.plugin.PluginBean;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
@@ -44,7 +43,6 @@ public class PluginBeanParser {
     pluginBean.description = rootTag.getChildText("description");
     pluginBean.pluginVersion = rootTag.getChildText("version");
     pluginBean.platformVersion = rootTag.getChildText("platformVersion");
-    pluginBean.category = rootTag.getChildText("category");
     pluginBean.resourceBundle = rootTag.getChildText("resource-bundle");
     pluginBean.localize = rootTag.getChildText("localize");
     pluginBean.changeNotes = rootTag.getChildText("change-notes");
