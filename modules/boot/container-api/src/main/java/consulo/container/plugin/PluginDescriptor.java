@@ -75,7 +75,7 @@ public interface PluginDescriptor {
 
   String getUrl();
 
-  String getDownloads();
+  int getDownloads();
 
   PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 

@@ -85,14 +85,11 @@ public class PluginHeaderPanel {
 
             myDownloads.setText(node.getDownloads() + " downloads");
             myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
-            switch (node.getInstallStatus()) {
-                case PluginNode.STATUS_INSTALLED:
-                    action = PluginAction.UNINSTALL;
-                    break;
-                case PluginNode.STATUS_DOWNLOADED:
-                    action = PluginAction.RESTART;
-                    break;
-            }
+            action = switch (node.getInstallStatus()) {
+                case PluginNode.STATUS_INSTALLED -> PluginAction.UNINSTALL;
+                case PluginNode.STATUS_DOWNLOADED -> PluginAction.RESTART;
+                default -> action;
+            };
         }
         else {
             action = null;

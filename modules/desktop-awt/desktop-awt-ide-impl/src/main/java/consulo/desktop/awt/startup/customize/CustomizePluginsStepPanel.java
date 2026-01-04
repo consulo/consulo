@@ -88,7 +88,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
                 Object userObject = node.getUserObject();
                 if (userObject instanceof PluginDescriptor) {
-                    Set<String> deepDependencies = new HashSet<>();
+                    Set<PluginId> deepDependencies = new HashSet<>();
                     collectDeepDependencies(deepDependencies, (PluginDescriptor)userObject);
                     setupChecked(myRoot, deepDependencies, state);
                 }
@@ -108,10 +108,9 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
         add(ScrollPaneFactory.createScrollPane(checkboxTree), BorderLayout.CENTER);
     }
 
-    private void collectDeepDependencies(Set<String> deepDependencies, PluginDescriptor ideaPluginDescriptor) {
-        for (PluginId depPluginId : ideaPluginDescriptor.getDependentPluginIds()) {
-            String idString = depPluginId.getIdString();
-            deepDependencies.add(idString);
+    private void collectDeepDependencies(Set<PluginId> deepDependencies, PluginDescriptor descriptor) {
+        for (PluginId depPluginId : descriptor.getDependentPluginIds()) {
+            deepDependencies.add(depPluginId);
 
             for (PluginDescriptor pluginDescriptor : myPluginDescriptors.values()) {
                 if (pluginDescriptor.getPluginId().equals(depPluginId)) {
@@ -137,16 +136,17 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
         if (myTemplateStepPanel == null) {
             return false;
         }
-        Set<String> enablePluginSet = myTemplateStepPanel.getEnablePluginSet();
+
+        Set<PluginId> enablePluginSet = myTemplateStepPanel.getEnablePluginSet();
 
         setupChecked(myRoot, enablePluginSet, null);
         return false;
     }
 
-    private static void setupChecked(DefaultMutableTreeNode treeNode, Set<String> set, Boolean state) {
+    private static void setupChecked(DefaultMutableTreeNode treeNode, Set<PluginId> set, Boolean state) {
         Object userObject = treeNode.getUserObject();
         if (userObject instanceof PluginDescriptor pluginDescriptor) {
-            String id = pluginDescriptor.getPluginId().getIdString();
+            PluginId id = pluginDescriptor.getPluginId();
             boolean contains = set.contains(id);
             if (state == null) {
                 ((CheckedTreeNode)treeNode).setChecked(contains);

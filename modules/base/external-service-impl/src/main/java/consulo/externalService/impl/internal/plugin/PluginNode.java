@@ -47,8 +47,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
     private String description;
 
     private String changeNotes;
-    private String downloads;
-    private String category;
+    private int myDownloads;
     private String size;
     private String vendorEmail;
     private String vendorUrl;
@@ -93,8 +92,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
         setUrl(jsonPlugin.url);
         setVersion(jsonPlugin.version);
         setPlatformVersion(jsonPlugin.platformVersion);
-        setDownloads(String.valueOf(jsonPlugin.downloads));
-        setCategory(jsonPlugin.category);
+        myDownloads = jsonPlugin.downloadsAll;
         myIconBytes = decodeIconBytes(jsonPlugin.iconBytes);
         myIconDarkBytes = decodeIconBytes(jsonPlugin.iconDarkBytes);
 
@@ -175,10 +173,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
     @Override
     public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
         return myPermissions.get(permissionType);
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     @Override
@@ -282,12 +276,8 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
     }
 
     @Override
-    public String getDownloads() {
-        return downloads;
-    }
-
-    public void setDownloads(String downloads) {
-        this.downloads = downloads;
+    public int getDownloads() {
+        return myDownloads;
     }
 
     public String getSize() {

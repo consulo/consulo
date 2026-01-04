@@ -16,6 +16,8 @@
 package consulo.desktop.awt.startup.customize;
 
 import consulo.application.internal.start.StartupActionScriptManager;
+import consulo.container.plugin.PluginId;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -44,7 +46,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     private final JBCardLayout myCardLayout = new JBCardLayout();
     protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<>();
     private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
-    private final Map<String, PluginTemplate> myPredefinedTemplateSets;
+    private final Map<PluginId, PluginTemplate> myPredefinedTemplateSets;
     private int myIndex = 0;
     private final JLabel myNavigationLabel = new JLabel();
     private final JLabel myHeaderLabel = new JLabel();
@@ -57,7 +59,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     public CustomizeIDEWizardDialog(
         boolean isDark,
         MultiMap<String, PluginDescriptor> pluginDescriptors,
-        Map<String, PluginTemplate> predefinedTemplateSets
+        Map<PluginId, PluginTemplate> predefinedTemplateSets
     ) {
         super(null);
         myDarkTheme = isDark;
@@ -128,6 +130,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
         return result;
     }
 
+    @RequiredUIAccess
     @Override
     protected JComponent createSouthPanel() {
         JPanel buttonPanel = new JPanel(new GridBagLayout());

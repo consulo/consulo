@@ -45,6 +45,7 @@ public class PluginJsonNode {
   public String vendor;
   public String url;
   public int downloads;
+  public int downloadsAll;
   public Long length;
   public Long date;
   public String version;

@@ -141,10 +141,8 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
 
         PluginNode pluginNode = value instanceof PluginNode ? (PluginNode) value : null;
         if (pluginNode != null) {
-            String downloads = pluginNode.getDownloads();
-            if (downloads == null) {
-                downloads = "";
-            }
+            String downloads = String.valueOf(pluginNode.getDownloads());
+
             if (downloads.length() > 3) {
                 downloads = new DecimalFormat("#,###").format(Integer.parseInt(downloads));
             }

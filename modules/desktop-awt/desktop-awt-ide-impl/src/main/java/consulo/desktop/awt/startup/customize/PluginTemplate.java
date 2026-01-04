@@ -15,10 +15,8 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import consulo.container.plugin.PluginId;
 import consulo.ui.image.Image;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.Set;
 
@@ -26,42 +24,10 @@ import java.util.Set;
  * @author VISTALL
  * @since 2020-08-02
  */
-public class PluginTemplate {
-    private final Set<String> myPluginIds;
-    private final String myDescription;
-    private final Image myImage;
-
-    private final int myRow;
-    private final int myCol;
-
-    public PluginTemplate(Set<String> pluginIds, String description, Image image, int row, int col) {
-        myPluginIds = pluginIds;
-        myDescription = description;
-        myImage = image;
-        myRow = row;
-        myCol = col;
-    }
-
-    public int getRow() {
-        return myRow;
-    }
-
-    public int getCol() {
-        return myCol;
-    }
-
-    @Nullable
-    public String getDescription() {
-        return myDescription;
-    }
-
-    @Nonnull
-    public Set<String> getPluginIds() {
-        return myPluginIds;
-    }
-
-    @Nonnull
-    public Image getImage() {
-        return myImage;
-    }
+public record PluginTemplate(PluginId id,
+                             Set<PluginId> pluginIds,
+                             String name,
+                             String description,
+                             Image[] images,
+                             int downloadsAll) {
 }

@@ -152,8 +152,8 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public String getDownloads() {
-    return null;
+  public int getDownloads() {
+    return 0;
   }
 
   @Override
