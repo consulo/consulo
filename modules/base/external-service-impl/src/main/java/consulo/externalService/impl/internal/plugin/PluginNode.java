@@ -197,14 +197,8 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
         this.id = PluginId.getId(id);
     }
 
-    @Nonnull
-    @Override
-    public String getCategory() {
-        return normalizeCategory(category);
-    }
-
     /**
-     * Be carefull when comparing Plugins versions. Use
+     * Be careful when comparing Plugins versions. Use
      * PluginManagerColumnInfo.compareVersion() for version comparing.
      *
      * @return Return plugin version

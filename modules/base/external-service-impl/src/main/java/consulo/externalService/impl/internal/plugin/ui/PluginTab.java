@@ -45,7 +45,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -308,7 +307,7 @@ public abstract class PluginTab implements Disposable {
             return tags.stream().map(PluginTab::getTagLocalizeValue).collect(Collectors.toList());
         }
 
-        return List.of(LocalizeValue.of(pluginDescriptor.getCategory()));
+        return List.of();
     }
 
     @Nonnull

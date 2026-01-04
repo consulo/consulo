@@ -50,9 +50,6 @@ public class PluginBean {
 
   public List<String> incompatibleWith = Collections.emptyList();
 
-  //@Tag("category")
-  public String category;
-
   //@Tag("resource-bundle")
   public String resourceBundle;
 

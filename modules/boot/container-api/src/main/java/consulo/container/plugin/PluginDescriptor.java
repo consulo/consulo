@@ -65,10 +65,6 @@ public interface PluginDescriptor {
 
   String getLocalize();
 
-  @Deprecated
-  //@DeprecationInfo("Use #getTags()")
-  String getCategory();
-
   Set<String> getTags();
 
   List<SimpleXmlElement> getActionsDescriptionElements();

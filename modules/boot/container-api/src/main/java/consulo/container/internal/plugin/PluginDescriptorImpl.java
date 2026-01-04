@@ -47,7 +47,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     private String myVendor;
     private String myVendorEmail;
     private String myVendorUrl;
-    private String myCategory;
     private String url;
     private final File myPath;
     private final byte[] myIconBytes;
@@ -113,7 +112,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         myChangeNotes = pluginBean.changeNotes;
         myVersion = StringUtilRt.nullize(pluginBean.pluginVersion);
         myPlatformVersion = pluginBean.platformVersion;
-        myCategory = pluginBean.category;
         myExperimental = pluginBean.experimental;
 
         if (pluginBean.vendor != null) {
@@ -263,22 +261,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     @Override
     public String getLocalize() {
         return myLocalize;
-    }
-
-    @Override
-    public String getCategory() {
-        return normalizeCategory(myCategory);
-    }
-
-    /*
-       This setter was explicitly defined to be able to set a category for a
-       descriptor outside its loading from the xml file.
-       Problem was that most commonly plugin authors do not publish the plugin's
-       category in its .xml file so to be consistent in plugins representation
-       (e.g. in the Plugins form) we have to set this value outside.
-    */
-    public void setCategory(String category) {
-        myCategory = category;
     }
 
     public List<ClassPathItem> getClassPathItems(Set<PluginId> enabledPluginIds) {

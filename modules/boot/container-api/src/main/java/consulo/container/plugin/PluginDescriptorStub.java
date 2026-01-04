@@ -95,18 +95,6 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public String getCategory() {
-    return normalizeCategory(null);
-  }
-
-  protected static String normalizeCategory(String cagetory) {
-    if (cagetory == null || cagetory.trim().length() == 0) {
-      return "Uncategorized";
-    }
-    return cagetory;
-  }
-
-  @Override
   public List<SimpleXmlElement> getActionsDescriptionElements() {
     return Collections.emptyList();
   }
