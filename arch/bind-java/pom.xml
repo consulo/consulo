@@ -107,10 +107,12 @@
             <artifactId>consulo-annotation</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.inject</groupId>
