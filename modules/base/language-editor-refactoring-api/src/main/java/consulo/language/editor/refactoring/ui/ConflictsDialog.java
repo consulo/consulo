@@ -234,9 +234,7 @@ public class ConflictsDialog extends DialogWrapper {
             if (myDoRefactoringRunnable != null) {
                 usageView.addPerformOperationAction(
                     myDoRefactoringRunnable,
-                    myCommandName != LocalizeValue.empty()
-                        ? myCommandName
-                        : RefactoringLocalize.retryCommand(),
+                    myCommandName.orIfEmpty(RefactoringLocalize.retryCommand()),
                     LocalizeValue.localizeTODO("Unable to perform refactoring. There were changes in code after the usages have been found."),
                     RefactoringLocalize.usageviewDoaction()
                 );

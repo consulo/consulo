@@ -50,7 +50,7 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Nonnull
     @SuppressWarnings("deprecation")
     public static AnSeparator create(@Nonnull LocalizeValue textValue) {
-        return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
+        return textValue.isEmpty() ? ourInstance : new AnSeparator(textValue);
     }
 
     @Nonnull

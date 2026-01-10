@@ -151,7 +151,7 @@ public class DesktopTextBoxWithExtensions {
         @Override
         public void setPlaceholder(@Nonnull LocalizeValue text) {
             JTextField field = toAWTComponent();
-            field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
+            field.putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());
         }
 
         @Nullable

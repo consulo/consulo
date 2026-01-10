@@ -227,7 +227,7 @@ public class NavigationGutterIconBuilder<T> {
             element.getTextRange(),
             renderer.getIcon(),
             Pass.LINE_MARKERS,
-            tooltip == LocalizeValue.empty() ? null : i -> tooltip.get(),
+            tooltip.isEmpty() ? null : i -> tooltip.get(),
             renderer.isNavigateAction() ? renderer : null,
             renderer.getAlignment(),
             gotoTargets
@@ -258,7 +258,7 @@ public class NavigationGutterIconBuilder<T> {
 
         boolean empty = isEmpty();
 
-        if (myTooltipText == LocalizeValue.empty() && !myLazy) {
+        if (myTooltipText.isEmpty() && !myLazy) {
             SortedSet<String> names = new TreeSet<>();
             for (T t : myTargets.get()) {
                 String text = myNamer.apply(t);

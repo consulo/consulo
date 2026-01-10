@@ -43,7 +43,7 @@ public interface StatusBarWidgetWrapper {
     static void setWidgetTooltip(JComponent widgetComponent, @Nonnull LocalizeValue toolTipText, @Nullable String shortcutText) {
         HelpTooltipImpl.dispose(widgetComponent);
 
-        if (toolTipText != LocalizeValue.empty()) {
+        if (toolTipText.isNotEmpty()) {
             HelpTooltipImpl helpTooltip = new HelpTooltipImpl();
             helpTooltip.setTitle(toolTipText.get());
 

@@ -67,7 +67,6 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -706,11 +705,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             int end = hostRange.getEndOffset();
             HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(info.getType()).range(element, start, end);
             LocalizeValue description = info.getDescription();
-            if (description != LocalizeValue.empty()) {
+            if (description.isNotEmpty()) {
                 builder.description(description);
             }
             LocalizeValue tooltip = info.getToolTip();
-            if (tooltip != LocalizeValue.empty()) {
+            if (tooltip.isNotEmpty()) {
                 builder.escapedToolTip(tooltip);
             }
             HighlightInfoImpl patched = (HighlightInfoImpl) builder.createUnconditionally();

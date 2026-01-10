@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.ui;
 
-import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBCurrentTheme;
@@ -232,7 +231,7 @@ public class ComponentValidator {
                     component.repaint();
                 }
 
-                if (validationInfo.message != LocalizeValue.empty()) {
+                if (validationInfo.message.isNotEmpty()) {
                     popupBuilder = createPopupBuilder(
                         validationInfo,
                         tipComponent -> {

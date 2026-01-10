@@ -45,7 +45,6 @@ public interface SimpleAccessible {
     @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     default String getAccessibleTooltipText() {
-        LocalizeValue tooltip = getAccessibleTooltipValue();
-        return tooltip == LocalizeValue.empty() ? null : tooltip.get();
+        return getAccessibleTooltipValue().getNullIfEmpty();
     }
 }

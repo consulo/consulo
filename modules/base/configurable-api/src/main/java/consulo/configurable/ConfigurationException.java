@@ -56,8 +56,7 @@ public class ConfigurationException extends Exception {
     @Deprecated
     @DeprecationInfo("Use getTitleValue()")
     public String getTitle() {
-        LocalizeValue titleValue = getTitleValue();
-        return titleValue == LocalizeValue.empty() ? null : titleValue.get();
+        return getTitleValue().getNullIfEmpty();
     }
 
     public void setQuickFix(Runnable quickFix) {

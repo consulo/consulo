@@ -31,7 +31,7 @@ public class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFo
   public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor, @Nullable ComponentManager project) {
     super(
       LocalizeValue.empty(),
-      LocalizeValue.empty(), 
+      LocalizeValue.empty(),
       null,
       project,
       fileChooserDescriptor,

@@ -291,7 +291,7 @@ public abstract class Language extends UserDataHolderBase {
     @Nonnull
     public LocalizeValue getDisplayName() {
         LocalizeValue value = myDisplayNameFromId;
-        if (value == LocalizeValue.empty()) {
+        if (value.isEmpty()) {
             myDisplayNameFromId = value = LocalizeValue.of(getID());
         }
         return value;

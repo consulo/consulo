@@ -14,7 +14,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -404,7 +403,7 @@ public class ActionUpdater {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
             if (child instanceof AnSeparator separator) {
-                if (separator.getTextValue() != LocalizeValue.empty()
+                if (separator.getTextValue().isNotEmpty()
                     || (!result.isEmpty() && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }

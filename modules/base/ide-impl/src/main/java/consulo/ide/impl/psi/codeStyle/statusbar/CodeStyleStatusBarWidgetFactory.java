@@ -60,7 +60,7 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
         LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.findUsingBaseLanguage(language);
         if (provider != null && provider.getIndentOptionsEditor() != null) {
             LocalizeValue name = provider.getConfigurableDisplayName();
-            if (name != LocalizeValue.empty()) {
+            if (name.isNotEmpty()) {
                 return name;
             }
         }

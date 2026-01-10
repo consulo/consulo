@@ -114,7 +114,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
             Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
             if (urlsIndex != null) {
-
                 for (Set<String> filePaths : urlsIndex.values()) {
                     Map<String, PluginFileInfo> loadInfo = new HashMap<>();
 

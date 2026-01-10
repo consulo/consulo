@@ -23,8 +23,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
 
     static HighlightInfoComposite create(@Nonnull List<? extends HighlightInfoImpl> infos) {
         // derive composite's offsets from an info with tooltip, if present
-        HighlightInfoImpl anchorInfo =
-            ContainerUtil.find(infos, info -> info.getToolTip() != LocalizeValue.empty());
+        HighlightInfoImpl anchorInfo = ContainerUtil.find(infos, info -> info.getToolTip().isNotEmpty());
         if (anchorInfo == null) {
             anchorInfo = infos.get(0);
         }
@@ -77,7 +76,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         List<LocalizeValue> result = new ArrayList<>();
         for (HighlightInfoImpl info : infos) {
             LocalizeValue itemDescription = info.getDescription();
-            if (itemDescription == LocalizeValue.empty()) {
+            if (itemDescription.isEmpty()) {
                 continue;
             }
             if (!result.isEmpty()) {
@@ -98,7 +97,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         boolean empty = true;
         for (HighlightInfoImpl info : infos) {
             LocalizeValue tooltip = info.getToolTip();
-            if (tooltip == LocalizeValue.empty()) {
+            if (tooltip.isEmpty()) {
                 continue;
             }
             if (!empty) {

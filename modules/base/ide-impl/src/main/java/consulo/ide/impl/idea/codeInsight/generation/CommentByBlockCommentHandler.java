@@ -173,7 +173,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
 
     @RequiredUIAccess
     private void showMessageIfNeeded() {
-        if (myWarning != LocalizeValue.empty()) {
+        if (myWarning.isNotEmpty()) {
             myEditor.getScrollingModel().disableAnimation();
             myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
             myEditor.getScrollingModel().enableAnimation();

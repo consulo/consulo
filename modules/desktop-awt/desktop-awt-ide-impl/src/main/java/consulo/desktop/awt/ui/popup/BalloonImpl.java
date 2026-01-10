@@ -1653,7 +1653,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             myHoverIcon = hoverIcon;
             myListener = listener;
 
-            setToolTipText(hint == LocalizeValue.empty() ? null : hint.get());
+            setToolTipText(hint.getNullIfEmpty());
 
             myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
                 @Override

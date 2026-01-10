@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -480,7 +479,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         @Nullable
         private Info calcInfo(@Nonnull Editor editor) {
             HighlightInfo info = getHighlightInfo();
-            if (info != null && (info.getDescription() == LocalizeValue.empty() || info.getToolTip() == LocalizeValue.empty())) {
+            if (info != null && (info.getDescription().isEmpty() || info.getToolTip().isEmpty())) {
                 info = null;
             }
 

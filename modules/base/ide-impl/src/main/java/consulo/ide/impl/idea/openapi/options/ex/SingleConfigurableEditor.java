@@ -91,7 +91,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
         super(parent, true);
         myDimensionKey = dimensionServiceKey;
         myShowApplyButton = showApplyButton;
-        setTitle(title == LocalizeValue.empty() ? createTitleString(configurable) : title);
+        setTitle(title.isEmpty() ? createTitleString(configurable) : title);
 
         myParentComponent = parent;
         myConfigurable = configurable;

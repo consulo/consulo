@@ -126,12 +126,8 @@ public class SearchTextField extends JPanel {
     }
 
     public void setPlaceholder(@Nonnull LocalizeValue localizeValue) {
-        if (localizeValue == LocalizeValue.empty()) {
-            myTextField.putClientProperty("JTextField.placeholderText", null);
-        } else {
-            // TODO [VISTALL] we need better control of localization change
-            myTextField.putClientProperty("JTextField.placeholderText", localizeValue.get());
-        }
+        // TODO [VISTALL] we need better control of localization change
+        myTextField.putClientProperty("JTextField.placeholderText", localizeValue.getNullIfEmpty());
     }
 
     protected boolean toClearTextOnEscape() {

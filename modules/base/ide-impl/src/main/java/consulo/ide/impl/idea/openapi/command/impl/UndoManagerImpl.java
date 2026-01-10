@@ -521,7 +521,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.empty();
         LocalizeValue shortActionName = desc.map(text -> StringUtil.first(text, 30, true));
 
-        if (desc == LocalizeValue.empty()) {
+        if (desc.isEmpty()) {
             desc = undo
                 ? ActionLocalize.actionUndoDescriptionEmpty()
                 : ActionLocalize.actionRedoDescriptionEmpty();

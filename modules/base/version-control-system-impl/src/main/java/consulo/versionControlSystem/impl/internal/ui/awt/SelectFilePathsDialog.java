@@ -47,10 +47,10 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> i
     ) {
         super(project, false, confirmationOption, prompt, showDoNotAskOption);
         myFileList = new FilePathChangesTreeListImpl(project, originalFiles, true, true, null, null);
-        if (okActionName != LocalizeValue.empty()) {
+        if (okActionName.isNotEmpty()) {
             getOKAction().setText(okActionName);
         }
-        if (cancelActionName != LocalizeValue.empty()) {
+        if (cancelActionName.isNotEmpty()) {
             getCancelAction().setText(cancelActionName);
         }
         myFileList.setChangesToDisplay(originalFiles);

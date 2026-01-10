@@ -160,7 +160,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         if (icon == null) {
             icon = selectedIcon != null ? selectedIcon : getEmptyIconIfCan();
         }
-        assert textValue != LocalizeValue.empty() : myAction + " has no presentation";
+        assert textValue.isNotEmpty() : myAction + " has no presentation";
 
         myTextValue = textValue;
         myDescription = presentation.getDescriptionValue();

@@ -82,7 +82,7 @@ public class VcsException extends Exception {
     @DeprecationInfo("Use variant with LocalizeValue")
     public VcsException(Collection<String> messages) {
         myMessages = messages.stream()
-            .map(message -> message == null ? LocalizeValue.empty() : LocalizeValue.of(message))
+            .map(LocalizeValue::ofNullable)
             .collect(Collectors.toList());
     }
 

@@ -201,7 +201,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             return List.of();
         }
 
-        if (files.size() == 1 && singleFilePromptGenerator != LocalizeValue.empty()) {
+        if (files.size() == 1 && singleFilePromptGenerator != null) {
             LocalizeValue filePrompt = singleFilePromptGenerator.apply(files.get(0).getPresentableUrl());
             return ConfirmationDialog.requestForConfirmation(
                 confirmationOption,
@@ -562,7 +562,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangesBrowserDialog dlg = parent != null
             ? new ChangesBrowserDialog(myProject, parent, changelists, mode, initRunnable)
             : new ChangesBrowserDialog(myProject, changelists, mode, initRunnable);
-        if (title != LocalizeValue.empty()) {
+        if (title.isNotEmpty()) {
             dlg.setTitle(title);
         }
         return dlg;
@@ -579,7 +579,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangesBrowserDialog dlg = parent != null
             ? new ChangesBrowserDialog(myProject, parent, changelists, mode, null)
             : new ChangesBrowserDialog(myProject, changelists, mode, null);
-        if (title != LocalizeValue.empty()) {
+        if (title.isNotEmpty()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -589,7 +589,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     @RequiredUIAccess
     public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, @Nonnull LocalizeValue title) {
         ChangeListViewerDialog dlg = new ChangeListViewerDialog(myProject, changelist, toSelect);
-        if (title != LocalizeValue.empty()) {
+        if (title.isNotEmpty()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -607,7 +607,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         ChangeListViewerDialog dlg = parent != null
             ? new ChangeListViewerDialog(parent, myProject, changes, false)
             : new ChangeListViewerDialog(myProject, changes, false);
-        if (title != LocalizeValue.empty()) {
+        if (title.isNotEmpty()) {
             dlg.setTitle(title);
         }
         dlg.show();
@@ -754,7 +754,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         panel.setMaxCount(maxCount);
         panel.refreshChanges(false);
         ContentFactory factory = ContentFactory.getInstance();
-        if (title == LocalizeValue.empty() && location != null) {
+        if (title.isEmpty() && location != null) {
             title = VcsLocalize.browseChangesContentTitle(location.toPresentableString());
         }
         final Content content = factory.createContent(panel, title.get(), false);

@@ -68,9 +68,9 @@ public class Utils {
 
             if (action instanceof AnSeparator) {
                 LocalizeValue textValue = ((AnSeparator) action).getTextValue();
-                if (textValue != LocalizeValue.empty() || (i > 0 && i < size - 1)) {
+                if (textValue.isNotEmpty() || (i > 0 && i < size - 1)) {
                     JPopupMenu.Separator separator = new JPopupMenu.Separator() {
-                        private JMenuItem myMenu = textValue != LocalizeValue.empty() ? new JMenuItem(textValue.getValue()) : null;
+                        private JMenuItem myMenu = textValue.isNotEmpty() ? new JMenuItem(textValue.get()) : null;
 
                         @Override
                         public void doLayout() {

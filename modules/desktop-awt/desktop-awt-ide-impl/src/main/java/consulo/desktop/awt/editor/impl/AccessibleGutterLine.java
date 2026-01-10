@@ -170,7 +170,7 @@ class AccessibleGutterLine extends JPanel {
             StringBuilder buf = new StringBuilder("annotation: ");
             for (int i = 0; i < myGutter.myTextAnnotationGutters.size(); i++) {
                 TextAnnotationGutterProvider gutterProvider = myGutter.myTextAnnotationGutters.get(i);
-                if (tooltipText == LocalizeValue.empty()) {
+                if (tooltipText.isEmpty()) {
                     tooltipText = gutterProvider.getToolTipValue(myLogicalLineNum, editor); // [tav] todo: take first non-null?
                 }
                 int annotationSize = myGutter.myTextAnnotationGutterSizes.get(i);

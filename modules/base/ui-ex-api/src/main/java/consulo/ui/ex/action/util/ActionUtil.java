@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action.util;
 
-import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -78,7 +77,7 @@ public class ActionUtil {
         if (StringUtil.isEmpty(p1.getText())) {
             p1.setTextValue(p2.getTextValue());
         }
-        p1.setDescriptionValue(p1.getDescriptionValue() == LocalizeValue.empty() ? p2.getDescriptionValue() : p1.getDescriptionValue());
+        p1.setDescriptionValue(p1.getDescriptionValue().orIfEmpty(p2.getDescriptionValue()));
         ShortcutSet ss1 = a1.getShortcutSet();
         if (ss1 == null || ss1 == CustomShortcutSet.EMPTY) {
             a1.copyShortcutFrom(a2);
