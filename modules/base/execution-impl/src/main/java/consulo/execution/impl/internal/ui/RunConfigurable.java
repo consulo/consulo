@@ -89,7 +89,7 @@ public class RunConfigurable extends BaseConfigurable {
     private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {
         @Override
         public LocalizeValue getDisplayName() {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
 
         @Override

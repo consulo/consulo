@@ -117,7 +117,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     protected final MyTextField myTextField = new MyTextField();
     private final CardLayout myCard = new CardLayout();
     private final JPanel myCardContainer = new JPanel(myCard);
-    protected final CheckBox myCheckBox = CheckBox.create(LocalizeValue.of());
+    protected final CheckBox myCheckBox = CheckBox.create(LocalizeValue.empty());
     /**
      * the tool area of the popup, it is just after card box
      */
@@ -402,8 +402,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
         LocalizeValue checkBoxText = myModel.getCheckBoxName();
         Color color = HelpTooltipImpl.SHORTCUT_COLOR;
-        if (checkBoxText == LocalizeValue.of()) {
-            myCheckBox.setLabelText(LocalizeValue.of());
+        if (checkBoxText.isEmpty()) {
+            myCheckBox.setLabelText(LocalizeValue.empty());
         }
         else if (myCheckBoxShortcut != null) {
             String text = "<html>" + checkBoxText.get() + (
@@ -420,7 +420,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
         myCheckBox.setValue(myModel.loadInitialCheckBoxState());
 
-        if (checkBoxText == LocalizeValue.of()) {
+        if (checkBoxText.isEmpty()) {
             myCheckBox.setVisible(false);
         }
 
@@ -484,16 +484,14 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         myTextField.setFont(editorFont);
         myTextField.putClientProperty("caretWidth", JBUIScale.scale(EditorUtil.getDefaultCaretWidth()));
 
-        if (checkBoxText != LocalizeValue.of()) {
-            if (myCheckBoxShortcut != null) {
-                new DumbAwareAction("change goto check box", null, null) {
-                    @RequiredUIAccess
-                    @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
-                        myCheckBox.setValue(!myCheckBox.getValueOrError());
-                    }
-                }.registerCustomShortcutSet(myCheckBoxShortcut, myTextField);
-            }
+        if (checkBoxText.isNotEmpty() && myCheckBoxShortcut != null) {
+            new DumbAwareAction("change goto check box", null, null) {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    myCheckBox.setValue(!myCheckBox.getValueOrError());
+                }
+            }.registerCustomShortcutSet(myCheckBoxShortcut, myTextField);
         }
 
         if (isCloseByFocusLost()) {

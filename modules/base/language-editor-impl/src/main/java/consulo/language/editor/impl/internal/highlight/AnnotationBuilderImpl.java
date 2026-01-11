@@ -288,7 +288,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     @Nonnull
     @Override
     public AnnotationBuilder tooltip(@Nonnull LocalizeValue tooltip) {
-        assertNotSet(myTooltip, LocalizeValue.of(), "tooltip");
+        assertNotSet(myTooltip, LocalizeValue.empty(), "tooltip");
         myTooltip = tooltip;
         return this;
     }
@@ -304,7 +304,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             range = myCurrentElement.getTextRange();
         }
 
-        if (myTooltip == LocalizeValue.of() && myMessage != LocalizeValue.of()) {
+        if (myTooltip.isEmpty() && myMessage.isNotEmpty()) {
             myTooltip = myMessage.map(TOOLTIP_ESCAPE);
         }
 

@@ -236,7 +236,7 @@ public final class IntentionActionMetaData {
   @Nonnull
   public LocalizeValue getActionText() {
     LocalizeValue text = myAction.getText();
-    if (text == LocalizeValue.of()) {
+    if (text.isEmpty()) {
       return LocalizeValue.of(myAction.getClass().getName());
     }
     return text;

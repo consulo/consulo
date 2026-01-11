@@ -37,7 +37,7 @@ public interface AutomaticRenamerFactory {
 
   @Nonnull
   default LocalizeValue getOptionName() {
-    return LocalizeValue.of();
+    return LocalizeValue.empty();
   }
 
   default boolean isEnabled() {

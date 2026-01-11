@@ -31,7 +31,7 @@ public class ClosePopupAction extends DumbAwareAction {
     private final AbstractPopup myPopup;
 
     public ClosePopupAction(@Nonnull LocalizeValue text, @Nonnull Image icon, @Nonnull AbstractPopup popup) {
-        super(text, LocalizeValue.of(), icon);
+        super(text, LocalizeValue.empty(), icon);
         myPopup = popup;
     }
 

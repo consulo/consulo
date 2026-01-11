@@ -163,7 +163,7 @@ public interface HighlightInfo extends Segment {
 
         @Nonnull
         default Builder registerFix(@Nonnull IntentionAction action) {
-            return registerFix(action, null, LocalizeValue.of(), null, null);
+            return registerFix(action, null, LocalizeValue.empty(), null, null);
         }
 
         @Deprecated

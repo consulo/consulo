@@ -67,7 +67,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
                 icon = PlatformIconGroup.filetypesText();
             }
 
-            result.add(new DumbAwareAction(language.getDisplayName(), LocalizeValue.of(), icon) {
+            result.add(new DumbAwareAction(language.getDisplayName(), LocalizeValue.empty(), icon) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {

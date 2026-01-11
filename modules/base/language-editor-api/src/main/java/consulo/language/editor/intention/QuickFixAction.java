@@ -56,7 +56,7 @@ public final class QuickFixAction {
         if (info == null) {
             return;
         }
-        info.registerFix(action, null, LocalizeValue.of(), fixRange, null);
+        info.registerFix(action, null, LocalizeValue.empty(), fixRange, null);
     }
 
     public static void registerQuickFixActions(@Nullable HighlightInfo info, @Nullable TextRange fixRange, @Nonnull Iterable<? extends IntentionAction> actions) {

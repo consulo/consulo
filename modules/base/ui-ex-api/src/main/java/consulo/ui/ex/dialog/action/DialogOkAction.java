@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DialogOkAction extends DumbAwareAction {
     public DialogOkAction(@Nonnull LocalizeValue actionText) {
-        super(actionText, LocalizeValue.of(), null);
+        super(actionText, LocalizeValue.empty(), null);
     }
 
     @Override

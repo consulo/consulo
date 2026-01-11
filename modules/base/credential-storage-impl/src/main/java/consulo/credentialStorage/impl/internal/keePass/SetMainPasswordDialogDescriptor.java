@@ -55,7 +55,7 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
     public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value, @Nonnull Window window) {
         if (value instanceof NewMasterPasswordResult newMasterPasswordResult) {
             LocalizeValue error = myOkHandler.apply(newMasterPasswordResult.password());
-            if (error != LocalizeValue.of())  {
+            if (error.isNotEmpty())  {
                 Alerts.okError(error).showAsync(window);
                 return false;
             }
@@ -76,7 +76,7 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
     public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
         myPasswordBox = PasswordBox.create();
         VerticalLayout layout = VerticalLayout.create();
-        if (myTopNote != LocalizeValue.of()) {
+        if (myTopNote.isNotEmpty()) {
             layout.add(Label.create(myTopNote));
         }
         layout.add(LabeledBuilder.filled(CredentialStorageLocalize.keePassRowMasterPassword(), myPasswordBox));

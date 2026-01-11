@@ -44,7 +44,7 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
     @Nonnull
     @Override
     public LocalizeValue getText() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     @Override

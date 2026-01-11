@@ -35,7 +35,7 @@ public class SimpleListPopupStepBuilder<T> {
 
     private final List<? extends T> myItems;
 
-    private LocalizeValue myTitle = LocalizeValue.of();
+    private LocalizeValue myTitle = LocalizeValue.empty();
 
     private Function<T, String> myTextBuilder = Object::toString;
 

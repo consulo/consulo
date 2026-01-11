@@ -63,7 +63,7 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
     @Nonnull
     @Override
     public LocalizeValue getCheckBoxName() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     @Override

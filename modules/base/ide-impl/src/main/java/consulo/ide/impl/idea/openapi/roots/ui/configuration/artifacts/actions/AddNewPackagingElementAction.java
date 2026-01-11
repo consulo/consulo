@@ -31,7 +31,7 @@ public class AddNewPackagingElementAction extends DumbAwareAction {
     private final ArtifactEditorEx myArtifactEditor;
 
     public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
-        super(type.getPresentableName(), LocalizeValue.of(), type.getIcon());
+        super(type.getPresentableName(), LocalizeValue.empty(), type.getIcon());
         myType = type;
         myArtifactEditor = artifactEditor;
     }

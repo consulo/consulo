@@ -137,7 +137,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         myShouldShowBackground = shouldShowBackground;
-        if (cancelText != LocalizeValue.of()) {
+        if (cancelText.isNotEmpty()) {
             myProgressWindow.setCancelButtonText(cancelText);
         }
         myProgressBar.setMaximum(100);
@@ -225,7 +225,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     private void createCenterPanel() {
         // Cancel button (if any)
 
-        if (myProgressWindow.myCancelText != LocalizeValue.of()) {
+        if (myProgressWindow.myCancelText.isNotEmpty()) {
             myCancelButton.setText(myProgressWindow.myCancelText.get());
         }
         myCancelButton.setVisible(myProgressWindow.myShouldShowCancel);

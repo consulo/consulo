@@ -32,7 +32,7 @@ public class SimpleProjectGroupActionGroup extends SimpleActionGroup implements 
     private final ProjectGroup myGroup;
 
     public SimpleProjectGroupActionGroup(ProjectGroup group, List<AnAction> children) {
-        super(LocalizeValue.ofNullable(group.getName()), LocalizeValue.of(), PlatformIconGroup.nodesFolder());
+        super(LocalizeValue.ofNullable(group.getName()), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
         setPopup(true);
         addAll(children);
         myGroup = group;

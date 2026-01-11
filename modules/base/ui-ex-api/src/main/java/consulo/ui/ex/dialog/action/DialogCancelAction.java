@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DialogCancelAction extends DumbAwareAction {
     public DialogCancelAction() {
-        super(CommonLocalize.buttonCancel(), LocalizeValue.of(), null);
+        super(CommonLocalize.buttonCancel(), LocalizeValue.empty(), null);
     }
 
     @RequiredUIAccess

@@ -26,7 +26,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  */
 public class PluginsOptionGroup extends DefaultActionGroup implements DumbAware {
     public PluginsOptionGroup() {
-        super(LocalizeValue.localizeTODO("Options"), LocalizeValue.of(), PlatformIconGroup.generalGearplain());
+        super(LocalizeValue.localizeTODO("Options"), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
     }
 
     @Override

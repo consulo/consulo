@@ -39,7 +39,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
   public RunContextAction(@Nonnull Executor executor) {
-    super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getActionName()), LocalizeValue.of(), executor.getIcon());
+    super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getActionName()), LocalizeValue.empty(), executor.getIcon());
     myExecutor = executor;
   }
 

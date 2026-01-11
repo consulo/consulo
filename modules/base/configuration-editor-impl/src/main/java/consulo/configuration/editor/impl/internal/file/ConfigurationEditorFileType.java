@@ -50,7 +50,7 @@ public class ConfigurationEditorFileType implements FileType {
     @Nonnull
     @Override
     public LocalizeValue getDescription() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     @Nonnull

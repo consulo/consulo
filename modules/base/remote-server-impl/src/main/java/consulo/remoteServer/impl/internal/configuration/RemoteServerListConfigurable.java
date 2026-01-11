@@ -256,7 +256,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
     private final class AddRemoteServerGroup extends ActionGroup implements ActionGroupWithPreselection {
         private AddRemoteServerGroup() {
-            super(RemoteServerLocalize.groupActionAddremoteservergroupText(), LocalizeValue.of(), PlatformIconGroup.generalAdd());
+            super(RemoteServerLocalize.groupActionAddremoteservergroupText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
             registerCustomShortcutSet(CommonShortcuts.getInsert(), myTree);
         }
 
@@ -281,7 +281,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         private final ServerType<?> myServerType;
 
         private AddRemoteServerAction(ServerType<?> serverType, Image icon) {
-            super(serverType.getPresentableName(), LocalizeValue.of(), icon);
+            super(serverType.getPresentableName(), LocalizeValue.empty(), icon);
             myServerType = serverType;
         }
 

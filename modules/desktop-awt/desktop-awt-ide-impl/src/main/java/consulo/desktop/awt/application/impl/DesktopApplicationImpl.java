@@ -455,7 +455,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.of(), action);
+        return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.empty(), action);
     }
 
     @Override

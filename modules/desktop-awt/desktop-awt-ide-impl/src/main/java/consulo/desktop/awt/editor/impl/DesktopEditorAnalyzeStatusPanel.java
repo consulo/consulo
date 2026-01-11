@@ -679,7 +679,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     private AnAction createAction(@Nonnull String id, @Nonnull Image icon) {
         AnAction delegate = ActionManager.getInstance().getAction(id);
-        AnAction result = new DumbAwareAction(delegate.getTemplatePresentation().getTextValue(), LocalizeValue.of(), icon) {
+        AnAction result = new DumbAwareAction(delegate.getTemplatePresentation().getTextValue(), LocalizeValue.empty(), icon) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

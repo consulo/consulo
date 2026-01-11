@@ -43,6 +43,6 @@ public abstract class EarlyAccessProgramDescriptor {
 
     @Nonnull
     public LocalizeValue getDescription() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 }

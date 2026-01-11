@@ -84,7 +84,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
         @Override
         protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
             AnAction specifyUrlButton =
-                new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.of(), PlatformIconGroup.nodesPpweb()) {
+                new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.empty(), PlatformIconGroup.nodesPpweb()) {
                     {
                         setShortcutSet(CustomShortcutSet.fromString("alt S"));
                     }

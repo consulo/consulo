@@ -32,7 +32,7 @@ public class Option {
     public Option(@Nonnull String id,
                   LocalizeValue nameSupplier,
                   boolean defaultValue) {
-        this(id, nameSupplier, defaultValue, LocalizeValue.of());
+        this(id, nameSupplier, defaultValue, LocalizeValue.empty());
     }
 
     public Option(@Nonnull String id,

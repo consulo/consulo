@@ -208,9 +208,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
 
         if (myIdToActionGroup.get(id) == null) {
-            LocalizeValue actionText = myIdToNameList.getOrDefault(id, LocalizeValue.of());
+            LocalizeValue actionText = myIdToNameList.getOrDefault(id, LocalizeValue.empty());
 
-            if (actionText != LocalizeValue.of()) {
+            if (actionText.isNotEmpty()) {
                 ActionGroup actionGroup = (ActionGroup) ActionManager.getInstance().getAction(id);
                 if (actionGroup != null) {
                     myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, actionText.get()));

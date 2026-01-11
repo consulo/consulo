@@ -22,7 +22,7 @@ abstract class AbstractEditIntentionSettingsAction implements SyntheticIntention
     myText = action.getText();
     // needed for checking errors in user written actions
     //noinspection ConstantConditions
-    LOG.assertTrue(myText != LocalizeValue.of(), "action " + action.getClass() + " text returned empty");
+    LOG.assertTrue(myText.isNotEmpty(), "action " + action.getClass() + " text returned empty");
     myEnabled = true;
   }
 

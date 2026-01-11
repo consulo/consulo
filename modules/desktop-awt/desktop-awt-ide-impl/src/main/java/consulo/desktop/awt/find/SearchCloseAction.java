@@ -35,7 +35,7 @@ public class SearchCloseAction extends DumbAwareAction {
     private final Runnable myCloseAction;
 
     public SearchCloseAction(@Nonnull Runnable closeAction) {
-        super(FindLocalize.tooltipCloseSearchBarEscape(), LocalizeValue.of(), PlatformIconGroup.actionsCancel());
+        super(FindLocalize.tooltipCloseSearchBarEscape(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         myCloseAction = closeAction;
 
         setShortcutSet(new CustomShortcutSet(KeyEvent.VK_ESCAPE));

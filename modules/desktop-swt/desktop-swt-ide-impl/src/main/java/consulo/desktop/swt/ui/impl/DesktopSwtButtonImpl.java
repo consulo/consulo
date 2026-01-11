@@ -36,7 +36,7 @@ import java.util.Objects;
  * @since 29/04/2021
  */
 public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Button> implements Button {
-    private LocalizeValue myText = LocalizeValue.of();
+    private LocalizeValue myText = LocalizeValue.empty();
 
     public DesktopSwtButtonImpl(LocalizeValue text) {
         myText = Objects.requireNonNull(text);

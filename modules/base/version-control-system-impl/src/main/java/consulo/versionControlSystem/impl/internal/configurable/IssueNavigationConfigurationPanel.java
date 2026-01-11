@@ -55,7 +55,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
         private final ListTableModel<IssueNavigationLink> myModel;
 
         public GeneralIssueLinkAction(Project project, ListTableModel<IssueNavigationLink> model) {
-            super(LocalizeValue.localizeTODO("General Pattern"), LocalizeValue.of());
+            super(LocalizeValue.localizeTODO("General Pattern"), LocalizeValue.empty());
             myProject = project;
             myModel = model;
         }
@@ -100,14 +100,14 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
     private List<IssueNavigationLink> myLinks;
     private ListTableModel<IssueNavigationLink> myModel;
 
-    private final ColumnInfo<IssueNavigationLink, String> ISSUE_COLUMN = new ColumnInfo<>(VcsLocalize.issueLinkIssueColumn().get()) {
+    private final ColumnInfo<IssueNavigationLink, String> ISSUE_COLUMN = new ColumnInfo<>(VcsLocalize.issueLinkIssueColumn()) {
         @Override
         public String valueOf(IssueNavigationLink issueNavigationLink) {
             return issueNavigationLink.getIssueRegexp();
         }
     };
 
-    private final ColumnInfo<IssueNavigationLink, String> LINK_COLUMN = new ColumnInfo<>(VcsLocalize.issueLinkLinkColumn().get()) {
+    private final ColumnInfo<IssueNavigationLink, String> LINK_COLUMN = new ColumnInfo<>(VcsLocalize.issueLinkLinkColumn()) {
         @Override
         public String valueOf(IssueNavigationLink issueNavigationLink) {
             return issueNavigationLink.getLinkRegexp();
@@ -169,7 +169,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
             }
         });
 
-        builder.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.of(), PlatformIconGroup.generalRemove()) {
+        builder.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -198,7 +198,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
             }
         });
 
-        builder.add(new DumbAwareAction(CommonLocalize.buttonEdit(), LocalizeValue.of(), PlatformIconGroup.actionsEdit()) {
+        builder.add(new DumbAwareAction(CommonLocalize.buttonEdit(), LocalizeValue.empty(), PlatformIconGroup.actionsEdit()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

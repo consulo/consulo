@@ -75,6 +75,6 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 }

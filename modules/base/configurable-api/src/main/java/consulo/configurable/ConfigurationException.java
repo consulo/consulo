@@ -32,7 +32,7 @@ public class ConfigurationException extends Exception {
 
     public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue titleValue) {
         super(message.get());
-        myTitle = titleValue == LocalizeValue.of() ? DEFAULT_TITLE : titleValue;
+        myTitle = titleValue.orIfEmpty(DEFAULT_TITLE);
     }
 
     @Deprecated

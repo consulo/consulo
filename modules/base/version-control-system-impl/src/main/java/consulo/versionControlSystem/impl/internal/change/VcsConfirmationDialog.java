@@ -83,7 +83,7 @@ class VcsConfirmationDialog extends OptionsDialog {
     @Nonnull
     @Override
     protected LocalizeValue getDoNotShowMessage() {
-        return myDoNotShowMessage == null ? LocalizeValue.of() : LocalizeValue.localizeTODO(myDoNotShowMessage);
+        return myDoNotShowMessage == null ? LocalizeValue.empty() : LocalizeValue.localizeTODO(myDoNotShowMessage);
     }
 
     @Nonnull

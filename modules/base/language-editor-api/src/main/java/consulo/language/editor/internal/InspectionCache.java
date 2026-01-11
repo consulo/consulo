@@ -197,11 +197,10 @@ public class InspectionCache {
     @Nonnull
     public LocalizeValue getDisplayNameByKey(@Nullable HighlightDisplayKey key) {
         if (key == null) {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
         else {
-            LocalizeValue computable = myHighlightDisplayKeyToDisplayNameMap.get(key);
-            return computable == null ? LocalizeValue.of() : computable;
+            return myHighlightDisplayKeyToDisplayNameMap.getOrDefault(key, LocalizeValue.empty());
         }
     }
 

@@ -104,7 +104,7 @@ public abstract class XDebuggerEditorBase {
         ActionGroup.Builder actions = ActionGroup.newImmutableBuilder();
         for (Language language : getSupportedLanguages()) {
             //noinspection ConstantConditions
-            actions.add(new AnAction(language.getDisplayName(), LocalizeValue.of(), language.getAssociatedFileType().getIcon()) {
+            actions.add(new AnAction(language.getDisplayName(), LocalizeValue.empty(), language.getAssociatedFileType().getIcon()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -152,7 +152,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     protected AnAction createExpandAction() {
-        return new DumbAwareAction(CommonLocalize.actionExpand(), LocalizeValue.of(), PlatformIconGroup.generalExpandcomponent()) {
+        return new DumbAwareAction(CommonLocalize.actionExpand(), LocalizeValue.empty(), PlatformIconGroup.generalExpandcomponent()) {
             {
                 Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts("ExpandExpandableComponent");
                 if (shortcuts != null && shortcuts.length > 0) {

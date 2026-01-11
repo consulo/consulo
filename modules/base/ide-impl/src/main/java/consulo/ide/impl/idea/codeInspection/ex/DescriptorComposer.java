@@ -86,7 +86,7 @@ public class DescriptorComposer extends HTMLComposerBase {
         List<String> texts = new ArrayList<>();
         for (QuickFixAction quickFix : quickFixes) {
             LocalizeValue text = quickFix.getText(where);
-            if (text == LocalizeValue.of()) {
+            if (text.isEmpty()) {
                 continue;
             }
             texts.add(text.get());

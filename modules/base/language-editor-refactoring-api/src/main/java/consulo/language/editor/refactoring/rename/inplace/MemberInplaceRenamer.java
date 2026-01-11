@@ -267,7 +267,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
             }
         };
         for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
-            if (factory.getOptionName() != LocalizeValue.of() && factory.isApplicable(element)) {
+            if (factory.getOptionName().isNotEmpty() && factory.isApplicable(element)) {
                 renameProcessor.addRenamerFactory(factory);
             }
         }

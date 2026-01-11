@@ -546,7 +546,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     private class RevertAction extends MyAction {
         public RevertAction() {
-            super(LocalHistoryLocalize.actionRevert(), LocalizeValue.of(), AllIcons.Actions.Rollback);
+            super(LocalHistoryLocalize.actionRevert(), LocalizeValue.empty(), AllIcons.Actions.Rollback);
         }
 
         @Override
@@ -562,7 +562,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     private class CreatePatchAction extends MyAction {
         public CreatePatchAction() {
-            super(LocalHistoryLocalize.actionCreatePatch(), LocalizeValue.of(), PlatformIconGroup.filetypesPatch());
+            super(LocalHistoryLocalize.actionCreatePatch(), LocalizeValue.empty(), PlatformIconGroup.filetypesPatch());
         }
 
         @Override

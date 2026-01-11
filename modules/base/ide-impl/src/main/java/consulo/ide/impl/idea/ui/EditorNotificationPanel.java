@@ -82,7 +82,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
 
-        myGearButton = Button.create(LocalizeValue.of());
+        myGearButton = Button.create(LocalizeValue.empty());
         myGearButton.addStyle(ButtonStyle.INPLACE);
         myGearButton.setVisible(false);
 

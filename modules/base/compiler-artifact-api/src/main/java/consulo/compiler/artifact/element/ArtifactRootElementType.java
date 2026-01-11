@@ -30,7 +30,7 @@ public class ArtifactRootElementType extends PackagingElementType<ArtifactRootEl
   public static final ArtifactRootElementType INSTANCE = new ArtifactRootElementType();
 
   private ArtifactRootElementType() {
-    super("root", LocalizeValue.of());
+    super("root", LocalizeValue.empty());
   }
 
   @Nonnull

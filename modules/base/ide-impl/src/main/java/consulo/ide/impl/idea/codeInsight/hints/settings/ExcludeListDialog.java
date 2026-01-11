@@ -94,7 +94,7 @@ public class ExcludeListDialog extends DialogWrapper {
         }
 
         LocalizeValue explanationHTML = getExcludeListExplanationHTML(language);
-        if (explanationHTML != LocalizeValue.of()) {
+        if (explanationHTML.isNotEmpty()) {
             bottomPanel.add(new JLabel(explanationHTML.get()));
         }
 
@@ -201,7 +201,7 @@ public class ExcludeListDialog extends DialogWrapper {
     private static LocalizeValue getExcludeListExplanationHTML(Language language) {
         InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
         if (provider == null) {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
         return provider.getBlacklistExplanationHTML();
     }

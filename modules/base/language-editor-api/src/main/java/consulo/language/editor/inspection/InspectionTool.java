@@ -94,10 +94,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
 
     @Nonnull
     public LocalizeValue[] getGroupPath() {
-        LocalizeValue groupDisplayName = getGroupDisplayName();
-        if (groupDisplayName == LocalizeValue.of()) {
-            groupDisplayName = InspectionLocalize.inspectionGeneralToolsGroupName();
-        }
+        LocalizeValue groupDisplayName = getGroupDisplayName().orIfEmpty(InspectionLocalize.inspectionGeneralToolsGroupName());
 
         Language language = getLanguage();
         if (language != null) {
@@ -148,7 +145,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
 
     @Nonnull
     public LocalizeValue getDescription() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     /**

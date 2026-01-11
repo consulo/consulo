@@ -103,7 +103,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
                 Configurable[] mergedArray = new Configurable[generalConfigurables.length + 1];
                 System.arraycopy(generalConfigurables, 0, mergedArray, 0, generalConfigurables.length);
                 mergedArray[generalConfigurables.length] = firstConfigurable;
-                myRootConfigurable = new MergedCompositeConfigurable("", LocalizeValue.of(), mergedArray);
+                myRootConfigurable = new MergedCompositeConfigurable("", LocalizeValue.empty(), mergedArray);
                 myChildren = firstConfigurable instanceof SearchableConfigurable.Parent ? ((Parent) firstConfigurable).getConfigurables() : EMPTY_CONFIGURABLES;
             }
         }
@@ -140,7 +140,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
             boolean c1e = StringUtil.isEmpty(o1.getDisplayName().get());
             return c1e == StringUtil.isEmpty(o2.getDisplayName().get()) ? 0 : (c1e ? -1 : 1);
         });
-        return new MergedCompositeConfigurable("", LocalizeValue.of(), mergedRootConfigurables);
+        return new MergedCompositeConfigurable("", LocalizeValue.empty(), mergedRootConfigurables);
     }
 
     @RequiredUIAccess

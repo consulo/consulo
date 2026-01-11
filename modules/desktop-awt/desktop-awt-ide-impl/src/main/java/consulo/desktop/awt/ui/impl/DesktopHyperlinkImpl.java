@@ -56,7 +56,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
         }
     }
 
-    private LocalizeValue myText = LocalizeValue.of();
+    private LocalizeValue myText = LocalizeValue.empty();
 
     public DesktopHyperlinkImpl(LocalizeValue text) {
         myText = text;

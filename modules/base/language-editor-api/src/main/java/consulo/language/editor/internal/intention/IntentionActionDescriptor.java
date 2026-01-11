@@ -57,7 +57,7 @@ public class IntentionActionDescriptor {
     }
 
     public IntentionActionDescriptor(@Nonnull IntentionAction action, Image icon) {
-        this(action, null, LocalizeValue.of(), icon);
+        this(action, null, LocalizeValue.empty(), icon);
     }
 
     public IntentionActionDescriptor(
@@ -213,7 +213,7 @@ public class IntentionActionDescriptor {
     @Override
     public String toString() {
         LocalizeValue text = getAction().getText();
-        return "descriptor: " + (text == LocalizeValue.of() ? getAction().getClass() : text);
+        return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
     }
 
     @Nullable

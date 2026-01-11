@@ -165,7 +165,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         }
         else {
             myCloseSearchResultsList.setSelectedIndex(gotoSearchResultIndex);
-            setNewStatusText(LocalizeValue.of());
+            setNewStatusText(LocalizeValue.empty());
         }
     }
 
@@ -293,7 +293,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
                                        int indexOfClosestResult) {
         ApplicationManager.getApplication().invokeLater(() -> {
             if (!caller.isShouldStop()) {
-                setNewStatusText(LocalizeValue.of());
+                setNewStatusText(LocalizeValue.empty());
                 SearchResult closestResult = allMatchesAtFrame.get(indexOfClosestResult);
                 largeFileEditor.getEditorModel().showSearchResult(closestResult);
                 largeFileEditor.getEditorModel().setHighlightingCloseSearchResultsEnabled(true);
@@ -321,7 +321,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
                         options.searchForwardDirection ? IdeActions.ACTION_FIND_NEXT : IdeActions.ACTION_FIND_PREVIOUS);
                     String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
                     LocalizeValue message;
-                    setNewStatusText(LocalizeValue.of());
+                    setNewStatusText(LocalizeValue.empty());
                     message = !shortcutsText.isEmpty()
                         ? options.searchForwardDirection
                         ? FileEditorLocalize.largeFileEditorSomeStringNotFoundPressSomeShortcutToSearchFromTheStart(options.stringToFind, shortcutsText)
@@ -417,7 +417,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     public void onSearchParametersChanged() {
         if (lastExecutedCloseSearchTask != null) {
             lastExecutedCloseSearchTask.shouldStop();
-            setNewStatusText(LocalizeValue.of());
+            setNewStatusText(LocalizeValue.empty());
         }
         mySearchReplaceComponent.setRegularBackground();
         largeFileEditor.getEditorModel().setHighlightingCloseSearchResultsEnabled(false);

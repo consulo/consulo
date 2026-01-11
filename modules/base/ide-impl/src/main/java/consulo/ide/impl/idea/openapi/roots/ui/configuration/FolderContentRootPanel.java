@@ -199,7 +199,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
 
     @RequiredUIAccess
     private Button createChangeOptionsAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-        Button button = Button.create(LocalizeValue.of());
+        Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(ProjectLocalize.modulePathsPropertiesTooltip());
         button.addStyle(ButtonStyle.INPLACE);
         button.addClickListener(event -> myCallback.showChangeOptionsDialog(getContentEntry(), folder));
@@ -217,7 +217,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
             tooltipText = ProjectLocalize.modulePathsRemoveTooltip();
         }
 
-        Button button = Button.create(LocalizeValue.of());
+        Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(tooltipText);
         button.addStyle(ButtonStyle.INPLACE);
         button.addClickListener(event -> myCallback.deleteContentFolder(getContentEntry(), folder));

@@ -42,7 +42,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
 
   @RequiredUIAccess
   public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nonnull LocalizeValue cancelText) {
-    super(cancelText != LocalizeValue.of(), false, project, parentComponent, cancelText);
+    super(cancelText.isNotEmpty(), false, project, parentComponent, cancelText);
     setTitle(title);
     UIAccess.assertIsUIThread();
     startStealingInputEvents();

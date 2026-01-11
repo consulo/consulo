@@ -381,7 +381,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
 
         @Override
         public LocalizeValue getCheckBoxName() {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
 
         @Override

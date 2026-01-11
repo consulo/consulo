@@ -485,7 +485,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     private void createUIComponents() {
         myShowContentCheckBox = new ThreeStateCheckBox();
-        myShowSpecificContentOptionsButton = Button.create(LocalizeValue.of());
+        myShowSpecificContentOptionsButton = Button.create(LocalizeValue.empty());
         myShowSpecificContentOptionsButton.setIcon(PlatformIconGroup.generalGearplain());
         myShowSpecificContentOptionsButton.addStyle(ButtonStyle.BORDERLESS);
     }

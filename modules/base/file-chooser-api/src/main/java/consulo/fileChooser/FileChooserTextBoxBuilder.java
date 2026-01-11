@@ -52,7 +52,7 @@ public final class FileChooserTextBoxBuilder {
         private final Controller myController;
 
         public BrowseAction(Controller controller) {
-            super(LocalizeValue.localizeTODO("Browse"), LocalizeValue.of(), PlatformIconGroup.nodesFolderopened());
+            super(LocalizeValue.localizeTODO("Browse"), LocalizeValue.empty(), PlatformIconGroup.nodesFolderopened());
             myController = controller;
         }
 

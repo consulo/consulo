@@ -104,7 +104,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
         if (!gutterAction.isAvailable(dataContext)) {
             return;
         }
-        descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), LocalizeValue.of(), icon) {
+        descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), LocalizeValue.empty(), icon) {
             @Nonnull
             @Override
             public LocalizeValue getDisplayName() {

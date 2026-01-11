@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.NotificationType;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
@@ -42,7 +41,7 @@ public interface EditorNotificationBuilder {
     @Nonnull
     default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText,
                                                  @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
-        return withAction(actionText, LocalizeValue.of(), action);
+        return withAction(actionText, LocalizeValue.empty(), action);
     }
 
     @Nonnull
@@ -55,7 +54,7 @@ public interface EditorNotificationBuilder {
 
     @Nonnull
     default EditorNotificationBuilder withGearAction(@Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
-        return withGearAction(LocalizeValue.of(), PlatformIconGroup.generalGearplain(), action);
+        return withGearAction(LocalizeValue.empty(), PlatformIconGroup.generalGearplain(), action);
     }
 
     @Nonnull

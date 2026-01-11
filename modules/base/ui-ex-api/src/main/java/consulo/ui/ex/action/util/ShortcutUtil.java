@@ -82,7 +82,7 @@ public class ShortcutUtil {
     @Nonnull
     public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
         if (accelerator == null) {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
 
         List<LocalizeValue> values = new ArrayList<>(3);
