@@ -121,7 +121,7 @@ public class ActionToolbarButtonEngine {
         CustomShortcutBuilder shortcutBuilder = myPresentation.getClientProperty(CustomShortcutBuilder.KEY);
         if (shortcutBuilder != null) {
             LocalizeValue shortcutText = shortcutBuilder.build();
-            if (shortcutBuilder != LocalizeValue.empty()) {
+            if (shortcutText.isNotEmpty()) {
                 return shortcutText.get();
             }
         }

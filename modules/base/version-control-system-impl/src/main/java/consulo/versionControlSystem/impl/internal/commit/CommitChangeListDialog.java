@@ -908,14 +908,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         LocalizeValue name = LocalizeValue.empty();
         for (AbstractVcs vcs : getAffectedVcses()) {
             CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-            if (name == LocalizeValue.empty() && checkinEnvironment != null) {
+            if (name.isEmpty() && checkinEnvironment != null) {
                 name = checkinEnvironment.getCheckinOperationName();
             }
             else {
                 name = VcsLocalize.commitDialogDefaultCommitOperationName();
             }
         }
-        return name != LocalizeValue.empty() ? name : VcsLocalize.commitDialogDefaultCommitOperationName();
+        return name.orIfEmpty(VcsLocalize.commitDialogDefaultCommitOperationName());
     }
 
     @Override

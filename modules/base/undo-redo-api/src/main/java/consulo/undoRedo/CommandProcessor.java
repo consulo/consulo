@@ -10,7 +10,6 @@ import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.builder.CommandBuilder;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
@@ -143,7 +142,7 @@ public abstract class CommandProcessor {
     }
 
     public void setCurrentCommandName(@Nonnull LocalizeValue name) {
-        setCurrentCommandName(name == LocalizeValue.empty() ? null : name.get());
+        setCurrentCommandName(name.getNullIfEmpty());
     }
 
     @Deprecated
@@ -173,8 +172,7 @@ public abstract class CommandProcessor {
     @DeprecationInfo("Use #getCurrentCommandNameValue()")
     @Nullable
     public String getCurrentCommandName() {
-        LocalizeValue currentCommandName = getCurrentCommandNameValue();
-        return currentCommandName == LocalizeValue.empty() ? null : currentCommandName.get();
+        return getCurrentCommandNameValue().getNullIfEmpty();
     }
 
     @Nullable

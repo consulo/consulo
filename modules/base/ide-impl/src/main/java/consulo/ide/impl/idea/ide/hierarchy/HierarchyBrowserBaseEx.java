@@ -669,7 +669,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             presentation.setEnabled(isEnabled(browser, selectedElement));
 
             LocalizeValue nonDefaultText = getNonDefaultText(browser, selectedElement);
-            if (nonDefaultText != LocalizeValue.empty()) {
+            if (nonDefaultText.isNotEmpty()) {
                 presentation.setTextValue(nonDefaultText);
             }
         }

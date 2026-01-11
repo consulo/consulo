@@ -127,7 +127,7 @@ public class Notification {
         }
 
         public Builder title(@Nonnull LocalizeValue title) {
-            if (myTitle != LocalizeValue.empty()) {
+            if (myTitle.isNotEmpty()) {
                 throw new IllegalArgumentException("Title is already initialized");
             }
             myTitle = title;
@@ -135,7 +135,7 @@ public class Notification {
         }
 
         public Builder subtitle(@Nonnull LocalizeValue subtitle) {
-            if (mySubtitle != LocalizeValue.empty()) {
+            if (mySubtitle.isNotEmpty()) {
                 throw new IllegalArgumentException("Subtitle is already initialized");
             }
             mySubtitle = subtitle;
@@ -143,7 +143,7 @@ public class Notification {
         }
 
         public Builder content(@Nonnull LocalizeValue content) {
-            if (myContent != LocalizeValue.empty()) {
+            if (myContent.isNotEmpty()) {
                 throw new IllegalArgumentException("Content is already initialized");
             }
             myContent = content;
@@ -464,7 +464,7 @@ public class Notification {
     }
 
     public boolean hasTitle() {
-        return myTitle != LocalizeValue.empty() || mySubtitle != LocalizeValue.empty();
+        return myTitle.isNotEmpty() || mySubtitle.isNotEmpty();
     }
 
     @Nonnull
@@ -506,7 +506,7 @@ public class Notification {
     }
 
     public boolean hasContent() {
-        return myContent != LocalizeValue.empty();
+        return myContent.isNotEmpty();
     }
 
     @Nonnull

@@ -2155,7 +2155,7 @@ public class UsageViewImpl implements UsageViewEx {
                 return;
             }
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-            if (myCannotMakeString != LocalizeValue.empty() && myChangesDetected) {
+            if (myCannotMakeString.isNotEmpty() && myChangesDetected) {
                 LocalizeValue title = UsageLocalize.changesDetectedErrorTitle();
                 if (canPerformReRun()) {
                     String message = myCannotMakeString + "\n\n" + UsageLocalize.dialogRerunSearch();

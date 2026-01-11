@@ -459,7 +459,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     @Nonnull
     @Override
     protected LocalizeValue getCommandName() {
-        if (myCachedCommandName == LocalizeValue.empty()) {
+        if (myCachedCommandName.isEmpty()) {
             myCachedCommandName = calcCommandName();
         }
         return myCachedCommandName;

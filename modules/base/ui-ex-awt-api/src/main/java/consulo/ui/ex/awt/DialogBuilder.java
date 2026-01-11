@@ -368,7 +368,7 @@ public class DialogBuilder implements Disposable {
         @Override
         public Action getAction(DialogWrapper dialogWrapper) {
             LocalizeAction builtinAction = getBuiltinAction((MyDialogWrapper)dialogWrapper);
-            if (myText != LocalizeValue.empty()) {
+            if (myText.isNotEmpty()) {
                 builtinAction.setText(myText);
             }
             return builtinAction;

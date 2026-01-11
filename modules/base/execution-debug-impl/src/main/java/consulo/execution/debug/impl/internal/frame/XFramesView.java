@@ -387,7 +387,7 @@ public class XFramesView extends XDebugView {
                 if (isObsolete()) {
                     return;
                 }
-                if (myErrorMessage == LocalizeValue.empty()) {
+                if (myErrorMessage.isEmpty()) {
                     myErrorMessage = errorMessage;
                     addFrameListElements(Collections.singletonList(errorMessage), true);
                     myRunning = false;
@@ -432,7 +432,7 @@ public class XFramesView extends XDebugView {
         }
 
         public boolean start() {
-            if (myExecutionStack == null || myErrorMessage != LocalizeValue.empty()) {
+            if (myExecutionStack == null || myErrorMessage.isNotEmpty()) {
                 return false;
             }
             myRunning = true;
@@ -472,7 +472,7 @@ public class XFramesView extends XDebugView {
         public void initModel(DefaultListModel model) {
             model.removeAllElements();
             myStackFrames.forEach(model::addElement);
-            if (myErrorMessage != LocalizeValue.empty()) {
+            if (myErrorMessage.isNotEmpty()) {
                 model.addElement(myErrorMessage.get());
             }
             else if (!myAllFramesLoaded) {

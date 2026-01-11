@@ -1288,7 +1288,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull FindUsagesOptions options
     ) {
         usage.navigate(true);
-        if (hint == LocalizeValue.empty()) {
+        if (hint.isEmpty()) {
             return;
         }
         Editor newEditor = getEditorFor(usage);

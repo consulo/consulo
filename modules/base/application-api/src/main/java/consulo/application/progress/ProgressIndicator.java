@@ -111,11 +111,7 @@ public interface ProgressIndicator {
    */
   @Nullable
   default String getText() {
-    LocalizeValue value = getTextValue();
-    if (value == LocalizeValue.empty()) {
-      return null;
-    }
-    return value.get();
+    return getTextValue().getNullIfEmpty();
   }
 
   @Nonnull
@@ -146,11 +142,7 @@ public interface ProgressIndicator {
    */
   @Nullable
   default String getText2() {
-    LocalizeValue value = getText2Value();
-    if (value == LocalizeValue.empty()) {
-      return null;
-    }
-    return value.get();
+    return getText2Value().getNullIfEmpty();
   }
 
   @Nonnull

@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -75,10 +74,10 @@ public class ActionGroupExpander {
         while (listed.hasNext()) {
             AnAction action = listed.next();
 
-            if (action instanceof AnSeparator separ
-                && separ.getTextValue() == LocalizeValue.empty()
+            if (action instanceof AnSeparator separator
+                && separator.getTextValue().isEmpty()
                 && listed.nextIndex() < actions.size()
-                && actions.get(listed.nextIndex()) instanceof AnSeparator separNext) {
+                && actions.get(listed.nextIndex()) instanceof AnSeparator) {
                 listed.remove();
             }
         }

@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
     @Nonnull
     static LocalizeValue empty() {
-        return SingleLocalizeValue.ourEmpty;
+        return EmptyLocalizeValue.VALUE;
     }
 
     @Nonnull
@@ -77,7 +77,7 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue ofNullable(@Nullable String text) {
-        return text == null ? of() : of(text);
+        return text == null ? empty() : of(text);
     }
 
     @Nonnull
@@ -95,10 +95,28 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return values.length == 0 ? of() : new JoinSeparatorLocalizeValue2(separator, values);
     }
 
-    @Override
+    default boolean isEmpty() {
+        return false;
+    }
+
+    default boolean isNotEmpty() {
+        return !isEmpty();
+    }
+
     @Nonnull
+    @Override
     default String get() {
         return getValue();
+    }
+
+    @Nullable
+    default String getNullIfEmpty() {
+        return getValue();
+    }
+
+    @Nonnull
+    default LocalizeValue orIfEmpty(LocalizeValue defaultValue) {
+        return this;
     }
 
     @Nonnull

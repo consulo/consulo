@@ -410,7 +410,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             range = myCurrentElement.getTextRange();
         }
 
-        if (myTooltip == LocalizeValue.empty() && myMessage != LocalizeValue.empty()) {
+        if (myTooltip.isEmpty() && myMessage.isNotEmpty()) {
             myTooltip = myMessage.map(TOOLTIP_ESCAPE);
         }
 

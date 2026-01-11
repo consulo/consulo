@@ -94,7 +94,7 @@ public abstract class ActionGroup extends AnAction {
             myChildren = chilren;
             myPopup = popup;
 
-            if (actionText != LocalizeValue.empty()) {
+            if (actionText.isNotEmpty()) {
                 getTemplatePresentation().setTextValue(actionText);
             }
         }

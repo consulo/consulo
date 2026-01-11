@@ -140,7 +140,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     List<LineMarkerProvider> providers = Application.get().getExtensionList(LineMarkerProvider.class);
     Function<LineMarkerProvider, PluginDescriptor> function = provider -> {
       PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-      return provider instanceof LineMarkerProviderDescriptor lineMarkerProviderDescriptor && lineMarkerProviderDescriptor.getName() != LocalizeValue.empty()
+      return provider instanceof LineMarkerProviderDescriptor lineMarkerProviderDescr && lineMarkerProviderDescr.getName().isNotEmpty()
         ? plugin : null;
     };
 

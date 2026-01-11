@@ -1916,7 +1916,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     void tooltipAvailable(@Nonnull LocalizeValue toolTip, @Nonnull MouseEvent e, @Nullable GutterMark renderer) {
         myCalculatingInBackground = null;
         TooltipController controller = TooltipController.getInstance();
-        if (toolTip == LocalizeValue.empty() || myEditor.isDisposed()) {
+        if (toolTip.isEmpty() || myEditor.isDisposed()) {
             controller.cancelTooltip(GUTTER_TOOLTIP_GROUP, e, false);
         }
         else {

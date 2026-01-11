@@ -127,7 +127,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     public static boolean canRename(Project project, Editor editor, PsiElement element)
         throws CommonRefactoringUtil.RefactoringErrorHintException {
         LocalizeValue message = renameabilityStatus(project, element);
-        if (message != LocalizeValue.empty()) {
+        if (message.isNotEmpty()) {
             CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle(), null);
             return false;
         }

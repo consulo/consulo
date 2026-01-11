@@ -823,14 +823,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             // text
             LocalizeValue textValue = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
             // don't override value which was set in API with empty value from xml descriptor
-            if (textValue != LocalizeValue.empty() || presentation.getText() == null) {
+            if (textValue.isNotEmpty() || presentation.getText() == null) {
                 presentation.setTextValue(textValue);
             }
 
             // description
             LocalizeValue description = computeDescription(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
             // don't override value which was set in API with empty value from xml descriptor
-            if (description != LocalizeValue.empty() || presentation.getDescriptionValue() == LocalizeValue.empty()) {
+            if (description.isNotEmpty() || presentation.getDescriptionValue().isEmpty()) {
                 presentation.setDescriptionValue(description);
             }
 

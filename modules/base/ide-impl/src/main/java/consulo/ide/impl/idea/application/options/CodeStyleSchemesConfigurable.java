@@ -342,7 +342,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     @Override
     public LocalizeValue getDisplayName() {
       LocalizeValue displayName = myProvider.getConfigurableDisplayName();
-      if (displayName != LocalizeValue.empty()) return displayName;
+      if (displayName.isNotEmpty()) return displayName;
 
       return ensurePanel().getDisplayName();
     }

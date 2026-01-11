@@ -118,6 +118,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         }
 
         private void updateText() {
+            // null when called from updateUI from super constructor before initializing myTextValue
             if (myTextValue == null) {
                 return;
             }

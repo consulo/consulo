@@ -108,8 +108,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        LocalizeValue title = descriptor.getTitleValue();
-        return title != LocalizeValue.empty() ? title : UILocalize.fileChooserDefaultTitle();
+        return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
     @Override

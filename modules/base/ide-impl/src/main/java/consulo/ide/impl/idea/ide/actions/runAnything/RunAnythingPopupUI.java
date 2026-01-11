@@ -576,7 +576,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             RunAnythingSearchListModel model = getSearchingModel(myResultsList);
             if (model != null) {
                 LocalizeValue title = model.getTitle(index);
-                if (title != LocalizeValue.empty()) {
+                if (title.isNotEmpty()) {
                     myMainPanel.add(
                         RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)),
                         BorderLayout.NORTH

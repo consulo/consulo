@@ -66,8 +66,7 @@ public interface LineAnnotationAspect {
     @DeprecationInfo("Use getTooltipValue(int)")
     @Nullable
     default String getTooltipText(int line) {
-        LocalizeValue tooltipValue = getTooltipValue(line);
-        return tooltipValue == LocalizeValue.empty() ? null : tooltipValue.get();
+        return getTooltipValue(line).getNullIfEmpty();
     }
 
     /**

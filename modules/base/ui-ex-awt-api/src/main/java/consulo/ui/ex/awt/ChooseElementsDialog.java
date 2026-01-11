@@ -175,7 +175,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(ScrollPaneFactory.createScrollPane(myChooser.getComponent()), BorderLayout.CENTER);
-        if (myDescription != LocalizeValue.empty()) {
+        if (myDescription.isNotEmpty()) {
             panel.add(new JLabel(myDescription.get()), BorderLayout.NORTH);
         }
         return panel;

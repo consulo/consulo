@@ -1217,14 +1217,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         mySearchTextArea.updateExtraActions();
         myReplaceTextArea.updateExtraActions();
         if (myNavigationHintLabel.isVisible()) {
-            myNavigationHintLabel.setText("");
+            myNavigationHintLabel.setText(LocalizeValue.empty());
             KeymapManager keymapManager = KeymapManager.getInstance();
             Keymap activeKeymap = keymapManager.getActiveKeymap();
             if (activeKeymap != null) {
                 String findNextText = KeymapUtil.getFirstKeyboardShortcutText("FindNext");
                 String findPreviousText = KeymapUtil.getFirstKeyboardShortcutText("FindPrevious");
                 if (!StringUtil.isEmpty(findNextText) && !StringUtil.isEmpty(findPreviousText)) {
-                    myNavigationHintLabel.setText(FindLocalize.labelUse0And1ToSelectUsages(findNextText, findPreviousText).get());
+                    myNavigationHintLabel.setText(FindLocalize.labelUse0And1ToSelectUsages(findNextText, findPreviousText));
                 }
             }
         }
@@ -1468,7 +1468,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         StatusText emptyText = myResultsPreviewTable.getEmptyText();
         emptyText.clear();
         emptyText.setText(
-            message != LocalizeValue.empty()
+            message.isNotEmpty()
                 ? UILocalize.messageNothingtoshowWithProblem(message)
                 : UILocalize.messageNothingtoshow()
         );

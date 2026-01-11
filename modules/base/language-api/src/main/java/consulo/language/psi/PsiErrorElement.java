@@ -35,8 +35,7 @@ public interface PsiErrorElement extends PsiElement {
   @Deprecated
   @DeprecationInfo("Use #getErrorDescriptionValue()")
   default String getErrorDescription() {
-    LocalizeValue errorDescriptionValue = getErrorDescriptionValue();
-    return errorDescriptionValue == LocalizeValue.empty() ? null : errorDescriptionValue.toString();
+    return getErrorDescriptionValue().getNullIfEmpty();
   }
 
   /**

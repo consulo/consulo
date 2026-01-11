@@ -93,11 +93,11 @@ public abstract class AnAction implements PossiblyDumbAware {
     @Nonnull
     public static AnAction create(
         @Nonnull LocalizeValue text,
-        @Nullable LocalizeValue description,
+        @Nonnull LocalizeValue description,
         @Nullable Image image,
         @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
     ) {
-        return new AnAction(text, description == null ? LocalizeValue.empty() : description, image) {
+        return new AnAction(text, description, image) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

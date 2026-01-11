@@ -674,7 +674,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         final Project myProject;
 
         MyBasePopupStep(@Nonnull Project project, @Nonnull LocalizeValue title, List<T> values) {
-            super(title != LocalizeValue.empty() ? title.get() : null, values);
+            super(title.getNullIfEmpty(), values);
             myProject = project;
         }
 

@@ -25,7 +25,6 @@ import java.util.Objects;
  * @since 09-Nov-17
  */
 public class SingleLocalizeValue implements LocalizeValue {
-    public static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
     public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
     public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
     public static final SingleLocalizeValue ourDot = new SingleLocalizeValue(".");

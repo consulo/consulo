@@ -306,7 +306,7 @@ public class KeymapUtil {
     @Nonnull
     private static LocalizeValue getName(AnAction action) {
         LocalizeValue name = action.getTemplatePresentation().getTextValue();
-        if (name != LocalizeValue.empty()) {
+        if (name.isNotEmpty()) {
             return name;
         }
         else {

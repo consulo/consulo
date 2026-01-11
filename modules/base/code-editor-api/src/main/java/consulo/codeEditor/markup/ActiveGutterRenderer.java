@@ -53,8 +53,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
     @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     default String getTooltipText() {
-        LocalizeValue tooltip = getTooltipValue();
-        return tooltip == LocalizeValue.empty() ? null : tooltip.get();
+        return getTooltipValue().getNullIfEmpty();
     }
 
     /**
