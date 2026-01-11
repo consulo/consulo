@@ -929,7 +929,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 @Nonnull
                 @Override
                 public LocalizeValue getDisplayName() {
-                    return LocalizeValue.of();
+                    return LocalizeValue.empty();
                 }
 
                 @Nonnull

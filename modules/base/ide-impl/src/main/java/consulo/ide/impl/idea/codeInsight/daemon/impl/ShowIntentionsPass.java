@@ -310,7 +310,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
                     enableDisableIntentionAction.add(new EnableDisableIntentionAction(action));
                     enableDisableIntentionAction.add(new EditIntentionSettingsAction(action));
                     IntentionActionDescriptor descriptor =
-                        new IntentionActionDescriptor(action, enableDisableIntentionAction, LocalizeValue.of());
+                        new IntentionActionDescriptor(action, enableDisableIntentionAction, LocalizeValue.empty());
                     if (!fixes.contains(descriptor)) {
                         intentions.intentionsToShow.add(descriptor);
                     }

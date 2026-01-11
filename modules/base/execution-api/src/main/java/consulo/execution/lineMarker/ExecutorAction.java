@@ -72,7 +72,7 @@ public class ExecutorAction extends AnAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
-        e.getPresentation().setVisible(activeText != LocalizeValue.of());
+        e.getPresentation().setVisible(activeText.isNotEmpty());
         e.getPresentation().setTextValue(activeText);
     }
 
@@ -105,7 +105,7 @@ public class ExecutorAction extends AnAction {
     private LocalizeValue getActionText(DataContext dataContext, @Nonnull Executor executor) {
         List<ConfigurationFromContext> list = getConfigurations(dataContext);
         if (list.isEmpty()) {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
         ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
         String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration) configuration.getConfiguration());

@@ -109,7 +109,7 @@ public interface ApplicationEx extends Application {
         @Nullable ComponentManager project,
         JComponent parentComponent
     ) {
-        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.of());
+        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.empty());
     }
 
     default void executeSuspendingWriteAction(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
@@ -125,7 +125,7 @@ public interface ApplicationEx extends Application {
         boolean canBeCanceled,
         ComponentManager project
     ) {
-        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.of());
+        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.empty());
     }
 
     /**

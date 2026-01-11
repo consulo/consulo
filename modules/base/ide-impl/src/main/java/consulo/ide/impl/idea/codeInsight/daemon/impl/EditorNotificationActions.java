@@ -30,7 +30,7 @@ class EditorNotificationActions {
       if (component instanceof IntentionActionProvider) {
         IntentionActionWithOptions action = ((IntentionActionProvider)component).getIntentionAction();
         if (action != null) {
-          intentions.notificationActionsToShow.add(new IntentionActionDescriptor(action, action.getOptions(), LocalizeValue.of()));
+          intentions.notificationActionsToShow.add(new IntentionActionDescriptor(action, action.getOptions(), LocalizeValue.empty()));
         }
       }
     }

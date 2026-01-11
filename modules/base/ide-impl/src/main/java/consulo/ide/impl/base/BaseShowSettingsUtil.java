@@ -48,13 +48,12 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
         @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
-            return LocalizeValue.of();
+            return LocalizeValue.empty();
         }
 
         @RequiredUIAccess
         @Override
         public void apply() throws ConfigurationException {
-
         }
     };
 

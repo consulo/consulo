@@ -206,7 +206,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         pgpKeyCombo = ComboBox.create(pgpListModel);
         pgpKeyCombo.setTextRender(pgpKey -> {
             if (pgpKey == null) {
-                return LocalizeValue.of();
+                return LocalizeValue.empty();
             }
             return LocalizeValue.localizeTODO(pgpKey.getUserId() + "(" + pgpKey.getKeyId() + ")");
         });
@@ -493,7 +493,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
             mgr.askAndSetMainKey(
                 event,
-                LocalizeValue.of(),
+                LocalizeValue.empty(),
                 () -> getTemplatePresentation().setTextValue(CredentialStorageLocalize.settingsPasswordChangeMasterPassword())
             );
         }

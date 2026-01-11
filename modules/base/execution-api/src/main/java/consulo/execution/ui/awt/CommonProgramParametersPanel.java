@@ -90,10 +90,13 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
         FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject())
             .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
             .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
-            .dialogDescription(LocalizeValue.of());
-        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Environment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
-            showMacroDialog();
-        }));
+            .dialogDescription(LocalizeValue.empty());
+        workDirBuilder.firstActions(DumbAwareAction.create(
+            LocalizeValue.localizeTODO("Environment Variables"),
+            LocalizeValue.empty(),
+            PlatformIconGroup.generalInlinevariables(),
+            e -> showMacroDialog()
+        ));
 
         myWorkDirectoryBox = workDirBuilder.build();
         myWorkingDirectoryComponent = LabeledComponent.create(

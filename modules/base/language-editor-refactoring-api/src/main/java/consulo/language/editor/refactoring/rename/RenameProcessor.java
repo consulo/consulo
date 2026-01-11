@@ -347,7 +347,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             }
 
             renamerFactoryEP.forEach(factory -> {
-                if (factory.getOptionName() == LocalizeValue.of() && factory.isApplicable(element)) {
+                if (factory.getOptionName().isEmpty() && factory.isApplicable(element)) {
                     myRenamers.add(factory.createRenamer(element, newName, usagesList));
                 }
             });

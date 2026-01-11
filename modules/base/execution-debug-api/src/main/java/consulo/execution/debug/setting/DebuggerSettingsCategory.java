@@ -5,8 +5,8 @@ import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public enum DebuggerSettingsCategory {
-    ROOT(LocalizeValue.of()) /* will be placed under root "Debugger" node, use it with care */,
-    GENERAL(LocalizeValue.of()),
+    ROOT(LocalizeValue.empty()) /* will be placed under root "Debugger" node, use it with care */,
+    GENERAL(LocalizeValue.empty()),
     DATA_VIEWS(XDebuggerLocalize.debuggerDataviewsDisplayName()),
     STEPPING(XDebuggerLocalize.debuggerSteppingDisplayName()),
     HOTSWAP(XDebuggerLocalize.debuggerHotswapDisplayName());

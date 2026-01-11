@@ -36,7 +36,7 @@ import jakarta.annotation.Nullable;
  * @since 2007-12-24
  */
 public abstract class SuppressIntentionAction implements Iconable, SyntheticIntentionAction {
-  private LocalizeValue myText = LocalizeValue.of();
+  private LocalizeValue myText = LocalizeValue.empty();
   public static SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 
   @Override

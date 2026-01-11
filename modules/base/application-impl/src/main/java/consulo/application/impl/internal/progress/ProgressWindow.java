@@ -22,7 +22,6 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.*;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
-import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -56,7 +55,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
     public final Project myProject;
     public final boolean myShouldShowCancel;
-    public LocalizeValue myCancelText = LocalizeValue.of();
+    public LocalizeValue myCancelText = LocalizeValue.empty();
 
     private String myTitle;
 
@@ -71,7 +70,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     }
 
     public ProgressWindow(boolean shouldShowCancel, boolean shouldShowBackground, @Nullable Project project) {
-        this(shouldShowCancel, shouldShowBackground, project, LocalizeValue.of());
+        this(shouldShowCancel, shouldShowBackground, project, LocalizeValue.empty());
     }
 
     public ProgressWindow(boolean shouldShowCancel, boolean shouldShowBackground, @Nullable Project project, @Nonnull LocalizeValue cancelText) {

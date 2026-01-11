@@ -67,7 +67,7 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue of(@Nonnull String text) {
-        return text.isEmpty() ? of() : new SingleLocalizeValue(text);
+        return text.isEmpty() ? empty() : new SingleLocalizeValue(text);
     }
 
     @Nonnull
@@ -82,17 +82,17 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue join(@Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinLocalizeValue(values);
+        return values.length == 0 ? empty() : new JoinLocalizeValue(values);
     }
 
     @Nonnull
     static LocalizeValue join(@Nonnull String separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue(separator, values);
+        return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue(separator, values);
     }
 
     @Nonnull
     static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue2(separator, values);
+        return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue2(separator, values);
     }
 
     default boolean isEmpty() {

@@ -603,14 +603,14 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                     }
 
                     indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
-                    indicator.setText2Value(LocalizeValue.of());
+                    indicator.setText2Value(LocalizeValue.empty());
 
                     ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
 
                     moduleManager.loadModules(indicator).get();
 
                     indicator.setTextValue(ProjectLocalize.progressTitlePreparingWorkspace());
-                    indicator.setText2Value(LocalizeValue.of());
+                    indicator.setText2Value(LocalizeValue.empty());
 
                     openProjectRequireBackgroundTask(project, uiAccess);
 

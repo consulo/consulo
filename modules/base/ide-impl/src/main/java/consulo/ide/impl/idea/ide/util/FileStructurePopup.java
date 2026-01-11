@@ -638,7 +638,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     @Nonnull
     @RequiredUIAccess
     private Button createSettingsButton() {
-        Button settingsButton = Button.create(LocalizeValue.of());
+        Button settingsButton = Button.create(LocalizeValue.empty());
         settingsButton.setIcon(PlatformIconGroup.generalGearplain());
         settingsButton.addStyle(ButtonStyle.TOOLBAR);
         settingsButton.addClickListener(event -> {

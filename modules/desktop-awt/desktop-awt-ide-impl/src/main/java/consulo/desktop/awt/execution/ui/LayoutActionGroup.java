@@ -27,9 +27,11 @@ import consulo.ui.ex.action.DefaultActionGroup;
  */
 public class LayoutActionGroup extends DefaultActionGroup implements DumbAware {
     public LayoutActionGroup() {
-        super(ExecutionLocalize.runnerContentTooltipLayoutSettings(),
-            LocalizeValue.of(),
-            ExecutionIconGroup.actionRestorelayout());
+        super(
+            ExecutionLocalize.runnerContentTooltipLayoutSettings(),
+            LocalizeValue.empty(),
+            ExecutionIconGroup.actionRestorelayout()
+        );
     }
 
     @Override

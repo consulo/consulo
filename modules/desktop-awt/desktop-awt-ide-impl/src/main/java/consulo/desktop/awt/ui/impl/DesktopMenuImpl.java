@@ -47,7 +47,7 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
     }
   }
 
-  private LocalizeValue myLabelText = LocalizeValue.of();
+  private LocalizeValue myLabelText = LocalizeValue.empty();
 
   public DesktopMenuImpl(LocalizeValue text) {
     myLabelText = text;

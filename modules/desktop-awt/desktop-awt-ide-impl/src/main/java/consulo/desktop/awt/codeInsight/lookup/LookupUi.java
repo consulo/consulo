@@ -77,7 +77,7 @@ class LookupUi {
         myProcessIcon.setVisible(false);
         myLookup.resort(false);
 
-        Button moreButton = Button.create(LocalizeValue.of());
+        Button moreButton = Button.create(LocalizeValue.empty());
         moreButton.setIcon(PlatformIconGroup.actionsMorevertical());
         moreButton.addStyle(ButtonStyle.TOOLBAR);
         moreButton.addClickListener(event -> {

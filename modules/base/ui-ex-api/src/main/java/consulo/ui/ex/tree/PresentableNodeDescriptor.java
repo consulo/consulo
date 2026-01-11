@@ -171,7 +171,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     private final SimpleTextAttributes myAttributes;
 
     public ColoredFragment(@Nonnull LocalizeValue aText, SimpleTextAttributes aAttributes) {
-      this(aText, LocalizeValue.of(), aAttributes);
+      this(aText, LocalizeValue.empty(), aAttributes);
     }
 
     public ColoredFragment(@Nonnull LocalizeValue aText, @Nonnull LocalizeValue toolTip, SimpleTextAttributes aAttributes) {

@@ -249,7 +249,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
         String optionToCheck = option.trim().toLowerCase();
         for (Configurable each : contentHits) {
-            if (each.getDisplayName() == LocalizeValue.of()) {
+            if (each.getDisplayName().isEmpty()) {
                 continue;
             }
             String displayName = each.getDisplayName().toLowerCase().get();

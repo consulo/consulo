@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
  * @author Mike
  */
 public abstract class BaseIntentionAction implements IntentionAction {
-  private LocalizeValue myText = LocalizeValue.of();
+  private LocalizeValue myText = LocalizeValue.empty();
 
   @Override
   @Nonnull

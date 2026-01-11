@@ -68,9 +68,8 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
         myTitle = getChooserTitle(descriptor);
     }
 
-    private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        LocalizeValue title = descriptor.getTitleValue();
-        return title != LocalizeValue.of() ? title : UILocalize.fileChooserDefaultTitle();
+    private static LocalizeValue getChooserTitle(@Nonnull FileChooserDescriptor descriptor) {
+        return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
     @Nonnull

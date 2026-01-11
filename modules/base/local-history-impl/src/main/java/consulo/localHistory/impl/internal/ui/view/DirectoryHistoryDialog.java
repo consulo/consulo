@@ -237,7 +237,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
 
     private abstract class ActionOnSelection extends MyAction {
         public ActionOnSelection(LocalizeValue text, Image icon) {
-            super(text, LocalizeValue.of(), icon);
+            super(text, LocalizeValue.empty(), icon);
         }
 
         @Override

@@ -97,7 +97,7 @@ public class ContentRootPanel extends JPanel {
             headerLabel.setForeground(JBColor.RED);
         }
 
-        Button button = Button.create(LocalizeValue.of());
+        Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(ProjectLocalize.modulePathsRemoveContentTooltip());
         button.addStyle(ButtonStyle.INPLACE);
         button.addClickListener(event -> myCallback.deleteContentEntry());

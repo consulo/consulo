@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
   public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private LocalizeValue myText = LocalizeValue.of();
+    private LocalizeValue myText = LocalizeValue.empty();
     private Image myIcon;
 
     @Nullable

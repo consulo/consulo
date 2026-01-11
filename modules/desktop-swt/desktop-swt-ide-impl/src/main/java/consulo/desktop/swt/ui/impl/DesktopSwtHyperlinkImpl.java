@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Link;
  * @since 29/04/2021
  */
 public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implements Hyperlink {
-  private LocalizeValue myText = LocalizeValue.of();
+  private LocalizeValue myText = LocalizeValue.empty();
 
   public DesktopSwtHyperlinkImpl(LocalizeValue text) {
     myText = text;

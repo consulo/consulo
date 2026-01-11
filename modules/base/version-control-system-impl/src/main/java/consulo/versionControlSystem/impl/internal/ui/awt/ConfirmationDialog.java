@@ -184,7 +184,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     @Nonnull
     @Override
     protected LocalizeValue getDoNotShowMessage() {
-        return myDoNotShowAgainMessage == LocalizeValue.of() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
+        return myDoNotShowAgainMessage.isEmpty() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
     }
 
     @Nonnull

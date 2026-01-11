@@ -172,11 +172,11 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
             targetPresentation.setIcon(sourcePresentation.getIcon());
         }
 
-        if (targetPresentation.getTextValue() == LocalizeValue.of() && sourcePresentation.getTextValue() != LocalizeValue.of()) {
+        if (targetPresentation.getTextValue().isEmpty() && sourcePresentation.getTextValue().isNotEmpty()) {
             targetPresentation.setTextValue(sourcePresentation.getTextValue());
         }
 
-        if (targetPresentation.getDescriptionValue() == LocalizeValue.of() && sourcePresentation.getDescriptionValue() != LocalizeValue.of()) {
+        if (targetPresentation.getDescriptionValue().isEmpty() && sourcePresentation.getDescriptionValue().isNotEmpty()) {
             targetPresentation.setDescriptionValue(sourcePresentation.getDescriptionValue());
         }
     }

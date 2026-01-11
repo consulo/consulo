@@ -54,7 +54,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     @RequiredUIAccess
     public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton, IdeModalityType ideModalityType) {
-        this(project, configurable, LocalizeValue.of(), dimensionKey, showApplyButton, ideModalityType);
+        this(project, configurable, LocalizeValue.empty(), dimensionKey, showApplyButton, ideModalityType);
     }
 
     @RequiredUIAccess
@@ -77,7 +77,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     @RequiredUIAccess
     public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton, IdeModalityType ideModalityType) {
-        this(parent, configurable, LocalizeValue.of(), dimensionServiceKey, showApplyButton, ideModalityType);
+        this(parent, configurable, LocalizeValue.empty(), dimensionServiceKey, showApplyButton, ideModalityType);
 
     }
 
@@ -142,7 +142,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     private static LocalizeValue createTitleString(Configurable configurable) {
         LocalizeValue displayName = configurable.getDisplayName();
-        LOG.assertTrue(displayName != LocalizeValue.of(), configurable.getClass().getName());
+        LOG.assertTrue(displayName.isNotEmpty(), configurable.getClass().getName());
         return displayName.map(text -> text.replaceAll("\n", " "));
     }
 

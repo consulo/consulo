@@ -35,7 +35,7 @@ public class PinToToolWindowAction extends DumbAwareAction {
     private final JBPopup myPopup;
 
     public PinToToolWindowAction(Consumer<? super JBPopup> pinTester, Image icon, JBPopup popup) {
-        super(IdeLocalize.showInFindWindowButtonName(), LocalizeValue.of(), icon);
+        super(IdeLocalize.showInFindWindowButtonName(), LocalizeValue.empty(), icon);
         myPinTester = pinTester;
         myPopup = popup;
     }

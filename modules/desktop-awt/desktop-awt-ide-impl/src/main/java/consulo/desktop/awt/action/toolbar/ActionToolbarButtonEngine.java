@@ -97,7 +97,7 @@ public class ActionToolbarButtonEngine {
         LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
         HelpTooltipImpl.dispose(myButton);
 
-        if (textValue != LocalizeValue.of() || descriptionValue != LocalizeValue.of()) {
+        if (textValue.isNotEmpty() || descriptionValue.isNotEmpty()) {
             HelpTooltipImpl ht = new HelpTooltipImpl();
 
             CustomTooltipBuilder customTooltipBuilder = myPresentation.getClientProperty(CustomTooltipBuilder.KEY);
@@ -108,7 +108,7 @@ public class ActionToolbarButtonEngine {
                 ht.setTitle(textValue.map(Presentation.NO_MNEMONIC).getValue());
                 ht.setShortcut(getShortcutText());
 
-                if (descriptionValue != LocalizeValue.of()) {
+                if (descriptionValue.isNotEmpty()) {
                     ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC).getValue());
                 }
             }

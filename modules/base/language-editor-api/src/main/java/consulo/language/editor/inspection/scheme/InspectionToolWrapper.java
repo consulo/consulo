@@ -190,7 +190,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
 
     public String loadDescription() {
         LocalizeValue descriptionValue = getTool().getDescription();
-        if (descriptionValue != LocalizeValue.of()) {
+        if (descriptionValue.isNotEmpty()) {
             return descriptionValue.get();
         }
 

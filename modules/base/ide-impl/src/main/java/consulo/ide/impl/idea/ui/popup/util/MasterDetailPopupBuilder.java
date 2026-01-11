@@ -158,13 +158,15 @@ public class MasterDetailPopupBuilder implements MasterController {
 
 
         if (myDoneRunnable != null) {
-            builder.setHeaderRightActions(List.of(new DumbAwareAction(LocalizeValue.localizeTODO("Close"), LocalizeValue.of(), PlatformIconGroup.actionsClose()) {
-                @RequiredUIAccess
-                @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
-                    myDoneRunnable.run();
+            builder.setHeaderRightActions(List.of(
+                new DumbAwareAction(LocalizeValue.localizeTODO("Close"), LocalizeValue.empty(), PlatformIconGroup.actionsClose()) {
+                    @RequiredUIAccess
+                    @Override
+                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                        myDoneRunnable.run();
+                    }
                 }
-            }));
+            ));
         }
 
         String title = myDelegate.getTitle();

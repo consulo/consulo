@@ -213,7 +213,7 @@ public class KeePassFileManager {
             contextComponent,
             value -> {
                 KeePassCredentialStore.saveDatabase(file, db, createMainKey(value, false), mainKeyFileStorage, secureRandomSupplier.get());
-                return LocalizeValue.of();
+                return LocalizeValue.empty();
             },
             onPasswordSet
         );

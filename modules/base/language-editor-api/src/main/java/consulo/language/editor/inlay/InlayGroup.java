@@ -23,7 +23,7 @@ public enum InlayGroup {
     private final LocalizeValue description;
 
     InlayGroup(LocalizeValue key) {
-        this(key, LocalizeValue.of());
+        this(key, LocalizeValue.empty());
     }
 
     InlayGroup(LocalizeValue key, LocalizeValue description) {

@@ -77,10 +77,13 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
         FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject());
         workDirBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
         workDirBuilder.dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage());
-        workDirBuilder.dialogDescription(LocalizeValue.of());
-        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Enviroment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
-            showMacroDialog();
-        }));
+        workDirBuilder.dialogDescription(LocalizeValue.empty());
+        workDirBuilder.firstActions(DumbAwareAction.create(
+            LocalizeValue.localizeTODO("Environment Variables"),
+            LocalizeValue.empty(),
+            PlatformIconGroup.generalInlinevariables(),
+            e -> showMacroDialog()
+        ));
 
         myWorkDirectoryBox = workDirBuilder.build();
 

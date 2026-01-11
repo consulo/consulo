@@ -114,7 +114,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      */
     @Nonnull
     default LocalizeValue getBlacklistExplanationHTML() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     /**
@@ -151,7 +151,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
 
     @Nonnull
     default LocalizeValue getDescription() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     /**

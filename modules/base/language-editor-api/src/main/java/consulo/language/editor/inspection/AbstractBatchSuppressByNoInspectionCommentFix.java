@@ -82,7 +82,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return PlatformIconGroup.generalInspectionstrafficoff();
   }
 
-  private LocalizeValue myText = LocalizeValue.of();
+  private LocalizeValue myText = LocalizeValue.empty();
 
   @Nonnull
   public LocalizeValue getText() {

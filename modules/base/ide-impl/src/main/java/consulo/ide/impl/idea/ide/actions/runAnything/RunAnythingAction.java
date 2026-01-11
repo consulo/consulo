@@ -104,7 +104,7 @@ public class RunAnythingAction extends AnAction implements DumbAware {
                     );
                 }
                 //keymap shortcut is added automatically
-                return LocalizeValue.of();
+                return LocalizeValue.empty();
             }
         );
 

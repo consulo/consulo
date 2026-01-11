@@ -59,7 +59,7 @@ public final class Annotation implements Segment {
 
     private List<QuickFixInfo> myQuickFixes = null;
     private Boolean myNeedsUpdateOnTyping = null;
-    private LocalizeValue myTooltip = LocalizeValue.of();
+    private LocalizeValue myTooltip = LocalizeValue.empty();
     private boolean myAfterEndOfLine = false;
     private boolean myIsFileLevelAnnotation = false;
     private GutterIconRenderer myGutterIconRenderer;

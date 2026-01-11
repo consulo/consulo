@@ -27,7 +27,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     private final int myOrder;
     private final Image myIcon;
 
-    private LocalizeValue myTextValue = LocalizeValue.of();
+    private LocalizeValue myTextValue = LocalizeValue.empty();
 
     public GutterIntentionAction(AnAction action, int order, Image icon) {
         myAction = action;
@@ -51,7 +51,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        return myTextValue != LocalizeValue.of() || isAvailable(editor.getDataContext());
+        return myTextValue.isNotEmpty() || isAvailable(editor.getDataContext());
     }
 
     @Nonnull
@@ -71,13 +71,13 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
             myAction.update(event);
             if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
                 LocalizeValue text = event.getPresentation().getTextValue();
-                myTextValue = text != LocalizeValue.of() ? text : myAction.getTemplatePresentation().getTextValue();
+                myTextValue = text.isNotEmpty() ? text : myAction.getTemplatePresentation().getTextValue();
             }
             else {
-                myTextValue = LocalizeValue.of();
+                myTextValue = LocalizeValue.empty();
             }
         }
-        return myTextValue != LocalizeValue.of();
+        return myTextValue.isNotEmpty();
     }
 
     @Override

@@ -77,7 +77,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
           }
 
           LocalizeValue displayName = configurable.getDisplayName();
-          if (displayName == LocalizeValue.of()) {
+          if (displayName.isEmpty()) {
             verticalLayout.add(uiComponent);
           }
           else {
@@ -111,11 +111,15 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
           JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable, parentDisposable);
           assert component != null;
           LocalizeValue displayName = configurable.getDisplayName();
-          if (displayName == LocalizeValue.of()) {
+          if (displayName.isEmpty()) {
             component.setBorder(BOTTOM_INSETS);
           }
           else {
-            component.setBorder(IdeBorderFactory.createTitledBorder(displayName.get(), false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
+            component.setBorder(IdeBorderFactory.createTitledBorder(
+              displayName.get(),
+              false,
+              firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS
+            ));
           }
           panel.add(component);
         }

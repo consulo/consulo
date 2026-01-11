@@ -29,7 +29,7 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
     private ImageState<Boolean> myIconState = new ImageState<>(Boolean.FALSE);
 
     public BranchActionGroup() {
-        super(LocalizeValue.of(), true);
+        super(LocalizeValue.empty(), true);
         getTemplatePresentation().setDisabledMnemonic(true);
         setIcons(
             PlatformIconGroup.nodesFavorite(),

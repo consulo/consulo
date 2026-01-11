@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
   public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private LocalizeValue myText = LocalizeValue.of();
+    private LocalizeValue myText = LocalizeValue.empty();
     private List<Component> myMenuItems = new ArrayList<>();
 
     public void add(@Nonnull MenuItem menuItem) {
