@@ -56,11 +56,6 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
-    static LocalizeValue of() {
-        return empty();
-    }
-
-    @Nonnull
     static LocalizeValue localizeTODO(@Nonnull String text) {
         return of(text);
     }
@@ -152,13 +147,6 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     @Nonnull
     default LocalizeValue capitalize() {
         return map(DefaultMapFunctions.CAPITALIZE);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use proper English word #capitalize()")
-    @Nonnull
-    default LocalizeValue captilize() {
-        return capitalize();
     }
 
     int compareIgnoreCase(@Nonnull LocalizeValue other);
