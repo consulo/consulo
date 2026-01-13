@@ -15,11 +15,11 @@
  */
 package consulo.localize;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.internal.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -30,6 +30,8 @@ import java.util.function.Supplier;
  * @since 2019-04-11
  */
 public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
+    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
+
     @Nonnull
     static LocalizeValue empty() {
         return EmptyLocalizeValue.VALUE;

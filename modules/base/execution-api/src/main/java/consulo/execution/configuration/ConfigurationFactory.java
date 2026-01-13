@@ -24,6 +24,8 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Comparator;
+
 /**
  * Factory for run configuration instances.
  *
@@ -31,6 +33,9 @@ import jakarta.annotation.Nullable;
  * @see ConfigurationType#getConfigurationFactories()
  */
 public abstract class ConfigurationFactory {
+  public static final Comparator<ConfigurationFactory> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
+      Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
+
   private final ConfigurationType myType;
 
   /**

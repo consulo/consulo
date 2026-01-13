@@ -23,7 +23,6 @@ import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.impl.internal.configuration.ConfigurationTypeSelector;
 import consulo.execution.impl.internal.service.action.AddServiceActionGroup;
 import consulo.execution.localize.ExecutionLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,7 +35,10 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -45,9 +47,6 @@ import java.util.function.Consumer;
  */
 @ActionImpl(id = "RunDashboard.AddType", parents = @ActionParentRef(@ActionRef(type = AddServiceActionGroup.class)))
 public class AddRunConfigurationTypeAction extends DumbAwareAction {
-    private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
-        (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
-
     public AddRunConfigurationTypeAction() {
         super(ActionLocalize.actionRundashboardAddtypeText());
     }
@@ -73,11 +72,9 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
         Consumer<JBPopup> popupOpener,
         boolean showApplicableTypesOnly
     ) {
-        List<ConfigurationType> allTypes =
-            ContainerUtil.filter(
-                project.getApplication().getExtensionList(ConfigurationType.class),
-                it -> !addedTypes.contains(it.getId())
-            );
+
+        List<ConfigurationType> allTypes = project.getApplication().getExtensionPoint(ConfigurationType.class)
+            .collectFiltered(it -> !addedTypes.contains(it.getId()));
 
         List<ConfigurationType> configurationTypes = new ArrayList<>(ConfigurationTypeSelector.getTypesToShow(
             project,
@@ -85,7 +82,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
             allTypes
         ));
 
-        configurationTypes.sort(IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
+        configurationTypes.sort(ConfigurationType.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
         var hiddenCount = allTypes.size() - configurationTypes.size();
         List<Object> popupList = new ArrayList<>(configurationTypes);
         if (hiddenCount > 0) {

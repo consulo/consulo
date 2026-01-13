@@ -27,22 +27,25 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2024-10-21
  */
-public class ExecutionActionValue implements LocalizeValueWithMnemonic {
-    private static final String ourReplaceChar = "⊹";
+public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
+    private static final String REPLACEMENT_CHAR = "⊹";
 
     @Nonnull
     public static LocalizeValue buildWithConfiguration(@Nonnull Function<String, LocalizeValue> function, String configurationName) {
-        String dummyStr = ourReplaceChar.repeat(configurationName.length());
+        String dummyStr = REPLACEMENT_CHAR.repeat(configurationName.length());
 
         LocalizeValue dummyValue = function.apply(dummyStr);
         return new ExecutionActionValue(dummyValue, dummyStr, configurationName);
     }
 
+    @Nonnull
     private final LocalizeValue myOriginal;
+    @Nonnull
     private final String myParamValue;
+    @Nonnull
     private final String myConfigurationName;
 
-    public ExecutionActionValue(LocalizeValue original, String paramValue, String configurationName) {
+    public ExecutionActionValue(@Nonnull LocalizeValue original, @Nonnull String paramValue, @Nonnull String configurationName) {
         myOriginal = original;
         myParamValue = paramValue;
         myConfigurationName = configurationName;
@@ -71,27 +74,22 @@ public class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-        return myOriginal.compareIgnoreCase(other);
-    }
-
-    @Override
     public int compareTo(@Nonnull LocalizeValue o) {
         return myOriginal.compareTo(o);
     }
 
     @Override
+    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
+        return myOriginal.compareIgnoreCase(other);
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ExecutionActionValue that = (ExecutionActionValue) o;
-        return Objects.equals(myOriginal, that.myOriginal) &&
-            Objects.equals(myParamValue, that.myParamValue) &&
-            Objects.equals(myConfigurationName, that.myConfigurationName);
+        return this == o
+            || o instanceof ExecutionActionValue that
+            && myOriginal.equals(that.myOriginal)
+            && myParamValue.equals(that.myParamValue)
+            && myConfigurationName.equals(that.myConfigurationName);
     }
 
     @Override

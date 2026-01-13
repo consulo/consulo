@@ -15,7 +15,7 @@
  */
 package consulo.execution.impl.internal.console;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeManager;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -55,7 +55,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
             
             Charset charset = myReference.getCharset();
             if (charset == null) {
-                return ExecutionBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName(locale));
+                return ExecutionLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName(locale)).get();
             } else {
                 return charset.displayName(locale);
             }
@@ -102,13 +102,13 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
         }
     }
 
-    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionBundle.message("combobox.console.favorites.separator.label"));
-    private static final SeparatorItem MORE = new SeparatorItem(ExecutionBundle.message("combobox.console.more.separator.label"));
+    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionLocalize.comboboxConsoleFavoritesSeparatorLabel().get());
+    private static final SeparatorItem MORE = new SeparatorItem(ExecutionLocalize.comboboxConsoleMoreSeparatorLabel().get());
 
     private static final CharsetItem DEFAULT = new CharsetItem(EncodingReference.DEFAULT);
 
     public ConsoleEncodingComboBox() {
-        setRenderer(new ColoredListCellRenderer<EncodingItem>() {
+        setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, EncodingItem value, int index, boolean selected, boolean hasFocus) {
                 if (value == null) {

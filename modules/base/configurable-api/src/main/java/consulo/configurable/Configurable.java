@@ -21,74 +21,78 @@ import consulo.util.collection.ArrayFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Comparator;
+
 /**
  * Named component which provides a configuration user interface.
  *
  * @see SearchableConfigurable
  * @see SimpleConfigurable
- *
  * @see ApplicationConfigurable
  * @see ProjectConfigurable
  */
 public interface Configurable extends UnnamedConfigurable {
-  Configurable[] EMPTY_ARRAY = new Configurable[0];
+    public static final Comparator<Configurable> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(Configurable::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
 
-  ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
+    Configurable[] EMPTY_ARRAY = new Configurable[0];
 
-  @Nonnull
-  default String getId() {
-    throw new AbstractMethodError("#getId() implementation required for class " + getClass());
-  }
+    ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
-  @Nullable
-  default String getParentId() {
-    return null;
-  }
-
-  /**
-   * can be used inside {@link #getHelpTopic()} for disable help
-   */
-  String DISABLED_HELP_ID = "___disabled___";
-
-  /**
-   * Returns the user-visible name of the settings component.
-   *
-   * @return the visible name of the component.
-   */
-  @Nonnull
-  LocalizeValue getDisplayName();
-
-  /**
-   * Returns alternative id for help (not id of configurable)
-   *
-   * @return the help id
-   */
-  @Override
-  @Nullable
-  default String getHelpTopic() {
-    return null;
-  }
-
-  interface Composite {
     @Nonnull
-    Configurable[] getConfigurables();
-  }
+    default String getId() {
+        throw new AbstractMethodError("#getId() implementation required for class " + getClass());
+    }
 
-  /**
-   * Forbids wrapping the content of the configurable in a scroll pane. Required when
-   * the configurable contains its own scrollable components.
-   */
-  interface NoScroll {
-  }
+    @Nullable
+    default String getParentId() {
+        return null;
+    }
 
-  /**
-   * This marker interface notifies the Settings dialog to not add an empty border to the Swing form.
-   * Required when the Swing form is a tabbed pane.
-   */
-  interface NoMargin {
-  }
+    /**
+     * can be used inside {@link #getHelpTopic()} for disable help
+     */
+    String DISABLED_HELP_ID = "___disabled___";
 
-  @Deprecated
-  interface HoldPreferredFocusedComponent extends UnnamedConfigurable {
-  }
+    /**
+     * Returns the user-visible name of the settings component.
+     *
+     * @return the visible name of the component.
+     */
+    @Nonnull
+    LocalizeValue getDisplayName();
+
+    /**
+     * Returns alternative id for help (not id of configurable)
+     *
+     * @return the help id
+     */
+    @Override
+    @Nullable
+    default String getHelpTopic() {
+        return null;
+    }
+
+    interface Composite {
+        @Nonnull
+        Configurable[] getConfigurables();
+    }
+
+    /**
+     * Forbids wrapping the content of the configurable in a scroll pane. Required when
+     * the configurable contains its own scrollable components.
+     */
+    interface NoScroll {
+    }
+
+    /**
+     * This marker interface notifies the Settings dialog to not add an empty border to the Swing form.
+     * Required when the Swing form is a tabbed pane.
+     */
+    interface NoMargin {
+    }
+
+    @Deprecated
+    interface HoldPreferredFocusedComponent extends UnnamedConfigurable {
+    }
 }
