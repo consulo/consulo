@@ -17,6 +17,7 @@ package consulo.execution.impl.internal.console;
 
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
@@ -35,7 +36,8 @@ import java.util.*;
  */
 public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.EncodingItem> {
     public static abstract class EncodingItem {
-        public abstract String getDisplayName();
+        @Nonnull
+        public abstract LocalizeValue getDisplayName();
     }
 
     public static class CharsetItem extends EncodingItem {
@@ -49,21 +51,22 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
             this(new EncodingReference(charset));
         }
 
+        @Nonnull
         @Override
-        public String getDisplayName() {
+        public LocalizeValue getDisplayName() {
             Locale locale = LocalizeManager.get().getLocale();
             
             Charset charset = myReference.getCharset();
             if (charset == null) {
-                return ExecutionLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName(locale)).get();
+                return ExecutionLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName(locale));
             } else {
-                return charset.displayName(locale);
+                return LocalizeValue.of(charset.displayName(locale));
             }
         }
 
         @Override
         public String toString() {
-            return getDisplayName();
+            return getDisplayName().toString();
         }
 
         @Override
@@ -85,25 +88,27 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
     }
 
     public static class SeparatorItem extends EncodingItem {
-        private final String myText;
+        @Nonnull
+        private final LocalizeValue myText;
 
-        public SeparatorItem(String text) {
+        public SeparatorItem(@Nonnull LocalizeValue text) {
             myText = text;
         }
 
+        @Nonnull
         @Override
-        public String getDisplayName() {
+        public LocalizeValue getDisplayName() {
             return myText;
         }
 
         @Override
         public String toString() {
-            return myText;
+            return myText.toString();
         }
     }
 
-    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionLocalize.comboboxConsoleFavoritesSeparatorLabel().get());
-    private static final SeparatorItem MORE = new SeparatorItem(ExecutionLocalize.comboboxConsoleMoreSeparatorLabel().get());
+    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionLocalize.comboboxConsoleFavoritesSeparatorLabel());
+    private static final SeparatorItem MORE = new SeparatorItem(ExecutionLocalize.comboboxConsoleMoreSeparatorLabel());
 
     private static final CharsetItem DEFAULT = new CharsetItem(EncodingReference.DEFAULT);
 
@@ -115,7 +120,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
                     append("");
                 }
                 else if (value instanceof SeparatorItem separatorItem) {
-                    setSeparator(separatorItem.getDisplayName());
+                    setSeparator(separatorItem.getDisplayName().get());
                 }
                 else if (value instanceof CharsetItem charsetItem) {
                     append(charsetItem.getDisplayName());
