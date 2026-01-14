@@ -29,7 +29,7 @@ import java.util.Comparator;
 
 public interface FileType {
     Comparator<FileType> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(FileType::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
+        Comparator.comparing(FileType::getDisplayName, LocalizeValue.defaultComparator());
 
     FileType[] EMPTY_ARRAY = new FileType[0];
 
@@ -127,9 +127,5 @@ public interface FileType {
         @Nonnull CharSequence content
     ) {
         return null;
-    }
-
-    static Comparator<FileType> defaultComparator() {
-        return DISPLAY_NAME_COMPARATOR;
     }
 }

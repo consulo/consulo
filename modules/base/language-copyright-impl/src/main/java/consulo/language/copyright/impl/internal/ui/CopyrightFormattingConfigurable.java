@@ -119,7 +119,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
             }
             list.add(updateCopyrightsProvider.createConfigurable(myProject, myPanel, fileType));
         }
-        Collections.sort(list, Configurable.defaultComparator());
+        Collections.sort(list, DISPLAY_NAME_COMPARATOR);
 
         return ContainerUtil.toArray(list, Configurable.ARRAY_FACTORY);
     }

@@ -33,7 +33,7 @@ import java.util.Comparator;
  */
 public interface Configurable extends UnnamedConfigurable {
     Comparator<Configurable> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(Configurable::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
+        Comparator.comparing(Configurable::getDisplayName, LocalizeValue.defaultComparator());
 
     Configurable[] EMPTY_ARRAY = new Configurable[0];
 
@@ -47,10 +47,6 @@ public interface Configurable extends UnnamedConfigurable {
     @Nullable
     default String getParentId() {
         return null;
-    }
-
-    static Comparator<Configurable> defaultComparator() {
-        return DISPLAY_NAME_COMPARATOR;
     }
 
     /**

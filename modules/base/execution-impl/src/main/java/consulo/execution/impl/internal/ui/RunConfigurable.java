@@ -1221,7 +1221,7 @@ public class RunConfigurable extends BaseConfigurable {
         private void showAddPopup(boolean showApplicableTypesOnly) {
             List<ConfigurationType> allTypes = myRunManager.getConfigurationFactories(false);
             final List<ConfigurationType> configurationTypes = ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
-            Collections.sort(configurationTypes, ConfigurationType.defaultComparator());
+            Collections.sort(configurationTypes, ConfigurationType.DISPLAY_NAME_COMPARATOR);
             final int hiddenCount = allTypes.size() - configurationTypes.size();
             if (hiddenCount > 0) {
                 configurationTypes.add(HIDDEN_ITEMS_STUB);
@@ -1277,7 +1277,7 @@ public class RunConfigurable extends BaseConfigurable {
 
                     private ListPopupStep getSupStep(final ConfigurationType type) {
                         final ConfigurationFactory[] factories = type.getConfigurationFactories();
-                        Arrays.sort(factories, ConfigurationFactory.defaultComparator());
+                        Arrays.sort(factories, ConfigurationFactory.DISPLAY_NAME_COMPARATOR);
                         return new BaseListPopupStep<ConfigurationFactory>(
                             ExecutionLocalize.addNewRunConfigurationActionName(type.getDisplayName()).get(),
                             factories

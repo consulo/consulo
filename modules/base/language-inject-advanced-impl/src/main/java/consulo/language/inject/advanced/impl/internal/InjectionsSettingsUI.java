@@ -437,7 +437,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
                 ContainerUtil.addAll(configurables, support.createSettings(myProject, myConfiguration));
             }
-            Collections.sort(configurables, Configurable.defaultComparator());
+            Collections.sort(configurables, DISPLAY_NAME_COMPARATOR);
             myConfigurables = configurables.toArray(new Configurable[configurables.size()]);
         }
 

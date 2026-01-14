@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
@@ -107,7 +106,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     protected Configurable[] buildConfigurables() {
         List<Configurable> list = Application.get().getExtensionPoint(PostfixTemplateProvider.class)
             .collectMapped(new ArrayList<>(), PostfixTemplatesChildConfigurable::new);
-        Collections.sort(list, Configurable.defaultComparator());
+        Collections.sort(list, DISPLAY_NAME_COMPARATOR);
         return list.toArray(new Configurable[list.size()]);
     }
 

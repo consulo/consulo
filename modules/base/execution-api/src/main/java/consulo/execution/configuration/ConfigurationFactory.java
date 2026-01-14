@@ -33,8 +33,8 @@ import java.util.Comparator;
  * @see ConfigurationType#getConfigurationFactories()
  */
 public abstract class ConfigurationFactory {
-    private static final Comparator<ConfigurationFactory> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
+    public static final Comparator<ConfigurationFactory> DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.defaultComparator());
 
     private final ConfigurationType myType;
 
@@ -143,9 +143,5 @@ public abstract class ConfigurationFactory {
         if (configuration instanceof ConfigurationCreationListener listener) {
             listener.onConfigurationCopied();
         }
-    }
-
-    public static Comparator<ConfigurationFactory> defaultComparator() {
-        return DISPLAY_NAME_COMPARATOR;
     }
 }

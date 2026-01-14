@@ -39,8 +39,8 @@ import java.util.Vector;
  * @since 2013-05-19
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
-    private static final Comparator<TreeNode> CASE_INSENSITIVE_EXTENSION_PROVIDER_NAME_COMPARATOR =
-        Comparator.comparing(tn -> ((ExtensionCheckedTreeNode) tn).myProvider.getName(), LocalizeValue.CASE_INSENSITIVE_ORDER);
+    private static final Comparator<TreeNode> EXTENSION_PROVIDER_NAME_COMPARATOR =
+        Comparator.comparing(tn -> ((ExtensionCheckedTreeNode) tn).myProvider.getName(), LocalizeValue.defaultComparator());
 
     private final ModuleExtensionProvider myProvider;
     @Nonnull
@@ -78,7 +78,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
                 child.add(e);
             }
         }
-        Collections.sort(child, CASE_INSENSITIVE_EXTENSION_PROVIDER_NAME_COMPARATOR);
+        Collections.sort(child, EXTENSION_PROVIDER_NAME_COMPARATOR);
         setUserObject(myExtension);
         // at java 9 children is Vector<TreeNode>()
         //noinspection Convert2Diamond

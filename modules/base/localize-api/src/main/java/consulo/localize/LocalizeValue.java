@@ -30,7 +30,7 @@ import java.util.function.Supplier;
  * @since 2019-04-11
  */
 public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
-    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
+    Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
 
     @Nonnull
     static LocalizeValue empty() {
@@ -152,4 +152,8 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     int compareIgnoreCase(@Nonnull LocalizeValue other);
+
+    static Comparator<LocalizeValue> defaultComparator() {
+        return CASE_INSENSITIVE_ORDER;
+    }
 }

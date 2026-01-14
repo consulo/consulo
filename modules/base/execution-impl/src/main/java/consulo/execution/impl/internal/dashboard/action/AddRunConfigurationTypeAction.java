@@ -35,10 +35,7 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -82,7 +79,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
             allTypes
         ));
 
-        configurationTypes.sort(ConfigurationType.defaultComparator());
+        configurationTypes.sort(ConfigurationType.DISPLAY_NAME_COMPARATOR);
         var hiddenCount = allTypes.size() - configurationTypes.size();
         List<Object> popupList = new ArrayList<>(configurationTypes);
         if (hiddenCount > 0) {
