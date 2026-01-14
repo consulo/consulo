@@ -433,11 +433,11 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     @Override
     public Configurable[] getConfigurables() {
         if (myConfigurables == null) {
-            ArrayList<Configurable> configurables = new ArrayList<>();
+            List<Configurable> configurables = new ArrayList<>();
             for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
                 ContainerUtil.addAll(configurables, support.createSettings(myProject, myConfiguration));
             }
-            Collections.sort(configurables, (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
+            Collections.sort(configurables, DISPLAY_NAME_COMPARATOR);
             myConfigurables = configurables.toArray(new Configurable[configurables.size()]);
         }
 

@@ -24,6 +24,8 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Comparator;
+
 /**
  * Factory for run configuration instances.
  *
@@ -31,112 +33,115 @@ import jakarta.annotation.Nullable;
  * @see ConfigurationType#getConfigurationFactories()
  */
 public abstract class ConfigurationFactory {
-  private final ConfigurationType myType;
+    public static final Comparator<ConfigurationFactory> DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.defaultComparator());
 
-  /**
-   * Used only buy SimpleConfigurationType
-   */
-  protected ConfigurationFactory() {
-    myType = (ConfigurationType)this;
-  }
+    private final ConfigurationType myType;
 
-  protected ConfigurationFactory(@Nonnull ConfigurationType type) {
-    myType = type;
-  }
+    /**
+     * Used only buy SimpleConfigurationType
+     */
+    protected ConfigurationFactory() {
+        myType = (ConfigurationType) this;
+    }
 
-  /**
-   * Creates a new run configuration with the specified name by cloning the specified template.
-   *
-   * @param name     the name for the new run configuration.
-   * @param template the template from which the run configuration is copied
-   * @return the new run configuration.
-   */
-  public RunConfiguration createConfiguration(String name, RunConfiguration template) {
-    RunConfiguration newConfiguration = template.clone();
-    newConfiguration.setName(name);
-    return newConfiguration;
-  }
+    protected ConfigurationFactory(@Nonnull ConfigurationType type) {
+        myType = type;
+    }
 
-  /**
-   * Override this method and return {@code false} to hide the configuration from 'New' popup in 'Edit Configurations' dialog
-   *
-   * @return {@code true} if it makes sense to create configurations of this type in {@code project}
-   */
-  public boolean isApplicable(@Nonnull Project project) {
-    return true;
-  }
+    /**
+     * Creates a new run configuration with the specified name by cloning the specified template.
+     *
+     * @param name     the name for the new run configuration.
+     * @param template the template from which the run configuration is copied
+     * @return the new run configuration.
+     */
+    public RunConfiguration createConfiguration(String name, RunConfiguration template) {
+        RunConfiguration newConfiguration = template.clone();
+        newConfiguration.setName(name);
+        return newConfiguration;
+    }
 
-  /**
-   * Creates a new template run configuration within the context of the specified project.
-   *
-   * @param project the project in which the run configuration will be used
-   * @return the run configuration instance.
-   */
-  public abstract RunConfiguration createTemplateConfiguration(Project project);
+    /**
+     * Override this method and return {@code false} to hide the configuration from 'New' popup in 'Edit Configurations' dialog
+     *
+     * @return {@code true} if it makes sense to create configurations of this type in {@code project}
+     */
+    public boolean isApplicable(@Nonnull Project project) {
+        return true;
+    }
 
-  public RunConfiguration createTemplateConfiguration(Project project, RunManager runManager) {
-    return createTemplateConfiguration(project);
-  }
+    /**
+     * Creates a new template run configuration within the context of the specified project.
+     *
+     * @param project the project in which the run configuration will be used
+     * @return the run configuration instance.
+     */
+    public abstract RunConfiguration createTemplateConfiguration(Project project);
 
-  /**
-   * @return id for factory
-   */
-  @Nonnull
-  public String getId() {
-    return myType.getId();
-  }
+    public RunConfiguration createTemplateConfiguration(Project project, RunManager runManager) {
+        return createTemplateConfiguration(project);
+    }
 
-  /**
-   * Returns the name of the run configuration variant created by this factory.
-   *
-   * @return the name of the run configuration variant created by this factory
-   */
-  @Nonnull
-  public LocalizeValue getDisplayName() {
-    return myType.getDisplayName();
-  }
+    /**
+     * @return id for factory
+     */
+    @Nonnull
+    public String getId() {
+        return myType.getId();
+    }
 
-  @Nullable
-  public Image getIcon(@Nonnull RunConfiguration configuration) {
-    return getIcon();
-  }
+    /**
+     * Returns the name of the run configuration variant created by this factory.
+     *
+     * @return the name of the run configuration variant created by this factory
+     */
+    @Nonnull
+    public LocalizeValue getDisplayName() {
+        return myType.getDisplayName();
+    }
 
-  @Nullable
-  public Image getIcon() {
-    return myType.getIcon();
-  }
+    @Nullable
+    public Image getIcon(@Nonnull RunConfiguration configuration) {
+        return getIcon();
+    }
 
-  @Nonnull
-  public ConfigurationType getType() {
-    return myType;
-  }
+    @Nullable
+    public Image getIcon() {
+        return myType.getIcon();
+    }
 
-  /**
-   * In this method you can configure defaults for the task, which are preferable to be used for your particular configuration type
-   *
-   * @param providerID
-   * @param task
-   */
-  public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
-  }
+    @Nonnull
+    public ConfigurationType getType() {
+        return myType;
+    }
 
-  public boolean isConfigurationSingletonByDefault() {
-    return true;
-  }
+    /**
+     * In this method you can configure defaults for the task, which are preferable to be used for your particular configuration type
+     *
+     * @param providerID
+     * @param task
+     */
+    public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
+    }
 
-  public boolean canConfigurationBeSingleton() {
-    return true;
-  }
+    public boolean isConfigurationSingletonByDefault() {
+        return true;
+    }
 
-  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
-      if (configuration instanceof ConfigurationCreationListener listener) {
-          listener.onNewConfigurationCreated();
-      }
-  }
+    public boolean canConfigurationBeSingleton() {
+        return true;
+    }
 
-  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
-      if (configuration instanceof ConfigurationCreationListener listener) {
-          listener.onConfigurationCopied();
-      }
-  }
+    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+        if (configuration instanceof ConfigurationCreationListener listener) {
+            listener.onNewConfigurationCreated();
+        }
+    }
+
+    public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
+        if (configuration instanceof ConfigurationCreationListener listener) {
+            listener.onConfigurationCopied();
+        }
+    }
 }

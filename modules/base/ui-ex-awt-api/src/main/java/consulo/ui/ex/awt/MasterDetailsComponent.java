@@ -64,6 +64,9 @@ import java.util.function.Predicate;
 public abstract class MasterDetailsComponent implements Configurable, MasterDetails {
     protected static final Logger LOG = Logger.getInstance(MasterDetailsComponent.class);
 
+    protected static final Comparator<MyNode> NODE_COMPARATOR =
+        Comparator.comparing(MyNode::getDisplayName, LocalizeValue.defaultComparator());
+
     protected MasterDetailsConfigurable myCurrentConfigurable;
     protected final JBSplitter mySplitter;
 
@@ -572,7 +575,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     protected Comparator<MyNode> getNodeComparator() {
-        return (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
+        return NODE_COMPARATOR;
     }
 
     public ActionCallback selectNodeInTree(DefaultMutableTreeNode nodeToSelect) {

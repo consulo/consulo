@@ -15,11 +15,11 @@
  */
 package consulo.localize;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.internal.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -88,6 +88,10 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     @Nonnull
     static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
         return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue2(separator, values);
+    }
+
+    static Comparator<LocalizeValue> defaultComparator() {
+        return BaseLocalizeValue.CASE_INSENSITIVE_ORDER;
     }
 
     default boolean isEmpty() {

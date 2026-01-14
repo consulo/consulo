@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.ApplicationManager;
 import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -28,16 +27,17 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEdi
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.setting.module.event.LibraryEditorListener;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
@@ -53,6 +53,9 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable {
+    private static final Comparator<Object> NODE_DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizeValue.defaultComparator());
+
     @Nonnull
     protected final Project myProject;
     @Nonnull
@@ -155,23 +158,18 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         for (Library library : libraries) {
             myRoot.add(new MyNode(new LibraryConfigurable(myProject, modelProvider, library, getLibrariesConfigurator(), TREE_UPDATER)));
         }
-        TreeUtil.sort(myRoot, (o1, o2) -> {
-            MyNode node1 = (MyNode) o1;
-            MyNode node2 = (MyNode) o2;
-            return node1.getDisplayName().compareIgnoreCase(node2.getDisplayName());
-        });
+        TreeUtil.sort(myRoot, NODE_DISPLAY_NAME_COMPARATOR);
         ((DefaultTreeModel) myTree.getModel()).reload(myRoot);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         super.apply();
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            getLibrariesConfigurator().commit();
-        });
+        myProject.getApplication().runWriteAction(() -> getLibrariesConfigurator().commit());
     }
 
+    @Nonnull
     public String getLevel() {
         return myLevel;
     }
@@ -222,7 +220,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
     @Nonnull
     protected LibrariesConfigurator getLibrariesConfigurator() {
-        ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil) ShowSettingsUtil.getInstance();
+        ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
         return Objects.requireNonNull(util.getLibrariesModel(myProject), "Called libraries configurable without librariesConfigurator");
     }
 
@@ -257,6 +255,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         }
     }
 
+    @RequiredUIAccess
     public void removeLibrary(@Nonnull LibraryProjectStructureElement element) {
         getModelProvider().getModifiableModel().removeLibrary(element.getLibrary());
         // todo myContext.getDaemonAnalyzer().removeElement(element);
@@ -338,7 +337,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             Object o = getSelectedObject();
             if (o instanceof LibraryEx) {
                 LibraryEx selected = (LibraryEx) o;
@@ -365,7 +364,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         }
 
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
                 e.getPresentation().setEnabled(false);
             }

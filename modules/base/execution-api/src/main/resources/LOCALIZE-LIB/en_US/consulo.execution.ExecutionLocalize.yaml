@@ -198,6 +198,8 @@ empty.run.configuration.panel.text.label3:
     text: button to create a new {0} based on default settings
 enable.coverage.with.emma:
     text: Record code &coverage information
+encoding.name.system.default:
+    text: '<System Default: {0}>'
 env.vars.checkbox.title:
     text: '&Include parent environment variables'
 env.vars.show.system:

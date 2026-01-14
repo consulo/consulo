@@ -39,7 +39,8 @@ import java.util.Locale;
 @ExtensionImpl
 public class DebuggerConfigurable implements SearchableConfigurable.Parent, ApplicationConfigurable {
     static final Configurable[] EMPTY_CONFIGURABLES = new Configurable[0];
-    private static final DebuggerSettingsCategory[] MERGED_CATEGORIES = {DebuggerSettingsCategory.STEPPING, DebuggerSettingsCategory.HOTSWAP};
+    private static final DebuggerSettingsCategory[] MERGED_CATEGORIES =
+        {DebuggerSettingsCategory.STEPPING, DebuggerSettingsCategory.HOTSWAP};
 
     private Configurable myRootConfigurable;
     private Configurable[] myChildren;
@@ -67,8 +68,8 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
     public Configurable[] getConfigurables() {
         compute();
 
-        if (myChildren.length == 0 && myRootConfigurable instanceof SearchableConfigurable.Parent) {
-            return ((Parent) myRootConfigurable).getConfigurables();
+        if (myChildren.length == 0 && myRootConfigurable instanceof SearchableConfigurable.Parent configurableParent) {
+            return configurableParent.getConfigurables();
         }
         else {
             return myChildren;
@@ -104,7 +105,9 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
                 System.arraycopy(generalConfigurables, 0, mergedArray, 0, generalConfigurables.length);
                 mergedArray[generalConfigurables.length] = firstConfigurable;
                 myRootConfigurable = new MergedCompositeConfigurable("", LocalizeValue.empty(), mergedArray);
-                myChildren = firstConfigurable instanceof SearchableConfigurable.Parent ? ((Parent) firstConfigurable).getConfigurables() : EMPTY_CONFIGURABLES;
+                myChildren = firstConfigurable instanceof SearchableConfigurable.Parent configurableParent
+                    ? configurableParent.getConfigurables()
+                    : EMPTY_CONFIGURABLES;
             }
         }
         else {
@@ -119,9 +122,10 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
             if (!configurables.isEmpty()) {
                 String id = category.name().toLowerCase(Locale.ENGLISH);
                 result.add(new MergedCompositeConfigurable(
-                    "debugger." + id,
-                    category.getDisplayName(),
-                    configurables.toArray(new Configurable[configurables.size()]))
+                        "debugger." + id,
+                        category.getDisplayName(),
+                        configurables.toArray(new Configurable[configurables.size()])
+                    )
                 );
             }
         }
@@ -136,10 +140,13 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
 
         Configurable[] mergedRootConfigurables = rootConfigurables.toArray(new Configurable[rootConfigurables.size()]);
         // move unnamed to top
-        Arrays.sort(mergedRootConfigurables, (o1, o2) -> {
-            boolean c1e = StringUtil.isEmpty(o1.getDisplayName().get());
-            return c1e == StringUtil.isEmpty(o2.getDisplayName().get()) ? 0 : (c1e ? -1 : 1);
-        });
+        Arrays.sort(
+            mergedRootConfigurables,
+            (o1, o2) -> {
+                boolean c1e = o1.getDisplayName().isEmpty();
+                return c1e == o2.getDisplayName().isEmpty() ? 0 : (c1e ? -1 : 1);
+            }
+        );
         return new MergedCompositeConfigurable("", LocalizeValue.empty(), mergedRootConfigurables);
     }
 
@@ -162,37 +169,37 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         return XBreakpointType.EXTENSION_POINT_NAME.hasAnyExtensions();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public JComponent createComponent(@Nonnull Disposable parent) {
         compute();
         return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, parent) : null;
     }
 
-    @RequiredUIAccess
     @Nullable
     @Override
+    @RequiredUIAccess
     public Component createUIComponent(@Nonnull Disposable parent) {
         compute();
         return myRootConfigurable != null ? myRootConfigurable.createUIComponent(parent) : null;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         return myRootConfigurable != null && myRootConfigurable.isModified();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void reset() {
         if (myRootConfigurable != null) {
             myRootConfigurable.reset();
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void disposeUIResources() {
         if (myRootConfigurable != null) {
             myRootConfigurable.disposeUIResources();

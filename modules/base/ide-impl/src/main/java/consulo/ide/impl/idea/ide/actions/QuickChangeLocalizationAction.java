@@ -54,12 +54,6 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
 
     @Override
     public void changeSchemeTo(@Nonnull Locale value) {
-        LocalizeManager localizeManager = LocalizeManager.get();
-
-        if (value == Locale.ROOT) {
-            localizeManager.setLocale(null);
-        } else {
-            localizeManager.setLocale(value);
-        }
+        LocalizeManager.get().setLocale(value == Locale.ROOT ? null : value);
     }
 }

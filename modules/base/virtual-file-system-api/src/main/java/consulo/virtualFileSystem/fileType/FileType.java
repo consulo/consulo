@@ -25,101 +25,107 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.nio.charset.Charset;
+import java.util.Comparator;
 
 public interface FileType {
-  FileType[] EMPTY_ARRAY = new FileType[0];
+    Comparator<FileType> DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(FileType::getDisplayName, LocalizeValue.defaultComparator());
 
-  ArrayFactory<FileType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new FileType[count];
+    FileType[] EMPTY_ARRAY = new FileType[0];
 
-  /**
-   * Returns the id of the file type. The name must be unique among all file types registered in the system.
-   *
-   * @return The file type id.
-   */
-  @Nonnull
-  default String getId() {
-    return getName();
-  }
+    ArrayFactory<FileType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new FileType[count];
 
-  /**
-   * Returns the name of the file type. The name must be unique among all file types registered in the system.
-   *
-   * @return The file type name.
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo(value = "Use #getId(), and implement #getId()")
-  default String getName() {
-    return getId();
-  }
+    /**
+     * Returns the id of the file type. The name must be unique among all file types registered in the system.
+     *
+     * @return The file type id.
+     */
+    @Nonnull
+    default String getId() {
+        return getName();
+    }
 
-  @Nonnull
-  default LocalizeValue getDisplayName() {
-    return LocalizeValue.of(getId());
-  }
+    /**
+     * Returns the name of the file type. The name must be unique among all file types registered in the system.
+     *
+     * @return The file type name.
+     */
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo(value = "Use #getId(), and implement #getId()")
+    default String getName() {
+        return getId();
+    }
 
-  /**
-   * Returns the user-readable description of the file type.
-   *
-   * @return The file type description.
-   */
-  @Nonnull
-  LocalizeValue getDescription();
+    @Nonnull
+    default LocalizeValue getDisplayName() {
+        return LocalizeValue.of(getId());
+    }
 
-  /**
-   * Returns the default extension for files of the type.
-   *
-   * @return The extension, not including the leading '.'.
-   */
-  @Nonnull
-  default String getDefaultExtension() {
-    return "";
-  }
+    /**
+     * Returns the user-readable description of the file type.
+     *
+     * @return The file type description.
+     */
+    @Nonnull
+    LocalizeValue getDescription();
 
-  /**
-   * Returns the icon used for showing files of the type.
-   *
-   * @return The icon instance, or null if no icon should be shown.
-   */
+    /**
+     * Returns the default extension for files of the type.
+     *
+     * @return The extension, not including the leading '.'.
+     */
+    @Nonnull
+    default String getDefaultExtension() {
+        return "";
+    }
 
-  @Nonnull
-  Image getIcon();
+    /**
+     * Returns the icon used for showing files of the type.
+     *
+     * @return The icon instance, or null if no icon should be shown.
+     */
 
-  /**
-   * Returns true if files of the specified type contain binary data. Used for source control, to-do items scanning and other purposes.
-   *
-   * @return true if the file is binary, false if the file is plain text.
-   */
-  default boolean isBinary() {
-    return false;
-  }
+    @Nonnull
+    Image getIcon();
 
-  /**
-   * Returns true if the specified file type is read-only. Read-only file types are not shown in the "File Types" settings dialog,
-   * and users cannot change the extensions associated with the file type.
-   *
-   * @return true if the file type is read-only, false otherwise.
-   */
-  default boolean isReadOnly() {
-    return false;
-  }
+    /**
+     * Returns true if files of the specified type contain binary data. Used for source control, to-do items scanning and other purposes.
+     *
+     * @return true if the file is binary, false if the file is plain text.
+     */
+    default boolean isBinary() {
+        return false;
+    }
 
-  /**
-   * Returns the character set for the specified file.
-   *
-   * @param file    The file for which the character set is requested.
-   * @param content file content as byte array
-   * @return The character set name, in the format supported by {@link java.nio.charset.Charset} class.
-   */
-  @Nullable
-  default String getCharset(@Nonnull VirtualFile file, byte[] content) {
-    return null;
-  }
+    /**
+     * Returns true if the specified file type is read-only. Read-only file types are not shown in the "File Types" settings dialog,
+     * and users cannot change the extensions associated with the file type.
+     *
+     * @return true if the file type is read-only, false otherwise.
+     */
+    default boolean isReadOnly() {
+        return false;
+    }
 
-  @Nullable
-  default Charset extractCharsetFromFileContent(@Nullable ComponentManager project,
-                                                @Nullable VirtualFile file,
-                                                @Nonnull CharSequence content) {
-    return null;
-  }
+    /**
+     * Returns the character set for the specified file.
+     *
+     * @param file    The file for which the character set is requested.
+     * @param content file content as byte array
+     * @return The character set name, in the format supported by {@link Charset} class.
+     */
+    @Nullable
+    default String getCharset(@Nonnull VirtualFile file, byte[] content) {
+        return null;
+    }
+
+    @Nullable
+    default Charset extractCharsetFromFileContent(
+        @Nullable ComponentManager project,
+        @Nullable VirtualFile file,
+        @Nonnull CharSequence content
+    ) {
+        return null;
+    }
 }
