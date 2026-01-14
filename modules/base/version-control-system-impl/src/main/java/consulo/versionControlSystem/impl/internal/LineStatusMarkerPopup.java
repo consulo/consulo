@@ -35,6 +35,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.editor.ui.internal.HintManagerEx;
 import consulo.language.plain.PlainTextFileType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionToolbar;
@@ -136,9 +137,14 @@ public abstract class LineStatusMarkerPopup {
 
         ActionToolbar toolbar = buildToolbar(mousePosition, disposable);
         toolbar.setTargetComponent(myEditor.getComponent());
-        toolbar.updateActionsImmediately(); // we need valid ActionToolbar.getPreferredSize() to calc size of popup
-        toolbar.setReservePlaceAutoPopupIcon(false);
 
+        toolbar.updateActionsAsync().whenCompleteAsync((actions, throwable) -> {
+            show(toolbar, mousePosition, disposable, editorComponent);
+        }, UIAccess.current());
+    }
+
+    @RequiredUIAccess
+    private void show(ActionToolbar toolbar, @Nullable Point mousePosition, @Nonnull Disposable disposable, JComponent editorComponent) {
         PopupPanel popupPanel = new PopupPanel(myEditor, toolbar, editorComponent);
 
         LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(popupPanel);
