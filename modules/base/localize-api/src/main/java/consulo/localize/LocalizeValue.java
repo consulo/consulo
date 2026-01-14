@@ -159,12 +159,6 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return getValue().compareTo(o.getValue());
     }
 
-    @Deprecated
-    @DeprecationInfo("Use compareToIgnoreCase")
-    default int compareIgnoreCase(@Nonnull LocalizeValue other) {
-        return compareToIgnoreCase(other);
-    }
-
     default int compareToIgnoreCase(@Nonnull LocalizeValue other) {
         return getValue().compareToIgnoreCase(other.getValue());
     }
