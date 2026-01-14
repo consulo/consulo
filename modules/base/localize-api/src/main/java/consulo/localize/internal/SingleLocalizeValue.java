@@ -48,16 +48,6 @@ public class SingleLocalizeValue implements LocalizeValue {
     }
 
     @Override
-    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-        return getValue().compareToIgnoreCase(other.getValue());
-    }
-
-    @Override
-    public int compareTo(@Nonnull LocalizeValue o) {
-        return getValue().compareTo(o.getValue());
-    }
-
-    @Override
     public String toString() {
         return getValue();
     }

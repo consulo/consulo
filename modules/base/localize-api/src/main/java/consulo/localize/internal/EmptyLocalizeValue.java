@@ -30,8 +30,6 @@ import java.util.function.Function;
 public class EmptyLocalizeValue implements LocalizeValue {
     public static final EmptyLocalizeValue VALUE = new EmptyLocalizeValue();
 
-    public static final String EMPTY_STRING = "";
-
     @Override
     public boolean isEmpty() {
         return true;
@@ -45,7 +43,7 @@ public class EmptyLocalizeValue implements LocalizeValue {
     @Nonnull
     @Override
     public String getValue() {
-        return EMPTY_STRING;
+        return "";
     }
 
     @Nullable
@@ -75,16 +73,6 @@ public class EmptyLocalizeValue implements LocalizeValue {
     @Override
     public LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
         return this;
-    }
-
-    @Override
-    public int compareTo(@Nonnull LocalizeValue other) {
-        return EMPTY_STRING.compareTo(other.getValue());
-    }
-
-    @Override
-    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-        return EMPTY_STRING.compareToIgnoreCase(other.getValue());
     }
 
     @Override

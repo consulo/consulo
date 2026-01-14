@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 2020-07-30
  */
 public abstract class BaseLocalizeValue implements LocalizeValue {
-    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
+    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareToIgnoreCase;
 
     protected static final Object[] ourEmptyArgs = new Object[0];
 
@@ -93,16 +93,6 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
         myText = newText;
         myModificationCount = manager.getModificationCount();
         return newText;
-    }
-
-    @Override
-    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-        return getValue().compareToIgnoreCase(other.getValue());
-    }
-
-    @Override
-    public int compareTo(@Nonnull LocalizeValue o) {
-        return getValue().compareTo(o.getValue());
     }
 
     @Override
