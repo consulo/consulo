@@ -1143,7 +1143,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       buildConfigurables();
     }
     for (InnerSearchableConfigurable configurable : mySubPanelFactories.values()) {
-      if (configurable.getDisplayName().equals(pageName)) {
+      if (configurable.getDisplayName().get().equals(pageName)) {
         return configurable;
       }
     }
