@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -30,69 +30,74 @@ import javax.swing.*;
  * @since 2006-03-17
  */
 public class DefaultSearchableConfigurable implements Configurable {
-  private final SearchableConfigurable myDelegate;
-  private JComponent myComponent;
+    private final SearchableConfigurable myDelegate;
+    private JComponent myComponent;
 
-  public DefaultSearchableConfigurable(SearchableConfigurable delegate) {
-    myDelegate = delegate;
-  }
-
-  @Override
-  @NonNls
-  public String getId() {
-    return myDelegate.getId();
-  }
-
-  public void clearSearch() {
-  }
-
-  public void enableSearch(String option) {
-    Runnable runnable = myDelegate.enableSearch(option);
-    if (runnable != null){
-      runnable.run();
+    public DefaultSearchableConfigurable(SearchableConfigurable delegate) {
+        myDelegate = delegate;
     }
-  }
 
-  @Override
-  public LocalizeValue getDisplayName() {
-    return myDelegate.getDisplayName();
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return myDelegate.getId();
+    }
 
-  @Override
-  @Nullable
-  public String getHelpTopic() {
-    return myDelegate.getHelpTopic();
-  }
+    public void clearSearch() {
+    }
 
-  @Override
-  public JComponent createComponent() {
-    myComponent = myDelegate.createComponent();
-    return myComponent;
-  }
+    public void enableSearch(String option) {
+        Runnable runnable = myDelegate.enableSearch(option);
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
 
-  @Override
-  public boolean isModified() {
-    return myDelegate.isModified();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return myDelegate.getDisplayName();
+    }
 
-  @Override
-  public void apply() throws ConfigurationException {
-    myDelegate.apply();
-  }
+    @Override
+    @Nullable
+    public String getHelpTopic() {
+        return myDelegate.getHelpTopic();
+    }
 
-  @Override
-  public void reset() {
-    myDelegate.reset();
-  }
+    @Override
+    @RequiredUIAccess
+    public JComponent createComponent() {
+        myComponent = myDelegate.createComponent();
+        return myComponent;
+    }
 
-  @Override
-  public void disposeUIResources() {
-    myComponent = null;
-    myDelegate.disposeUIResources();
-  }
+    @Override
+    @RequiredUIAccess
+    public boolean isModified() {
+        return myDelegate.isModified();
+    }
 
-  public Configurable getDelegate() {
-    return myDelegate;
-  }
+    @Override
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        myDelegate.apply();
+    }
 
+    @Override
+    @RequiredUIAccess
+    public void reset() {
+        myDelegate.reset();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        myComponent = null;
+        myDelegate.disposeUIResources();
+    }
+
+    public Configurable getDelegate() {
+        return myDelegate;
+    }
 }

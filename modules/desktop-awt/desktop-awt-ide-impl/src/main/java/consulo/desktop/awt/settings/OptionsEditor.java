@@ -88,12 +88,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             myConfigurable = configurable;
         }
 
-        @Override
         @Nonnull
+        @Override
         public String getId() {
             return myConfigurable.getClass().getName();
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
             return myConfigurable.getDisplayName();
@@ -104,44 +105,43 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             return myConfigurable.getHelpTopic();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public JComponent createComponent(@Nonnull Disposable parent) {
             return myConfigurable.createComponent(parent);
         }
 
-        @RequiredUIAccess
         @Nullable
         @Override
+        @RequiredUIAccess
         public consulo.ui.Component createUIComponent(@Nonnull Disposable parentDisposable) {
             return myConfigurable.createUIComponent(parentDisposable);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public boolean isModified() {
             return myConfigurable.isModified();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void apply() throws ConfigurationException {
             myConfigurable.apply();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void reset() {
             myConfigurable.reset();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void disposeUIResources() {
             myConfigurable.disposeUIResources();
         }
     }
-
 
     private static class ContentWrapper extends NonOpaquePanel {
         private final JLabel myErrorLabel;
@@ -216,7 +216,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
                 if (clientProperty != null && ApplicationProperties.isInSandbox()) {
                     LOG.warn(String.format(
-                        "Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
+                        "Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() " +
+                            "and create a new instance in createComponent()!",
                         configurable
                     ));
                 }
@@ -262,8 +263,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 if (getTextEditor().isFocusOwner()) {
                     try {
                         myDelegatingNow = true;
-                        boolean treeNavigation =
-                            stroke.getModifiers() == 0 && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
+                        boolean treeNavigation = stroke.getModifiers() == 0
+                            && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
 
                         if ("pressed ENTER".equals(stroke.toString())) {
                             return true; // avoid closing dialog on ENTER
@@ -325,29 +326,22 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 myGP.clear();
 
                 Runnable runnable = SearchUtil.lightOptions(searchable, myContentWrapper, text, myGP);
-                if (runnable != null) {
-                    myVisible = true;//myContext.isHoldingFilter();
-                    runnable.run();
+                myVisible = true;//myContext.isHoldingFilter();
+                runnable.run();
 
-                    boolean pushFilteringFurther = true;
-                    if (sameText) {
-                        pushFilteringFurther = false;
-                    }
-                    else {
-                        if (myFilter.myHits != null) {
-                            pushFilteringFurther = !myFilter.myHits.getNameHits().contains(current);
-                        }
-                    }
+                boolean pushFilteringFurther = true;
+                if (sameText) {
+                    pushFilteringFurther = false;
+                }
+                else if (myFilter.myHits != null) {
+                    pushFilteringFurther = !myFilter.myHits.getNameHits().contains(current);
+                }
 
-                    Runnable ownSearch = searchable.enableSearch(text);
-                    if (pushFilteringFurther && ownSearch != null) {
-                        ownSearch.run();
-                    }
-                    fireNeedsRepaint(myOwnDetails.getComponent());
+                Runnable ownSearch = searchable.enableSearch(text);
+                if (pushFilteringFurther && ownSearch != null) {
+                    ownSearch.run();
                 }
-                else {
-                    myVisible = false;
-                }
+                fireNeedsRepaint(myOwnDetails.getComponent());
             }
             finally {
                 myConfigurableToLastOption.put(current, text);
@@ -419,7 +413,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                         && myHits.getNameFullHits().contains(eachConfigurableNode.myConfigurable)) {
                         return true;
                     }
-                    eachParent = (OptionsTree.Base)eachParent.getParent();
+                    eachParent = (OptionsTree.Base) eachParent.getParent();
                 }
 
                 return false;
@@ -515,7 +509,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         private boolean isEmptyParent(Configurable configurable) {
-            return configurable instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent)configurable).hasOwnContent();
+            return configurable instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent) configurable).hasOwnContent();
         }
 
         @Nullable
@@ -797,8 +791,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @Override
-    public AsyncResult<Configurable> select(@Nonnull String confurableId) {
-        Configurable configurableInfo = myTree.findConfigurableById(confurableId);
+    public AsyncResult<Configurable> select(@Nonnull String configurableId) {
+        Configurable configurableInfo = myTree.findConfigurableById(configurableId);
         if (configurableInfo == null) {
             return AsyncResult.rejected();
         }
@@ -989,10 +983,12 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return result;
     }
 
+    @RequiredUIAccess
     private void checkModified(Configurable configurable) {
         fireModification(configurable);
     }
 
+    @RequiredUIAccess
     private void fireModification(Configurable actual) {
         Collection<Configurable> toCheck = collectAllParentsAndSiblings(actual);
 
@@ -1021,6 +1017,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return result;
     }
 
+    @RequiredUIAccess
     private void fireModificationForItem(Configurable configurable) {
         if (configurable != null) {
             if (!myConfigurable2Content.containsKey(configurable) && ConfigurableWrapper.hasOwnContent(configurable)) {
@@ -1278,7 +1275,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
 
             if (configurable instanceof Configurable.Composite) {
-                visitRecursive(((Configurable.Composite)configurable).getConfigurables(), consumer);
+                visitRecursive(((Configurable.Composite) configurable).getConfigurables(), consumer);
             }
         }
     }
@@ -1287,6 +1284,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return myContext;
     }
 
+    @RequiredUIAccess
     public void flushModifications() {
         fireModification(getContext().getCurrentConfigurable());
     }
@@ -1298,7 +1296,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     @Override
     public void eventDispatched(AWTEvent event) {
         if (event.getID() == MouseEvent.MOUSE_PRESSED || event.getID() == MouseEvent.MOUSE_RELEASED || event.getID() == MouseEvent.MOUSE_DRAGGED) {
-            MouseEvent me = (MouseEvent)event;
+            MouseEvent me = (MouseEvent) event;
             if (SwingUtilities.isDescendingFrom(me.getComponent(), SwingUtilities.getWindowAncestor(myContentWrapper)) || isPopupOverEditor(
                 me.getComponent())) {
                 queueModificationCheck();
@@ -1306,7 +1304,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
         }
         else if (event.getID() == KeyEvent.KEY_PRESSED || event.getID() == KeyEvent.KEY_RELEASED) {
-            KeyEvent ke = (KeyEvent)event;
+            KeyEvent ke = (KeyEvent) event;
             if (SwingUtilities.isDescendingFrom(ke.getComponent(), myContentWrapper)) {
                 queueModificationCheck();
             }
@@ -1330,7 +1328,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     private boolean isPopupOverEditor(Component c) {
         Window wnd = SwingUtilities.getWindowAncestor(c);
-        return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
+        return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog) wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
     }
 
     private String getFilterText() {
