@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Comparator;
 
 public interface FileType {
-    public static final Comparator<FileType> CASE_INSENSITIVE_DISPLAY_NAME_COMPARATOR =
+    Comparator<FileType> DISPLAY_NAME_COMPARATOR =
         Comparator.comparing(FileType::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
 
     FileType[] EMPTY_ARRAY = new FileType[0];
@@ -113,7 +113,7 @@ public interface FileType {
      *
      * @param file    The file for which the character set is requested.
      * @param content file content as byte array
-     * @return The character set name, in the format supported by {@link java.nio.charset.Charset} class.
+     * @return The character set name, in the format supported by {@link Charset} class.
      */
     @Nullable
     default String getCharset(@Nonnull VirtualFile file, byte[] content) {
@@ -127,5 +127,9 @@ public interface FileType {
         @Nonnull CharSequence content
     ) {
         return null;
+    }
+
+    static Comparator<FileType> defaultComparator() {
+        return DISPLAY_NAME_COMPARATOR;
     }
 }

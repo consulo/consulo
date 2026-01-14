@@ -32,7 +32,7 @@ import java.util.Comparator;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType extends PossiblyDumbAware {
-    public static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
+    Comparator<ConfigurationType> DISPLAY_NAME_COMPARATOR =
         Comparator.comparing(ConfigurationType::getDisplayName, LocalizeValue.CASE_INSENSITIVE_ORDER);
 
     /**
@@ -86,5 +86,9 @@ public interface ConfigurationType extends PossiblyDumbAware {
     @Override
     default boolean isDumbAware() {
         return true;
+    }
+
+    static Comparator<ConfigurationType> defaultComparator() {
+        return DISPLAY_NAME_COMPARATOR;
     }
 }

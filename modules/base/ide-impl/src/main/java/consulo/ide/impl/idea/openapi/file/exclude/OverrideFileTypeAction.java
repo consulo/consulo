@@ -61,7 +61,7 @@ public class OverrideFileTypeAction extends AnAction {
 
         List<FileType> sortedFileTypes = ContainerUtil.sorted(
             Arrays.asList(FileTypeManager.getInstance().getRegisteredFileTypes()),
-            FileType.CASE_INSENSITIVE_DISPLAY_NAME_COMPARATOR
+            FileType.defaultComparator()
         );
         for (FileType type : sortedFileTypes) {
             if (!OverrideFileTypeManager.isOverridable(type)) {

@@ -53,7 +53,7 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable {
-    private static final Comparator<Object> IGNORE_CASE_NODE_DISPLAY_NAME_COMPARATOR =
+    private static final Comparator<Object> NODE_DISPLAY_NAME_COMPARATOR =
         Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizeValue.CASE_INSENSITIVE_ORDER);
 
     @Nonnull
@@ -158,7 +158,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         for (Library library : libraries) {
             myRoot.add(new MyNode(new LibraryConfigurable(myProject, modelProvider, library, getLibrariesConfigurator(), TREE_UPDATER)));
         }
-        TreeUtil.sort(myRoot, IGNORE_CASE_NODE_DISPLAY_NAME_COMPARATOR);
+        TreeUtil.sort(myRoot, NODE_DISPLAY_NAME_COMPARATOR);
         ((DefaultTreeModel) myTree.getModel()).reload(myRoot);
     }
 

@@ -21,6 +21,7 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.TemplateConstants;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
 import consulo.localize.LocalizeValue;
@@ -39,143 +40,141 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @ExtensionImpl
-public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout> implements Configurable.Composite, SearchableConfigurable, ApplicationConfigurable {
-  protected static class Layout implements Supplier<Component> {
-    private final CheckBox myPostfixTemplatesEnabled;
-    private final CheckBox myCompletionEnabledCheckbox;
-    private final ComboBox<Character> myShortcutComboBox;
-    private final VerticalLayout myLayout;
+public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout>
+    implements Configurable.Composite, SearchableConfigurable, ApplicationConfigurable {
+    protected static class Layout implements Supplier<Component> {
+        private final CheckBox myPostfixTemplatesEnabled;
+        private final CheckBox myCompletionEnabledCheckbox;
+        private final ComboBox<Character> myShortcutComboBox;
+        private final VerticalLayout myLayout;
 
-    @RequiredUIAccess
-    public Layout() {
-      myLayout = VerticalLayout.create();
+        @RequiredUIAccess
+        public Layout() {
+            myLayout = VerticalLayout.create();
 
-      myPostfixTemplatesEnabled = CheckBox.create(LocalizeValue.localizeTODO("&Enable postfix templates"));
-      myLayout.add(myPostfixTemplatesEnabled);
+            myPostfixTemplatesEnabled = CheckBox.create(LocalizeValue.localizeTODO("&Enable postfix templates"));
+            myLayout.add(myPostfixTemplatesEnabled);
 
-      myCompletionEnabledCheckbox = CheckBox.create(LocalizeValue.localizeTODO("&Show postfix templates in completion auto-popup"));
-      myLayout.add(myCompletionEnabledCheckbox);
+            myCompletionEnabledCheckbox = CheckBox.create(LocalizeValue.localizeTODO("&Show postfix templates in completion auto-popup"));
+            myLayout.add(myCompletionEnabledCheckbox);
 
-      ComboBox.Builder<Character> builder = ComboBox.<Character>builder();
-      builder.add(TemplateConstants.SPACE_CHAR, CodeInsightBundle.message("template.shortcut.space"));
-      builder.add(TemplateConstants.ENTER_CHAR, CodeInsightBundle.message("template.shortcut.enter"));
-      builder.add(TemplateConstants.TAB_CHAR, CodeInsightBundle.message("template.shortcut.tab"));
-      myShortcutComboBox = builder.build();
+            ComboBox.Builder<Character> builder = ComboBox.<Character>builder();
+            builder.add(TemplateConstants.SPACE_CHAR, CodeInsightLocalize.templateShortcutSpace());
+            builder.add(TemplateConstants.ENTER_CHAR, CodeInsightLocalize.templateShortcutEnter());
+            builder.add(TemplateConstants.TAB_CHAR, CodeInsightLocalize.templateShortcutTab());
+            myShortcutComboBox = builder.build();
 
-      myLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Expand templates with"), myShortcutComboBox));
+            myLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Expand templates with"), myShortcutComboBox));
 
-      myPostfixTemplatesEnabled.addValueListener(event -> updateComponents());
+            myPostfixTemplatesEnabled.addValueListener(event -> updateComponents());
+        }
+
+        @RequiredUIAccess
+        private void updateComponents() {
+            boolean pluginEnabled = myPostfixTemplatesEnabled.getValue();
+            myCompletionEnabledCheckbox.setVisible(true);
+            myCompletionEnabledCheckbox.setEnabled(pluginEnabled);
+            myShortcutComboBox.setEnabled(pluginEnabled);
+        }
+
+        @Nonnull
+        @Override
+        public Component get() {
+            return myLayout;
+        }
     }
 
-    @RequiredUIAccess
-    private void updateComponents() {
-      boolean pluginEnabled = myPostfixTemplatesEnabled.getValue();
-      myCompletionEnabledCheckbox.setVisible(true);
-      myCompletionEnabledCheckbox.setEnabled(pluginEnabled);
-      myShortcutComboBox.setEnabled(pluginEnabled);
+    private Configurable[] myChildren;
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return "editing.postfixCompletion";
+    }
+
+    @Nullable
+    @Override
+    public String getParentId() {
+        return "editor.preferences.completion";
     }
 
     @Nonnull
     @Override
-    public Component get() {
-      return myLayout;
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Postfix Completion");
     }
-  }
 
-  private Configurable[] myChildren;
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "editing.postfixCompletion";
-  }
-
-  @Nullable
-  @Override
-  public String getParentId() {
-    return "editor.preferences.completion";
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Postfix Completion");
-  }
-
-  protected Configurable[] buildConfigurables() {
-    List<PostfixTemplateProvider> providers = Application.get().getExtensionList(PostfixTemplateProvider.class);
-    List<Configurable> list = new ArrayList<>(providers.size());
-    for (PostfixTemplateProvider postfixTemplateProvider : providers) {
-      list.add(new PostfixTemplatesChildConfigurable(postfixTemplateProvider));
+    protected Configurable[] buildConfigurables() {
+        List<Configurable> list = Application.get().getExtensionPoint(PostfixTemplateProvider.class)
+            .collectMapped(new ArrayList<>(), PostfixTemplatesChildConfigurable::new);
+        Collections.sort(list, Configurable.defaultComparator());
+        return list.toArray(new Configurable[list.size()]);
     }
-    Collections.sort(list, Configurable.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
-    return list.toArray(new Configurable[list.size()]);
-  }
 
-  @Nonnull
-  @Override
-  public Configurable[] getConfigurables() {
-    if (myChildren == null) {
-      myChildren = buildConfigurables();
+    @Nonnull
+    @Override
+    public Configurable[] getConfigurables() {
+        if (myChildren == null) {
+            myChildren = buildConfigurables();
+        }
+        return myChildren;
     }
-    return myChildren;
-  }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Layout createPanel(@Nonnull Disposable uiDisposable) {
-    return new Layout();
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected boolean isModified(@Nonnull Layout component) {
-    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
-    return component.myPostfixTemplatesEnabled.getValue() != templatesSettings.isPostfixTemplatesEnabled() ||
-           component.myCompletionEnabledCheckbox.getValue() != templatesSettings.isTemplatesCompletionEnabled() ||
-           component.myShortcutComboBox.getValue() != templatesSettings.getShortcut();
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void apply(@Nonnull Layout component) throws ConfigurationException {
-    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
-
-    templatesSettings.setPostfixTemplatesEnabled(component.myPostfixTemplatesEnabled.getValue());
-    templatesSettings.setTemplatesCompletionEnabled(component.myCompletionEnabledCheckbox.getValue());
-    templatesSettings.setShortcut(component.myShortcutComboBox.getValue());
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void reset(@Nonnull Layout component) {
-    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
-
-    component.myPostfixTemplatesEnabled.setValue(templatesSettings.isPostfixTemplatesEnabled());
-    component.myCompletionEnabledCheckbox.setValue(templatesSettings.isTemplatesCompletionEnabled());
-    component.myShortcutComboBox.setValue((char)templatesSettings.getShortcut());
-
-    component.updateComponents();
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void disposeUIResources(@Nonnull Layout component) {
-    super.disposeUIResources(component);
-
-    myChildren = null;
-  }
-
-  @Nullable
-  public PostfixTemplatesChildConfigurable findConfigurable(PostfixTemplateProvider postfixTemplateProvider) {
-    for (Configurable configurable : getConfigurables()) {
-      PostfixTemplatesChildConfigurable childConfigurable = (PostfixTemplatesChildConfigurable)configurable;
-
-      if (childConfigurable.getPostfixTemplateProvider() == postfixTemplateProvider) {
-        return childConfigurable;
-      }
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    protected Layout createPanel(@Nonnull Disposable uiDisposable) {
+        return new Layout();
     }
-    return null;
-  }
+
+    @Override
+    @RequiredUIAccess
+    protected boolean isModified(@Nonnull Layout component) {
+        PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+        return component.myPostfixTemplatesEnabled.getValue() != templatesSettings.isPostfixTemplatesEnabled()
+            || component.myCompletionEnabledCheckbox.getValue() != templatesSettings.isTemplatesCompletionEnabled()
+            || component.myShortcutComboBox.getValue() != templatesSettings.getShortcut();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void apply(@Nonnull Layout component) throws ConfigurationException {
+        PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+
+        templatesSettings.setPostfixTemplatesEnabled(component.myPostfixTemplatesEnabled.getValue());
+        templatesSettings.setTemplatesCompletionEnabled(component.myCompletionEnabledCheckbox.getValue());
+        templatesSettings.setShortcut(component.myShortcutComboBox.getValue());
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void reset(@Nonnull Layout component) {
+        PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+
+        component.myPostfixTemplatesEnabled.setValue(templatesSettings.isPostfixTemplatesEnabled());
+        component.myCompletionEnabledCheckbox.setValue(templatesSettings.isTemplatesCompletionEnabled());
+        component.myShortcutComboBox.setValue((char) templatesSettings.getShortcut());
+
+        component.updateComponents();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void disposeUIResources(@Nonnull Layout component) {
+        super.disposeUIResources(component);
+
+        myChildren = null;
+    }
+
+    @Nullable
+    public PostfixTemplatesChildConfigurable findConfigurable(PostfixTemplateProvider postfixTemplateProvider) {
+        for (Configurable configurable : getConfigurables()) {
+            PostfixTemplatesChildConfigurable childConfigurable = (PostfixTemplatesChildConfigurable) configurable;
+
+            if (childConfigurable.getPostfixTemplateProvider() == postfixTemplateProvider) {
+                return childConfigurable;
+            }
+        }
+        return null;
+    }
 }

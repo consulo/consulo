@@ -82,7 +82,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
             allTypes
         ));
 
-        configurationTypes.sort(ConfigurationType.IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
+        configurationTypes.sort(ConfigurationType.defaultComparator());
         var hiddenCount = allTypes.size() - configurationTypes.size();
         List<Object> popupList = new ArrayList<>(configurationTypes);
         if (hiddenCount > 0) {

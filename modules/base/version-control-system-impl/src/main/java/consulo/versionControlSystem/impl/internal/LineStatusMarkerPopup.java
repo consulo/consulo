@@ -87,13 +87,15 @@ public abstract class LineStatusMarkerPopup {
         return false;
     }
 
-
     public void scrollAndShow() {
         if (!myTracker.isValid()) {
             return;
         }
         Document document = myTracker.getDocument();
-        int line = Math.min(myRange.getType() == VcsRange.DELETED ? myRange.getLine2() : myRange.getLine2() - 1, getLineCount(document) - 1);
+        int line = Math.min(
+            myRange.getType() == VcsRange.DELETED ? myRange.getLine2() : myRange.getLine2() - 1,
+            getLineCount(document) - 1
+        );
         int lastOffset = document.getLineStartOffset(line);
         myEditor.getCaretModel().moveToOffset(lastOffset);
         myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
@@ -109,7 +111,12 @@ public abstract class LineStatusMarkerPopup {
     public void showHint(@Nonnull MouseEvent e) {
         JComponent comp = (JComponent) e.getComponent(); // shall be EditorGutterComponent, cast is safe.
         JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
-        Point point = SwingUtilities.convertPoint(comp, ((EditorEx) myEditor).getGutterComponentEx().getComponent().getWidth(), e.getY(), layeredPane);
+        Point point = SwingUtilities.convertPoint(
+            comp,
+            ((EditorEx) myEditor).getGutterComponentEx().getComponent().getWidth(),
+            e.getY(),
+            layeredPane
+        );
         showHintAt(point);
         e.consume();
     }
@@ -160,8 +167,8 @@ public abstract class LineStatusMarkerPopup {
         }
     }
 
-    @RequiredUIAccess
     @Nullable
+    @RequiredUIAccess
     private List<DiffFragment> computeWordDiff() {
         if (!isShowInnerDifferences()) {
             return null;
@@ -173,7 +180,10 @@ public abstract class LineStatusMarkerPopup {
         CharSequence vcsContent = myTracker.getVcsContent(myRange);
         CharSequence currentContent = myTracker.getCurrentContent(myRange);
 
-        return BackgroundTaskUtil.tryComputeFast(indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator), Registry.intValue("diff.status.tracker.byword.delay"));
+        return BackgroundTaskUtil.tryComputeFast(
+            indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator),
+            Registry.intValue("diff.status.tracker.byword.delay")
+        );
     }
 
     private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
@@ -193,11 +203,14 @@ public abstract class LineStatusMarkerPopup {
             highlighters.addAll(diffInternal.createInlineHighlighter(myEditor, currentStart, currentEnd, type));
         }
 
-        Disposer.register(parentDisposable, () -> {
-            for (RangeHighlighter highlighter : highlighters) {
-                highlighter.dispose();
+        Disposer.register(
+            parentDisposable,
+            () -> {
+                for (RangeHighlighter highlighter : highlighters) {
+                    highlighter.dispose();
+                }
             }
-        });
+        );
     }
 
     @Nullable
@@ -248,9 +261,7 @@ public abstract class LineStatusMarkerPopup {
         @Nullable
         private final JComponent myEditorComponent;
 
-        public PopupPanel(@Nonnull final Editor editor,
-                          @Nonnull ActionToolbar toolbar,
-                          @Nullable JComponent editorComponent) {
+        public PopupPanel(@Nonnull final Editor editor, @Nonnull ActionToolbar toolbar, @Nullable JComponent editorComponent) {
             super(new BorderLayout());
             setOpaque(false);
 
@@ -304,6 +315,7 @@ public abstract class LineStatusMarkerPopup {
                     transferEvent(e, editor);
                 }
 
+                @Override
                 public void mouseReleased(MouseEvent e) {
                     transferEvent(e, editor);
                 }

@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
@@ -53,6 +54,8 @@ public interface ComboBox<E> extends ValueComponent<E> {
     static class Builder<K> {
         private Map<K, LocalizeValue> myValues = new LinkedHashMap<>();
 
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
         @Nonnull
         public Builder<K> add(K key, String value) {
             myValues.put(key, LocalizeValue.of(value));
