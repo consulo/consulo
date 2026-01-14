@@ -30,8 +30,6 @@ import java.util.function.Supplier;
  * @since 2019-04-11
  */
 public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
-    Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
-
     @Nonnull
     static LocalizeValue empty() {
         return EmptyLocalizeValue.VALUE;
@@ -90,6 +88,10 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     @Nonnull
     static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
         return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue2(separator, values);
+    }
+
+    static Comparator<LocalizeValue> defaultComparator() {
+        return BaseLocalizeValue.CASE_INSENSITIVE_ORDER;
     }
 
     default boolean isEmpty() {
@@ -152,8 +154,4 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     int compareIgnoreCase(@Nonnull LocalizeValue other);
-
-    static Comparator<LocalizeValue> defaultComparator() {
-        return CASE_INSENSITIVE_ORDER;
-    }
 }

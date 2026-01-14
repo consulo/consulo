@@ -19,6 +19,7 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -26,7 +27,9 @@ import java.util.Map;
  * @author VISTALL
  * @since 2020-07-30
  */
-abstract class BaseLocalizeValue implements LocalizeValue {
+public abstract class BaseLocalizeValue implements LocalizeValue {
+    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = LocalizeValue::compareIgnoreCase;
+
     protected static final Object[] ourEmptyArgs = new Object[0];
 
     protected final Object[] myArgs;
