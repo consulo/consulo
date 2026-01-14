@@ -41,6 +41,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -49,6 +50,9 @@ import java.util.List;
  */
 @ExtensionImpl
 public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
+    public static final Comparator<AdditionalEditorAppearanceSettingProvider> APPEARANCE_SETTING_PROVIDER_LABEL_NAME_COMPARATOR =
+        Comparator.comparing(AdditionalEditorAppearanceSettingProvider::getLabelName, LocalizeValue.defaultComparator());
+
     private final Application myApplication;
     private final Provider<PersistentEditorSettings> myEditorSettingsExternalizable;
     private final Provider<CodeEditorInternalHelper> myEditorInternalHelper;
@@ -113,7 +117,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         root.add(showVerticalIndents);
 
         List<AdditionalEditorAppearanceSettingProvider> providers = new ArrayList<>(myApplication.getExtensionList(AdditionalEditorAppearanceSettingProvider.class));
-        providers.sort((o1, o2) -> o1.getLabelName().compareIgnoreCase(o2.getLabelName()));
+        providers.sort(APPEARANCE_SETTING_PROVIDER_LABEL_NAME_COMPARATOR);
 
         for (AdditionalEditorAppearanceSettingProvider provider : providers) {
             VerticalLayout childRoot = VerticalLayout.create();
