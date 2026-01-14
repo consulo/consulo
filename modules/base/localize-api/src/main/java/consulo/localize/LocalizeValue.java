@@ -15,6 +15,7 @@
  */
 package consulo.localize;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.internal.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -153,5 +154,18 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return map(DefaultMapFunctions.CAPITALIZE);
     }
 
-    int compareIgnoreCase(@Nonnull LocalizeValue other);
+    @Override
+    default public int compareTo(@Nonnull LocalizeValue o) {
+        return getValue().compareTo(o.getValue());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use compareToIgnoreCase")
+    default int compareIgnoreCase(@Nonnull LocalizeValue other) {
+        return compareToIgnoreCase(other);
+    }
+
+    default int compareToIgnoreCase(@Nonnull LocalizeValue other) {
+        return getValue().compareToIgnoreCase(other.getValue());
+    }
 }

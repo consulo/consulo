@@ -171,7 +171,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
     myDescriptors.sort((o1, o2) -> {
       if (pluginDescriptorMap.get(o1) != pluginDescriptorMap.get(o2)) return 0;
-      return o1.getName().compareIgnoreCase(o2.getName());
+      return o1.getName().compareToIgnoreCase(o2.getName());
     });
     PluginDescriptor current = null;
     for (GutterIconDescriptor descriptor : myDescriptors) {

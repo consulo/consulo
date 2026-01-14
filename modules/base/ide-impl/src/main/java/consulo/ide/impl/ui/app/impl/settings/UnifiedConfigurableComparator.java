@@ -41,7 +41,7 @@ public class UnifiedConfigurableComparator implements Comparator<TreeNode<Config
       return (int)(weight2 - weight1);
     }
 
-    return getConfigurableDisplayName(o1.getValue()).compareIgnoreCase(getConfigurableDisplayName(o2.getValue()));
+    return getConfigurableDisplayName(o1.getValue()).compareToIgnoreCase(getConfigurableDisplayName(o2.getValue()));
   }
 
   private static int getWeight(TreeNode<Configurable> node) {

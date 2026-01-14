@@ -133,7 +133,7 @@ public class InspectionResultsViewComparator implements Comparator {
                 return problemDescriptor1.getLineNumber() - problemDescriptor2.getLineNumber();
             }
             if (descriptor1 != null && descriptor2 != null) {
-                return descriptor1.getDescriptionTemplate().compareIgnoreCase(descriptor2.getDescriptionTemplate());
+                return descriptor1.getDescriptionTemplate().compareToIgnoreCase(descriptor2.getDescriptionTemplate());
             }
             if (descriptor1 == null) {
                 return descriptor2 == null ? 0 : -1;
