@@ -15,7 +15,6 @@
  */
 package consulo.localize;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.internal.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -91,7 +90,7 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue2(separator, values);
     }
 
-    static Comparator<LocalizeValue> defaultComparator() {
+    static Comparator<LocalizeValue> comparator() {
         return BaseLocalizeValue.CASE_INSENSITIVE_ORDER;
     }
 
@@ -155,11 +154,7 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Override
-    default public int compareTo(@Nonnull LocalizeValue o) {
-        return getValue().compareTo(o.getValue());
-    }
-
-    default int compareToIgnoreCase(@Nonnull LocalizeValue other) {
-        return getValue().compareToIgnoreCase(other.getValue());
+    default public int compareTo(@Nonnull LocalizeValue that) {
+        return comparator().compare(this, that);
     }
 }

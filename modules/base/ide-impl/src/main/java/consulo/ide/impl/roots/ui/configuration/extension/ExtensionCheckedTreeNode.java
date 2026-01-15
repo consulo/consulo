@@ -40,7 +40,7 @@ import java.util.Vector;
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     private static final Comparator<TreeNode> EXTENSION_PROVIDER_NAME_COMPARATOR =
-        Comparator.comparing(tn -> ((ExtensionCheckedTreeNode) tn).myProvider.getName(), LocalizeValue.defaultComparator());
+        Comparator.comparing(tn -> ((ExtensionCheckedTreeNode) tn).myProvider.getName(), LocalizeValue.comparator());
 
     private final ModuleExtensionProvider myProvider;
     @Nonnull

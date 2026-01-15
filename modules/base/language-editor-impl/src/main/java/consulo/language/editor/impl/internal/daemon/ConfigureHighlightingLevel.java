@@ -140,7 +140,7 @@ public class ConfigureHighlightingLevel {
 
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
 
-        languages.stream().sorted((o1, o2) -> o1.getDisplayName().compareTo(o2.getDisplayName())).forEach(it -> {
+        languages.stream().sorted(Language.DISPLAY_NAME_COMPARATOR).forEach(it -> {
             if (isSeparatorNeeded) {
                 group.add(AnSeparator.create(it.getDisplayName()));
             }

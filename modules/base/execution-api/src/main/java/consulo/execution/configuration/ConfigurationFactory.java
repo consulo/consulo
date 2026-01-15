@@ -34,7 +34,7 @@ import java.util.Comparator;
  */
 public abstract class ConfigurationFactory {
     public static final Comparator<ConfigurationFactory> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.defaultComparator());
+        Comparator.comparing(ConfigurationFactory::getDisplayName, LocalizeValue.comparator());
 
     private final ConfigurationType myType;
 

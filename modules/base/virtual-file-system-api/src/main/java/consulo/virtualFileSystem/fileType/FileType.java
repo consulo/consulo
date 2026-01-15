@@ -28,8 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Comparator;
 
 public interface FileType {
-    Comparator<FileType> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(FileType::getDisplayName, LocalizeValue.defaultComparator());
+    Comparator<FileType> DISPLAY_NAME_COMPARATOR = Comparator.comparing(FileType::getDisplayName, LocalizeValue.comparator());
 
     FileType[] EMPTY_ARRAY = new FileType[0];
 

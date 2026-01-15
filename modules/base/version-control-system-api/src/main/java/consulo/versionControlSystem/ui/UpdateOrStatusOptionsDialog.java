@@ -33,12 +33,12 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     private final JComponent myMainPanel;
     private final Map<AbstractVcs, UnnamedConfigurable> myEnvToConfMap = new HashMap<>();
     protected final Project myProject;
-
 
     @RequiredUIAccess
     public UpdateOrStatusOptionsDialog(Project project, Map<UnnamedConfigurable, AbstractVcs> confs) {
@@ -53,8 +53,8 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
         }
         else {
             myMainPanel = new JBTabbedPane();
-            ArrayList<AbstractVcs> vcses = new ArrayList<>(confs.values());
-            Collections.sort(vcses, (o1, o2) -> o1.getDisplayName().compareTo(o2.getDisplayName()));
+            List<AbstractVcs> vcses = new ArrayList<>(confs.values());
+            Collections.sort(vcses, AbstractVcs.DISPLAY_NAME_COMPARATOR);
             Map<AbstractVcs, UnnamedConfigurable> vcsToConfigurable = revertMap(confs);
             for (AbstractVcs vcs : vcses) {
                 addComponent(vcs, vcsToConfigurable.get(vcs), vcs.getDisplayName().get());
@@ -69,7 +69,7 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     }
 
     private static Map<AbstractVcs, UnnamedConfigurable> revertMap(Map<UnnamedConfigurable, AbstractVcs> confs) {
-        HashMap<AbstractVcs, UnnamedConfigurable> result = new HashMap<>();
+        Map<AbstractVcs, UnnamedConfigurable> result = new HashMap<>();
         for (UnnamedConfigurable configurable : confs.keySet()) {
             result.put(confs.get(configurable), configurable);
         }

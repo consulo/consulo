@@ -65,7 +65,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     protected static final Logger LOG = Logger.getInstance(MasterDetailsComponent.class);
 
     protected static final Comparator<MyNode> NODE_COMPARATOR =
-        Comparator.comparing(MyNode::getDisplayName, LocalizeValue.defaultComparator());
+        Comparator.comparing(MyNode::getDisplayName, LocalizeValue.comparator());
 
     protected MasterDetailsConfigurable myCurrentConfigurable;
     protected final JBSplitter mySplitter;

@@ -33,7 +33,7 @@ import java.util.Comparator;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType extends PossiblyDumbAware {
     Comparator<ConfigurationType> DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(ConfigurationType::getDisplayName, LocalizeValue.defaultComparator());
+        Comparator.comparing(ConfigurationType::getDisplayName, LocalizeValue.comparator());
 
     /**
      * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run

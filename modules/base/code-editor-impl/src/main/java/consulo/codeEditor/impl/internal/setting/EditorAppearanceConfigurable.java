@@ -51,7 +51,7 @@ import java.util.List;
 @ExtensionImpl
 public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
     public static final Comparator<AdditionalEditorAppearanceSettingProvider> APPEARANCE_SETTING_PROVIDER_LABEL_NAME_COMPARATOR =
-        Comparator.comparing(AdditionalEditorAppearanceSettingProvider::getLabelName, LocalizeValue.defaultComparator());
+        Comparator.comparing(AdditionalEditorAppearanceSettingProvider::getLabelName, LocalizeValue.comparator());
 
     private final Application myApplication;
     private final Provider<PersistentEditorSettings> myEditorSettingsExternalizable;

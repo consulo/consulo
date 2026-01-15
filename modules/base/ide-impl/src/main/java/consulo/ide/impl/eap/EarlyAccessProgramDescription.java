@@ -45,7 +45,7 @@ record EarlyAccessProgramDescription(
     @Override
     public int compareTo(@Nonnull EarlyAccessProgramDescription o) {
         if (available == o.available) {
-            return name.compareToIgnoreCase(o.name);
+            return name.compareTo(o.name);
         }
         return available ? -1 : +1;
     }
