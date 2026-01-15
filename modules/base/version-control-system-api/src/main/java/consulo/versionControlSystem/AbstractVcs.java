@@ -51,6 +51,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -60,6 +61,9 @@ import java.util.function.Function;
  * @see ProjectLevelVcsManager
  */
 public abstract class AbstractVcs<ComList extends CommittedChangeList> extends StartedActivated {
+    public static final Comparator<AbstractVcs> DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(AbstractVcs::getDisplayName, LocalizeValue.comparator());
+
     protected static final String ourIntegerPattern = "\\d+";
 
     @Nonnull

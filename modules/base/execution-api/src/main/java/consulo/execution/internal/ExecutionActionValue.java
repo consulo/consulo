@@ -74,13 +74,8 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public int compareTo(@Nonnull LocalizeValue o) {
-        return myOriginal.compareTo(o);
-    }
-
-    @Override
-    public int compareToIgnoreCase(@Nonnull LocalizeValue other) {
-        return myOriginal.compareToIgnoreCase(other);
+    public int compareTo(@Nonnull LocalizeValue that) {
+        return myOriginal.compareTo(that);
     }
 
     @Override

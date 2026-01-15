@@ -485,6 +485,9 @@ public class RunConfigurable extends BaseConfigurable {
                 else if (userObject1 == DEFAULTS && userObject2 instanceof ConfigurationType) {
                     return 1;
                 }
+                else if (userObject2 == DEFAULTS && userObject1 instanceof ConfigurationType) {
+                    return -1;
+                }
 
                 return 0;
             }

@@ -61,8 +61,9 @@ public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction imp
 
     @Override
     public int compareTo(@Nonnull IntentionAction other) {
-        if (!getText().equals(other.getText())) {
-            return getText().compareTo(other.getText());
+        int i = getText().compareTo(other.getText());
+        if (i != 0) {
+            return i;
         }
 
         if (other instanceof ChoiceVariantIntentionAction) {

@@ -18,48 +18,52 @@ import jakarta.annotation.Nullable;
  * quick-fix popup.
  */
 @SuppressWarnings("ComparableType") // FIXME [VISTALL] need understand why comparable used here
-public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixAction implements HighlightInfoType.Iconable, Iconable, CustomizableIntentionAction, Comparable<IntentionAction> {
-  public abstract int getIndex();
+public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixAction
+    implements HighlightInfoType.Iconable, Iconable, CustomizableIntentionAction, Comparable<IntentionAction> {
+    public abstract int getIndex();
 
-  @Override
-  public boolean isSelectable() {
-    return true;
-  }
-
-  @Override
-  public boolean isShowSubmenu() {
-    return false;
-  }
-
-  @Override
-  public boolean isShowIcon() {
-    return true;
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return Image.empty(Image.DEFAULT_ICON_SIZE);
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon(@IconFlags int flags) {
-    return getIcon();
-  }
-
-  @Override
-  public int compareTo(@Nonnull IntentionAction other) {
-    if (!getText().equals(other.getText())) return this.getText().compareTo(other.getText());
-
-    if (other instanceof ChoiceTitleIntentionAction) {
-      return 1;
+    @Override
+    public boolean isSelectable() {
+        return true;
     }
 
-    if (other instanceof ChoiceVariantIntentionAction) {
-      return this.getIndex() - ((ChoiceVariantIntentionAction)other).getIndex();
+    @Override
+    public boolean isShowSubmenu() {
+        return false;
     }
 
-    return 0;
-  }
+    @Override
+    public boolean isShowIcon() {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return Image.empty(Image.DEFAULT_ICON_SIZE);
+    }
+
+    @Nullable
+    @Override
+    public Image getIcon(@IconFlags int flags) {
+        return getIcon();
+    }
+
+    @Override
+    public int compareTo(@Nonnull IntentionAction other) {
+        int i = this.getText().compareTo(other.getText());
+        if (i != 0) {
+            return i;
+        }
+
+        if (other instanceof ChoiceTitleIntentionAction) {
+            return 1;
+        }
+
+        if (other instanceof ChoiceVariantIntentionAction otherAction) {
+            return this.getIndex() - otherAction.getIndex();
+        }
+
+        return 0;
+    }
 }

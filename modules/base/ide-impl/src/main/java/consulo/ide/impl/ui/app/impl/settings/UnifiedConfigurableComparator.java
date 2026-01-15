@@ -25,40 +25,37 @@ import consulo.ui.TreeNode;
 import java.util.Comparator;
 
 /**
+ * From OptionsTree - swing settings dialog
+ *
  * @author VISTALL
  * @since 2020-05-11
- *
- * from OptionsTree - swing settings dialog
  */
 public class UnifiedConfigurableComparator implements Comparator<TreeNode<Configurable>> {
-  public static final UnifiedConfigurableComparator INSTANCE = new UnifiedConfigurableComparator();
+    public static final UnifiedConfigurableComparator INSTANCE = new UnifiedConfigurableComparator();
 
-  @Override
-  public int compare(TreeNode<Configurable> o1, TreeNode<Configurable> o2) {
-    double weight1 = getWeight(o1);
-    double weight2 = getWeight(o2);
-    if (weight1 != weight2) {
-      return (int)(weight2 - weight1);
+    @Override
+    public int compare(TreeNode<Configurable> o1, TreeNode<Configurable> o2) {
+        int weight1 = getWeight(o1);
+        int weight2 = getWeight(o2);
+        if (weight1 != weight2) {
+            return weight2 - weight1;
+        }
+
+        return o1.getValue().getDisplayName().compareTo(o2.getValue().getDisplayName());
     }
 
-    return getConfigurableDisplayName(o1.getValue()).compareToIgnoreCase(getConfigurableDisplayName(o2.getValue()));
-  }
-
-  private static int getWeight(TreeNode<Configurable> node) {
-    Configurable configurable = node.getValue();
-    if (configurable instanceof ConfigurableWeight) {
-      return ((ConfigurableWeight)configurable).getConfigurableWeight();
+    private static int getWeight(TreeNode<Configurable> node) {
+        Configurable configurable = node.getValue();
+        if (configurable instanceof ConfigurableWeight weight) {
+            return weight.getConfigurableWeight();
+        }
+        else if (configurable instanceof ConfigurableWrapper wrapper && wrapper.getConfigurable() instanceof ConfigurableWeight weight) {
+            return weight.getConfigurableWeight();
+        }
+        return 0;
     }
-    else if(configurable instanceof ConfigurableWrapper) {
-      UnnamedConfigurable wrapped = ((ConfigurableWrapper)configurable).getConfigurable();
-      if(wrapped instanceof ConfigurableWeight) {
-        return ((ConfigurableWeight)wrapped).getConfigurableWeight();
-      }
-    }
-    return 0;
-  }
 
-  public static LocalizeValue getConfigurableDisplayName(Configurable c) {
-    return c.getDisplayName();
-  }
+    public static LocalizeValue getConfigurableDisplayName(Configurable c) {
+        return c.getDisplayName();
+    }
 }

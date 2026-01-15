@@ -48,6 +48,9 @@ public abstract class Language extends UserDataHolderBase {
 
     public static final Key<Language> KEY = Key.create(Language.class);
 
+    public static final Comparator<Language> DISPLAY_NAME_COMPARATOR =
+        Comparator.comparing(Language::getDisplayName, LocalizeValue.comparator());
+
     // this fields must be before ANY field due registration
     private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages = new ConcurrentHashMap<>();
     private static final Map<String, Language> ourRegisteredIDs = new ConcurrentHashMap<>();

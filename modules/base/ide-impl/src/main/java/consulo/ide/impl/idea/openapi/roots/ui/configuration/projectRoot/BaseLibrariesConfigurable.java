@@ -54,7 +54,7 @@ import java.util.*;
 
 public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable {
     private static final Comparator<Object> NODE_DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizeValue.defaultComparator());
+        Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizeValue.comparator());
 
     @Nonnull
     protected final Project myProject;

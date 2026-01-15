@@ -350,14 +350,15 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
                 rootChildren.add(treeNode);
             }
 
-            Collections.sort(rootChildren, (node1, node2) -> {
-                Object object1 = node1.getUserObject();
-                Object object2 = node2.getUserObject();
-                if (object2 instanceof SettingsWrapper) {
-                    return ((SettingsWrapper) object1).getDisplayName().compareTo(((SettingsWrapper) object2).getDisplayName());
+            Collections.sort(
+                rootChildren,
+                (node1, node2) -> {
+                    if (node1.getUserObject() instanceof SettingsWrapper sw1 && node2.getUserObject() instanceof SettingsWrapper sw2) {
+                        return sw1.getDisplayName().compareTo(sw2.getDisplayName());
+                    }
+                    return 0;
                 }
-                return 1;
-            });
+            );
 
             DefaultMutableTreeNode root = new DefaultMutableTreeNode();
             for (DefaultMutableTreeNode child : rootChildren) {
