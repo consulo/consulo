@@ -1,16 +1,18 @@
 /**
  * @author VISTALL
- * @since 23-Mar-22
+ * @since 2022-03-23
  */
 module consulo.application.impl {
     requires transitive consulo.component.impl;
     requires transitive consulo.component.store.impl;
     requires transitive consulo.application.api;
-    requires transitive consulo.project.api;
     requires transitive consulo.document.api;
     requires transitive consulo.language.api;
-    requires transitive consulo.process.api;
     requires transitive consulo.logging.api;
+    requires transitive consulo.localization.api;
+    requires transitive consulo.localization.impl;
+    requires transitive consulo.process.api;
+    requires transitive consulo.project.api;
     requires consulo.util.nodep;
     requires consulo.ui.impl;
     requires consulo.container.api;
