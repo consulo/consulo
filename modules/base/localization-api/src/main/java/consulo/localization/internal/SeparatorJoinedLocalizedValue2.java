@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @author NYUrchenko
  * @since 2025-09-18
  */
-public final class SeparatorJoinedLocalizedValue2 extends JoinedLocalizedValue {
+public /*final*/ class SeparatorJoinedLocalizedValue2 extends JoinedLocalizedValue {
     @Nonnull
     private final LocalizedValue mySeparator;
 

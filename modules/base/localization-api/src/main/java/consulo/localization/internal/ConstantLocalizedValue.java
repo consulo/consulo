@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
  * @author NYUrchenko
  * @since 2017-11-09
  */
-public final class ConstantLocalizedValue extends AbstractLocalizedValue {
+public /*final*/ class ConstantLocalizedValue extends AbstractLocalizedValue {
     public static final ConstantLocalizedValue SPACE = new ConstantLocalizedValue(" ");
     public static final ConstantLocalizedValue COLON = new ConstantLocalizedValue(":");
     public static final ConstantLocalizedValue DOT = new ConstantLocalizedValue(".");

@@ -15,55 +15,22 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.SeparatorJoinedLocalizedValue2;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2025-09-18
  */
-public class SeparatorJoinedLocalizeValue2 extends BaseLocalizeValue {
-    private final LocalizeValue mySeparator;
-
-    public SeparatorJoinedLocalizeValue2(LocalizeValue separator, LocalizeValue[] values) {
-        super(values);
-        mySeparator = separator;
-    }
-
-    @Nonnull
-    @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        throw new UnsupportedOperationException("this method will never called");
-    }
-
-    @Nonnull
-    @Override
-    protected String calcValue(LocalizeManager manager) {
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < myArgs.length; i++) {
-            if (i != 0) {
-                builder.append(mySeparator.getValue());
-            }
-
-            Object ar = myArgs[i];
-
-            String value = ar instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(ar);
-
-            builder.append(value);
-        }
-        return builder.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o == this
-            || super.equals(o)
-            && o instanceof SeparatorJoinedLocalizeValue2 that
-            && mySeparator.equals(that.mySeparator);
+@SuppressWarnings("deprecation")
+public class SeparatorJoinedLocalizeValue2 extends SeparatorJoinedLocalizedValue2 implements LocalizeValue {
+    public SeparatorJoinedLocalizeValue2(
+        @Nonnull LocalizeManager manager,
+        @Nonnull LocalizeValue separator,
+        @Nonnull LocalizeValue[] values
+    ) {
+        super(manager, separator, values);
     }
 }

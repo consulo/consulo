@@ -15,45 +15,18 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.JoinedLocalizedValue;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2021-09-24
  */
-public final class JoinedLocalizeValue extends BaseLocalizeValue {
-    public JoinedLocalizeValue(LocalizeValue[] values) {
-        super(values);
-    }
-
-    @Nonnull
-    @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        throw new UnsupportedOperationException("this method will never called");
-    }
-
-    @Nonnull
-    @Override
-    protected String calcValue(LocalizeManager manager) {
-        StringBuilder builder = new StringBuilder();
-
-        for (Object arg : myArgs) {
-            String value = arg instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(arg);
-
-            builder.append(value);
-        }
-        return builder.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o == this
-            || super.equals(o)
-            && o instanceof JoinedLocalizeValue that;
+@SuppressWarnings("deprecation")
+public class JoinedLocalizeValue extends JoinedLocalizedValue implements LocalizeValue {
+    public JoinedLocalizeValue(@Nonnull LocalizeManager manager, @Nonnull LocalizeValue[] values) {
+        super(manager, values);
     }
 }

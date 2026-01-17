@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package consulo.localize;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localization.LocalizationKey;
 import consulo.localize.internal.DefaultLocalizeKey;
-import consulo.localize.internal.EmptyLocalizeKey;
+import consulo.localize.internal.LocalizeManagerHolder;
 import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
@@ -25,32 +27,26 @@ import java.util.Locale;
  * @author VISTALL
  * @since 2017-11-09
  */
-public interface LocalizeKey {
+@Deprecated
+@DeprecationInfo("Use LocalizationKey")
+@SuppressWarnings("deprecation")
+public interface LocalizeKey extends LocalizationKey {
     @Nonnull
-    static LocalizeKey empty() {
-        return EmptyLocalizeKey.INSTANCE;
+    static LocalizeKey of(@Nonnull String localizationId, @Nonnull String key) {
+        return new DefaultLocalizeKey(LocalizeManagerHolder.get(), localizationId, key.toLowerCase(Locale.ROOT));
     }
 
     @Nonnull
-    static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key) {
-        return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
-    }
-
-    @Nonnull
-    static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key, int argumentsCount) {
+    static LocalizeKey of(@Nonnull String localizationId, @Nonnull String key, int argumentsCount) {
         // TODO [VISTALL] make optimization for future use on call #getValue()
-        return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
+        return of(localizationId, key);
     }
 
     @Nonnull
-    String getLocalizeId();
-
-    @Nonnull
-    String getKey();
-
-    @Nonnull
+    @Override
     LocalizeValue getValue();
 
     @Nonnull
-    LocalizeValue getValue(Object... args);
+    @Override
+    LocalizeValue getValue(@Nonnull Object... args);
 }

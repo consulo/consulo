@@ -22,7 +22,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -96,7 +96,6 @@ public class SingleConfigurableEditor extends DialogWrapper {
         IdeModalityType ideModalityType
     ) {
         this(parent, configurable, null, dimensionServiceKey, showApplyButton, ideModalityType);
-
     }
 
     @RequiredUIAccess
@@ -272,8 +271,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     public static String createDimensionKey(@Nonnull Configurable configurable) {
-        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
-        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
+        LocalizationKey localizationKey = configurable.getDisplayName().getKey().orElseThrow();
+        return "#" + localizationKey.getLocalizationId() + "@" + localizationKey.getKey();
     }
 
     protected class ApplyAction extends AbstractAction {

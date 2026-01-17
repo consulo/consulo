@@ -27,7 +27,7 @@ import java.util.*;
  * @author NYUrchenko
  * @since 2020-05-20
  */
-public final class DefaultLocalizedValue extends CachingLocalizedValue {
+public /*final*/ class DefaultLocalizedValue extends CachingLocalizedValue {
     protected static final Object[] EMPTY_ARGS = new Object[0];
 
     @Nonnull

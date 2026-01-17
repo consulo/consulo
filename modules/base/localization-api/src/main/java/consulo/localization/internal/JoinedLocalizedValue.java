@@ -26,8 +26,8 @@ import java.util.Arrays;
  * @author NYUrchenko
  * @since 2021-09-24
  */
-public sealed class JoinedLocalizedValue extends CachingLocalizedValue
-    permits SeparatorJoinedLocalizedValue, SeparatorJoinedLocalizedValue2 {
+public /*sealed*/ class JoinedLocalizedValue extends CachingLocalizedValue
+    /*permits SeparatorJoinedLocalizedValue, SeparatorJoinedLocalizedValue2*/ {
     @Nonnull
     protected final LocalizedValue[] myValues;
 

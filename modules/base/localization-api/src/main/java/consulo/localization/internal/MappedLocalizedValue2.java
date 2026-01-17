@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 2020-07-30
  */
-public final class MappedLocalizedValue2 extends CachingLocalizedValue {
+public /*final*/ class MappedLocalizedValue2 extends CachingLocalizedValue {
     @Nonnull
     private final LocalizedValue myDelegate;
     @Nonnull
