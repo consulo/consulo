@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,17 @@ import jakarta.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
- * @author UNV
- * @since 2025-12-04
+ * @author VISTALL
+ * @since 2020-07-30
  */
-public final class MapLocalizeValue2 extends BaseLocalizeValue {
+public final class MappedLocalizeValue extends BaseLocalizeValue {
     private final LocalizeValue myDelegate;
-    private final BiFunction<LocalizeManager, String, String> myMapper;
+    private final Function<String, String> myMapper;
 
-    public MapLocalizeValue2(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
+    public MappedLocalizeValue(LocalizeValue delegate, Function<String, String> mapper) {
         super(ourEmptyArgs);
         myDelegate = delegate;
         myMapper = mapper;
@@ -42,20 +42,15 @@ public final class MapLocalizeValue2 extends BaseLocalizeValue {
     @Override
     protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         String value = myDelegate.getValue();
-        return Map.entry(localizeManager.getLocale(), myMapper.apply(localizeManager, value));
+        return Map.entry(localizeManager.getLocale(), myMapper.apply(value));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MapLocalizeValue2 that = (MapLocalizeValue2) o;
-        return Objects.equals(myDelegate, that.myDelegate) &&
-            Objects.equals(myMapper, that.myMapper);
+        return this == o
+            || o instanceof MappedLocalizeValue that
+            && Objects.equals(myDelegate, that.myDelegate)
+            && Objects.equals(myMapper, that.myMapper);
     }
 
     @Override

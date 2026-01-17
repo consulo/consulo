@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,6 @@ import java.util.Map;
  * @since 2020-07-30
  */
 public abstract class BaseLocalizeValue implements LocalizeValue {
-    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = (lv1, lv2) -> {
-        String v1 = lv1.get(), v2 = lv2.get();
-        int insensitive = v1.compareToIgnoreCase(v2);
-        return insensitive != 0 ? insensitive : v1.compareTo(v2);
-    };
-
     protected static final Object[] ourEmptyArgs = new Object[0];
 
     protected final Object[] myArgs;

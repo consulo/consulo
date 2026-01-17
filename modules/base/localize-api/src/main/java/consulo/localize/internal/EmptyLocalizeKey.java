@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,36 +41,6 @@ public final class EmptyLocalizeKey implements LocalizeKey {
     @Nonnull
     @Override
     public LocalizeValue getValue() {
-        return LocalizeValue.empty();
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(Object arg) {
-        return LocalizeValue.empty();
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(Object arg0, Object arg1) {
-        return LocalizeValue.empty();
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(Object arg0, Object arg1, Object arg2) {
-        return LocalizeValue.empty();
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3) {
-        return LocalizeValue.empty();
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
         return LocalizeValue.empty();
     }
 

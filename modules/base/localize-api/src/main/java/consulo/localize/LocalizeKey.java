@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2017-11-09
  */
 public interface LocalizeKey {
     @Nonnull
@@ -50,21 +50,6 @@ public interface LocalizeKey {
 
     @Nonnull
     LocalizeValue getValue();
-
-    @Nonnull
-    LocalizeValue getValue(Object arg);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3);
-
-    @Nonnull
-    LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4);
 
     @Nonnull
     LocalizeValue getValue(Object... args);

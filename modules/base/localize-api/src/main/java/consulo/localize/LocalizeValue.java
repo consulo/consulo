@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,22 +37,22 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue space() {
-        return SingleLocalizeValue.ourSpace;
+        return ConstantLocalizeValue.SPACE;
     }
 
     @Nonnull
     static LocalizeValue colon() {
-        return SingleLocalizeValue.ourColon;
+        return ConstantLocalizeValue.COLON;
     }
 
     @Nonnull
     static LocalizeValue dot() {
-        return SingleLocalizeValue.ourDot;
+        return ConstantLocalizeValue.DOT;
     }
 
     @Nonnull
     static LocalizeValue questionMark() {
-        return SingleLocalizeValue.ourQuestionMark;
+        return ConstantLocalizeValue.QUESTION_MARK;
     }
 
     @Nonnull
@@ -62,12 +62,12 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue of(@Nonnull String text) {
-        return text.isEmpty() ? empty() : new SingleLocalizeValue(text);
+        return text.isEmpty() ? empty() : new ConstantLocalizeValue(text);
     }
 
     @Nonnull
     static LocalizeValue of(char c) {
-        return new SingleLocalizeValue(String.valueOf(c));
+        return new ConstantLocalizeValue(String.valueOf(c));
     }
 
     @Nonnull
@@ -77,21 +77,21 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue join(@Nonnull LocalizeValue... values) {
-        return values.length == 0 ? empty() : new JoinLocalizeValue(values);
+        return values.length == 0 ? empty() : new JoinedLocalizeValue(values);
     }
 
     @Nonnull
     static LocalizeValue join(@Nonnull String separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue(separator, values);
+        return values.length == 0 ? empty() : new SeparatorJoinedLocalizeValue(separator, values);
     }
 
     @Nonnull
     static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
-        return values.length == 0 ? empty() : new JoinSeparatorLocalizeValue2(separator, values);
+        return values.length == 0 ? empty() : new SeparatorJoinedLocalizeValue2(separator, values);
     }
 
     static Comparator<LocalizeValue> comparator() {
-        return BaseLocalizeValue.CASE_INSENSITIVE_ORDER;
+        return DefaultLocalizeValue.CASE_INSENSITIVE_ORDER;
     }
 
     default boolean isEmpty() {
@@ -130,12 +130,12 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     default LocalizeValue map(@Nonnull Function<String, String> mapper) {
-        return new MapLocalizeValue(this, mapper);
+        return new MappedLocalizeValue(this, mapper);
     }
 
     @Nonnull
     default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
-        return new MapLocalizeValue2(this, mapper);
+        return new MappedLocalizeValue2(this, mapper);
     }
 
     @Nonnull

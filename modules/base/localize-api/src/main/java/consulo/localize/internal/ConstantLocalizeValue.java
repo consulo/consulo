@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,17 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2017-11-09
  */
-public class SingleLocalizeValue implements LocalizeValue {
-    public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
-    public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
-    public static final SingleLocalizeValue ourDot = new SingleLocalizeValue(".");
-    public static final SingleLocalizeValue ourQuestionMark = new SingleLocalizeValue("?");
+public class ConstantLocalizeValue implements LocalizeValue {
+    public static final ConstantLocalizeValue SPACE = new ConstantLocalizeValue(" ");
+    public static final ConstantLocalizeValue COLON = new ConstantLocalizeValue(":");
+    public static final ConstantLocalizeValue DOT = new ConstantLocalizeValue(".");
+    public static final ConstantLocalizeValue QUESTION_MARK = new ConstantLocalizeValue("?");
 
     private final String myValue;
 
-    public SingleLocalizeValue(String value) {
+    public ConstantLocalizeValue(String value) {
         myValue = value;
     }
 
@@ -60,7 +60,7 @@ public class SingleLocalizeValue implements LocalizeValue {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SingleLocalizeValue that = (SingleLocalizeValue)o;
+        ConstantLocalizeValue that = (ConstantLocalizeValue) o;
         return Objects.equals(myValue, that.myValue);
     }
 

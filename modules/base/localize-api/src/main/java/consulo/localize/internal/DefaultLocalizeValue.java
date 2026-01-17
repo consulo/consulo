@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package consulo.localize.internal;
 
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -26,6 +27,12 @@ import java.util.*;
  * @since 2020-05-20
  */
 public final class DefaultLocalizeValue extends BaseLocalizeValue {
+    public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = (lv1, lv2) -> {
+        String v1 = lv1.get(), v2 = lv2.get();
+        int insensitive = v1.compareToIgnoreCase(v2);
+        return insensitive != 0 ? insensitive : v1.compareTo(v2);
+    };
+
     private final LocalizeKey myLocalizeKey;
 
     public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
