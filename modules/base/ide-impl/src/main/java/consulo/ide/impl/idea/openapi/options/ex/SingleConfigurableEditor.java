@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -53,17 +52,25 @@ public class SingleConfigurableEditor extends DialogWrapper {
     private boolean myChangesWereApplied;
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton, IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(
+        @Nullable Project project,
+        Configurable configurable,
+        String dimensionKey,
+        boolean showApplyButton,
+        IdeModalityType ideModalityType
+    ) {
         this(project, configurable, LocalizeValue.empty(), dimensionKey, showApplyButton, ideModalityType);
     }
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(@Nullable Project project,
-                                    Configurable configurable,
-                                    @Nonnull LocalizeValue title,
-                                    @NonNls String dimensionKey,
-                                    boolean showApplyButton,
-                                    IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(
+        @Nullable Project project,
+        Configurable configurable,
+        @Nonnull LocalizeValue title,
+        String dimensionKey,
+        boolean showApplyButton,
+        IdeModalityType ideModalityType
+    ) {
         super(project, true, ideModalityType);
         myDimensionKey = dimensionKey;
         myShowApplyButton = showApplyButton;
@@ -76,18 +83,26 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton, IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(
+        Component parent,
+        Configurable configurable,
+        String dimensionServiceKey,
+        boolean showApplyButton,
+        IdeModalityType ideModalityType
+    ) {
         this(parent, configurable, LocalizeValue.empty(), dimensionServiceKey, showApplyButton, ideModalityType);
 
     }
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(Component parent,
-                                    Configurable configurable,
-                                    @Nonnull LocalizeValue title,
-                                    String dimensionServiceKey,
-                                    boolean showApplyButton,
-                                    IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(
+        Component parent,
+        Configurable configurable,
+        @Nonnull LocalizeValue title,
+        String dimensionServiceKey,
+        boolean showApplyButton,
+        IdeModalityType ideModalityType
+    ) {
         super(parent, true);
         myDimensionKey = dimensionServiceKey;
         myShowApplyButton = showApplyButton;
@@ -100,34 +115,52 @@ public class SingleConfigurableEditor extends DialogWrapper {
         myConfigurable.reset();
     }
 
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton) {
+    @RequiredUIAccess
+    public SingleConfigurableEditor(
+        @Nullable Project project,
+        Configurable configurable,
+        String dimensionKey,
+        boolean showApplyButton
+    ) {
         this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
     }
 
+    @RequiredUIAccess
     public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton) {
         this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
     }
 
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, IdeModalityType ideModalityType) {
+    @RequiredUIAccess
+    public SingleConfigurableEditor(
+        @Nullable Project project,
+        Configurable configurable,
+        String dimensionKey,
+        IdeModalityType ideModalityType
+    ) {
         this(project, configurable, dimensionKey, true, ideModalityType);
     }
 
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey) {
+    @RequiredUIAccess
+    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey) {
         this(project, configurable, dimensionKey, true);
     }
 
+    @RequiredUIAccess
     public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey) {
         this(parent, configurable, dimensionServiceKey, true);
     }
 
+    @RequiredUIAccess
     public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, IdeModalityType ideModalityType) {
         this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable), ideModalityType);
     }
 
+    @RequiredUIAccess
     public SingleConfigurableEditor(@Nullable Project project, Configurable configurable) {
         this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
     }
 
+    @RequiredUIAccess
     public SingleConfigurableEditor(Component parent, Configurable configurable) {
         this(parent, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
     }
@@ -154,6 +187,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     @Nullable
     @Override
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
         if (myConfigurable instanceof Configurable.NoMargin) {
             JComponent southPanel = super.createSouthPanel();
@@ -193,6 +227,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(myConfigurable.getHelpTopic());
     }
@@ -201,7 +236,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     @RequiredUIAccess
     public void doCancelAction() {
         if (myChangesWereApplied) {
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAll();
         }
         super.doCancelAction();
     }
@@ -214,15 +249,15 @@ public class SingleConfigurableEditor extends DialogWrapper {
                 myConfigurable.apply();
             }
 
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAll();
         }
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
                 }
             }
             return;
@@ -242,6 +277,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
             super(CommonLocalize.buttonApply().get());
             Runnable updateRequest = new Runnable() {
                 @Override
+                @RequiredUIAccess
                 public void run() {
                     if (!SingleConfigurableEditor.this.isShowing()) {
                         return;
@@ -274,15 +310,15 @@ public class SingleConfigurableEditor extends DialogWrapper {
                 if (myConfigurable.isModified()) {
                     myConfigurable.apply();
                     myChangesWereApplied = true;
-                    setCancelButtonText(CommonLocalize.buttonClose().get());
+                    setCancelButtonText(CommonLocalize.buttonClose());
                 }
             }
             catch (ConfigurationException e) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
                 }
             }
             finally {
