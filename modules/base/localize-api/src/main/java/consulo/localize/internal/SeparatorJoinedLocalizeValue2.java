@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,14 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 24/09/2021
+ * @since 2025-09-18
  */
-public final class JoinLocalizeValue extends BaseLocalizeValue {
-    public JoinLocalizeValue(LocalizeValue[] values) {
+public class SeparatorJoinedLocalizeValue2 extends BaseLocalizeValue {
+    private final LocalizeValue mySeparator;
+
+    public SeparatorJoinedLocalizeValue2(LocalizeValue separator, LocalizeValue[] values) {
         super(values);
+        mySeparator = separator;
     }
 
     @Nonnull
@@ -42,11 +45,25 @@ public final class JoinLocalizeValue extends BaseLocalizeValue {
     protected String calcValue(LocalizeManager manager) {
         StringBuilder builder = new StringBuilder();
 
-        for (Object arg : myArgs) {
-            String value = arg instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(arg);
+        for (int i = 0; i < myArgs.length; i++) {
+            if (i != 0) {
+                builder.append(mySeparator.getValue());
+            }
+
+            Object ar = myArgs[i];
+
+            String value = ar instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(ar);
 
             builder.append(value);
         }
         return builder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o == this
+            || super.equals(o)
+            && o instanceof SeparatorJoinedLocalizeValue2 that
+            && mySeparator.equals(that.mySeparator);
     }
 }
