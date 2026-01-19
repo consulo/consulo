@@ -1,27 +1,24 @@
 /*
  * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
-package consulo.ide.impl.idea.ide.scratch;
+package consulo.language.scratch;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeView;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.Language;
-import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.file.LanguageFileType;
+import consulo.language.internal.LanguageInternal;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.language.scratch.ScratchFileService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandProcessor;
+import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -69,7 +66,8 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
         public String fileExtension;
 
         public ScratchFileService.Option createOption = ScratchFileService.Option.create_new_always;
-        public IdeView ideView;
+
+        public DataContext dataProvider;
     }
 
     @Nullable
@@ -87,15 +85,6 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
     @Nonnull
     @RequiredUIAccess
     public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-        return CommandProcessor.getInstance().<String>newCommand()
-            .project(project)
-            .inWriteAction()
-            .compute(() -> {
-                PsiFile psi = parseHeader(project, language, text);
-                if (psi != null) {
-                    CodeStyleManager.getInstance(project).reformat(psi);
-                }
-                return psi == null ? text : psi.getText();
-            });
+        return LanguageInternal.getInstance().reformatScratch(project, language, text);
     }
 }

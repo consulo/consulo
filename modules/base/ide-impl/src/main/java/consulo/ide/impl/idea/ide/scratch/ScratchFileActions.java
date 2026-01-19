@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ActionImpl;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -16,6 +15,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.*;
 import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileCreationHelper;
 import consulo.language.scratch.ScratchFileService;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
@@ -94,7 +94,7 @@ public class ScratchFileActions {
         else {
             context.text = StringUtil.notNullize(e.getData(PlatformDataKeys.PREDEFINED_TEXT));
         }
-        context.ideView = e.getData(IdeView.KEY);
+        context.dataProvider = e.getDataContext();
         return context;
     }
 
@@ -108,8 +108,9 @@ public class ScratchFileActions {
         }
         ScratchFileCreationHelper.forLanguage(language).beforeCreate(project, context);
 
-        VirtualFile dir = context.ideView != null
-            ? PsiUtilCore.getVirtualFile(ArrayUtil.getFirstElement(context.ideView.getDirectories())) : null;
+        IdeView ideView = context.dataProvider.getData(IdeView.KEY);
+        VirtualFile dir = ideView != null
+            ? PsiUtilCore.getVirtualFile(ArrayUtil.getFirstElement(ideView.getDirectories())) : null;
         RootType rootType = dir == null ? null : ScratchFileService.findRootType(dir);
         String relativePath = rootType != ScratchRootType.getInstance() ? ""
             : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
@@ -124,8 +125,8 @@ public class ScratchFileActions {
 
         PsiNavigationSupport.getInstance().createNavigatable(project, file, context.caretOffset).navigate(true);
         PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-        if (context.ideView != null && psiFile != null) {
-            context.ideView.selectElement(psiFile);
+        if (ideView != null && psiFile != null) {
+            ideView.selectElement(psiFile);
         }
         return psiFile;
     }

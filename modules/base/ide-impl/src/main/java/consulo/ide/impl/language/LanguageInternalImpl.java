@@ -18,9 +18,15 @@ package consulo.ide.impl.language;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.document.Document;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.internal.EditorHighlighterCache;
 import consulo.language.internal.LanguageInternal;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.FileContent;
+import consulo.language.scratch.ScratchFileCreationHelper;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.inject.Singleton;
 
 /**
@@ -36,5 +42,19 @@ public class LanguageInternalImpl implements LanguageInternal {
             EditorHighlighter.KEY,
             EditorHighlighterCache.getEditorHighlighterForCachesBuilding(document)
         );
+    }
+
+    @Override
+    public String reformatScratch(Project project, Language language, String text) {
+        return CommandProcessor.getInstance().<String>newCommand()
+            .project(project)
+            .inWriteAction()
+            .compute(() -> {
+                PsiFile psi = ScratchFileCreationHelper.parseHeader(project, language, text);
+                if (psi != null) {
+                    CodeStyleManager.getInstance(project).reformat(psi);
+                }
+                return psi == null ? text : psi.getText();
+            });
     }
 }

@@ -19,7 +19,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.document.Document;
+import consulo.language.Language;
 import consulo.language.psi.stub.FileContent;
+import consulo.project.Project;
 
 /**
  * @author VISTALL
@@ -32,5 +34,9 @@ public interface LanguageInternal {
     }
 
     default void rememberEditorHighlight(FileContent fileContent, Document document) {
+    }
+
+    default String reformatScratch(Project project, Language language, String text) {
+        return text;
     }
 }

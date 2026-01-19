@@ -7,6 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
 import consulo.language.Language;
+import consulo.language.scratch.ScratchFileCreationHelper;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
