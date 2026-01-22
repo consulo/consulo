@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2019-04-11
  */
 public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedValue> {

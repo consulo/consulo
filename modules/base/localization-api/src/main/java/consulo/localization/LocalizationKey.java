@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2017-11-09
  */
 public interface LocalizationKey {
