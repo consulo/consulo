@@ -24,7 +24,7 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2020-05-20
  */
 public final class DefaultLocalizedValue extends CachingLocalizedValue {
