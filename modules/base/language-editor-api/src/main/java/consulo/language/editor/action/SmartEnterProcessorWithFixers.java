@@ -1,9 +1,9 @@
 package consulo.language.editor.action;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -16,8 +16,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.OrderedSet;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +31,11 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
 
   protected int myFirstErrorOffset = Integer.MAX_VALUE;
 
-  private final List<Fixer<? extends SmartEnterProcessorWithFixers>> myFixers = new ArrayList<Fixer<? extends SmartEnterProcessorWithFixers>>();
-  private final List<FixEnterProcessor> myEnterProcessors = new ArrayList<FixEnterProcessor>();
+  private final List<Fixer<? extends SmartEnterProcessorWithFixers>> myFixers = new ArrayList<>();
+  private final List<FixEnterProcessor> myEnterProcessors = new ArrayList<>();
 
   protected static void plainEnter(@Nonnull Editor editor) {
-    getEnterHandler().execute(editor, ((EditorEx)editor).getDataContext());
+     getEnterHandler().execute(editor, editor.getCaretModel().getCurrentCaret(), EditorUtil.getEditorDataContext(editor));
   }
 
   protected static EditorActionHandler getEnterHandler() {
@@ -88,7 +88,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
         return;
       }
 
-      OrderedSet<PsiElement> queue = new OrderedSet<PsiElement>();
+      OrderedSet<PsiElement> queue = new OrderedSet<>();
       collectAllElements(atCaret, queue, true);
       queue.add(atCaret);
 
@@ -183,10 +183,5 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     protected void plainEnter(@Nonnull Editor editor) {
       SmartEnterProcessorWithFixers.plainEnter(editor);
     }
-  }
-
-  @Override
-  public void commit(@Nonnull Editor editor) { // pull up
-    super.commit(editor);
   }
 }

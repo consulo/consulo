@@ -19,10 +19,14 @@ import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.util.LoggerUtil;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -415,6 +419,25 @@ public class EditorUtil {
 //                EditorBundle.message("editor.max.carets.hint", editor.getCaretModel().getMaxCaretCount()),
 //                NotificationType.INFORMATION)
 //            .notify(editor.getProject());
+    }
+
+
+    @Nonnull
+    public static DataContext getEditorDataContext(@Nonnull Editor editor) {
+        DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
+        if (context.getData(Project.KEY) == editor.getProject()) {
+            return context;
+        }
+        return new DataContext() {
+            @Nullable
+            @Override
+            public <T> T getData(@Nonnull Key<T> dataId) {
+                if (Project.KEY == dataId) {
+                    return (T) editor.getProject();
+                }
+                return context.getData(dataId);
+            }
+        };
     }
 
     public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {

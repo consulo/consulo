@@ -26,8 +26,6 @@ import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -49,7 +47,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
@@ -626,25 +623,6 @@ public final class EditorUtil {
                 return Pair.create(editor.getSelectionModel().getBlockSelectionStarts(), editor.getSelectionModel().getBlockSelectionEnds());
             }
         }, disposable);
-    }
-
-
-    @Nonnull
-    public static DataContext getEditorDataContext(@Nonnull Editor editor) {
-        DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
-        if (context.getData(Project.KEY) == editor.getProject()) {
-            return context;
-        }
-        return new DataContext() {
-            @Nullable
-            @Override
-            public <T> T getData(@Nonnull Key<T> dataId) {
-                if (Project.KEY == dataId) {
-                    return (T) editor.getProject();
-                }
-                return context.getData(dataId);
-            }
-        };
     }
 
     public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, @Nonnull Document document) {
