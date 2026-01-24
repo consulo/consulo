@@ -70,6 +70,7 @@ module consulo.language.editor.api {
     exports consulo.language.editor.wolfAnalyzer;
 
     exports consulo.language.editor.internal to
+        consulo.ide.api,
         consulo.ide.impl,
         consulo.language.editor.impl,
         consulo.language.index.impl,

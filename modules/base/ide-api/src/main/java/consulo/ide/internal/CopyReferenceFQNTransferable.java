@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.internal;
 
+import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nullable;
 
@@ -9,16 +10,18 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-class CopyReferenceFQNTransferable implements Transferable {
+public class CopyReferenceFQNTransferable implements Transferable {
+    public static final DataFlavor DATA_FLAVOR = FileCopyPasteUtil.createJvmDataFlavor(CopyReferenceFQNTransferable.class);
+
     private final String fqn;
 
-    CopyReferenceFQNTransferable(String fqn) {
+    public CopyReferenceFQNTransferable(String fqn) {
         this.fqn = fqn;
     }
 
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{CopyReferenceAction.ourFlavor, DataFlavor.stringFlavor};
+        return new DataFlavor[]{DATA_FLAVOR, DataFlavor.stringFlavor};
     }
 
     @Override

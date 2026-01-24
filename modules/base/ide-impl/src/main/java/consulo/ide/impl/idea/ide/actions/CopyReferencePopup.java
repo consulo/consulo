@@ -7,11 +7,11 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
+import consulo.ide.internal.CopyPathProviderUtil;
 import consulo.language.localize.LanguageLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -125,7 +125,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                         Presentation presentation = factory.getPresentation(actionItem.getAction());
 
                         AnAction action = actionItem.getAction();
-                        String qualifiedName = presentation.getClientProperty(CopyPathProvider.QUALIFIED_NAME);
+                        String qualifiedName = presentation.getClientProperty(CopyPathProviderUtil.QUALIFIED_NAME);
 
                         myInfoLabel.setText("");
                         if (qualifiedName != null) {

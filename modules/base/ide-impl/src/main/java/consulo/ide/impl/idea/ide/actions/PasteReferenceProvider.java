@@ -7,6 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.impl.internal.action.PasteAction;
+import consulo.ide.internal.CopyReferenceFQNTransferable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.QualifiedNameProvider;
@@ -101,7 +102,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
             Transferable transferable = producer.get();
             if (transferable != null) {
                 try {
-                    return (String)transferable.getTransferData(CopyReferenceAction.ourFlavor);
+                    return (String)transferable.getTransferData(CopyReferenceFQNTransferable.DATA_FLAVOR);
                 }
                 catch (Exception ignored) {
                 }
@@ -109,6 +110,6 @@ public class PasteReferenceProvider implements CustomPasteProvider {
             return null;
         }
 
-        return CopyPasteManager.getInstance().getContents(CopyReferenceAction.ourFlavor);
+        return CopyPasteManager.getInstance().getContents(CopyReferenceFQNTransferable.DATA_FLAVOR);
     }
 }

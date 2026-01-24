@@ -20,6 +20,8 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
+import consulo.ide.internal.CopyPathProviderUtil;
+import consulo.language.editor.internal.CopyReferenceUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
@@ -32,7 +34,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -42,8 +43,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CopyPathProvider extends DumbAwareAction {
-    public static final Key<String> QUALIFIED_NAME = Key.of("QUALIFIED_NAME");
-
     public CopyPathProvider() {
     }
 
@@ -93,7 +92,7 @@ public class CopyPathProvider extends DumbAwareAction {
             : null;
 
         Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(QUALIFIED_NAME, qualifiedName);
+        presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
         presentation.setEnabledAndVisible(qualifiedName != null);
     }
 

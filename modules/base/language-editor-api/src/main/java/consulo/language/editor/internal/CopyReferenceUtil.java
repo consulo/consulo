@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions;
+package consulo.language.editor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
@@ -11,10 +11,7 @@ import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.psi.*;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.internal.StatusBarEx;
-import consulo.project.ui.wm.WindowManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -25,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class CopyReferenceUtil {
+public class CopyReferenceUtil {
     @RequiredReadAction
-    static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
+    public static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
         TextAttributesKey attributesKey = EditorColors.SEARCH_RESULT_ATTRIBUTES;
 
         HighlightManager highlightManager = HighlightManager.getInstance(project);
-        if (elements.size() == 1 && editor != null && project != null) {
+        if (elements.size() == 1 && editor != null) {
             PsiElement element = elements.get(0);
             PsiElement nameIdentifier = IdentifierUtil.getNameIdentifier(element);
             if (nameIdentifier != null) {
@@ -51,7 +48,7 @@ public final class CopyReferenceUtil {
 
     @Nonnull
     @RequiredReadAction
-    static List<PsiElement> getElementsToCopy(@Nullable Editor editor, DataContext dataContext) {
+    public static List<PsiElement> getElementsToCopy(@Nullable Editor editor, DataContext dataContext) {
         List<PsiElement> elements = new ArrayList<>();
         if (editor != null) {
             PsiReference reference = TargetElementUtil.findReference(editor);
@@ -87,17 +84,17 @@ public final class CopyReferenceUtil {
         );
     }
 
-    static PsiElement adjustElement(PsiElement element) {
+    public static PsiElement adjustElement(PsiElement element) {
         PsiElement adjustedElement = QualifiedNameProviderUtil.adjustElementToCopy(element);
         return adjustedElement != null ? adjustedElement : element;
     }
 
     @Nullable
-    static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
+    public static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
         return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);
     }
 
-    static String doCopy(List<? extends PsiElement> elements, @Nullable Editor editor) {
+    public static String doCopy(List<? extends PsiElement> elements, @Nullable Editor editor) {
         if (elements.isEmpty()) {
             return null;
         }
@@ -116,7 +113,7 @@ public final class CopyReferenceUtil {
     }
 
     @Nullable
-    static String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
+    public static String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
         return QualifiedNameProviderUtil.elementToFqn(element, editor);
     }
 }
