@@ -24,7 +24,6 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -36,11 +35,11 @@ import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.LanguageQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
+import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -118,7 +117,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
     }
 
     private static boolean isInStringLiteral(@Nonnull Editor editor, @Nonnull DataContext dataContext, int offset) {
-        Language language = EnterHandler.getLanguage(dataContext);
+        Language language = EnterHandlerHelper.getContextLanguage(dataContext);
         if (offset > 0 && language != null) {
             QuoteHandler quoteHandler = LanguageQuoteHandler.forLanguage(language);
             if (quoteHandler == null) {

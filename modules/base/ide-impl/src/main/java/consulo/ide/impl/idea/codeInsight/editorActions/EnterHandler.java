@@ -37,6 +37,7 @@ import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.lexer.Lexer;
@@ -49,7 +50,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -62,7 +62,6 @@ import java.util.Objects;
 public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
     private static final Logger LOG = Logger.getInstance(EnterHandler.class);
 
-    private final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
     private EditorActionHandler myOriginalHandler;
 
     public EnterHandler() {
@@ -203,7 +202,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     @Nonnull
     private static DataContext getExtendedContext(@Nonnull DataContext originalContext, @Nonnull Project project, @Nonnull Caret caret) {
         DataContext context = originalContext instanceof UserDataHolder ? originalContext : new DataContextWrapper(originalContext);
-        ((UserDataHolder)context).putUserData(CONTEXT_LANGUAGE, PsiUtilBase.getLanguageInEditor(caret, project));
+        ((UserDataHolder)context).putUserData(EnterHandlerHelper.CONTEXT_LANGUAGE, PsiUtilBase.getLanguageInEditor(caret, project));
         return context;
     }
 
@@ -398,7 +397,10 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
                     i = 0;
                 }
                 int lineStart = CharArrayUtil.shiftForward(chars, i, " \t");
-                Language language = myDataContext instanceof UserDataHolder ? CONTEXT_LANGUAGE.get((UserDataHolder)myDataContext) : null;
+                Language language = myDataContext instanceof UserDataHolder holder
+                    ? EnterHandlerHelper.CONTEXT_LANGUAGE.get(holder)
+                    : null;
+
                 Commenter langCommenter = language != null ? Commenter.forLanguage(language) : null;
                 CodeDocumentationUtil.CommentContext commentContext =
                     CodeDocumentationUtil.tryParseCommentContext(langCommenter, chars, lineStart);
@@ -462,7 +464,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
                 boolean docIndentApplied = false;
                 CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
                 if (codeInsightSettings.SMART_INDENT_ON_ENTER || myForceIndent || commentContext.docStart || commentContext.docAsterisk) {
-                    int offset = adjustLineIndentNoCommit(getLanguage(myDataContext), myDocument, myEditor, myOffset);
+                    int offset = adjustLineIndentNoCommit(EnterHandlerHelper.getContextLanguage(myDataContext), myDocument, myEditor, myOffset);
                     if (offset >= 0) {
                         myOffset = offset;
                         myIsIndentAdjustmentNeeded = false;
@@ -758,13 +760,5 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         public boolean isIndentAdjustmentNeeded() {
             return myIsIndentAdjustmentNeeded;
         }
-    }
-
-    @Nullable
-    public static Language getLanguage(@Nonnull DataContext dataContext) {
-        if (dataContext instanceof UserDataHolder userDataHolder) {
-            return CONTEXT_LANGUAGE.get(userDataHolder);
-        }
-        return null;
     }
 }

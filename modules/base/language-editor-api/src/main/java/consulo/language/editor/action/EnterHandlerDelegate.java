@@ -16,11 +16,14 @@
 
 package consulo.language.editor.action;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.language.Language;
+import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.SimpleReference;
@@ -38,6 +41,15 @@ public interface EnterHandlerDelegate {
         DefaultForceIndent,
         DefaultSkipIndent,
         Stop
+    }
+
+    /**
+     * Return contextual language while processing enter handler
+     */
+    @Nullable
+    @UsedInPlugin
+    static Language getContextLanguage(@Nonnull DataContext dataContext) {
+        return EnterHandlerHelper.getContextLanguage(dataContext);
     }
 
     /**

@@ -5,7 +5,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -13,6 +12,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.action.CodeDocumentationUtil;
 import consulo.language.editor.action.EnterBetweenBracesDelegate;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
@@ -41,7 +41,7 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get().intValue();
 
-        EnterBetweenBracesDelegate helper = getLanguageImplementation(EnterHandler.getLanguage(dataContext));
+        EnterBetweenBracesDelegate helper = getLanguageImplementation(EnterHandlerHelper.getContextLanguage(dataContext));
 
         if (!isApplicable(file, editor, text, caretOffset, helper)) {
             return Result.Continue;
@@ -65,7 +65,7 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
             document.insertString(editor.getCaretModel().getOffset(), "*" + indentInsideJavadoc);
         }
 
-        helper.formatAtOffset(file, editor, editor.getCaretModel().getOffset(), EnterHandler.getLanguage(dataContext));
+        helper.formatAtOffset(file, editor, editor.getCaretModel().getOffset(), EnterHandlerHelper.getContextLanguage(dataContext));
         return indentInsideJavadoc == null ? Result.Continue : Result.DefaultForceIndent;
     }
 
