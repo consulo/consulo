@@ -56,6 +56,9 @@ public interface InjectedLanguageManager {
 
     int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset, boolean minHostOffset);
 
+    @Nullable
+    String getUnescapedLeafText(PsiElement element, boolean strict);
+
     @Nonnull
     String getUnescapedText(@Nonnull PsiElement injectedNode);
 

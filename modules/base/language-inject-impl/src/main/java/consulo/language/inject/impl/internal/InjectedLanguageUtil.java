@@ -3,6 +3,7 @@
 package consulo.language.inject.impl.internal;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.CachedValueProvider;
@@ -652,6 +653,7 @@ public class InjectedLanguageUtil {
   }
 
   @Nullable
+  @RequiredReadAction
   public static String getUnescapedLeafText(PsiElement element, boolean strict) {
     String unescaped = element.getCopyableUserData(LeafPatcher.UNESCAPED_TEXT);
     if (unescaped != null) {

@@ -180,6 +180,12 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
         cachedInjectors = null;
     }
 
+    @Override
+    @Nullable
+    public String getUnescapedLeafText(PsiElement element, boolean strict) {
+        return InjectedLanguageUtil.getUnescapedLeafText(element, strict);
+    }
+
     @Nonnull
     @Override
     public String getUnescapedText(@Nonnull PsiElement injectedNode) {
