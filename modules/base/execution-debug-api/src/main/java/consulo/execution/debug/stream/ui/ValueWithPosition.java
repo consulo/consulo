@@ -1,0 +1,19 @@
+// Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package consulo.execution.debug.stream.ui;
+
+import consulo.execution.debug.stream.trace.TraceElement;
+
+/**
+ * @author Vitaliy.Bibaev
+ */
+public interface ValueWithPosition {
+  TraceElement getTraceElement();
+
+  boolean isVisible();
+
+  boolean isHighlighted();
+
+  int getPosition();
+
+  boolean isValid();
+}

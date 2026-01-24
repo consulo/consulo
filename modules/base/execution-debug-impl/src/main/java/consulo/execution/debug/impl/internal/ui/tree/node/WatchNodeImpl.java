@@ -24,7 +24,7 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XErrorValuePresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.execution.debug.impl.internal.evaluate.XEvaluationCallbackBase;
+import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.localize.LocalizeValue;

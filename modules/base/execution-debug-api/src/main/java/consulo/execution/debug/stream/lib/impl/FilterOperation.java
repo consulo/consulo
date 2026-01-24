@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.debug.impl.internal.evaluate;
+package consulo.execution.debug.stream.lib.impl;
 
-import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.stream.resolve.FilterResolver;
+import jakarta.annotation.Nonnull;
 
-/**
- * @author nik
- */
-public abstract class XEvaluationCallbackBase implements XDebuggerEvaluator.XEvaluationCallback {
+public class FilterOperation extends OrderBasedOperation {
+  public FilterOperation(@Nonnull String name) {
+    super(name, new FilterResolver());
+  }
 }

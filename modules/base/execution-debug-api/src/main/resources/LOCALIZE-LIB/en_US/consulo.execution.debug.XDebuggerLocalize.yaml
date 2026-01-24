@@ -1,3 +1,5 @@
+action.StreamTracerAction.text:
+    text: Trace Current Stream Chain
 action.add.to.watch.text:
     text: Add to Watches
 action.adjust.array.range.text:
@@ -12,6 +14,8 @@ action.auto.tooltip.on.selection.text:
     text: Show value on selection change
 action.auto.tooltip.text:
     text: Value auto tooltip
+action.calculating.chains.background.progress.title:
+    text: Calculating chains
 action.choose.debug.configuration.popup.description:
     text: Choose and debug configuration
 action.choose.debug.configuration.popup.text:
@@ -240,6 +244,12 @@ debugger.variables.not.available:
     text: Variables are not available
 dialog.title.evaluate.code.fragment:
     text: Evaluate Code Fragment
+evaluation.in.progress:
+    text: Evaluation in progress
+exception.label:
+    text: Cause
+exception.tab.name:
+    text: Exception
 inspect.value.dialog.title:
     text: Inspect ''{0}''
 invalid.frame:
@@ -272,6 +282,8 @@ memory.view.table.column.name.count:
     text: Count
 memory.view.table.column.name.diff:
     text: Diff
+multiple.chains.popup.title:
+    text: Multiple Chains Found
 node.test.show.full.value:
     text: … View
 node.text.ellipsis.0.more.nodes.double.click.to.show:
@@ -332,6 +344,28 @@ showReferring.dialog.title:
     text: Referring Objects For {0}
 stack.frame.loading.text:
     text: Loading…
+stream.debugger.dialog.flat.mode.button:
+    text: Flat Mode
+stream.debugger.dialog.split.mode.button:
+    text: Split Mode
+stream.debugger.dialog.title:
+    text: Stream Trace
+stream.debugger.dialog.with.exception.title:
+    text: Stream Trace (Exception Occurred)
+stream.debugger.evaluation.failed:
+    text: 'Evaluation failed: {0}'
+stream.debugger.evaluation.failed.cannot.interpret.result:
+    text: Cannot interpret trace result. {0}
+stream.debugger.evaluation.failed.no.suspend.context:
+    text: The execution of the program was resumed.
+stream.debugger.evaluation.failed.unexpected.value:
+    text: Unexpected value received.
+stream.debugger.evaluation.failed.unknown.type:
+    text: Unknown type of result value.
+stream.debugger.evaluation.failed.with.exception:
+    text: 'Evaluation failed: {0} exception thrown'
+stream.debugger.evaluation.failed.with.exception.and.message:
+    text: 'Evaluation failed: {0} exception thrown: {1}'
 string.debugger.runner.description:
     text: Debug selected configuration
 suspend.policy.panel.all:
@@ -344,6 +378,10 @@ suspend.policy.panel.thread:
     text: '&Thread'
 suspend.policy.panel.title:
     text: Suspend policy
+tab.content.exception.thrown:
+    text: There is no result (exception was thrown)
+tab.content.no.result:
+    text: There is no result of such stream chain
 xbreakpoint.default.display.text:
     text: Line {0} in {1}
 xbreakpoint.group.depends.on:

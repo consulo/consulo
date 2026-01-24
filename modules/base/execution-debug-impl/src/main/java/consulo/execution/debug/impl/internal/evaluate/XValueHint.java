@@ -31,6 +31,7 @@ import consulo.execution.debug.impl.internal.action.handler.XDebuggerEvaluateAct
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
+import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTree;
 import consulo.execution.ui.console.ConsoleView;

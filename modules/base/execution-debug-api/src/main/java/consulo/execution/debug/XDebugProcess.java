@@ -60,6 +60,7 @@ public abstract class XDebugProcess {
         mySession = session;
     }
 
+    @Nonnull
     public final XDebugSession getSession() {
         return mySession;
     }

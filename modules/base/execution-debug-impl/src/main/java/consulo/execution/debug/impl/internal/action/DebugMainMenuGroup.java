@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.debug.impl.internal.stream.action.TraceStreamAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -45,6 +46,7 @@ import consulo.ui.ex.action.IdeActions;
         @ActionRef(type = ResumeAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = EvaluateAction.class),
+        @ActionRef(type = TraceStreamAction.class),
         @ActionRef(type = QuickEvaluateAction.class),
         @ActionRef(type = ShowExecutionPointAction.class),
         @ActionRef(type = AnSeparator.class),

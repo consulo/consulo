@@ -20,7 +20,7 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.execution.debug.frame.XValueContainer;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerEvaluationDialog;
-import consulo.execution.debug.impl.internal.evaluate.XEvaluationCallbackBase;
+import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;

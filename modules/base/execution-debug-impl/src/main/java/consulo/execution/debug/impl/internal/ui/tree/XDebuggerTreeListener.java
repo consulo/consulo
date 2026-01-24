@@ -26,7 +26,9 @@ import java.util.List;
  * @author nik
  */
 public interface XDebuggerTreeListener {
-  void nodeLoaded(@Nonnull RestorableStateNode node, String name);
+    default void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
+    }
 
-  void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last);
+    default void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
+    }
 }
