@@ -19,7 +19,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2017-11-09
  */
 public final class ConstantLocalizedValue extends AbstractLocalizedValue {

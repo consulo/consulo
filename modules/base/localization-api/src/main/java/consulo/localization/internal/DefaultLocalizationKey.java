@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2020-05-20
  */
 public final class DefaultLocalizationKey implements LocalizationKey {

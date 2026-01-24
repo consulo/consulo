@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 /**
  * @author VISTALL
- * @author NYUrchenko
+ * @author UNV
  * @since 2021-09-24
  */
 public sealed class JoinedLocalizedValue extends CachingLocalizedValue
