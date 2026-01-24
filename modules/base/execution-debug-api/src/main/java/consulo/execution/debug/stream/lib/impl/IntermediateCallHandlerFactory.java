@@ -15,12 +15,13 @@
  */
 package consulo.execution.debug.stream.lib.impl;
 
-import consulo.execution.debug.stream.resolve.DistinctResolver;
-import consulo.execution.debug.stream.trace.impl.interpret.DistinctCallTraceInterpreter;
+import consulo.execution.debug.stream.trace.IntermediateCallHandler;
+import consulo.execution.debug.stream.trace.dsl.Dsl;
+import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import jakarta.annotation.Nonnull;
 
-public class DistinctOperation extends IntermediateOperationBase {
-  public DistinctOperation(@Nonnull String name, @Nonnull IntermediateCallHandlerFactory handlerFactory) {
-    super(name, handlerFactory, new DistinctCallTraceInterpreter(), new DistinctResolver());
-  }
+@FunctionalInterface
+public interface IntermediateCallHandlerFactory {
+    @Nonnull
+    IntermediateCallHandler create(int callOrder, @Nonnull IntermediateStreamCall call, @Nonnull Dsl dsl);
 }

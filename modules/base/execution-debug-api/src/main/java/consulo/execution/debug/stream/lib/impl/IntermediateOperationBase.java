@@ -16,12 +16,12 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class IntermediateOperationBase implements IntermediateOperation {
   private final String name;
-  private final HandlerFactory handlerFactory;
+  private final IntermediateCallHandlerFactory handlerFactory;
   private final CallTraceInterpreter traceInterpreter;
   private final ValuesOrderResolver valuesOrderResolver;
 
   protected IntermediateOperationBase(@Nonnull String name,
-                                      @Nonnull HandlerFactory handlerFactory,
+                                      @Nonnull IntermediateCallHandlerFactory handlerFactory,
                                       @Nonnull CallTraceInterpreter traceInterpreter,
                                       @Nonnull ValuesOrderResolver valuesOrderResolver) {
     this.name = name;
@@ -54,9 +54,4 @@ public abstract class IntermediateOperationBase implements IntermediateOperation
     return handlerFactory.create(callOrder, call, dsl);
   }
 
-  @FunctionalInterface
-  protected interface HandlerFactory {
-    @Nonnull
-    IntermediateCallHandler create(int callOrder, @Nonnull IntermediateStreamCall call, @Nonnull Dsl dsl);
-  }
 }

@@ -18,8 +18,8 @@ public class DistinctTraceHandler extends HandlerBase.Intermediate {
 
   public DistinctTraceHandler(int num, IntermediateStreamCall call, Dsl dsl) {
     super(dsl);
-    this.myCall = call;
-    this.myPeekTracer = new PeekTraceHandler(num, "distinct", call.getTypeBefore(), call.getTypeAfter(), dsl);
+    myCall = call;
+    myPeekTracer = new PeekTraceHandler(num, "distinct", call.getTypeBefore(), call.getTypeAfter(), dsl);
   }
 
   @Override
