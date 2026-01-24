@@ -124,4 +124,12 @@ public interface InjectedLanguageManager {
 
     @Nonnull
     PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow);
+
+    @RequiredReadAction
+    @Nonnull
+    default String getUnescapedText(@Nonnull PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {
+        int beginIndex = startElement == null ? 0 : startElement.getTextRange().getStartOffset();
+        int endIndex = endElement == null ? file.getTextLength() : endElement.getTextRange().getStartOffset();
+        return file.getText().substring(beginIndex, endIndex);
+    }
 }

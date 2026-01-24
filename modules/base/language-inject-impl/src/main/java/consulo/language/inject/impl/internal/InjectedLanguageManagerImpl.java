@@ -387,6 +387,8 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     }
 
     @Override
+    @Nonnull
+    @RequiredReadAction
     public String getUnescapedText(@Nonnull PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {
         return InjectedLanguageUtil.getUnescapedText(file, startElement, endElement);
     }

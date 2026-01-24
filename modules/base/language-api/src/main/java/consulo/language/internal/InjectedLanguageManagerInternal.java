@@ -69,8 +69,6 @@ public interface InjectedLanguageManagerInternal extends InjectedLanguageManager
 
     <T> void putInjectedFileUserData(@Nonnull PsiElement element, @Nonnull Language language, @Nonnull Key<T> key, @Nullable T value);
 
-    String getUnescapedText(@Nonnull PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement);
-
     // null means failed to reparse
     BooleanSupplier reparse(@Nonnull PsiFile injectedPsiFile,
                             @Nonnull DocumentWindow injectedDocument,
