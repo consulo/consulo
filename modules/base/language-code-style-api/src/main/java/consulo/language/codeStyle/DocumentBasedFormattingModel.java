@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -62,6 +61,10 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         myFile = file;
         myDocumentModel = FormattingDocumentModel.create(document, file);
         myOriginalFormattingModel = null;
+    }
+
+    public DocumentBasedFormattingModel(@Nonnull Block rootBlock, @Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
+        this(rootBlock, file.getProject(), settings, file.getFileType(), file);
     }
 
     public DocumentBasedFormattingModel(
@@ -110,7 +113,6 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     public FormattingDocumentModel getDocumentModel() {
         return myDocumentModel;
     }
-
 
     @Override
     public TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace) {
