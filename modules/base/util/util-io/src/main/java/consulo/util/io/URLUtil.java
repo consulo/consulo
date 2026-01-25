@@ -26,10 +26,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -343,5 +340,23 @@ public class URLUtil {
             return url;
         }
         return url;
+    }
+
+    /**
+     * Encodes a URI component by replacing each instance of certain characters by one, two, three,
+     * or four escape sequences representing the UTF-8 encoding of the character.
+     * Behaves similarly to standard JavaScript build-in function <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent">encodeURIComponent</a>.
+     *
+     * @param s a component of a URI
+     * @return a new string representing the provided string encoded as a URI component
+     */
+    @Nonnull
+    public static String encodeURIComponent(@Nonnull String s) {
+        return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20")
+            .replace("%21", "!")
+            .replace("%27", "'")
+            .replace("%28", "(")
+            .replace("%29", ")")
+            .replace("%7E", "~");
     }
 }

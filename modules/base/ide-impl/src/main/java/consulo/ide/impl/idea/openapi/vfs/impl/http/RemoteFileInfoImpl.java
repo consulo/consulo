@@ -26,6 +26,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
+import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
 import consulo.virtualFileSystem.http.event.FileDownloadingListener;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;

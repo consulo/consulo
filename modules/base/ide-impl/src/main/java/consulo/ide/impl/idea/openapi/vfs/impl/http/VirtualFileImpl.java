@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

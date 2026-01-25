@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.util.io;
 
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.regex.Matcher;
@@ -278,7 +277,7 @@ public class URLUtil {
    */
   @Nonnull
   public static String encodeURIComponent(@Nonnull String s) {
-    return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20").replace("%21", "!").replace("%27", "'").replace("%28", "(").replace("%29", ")").replace("%7E", "~");
+    return consulo.util.io.URLUtil.encodeURIComponent(s);
   }
 
   @Nonnull
