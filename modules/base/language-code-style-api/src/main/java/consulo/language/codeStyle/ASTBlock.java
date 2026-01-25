@@ -16,10 +16,43 @@
 package consulo.language.codeStyle;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 /**
  * @author yole
  */
 public interface ASTBlock extends Block {
     ASTNode getNode();
+
+    /**
+     * @return {@link ASTNode} from this {@code block} if it's {@link ASTBlock}, null otherwise
+     */
+    @Contract("null -> null")
+    @Nullable
+    static ASTNode getNode(@Nullable Block block) {
+        return block instanceof ASTBlock ? ((ASTBlock) block).getNode() : null;
+    }
+
+    /**
+     * @return element type of the {@link ASTNode} contained in the {@code block}, if it's an {@link ASTBlock}, null otherwise
+     */
+    @Contract("null -> null")
+    @Nullable
+    static IElementType getElementType(@Nullable Block block) {
+        ASTNode node = getNode(block);
+        return node == null ? null : node.getElementType();
+    }
+
+    /**
+     * @return {@link PsiElement} from {@link ASTNode} from this {@code block} if it's {@link ASTBlock}, null otherwise
+     */
+    @Contract("null -> null")
+    @Nullable
+    static PsiElement getPsiElement(@Nullable Block block) {
+        ASTNode obj = getNode(block);
+        return obj == null ? null : obj.getPsi();
+    }
 }

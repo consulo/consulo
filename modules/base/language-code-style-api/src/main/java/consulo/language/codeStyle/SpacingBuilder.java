@@ -1,20 +1,21 @@
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.codeStyle;
 
-import consulo.language.Language;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-
+import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author yole
- */
 public class SpacingBuilder {
+    private static final Logger LOG = Logger.getInstance(SpacingBuilder.class);
+
     private static class SpacingRule {
         protected final RuleCondition myRuleCondition;
         protected final int myMinSpaces;
@@ -23,14 +24,12 @@ public class SpacingBuilder {
         protected final boolean myKeepLineBreaks;
         protected final int myKeepBlankLines;
 
-        private SpacingRule(
-            @Nonnull RuleCondition condition,
-            int minSpaces,
-            int maxSpaces,
-            int minLF,
-            boolean keepLineBreaks,
-            int keepBlankLines
-        ) {
+        private SpacingRule(@Nonnull RuleCondition condition,
+                            int minSpaces,
+                            int maxSpaces,
+                            int minLF,
+                            boolean keepLineBreaks,
+                            int keepBlankLines) {
             myRuleCondition = condition;
             myMinSpaces = minSpaces;
             myMaxSpaces = maxSpaces;
@@ -39,38 +38,42 @@ public class SpacingBuilder {
             myKeepBlankLines = keepBlankLines;
         }
 
-        public boolean matches(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
-            return myRuleCondition.matches(
-                parentBlock.getNode().getElementType(),
-                childBlock1.getNode().getElementType(),
-                childBlock2.getNode().getElementType()
-            );
+        @Contract("null,_,_->false; _,null,_->false; _,_,null->false")
+        public boolean matches(@Nullable IElementType parentType, @Nullable IElementType childType1, @Nullable IElementType childType2) {
+            return parentType != null && childType1 != null && childType2 != null && myRuleCondition.matches(parentType, childType1, childType2);
         }
 
-        public Spacing createSpacing(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
+        @Contract("null,_,_->false; _,null,_->false; _,_,null->false")
+        public boolean matches(@Nullable ASTBlock parentBlock, @Nullable ASTBlock childBlock1, @Nullable ASTBlock childBlock2) {
+            return matches(ASTBlock.getElementType(parentBlock), ASTBlock.getElementType(childBlock1), ASTBlock.getElementType(childBlock2));
+        }
+
+        /**
+         * @param parentRange the range that includes both children blocks (usually the range of the parent block).
+         */
+        @Nonnull
+        Spacing createSpacing(@Nonnull TextRange parentRange) {
             return Spacing.createSpacing(myMinSpaces, myMaxSpaces, myMinLF, myKeepLineBreaks, myKeepBlankLines);
         }
     }
 
     private static class DependentLFSpacingRule extends SpacingRule {
-        public DependentLFSpacingRule(
-            @Nonnull RuleCondition condition,
-            int minSpaces,
-            int maxSpaces,
-            boolean keepLineBreaks,
-            int keepBlankLines
-        ) {
+        DependentLFSpacingRule(@Nonnull RuleCondition condition,
+                               int minSpaces,
+                               int maxSpaces,
+                               boolean keepLineBreaks,
+                               int keepBlankLines) {
             super(condition, minSpaces, maxSpaces, 1, keepLineBreaks, keepBlankLines);
         }
 
+        @Nonnull
         @Override
-        public Spacing createSpacing(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
-            TextRange range = parentBlock.getNode().getTextRange();
-            return Spacing.createDependentLFSpacing(myMinSpaces, myMaxSpaces, range, myKeepLineBreaks, myKeepBlankLines);
+        Spacing createSpacing(@Nonnull TextRange parentRange) {
+            return Spacing.createDependentLFSpacing(myMinSpaces, myMaxSpaces, parentRange, myKeepLineBreaks, myKeepBlankLines);
         }
     }
 
-    private static class RuleCondition {
+    private static final class RuleCondition {
         private final TokenSet myParentType;
         private final TokenSet myChild1Type;
         private final TokenSet myChild2Type;
@@ -81,18 +84,14 @@ public class SpacingBuilder {
             myChild2Type = child2Type;
         }
 
-        private boolean matches(
-            @Nonnull IElementType parentType,
-            @Nonnull IElementType firstChildType,
-            @Nonnull IElementType secondChildType
-        ) {
-            return (myParentType == null || myParentType.contains(parentType))
-                && (myChild1Type == null || myChild1Type.contains(firstChildType))
-                && (myChild2Type == null || myChild2Type.contains(secondChildType));
+        private boolean matches(@Nonnull IElementType parentType, @Nonnull IElementType firstChildType, @Nonnull IElementType secondChildType) {
+            return ((myParentType == null || myParentType.contains(parentType)) &&
+                (myChild1Type == null || myChild1Type.contains(firstChildType)) &&
+                (myChild2Type == null || myChild2Type.contains(secondChildType)));
         }
     }
 
-    public class RuleBuilder {
+    public final class RuleBuilder {
         RuleCondition[] myConditions;
 
         private RuleBuilder(RuleCondition... conditions) {
@@ -129,12 +128,7 @@ public class SpacingBuilder {
          */
         public SpacingBuilder spaces(int count, boolean useParentDependentLFSpacing) {
             if (useParentDependentLFSpacing) {
-                return parentDependentLFSpacing(
-                    count,
-                    count,
-                    myCodeStyleSettings.KEEP_LINE_BREAKS,
-                    myCodeStyleSettings.KEEP_BLANK_LINES_IN_CODE
-                );
+                return parentDependentLFSpacing(count, count, myCodeStyleSettings.KEEP_LINE_BREAKS, myCodeStyleSettings.KEEP_BLANK_LINES_IN_CODE);
             }
             else {
                 return spacing(count, count, 0, myCodeStyleSettings.KEEP_LINE_BREAKS, myCodeStyleSettings.KEEP_BLANK_LINES_IN_CODE);
@@ -144,14 +138,8 @@ public class SpacingBuilder {
         public SpacingBuilder blankLines(int count) {
             int blankLines = count + 1;
             for (RuleCondition condition : myConditions) {
-                myRules.add(new SpacingRule(
-                    condition,
-                    0,
-                    0,
-                    blankLines,
-                    myCodeStyleSettings.KEEP_LINE_BREAKS,
-                    myCodeStyleSettings.KEEP_BLANK_LINES_IN_DECLARATIONS
-                ));
+                myRules.add(new SpacingRule(condition, 0, 0, blankLines,
+                    myCodeStyleSettings.KEEP_LINE_BREAKS, myCodeStyleSettings.KEEP_BLANK_LINES_IN_DECLARATIONS));
             }
             return SpacingBuilder.this;
         }
@@ -162,14 +150,8 @@ public class SpacingBuilder {
 
         public SpacingBuilder lineBreakInCode() {
             for (RuleCondition condition : myConditions) {
-                myRules.add(new SpacingRule(
-                    condition,
-                    1,
-                    0,
-                    1,
-                    myCodeStyleSettings.KEEP_LINE_BREAKS,
-                    myCodeStyleSettings.KEEP_BLANK_LINES_IN_CODE
-                ));
+                myRules.add(new SpacingRule(condition, 1, 0, 1,
+                    myCodeStyleSettings.KEEP_LINE_BREAKS, myCodeStyleSettings.KEEP_BLANK_LINES_IN_CODE));
             }
             return SpacingBuilder.this;
         }
@@ -207,16 +189,6 @@ public class SpacingBuilder {
     private final List<SpacingRule> myRules = new ArrayList<>();
 
     /**
-     * @param codeStyleSettings
-     * @deprecated Use other constructors!
-     */
-    @Deprecated
-    public SpacingBuilder(CodeStyleSettings codeStyleSettings) {
-        // TODO: remove deprecated method (v.14)
-        myCodeStyleSettings = codeStyleSettings;
-    }
-
-    /**
      * Creates SpacingBuilder with given code style settings and language whose settings must be used.
      *
      * @param codeStyleSettings The root code style settings.
@@ -229,11 +201,11 @@ public class SpacingBuilder {
     /**
      * Creates SpacingBuilder with given language code style settings.
      *
-     * @param languageCodeStyleSettings The language code style settings. Note that <code>getLanguage()</code> method must not
+     * @param languageCodeStyleSettings The language code style settings. Note that {@code getLanguage()} method must not
      *                                  return null!
      */
     public SpacingBuilder(@Nonnull CommonCodeStyleSettings languageCodeStyleSettings) {
-        assert languageCodeStyleSettings.getLanguage() != null : "Only language code style settings are accepted (getLanguage() != null)";
+        assert !Language.ANY.equals(languageCodeStyleSettings.getLanguage()) : "Only language code style settings are accepted (getLanguage() != null)";
         myCodeStyleSettings = languageCodeStyleSettings;
     }
 
@@ -255,6 +227,10 @@ public class SpacingBuilder {
 
     public RuleBuilder afterInside(TokenSet tokenSet, IElementType parentType) {
         return new RuleBuilder(new RuleCondition(TokenSet.create(parentType), tokenSet, null));
+    }
+
+    public RuleBuilder afterInside(TokenSet tokenSet, TokenSet parentType) {
+        return new RuleBuilder(new RuleCondition(parentType, tokenSet, null));
     }
 
     public RuleBuilder before(IElementType elementType) {
@@ -337,14 +313,14 @@ public class SpacingBuilder {
     }
 
     public RuleBuilder aroundInside(IElementType token, IElementType parent) {
-        TokenSet tokenSet = TokenSet.create(token);
+        final TokenSet tokenSet = TokenSet.create(token);
         RuleCondition before = new RuleCondition(TokenSet.create(parent), null, tokenSet);
         RuleCondition after = new RuleCondition(TokenSet.create(parent), tokenSet, null);
         return new RuleBuilder(before, after);
     }
 
     public RuleBuilder aroundInside(IElementType token, TokenSet parent) {
-        TokenSet tokenSet = TokenSet.create(token);
+        final TokenSet tokenSet = TokenSet.create(token);
         RuleCondition before = new RuleCondition(parent, null, tokenSet);
         RuleCondition after = new RuleCondition(parent, tokenSet, null);
         return new RuleBuilder(before, after);
@@ -355,13 +331,38 @@ public class SpacingBuilder {
         return this;
     }
 
-    @Nullable
-    public Spacing getSpacing(Block parent, Block child1, Block child2) {
-        if (parent instanceof ASTBlock parentBlock && child1 instanceof ASTBlock child1Block && child2 instanceof ASTBlock child2Block) {
-            for (SpacingRule rule : myRules) {
-                if (rule.matches(parentBlock, child1Block, child2Block)) {
-                    return rule.createSpacing(parentBlock, child1Block, child2Block);
-                }
+    /**
+     * @see #getSpacing(Block, Block, Block)
+     */
+    @Contract("_,null,_,_->null; _,_,null,_->null; _,_,_,null->null")
+    public @Nullable Spacing getSpacing(@Nonnull Block parentBlock,
+                                                           @Nullable IElementType parentType,
+                                                           @Nullable IElementType child1Type,
+                                                           @Nullable IElementType child2Type) {
+        for (SpacingRule rule : myRules) {
+            if (rule.matches(parentType, child1Type, child2Type)) {
+                return rule.createSpacing(parentBlock.getTextRange());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Works only with instances of {@link ASTBlock}, in other case returns null.
+     *
+     * @param parent expected an instance of ASTBlock.
+     * @param child1 expected an instance of ASTBlock.
+     * @param child2 expected an instance of ASTBlock.
+     * @see #getSpacing(Block, IElementType, IElementType, IElementType)
+     */
+    @Contract("null,_,_->null; _,null,_->null; _,_,null->null")
+    public @Nullable Spacing getSpacing(@Nullable Block parent, @Nullable Block child1, @Nullable Block child2) {
+        if (!(parent instanceof ASTBlock) || !(child1 instanceof ASTBlock) || !(child2 instanceof ASTBlock)) {
+            return null;
+        }
+        for (SpacingRule rule : myRules) {
+            if (rule.matches((ASTBlock) parent, (ASTBlock) child1, (ASTBlock) child2)) {
+                return rule.createSpacing(parent.getTextRange());
             }
         }
         return null;
