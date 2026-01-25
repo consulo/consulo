@@ -21,13 +21,13 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.action.TypedActionHandlerEx;
-import consulo.codeEditor.internal.RawTypedActionHandler;
+import consulo.codeEditor.internal.RawTypedActionHandlerInternal;
 import consulo.dataContext.DataContext;
 
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedActionHandler {
+public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedActionHandlerInternal {
   private TypedActionHandler myDelegate;
 
   @Override

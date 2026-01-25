@@ -10,10 +10,9 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.ActionPlan;
+import consulo.codeEditor.action.RawTypedActionHandler;
 import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.action.TypedAction;
-import consulo.codeEditor.impl.internal.DefaultRawTypedHandler;
-import consulo.codeEditor.impl.internal.TypedActionImpl;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
@@ -684,7 +683,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
                 );
             }
             if (element.getNode() != null && isBrace) {
-                DefaultRawTypedHandler handler = ((TypedActionImpl)TypedAction.getInstance()).getDefaultRawTypedHandler();
+                RawTypedActionHandler handler = TypedAction.getInstance().getDefaultRawTypedHandler();
                 handler.beginUndoablePostProcessing();
 
                 int finalLBraceOffset = lBraceOffset;

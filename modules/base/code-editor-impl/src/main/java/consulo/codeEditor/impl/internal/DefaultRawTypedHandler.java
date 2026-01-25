@@ -16,7 +16,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
-public class DefaultRawTypedHandler implements TypedActionHandlerEx {
+public class DefaultRawTypedHandler implements TypedActionHandlerEx, RawTypedActionHandler {
     private final TypedAction myAction;
     private CommandToken myCurrentCommandToken;
     private boolean myInOuterCommand;
@@ -81,6 +81,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void beginUndoablePostProcessing() {
         if (myInOuterCommand) {

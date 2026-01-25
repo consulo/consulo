@@ -17,12 +17,12 @@ package consulo.codeEditor.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.codeEditor.action.TypedActionHandler;
+import consulo.codeEditor.action.RawTypedActionHandler;
 
 /**
  * @author VISTALL
  * @since 22-Jun-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface RawTypedActionHandler extends TypedActionHandler, OverrideTypedActionHandler {
+public interface RawTypedActionHandlerInternal extends RawTypedActionHandler, OverrideTypedActionHandler {
 }

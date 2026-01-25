@@ -4,6 +4,7 @@ package consulo.codeEditor.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.action.TypedAction;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -19,6 +20,8 @@ public class TypedActionImpl extends TypedAction {
     setupRawHandler(myDefaultRawTypedHandler);
   }
 
+  @Nonnull
+  @Override
   public DefaultRawTypedHandler getDefaultRawTypedHandler() {
     return myDefaultRawTypedHandler;
   }

@@ -7,7 +7,7 @@ import consulo.application.Application;
 import consulo.application.util.FreezeLogger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
-import consulo.codeEditor.internal.RawTypedActionHandler;
+import consulo.codeEditor.internal.RawTypedActionHandlerInternal;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
@@ -55,7 +55,7 @@ public abstract class TypedAction {
     }
 
     private void loadRawHandlers() {
-        for (RawTypedActionHandler handler : myApplication.getExtensionPoint(RawTypedActionHandler.class).getExtensionList()) {
+        for (RawTypedActionHandlerInternal handler : myApplication.getExtensionPoint(RawTypedActionHandlerInternal.class).getExtensionList()) {
             handler.init(myRawHandler);
 
             myRawHandler = handler;
@@ -117,6 +117,11 @@ public abstract class TypedAction {
     @Nonnull
     public TypedActionHandler getRawHandler() {
         return myRawHandler;
+    }
+
+    @Nonnull
+    public RawTypedActionHandler getDefaultRawTypedHandler() {
+        throw new UnsupportedOperationException();
     }
 
     /**
