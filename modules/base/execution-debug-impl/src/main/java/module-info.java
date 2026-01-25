@@ -28,5 +28,5 @@ module consulo.execution.debug.impl {
     opens consulo.execution.debug.impl.internal.ui.tree.action to consulo.component.impl;
     opens consulo.execution.debug.impl.internal.setting to consulo.util.xml.serializer;
     opens consulo.execution.debug.impl.internal.breakpoint to consulo.util.xml.serializer;
-    opens consulo.execution.debug.impl.internal.action.handler to consulo.util.xml.serializer;
+    opens consulo.execution.debug.impl.internal.action.handler to consulo.util.xml.serializer, consulo.proxy;
 }
