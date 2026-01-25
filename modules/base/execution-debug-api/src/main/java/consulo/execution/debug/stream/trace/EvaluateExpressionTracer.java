@@ -11,7 +11,6 @@ import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,59 +37,57 @@ public class EvaluateExpressionTracer implements StreamTracer {
 
     @Nonnull
     @Override
-    public CompletableFuture<Result> trace(@Nonnull StreamChain chain) {
-        return CompletableFuture.supplyAsync(() -> {
-            String streamTraceExpression = myExpressionBuilder.createTraceExpression(chain);
+    public Result trace(@Nonnull StreamChain chain) {
+        String streamTraceExpression = myExpressionBuilder.createTraceExpression(chain);
 
-            XStackFrame stackFrame = mySession.getCurrentStackFrame();
-            XDebuggerEvaluator evaluator = mySession.getDebugProcess().getEvaluator();
+        XStackFrame stackFrame = mySession.getCurrentStackFrame();
+        XDebuggerEvaluator evaluator = mySession.getDebugProcess().getEvaluator();
 
-            if (stackFrame != null && evaluator != null) {
-                EvaluationResult deferredResult = evaluateStreamExpression(evaluator, chain, streamTraceExpression, stackFrame);
+        if (stackFrame != null && evaluator != null) {
+            EvaluationResult deferredResult = evaluateStreamExpression(evaluator, chain, streamTraceExpression, stackFrame);
 
-                if (deferredResult.error == null) {
-                    XValue xValue = deferredResult.xValue;
-                    if (xValue == null) {
-                        return Result.Unknown.INSTANCE;
-                    }
+            if (deferredResult.error == null) {
+                XValue xValue = deferredResult.xValue;
+                if (xValue == null) {
+                    return Result.Unknown.INSTANCE;
+                }
 
-                    XValueInterpreter.Result result = null;
+                XValueInterpreter.Result result = null;
+                try {
+                    result = myXValueInterpreter.extract(mySession, xValue).get();
+                }
+                catch (Exception e) {
+                    return new Result.EvaluationFailed(streamTraceExpression, e.getMessage());
+                }
+                if (result instanceof XValueInterpreter.Result.Array arrayResult) {
+                    TracingResult interpretedResult;
                     try {
-                        result = myXValueInterpreter.extract(mySession, xValue).get();
+                        interpretedResult = myResultInterpreter.interpret(chain, arrayResult.getArrayReference(), arrayResult.getHasInnerExceptions());
                     }
-                    catch (Exception e) {
-                        return new Result.EvaluationFailed(streamTraceExpression, e.getMessage());
-                    }
-                    if (result instanceof XValueInterpreter.Result.Array arrayResult) {
-                        TracingResult interpretedResult;
-                        try {
-                            interpretedResult = myResultInterpreter.interpret(chain, arrayResult.getArrayReference(), arrayResult.getHasInnerExceptions());
-                        }
-                        catch (Throwable t) {
-                            return new Result.EvaluationFailed(
-                                streamTraceExpression,
-                                XDebuggerLocalize.streamDebuggerEvaluationFailedCannotInterpretResult(t.getMessage()).get()
-                            );
-                        }
-                        return new Result.Evaluated(interpretedResult, arrayResult.getEvaluationContext());
-                    }
-                    else if (result instanceof XValueInterpreter.Result.Error errorResult) {
-                        return new Result.EvaluationFailed(streamTraceExpression, errorResult.getMessage());
-                    }
-                    else if (result instanceof XValueInterpreter.Result.Unknown) {
+                    catch (Throwable t) {
                         return new Result.EvaluationFailed(
                             streamTraceExpression,
-                            XDebuggerLocalize.streamDebuggerEvaluationFailed(XDebuggerLocalize.streamDebuggerEvaluationFailedUnknownType()).get()
+                            XDebuggerLocalize.streamDebuggerEvaluationFailedCannotInterpretResult(t.getMessage()).get()
                         );
                     }
+                    return new Result.Evaluated(interpretedResult, arrayResult.getEvaluationContext());
                 }
-                else {
-                    return new Result.CompilationFailed(streamTraceExpression, deferredResult.error);
+                else if (result instanceof XValueInterpreter.Result.Error errorResult) {
+                    return new Result.EvaluationFailed(streamTraceExpression, errorResult.getMessage());
+                }
+                else if (result instanceof XValueInterpreter.Result.Unknown) {
+                    return new Result.EvaluationFailed(
+                        streamTraceExpression,
+                        XDebuggerLocalize.streamDebuggerEvaluationFailed(XDebuggerLocalize.streamDebuggerEvaluationFailedUnknownType()).get()
+                    );
                 }
             }
+            else {
+                return new Result.CompilationFailed(streamTraceExpression, deferredResult.error);
+            }
+        }
 
-            return Result.Unknown.INSTANCE;
-        });
+        return Result.Unknown.INSTANCE;
     }
 
     public static class EvaluationResult {
@@ -110,7 +107,7 @@ public class EvaluateExpressionTracer implements StreamTracer {
     private EvaluationResult evaluateStreamExpression(
         @Nonnull XDebuggerEvaluator evaluator,
         @Nonnull StreamChain chain,
-        @NonNls @Nonnull String streamTraceExpression,
+        @Nonnull String streamTraceExpression,
         @Nonnull XStackFrame stackFrame
     ) {
         CompletableFuture<EvaluationResult> deferred = new CompletableFuture<>();

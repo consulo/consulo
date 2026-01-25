@@ -47,7 +47,7 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
 
         int infoArraySize = 2 + intermediateHandlers.size();
         ArrayVariable info = dsl.array(dsl.getTypes().ANY(), "info");
-        Variable streamResult = dsl.variable(dsl.getTypes().nullable(types -> types.ANY()), "streamResult");
+        Variable streamResult = dsl.variable(dsl.getTypes().nullable(Types::ANY), "streamResult");
         CodeBlock declarations = buildDeclarations(intermediateHandlers, terminatorHandler);
 
         CodeBlock tracingCall = buildStreamExpression(traceChain, streamResult);
@@ -70,10 +70,7 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
                     dsl.newArray(dsl.getTypes().LONG(), new TextExpression(dsl.currentNanoseconds() + " - " + startTime.toCode())),
                     false
                 );
-                scope.statement(() -> {
-                    code.assign(result, dsl.newArray(dsl.getTypes().ANY(), info, streamResult, elapsedTime));
-                    return null;
-                });
+                scope.assign(result, dsl.newArray(dsl.getTypes().ANY(), info, streamResult, elapsedTime));
             });
         });
     }
@@ -147,25 +144,17 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
 
             block.tryBlock(tryBlock -> {
                 if (resultType.equals(dsl.getTypes().VOID())) {
-                    tryBlock.statement(() -> {
-                        block.assign(streamResult, dsl.newSizedArray(dsl.getTypes().ANY(), 1));
-                        return null;
-                    });
+                    tryBlock.assign(streamResult, dsl.newSizedArray(dsl.getTypes().ANY(), 1));
+
                     tryBlock.statement(() -> new TextExpression(chain.getText()));
                 }
                 else {
                     tryBlock.statement(() -> evaluationResult.set(0, new TextExpression(chain.getText())));
-                    tryBlock.statement(() -> {
-                        block.assign(streamResult, evaluationResult);
-                        return null;
-                    });
+                    tryBlock.assign(streamResult, evaluationResult);
                 }
             }).doCatch(dsl.variable(dsl.getTypes().EXCEPTION(), "t"), catchBlock -> {
                 // TODO: add exception variable as a property of catch code block
-                catchBlock.statement(() -> {
-                    block.assign(streamResult, dsl.newArray(dsl.getTypes().EXCEPTION(), new TextExpression("t")));
-                    return null;
-                });
+                catchBlock.assign(streamResult, dsl.newArray(dsl.getTypes().EXCEPTION(), new TextExpression("t")));
             });
         });
     }
@@ -186,7 +175,7 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
 
         return dsl.block(block -> {
             for (int i = 0; i < handlers.size(); i++) {
-                final int index = i;
+                int index = i;
                 TraceHandler handler = handlers.get(i);
                 block.scope(scope -> {
                     scope.add(handler.prepareResult());

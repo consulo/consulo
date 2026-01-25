@@ -2,10 +2,8 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamChain;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
-import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.Nls;
 
 /**
  * @author Vitaliy.Bibaev
@@ -85,5 +83,5 @@ public interface StreamTracer {
   }
 
   @Nonnull
-  CompletableFuture<Result> trace(@Nonnull StreamChain chain);
+  Result trace(@Nonnull StreamChain chain);
 }

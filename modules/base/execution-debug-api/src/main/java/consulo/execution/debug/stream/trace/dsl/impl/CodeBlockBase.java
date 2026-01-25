@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -32,7 +33,7 @@ public abstract class CodeBlockBase implements CompositeCodeBlock {
 
   @Override
   public void statement(@Nonnull Supplier<Statement> statement) {
-    myStatements.add(statement.get());
+    myStatements.add(Objects.requireNonNull(statement.get()));
   }
 
   @Nonnull
@@ -70,7 +71,7 @@ public abstract class CodeBlockBase implements CompositeCodeBlock {
     CodeBlock codeBlock = myFactory.createEmptyCodeBlock();
     init.accept(codeBlock);
     TryBlock tryBlock = myFactory.createTryBlock(codeBlock);
-    myStatements.add(tryBlock);
+    myStatements.add(Objects.requireNonNull(tryBlock));
     return tryBlock;
   }
 

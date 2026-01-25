@@ -35,7 +35,6 @@ import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -110,21 +109,19 @@ public final class TraceStreamRunner {
 
     @Nonnull
     private List<ChainResolver.StreamChainWithLibrary> getChains(@Nonnull XDebugSession session) {
-        return ReadAction.compute(() -> {
-            PsiElement element = myPositionResolver.getNearestElementToBreakpoint(session);
-            if (element == null) {
-                LOG.info("Element at cursor is not found");
-                return Collections.emptyList();
-            }
-            else {
-                return ProgressManager.getInstance().runProcessWithProgressSynchronously(
-                    () -> CHAIN_RESOLVER.getChains(element),
-                    XDebuggerLocalize.actionCalculatingChainsBackgroundProgressTitle(),
-                    true,
-                    session.getProject()
-                );
-            }
-        });
+        PsiElement element = ReadAction.compute(() -> myPositionResolver.getNearestElementToBreakpoint(session));
+        if (element == null) {
+            LOG.info("Element at cursor is not found");
+            return Collections.emptyList();
+        }
+        else {
+            return ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                () -> ReadAction.compute(() -> CHAIN_RESOLVER.getChains(element)),
+                XDebuggerLocalize.actionCalculatingChainsBackgroundProgressTitle(),
+                true,
+                session.getProject()
+            );
+        }
     }
 
     private static class MyStreamChainChooser extends ElementChooserImpl<StreamChainOption> {
@@ -177,13 +174,7 @@ public final class TraceStreamRunner {
         StreamTracer tracer = new EvaluateExpressionTracer(session, expressionBuilder, resultInterpreter, xValueInterpreter);
 
         debuggerLauncher.launchDebuggerCommand(() -> {
-            StreamTracer.Result result = null;
-            try {
-                result = tracer.trace(chain).get();
-            }
-            catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+            StreamTracer.Result result = tracer.trace(chain);
 
             if (result instanceof StreamTracer.Result.Evaluated) {
                 StreamTracer.Result.Evaluated evaluated = (StreamTracer.Result.Evaluated) result;
