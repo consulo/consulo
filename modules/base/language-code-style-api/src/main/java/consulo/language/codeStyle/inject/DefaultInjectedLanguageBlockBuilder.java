@@ -1,106 +1,80 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.codeStyle.inject;
 
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
-/**
- * @author Denis Zhdanov
- * @since 9/6/12 9:22 AM
- */
 public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBuilder {
-  
-  @Nonnull
-  private final CodeStyleSettings mySettings;
 
-  public DefaultInjectedLanguageBlockBuilder(@Nonnull CodeStyleSettings settings) {
-    mySettings = settings;
-  }
+    private final @Nonnull CodeStyleSettings mySettings;
 
-  @Nonnull
-  @Override
-  public CodeStyleSettings getSettings() {
-    return mySettings;
-  }
-
-  @Override
-  public boolean canProcessFragment(String text, ASTNode injectionHost) {
-    return true;
-  }
-
-  @Override
-  public Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range) {
-    return new GlueBlock(node, wrap, alignment, indent, range);
-  }
-
-  @Override
-  public Block createBlockAfterInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range) {
-    return new GlueBlock(node, wrap, alignment, Indent.getNoneIndent(), range);
-  }
-
-  private static class GlueBlock extends AbstractBlock {
-
-    @Nonnull
-    private final Indent    myIndent;
-    @Nonnull
-    private final TextRange myRange;
-
-    private GlueBlock(@Nonnull ASTNode node,
-                      @Nullable Wrap wrap,
-                      @Nullable Alignment alignment,
-                      @Nonnull Indent indent,
-                      @Nonnull TextRange range)
-    {
-      super(node, wrap, alignment);
-      myIndent = indent;
-      myRange = range;
-    }
-
-    @Nonnull
-    @Override
-    public TextRange getTextRange() {
-      return myRange;
+    public DefaultInjectedLanguageBlockBuilder(@Nonnull CodeStyleSettings settings) {
+        mySettings = settings;
     }
 
     @Override
-    protected List<Block> buildChildren() {
-      return AbstractBlock.EMPTY;
-    }
-
-    @Nonnull
-    @Override
-    public Indent getIndent() {
-      return myIndent;
-    }
-
-    @Nullable
-    @Override
-    public Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
-      return null;
+    public @Nonnull CodeStyleSettings getSettings() {
+        return mySettings;
     }
 
     @Override
-    public boolean isLeaf() {
-      return true;
+    public boolean canProcessFragment(String text, ASTNode injectionHost) {
+        return true;
     }
-  }
+
+    @Override
+    public Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, final TextRange range) {
+        return new GlueBlock(node, wrap, alignment, indent, range);
+    }
+
+    @Override
+    public Block createBlockAfterInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range) {
+        return new GlueBlock(node, wrap, alignment, Indent.getNoneIndent(), range);
+    }
+
+    private static final class GlueBlock extends AbstractBlock {
+
+        private final @Nonnull Indent myIndent;
+        private final @Nonnull TextRange myRange;
+
+        private GlueBlock(@Nonnull ASTNode node,
+                          @Nullable Wrap wrap,
+                          @Nullable Alignment alignment,
+                          @Nonnull Indent indent,
+                          @Nonnull TextRange range) {
+            super(node, wrap, alignment);
+            myIndent = indent;
+            myRange = range;
+        }
+
+        @Override
+        public @Nonnull TextRange getTextRange() {
+            return myRange;
+        }
+
+        @Override
+        protected List<Block> buildChildren() {
+            return AbstractBlock.EMPTY;
+        }
+
+        @Override
+        public @Nonnull Indent getIndent() {
+            return myIndent;
+        }
+
+        @Override
+        public @Nullable Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
+            return null;
+        }
+
+        @Override
+        public boolean isLeaf() {
+            return true;
+        }
+    }
 }

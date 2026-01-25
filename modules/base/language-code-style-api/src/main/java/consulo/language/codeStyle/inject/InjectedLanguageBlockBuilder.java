@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2010 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.codeStyle.inject;
 
 import consulo.document.util.TextRange;
@@ -25,141 +11,167 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
-/**
- * @author nik
- */
 public abstract class InjectedLanguageBlockBuilder {
-  private static final Logger LOG = Logger.getInstance(InjectedLanguageBlockBuilder.class);
+    private static final Logger LOG = Logger.getInstance(InjectedLanguageBlockBuilder.class);
 
-  public Block createInjectedBlock(ASTNode node,
-                                   Block originalBlock,
-                                   Indent indent,
-                                   int offset,
-                                   TextRange range,
-                                   @Nullable Language language)
-  {
-    return new InjectedLanguageBlockWrapper(originalBlock, offset, range, indent, language);
-  }
+    public @Nonnull Block createInjectedBlock(@Nonnull ASTNode node,
+                                              @Nonnull Block originalBlock,
+                                              Indent indent,
+                                              int offset,
+                                              TextRange range,
+                                              @Nonnull Language language) {
+        return new InjectedLanguageBlockWrapper(originalBlock, offset, range, indent, language);
+    }
 
-  public abstract CodeStyleSettings getSettings();
+    public abstract CodeStyleSettings getSettings();
 
-  public abstract boolean canProcessFragment(String text, ASTNode injectionHost);
+    protected boolean supportsMultipleFragments() {
+        return false;
+    }
 
-  public abstract Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range);
+    public abstract boolean canProcessFragment(String text, ASTNode injectionHost);
 
-  public abstract Block createBlockAfterInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range);
+    public abstract Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range);
 
-  public boolean addInjectedBlocks(List<Block> result, final ASTNode injectionHost, Wrap wrap, Alignment alignment, Indent indent) {
-    final PsiFile[] injectedFile = new PsiFile[1];
-    final Ref<TextRange> injectedRangeInsideHost = new Ref<TextRange>();
-    final Ref<Integer> prefixLength = new Ref<Integer>();
-    final Ref<Integer> suffixLength = new Ref<Integer>();
-    Ref<ASTNode> injectionHostToUse = new Ref<ASTNode>(injectionHost);
+    public abstract Block createBlockAfterInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range);
 
-    PsiLanguageInjectionHost.InjectedPsiVisitor injectedPsiVisitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-      @Override
-      public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
-        if (places.size() != 1) {
-          return;
-        }
-        PsiLanguageInjectionHost.Shred shred = places.get(0);
-        TextRange textRange = shred.getRangeInsideHost();
-        PsiLanguageInjectionHost shredHost = shred.getHost();
-        if (shredHost == null) {
-          return;
-        }
-        ASTNode node = shredHost.getNode();
-        if (node == null) {
-          return;
-        }
-        if (node != injectionHost) {
-          int shift = 0;
-          boolean canProcess = false;
-          for (ASTNode n = injectionHost.getTreeParent(), prev = injectionHost; n != null; prev = n, n = n.getTreeParent()) {
-            shift += n.getStartOffset() - prev.getStartOffset();
-            if (n == node) {
-              textRange = textRange.shiftRight(shift);
-              canProcess = true;
-              break;
+    public boolean addInjectedBlocks(List<? super Block> result, ASTNode injectionHost, Wrap wrap, Alignment alignment, Indent indent) {
+        SimpleReference<Integer> lastInjectionEndOffset = new SimpleReference<>(0);
+
+        PsiLanguageInjectionHost.InjectedPsiVisitor injectedPsiVisitor = (injectedPsi, places) -> {
+            if (places.isEmpty() || (places.size() != 1 && !supportsMultipleFragments())) {
+                return;
             }
-          }
-          if (!canProcess) {
+            PsiLanguageInjectionHost.Shred firstShred = places.get(0);
+            PsiLanguageInjectionHost.Shred lastShred = places.get(places.size() - 1);
+            PsiLanguageInjectionHost shredHost = firstShred.getHost();
+            if (shredHost == null) {
+                return;
+            }
+
+            for (PsiLanguageInjectionHost.Shred place : places) {
+                if (place.getHost() != shredHost) return;
+            }
+
+            TextRange injectionRange = new TextRange(firstShred.getRangeInsideHost().getStartOffset(),
+                lastShred.getRangeInsideHost().getEndOffset());
+            ASTNode node = shredHost.getNode();
+            if (node == null || !injectionHost.getTextRange().contains(injectionRange.shiftRight(node.getStartOffset()))) {
+                return;
+            }
+            if (node != injectionHost) {
+                int shift = 0;
+                boolean canProcess = false;
+                for (ASTNode n = injectionHost.getTreeParent(), prev = injectionHost; n != null; prev = n, n = n.getTreeParent()) {
+                    shift += n.getStartOffset() - prev.getStartOffset();
+                    if (n == node) {
+                        injectionRange = injectionRange.shiftRight(shift);
+                        canProcess = true;
+                        break;
+                    }
+                }
+                if (!canProcess) {
+                    return;
+                }
+            }
+
+            String childText;
+            if (injectionHost.getTextLength() == injectionRange.getEndOffset() && injectionRange.getStartOffset() == 0 ||
+                canProcessFragment((childText = injectionHost.getText()).substring(0, injectionRange.getStartOffset()), injectionHost) &&
+                    canProcessFragment(childText.substring(injectionRange.getEndOffset()), injectionHost)) {
+
+                // inject language block
+
+                Language childLanguage = injectedPsi.getLanguage();
+                FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, injectionHost.getPsi());
+
+                if (builder != null) {
+                    int startOffset = injectionRange.getStartOffset();
+                    int endOffset = injectionRange.getEndOffset();
+                    TextRange range = injectionHost.getTextRange();
+                    int prefixLength = firstShred.getPrefix().length();
+                    int suffixLength = lastShred.getSuffix().length();
+
+                    int childOffset = range.getStartOffset();
+                    if (lastInjectionEndOffset.get() < startOffset) {
+                        result.add(createBlock(injectionHost, wrap, alignment, indent, new TextRange(lastInjectionEndOffset.get(), startOffset)));
+                    }
+
+                    addInjectedLanguageBlocks(result, injectedPsi, indent, childOffset + startOffset,
+                        new TextRange(prefixLength, injectedPsi.getTextLength() - suffixLength), places);
+
+                    lastInjectionEndOffset.set(endOffset);
+                }
+            }
+        };
+        PsiElement injectionHostPsi = injectionHost.getPsi();
+        PsiFile containingFile = injectionHostPsi.getContainingFile();
+        InjectedLanguageManager.getInstance(containingFile.getProject())
+            .enumerateEx(injectionHostPsi, containingFile, true, injectedPsiVisitor);
+
+        if (lastInjectionEndOffset.get() > 0) {
+            if (lastInjectionEndOffset.get() < injectionHost.getTextLength()) {
+                result.add(createBlock(injectionHost, wrap, alignment, indent,
+                    new TextRange(lastInjectionEndOffset.get(), injectionHost.getTextLength())));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private Block createBlock(ASTNode injectionHost, Wrap wrap, Alignment alignment, Indent indent, TextRange range) {
+        if (range.getStartOffset() == 0) {
+            ASTNode leaf = injectionHost.findLeafElementAt(range.getEndOffset() - 1);
+            return createBlockBeforeInjection(
+                leaf, wrap, alignment, indent, range.shiftRight(injectionHost.getStartOffset()));
+        }
+        ASTNode leaf = injectionHost.findLeafElementAt(range.getStartOffset());
+        return createBlockAfterInjection(
+            leaf, wrap, alignment, indent, range.shiftRight(injectionHost.getStartOffset()));
+    }
+
+    protected void addInjectedLanguageBlocks(List<? super Block> result,
+                                             PsiFile injectedFile,
+                                             Indent indent,
+                                             int offset,
+                                             TextRange injectedEditableRange,
+                                             List<? extends PsiLanguageInjectionHost.Shred> shreds) {
+        addInjectedLanguageBlockWrapper(result, injectedFile.getNode(), indent, offset, injectedEditableRange);
+    }
+
+    public void addInjectedLanguageBlockWrapper(List<? super Block> result, ASTNode injectedNode,
+                                                Indent indent, int offset, @Nullable TextRange range) {
+        if (isEmptyRange(injectedNode, range)) {
             return;
-          }
-        }
-        
-        String childText;
-          if ((injectionHost.getTextLength() == textRange.getEndOffset() && textRange.getStartOffset() == 0) ||
-              (canProcessFragment((childText = injectionHost.getText()).substring(0, textRange.getStartOffset()), injectionHost) &&
-               canProcessFragment(childText.substring(textRange.getEndOffset()), injectionHost))) {
-            injectedFile[0] = injectedPsi;
-            injectedRangeInsideHost.set(textRange);
-            prefixLength.set(shred.getPrefix().length());
-            suffixLength.set(shred.getSuffix().length());
-          }
-      }
-    };
-
-    PsiElement injectionHostPsi = injectionHost.getPsi();
-    PsiFile containingFile = injectionHostPsi.getContainingFile();
-    InjectedLanguageManager.getInstance(containingFile.getProject()).enumerateEx(injectionHostPsi, containingFile, true, injectedPsiVisitor);
-
-    if  (injectedFile[0] != null) {
-      Language childLanguage = injectedFile[0].getLanguage();
-      FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, injectionHost.getPsi());
-
-      if (builder != null) {
-        int startOffset = injectedRangeInsideHost.get().getStartOffset();
-        int endOffset = injectedRangeInsideHost.get().getEndOffset();
-        TextRange range = injectionHostToUse.get().getTextRange();
-
-        int childOffset = range.getStartOffset();
-        if (startOffset != 0) {
-          ASTNode leaf = injectionHostToUse.get().findLeafElementAt(startOffset - 1);
-          result.add(createBlockBeforeInjection(leaf, wrap, alignment, indent, new TextRange(childOffset, childOffset + startOffset)));
         }
 
-        addInjectedLanguageBlockWrapper(result, injectedFile[0].getNode(), indent, childOffset + startOffset,
-                                        new TextRange(prefixLength.get(), injectedFile[0].getTextLength() - suffixLength.get()));
-
-        if (endOffset != injectionHostToUse.get().getTextLength()) {
-          ASTNode leaf = injectionHostToUse.get().findLeafElementAt(endOffset);
-          result.add(createBlockAfterInjection(leaf, wrap, alignment, indent, new TextRange(childOffset + endOffset, range.getEndOffset())));
+        PsiElement childPsi = injectedNode.getPsi();
+        Language childLanguage = childPsi.getLanguage();
+        FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, childPsi);
+        LOG.assertTrue(builder != null);
+        FormattingModel childModel = builder.createModel(FormattingContext.create(childPsi, getSettings()));
+        if (!childPsi.getTextRange().contains(childModel.getRootBlock().getTextRange())) {
+            LOG.error("Invalid formatter model created for injected language fragment. Node rage: " + childPsi.getTextRange() +
+                "; created model range: " + childModel.getRootBlock().getTextRange() +
+                "; builder: " + builder.getClass().getName() +
+                "; injected language: " + childLanguage.getID() +
+                "; file: " + childPsi.getContainingFile().getName());
+            return;
         }
-        return true;
-      }
-    }
-    return false;
-  }
+        Block original = childModel.getRootBlock();
 
-  public void addInjectedLanguageBlockWrapper(List<Block> result, ASTNode injectedNode,
-                                              Indent indent, int offset, @Nullable TextRange range) {
-
-    //
-    // Do not create a block for an empty range
-    //
-    if (range != null) {
-      if (range.getLength() == 0) return;
-      if(StringUtil.isEmptyOrSpaces(range.substring(injectedNode.getText()))) {
-        return;
-      }
+        if (original.isLeaf() && !injectedNode.getText().trim().isEmpty() || !original.getSubBlocks().isEmpty()) {
+            result.add(createInjectedBlock(injectedNode, original, indent, offset, range, childLanguage));
+        }
     }
-    
-    PsiElement childPsi = injectedNode.getPsi();
-    Language childLanguage = childPsi.getLanguage();
-    FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, childPsi);
-    LOG.assertTrue(builder != null);
-    FormattingModel childModel = builder.createModel(FormattingContext.create(childPsi, getSettings()));
-    Block original = childModel.getRootBlock();
 
-    if ((original.isLeaf() && injectedNode.getText().trim().length() > 0) || original.getSubBlocks().size() != 0) {
-      result.add(createInjectedBlock(injectedNode, original, indent, offset, range, childLanguage));
+    protected static boolean isEmptyRange(@Nonnull ASTNode injectedNode, @Nullable TextRange range) {
+        return range != null && (range.getLength() == 0 || StringUtil.isEmptyOrSpaces(range.substring(injectedNode.getText())));
     }
-  }
 }
