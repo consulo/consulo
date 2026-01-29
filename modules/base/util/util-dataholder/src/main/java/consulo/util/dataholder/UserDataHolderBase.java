@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 
-public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
+public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolderEx, Cloneable {
     public static final Key<KeyFMap> COPYABLE_USER_MAP_KEY = Key.create("COPYABLE_USER_MAP_KEY");
 
     private static VarHandle ourUpdaterVarHandle;
@@ -100,6 +100,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
         return map == null ? null : map.get(key);
     }
 
+    @Override
     public <T> void putCopyableUserData(Key<T> key, T value) {
         while (true) {
             KeyFMap map = getUserMap();
@@ -143,6 +144,11 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
                 return value;
             }
         }
+    }
+
+    @Override
+    public void copyCopyableDataTo(@Nonnull CopyableUserDataHolder clone) {
+        copyCopyableDataTo((UserDataHolderBase) clone);
     }
 
     public void copyCopyableDataTo(@Nonnull UserDataHolderBase clone) {

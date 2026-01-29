@@ -21,71 +21,72 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author gregsh
  */
 @SuppressWarnings("unchecked")
 public class Functions {
-  private static final Function ID = (MonoFunction) o -> o;
+    private static final Function ID = (MonoFunction) o -> o;
 
-  private static final Function NULL = o -> null;
+    private static final Function NULL = o -> null;
 
-  private static final Function TO_STRING = String::valueOf;
+    private static final Function TO_STRING = String::valueOf;
 
-  public static <A> MonoFunction<A> id() {
-    return (MonoFunction<A>)ID;
-  }
+    public static <A> MonoFunction<A> id() {
+        return (MonoFunction<A>) ID;
+    }
 
-  public static <A, B> Function<A, B> constant(B b) {
-    return a -> b;
-  }
+    public static <A, B> Function<A, B> constant(B b) {
+        return a -> b;
+    }
 
-  public static <A, B> Function<A, B> identity() {
-    return ID;
-  }
+    public static <A, B> Function<A, B> identity() {
+        return ID;
+    }
 
-  public static <A, B> Function<A, B> cast(Class<B> clazz) {
-    return ID;
-  }
+    public static <A, B> Function<A, B> cast(Class<B> clazz) {
+        return ID;
+    }
 
-  public static <A, B, C> Function<A, C> compose(Function<A, B> f1, Function<B, ? extends C> f2) {
-    return a -> f2.apply(f1.apply(a));
-  }
+    public static <A, B, C> Function<A, C> compose(Function<A, B> f1, Function<B, ? extends C> f2) {
+        return a -> f2.apply(f1.apply(a));
+    }
 
-  public static <A> Function<A, String> TO_STRING() {
-    return TO_STRING;
-  }
+    public static <A> Function<A, String> TO_STRING() {
+        return TO_STRING;
+    }
 
-  public static <A, B> Function<A, B> fromMap(Map<A, B> map) {
-    return map::get;
-  }
+    public static <A, B> Function<A, B> fromMap(Map<A, B> map) {
+        return map::get;
+    }
 
-  private static final Function<Object, Class> TO_CLASS = Object::getClass;
+    private static final Function<Object, Class> TO_CLASS = Object::getClass;
 
-  public static <T> Function<T, Class> TO_CLASS() {
-    return (Function<T, Class>)TO_CLASS;
-  }
+    public static <T> Function<T, Class> TO_CLASS() {
+        return (Function<T, Class>) TO_CLASS;
+    }
 
-  private static final Function PAIR_FIRST = (Function<Pair<?, ?>, Object>)pair -> Pair.getFirst(pair);
+    private static final Function PAIR_FIRST = (Function<Pair<?, ?>, Object>) pair -> Pair.getFirst(pair);
 
-  private static final Function PAIR_SECOND = (Function<Pair<?, ?>, Object>)pair -> Pair.getSecond(pair);
+    private static final Function PAIR_SECOND = (Function<Pair<?, ?>, Object>) pair -> Pair.getSecond(pair);
 
-  public static <A> Function<Pair<A, ?>, A> pairFirst() {
-    return (Function<Pair<A, ?>, A>)PAIR_FIRST;
-  }
+    public static <A> Function<Pair<A, ?>, A> pairFirst() {
+        return (Function<Pair<A, ?>, A>) PAIR_FIRST;
+    }
 
-  public static <B> Function<Pair<?, B>, B> pairSecond() {
-    return (Function<Pair<?, B>, B>)PAIR_SECOND;
-  }
+    public static <B> Function<Pair<?, B>, B> pairSecond() {
+        return (Function<Pair<?, B>, B>) PAIR_SECOND;
+    }
 
-  public static MonoFunction<Integer> intIncrement() {
-    return integer -> integer + 1;
-  }
+    public static MonoFunction<Integer> intIncrement() {
+        return integer -> integer + 1;
+    }
 
-  private static final Function WRAP_ARRAY = t -> t == null ? Collections.emptyList() : Arrays.asList(t);
+    private static final Function WRAP_ARRAY = t -> t == null ? Collections.emptyList() : Arrays.asList(t);
 
-  public static <T> Function<T[], Iterable<T>> wrapArray() {
-    return (Function<T[], Iterable<T>>)WRAP_ARRAY;
-  }
+    public static <T> Function<T[], Iterable<T>> wrapArray() {
+        return (Function<T[], Iterable<T>>) WRAP_ARRAY;
+    }
 }

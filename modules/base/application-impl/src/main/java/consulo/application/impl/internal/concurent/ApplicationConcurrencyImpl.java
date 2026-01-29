@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
@@ -33,49 +34,68 @@ import java.util.concurrent.ScheduledExecutorService;
 @Singleton
 @ServiceImpl
 public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
-  private AppScheduledExecutorService myScheduledExecutorService = new AppScheduledExecutorService("Global instance", this);
+    private final AppScheduledExecutorService myScheduledExecutorService;
 
-  @Nonnull
-  @Override
-  public ExecutorService getExecutorService() {
-    return myScheduledExecutorService.getBackendExecutorService();
-  }
+    private final CoroutineContext myCoroutineContext;
 
-  @Nonnull
-  @Override
-  public ScheduledExecutorService getScheduledExecutorService() {
-    return myScheduledExecutorService;
-  }
+    public ApplicationConcurrencyImpl() {
+        myScheduledExecutorService = new AppScheduledExecutorService("Global instance", this);
+        myCoroutineContext = new CoroutineContext(myScheduledExecutorService, myScheduledExecutorService);
+    }
 
-  @Nonnull
-  @Override
-  public ScheduledExecutorService createBoundedScheduledExecutorService(@Nonnull String name, int maxThreads) {
-    AppDelayQueue delayQueue = ((AppScheduledExecutorService)getScheduledExecutorService()).getDelayQueue();
-    return new BoundedScheduledExecutorService(name, getExecutorService(), maxThreads, delayQueue);
-  }
+    @Nonnull
+    @Override
+    public CoroutineContext coroutineContext() {
+        return myCoroutineContext;
+    }
 
-  @Override
-  @Nonnull
-  public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
-                                                              @Nonnull Executor backendExecutor,
-                                                              int maxThreads) {
-    return new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
-  }
+    @Nonnull
+    @Override
+    public Executor executor() {
+        return myScheduledExecutorService.getBackendExecutorService();
+    }
 
-  @Nonnull
-  @Override
-  public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name, int maxThreads, @Nonnull Disposable parentDisposable) {
-    return createBoundedApplicationPoolExecutor(name, getExecutorService(), maxThreads, parentDisposable);
-  }
+    @Nonnull
+    @Override
+    public ExecutorService getExecutorService() {
+        return myScheduledExecutorService.getBackendExecutorService();
+    }
 
-  @Override
-  @Nonnull
-  public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
-                                                              @Nonnull Executor backendExecutor,
-                                                              int maxThreads,
-                                                              @Nonnull Disposable parentDisposable) {
-    BoundedTaskExecutor executor = new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
-    Disposer.register(parentDisposable, executor::shutdownNow);
-    return executor;
-  }
+    @Nonnull
+    @Override
+    public ScheduledExecutorService getScheduledExecutorService() {
+        return myScheduledExecutorService;
+    }
+
+    @Nonnull
+    @Override
+    public ScheduledExecutorService createBoundedScheduledExecutorService(@Nonnull String name, int maxThreads) {
+        AppDelayQueue delayQueue = ((AppScheduledExecutorService) getScheduledExecutorService()).getDelayQueue();
+        return new BoundedScheduledExecutorService(name, getExecutorService(), maxThreads, delayQueue);
+    }
+
+    @Override
+    @Nonnull
+    public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
+                                                                @Nonnull Executor backendExecutor,
+                                                                int maxThreads) {
+        return new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
+    }
+
+    @Nonnull
+    @Override
+    public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name, int maxThreads, @Nonnull Disposable parentDisposable) {
+        return createBoundedApplicationPoolExecutor(name, getExecutorService(), maxThreads, parentDisposable);
+    }
+
+    @Override
+    @Nonnull
+    public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
+                                                                @Nonnull Executor backendExecutor,
+                                                                int maxThreads,
+                                                                @Nonnull Disposable parentDisposable) {
+        BoundedTaskExecutor executor = new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
+        Disposer.register(parentDisposable, executor::shutdownNow);
+        return executor;
+    }
 }

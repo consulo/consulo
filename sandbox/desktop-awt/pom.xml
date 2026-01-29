@@ -203,6 +203,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-util-concurrent-coroutine</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-util-rmi</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -215,6 +215,7 @@
     <module>modules/base/util/util-collection-via-trove</module>
     <module>modules/base/util/util-collection-runtime</module>
     <module>modules/base/util/util-concurrent</module>
+    <module>modules/base/util/util-concurrent-coroutine</module>
     <module>modules/base/util/util-dataholder</module>
     <module>modules/base/util/util-jdom</module>
     <module>modules/base/util/util-io</module>

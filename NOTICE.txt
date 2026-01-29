@@ -1,5 +1,8 @@
- * Some icons from Kotlin repo - license Apache 2.
+ * Initial code from https://github.com/JetBrains/intellij-community - Apache 2
+ * Some icons from Kotlin repo - Apache 2.
  * Web impl contains sources from ContextMenu https://github.com/vaadin/context-menu
+ * coroutines https://github.com/esoco/coroutines - Apache 2
+ * objectrelations https://github.com/esoco/objectrelations - Apache 2
  * mxGraph used in desktop-ui-impl. License
    Copyright (c) 2001-2009, JGraph Ltd
    All rights reserved.

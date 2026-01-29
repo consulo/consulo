@@ -91,7 +91,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
         myTaskFuture = myPluginAdvertiserRequester.doRequest().whenCompleteAsync(
             (pluginDescriptors, throwable) -> checkAndNotify(pluginDescriptors),
-            myApplicationConcurrency.getExecutorService()
+            myApplicationConcurrency.executor()
         );
     }
 

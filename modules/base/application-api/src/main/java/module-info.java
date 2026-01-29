@@ -12,6 +12,7 @@ module consulo.application.api {
     requires transitive consulo.base.icon.library;
     requires consulo.proxy;
 
+    requires transitive consulo.util.concurrent.coroutine;
     requires transitive consulo.util.concurrent;
     requires transitive consulo.util.collection;
     requires transitive consulo.util.interner;

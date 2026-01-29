@@ -91,7 +91,7 @@ public class PluginAdvertiserRequester {
             update(pluginDescriptors);
 
             return pluginDescriptors;
-        }, myApplicationConcurrency.getExecutorService());
+        }, myApplicationConcurrency.executor());
     }
 
     public void update(@Nullable List<PluginDescriptor> list) {

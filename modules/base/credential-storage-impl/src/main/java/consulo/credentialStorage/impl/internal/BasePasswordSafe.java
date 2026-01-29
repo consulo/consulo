@@ -186,7 +186,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     @Override
     public CompletableFuture<Credentials> getAsync(CredentialAttributes attributes) {
-        return CompletableFuture.supplyAsync(() -> get(attributes), myApplicationConcurrency.getExecutorService());
+        return CompletableFuture.supplyAsync(() -> get(attributes), myApplicationConcurrency.executor());
     }
 
     public void save() {
