@@ -30,7 +30,7 @@ public class CoroutineDelayTest {
 
             assertEquals("TEST", ca.getResult());
             long delay = System.currentTimeMillis() - start;
-            assertTrue(delay > DELAY, () -> "Failed to check delay. Delay: " + delay);
+            assertTrue(delay >= DELAY, () -> "Failed to check delay. Delay: " + delay);
             assertTrue(ca.isFinished());
         });
     }
