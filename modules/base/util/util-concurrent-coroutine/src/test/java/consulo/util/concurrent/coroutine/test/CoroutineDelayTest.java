@@ -29,7 +29,8 @@ public class CoroutineDelayTest {
             Continuation<String> ca = r.runAsync(scope, "test");
 
             assertEquals("TEST", ca.getResult());
-            assertTrue((System.currentTimeMillis() - start) > DELAY);
+            long delay = System.currentTimeMillis() - start;
+            assertTrue(delay > DELAY, () -> "Failed to check delay. Delay: " + delay);
             assertTrue(ca.isFinished());
         });
     }
