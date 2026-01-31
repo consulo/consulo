@@ -19,12 +19,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.ProgressBuilder;
 import consulo.application.progress.ProgressBuilderFactory;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -51,22 +50,12 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
     @Override
     public ProgressBuilder newProgressBuilder(@Nullable ComponentManager project, @Nonnull LocalizeValue title) {
         return new BaseProgressBuilderImpl(project, title) {
-            @RequiredUIAccess
             @Nonnull
             @Override
-            public <V> CompletableFuture<V> execute(@Nonnull Function<ProgressIndicator, V> function) {
-                UIAccess.assertIsUIThread();
+            public <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
+                                                    @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
                 assertCreated();
-
-                UIAccess uiAccess = UIAccess.current();
-                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, function);
-            }
-
-            @Nonnull
-            @Override
-            public <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess, @Nonnull Function<ProgressIndicator, V> function) {
-                assertCreated();
-                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, function);
+                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, pipelineBuilder);
             }
         };
     }

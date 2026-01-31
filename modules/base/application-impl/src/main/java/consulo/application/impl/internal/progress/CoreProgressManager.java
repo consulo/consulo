@@ -2,6 +2,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.internal.*;
 import consulo.application.localize.ApplicationLocalize;
@@ -26,6 +27,10 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -46,6 +51,8 @@ import java.util.function.Supplier;
 
 public class CoreProgressManager extends ProgressManager implements ProgressManagerEx, Disposable {
     private static final Logger LOG = Logger.getInstance(CoreProgressManager.class);
+
+    private static final Key VALUE = Key.create("CoreProgressManager#VALUE");
 
     static final int CHECK_CANCELED_DELAY_MILLIS = 10;
     private final AtomicInteger myUnsafeProgressCount = new AtomicInteger(0);
@@ -386,15 +393,15 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     public <V> CompletableFuture<V> executeTask(@Nonnull UIAccess uiAccess,
                                                 @Nullable ComponentManager project,
                                                 @Nonnull LocalizeValue titleText,
                                                 boolean modal,
                                                 boolean cancelable,
-                                                Function<ProgressIndicator, V> func) {
+                                                @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
         ProgressBuilderTaskInfo info = new ProgressBuilderTaskInfo(titleText, cancelable);
 
         BaseApplication application = (BaseApplication) Application.get();
@@ -409,7 +416,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     true,
                     project,
                     null,
-                    ApplicationLocalize.taskButtonCancel());
+                    ApplicationLocalize.taskButtonCancel()
+                );
             }
             else {
                 indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
@@ -425,13 +433,48 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             return indicator;
         }, uiAccess);
 
-        CompletableFuture<V> future = new NewProgressRunner<>(progress -> startTask(func, progress, info), modal, indicatorFuture)
+        CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
+            Function<ProgressIndicator, V> task = progressIndicator -> {
+                ApplicationConcurrency ac = myApplication.getInstance(ApplicationConcurrency.class);
+
+                Coroutine<?, ?> coroutine = pipelineBuilder
+                    .apply(Coroutine.first(CodeExecution.consume((v, continuation) -> {
+                        continuation.scope().putCopyableUserData(UIAccess.KEY, uiAccess);
+                        continuation.scope().putCopyableUserData(ProgressIndicator.KEY, progress);
+
+                        progressIndicator.addListener(new ProgressIndicatorListener() {
+                            @Override
+                            public void canceled() {
+                                continuation.scope().cancel();
+                            }
+                        });
+                    })))
+                    .then(CodeExecution.setScopeParameter(VALUE));
+
+                CoroutineScope.ScopeFuture<V> scopeFuture = CoroutineScope.produce(
+                    ac.coroutineContext(),
+                    scope -> (V) scope.getUserData(VALUE),
+                    rScope -> coroutine.runAsync(rScope, null)
+                );
+
+                try {
+                    return (V) scopeFuture.get();
+                }
+                catch (CancellationException e) {
+                    throw new ProcessCanceledException(e);
+                }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+            return startTask(task, progress, info);
+        }, modal, indicatorFuture)
             .submit(application);
 
         future.whenComplete((v, throwable) -> {
             IndicatorDisposable disposable = indicatorDisposable.get();
             if (disposable != null) {
-                disposable.dispose();
+                disposable.disposeWithTree();
             }
         });
         return future;

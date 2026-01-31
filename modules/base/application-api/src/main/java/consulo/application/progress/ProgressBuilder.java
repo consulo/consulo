@@ -16,11 +16,10 @@
 package consulo.application.progress;
 
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -35,26 +34,7 @@ public interface ProgressBuilder {
     ProgressBuilder modal();
 
     @Nonnull
-    @RequiredUIAccess
-    <V> CompletableFuture<V> execute(@Nonnull Function<ProgressIndicator, V> function);
+    <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
+                                     @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
 
-    @Nonnull
-    <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess, @Nonnull Function<ProgressIndicator, V> function);
-
-    @Nonnull
-    @RequiredUIAccess
-    default CompletableFuture<?> executeVoid(Consumer<ProgressIndicator> consumer) {
-        return execute(progressIndicator -> {
-            consumer.accept(progressIndicator);
-            return null;
-        });
-    }
-
-    @Nonnull
-    default CompletableFuture<?> executeVoid(@Nonnull UIAccess uiAccess, @Nonnull Consumer<ProgressIndicator> consumer) {
-        return execute(uiAccess, progressIndicator -> {
-            consumer.accept(progressIndicator);
-            return null;
-        });
-    }
 }

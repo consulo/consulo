@@ -30,6 +30,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
@@ -53,6 +54,8 @@ import java.util.function.Supplier;
  * If there are read actions running at this moment <code>runWriteAction</code> is blocked until they are completed.
  */
 public interface Application extends ComponentManager {
+    Key<Application> KEY = Key.of(Application.class);
+
     @Nonnull
     @SuppressWarnings("deprecation")
     @Deprecated
