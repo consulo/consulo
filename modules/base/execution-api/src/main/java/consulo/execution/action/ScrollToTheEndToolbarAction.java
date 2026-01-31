@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.internal.action;
+package consulo.execution.action;
 
 import consulo.application.AllIcons;
 import consulo.application.ReadAction;
