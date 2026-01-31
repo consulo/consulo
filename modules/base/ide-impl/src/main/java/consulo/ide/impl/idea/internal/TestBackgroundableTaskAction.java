@@ -23,11 +23,11 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.util.lang.TimeoutUtil;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.Delay;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -49,28 +49,20 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
         Project project = e.getData(Project.KEY);
 
         UIAccess uiAccess = UIAccess.current();
-        
+
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action..."))
             .cancelable()
-            .execute(progressIndicator -> {
-                long millis = TimeUnit.MINUTES.toMillis(1);
-                progressIndicator.checkCanceled();
-                while (!progressIndicator.isCanceled()) {
-                    long l = 1000L;
-                    millis -= l;
-                    TimeoutUtil.sleep(l);
-
-                    if (millis <= 0) {
-                        break;
-                    }
+            .execute(uiAccess, c -> {
+                    return c.then(Delay.sleep(60_000))
+                        .then(CodeExecution.supply(() -> "Success Result"));
                 }
-                return "Success Result";
-            });
+            );
 
         future.whenCompleteAsync((s, throwable) -> {
             if (throwable != null) {
                 Alerts.okError(LocalizeValue.ofNullable(throwable.getLocalizedMessage())).showAsync(project);
-            } else {
+            }
+            else {
                 Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
             }
         }, uiAccess);

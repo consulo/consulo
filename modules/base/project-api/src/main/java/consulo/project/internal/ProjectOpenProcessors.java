@@ -22,6 +22,7 @@ import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public interface ProjectOpenProcessors {
   List<ProjectOpenProcessor> getProcessors();
 
   @Nullable
-  default ProjectOpenProcessor findProcessor(@Nonnull File file) {
+  default ProjectOpenProcessor findProcessor(@Nonnull Path file) {
     for (ProjectOpenProcessor provider : getProcessors()) {
       if (provider.canOpenProject(file)) {
         return provider;

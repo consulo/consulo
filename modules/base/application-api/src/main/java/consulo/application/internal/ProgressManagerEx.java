@@ -21,6 +21,7 @@ import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -56,5 +57,5 @@ public interface ProgressManagerEx {
                                          @Nonnull LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,
-                                         Function<ProgressIndicator, V> func);
+                                         @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
 }

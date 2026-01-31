@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +52,9 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
 
     @Nullable
     @Override
-    public ProjectOpenProcessor findProcessor(@Nonnull File file) {
+    public ProjectOpenProcessor findProcessor(@Nonnull Path path) {
         for (ProjectOpenProcessor processor : getProcessors()) {
-            if (processor.canOpenProject(file)) {
+            if (processor.canOpenProject(path)) {
                 return processor;
             }
         }

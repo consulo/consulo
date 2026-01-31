@@ -19,11 +19,11 @@ import consulo.application.Application;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.container.internal.ShowErrorCaller;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.ui.wm.IdeFrame;
@@ -37,98 +37,100 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author yole
  */
 public class CommandLineProcessor {
-  private CommandLineProcessor() {
-  }
-
-  @Nonnull
-  public static AsyncResult<Project> processExternalCommandLine(@Nonnull CommandLineArgs commandLineArgs,
-                                                                @Nullable String currentDirectory) {
-    String file = commandLineArgs.getFile();
-    if (file == null) {
-      return AsyncResult.rejected();
-    }
-    int line = commandLineArgs.getLine();
-
-    if (StringUtil.isQuotedString(file)) {
-      file = StringUtil.stripQuotesAroundValue(file);
+    private CommandLineProcessor() {
     }
 
-    if (!new File(file).isAbsolute()) {
-      file = currentDirectory != null ? new File(currentDirectory, file).getAbsolutePath() : new File(file).getAbsolutePath();
-    }
-
-    File projectFile = findProjectDirectoryOrFile(file);
-
-    File targetFile = new File(file);
-
-    UIAccess uiAccess = Application.get().getLastUIAccess();
-    if (projectFile != null) {
-      return ProjectImplUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
-        if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
-          VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
-          if (virtualFile != null) {
-            openFile(uiAccess, project, virtualFile, line);
-          }
+    @Nonnull
+    public static AsyncResult<Project> processExternalCommandLine(@Nonnull CommandLineArgs commandLineArgs,
+                                                                  @Nullable String currentDirectory) {
+        String file = commandLineArgs.getFile();
+        if (file == null) {
+            return AsyncResult.rejected();
         }
-      });
-    }
-    else {
-      VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
-      if (targetVFile == null) {
-        ShowErrorCaller.showErrorDialog("Cannot find file", "Cannot find file '" + file + "'", null);
-        return AsyncResult.rejected();
-      }
+        int line = commandLineArgs.getLine();
 
-      Project bestProject = findBestProject(targetVFile);
+        if (StringUtil.isQuotedString(file)) {
+            file = StringUtil.stripQuotesAroundValue(file);
+        }
 
-      openFile(uiAccess, bestProject, targetVFile, line);
+        if (!new File(file).isAbsolute()) {
+            file = currentDirectory != null ? new File(currentDirectory, file).getAbsolutePath() : new File(file).getAbsolutePath();
+        }
 
-      return AsyncResult.resolved(bestProject);
-    }
-  }
+        Path projectFile = findProjectDirectoryOrFile(file);
 
-  private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
-    uiAccess.give(() -> {
-      OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(project).newBuilder(virtualFile);
-      if (line != -1) {
-        builder = builder.line(line - 1);
-      }
+        Path targetFile = Path.of(file);
 
-      builder.build().navigate(true);
-    });
-  }
+        UIAccess uiAccess = Application.get().getLastUIAccess();
+        if (projectFile != null) {
+            return ProjectImplUtil.openAsync(projectFile.toString(), null, true, uiAccess).doWhenDone(project -> {
+                if (!FileUtil.pathsEqual(projectFile.toString(), targetFile.toString()) && !Files.isDirectory(targetFile)) {
+                    VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(targetFile);
+                    if (virtualFile != null) {
+                        openFile(uiAccess, project, virtualFile, line);
+                    }
+                }
+            });
+        }
+        else {
+            VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(targetFile);
+            if (targetVFile == null) {
+                ShowErrorCaller.showErrorDialog("Cannot find file", "Cannot find file '" + file + "'", null);
+                return AsyncResult.rejected();
+            }
 
-  @Nonnull
-  private static Project findBestProject(VirtualFile virtualFile) {
-    Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    for (Project aProject : projects) {
-      if (ProjectRootManager.getInstance(aProject).getFileIndex().isInContent(virtualFile)) {
-        return aProject;
-      }
-    }
-    IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
-    Project project = frame == null ? null : frame.getProject();
-    return project != null ? project : projects[0];
-  }
+            Project bestProject = findBestProject(targetVFile);
 
-  @Nullable
-  private static File findProjectDirectoryOrFile(@Nonnull String path) {
-    File target = new File(path);
+            openFile(uiAccess, bestProject, targetVFile, line);
 
-    while (target != null) {
-      ProjectOpenProcessor processor = ProjectOpenProcessors.getInstance().findProcessor(target);
-      if (processor != null) {
-        return target;
-      }
-
-      target = target.getParentFile();
+            return AsyncResult.resolved(bestProject);
+        }
     }
 
-    return null;
-  }
+    private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
+        uiAccess.give(() -> {
+            OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(project).newBuilder(virtualFile);
+            if (line != -1) {
+                builder = builder.line(line - 1);
+            }
+
+            builder.build().navigate(true);
+        });
+    }
+
+    @Nonnull
+    private static Project findBestProject(VirtualFile virtualFile) {
+        Project[] projects = ProjectManager.getInstance().getOpenProjects();
+        for (Project aProject : projects) {
+            if (ProjectRootManager.getInstance(aProject).getFileIndex().isInContent(virtualFile)) {
+                return aProject;
+            }
+        }
+        IdeFrame frame = (IdeFrame) IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+        Project project = frame == null ? null : frame.getProject();
+        return project != null ? project : projects[0];
+    }
+
+    @Nullable
+    private static Path findProjectDirectoryOrFile(@Nonnull String path) {
+        Path target = Path.of(path);
+
+        while (target != null) {
+            ProjectOpenProcessor processor = ProjectOpenProcessors.getInstance().findProcessor(target);
+            if (processor != null) {
+                return target;
+            }
+
+            target = target.getParent();
+        }
+
+        return null;
+    }
 }

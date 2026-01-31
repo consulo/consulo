@@ -45,7 +45,7 @@ public class ProjectImporterCheckoutListener implements PreCheckoutListener {
                 }
                 VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
                 if (virtualFile != null) {
-                    ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
+                    ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file.toPath());
                     if (openProcessor != null) {
                         int rc = Messages.showYesNoDialog(
                             project,

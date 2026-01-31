@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,25 @@
  */
 package consulo.project;
 
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UnprotectedUserDataHolder;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
+
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 2024-09-23
+ * @since 2026-01-29
  */
-public final class ProjectOpenContext extends UnprotectedUserDataHolder {
-    public static final Key<Boolean> FORCE_OPEN_IN_NEW_FRAME = Key.create("ProjectOpenContext#FORCE_OPEN_IN_NEW_FRAME");
-    public static final Key<Project> ACTIVE_PROJECT = Key.create("ProjectOpenContext#ACTIVE_PROJECT");
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProjectOpenService {
+    @Nonnull
+    CompletableFuture<Project> openProjectAsync(
+        @Nonnull Path filePath,
+        @Nonnull UIAccess uiAccess,
+        @Nonnull ProjectOpenContext context
+    );
 }
+

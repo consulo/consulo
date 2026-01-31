@@ -24,19 +24,19 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author max
  */
-public abstract class ProjectOpenProcessor {
+public interface ProjectOpenProcessor {
     @Nullable
-    public abstract Image getIcon(@Nonnull VirtualFile file);
+    Image getIcon(@Nonnull VirtualFile file);
 
-    public abstract boolean canOpenProject(@Nonnull File file);
+    boolean canOpenProject(@Nonnull Path file);
 
     @Nonnull
-    public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
-                                                            @Nonnull UIAccess uiAccess,
-                                                            @Nonnull ProjectOpenContext context);
+    AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
+                                            @Nonnull UIAccess uiAccess,
+                                            @Nonnull ProjectOpenContext context);
 }

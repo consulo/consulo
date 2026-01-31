@@ -19,13 +19,11 @@ import consulo.application.Application;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.internal.ProjectOpenProcessor;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.project.internal.ProjectOpenProcessors;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
@@ -50,7 +48,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
 
     @Nullable
     private Image getProcessorIcon(VirtualFile virtualFile) {
-        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
+        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile.toNioPath());
         if (provider != null) {
             return provider.getIcon(virtualFile);
         }
@@ -66,7 +64,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     public static boolean canOpen(VirtualFile file) {
-        return ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(file)) != null;
+        return ProjectOpenProcessors.getInstance().findProcessor(file.toNioPath()) != null;
     }
 
     private static boolean isProjectDirectory(VirtualFile virtualFile) {

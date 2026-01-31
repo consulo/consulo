@@ -16,11 +16,13 @@
 package consulo.application.impl.internal.concurent;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Executor;
@@ -38,9 +40,11 @@ public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
 
     private final CoroutineContext myCoroutineContext;
 
-    public ApplicationConcurrencyImpl() {
-        myScheduledExecutorService = new AppScheduledExecutorService("Global instance", this);
+    @Inject
+    public ApplicationConcurrencyImpl(@Nonnull Application application) {
+        myScheduledExecutorService = new AppScheduledExecutorService("Global Instance", this);
         myCoroutineContext = new CoroutineContext(myScheduledExecutorService, myScheduledExecutorService);
+        myCoroutineContext.putCopyableUserData(Application.KEY, application);
     }
 
     @Nonnull

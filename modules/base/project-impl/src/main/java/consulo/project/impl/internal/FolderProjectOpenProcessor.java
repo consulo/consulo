@@ -38,12 +38,13 @@ import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
  * @since 2025-05-26
  */
-public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
+public class FolderProjectOpenProcessor implements ProjectOpenProcessor {
     public static final FolderProjectOpenProcessor INSTANCE = new FolderProjectOpenProcessor();
 
     @Nullable
@@ -53,7 +54,7 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
+    public boolean canOpenProject(@Nonnull Path file) {
         return true;
     }
 

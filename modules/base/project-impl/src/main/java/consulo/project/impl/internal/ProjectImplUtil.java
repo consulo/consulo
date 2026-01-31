@@ -30,7 +30,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,6 +39,7 @@ import java.io.IOException;
 /**
  * @author Eugene Belyaev
  */
+@Deprecated
 public class ProjectImplUtil {
     private static final Logger LOG = Logger.getInstance(ProjectImplUtil.class);
 
@@ -132,7 +132,7 @@ public class ProjectImplUtil {
         }
 
         return PooledAsyncResult.create((result) -> {
-            ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+            ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile.toNioPath());
             if (provider != null) {
                 result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
 

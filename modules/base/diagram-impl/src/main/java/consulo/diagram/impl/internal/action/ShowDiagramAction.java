@@ -16,7 +16,7 @@
 package consulo.diagram.impl.internal.action;
 
 import consulo.application.Application;
-import consulo.application.ReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.diagram.GraphProvider;
@@ -80,9 +80,11 @@ public class ShowDiagramAction extends AnAction {
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
             .cancelable()
-            .execute(progressIndicator -> ReadAction.compute(() -> {
-                return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
-            }));
+            .execute(UIAccess.current(), coroutine -> {
+                return coroutine.then(ReadLock.apply(o -> {
+                    return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
+                }));
+            });
 
         UIAccess uiAccess = UIAccess.current();
 

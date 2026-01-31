@@ -26,12 +26,13 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author max
  */
-public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
+public class DefaultProjectOpenProcessor implements ProjectOpenProcessor {
     private static final DefaultProjectOpenProcessor INSTANCE = new DefaultProjectOpenProcessor();
 
     public static DefaultProjectOpenProcessor getInstance() {
@@ -39,8 +40,8 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
-        return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
+    public boolean canOpenProject(@Nonnull Path file) {
+        return Files.isDirectory(file) && Files.exists(file.resolve(Project.DIRECTORY_STORE_FOLDER + "/modules.xml"));
     }
 
     @Override
