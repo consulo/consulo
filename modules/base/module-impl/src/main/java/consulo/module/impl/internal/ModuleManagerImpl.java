@@ -487,7 +487,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Nonnull
     @Override
-    @RequiredReadAction
     public Module[] getModules() {
         if (!myReady) {
             Exception trace = DebugStackTrace.getTrace();
