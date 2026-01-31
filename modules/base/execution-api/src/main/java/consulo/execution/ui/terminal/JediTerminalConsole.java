@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,15 @@
  */
 package consulo.execution.ui.terminal;
 
-import consulo.disposer.Disposable;
-import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
+import com.jediterm.terminal.Terminal;
+import com.jediterm.terminal.model.TerminalTextBuffer;
 
 /**
  * @author VISTALL
- * @since 15/04/2023
+ * @since 2026-01-31
  */
-public interface TerminalConsole extends Disposable {
-    @Nonnull
-    String getSessionName();
+public interface JediTerminalConsole extends TerminalConsole {
+    Terminal getTerminal();
 
-    @Nonnull
-    Component getUIComponent();
+    TerminalTextBuffer getTerminalTextBuffer();
 }
