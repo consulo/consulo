@@ -25,6 +25,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.TextRange;
+import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ui.ex.action.CompositeShortcutSet;
@@ -71,10 +72,10 @@ import java.util.*;
 /**
  * @author gregsh
  */
-public class ConsoleHistoryController {
-    private static final Key<ConsoleHistoryController> CONTROLLER_KEY = Key.create("CONTROLLER_KEY");
+public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
+    private static final Key<ConsoleHistoryControllerImpl> CONTROLLER_KEY = Key.create("CONTROLLER_KEY");
 
-    private static final Logger LOG = Logger.getInstance(ConsoleHistoryController.class);
+    private static final Logger LOG = Logger.getInstance(ConsoleHistoryControllerImpl.class);
 
     private final static Map<String, ConsoleHistoryModel> ourModels =
         FactoryMap.createMap(k -> new ConsoleHistoryModel(null), ContainerUtil::createConcurrentWeakValueMap);
@@ -88,12 +89,12 @@ public class ConsoleHistoryController {
     private long myLastSaveStamp;
 
     @Deprecated
-    public ConsoleHistoryController(@Nonnull String type, @Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
+    public ConsoleHistoryControllerImpl(@Nonnull String type, @Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
         this(new ConsoleRootType(type, null) {
         }, persistenceId, console);
     }
 
-    public ConsoleHistoryController(
+    public ConsoleHistoryControllerImpl(
         @Nonnull ConsoleRootType rootType,
         @Nullable String persistenceId,
         @Nonnull LanguageConsoleView console
@@ -101,7 +102,7 @@ public class ConsoleHistoryController {
         this(rootType, persistenceId, console, ourModels.get(getHistoryName(rootType, fixNullPersistenceId(persistenceId, console))));
     }
 
-    private ConsoleHistoryController(
+    private ConsoleHistoryControllerImpl(
         @Nonnull ConsoleRootType rootType,
         @Nullable String persistenceId,
         @Nonnull LanguageConsoleView console,
@@ -111,17 +112,7 @@ public class ConsoleHistoryController {
         myConsole = console;
     }
 
-    public static ConsoleHistoryController getController(LanguageConsoleView console) {
-        return console.getVirtualFile().getUserData(CONTROLLER_KEY);
-    }
-
-    public static void addToHistory(@Nonnull LanguageConsoleView consoleView, @Nullable String command) {
-        ConsoleHistoryController controller = getController(consoleView);
-        if (controller != null) {
-            controller.addToHistory(command);
-        }
-    }
-
+    @Override
     public void addToHistory(@Nullable String command) {
         getModel().addToHistory(command);
     }
@@ -143,7 +134,7 @@ public class ConsoleHistoryController {
         return myMultiline;
     }
 
-    public ConsoleHistoryController setMultiline(boolean multiline) {
+    public ConsoleHistoryControllerImpl setMultiline(boolean multiline) {
         myMultiline = multiline;
         return this;
     }
@@ -240,6 +231,7 @@ public class ConsoleHistoryController {
         return myHistoryPrev;
     }
 
+    @Override
     public AnAction getBrowseHistory() {
         return myBrowseHistory;
     }

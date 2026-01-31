@@ -31,6 +31,7 @@ import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -438,6 +439,39 @@ public class EditorUtil {
                 return context.getData(dataId);
             }
         };
+    }
+
+    public static void scrollToTheEnd(@Nonnull Editor editor) {
+        scrollToTheEnd(editor, false);
+    }
+
+    public static void scrollToTheEnd(@Nonnull Editor editor, boolean preferVerticalScroll) {
+        editor.getSelectionModel().removeSelection();
+        Document document = editor.getDocument();
+        int lastLine = Math.max(0, document.getLineCount() - 1);
+        boolean caretWasAtLastLine = editor.getCaretModel().getLogicalPosition().line == lastLine;
+        editor.getCaretModel().moveToOffset(document.getTextLength());
+        ScrollingModel scrollingModel = editor.getScrollingModel();
+        if (preferVerticalScroll && document.getLineStartOffset(lastLine) == document.getLineEndOffset(lastLine)) {
+            // don't move 'focus' to empty last line
+            int scrollOffset;
+            if (editor instanceof EditorEx) {
+                JScrollBar verticalScrollBar = ((EditorEx) editor).getScrollPane().getVerticalScrollBar();
+                scrollOffset = verticalScrollBar.getMaximum() - verticalScrollBar.getModel().getExtent();
+            }
+            else {
+                scrollOffset = editor.getContentComponent().getHeight() - scrollingModel.getVisibleArea().height;
+            }
+            scrollingModel.scrollVertically(scrollOffset);
+        }
+        else if (!caretWasAtLastLine) {
+            // don't scroll to the end of the last line (IDEA-124688)...
+            scrollingModel.scrollTo(new LogicalPosition(lastLine, 0), ScrollType.RELATIVE);
+        }
+        else {
+            // ...unless the caret was already on the last line - then scroll to the end of it.
+            scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+        }
     }
 
     public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {

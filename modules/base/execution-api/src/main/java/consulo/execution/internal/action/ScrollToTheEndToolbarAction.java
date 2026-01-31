@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
+package consulo.execution.internal.action;
 
 import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;

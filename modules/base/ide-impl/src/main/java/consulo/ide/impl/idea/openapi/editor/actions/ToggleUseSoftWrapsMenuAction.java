@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.action.AbstractToggleUseSoftWrapsAction;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;

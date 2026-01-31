@@ -326,6 +326,7 @@ public final class EditorUtil {
      * @see #getNotFoldedLineEndOffset(Editor, int)
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
+    @Deprecated
     public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
                                                                                                 @Nonnull VisualPosition start,
                                                                                                 @Nonnull VisualPosition end) {
@@ -335,6 +336,7 @@ public final class EditorUtil {
     /**
      * Finds the start offset of visual line at which given offset is located, not taking soft wraps into account.
      */
+    @Deprecated
     public static int getNotFoldedLineStartOffset(@Nonnull Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.getNotFoldedLineStartOffset(editor, offset);
     }
@@ -342,41 +344,19 @@ public final class EditorUtil {
     /**
      * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
      */
+    @Deprecated
     public static int getNotFoldedLineEndOffset(@Nonnull Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.getNotFoldedLineEndOffset(editor, offset);
     }
 
+    @Deprecated
     public static void scrollToTheEnd(@Nonnull Editor editor) {
-        scrollToTheEnd(editor, false);
+        consulo.codeEditor.util.EditorUtil.scrollToTheEnd(editor);
     }
 
+    @Deprecated
     public static void scrollToTheEnd(@Nonnull Editor editor, boolean preferVerticalScroll) {
-        editor.getSelectionModel().removeSelection();
-        Document document = editor.getDocument();
-        int lastLine = Math.max(0, document.getLineCount() - 1);
-        boolean caretWasAtLastLine = editor.getCaretModel().getLogicalPosition().line == lastLine;
-        editor.getCaretModel().moveToOffset(document.getTextLength());
-        ScrollingModel scrollingModel = editor.getScrollingModel();
-        if (preferVerticalScroll && document.getLineStartOffset(lastLine) == document.getLineEndOffset(lastLine)) {
-            // don't move 'focus' to empty last line
-            int scrollOffset;
-            if (editor instanceof EditorEx) {
-                JScrollBar verticalScrollBar = ((EditorEx) editor).getScrollPane().getVerticalScrollBar();
-                scrollOffset = verticalScrollBar.getMaximum() - verticalScrollBar.getModel().getExtent();
-            }
-            else {
-                scrollOffset = editor.getContentComponent().getHeight() - scrollingModel.getVisibleArea().height;
-            }
-            scrollingModel.scrollVertically(scrollOffset);
-        }
-        else if (!caretWasAtLastLine) {
-            // don't scroll to the end of the last line (IDEA-124688)...
-            scrollingModel.scrollTo(new LogicalPosition(lastLine, 0), ScrollType.RELATIVE);
-        }
-        else {
-            // ...unless the caret was already on the last line - then scroll to the end of it.
-            scrollingModel.scrollToCaret(ScrollType.RELATIVE);
-        }
+        consulo.codeEditor.util.EditorUtil.scrollToTheEnd(editor, preferVerticalScroll);
     }
 
     public static boolean isChangeFontSize(@Nonnull MouseWheelEvent e) {

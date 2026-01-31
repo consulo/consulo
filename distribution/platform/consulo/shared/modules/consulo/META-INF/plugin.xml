@@ -760,7 +760,7 @@
         <group id="ConsoleView.PopupMenu">
             <reference ref="ConsoleEditorPopupMenu"/>
             <separator/>
-            <action id="ConsoleView.ClearAll" class="consulo.execution.impl.internal.action.ClearConsoleAction"/>
+            <action id="ConsoleView.ClearAll" class="consulo.execution.internal.action.ClearConsoleAction"/>
         </group>
 
         <action id="DumpLookupElementWeights" class="consulo.ide.impl.idea.internal.DumpLookupElementWeights"
