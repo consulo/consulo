@@ -416,7 +416,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     true,
                     project,
                     null,
-                    ApplicationLocalize.taskButtonCancel());
+                    ApplicationLocalize.taskButtonCancel()
+                );
             }
             else {
                 indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
@@ -438,6 +439,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
                 Coroutine<?, ?> coroutine = pipelineBuilder
                     .apply(Coroutine.first(CodeExecution.consume((v, continuation) -> {
+                        continuation.scope().putCopyableUserData(UIAccess.KEY, uiAccess);
                         continuation.scope().putCopyableUserData(ProgressIndicator.KEY, progress);
 
                         progressIndicator.addListener(new ProgressIndicatorListener() {
@@ -472,7 +474,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         future.whenComplete((v, throwable) -> {
             IndicatorDisposable disposable = indicatorDisposable.get();
             if (disposable != null) {
-                disposable.dispose();
+                disposable.disposeWithTree();
             }
         });
         return future;

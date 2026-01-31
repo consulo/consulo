@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
+package consulo.codeEditor.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.util.SoftWrapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -67,8 +66,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     public void update(@Nonnull AnActionEvent e) {
         if (myGlobal) {
             Editor editor = getEditor(e);
-            if (editor != null && editor.getSettings() instanceof SettingsImpl settingsImpl
-                && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
+            if (editor != null && editor.getSettings().getSoftWrapAppliancePlace() != myAppliancePlace) {
                 e.getPresentation().setEnabledAndVisible(false);
                 return;
             }
@@ -79,7 +77,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         if (myGlobal) {
-            return EditorSettingsExternalizable.getInstance().isUseSoftWraps(myAppliancePlace);
+            return PersistentEditorSettings.getInstance().isUseSoftWraps(myAppliancePlace);
         }
         Editor editor = getEditor(e);
         return editor != null && editor.getSettings().isUseSoftWraps();

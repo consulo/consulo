@@ -42,6 +42,8 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Collection;
+
 /**
  * @author nik
  */
@@ -63,12 +65,17 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   protected void attachNotificationTo(Content content) {
     if (myConsole instanceof ObservableConsoleView) {
       ObservableConsoleView observable = (ObservableConsoleView)myConsole;
-      observable.addChangeListener(types -> {
-        if (types.contains(ConsoleViewContentType.ERROR_OUTPUT) || types.contains(ConsoleViewContentType.NORMAL_OUTPUT)) {
-          content.fireAlert();
-        }
+      observable.addChangeListener(new ObservableConsoleView.ChangeListener() {
+          @Override
+          public void contentAdded(Collection<ConsoleViewContentType> types) {
+              if (types.contains(ConsoleViewContentType.ERROR_OUTPUT) || types.contains(ConsoleViewContentType.NORMAL_OUTPUT)) {
+                  content.fireAlert();
+              }
+          }
       }, content);
+
       RunProfile profile = getRunProfile();
+
       if (profile instanceof RunConfigurationBase && !ApplicationManager.getApplication().isUnitTestMode()) {
         observable.addChangeListener(
                 new RunContentBuilder.ConsoleToFrontListener((RunConfigurationBase)profile, myProject, DefaultDebugExecutor.getDebugExecutorInstance(),

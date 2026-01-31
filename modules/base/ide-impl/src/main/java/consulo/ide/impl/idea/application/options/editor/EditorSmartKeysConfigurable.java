@@ -38,7 +38,6 @@ import consulo.ui.util.LabeledComponents;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.Collection;
 import java.util.function.Supplier;

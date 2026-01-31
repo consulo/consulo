@@ -30,7 +30,7 @@ import consulo.execution.ui.console.language.BaseConsoleExecuteActionHandler;
 import consulo.execution.ui.console.language.BasicGutterContentProvider;
 import consulo.execution.ui.console.language.GutterContentProvider;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.execution.console.ConsoleHistoryController;
+import consulo.ide.impl.idea.execution.console.ConsoleHistoryControllerImpl;
 import consulo.ide.impl.idea.execution.console.LanguageConsoleImpl;
 import consulo.ide.impl.idea.execution.console.UseConsoleInputAction;
 import consulo.language.Language;
@@ -363,6 +363,6 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
                             @Nonnull String historyType) {
     ConsoleExecuteAction action = new ConsoleExecuteAction(console, executeActionHandler, executionEnabled);
     action.registerCustomShortcutSet(action.getShortcutSet(), console.getConsoleEditor().getComponent());
-    new ConsoleHistoryController(new MyConsoleRootType(historyType), null, console).install();
+    new ConsoleHistoryControllerImpl(new MyConsoleRootType(historyType), null, console).install();
   }
 }

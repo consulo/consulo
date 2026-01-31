@@ -10,15 +10,13 @@ import com.jediterm.terminal.ui.TerminalAction;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ui.terminal.TerminalConsole;
-import consulo.execution.ui.terminal.TerminalConsoleSettings;
+import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.ui.Component;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.JBScrollBar;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,12 +24,9 @@ import javax.swing.*;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class JBTerminalWidget extends JediTermWidget implements Disposable, TerminalConsole {
-    private final TerminalConsoleSettings myTerminalConsoleSettings;
-
-    public JBTerminalWidget(JBTerminalSystemSettingsProvider settingsProvider, TerminalConsoleSettings settings) {
+public class JBTerminalWidget extends JediTermWidget implements Disposable, JediTerminalConsole {
+    public JBTerminalWidget(JBTerminalSystemSettingsProvider settingsProvider) {
         super(settingsProvider);
-        myTerminalConsoleSettings = settings;
 
         convertActions(this, getActions());
     }

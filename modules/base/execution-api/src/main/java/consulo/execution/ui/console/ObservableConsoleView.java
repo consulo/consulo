@@ -17,16 +17,19 @@
 package consulo.execution.ui.console;
 
 import consulo.disposer.Disposable;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 
-public interface ObservableConsoleView  {
+public interface ObservableConsoleView extends ConsoleView {
 
-  void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent);
+    void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent);
 
-  interface ChangeListener {
-    void contentAdded(Collection<ConsoleViewContentType> types);
-  }
+    interface ChangeListener {
+        default void contentAdded(Collection<ConsoleViewContentType> types) {
+        }
 
+        default void textCleared() {
+        }
+    }
 }

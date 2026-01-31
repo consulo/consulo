@@ -16,6 +16,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.execution.internal.LanguageConsoleViewEx;
+import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.ConsoleViewUtil;
@@ -267,7 +268,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
     @Override
     public void installConsoleHistory(ConsoleRootType consoleRootType, String historyPersistenceId) {
-        new ConsoleHistoryController(consoleRootType, historyPersistenceId, this).install();
+        new ConsoleHistoryControllerImpl(consoleRootType, historyPersistenceId, this).install();
     }
 
     public String addToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean preserveMarkup) {

@@ -15,18 +15,22 @@
  */
 package consulo.desktop.awt.execution.terminal;
 
+import com.jediterm.terminal.*;
+import com.jediterm.terminal.emulator.JediEmulator;
+import com.jediterm.terminal.model.JediTerminal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.terminal.TerminalSession;
-import consulo.execution.ui.terminal.TerminalConsole;
+import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
+import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
@@ -35,23 +39,49 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 @Singleton
 public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public DesktopAWTTerminalConsoleFactory(Application application) {
-    myApplication = application;
-  }
+    @Inject
+    public DesktopAWTTerminalConsoleFactory(Application application) {
+        myApplication = application;
+    }
 
-  @Override
-  @Nonnull
-  public TerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
-    JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
+    @Override
+    @Nonnull
+    public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
+        JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
-    JBTerminalWidget widget = new JBTerminalWidget(provider, settings);
-    Disposer.register(parentDisposable, widget);
+        JBTerminalWidget widget = new JBTerminalWidget(provider);
+        Disposer.register(parentDisposable, widget);
 
-    ((AbstractTerminalRunner)session).openSessionInDirectory(widget);
+        ((AbstractTerminalRunner) session).openSessionInDirectory(widget);
 
-    return widget;
-  }
+        return widget;
+    }
+
+    @Nonnull
+    @Override
+    public JediTerminalConsole createCustom(Disposable parentDisposable,
+                                            BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
+                                            TtyConnector connector) {
+        JBTerminalSystemSettingsProvider provider =
+            new JBTerminalSystemSettingsProvider(myApplication, TerminalConsoleSettings.DEFAULT, parentDisposable);
+
+        JBTerminalWidget widget = new JBTerminalWidget(provider) {
+            @Override
+            protected TerminalStarter createTerminalStarter(JediTerminal terminal, TtyConnector connector) {
+                return new TerminalStarter(terminal, connector, new TtyBasedArrayDataStream(connector)) {
+                    @Override
+                    protected JediEmulator createEmulator(TerminalDataStream dataStream, Terminal terminal) {
+                        return jediEmulatorFactory.apply(dataStream, terminal);
+                    }
+                };
+            }
+        };
+
+        widget.setTtyConnector(connector);
+        widget.start();
+
+        return widget;
+    }
 }

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
+package consulo.codeEditor.action;
 
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.action.AbstractToggleUseSoftWrapsAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,8 +29,8 @@ import jakarta.annotation.Nonnull;
  */
 public class ToggleUseSoftWrapsToolbarAction extends AbstractToggleUseSoftWrapsAction {
 
-  public ToggleUseSoftWrapsToolbarAction(@Nonnull SoftWrapAppliancePlaces place) {
-    super(place, true);
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS));
-  }
+    public ToggleUseSoftWrapsToolbarAction(@Nonnull SoftWrapAppliancePlaces place) {
+        super(place, true);
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS));
+    }
 }

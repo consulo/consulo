@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.ui.terminal;
+package consulo.execution.internal;
 
-import consulo.disposer.Disposable;
-import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
+import consulo.execution.ui.console.ConsoleHistoryController;
+import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL
- * @since 15/04/2023
+ * @since 2026-01-31
  */
-public interface TerminalConsole extends Disposable {
-    @Nonnull
-    String getSessionName();
-
-    @Nonnull
-    Component getUIComponent();
+public class ConsoleHistoryControllerInternal {
+    public static final Key<ConsoleHistoryController> CONTROLLER_KEY = Key.create("CONTROLLER_KEY");
 }

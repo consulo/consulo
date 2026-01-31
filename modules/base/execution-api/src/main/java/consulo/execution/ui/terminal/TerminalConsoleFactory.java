@@ -15,12 +15,17 @@
  */
 package consulo.execution.ui.terminal;
 
+import com.jediterm.terminal.Terminal;
+import com.jediterm.terminal.TerminalDataStream;
+import com.jediterm.terminal.TtyConnector;
+import com.jediterm.terminal.emulator.JediEmulator;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.execution.terminal.TerminalSession;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
@@ -28,6 +33,17 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TerminalConsoleFactory {
-  @Nonnull
-  TerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable);
+    @Nonnull
+    JediTerminalConsole create(
+        TerminalSession session,
+        TerminalConsoleSettings settings,
+        Disposable parentDisposable
+    );
+
+    @Nonnull
+    JediTerminalConsole createCustom(
+        Disposable parentDisposable,
+        BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
+        TtyConnector connector
+    );
 }
