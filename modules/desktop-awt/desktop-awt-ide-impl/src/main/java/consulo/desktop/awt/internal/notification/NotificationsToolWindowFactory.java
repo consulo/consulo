@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.execution.internal.action.ScrollToTheEndToolbarAction;
+import consulo.execution.action.ScrollToTheEndToolbarAction;
 import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.setting.ShowSettingsUtil;

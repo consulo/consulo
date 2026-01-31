@@ -25,7 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.internal.action.ClearConsoleAction;
-import consulo.execution.internal.action.ScrollToTheEndToolbarAction;
+import consulo.execution.action.ScrollToTheEndToolbarAction;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.localize.LocalizeValue;

@@ -29,7 +29,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.execution.ConsoleFolding;
 import consulo.execution.impl.internal.action.EOFAction;
-import consulo.execution.internal.action.ScrollToTheEndToolbarAction;
+import consulo.execution.action.ScrollToTheEndToolbarAction;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;

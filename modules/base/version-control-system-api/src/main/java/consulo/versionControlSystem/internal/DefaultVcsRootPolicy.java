@@ -46,9 +46,6 @@ public abstract class DefaultVcsRootPolicy {
   @Nullable
   public abstract VirtualFile getVcsRootFor(@Nonnull VirtualFile file);
 
-  @Nonnull
-  public abstract Collection<VirtualFile> getDirtyRoots();
-
   public String getProjectConfigurationMessage(@Nonnull Project project) {
     boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);
     StringBuilder sb = new StringBuilder("Content roots of all modules");

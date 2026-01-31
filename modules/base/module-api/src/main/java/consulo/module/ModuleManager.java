@@ -74,7 +74,6 @@ public abstract class ModuleManager {
    * @return the array of modules.
    */
   @Nonnull
-  @RequiredReadAction
   public abstract Module[] getModules();
 
   /**
