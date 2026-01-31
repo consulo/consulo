@@ -10,10 +10,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.*;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.action.TypedAction;
-import consulo.codeEditor.action.TypedActionHandler;
+import consulo.codeEditor.action.*;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
@@ -32,6 +29,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.execution.ConsoleFolding;
 import consulo.execution.impl.internal.action.EOFAction;
+import consulo.execution.internal.action.ScrollToTheEndToolbarAction;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;
@@ -39,8 +37,6 @@ import consulo.execution.util.ConsoleBuffer;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
-import consulo.execution.internal.action.ScrollToTheEndToolbarAction;
-import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -322,10 +318,16 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         if (myEditor == null) {
             return;
         }
+
+        for (ChangeListener each : myListeners) {
+            each.textCleared();
+        }
+
         synchronized (LOCK) {
             // real document content will be cleared on next flush;
             myDeferredBuffer.clear();
         }
+        
         if (!myFlushAlarm.isDisposed()) {
             cancelAllFlushRequests();
             addFlushRequest(0, CLEAR);
