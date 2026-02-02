@@ -74,4 +74,6 @@ module consulo.execution.api {
         consulo.execution.test.sm.api,
         consulo.desktop.awt.ide.impl,
         consulo.execution.test.api;
+
+    opens consulo.execution.internal.action to consulo.component.impl;
 }
