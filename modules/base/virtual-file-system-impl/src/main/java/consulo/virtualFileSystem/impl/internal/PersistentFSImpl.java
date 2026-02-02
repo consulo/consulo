@@ -28,6 +28,7 @@ import consulo.virtualFileSystem.impl.internal.zip.ZipHandler;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
@@ -61,11 +62,12 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     private BulkFileListener myPublisher;
     private final VfsData myVfsData = new VfsData();
 
-    public PersistentFSImpl() {
+    @Inject
+    public PersistentFSImpl(Application application) {
         ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
         LowMemoryWatcher.register(this::clearIdCache, this);
 
-        AsyncEventSupport.startListening();
+        AsyncEventSupport.startListening(application);
 
         //Activity activity = StartUpMeasurer.startActivity("connect FSRecords");
         FSRecords.connect();

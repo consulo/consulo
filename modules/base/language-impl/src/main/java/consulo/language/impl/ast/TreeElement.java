@@ -15,8 +15,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
-import consulo.project.Project;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -57,10 +55,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     public PsiManager getManager() {
-        Project project = SingleProjectHolder.theOnlyOpenProject();
-        if (project != null) {
-            return PsiManager.getInstance(project);
-        }
         TreeElement element;
         CompositeElement parent;
         for (element = this; (parent = element.getTreeParent()) != null; element = parent) {

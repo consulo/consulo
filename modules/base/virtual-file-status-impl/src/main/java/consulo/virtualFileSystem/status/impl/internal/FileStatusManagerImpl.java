@@ -154,7 +154,10 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     private void cacheChangedFileStatus(VirtualFile virtualFile, FileStatus fs) {
         myCachedStatuses.put(virtualFile, fs);
         if (FileStatus.NOT_CHANGED.equals(fs)) {
-            ThreeState parentingStatus = myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
+            ThreeState parentingStatus = myFileStatusProvider == null
+                ? ThreeState.NO
+                : myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
+
             if (ThreeState.YES.equals(parentingStatus)) {
                 myWhetherExactlyParentToChanged.put(virtualFile, true);
             }

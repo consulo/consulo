@@ -20,7 +20,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LazyParseableElement;
@@ -318,10 +317,6 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   @Override
   @Nonnull
   public Project getProject() {
-    Project project = SingleProjectHolder.theOnlyOpenProject();
-    if (project != null) {
-      return project;
-    }
     PsiManager manager = getManager();
     if (manager == null) throw new PsiInvalidElementAccessException(this);
 

@@ -155,8 +155,6 @@ public class DesktopApplicationImpl extends BaseApplication {
 
         myLock = new ReadMostlyRWLock(edt);
 
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
-
         NoSwingUnderWriteAction.watchForEvents(this);
     }
 
@@ -232,7 +230,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
-        invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
+        invokeLater(runnable, getDefaultModalityState(), expired);
     }
 
     @Override
@@ -246,7 +244,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         @Nonnull ModalityState state,
         @Nonnull BooleanSupplier expired
     ) {
-        LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
+        LaterInvocator.invokeLaterWithCallback(runnable, state, expired, null);
     }
 
     @RequiredUIAccess
@@ -257,7 +255,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             return;
         }
         if (SwingUtilities.isEventDispatchThread()) {
-            runIntendedWriteActionOnCurrentThread(runnable);
+            runnable.run();
             return;
         }
 
@@ -265,7 +263,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(runnable), modalityState);
+        LaterInvocator.invokeAndWait(runnable, modalityState);
     }
 
     @Override

@@ -15,9 +15,10 @@
  */
 package consulo.application.concurrent.coroutine;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import jakarta.annotation.Nonnull;
@@ -29,20 +30,20 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 2026-01-30
+ * @since 2026-02-01
  */
-public final class ReadLock<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull Function<I, O> function) {
-        return new ReadLock<>((i, c) -> function.apply(i));
+public final class WriteLock<I, O> extends CoroutineStep<I, O> {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction @Nonnull Function<I, O> function) {
+        return new WriteLock<>((i, c) -> function.apply(i));
     }
 
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull BiFunction<I, Continuation<?>, O> function) {
-        return new ReadLock<>(function);
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction @Nonnull BiFunction<I, Continuation<?>, O> function) {
+        return new WriteLock<>(function);
     }
 
     private final BiFunction<I, Continuation<?>, O> myFunction;
 
-    private ReadLock(BiFunction<I, Continuation<?>, O> function) {
+    private WriteLock(BiFunction<I, Continuation<?>, O> function) {
         myFunction = function;
     }
 
@@ -50,7 +51,15 @@ public final class ReadLock<I, O> extends CoroutineStep<I, O> {
     protected O execute(I input, Continuation<?> continuation) {
         UIAccess.assetIsNotUIThread();
 
-        Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
-        return application.runReadAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+        ApplicationWithIntentWriteLock application =
+            (ApplicationWithIntentWriteLock) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
+
+        try {
+            application.acquireWriteIntentLock(WriteLock.class.getName());
+            //noinspection RequiredXAction
+            return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+        } finally {
+           application.releaseWriteIntentLock();
+        }
     }
 }

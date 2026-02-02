@@ -13,44 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.concurrent.coroutine;
+package consulo.ui.ex.coroutine;
 
-import consulo.application.Application;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 2026-01-30
+ * @since 2026-01-31
  */
-public final class ReadLock<I, O> extends CoroutineStep<I, O> {
+public class UIAction<I, O> extends CoroutineStep<I, O> {
     public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull Function<I, O> function) {
-        return new ReadLock<>((i, c) -> function.apply(i));
+        return new UIAction<>((i, c) -> function.apply(i));
     }
 
     public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull BiFunction<I, Continuation<?>, O> function) {
-        return new ReadLock<>(function);
+        return new UIAction<>(function);
     }
 
     private final BiFunction<I, Continuation<?>, O> myFunction;
 
-    private ReadLock(BiFunction<I, Continuation<?>, O> function) {
+    private UIAction(BiFunction<I, Continuation<?>, O> function) {
         myFunction = function;
     }
 
     @Override
     protected O execute(I input, Continuation<?> continuation) {
-        UIAccess.assetIsNotUIThread();
-
-        Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
-        return application.runReadAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+        UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
+        SimpleReference<O> ref = new SimpleReference<>();
+        uiAccess.giveAndWait(() -> {
+            ref.set(myFunction.apply(input, continuation));
+        });
+        return ref.get();
     }
 }

@@ -2,7 +2,6 @@
 package consulo.project.ui.impl.internal.wm.statusBar;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -57,10 +56,10 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    public void updateAllWidgets(@Nonnull UIAccess uiAccess) {
+    public void updateAllWidgets(@Nullable IdeFrame frame, @Nonnull UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             for (StatusBarWidgetFactory factory : myWidgetFactories.keySet()) {
-                updateWidget(factory, uiAccess);
+                updateWidget(frame, factory, uiAccess);
             }
         }
     }
@@ -68,7 +67,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     public void disableAllWidgets(@Nonnull UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             for (StatusBarWidgetFactory factory : myWidgetFactories.keySet()) {
-                disableWidget(factory, uiAccess);
+                disableWidget(null, factory, uiAccess);
             }
         }
     }
@@ -87,11 +86,17 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
 
     @Override
     public void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess) {
+        updateWidget(null, factory, uiAccess);
+    }
+
+    public void updateWidget(@Nullable IdeFrame frame,
+                             @Nonnull StatusBarWidgetFactory factory,
+                             @Nonnull UIAccess uiAccess) {
         if (factory.isAvailable(myProject) && (!factory.isConfigurable() || StatusBarWidgetSettings.getInstance().isEnabled(factory))) {
-            enableWidget(factory, uiAccess);
+            enableWidget(frame, factory, uiAccess);
         }
         else {
-            disableWidget(factory, uiAccess);
+            disableWidget(frame, factory, uiAccess);
         }
     }
 
@@ -104,7 +109,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     @Override
     public void dispose() {
         synchronized (myWidgetFactories) {
-            myWidgetFactories.forEach((factory, createdWidget) -> disableWidget(factory, Application.get().getLastUIAccess()));
+            myWidgetFactories.forEach((factory, createdWidget) -> disableWidget(null, factory, myProject.getUIAccess()));
             myWidgetFactories.clear();
         }
     }
@@ -121,7 +126,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    private void enableWidget(@Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
+    private void enableWidget(@Nullable IdeFrame frame, @Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
         List<String> order = getCache().order();
 
         synchronized (myWidgetFactories) {
@@ -141,7 +146,10 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
 
             uiAccess.giveIfNeed(() -> {
                 if (!myProject.isDisposed()) {
-                    StatusBarEx statusBar = (StatusBarEx)myWindowManager.getStatusBar(myProject);
+                    StatusBarEx statusBar = frame != null
+                        ? (StatusBarEx) frame.getStatusBar()
+                        : (StatusBarEx) myWindowManager.getStatusBar(myProject);
+
                     if (statusBar == null) {
                         LOG.error("Cannot add a widget for project without root status bar: " + factory.getId());
                         return;
@@ -153,14 +161,17 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    private void disableWidget(@Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
+    private void disableWidget(@Nullable IdeFrame frame, @Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             StatusBarWidget createdWidget = myWidgetFactories.put(factory, null);
             if (createdWidget != null) {
                 factory.disposeWidget(createdWidget);
                 uiAccess.giveIfNeed(() -> {
                     if (!myProject.isDisposed()) {
-                        StatusBarEx statusBar = (StatusBarEx)myWindowManager.getStatusBar(myProject);
+                        StatusBarEx statusBar = frame != null
+                            ? (StatusBarEx) frame.getStatusBar()
+                            : (StatusBarEx) myWindowManager.getStatusBar(myProject);
+
                         if (statusBar != null) {
                             statusBar.removeWidget(createdWidget.getId());
                         }
@@ -192,7 +203,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
 
     private void removeWidgetFactory(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
-            disableWidget(factory, uiAccess);
+            disableWidget(null, factory, uiAccess);
             myWidgetFactories.remove(factory);
             incModificationCount();
         }

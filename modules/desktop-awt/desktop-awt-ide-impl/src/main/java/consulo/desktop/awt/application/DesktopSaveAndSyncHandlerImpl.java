@@ -18,6 +18,7 @@ package consulo.desktop.awt.application;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -30,6 +31,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.*;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -87,7 +90,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
                     IdeEventQueue eventQueue = IdeEventQueue.getInstance();
                     eventQueue.removeIdleListener(myIdleListener);
                     Integer timeout = (Integer) e.getNewValue();
-                    eventQueue.addIdleListener(myIdleListener, timeout.intValue() * 1000);
+                    eventQueue.addIdleListener(myIdleListener, timeout * 1000);
                 }
             }
         };
@@ -122,7 +125,12 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
     @Override
     public void saveProjectsAndDocuments() {
         if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
-            myApplication.saveAll();
+            CoroutineScope.launchAsync(myApplication.coroutineContext(), () -> {
+                return Coroutine.first(WriteLock.apply((o, continuation) -> {
+                    myApplication.saveAll();
+                    return o;
+                }));
+            });
         }
     }
 

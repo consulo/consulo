@@ -18,32 +18,29 @@ package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.language.psi.PsiNavigationSupport;
-import consulo.language.ast.ASTNode;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.content.scope.SearchScope;
 import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.navigation.Navigatable;
 import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
-import consulo.language.psi.resolve.PsiScopeProcessor;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.language.ast.IElementType;
-import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
-import consulo.project.internal.SingleProjectHolder;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 public class LeafPsiElement extends LeafElement implements consulo.language.psi.LeafPsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LeafPsiElement.class);
@@ -270,10 +267,6 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   @Override
   @Nonnull
   public Project getProject() {
-    Project project = SingleProjectHolder.theOnlyOpenProject();
-    if (project != null) {
-      return project;
-    }
     PsiManager manager = getManager();
     if (manager == null) invalid();
     return manager.getProject();

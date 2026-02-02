@@ -39,7 +39,6 @@ import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.impl.internal.action.SimpleProjectGroupActionGroup;
@@ -62,6 +61,7 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -546,6 +546,9 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                 }
             }
 
+            ProjectManager projectManager = ProjectManager.getInstance();
+            UIAccess uiAccess = UIAccess.current();
+
             for (String openPath : openPaths) {
                 if (isValidProjectPath(openPath)) {
                     ProjectOpenContext context = new ProjectOpenContext();
@@ -554,7 +557,9 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                         context.putUserData(IdeFrameState.KEY, state);
                     }
 
-                    ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current(), context);
+                    context.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, forceNewFrame);
+
+                    projectManager.openProjectAsync(Path.of(openPath), uiAccess, context);
                 }
             }
         }

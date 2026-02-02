@@ -38,13 +38,16 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
-import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
+import consulo.project.internal.ProjectOpenService;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.store.IProjectStore;
-import consulo.project.internal.*;
+import consulo.project.internal.ProjectFrameAllocator;
+import consulo.project.internal.ProjectManagerEx;
+import consulo.project.internal.ProjectReloadState;
+import consulo.project.internal.ProjectWindowFocuser;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -68,14 +71,17 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @Singleton
@@ -95,6 +101,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     @Nonnull
     private final ComponentBinding myComponentBinding;
     @Nonnull
+    private final Provider<ProjectOpenService> myProjectOpenService;
+    @Nonnull
     private final ProgressIndicatorProvider myProgressManager;
 
     private final EventDispatcher<ProjectManagerListener> myDeprecatedListenerDispatcher =
@@ -112,9 +120,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private ExcludeRootsCache myExcludeRootsCache;
 
     @Inject
-    public ProjectManagerImpl(@Nonnull Application application, @Nonnull ComponentBinding componentBinding) {
+    public ProjectManagerImpl(@Nonnull Application application,
+                              @Nonnull ComponentBinding componentBinding,
+                              @Nonnull Provider<ProjectOpenService> projectOpenService) {
         myApplication = application;
         myComponentBinding = componentBinding;
+        myProjectOpenService = projectOpenService;
         myProgressManager = application.getProgressManager();
 
         MessageBus messageBus = application.getMessageBus();
@@ -167,7 +178,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
         ProjectImpl project = createProject(projectName, dirPath, false);
         try {
-            initProject(project, useDefaultProjectSettings ? (ProjectImpl) getDefaultProject() : null);
+            initProject(project);
             return project;
         }
         catch (Throwable t) {
@@ -198,7 +209,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return message;
     }
 
-    private void initProject(@Nonnull ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+    private void initProject(@Nonnull ProjectImpl project) throws IOException {
         ProgressIndicator indicator = myProgressManager.getProgressIndicator();
         if (indicator != null && !project.isDefault()) {
             indicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
@@ -207,16 +218,9 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
         boolean succeed = false;
         try {
-            if (template != null) {
-                project.getStateStore().loadProjectFromTemplate(template);
-            }
-            else {
-                project.getStateStore().load();
-            }
-            project.initNotLazyServices();
+            project.getStateStore().load();
 
-            ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(project);
-            moduleManager.setReady(true);
+            project.initNotLazyServices();
 
             succeed = true;
         }
@@ -271,14 +275,13 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    private boolean addToOpened(@Nonnull Project project) {
+    public boolean addToOpened(@Nonnull Project project) {
         assert !project.isDisposed() : "Must not open already disposed project";
         synchronized (lock) {
             if (isProjectOpened(project)) {
                 return false;
             }
             myOpenProjects = ArrayUtil.append(myOpenProjects, project);
-            SingleProjectHolder.theProject = myOpenProjects.length == 1 ? project : null;
         }
         return true;
     }
@@ -287,7 +290,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private Collection<Project> removeFromOpened(@Nonnull Project project) {
         synchronized (lock) {
             myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
-            SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
             return Arrays.asList(myOpenProjects);
         }
     }
@@ -594,12 +596,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                         return;
                     }
 
-                    ProjectFrameAllocator projectFrameAllocator = project.getInstance(ProjectFrameAllocator.class);
+                    ProjectFrameAllocator projectFrameAllocator = Application.get().getInstance(ProjectFrameAllocator.class);
 
-                    uiAccess.giveAndWait(() -> projectFrameAllocator.allocateFrame(context));
+                    uiAccess.giveAndWait(() -> projectFrameAllocator.allocateFrame(project, context));
 
                     if (init) {
-                        initProjectAsync(project, null, indicator);
+                        initProjectAsync(project, indicator);
                     }
 
                     indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
@@ -668,19 +670,14 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     private void initProjectAsync(
         @Nonnull ProjectImpl project,
-        @Nullable ProjectImpl template,
         ProgressIndicator progressIndicator
     ) throws IOException {
         progressIndicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
 
         boolean succeed = false;
         try {
-            if (template != null) {
-                project.getStateStore().loadProjectFromTemplate(template);
-            }
-            else {
-                project.getStateStore().load();
-            }
+            project.getStateStore().load();
+
             project.initNotLazyServices();
             succeed = true;
         }
@@ -692,5 +689,11 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 project.getUIAccess().give(() -> WriteAction.run(() -> Disposer.dispose(project)));
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public CompletableFuture<Project> openProjectAsync(@Nonnull Path filePath, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
+        return myProjectOpenService.get().openProjectAsync(filePath, uiAccess, context);
     }
 }

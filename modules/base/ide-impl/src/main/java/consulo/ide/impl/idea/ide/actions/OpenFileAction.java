@@ -21,10 +21,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.fileChooser.node.FileElement;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
@@ -34,8 +34,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
-import consulo.project.ProjectOpenService;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,19 +54,19 @@ import jakarta.inject.Inject;
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
     @Nonnull
-    private final ProjectOpenService myProjectOpenService;
+    private final ProjectManager myProjectManager;
 
     @Inject
-    public OpenFileAction(@Nonnull ProjectOpenService projectOpenService) {
-        this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened(), projectOpenService);
+    public OpenFileAction(@Nonnull ProjectManager projectManager) {
+        this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened(), projectManager);
     }
 
     public OpenFileAction(@Nonnull LocalizeValue text,
                           @Nonnull LocalizeValue description,
                           @Nullable Image icon,
-                          @Nonnull ProjectOpenService projectOpenService) {
+                          @Nonnull ProjectManager projectManager) {
         super(text, description, icon);
-        myProjectOpenService = projectOpenService;
+        myProjectManager = projectManager;
     }
 
     @Override
@@ -122,7 +122,12 @@ public class OpenFileAction extends AnAction implements DumbAware {
     private void doOpenFile(@Nullable Project project, @Nonnull VirtualFile[] result) {
         for (VirtualFile file : result) {
             if (file.isDirectory()) {
-                myProjectOpenService.openProjectAsync(file.toNioPath(), UIAccess.current(), new ProjectOpenContext())
+                ProjectOpenContext openContext = new ProjectOpenContext();
+                if (project != null) {
+                    openContext.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+                }
+
+                myProjectManager.openProjectAsync(file.toNioPath(), UIAccess.current(), openContext)
                     .whenComplete((successOpenedProject, throwable) -> {
                         if (successOpenedProject != null) {
                             FileChooserUtil.setLastOpenedFile(successOpenedProject, file);

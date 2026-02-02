@@ -112,7 +112,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
         setEditorComponent(editorComponent);

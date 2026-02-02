@@ -24,7 +24,7 @@ import consulo.project.startup.StartupManager;
 public abstract class StartupManagerEx extends StartupManager {
     @Deprecated
     public boolean startupActivityPassed() {
-        return true;
+        return postStartupActivityPassed();
     }
 
     public static StartupManagerEx getInstanceEx(Project project) {

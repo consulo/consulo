@@ -47,7 +47,6 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
@@ -57,6 +56,7 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -224,10 +224,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     public abstract void initializeUI();
 
     @RequiredUIAccess
-    protected abstract void initializeEditorComponent();
+    public abstract void initializeEditorComponent();
 
     @RequiredUIAccess
-    protected void postInitialize() {
+    public void postInitialize() {
         updateToolWindowsPane();
     }
 
@@ -275,14 +275,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Nonnull
-    protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
-        List<AsyncResult<Void>> results = new ArrayList<>();
+    public CompletableFuture<?> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
+        List<CompletableFuture<?>> results = new ArrayList<>();
 
         for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
-            AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
-            results.add(toolWindowResult);
-
-            uiAccess.give(() -> {
+            results.add(uiAccess.giveAsync(() -> {
                 if (factory.validate(myProject)) {
                     try {
                         initToolWindow(factory);
@@ -294,14 +291,14 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                         LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
                     }
                 }
-            }).notify(toolWindowResult);
+            }));
         }
 
-        return AsyncResult.merge(results);
+        return CompletableFuture.allOf(results.toArray(CompletableFuture[]::new));
     }
 
     @RequiredUIAccess
-    protected void connectModuleExtensionListener() {
+    public void connectModuleExtensionListener() {
         myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void rootsChanged(ModuleRootEvent event) {

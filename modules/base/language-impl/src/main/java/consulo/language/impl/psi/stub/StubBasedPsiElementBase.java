@@ -41,7 +41,6 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
@@ -296,20 +295,12 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     @Nonnull
     @Override
     public PsiManager getManager() {
-        Project project = SingleProjectHolder.theOnlyOpenProject();
-        if (project != null) {
-            return PsiManager.getInstance(project);
-        }
         return getContainingFile().getManager();
     }
 
     @Override
     @Nonnull
     public Project getProject() {
-        Project project = SingleProjectHolder.theOnlyOpenProject();
-        if (project != null) {
-            return project;
-        }
         return getContainingFile().getProject();
     }
 

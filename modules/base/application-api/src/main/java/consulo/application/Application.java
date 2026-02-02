@@ -18,6 +18,7 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.AppSemVer;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -30,6 +31,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -536,6 +538,11 @@ public interface Application extends ComponentManager {
      */
     default boolean isUnifiedApplication() {
         return false;
+    }
+
+    @Nonnull
+    default CoroutineContext coroutineContext() {
+        return getInstance(ApplicationConcurrency.class).coroutineContext();
     }
 
     // region Deprecated stuff

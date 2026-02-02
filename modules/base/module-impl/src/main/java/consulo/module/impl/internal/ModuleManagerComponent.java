@@ -73,16 +73,28 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 cleanCachedStuff();
             }
         });
-
-        if (project.isDefault()) {
-            myReady = true;
-        }
     }
 
     @Nonnull
     @Override
     protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
+    }
+
+    public void loadModulesNew(@Nonnull ProgressIndicator indicator) {
+        StatCollector stat = new StatCollector();
+
+        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+
+        indicator.setIndeterminate(true);
+
+        stat.markWith("fire modules add", () -> {
+            for (Module module : myModuleModel.myModules) {
+                fireModuleAdded(module);
+            }
+        });
+
+        stat.dump("ModulesManager", LOG::info);
     }
 
     @Nonnull
@@ -100,7 +112,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 }
             });
 
-            myReady = true;
             stat.dump("ModulesManager", LOG::info);
         });
     }

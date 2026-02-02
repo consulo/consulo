@@ -158,7 +158,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   /**
    * Gets the path of this file. Path is a string which uniquely identifies file within given
    * <code>{@link VirtualFileSystem}</code>. Format of the path depends on the concrete file system.
-   * For <code>{@link consulo.ide.impl.idea.openapi.vfs.LocalFileSystem}</code> it is an absolute file path with file separator characters
+   * For <code>{@link LocalFileSystem}</code> it is an absolute file path with file separator characters
    * (File.separatorChar) replaced to the forward slash ('/').
    *
    * @return the path

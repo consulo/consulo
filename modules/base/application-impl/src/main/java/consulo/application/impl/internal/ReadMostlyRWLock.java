@@ -42,6 +42,8 @@ public final class ReadMostlyRWLock implements RWLock {
     public volatile Thread writeThread;
     private volatile Thread writeIntendedThread;
 
+    private volatile Thread myOldWriteThread;
+
     //@VisibleForTesting
     volatile boolean writeRequested;  // this writer is requesting or obtained the write access
     private final AtomicBoolean writeIntent = new AtomicBoolean(false);
@@ -235,6 +237,7 @@ public final class ReadMostlyRWLock implements RWLock {
                 assert !writeRequested;
                 assert !writeAcquired;
 
+                myOldWriteThread = writeThread;
                 writeThread = Thread.currentThread();
                 break;
             }
@@ -255,7 +258,9 @@ public final class ReadMostlyRWLock implements RWLock {
         assert !writeAcquired;
         assert !writeRequested;
 
-        writeThread = null;
+        writeThread = myOldWriteThread;
+        myOldWriteThread = null;
+
         writeIntent.set(false);
         LockSupport.unpark(writeIntendedThread);
     }

@@ -127,7 +127,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         connection.subscribe(BatchUpdateListener.class, handler);
     }
 
-    @RequiredReadAction
     public void projectOpened() {
         addRootsToWatch();
         Application application = myProject.getApplication();
@@ -141,7 +140,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
-    @RequiredReadAction
     protected void addRootsToWatch() {
         Couple<Set<String>> roots = getAllRoots(false);
         if (roots == null) {
@@ -182,7 +180,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Nullable
-    @RequiredReadAction
     private Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
         if (myProject.isDefault()) {
             return null;
@@ -211,7 +208,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         return Couple.of(recursive, flat);
     }
 
-    @RequiredReadAction
     private void addRootsFromModules(boolean includeSourceRoots, Set<String> recursive, Set<String> flat) {
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
         for (Module module : modules) {

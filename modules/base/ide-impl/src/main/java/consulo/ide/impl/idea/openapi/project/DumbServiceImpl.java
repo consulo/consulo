@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.project;
 
-import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.WriteAction;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.internal.AbstractProgressIndicatorExBase;
@@ -33,8 +33,6 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
-import consulo.module.ModuleManager;
-import consulo.module.internal.ModuleManagerInternal;
 import consulo.project.DumbModeTask;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -48,10 +46,14 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Queue;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.Condition;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
@@ -107,7 +109,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.class, new BatchFileChangeListener() {
             @SuppressWarnings("UnnecessaryFullyQualifiedName")
             final // synchronized, can be accessed from different threads
-            java.util.Stack<AccessToken> stack = new Stack<>();
+            Stack<AccessToken> stack = new Stack<>();
 
             @Override
             public void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
@@ -284,12 +286,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             LOG.error("No indexing tasks should be created for default project: " + task);
         }
 
-        ModuleManagerInternal moduleManager = (ModuleManagerInternal) ModuleManager.getInstance(myProject);
-        if (!moduleManager.isReady()) {
-            LOG.error("Queue task for not ready project: " + task);
-        }
-
-        if (myApplication.isUnitTestMode() || myApplication.isHeadlessEnvironment() || myApplication.isUnifiedApplication()) {
+        if (myApplication.isUnitTestMode() || myApplication.isHeadlessEnvironment()) {
             runTaskSynchronously(task);
         }
         else {
@@ -304,7 +301,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
 
         Exception trace = new Exception();
-        
+
         indicator.pushState();
         ((CoreProgressManager) ProgressManager.getInstance()).suppressPrioritizing();
         try {
@@ -322,20 +319,18 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    @VisibleForTesting
     void queueAsynchronousTask(@Nonnull DumbModeTask task) {
         Exception trace = new Exception(); // please report exceptions here to peter
-        myProject.getUIAccess().giveIfNeed(() -> queueTaskOnEdt(task, trace));
+        queueTaskLater(task, trace);
     }
 
-    private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nonnull Exception trace) {
+    private void queueTaskLater(@Nonnull DumbModeTask task, @Nonnull Exception trace) {
         if (!addTaskToQueue(task)) {
             return;
         }
 
         if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
             enterDumbMode(trace);
-            myApplication.invokeLater(() -> startBackgroundProcess(trace), myProject.getDisposed());
         }
     }
 
@@ -357,24 +352,33 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return true;
     }
 
-    private void enterDumbMode(@Nonnull Throwable trace) {
+    private void enterDumbMode(@Nonnull Exception trace) {
         boolean wasSmart = !isDumb();
-        WriteAction.run(() -> {
-            synchronized (myRunWhenSmartQueue) {
-                myState.set(State.SCHEDULED_TASKS);
-            }
-            myDumbStart = trace;
-            myDumbEnterTrace = new Throwable();
-            myModificationCount++;
+
+        CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine.first(WriteLock.apply((o, continuation) -> {
+                    synchronized (myRunWhenSmartQueue) {
+                        myState.set(State.SCHEDULED_TASKS);
+                    }
+                    myDumbStart = trace;
+                    myDumbEnterTrace = new Throwable();
+                    myModificationCount++;
+                    return o;
+                }))
+                .then(Condition.doIf((o, c) -> wasSmart, UIAction.apply((o, c) -> {
+                    try {
+                        myPublisher.enteredDumbMode();
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                    }
+                    return o;
+                })))
+                .then(UIAction.apply((o, continuation) -> {
+                    startBackgroundProcess(trace);
+                    return o;
+                }));
         });
-        if (wasSmart) {
-            try {
-                myPublisher.enteredDumbMode();
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-        }
     }
 
     private void queueUpdateFinished() {
@@ -770,7 +774,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         SMART,
 
         /**
-         * A state between entering dumb mode ({@link #queueTaskOnEdt}) and actually starting the background progress later ({@link #runBackgroundProcess}).
+         * A state between entering dumb mode ({@link #queueTaskLater}) and actually starting the background progress later ({@link #runBackgroundProcess}).
          * In this state, it's possible to call {@link #completeJustSubmittedTasks()} and perform all submitted the tasks modality.
          * This state can happen after {@link #SMART} or {@link #WAITING_FOR_FINISH}. Followed by {@link #RUNNING_DUMB_TASKS}.
          */

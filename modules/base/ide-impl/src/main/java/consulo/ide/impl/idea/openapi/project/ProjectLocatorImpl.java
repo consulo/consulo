@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
@@ -48,12 +47,6 @@ public class ProjectLocatorImpl extends ProjectLocator {
   @Override
   @Nullable
   public Project guessProjectForFile(VirtualFile file) {
-    // StubUpdatingIndex calls this method very often, so, optimized implementation is required
-    Project project = SingleProjectHolder.theOnlyOpenProject();
-    if (project != null && !project.isDisposed()) {
-      return project;
-    }
-
     if (file != null) {
       Project preferredProject = getPreferredProject(file);
       if (preferredProject != null) {

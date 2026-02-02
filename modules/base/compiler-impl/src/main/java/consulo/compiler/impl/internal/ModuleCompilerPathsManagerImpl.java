@@ -18,7 +18,6 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 @Singleton
 @ServiceImpl
-public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
+public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements Disposable {
     private static final String MODULE_OUTPUT_TAG = "module";
     private static final String EXCLUDE = "exclude";
     private static final String NAME = "name";
@@ -150,7 +149,6 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
 
     @Nullable
-    @Override
     public Element getState() {
         if (myInheritOutput) {
             return null;
@@ -178,7 +176,6 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
 
 
-    @Override
     public void loadState(Element element) {
         myInheritOutput = false;
         myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE, "true"));

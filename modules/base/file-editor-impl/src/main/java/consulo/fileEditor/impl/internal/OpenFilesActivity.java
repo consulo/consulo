@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author Dmitry Avdeev
  * @since 2012-04-11
  */
-@ExtensionImpl(id = "OpenFilesActivity")
+@ExtensionImpl(id = "OpenFilesActivity", order = "first")
 public class OpenFilesActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {

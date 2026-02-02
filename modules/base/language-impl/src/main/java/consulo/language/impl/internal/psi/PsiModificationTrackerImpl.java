@@ -4,6 +4,7 @@ package consulo.language.impl.internal.psi;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.util.ModificationTracker;
@@ -15,6 +16,8 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -47,7 +50,10 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
             DumbModeListener.class,
             new DumbModeListener() {
                 private void doIncCounter() {
-                    application.runWriteAction(() -> incCounter());
+                    CoroutineScope.launchAsync(project.coroutineContext(), () -> Coroutine.first(WriteLock.apply((o, c) -> {
+                        incCounter();
+                        return o;
+                    })));
                 }
 
                 @Override
@@ -83,7 +89,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
 
     @RequiredWriteAction
     public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
-        PsiTreeChangeEventImpl eventImpl = (PsiTreeChangeEventImpl)event;
+        PsiTreeChangeEventImpl eventImpl = (PsiTreeChangeEventImpl) event;
         if (!canAffectPsi(eventImpl)) {
             return;
         }

@@ -890,7 +890,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         Runnable r = wrapLaterInvocation(action, modal);
         // EDT == Write Thread in legacy mode
         LaterInvocator.invokeLaterWithCallback(
-            () -> runIntendedWriteActionOnCurrentThread(r),
+            r,
             modal,
             expired,
             null

@@ -43,6 +43,7 @@ public final class AccessRule {
     }
 
     @Nonnull
+    @Deprecated
     public static CompletableFuture<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
         return writeAsync(() -> {
             action.run();
@@ -51,6 +52,7 @@ public final class AccessRule {
     }
 
     @Nonnull
+    @Deprecated
     public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
         CompletableFuture<T> result = new CompletableFuture<>();
         AppUIExecutor.onWriteThread().later().execute(() -> {

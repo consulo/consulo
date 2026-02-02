@@ -508,7 +508,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         JComponent editorComponent = getEditorComponent(myProject);
         editorComponent.setFocusable(false);
 

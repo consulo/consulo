@@ -31,8 +31,8 @@ public final class AsyncEventSupport {
     public static final ExtensionPointName<AsyncFileListener> EP_NAME = ExtensionPointName.create(AsyncFileListener.class);
     private static boolean ourSuppressAppliers;
 
-    public static void startListening() {
-        Application.get().getMessageBus().connect().subscribe(
+    public static void startListening(Application application) {
+        application.getMessageBus().connect().subscribe(
             BulkFileListener.class,
             new BulkFileListener() {
                 Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> appliersFromBefore;
@@ -77,6 +77,7 @@ public final class AsyncEventSupport {
             EP_NAME.getExtensionList(),
             ((BaseVirtualFileManager)VirtualFileManager.getInstance()).getAsyncFileListeners()
         );
+
         for (AsyncFileListener listener : allListeners) {
             ProgressManager.checkCanceled();
             long startNs = System.nanoTime();

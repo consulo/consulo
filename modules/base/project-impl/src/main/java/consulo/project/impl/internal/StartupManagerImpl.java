@@ -132,18 +132,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         }
         dumbAwareActivity.end();
         snapshot.logResponsivenessSinceCreation("Post-startup activities under progress");
-
-        //StartupActivity.POST_STARTUP_ACTIVITY.addExtensionPointListener(new ExtensionPointListener<StartupActivity>() {
-        //  @Override
-        //  public void extensionAdded(@Nonnull StartupActivity extension, @Nonnull PluginDescriptor pluginDescriptor) {
-        //    if (DumbService.isDumbAware(extension)) {
-        //      runActivity(new AtomicBoolean(), extension, pluginDescriptor);
-        //    }
-        //    else {
-        //      dumbService.runWhenSmart(() -> runActivity(new AtomicBoolean(), extension, pluginDescriptor));
-        //    }
-        //  }
-        //}, this);
     }
 
     private void runActivity(@Nonnull AtomicBoolean uiFreezeWarned, @Nonnull UIAccess uiAccess, @Nonnull StartupActivity extension, @Nonnull PluginDescriptor pluginDescriptor) {
@@ -186,8 +174,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         if (postStartupActivityPassed()) {
             return;
         }
-
-        Application app = myApplication;
 
         runActivities(uiAccess, myDumbAwarePostStartupActivities, StartUpMeasurer.Phases.PROJECT_DUMB_POST_STARTUP);
 

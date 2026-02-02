@@ -118,7 +118,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
         setEditorComponent(editorComponent);

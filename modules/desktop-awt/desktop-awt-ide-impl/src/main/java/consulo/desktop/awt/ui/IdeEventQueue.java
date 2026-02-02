@@ -90,7 +90,7 @@ public class IdeEventQueue extends EventQueue {
 
   private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
   private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
-  private static final boolean ourDefaultEventWithWrite = true;
+  private static final boolean ourDefaultEventWithWrite = false;
 
   private static ProgressManager ourProgressManager;
 
@@ -406,10 +406,12 @@ public class IdeEventQueue extends EventQueue {
         processEventRunnable.run();
         return;
       }
-      if (ourRunnablesWithWrite.contains(runnableClass)) {
-        ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-        return;
-      }
+
+      // TODO !
+//      if (ourRunnablesWithWrite.contains(runnableClass)) {
+//        ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
+//        return;
+//      }
     }
 
     if (ourDefaultEventWithWrite) {

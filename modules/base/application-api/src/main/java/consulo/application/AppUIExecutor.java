@@ -50,6 +50,7 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @see Application#getDefaultModalityState()
    */
   @Nonnull
+  @Deprecated
   static AppUIExecutor onWriteThread() {
     return onWriteThread(Application.get().getDefaultModalityState());
   }

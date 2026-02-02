@@ -16,19 +16,34 @@
 package consulo.project.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.internal.ComponentBinding;
 import consulo.localize.LocalizeValue;
+import consulo.module.ModuleManager;
+import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
-import consulo.project.ProjectOpenService;
+import consulo.project.internal.ProjectOpenService;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.internal.ProjectFrameAllocator;
+import consulo.project.localize.ProjectLocalize;
+import consulo.project.startup.StartupManager;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,14 +54,29 @@ import java.util.concurrent.CompletableFuture;
 @ServiceImpl
 @Singleton
 public class ProjectOpenServiceImpl implements ProjectOpenService {
+    @Nonnull
+    private final Application myApplication;
     private final ApplicationConcurrency myApplicationConcurrency;
     private final ProgressBuilderFactory myProgressBuilderFactory;
+    @Nonnull
+    private final ComponentBinding myComponentBinding;
+    @Nonnull
+    private final ProjectManager myProjectManager;
+    private ProjectFrameAllocator myProjectFrameAllocator;
 
     @Inject
-    public ProjectOpenServiceImpl(ApplicationConcurrency applicationConcurrency,
-                                  ProgressBuilderFactory progressBuilderFactory) {
+    public ProjectOpenServiceImpl(@Nonnull Application application,
+                                  @Nonnull ApplicationConcurrency applicationConcurrency,
+                                  @Nonnull ProgressBuilderFactory progressBuilderFactory,
+                                  @Nonnull ComponentBinding componentBinding,
+                                  @Nonnull ProjectManager projectManager,
+                                  @Nonnull ProjectFrameAllocator projectFrameAllocator) {
+        myApplication = application;
         myApplicationConcurrency = applicationConcurrency;
         myProgressBuilderFactory = progressBuilderFactory;
+        myComponentBinding = componentBinding;
+        myProjectManager = projectManager;
+        myProjectFrameAllocator = projectFrameAllocator;
     }
 
     @Nonnull
@@ -55,15 +85,114 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         @Nonnull Path filePath,
         @Nonnull UIAccess uiAccess,
         @Nonnull ProjectOpenContext context) {
+        CompletableFuture<Project> future = new CompletableFuture<>();
 
-        myProgressBuilderFactory.newProgressBuilder(null, LocalizeValue.localizeTODO("Opening project..."))
+        Project activeProject = context.getUserData(ProjectOpenContext.ACTIVE_PROJECT);
+
+        CompletableFuture<ProjectImpl> projectInit = myProgressBuilderFactory.newProgressBuilder(activeProject, ProjectLocalize.projectLoadProgress())
             .cancelable()
-            .execute(uiAccess, initial -> {
-                return initial.then(CodeExecution.apply((o, continuation) -> {
-                  return LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
+            .execute(uiAccess, first -> {
+                Coroutine<?, ProjectImpl> then = first.then(CodeExecution.apply((o, continuation) -> {
+                    VirtualFile projectDir = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
+                    if (projectDir != null) {
+                        return new ProjectImpl(myApplication, myProjectManager, projectDir, null, myComponentBinding);
+                    }
+                    else {
+                        continuation.cancel();
+                    }
+                    return null;
                 }));
+
+                return myProjectFrameAllocator.allocateFrame(context, then);
             });
 
-        return CompletableFuture.failedFuture(null);
+        projectInit.whenComplete((projectImpl, throwable) -> {
+            if (throwable != null) {
+                future.completeExceptionally(throwable);
+            }
+            else if (projectImpl == null) {
+                future.completeExceptionally(new FileNotFoundException("File not found : " + filePath));
+            }
+            else {
+                doOpenInProject(projectImpl, uiAccess, future);
+            }
+        });
+
+        return future;
+    }
+
+    private void doOpenInProject(ProjectImpl project, UIAccess uiAccess, CompletableFuture<Project> future) {
+        myProgressBuilderFactory.newProgressBuilder(project, ProjectLocalize.projectLoadProgress())
+            .cancelable()
+            .execute(uiAccess, first -> {
+                Coroutine<?, Object> init = first
+                    .then(CodeExecution.run(() -> {
+                        try {
+                            project.getStateStore().load();
+                        }
+                        catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }))
+                    .then(CodeExecution.supply((c) -> {
+                        project.initNotLazyServices();
+                        return c;
+                    }))
+                    .then(CodeExecution.supply((c) -> {
+                        ProjectManagerImpl manager = (ProjectManagerImpl) ProjectManager.getInstance();
+                        manager.addToOpened(project);
+
+                        myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess);
+
+                        return c;
+                    }));
+
+                init = myProjectFrameAllocator.initializeSteps(project, init);
+
+                init = init.then(WriteLock.apply((o, c) -> {
+                        ProgressIndicator indicator = ProgressIndicator.from(c);
+                        indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
+                        indicator.setText2Value(LocalizeValue.empty());
+
+                        ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
+                        moduleManager.loadModulesNew(indicator);
+                        return o;
+                    }))
+                    .then(CodeExecution.supply((o) -> {
+                        ProgressIndicator indicator = ProgressIndicator.from(o);
+
+                        indicator.setTextValue(ProjectLocalize.progressTitlePreparingWorkspace());
+                        indicator.setText2Value(LocalizeValue.empty());
+
+                        StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
+                        startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
+
+                        project.setFullyInitialized(true);
+                        return o;
+                    }))
+                    .then(CodeExecution.supply((o) -> {
+                        StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
+                        startupManager.runPostStartupActivities(uiAccess);
+                        return o;
+                    }))
+                    .then(CodeExecution.supply(o -> {
+                        StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
+                        startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
+                        return o;
+                    }));
+
+                init = myProjectFrameAllocator.postSteps(project, init);
+                return init;
+            }).whenComplete((o, throwable) -> {
+                if (throwable != null) {
+                    future.completeExceptionally(throwable);
+                }
+                else if (project == null) {
+                    future.completeExceptionally(new IllegalArgumentException("Failed to open project"));
+                }
+                else {
+                    future.complete(project);
+                }
+            });
     }
 }

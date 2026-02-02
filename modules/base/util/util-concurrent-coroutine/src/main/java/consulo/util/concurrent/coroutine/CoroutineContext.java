@@ -53,6 +53,12 @@ public final class CoroutineContext extends CoroutineEnvironment {
         this.scheduler = scheduler;
     }
 
+    public CoroutineContext copy() {
+        CoroutineContext context = new CoroutineContext(executor, scheduler);
+        copyCopyableDataTo(context);
+        return context;
+    }
+
     /**
      * Blocks until the coroutines of all {@link CoroutineScope scopes} in this
      * context have finished execution. If no coroutines are running or all have

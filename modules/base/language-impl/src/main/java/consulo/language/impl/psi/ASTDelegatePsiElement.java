@@ -22,7 +22,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.project.internal.SingleProjectHolder;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
@@ -30,7 +29,6 @@ import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 
@@ -49,10 +47,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     @Nonnull
     @Override
     public PsiManager getManager() {
-        Project project = SingleProjectHolder.theOnlyOpenProject();
-        if (project != null) {
-            return PsiManager.getInstance(project);
-        }
         PsiElement parent = this;
 
         while (parent instanceof ASTDelegatePsiElement) {

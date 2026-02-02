@@ -22,7 +22,4 @@ import consulo.module.ModuleManager;
  * @since 2024-11-17
  */
 public abstract class ModuleManagerInternal extends ModuleManager {
-    public boolean isReady() {
-        return true;
-    }
 }

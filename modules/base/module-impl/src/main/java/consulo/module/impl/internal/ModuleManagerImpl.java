@@ -17,7 +17,6 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -40,7 +39,6 @@ import consulo.module.content.internal.ModuleIconService;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
-import consulo.module.internal.DebugStackTrace;
 import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;
@@ -58,7 +56,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -158,8 +155,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private boolean myFirstLoad = true;
 
-    protected boolean myReady = false;
-
     public static final String ELEMENT_MODULES = "modules";
     public static final String ELEMENT_MODULE = "module";
 
@@ -180,15 +175,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public ModuleManagerImpl(Project project) {
         myProject = project;
         myMessageBus = project.getMessageBus();
-    }
-
-    public void setReady(boolean ready) {
-        myReady = ready;
-    }
-
-    @Override
-    public boolean isReady() {
-        return myReady;
     }
 
     @Override
@@ -287,7 +273,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         return null;
     }
 
-    @RequiredUIAccess
     protected void loadModules(ModuleModelImpl moduleModel, @Nullable ProgressIndicator indicator, boolean firstLoad) {
         if (myModuleLoadItems.isEmpty()) {
             return;
@@ -488,17 +473,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Nonnull
     @Override
     public Module[] getModules() {
-        if (!myReady) {
-            Exception trace = DebugStackTrace.getTrace();
-            if (trace != null) {
-                LOG.error("Modules not initialized at current moment", trace);
-            }
-            else {
-                LOG.error("Modules not initialized at current moment");
-            }
-            return Module.EMPTY_ARRAY;
-        }
-
         if (myModuleModel.myIsWritable) {
             myProject.getApplication().assertReadAccessAllowed();
         }
@@ -511,11 +485,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module[] getSortedModules() {
-        if (!myReady) {
-            LOG.error("Modules not initialized at current moment");
-            return Module.EMPTY_ARRAY;
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedSortedModules == null) {
@@ -527,10 +496,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module findModuleByName(@Nonnull String name) {
-        if (!myReady) {
-            throw new IllegalArgumentException("Modules not initialized at current moment");
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
     }
@@ -611,6 +576,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     protected abstract ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
     @Nonnull
+    @RequiredWriteAction
     protected ModuleEx createAndLoadModule(
         @Nonnull ModuleLoadItem moduleLoadItem,
         @Nonnull ModuleModelImpl moduleModel,
@@ -622,7 +588,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
 
         ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(module);
-        AccessRule.read(() -> moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator));
+
+        moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator);
 
         return module;
     }
@@ -750,13 +717,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Nonnull
-        @RequiredUIAccess
+        @RequiredWriteAction
         private Module loadModuleInternal(@Nonnull ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
 
             String moduleName = item.getName();
             if (progressIndicator != null) {
-                progressIndicator.setText2(moduleName);
+                progressIndicator.setText2Value(LocalizeValue.of(moduleName));
             }
 
             if (firstLoad) {
@@ -774,9 +741,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
             String dirUrl = item.getDirUrl();
             if (dirUrl != null) {
-                SimpleReference<VirtualFile> ref = SimpleReference.create();
-                myProject.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
-                VirtualFile moduleDir = ref.get();
+                VirtualFile moduleDir = VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl);
 
                 if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
                     throw new ModuleDirIsNotExistsException(ProjectLocalize.moduleDirDoesNotExistError(
@@ -794,7 +759,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 collapseOrExpandMacros(oldModule, item.getElement(), false);
 
                 ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(oldModule);
-                myProject.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
+
+                moduleRootManager.loadState(item.getElement(), progressIndicator);
             }
             return oldModule;
         }

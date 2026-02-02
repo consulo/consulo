@@ -44,14 +44,6 @@ public class StoragePathMacros {
   public static final String APP_CONFIG = "$APP_CONFIG$";
 
   /**
-   * <code>'.ipr'</code> file path key.
-   */
-  @Deprecated
-  @DeprecationInfo(value = "Project file types is not supported anymore")
-  @Nonnull
-  public static final String PROJECT_FILE = "$PROJECT_FILE$";
-
-  /**
    * <code>'.consulo'</code> directory path key.
    */
   @Nonnull

@@ -50,7 +50,7 @@ public class ProjectStorageUtil {
                         Project _project = unableToSaveProjectNotification.getProject();
                         notification.expire();
 
-                        if (_project != null && !_project.isDisposed()) {
+                        if (_project != null && _project.isInitialized()) {
                             _project.save();
                         }
                     })
