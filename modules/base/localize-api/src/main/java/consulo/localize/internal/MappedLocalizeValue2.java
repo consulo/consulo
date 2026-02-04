@@ -15,46 +15,25 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.LocalizationManager;
+import consulo.localization.internal.MappedLocalizedValue2;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
  * @author UNV
  * @since 2025-12-04
  */
-public final class MappedLocalizeValue2 extends BaseLocalizeValue {
-    private final LocalizeValue myDelegate;
-    private final BiFunction<LocalizeManager, String, String> myMapper;
-
-    public MappedLocalizeValue2(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
-        super(ourEmptyArgs);
-        myDelegate = delegate;
-        myMapper = mapper;
-    }
-
-    @Nonnull
-    @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        String value = myDelegate.getValue();
-        return Map.entry(localizeManager.getLocale(), myMapper.apply(localizeManager, value));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o
-            || o instanceof MappedLocalizeValue2 that
-            && Objects.equals(myDelegate, that.myDelegate)
-            && Objects.equals(myMapper, that.myMapper);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(myDelegate, myMapper);
+@SuppressWarnings("deprecation")
+public class MappedLocalizeValue2 extends MappedLocalizedValue2 implements LocalizeValue {
+    public MappedLocalizeValue2(
+        @Nonnull LocalizeManager manager,
+        @Nonnull LocalizeValue delegate,
+        @Nonnull BiFunction<LocalizationManager, String, String> mapper
+    ) {
+        super(manager, delegate, mapper);
     }
 }

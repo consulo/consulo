@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataContext;
 import consulo.ide.internal.RunAnythingCache;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CollectionListModel;
@@ -46,7 +46,7 @@ public abstract class RunAnythingGroup {
     public abstract LocalizeValue getTitle();
 
     public String getKey() {
-        Optional<LocalizeKey> key = getTitle().getKey();
+        Optional<LocalizationKey> key = getTitle().getKey();
         return key.isPresent() ? key.get().getKey() : "";
     }
 

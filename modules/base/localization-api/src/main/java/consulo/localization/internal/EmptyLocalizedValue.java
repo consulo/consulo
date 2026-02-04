@@ -27,7 +27,7 @@ import java.util.function.Function;
  * @author UNV
  * @since 2025-12-06
  */
-public final class EmptyLocalizedValue implements LocalizedValue {
+public /*final*/ class EmptyLocalizedValue implements LocalizedValue {
     public static final EmptyLocalizedValue VALUE = new EmptyLocalizedValue();
 
     private static final String EMPTY_STRING = "";

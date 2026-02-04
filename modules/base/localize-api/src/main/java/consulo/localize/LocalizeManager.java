@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,22 @@
  */
 package consulo.localize;
 
-import consulo.container.plugin.util.PlatformServiceLoader;
-import consulo.disposer.Disposable;
-
+import consulo.annotation.DeprecationInfo;
+import consulo.localization.LocalizationManager;
+import consulo.localize.internal.LocalizeManagerHolder;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import java.util.Locale;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public abstract class LocalizeManager {
-    private static LocalizeManager ourInstance = PlatformServiceLoader.findImplementation(LocalizeManager.class, ServiceLoader::load);
-
+@Deprecated
+@DeprecationInfo("Use LocalizationManager")
+@SuppressWarnings("deprecation")
+public interface LocalizeManager extends LocalizationManager {
     @Nonnull
-    public static LocalizeManager get() {
-        return ourInstance;
+    static LocalizeManager get() {
+        return LocalizeManagerHolder.get();
     }
 
     /**
@@ -45,40 +40,6 @@ public abstract class LocalizeManager {
      * @return localize value, if key not found, or parsing error return localize value like parameter
      */
     @Nonnull
-    public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
-
-    /**
-     * Return unformatted localize text
-     *
-     * @throws IllegalArgumentException if key is invalid
-     */
-    @Nonnull
-    public abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key);
-
-    @Nonnull
-    public abstract Locale parseLocale(@Nonnull String localeText);
-
-    public void setLocale(@Nullable Locale locale) {
-        setLocale(locale, true);
-    }
-
-    public abstract void setLocale(@Nullable Locale locale, boolean fireEvents);
-
-    @Nonnull
-    public abstract Locale getLocale();
-
-    @Nonnull
-    public abstract Locale getAutoDetectedLocale();
-
-    public abstract boolean isDefaultLocale();
-
-    @Nonnull
-    public abstract Set<Locale> getAvaliableLocales();
-
-    public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
-
-    public abstract byte getModificationCount();
-
-    @Nonnull
-    public abstract String formatText(String unformattedText, Locale locale, Object... args);
+    @Override
+    LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
 }

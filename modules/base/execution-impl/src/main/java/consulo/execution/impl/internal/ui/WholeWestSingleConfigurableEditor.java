@@ -23,7 +23,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -209,8 +209,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     protected static String createDimensionKey(Configurable configurable) {
-        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
-        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
+        LocalizationKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
+        return "#" + localizeKey.getLocalizationId() + "@" + localizeKey.getKey();
     }
 
     protected class ApplyAction extends DialogWrapperAction {

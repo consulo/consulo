@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,18 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.LocalizationManagerHolder;
+import consulo.localize.LocalizeManager;
+import jakarta.annotation.Nonnull;
+
 /**
- * @author VISTALL
- * @since 2024-09-01
+ * @author UNV
+ * @since 2026-01-12
  */
-public interface LocalizeManagerEx {
-    void initialize();
+@SuppressWarnings("deprecation")
+public class LocalizeManagerHolder {
+    @Nonnull
+    public static LocalizeManager get() {
+        return (LocalizeManager) LocalizationManagerHolder.get();
+    }
 }

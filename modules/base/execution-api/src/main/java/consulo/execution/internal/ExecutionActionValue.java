@@ -15,6 +15,7 @@
  */
 package consulo.execution.internal;
 
+import consulo.localization.LocalizedValue;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
@@ -74,7 +75,7 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public int compareTo(@Nonnull LocalizeValue that) {
+    public int compareTo(@Nonnull LocalizedValue that) {
         return myOriginal.compareTo(that);
     }
 

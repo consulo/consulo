@@ -22,7 +22,7 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.internal.ConfigurableExtensionPointUtil;
 import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.localize.LocalizeKey;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -58,8 +58,8 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     };
 
     public static String createDimensionKey(@Nonnull Configurable configurable) {
-        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
-        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
+        LocalizationKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
+        return "#" + localizeKey.getLocalizationId() + "@" + localizeKey.getKey();
     }
 
     @Nonnull

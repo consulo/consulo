@@ -55,6 +55,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localization.LocalizationKey;
 import consulo.localize.LocalizeKey;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -430,7 +431,7 @@ public final class DaemonListeners implements Disposable {
     }
 
     private class MyCommandListener implements CommandListener {
-        private final LocalizeKey myCutActionKey;
+        private final LocalizationKey myCutActionKey;
 
         private MyCommandListener(ActionManager actionManager) {
             myCutActionKey = actionManager
@@ -448,7 +449,7 @@ public final class DaemonListeners implements Disposable {
                 return;
             }
 
-            LocalizeKey commandKey = event.getCommandNameValue().getKey().orElse(null);
+            LocalizationKey commandKey = event.getCommandNameValue().getKey().orElse(null);
 
             cutOperationJustHappened = myCutActionKey.equals(commandKey);
             if (!myDaemonCodeAnalyzer.isRunning()) {

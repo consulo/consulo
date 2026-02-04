@@ -15,61 +15,31 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.DefaultLocalizedValue;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.*;
+import java.util.Comparator;
 
 /**
  * @author VISTALL
  * @since 2020-05-20
  */
-public final class DefaultLocalizeValue extends BaseLocalizeValue {
+@SuppressWarnings("deprecation")
+public class DefaultLocalizeValue extends DefaultLocalizedValue implements LocalizeValue {
     public static final Comparator<LocalizeValue> CASE_INSENSITIVE_ORDER = (lv1, lv2) -> {
         String v1 = lv1.get(), v2 = lv2.get();
         int insensitive = v1.compareToIgnoreCase(v2);
         return insensitive != 0 ? insensitive : v1.compareTo(v2);
     };
 
-    private final LocalizeKey myLocalizeKey;
-
-    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
-        this(localizeKey, ourEmptyArgs);
+    public DefaultLocalizeValue(@Nonnull LocalizeManager manager, @Nonnull LocalizeKey key) {
+        super(manager, key);
     }
 
-    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
-        super(args);
-        myLocalizeKey = localizeKey;
-    }
-
-    @Nonnull
-    @Override
-    public Optional<LocalizeKey> getKey() {
-        return Optional.of(myLocalizeKey);
-    }
-
-    @Nonnull
-    @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        return localizeManager.getUnformattedText(myLocalizeKey);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        DefaultLocalizeValue that = (DefaultLocalizeValue) o;
-        return Objects.equals(myLocalizeKey, that.myLocalizeKey) && Arrays.equals(myArgs, that.myArgs);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(myLocalizeKey, myArgs);
+    public DefaultLocalizeValue(@Nonnull LocalizeManager manager, @Nonnull LocalizeKey key, @Nonnull Object... args) {
+        super(manager, key, args);
     }
 }
