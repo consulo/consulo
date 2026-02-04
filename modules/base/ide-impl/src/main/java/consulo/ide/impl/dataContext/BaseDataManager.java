@@ -311,8 +311,4 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     public DataContext getDataContext(@Nullable consulo.ui.Component component) {
         return new MyUIDataContext(this, component);
     }
-
-    public DataContext getDataContextTest(Component component) {
-        throw new UnsupportedOperationException();
-    }
 }

@@ -201,18 +201,6 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  public DataContext getDataContextTest(Component component) {
-    DataContext dataContext = getDataContext(component);
-
-    Project project = dataContext.getData(Project.KEY);
-    Component focusedComponent = windowManager().getFocusedComponent(project);
-    if (focusedComponent != null) {
-      dataContext = getDataContext(focusedComponent);
-    }
-    return dataContext;
-  }
-
-  @Override
   @Nonnull
   public DataContext getDataContext() {
     return getDataContext(getFocusedComponent());

@@ -52,9 +52,4 @@ public class UnifiedDataManagerImpl extends BaseDataManager {
   public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
     throw new UnsupportedOperationException();
   }
-
-  @Override
-  public DataContext getDataContextTest(Component component) {
-    return getDataContext();
-  }
 }
