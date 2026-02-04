@@ -109,12 +109,8 @@ public final class ReadMostlyRWLock implements RWLock {
         return status.readRequested;
     }
 
-    // null means lock already acquired, Reader means lock acquired successfully
     @Override
     public Reader startRead() {
-        if (Thread.currentThread() == writeThread) {
-            return null;
-        }
         Reader status = R.get();
         throwIfImpatient(status);
         if (status.readRequested) {
@@ -236,6 +232,7 @@ public final class ReadMostlyRWLock implements RWLock {
             if (writeIntent.compareAndSet(false, true)) {
                 assert !writeRequested;
                 assert !writeAcquired;
+                assert myOldWriteThread == null;
 
                 myOldWriteThread = writeThread;
                 writeThread = Thread.currentThread();

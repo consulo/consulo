@@ -452,7 +452,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     .then(CodeExecution.setScopeParameter(VALUE));
 
                 CoroutineScope.ScopeFuture<V> scopeFuture = CoroutineScope.produce(
-                    ac.coroutineContext(),
+                    myApplication.coroutineContext(),
                     scope -> (V) scope.getUserData(VALUE),
                     rScope -> coroutine.runAsync(rScope, null)
                 );

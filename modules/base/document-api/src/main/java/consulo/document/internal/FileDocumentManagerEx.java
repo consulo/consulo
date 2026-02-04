@@ -33,7 +33,6 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
     void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
 
     @Override
-    @RequiredUIAccess
     default void saveAllDocuments() {
         saveAllDocuments(true);
     }
@@ -41,6 +40,5 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
     /**
      * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
      */
-    @RequiredUIAccess
     void saveAllDocuments(boolean isExplicit);
 }

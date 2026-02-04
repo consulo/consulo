@@ -2,17 +2,12 @@
 package consulo.virtualFileSystem.impl.internal.refresh;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.FrequentEventDetector;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.SensitiveProgressWrapper;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.disposer.Disposable;
@@ -147,15 +142,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
 
     private void processAndFireEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
-        while (true) {
-            ProgressIndicator progress = new SensitiveProgressWrapper(new EmptyProgressIndicator());
-            boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, modality), progress);
-            if (success) {
-                break;
-            }
-
-            ProgressIndicatorUtils.yieldToPendingWriteActions();
-        }
+        tryProcessingEvents(session, modality);
     }
 
     protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {

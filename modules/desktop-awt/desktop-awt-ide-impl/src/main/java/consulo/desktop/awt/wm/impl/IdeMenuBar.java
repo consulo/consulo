@@ -26,7 +26,6 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
@@ -344,7 +343,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     myNewVisibleActions.clear();
 
     if (!myDisabled) {
-      DataContext dataContext = ((BaseDataManager)myDataManager).getDataContextTest(this);
+      DataContext dataContext = myDataManager.getDataContext(this);
       expandActionGroup(dataContext, myNewVisibleActions, myActionManager);
     }
 

@@ -392,8 +392,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     @Nonnull
     @Override
     public CoroutineContext coroutineContext() {
-        ApplicationConcurrency concurrency = getApplication().getInstance(ApplicationConcurrency.class);
-        CoroutineContext coroutineContext = concurrency.coroutineContext();
+        CoroutineContext coroutineContext = getApplication().coroutineContext();
 
         CoroutineContext context = coroutineContext.copy();
         context.putCopyableUserData(UIAccess.KEY, getUIAccess());

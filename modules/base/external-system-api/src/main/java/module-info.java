@@ -11,6 +11,7 @@ module consulo.external.system.api {
     requires transitive consulo.module.content.api;
     requires transitive consulo.execution.api;
     requires transitive consulo.execution.debug.api;
+    requires transitive consulo.build.ui.api;
 
     requires transitive consulo.external.system.rt;
 

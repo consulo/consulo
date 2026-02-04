@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
-import consulo.application.WriteAction;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressWindow;
@@ -53,6 +52,7 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.Queue;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Condition;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
@@ -388,7 +388,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // The current suspender, however, might have already got suspended between the point of the last check cancelled call and
             // this point. If it has happened it will be cleaned up when the suspender is closed on the background process thread.
             myCurrentSuspender = null;
-            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> myProject.getUIAccess().give(this::updateFinished));
+            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> updateFinished());
         }
     }
 
@@ -408,32 +408,33 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     private void updateFinished() {
-        if (!WriteAction.compute(this::switchToSmartMode)) {
-            return;
-        }
-
-        if (myApplication.isInternal()) {
-            LOG.info("updateFinished");
-        }
-
-        try {
-            myPublisher.exitDumbMode();
-            FileEditorManager.getInstance(myProject).refreshIconsAsync();
-        }
-        finally {
-            // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
-            // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
-            while (!isDumb()) {
-                Runnable runnable;
-                synchronized (myRunWhenSmartQueue) {
-                    if (myRunWhenSmartQueue.isEmpty()) {
-                        break;
+        CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine.first(WriteLock.apply((o, continuation) -> switchToSmartMode()))
+                .then(Condition.doIf((switched, c) -> Boolean.TRUE.equals(switched), CodeExecution.run(() -> {
+                    if (myApplication.isInternal()) {
+                        LOG.info("updateFinished");
                     }
-                    runnable = myRunWhenSmartQueue.pullFirst();
-                }
-                doRun(runnable);
-            }
-        }
+
+                    try {
+                        myPublisher.exitDumbMode();
+                        FileEditorManager.getInstance(myProject).refreshIconsAsync();
+                    }
+                    finally {
+                        // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
+                        // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
+                        while (!isDumb()) {
+                            Runnable runnable;
+                            synchronized (myRunWhenSmartQueue) {
+                                if (myRunWhenSmartQueue.isEmpty()) {
+                                    break;
+                                }
+                                runnable = myRunWhenSmartQueue.pullFirst();
+                            }
+                            doRun(runnable);
+                        }
+                    }
+                })));
+        });
     }
 
     // Extracted to have a capture point

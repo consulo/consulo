@@ -84,7 +84,7 @@ public class CoroutineScope extends CoroutineEnvironment {
      *
      * @param context The context to run the scope's coroutines in
      */
-    CoroutineScope(@Nonnull CoroutineContext context) {
+    public CoroutineScope(@Nonnull CoroutineContext context) {
         this.context = Objects.requireNonNull(context, () -> "CoroutineContext required");
         this.context.scopeLaunched(this);
     }

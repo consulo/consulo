@@ -335,10 +335,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
      * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
      */
     @Override
-    @RequiredUIAccess
     public void saveAllDocuments(boolean isExplicit) {
-        UIAccess.assertIsUIThread();
-
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
             return;
