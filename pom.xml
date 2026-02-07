@@ -81,6 +81,7 @@
     <module>modules/base/test-impl</module>
     <module>modules/base/test-junit-impl</module>
     <module>modules/base/virtual-file-system-api</module>
+    <module>modules/base/virtual-file-system-http-api</module>
     <module>modules/base/document-api</module>
     <module>modules/base/project-api</module>
     <module>modules/base/project-content-api</module>
@@ -133,6 +134,7 @@
     <module>modules/base/component-impl</module>
     <module>modules/base/ui-ex-awt-api</module>
     <module>modules/base/virtual-file-system-impl</module>
+    <module>modules/base/virtual-file-system-http-impl</module>
     <module>modules/base/language-code-style-api</module>
     <module>modules/base/language-code-style-impl</module>
     <module>modules/base/language-code-style-ui-api</module>

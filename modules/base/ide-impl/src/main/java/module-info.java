@@ -424,7 +424,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
-  exports consulo.ide.impl.idea.openapi.vfs.impl.http;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
   exports consulo.ide.impl.idea.openapi.wm.impl;
   exports consulo.ide.impl.idea.openapi.wm.impl.status;

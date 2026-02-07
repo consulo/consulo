@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.impl.http;
+package consulo.virtualFileSystem.http.event;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.virtualFileSystem.VirtualFileManager;
-import org.jetbrains.annotations.NonNls;
+import consulo.localize.LocalizeValue;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
-@ExtensionImpl
-public class HttpsFileSystem extends HttpFileSystemBase {
-  @NonNls public static final String HTTPS_PROTOCOL = "https";
+public interface FileDownloadingListener {
 
-  public HttpsFileSystem() {
-    super(HTTPS_PROTOCOL);
-  }
+    void fileDownloaded(VirtualFile localFile);
 
-  public static HttpsFileSystem getHttpsInstance() {
-    return (HttpsFileSystem)VirtualFileManager.getInstance().getFileSystem(HTTPS_PROTOCOL);
-  }
+    void errorOccurred(@Nonnull LocalizeValue errorMessage);
+
+    void downloadingStarted();
+
+    void downloadingCancelled();
+
+    void progressMessageChanged(boolean indeterminate, @Nonnull LocalizeValue message);
+
+    void progressFractionChanged(double fraction);
 }

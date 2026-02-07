@@ -57,6 +57,12 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
+            <artifactId>consulo-virtual-file-system-http-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>consulo-virtual-file-watcher-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>

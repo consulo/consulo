@@ -7,6 +7,7 @@ module consulo.http.api {
 
     exports consulo.http;
     exports consulo.http.ssl;
+    exports consulo.http.localize;
 
     exports consulo.http.internal to consulo.http.adapter.httpclient4;
 }

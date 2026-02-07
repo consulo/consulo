@@ -53,6 +53,8 @@
                 <include>consulo:consulo-xcoverage-data</include>
                 <include>consulo:consulo-proxy</include>
                 <include>consulo:consulo-virtual-file-system-api</include>
+                <include>consulo:consulo-virtual-file-system-http-api</include>
+                <include>consulo:consulo-virtual-file-system-http-impl</include>
                 <include>consulo:consulo-datacontext-api</include>
                 <include>consulo:consulo-navigation-api</include>
                 <include>consulo:consulo-module-api</include>

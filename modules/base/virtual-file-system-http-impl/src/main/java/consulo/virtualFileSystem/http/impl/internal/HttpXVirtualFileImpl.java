@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.impl.http;
+package consulo.virtualFileSystem.http.impl.internal;
 
 import consulo.application.Application;
 import consulo.document.FileDocumentManager;
@@ -23,6 +23,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.http.BaseHttpFileSystem;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
 import jakarta.annotation.Nonnull;
@@ -32,8 +33,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-class VirtualFileImpl extends HttpVirtualFile {
-    private final HttpFileSystemBase myFileSystem;
+class HttpXVirtualFileImpl extends HttpVirtualFile {
+    private final BaseHttpFileSystem myFileSystem;
+
     private final @Nullable
     RemoteFileInfoImpl myFileInfo;
     private FileType myInitialFileType;
@@ -41,7 +43,7 @@ class VirtualFileImpl extends HttpVirtualFile {
     private final String myParentPath;
     private final String myName;
 
-    VirtualFileImpl(HttpFileSystemBase fileSystem, String path, @Nullable RemoteFileInfoImpl fileInfo) {
+    HttpXVirtualFileImpl(BaseHttpFileSystem fileSystem, String path, @Nullable RemoteFileInfoImpl fileInfo) {
         myFileSystem = fileSystem;
         myPath = path;
         myFileInfo = fileInfo;
@@ -50,7 +52,7 @@ class VirtualFileImpl extends HttpVirtualFile {
                 @Override
                 public void fileDownloaded(VirtualFile localFile) {
                     Application.get().invokeLater(() -> {
-                        VirtualFileImpl file = VirtualFileImpl.this;
+                        HttpXVirtualFileImpl file = HttpXVirtualFileImpl.this;
                         FileDocumentManager.getInstance().reloadFiles(file);
                         if (!localFile.getFileType().equals(myInitialFileType)) {
                             FileContentUtilCore.reparseFiles(file);

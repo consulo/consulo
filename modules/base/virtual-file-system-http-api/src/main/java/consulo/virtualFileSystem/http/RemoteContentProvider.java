@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.http;
 
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -27,22 +28,22 @@ import java.io.File;
  */
 public abstract class RemoteContentProvider {
 
-  public abstract boolean canProvideContent(@Nonnull String url);
+    public abstract boolean canProvideContent(@Nonnull String url);
 
-  public abstract void saveContent(String url, @Nonnull File targetFile, @Nonnull DownloadingCallback callback);
+    public abstract void saveContent(String url, @Nonnull File targetFile, @Nonnull DownloadingCallback callback);
 
-  public abstract boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local);
+    public abstract boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local);
 
 
-  public interface DownloadingCallback {
-    void finished(@Nullable FileType fileType);
+    public interface DownloadingCallback {
+        void finished(@Nullable FileType fileType);
 
-    void errorOccurred(@Nonnull String errorMessage, boolean cancelled);
+        void errorOccurred(@Nonnull LocalizeValue errorMessage, boolean cancelled);
 
-    void setProgressText(@Nonnull String text, boolean indeterminate);
+        void setProgressText(@Nonnull LocalizeValue text, boolean indeterminate);
 
-    void setProgressFraction(double fraction);
+        void setProgressFraction(double fraction);
 
-    boolean isCancelled();
-  }
+        boolean isCancelled();
+    }
 }

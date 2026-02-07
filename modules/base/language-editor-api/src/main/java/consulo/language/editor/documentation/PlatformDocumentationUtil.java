@@ -18,9 +18,9 @@ package consulo.language.editor.documentation;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.http.HttpFileSystem;
-
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class PlatformDocumentationUtil {
     for (String root : roots) {
       VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(root);
       if (virtualFile != null) {
-        if (virtualFile.getFileSystem() instanceof HttpFileSystem) {
+        if (virtualFile instanceof HttpVirtualFile) {
           String url = virtualFile.getUrl();
           if (!url.endsWith("/")) url += "/";
           result.add(url + relPath);

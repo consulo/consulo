@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,21 @@
  */
 package consulo.virtualFileSystem.http;
 
-import consulo.virtualFileSystem.http.event.FileDownloadingListener;
-
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 /**
  * @author VISTALL
- * @since 24-Apr-22
+ * @since 2026-02-07
  */
-public interface RemoteFileInfo extends RemoteContentProvider.DownloadingCallback {
-  void addDownloadingListener(@Nonnull FileDownloadingListener listener);
+public interface HttpsFileSystem extends BaseHttpFileSystem {
+    String HTTPS_PROTOCOL = "https";
 
-  void removeDownloadingListener(@Nonnull FileDownloadingListener listener);
+    static HttpsFileSystem getInstance() {
+        return (HttpsFileSystem) VirtualFileManager.getInstance().getFileSystem(HTTPS_PROTOCOL);
+    }
 
-  String getUrl();
-
-  RemoteFileState getState();
-
-  void cancelDownloading();
-
-  void startDownloading();
-
-  void restartDownloading();
-
-  String getErrorMessage();
+    @Deprecated
+    public static HttpsFileSystem getHttpsInstance() {
+        return getInstance();
+    }
 }

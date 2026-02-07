@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -206,7 +206,7 @@ public class PathEditor {
   }
 
   protected boolean isUrlInserted() {
-    return getRowCount() > 0 && ((VirtualFile)getListModel().lastElement()).getFileSystem() instanceof HttpFileSystem;
+    return getRowCount() > 0 && (VirtualFile)getListModel().lastElement() instanceof HttpVirtualFile;
   }
 
   protected void requestDefaultFocus() {
@@ -357,7 +357,7 @@ public class PathEditor {
   }
 
   private static boolean isHttpRoot(VirtualFile virtualFileOrProjectRoot) {
-    return virtualFileOrProjectRoot != null && (virtualFileOrProjectRoot.getFileSystem() instanceof HttpFileSystem);
+    return virtualFileOrProjectRoot instanceof HttpVirtualFile;
   }
 
   private final class MyCellRenderer extends DefaultListCellRenderer {

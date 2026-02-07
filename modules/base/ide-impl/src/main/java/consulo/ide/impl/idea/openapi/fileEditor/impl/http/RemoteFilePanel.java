@@ -22,6 +22,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -99,8 +100,8 @@ public class RemoteFilePanel implements PropertyChangeListener {
             switchEditor();
         }
         else {
-            String errorMessage = remoteFileInfo.getErrorMessage();
-            if (errorMessage != null) {
+            LocalizeValue errorMessage = remoteFileInfo.getErrorMessage();
+            if (errorMessage != LocalizeValue.empty()) {
                 myDownloadingListener.errorOccurred(errorMessage);
             }
         }
@@ -206,19 +207,19 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void errorOccurred(@Nonnull String errorMessage) {
+        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
             Application.get().invokeLater(() -> {
-                myErrorLabel.setText(errorMessage);
+                myErrorLabel.setText(errorMessage.getNullIfEmpty());
                 showCard(ERROR_CARD);
             });
         }
 
         @Override
-        public void progressMessageChanged(boolean indeterminate, @Nonnull String message) {
+        public void progressMessageChanged(boolean indeterminate, @Nonnull LocalizeValue message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
                 @Override
                 public void run() {
-                    myProgressLabel.setText(message);
+                    myProgressLabel.setText(message.getNullIfEmpty());
                 }
             });
         }

@@ -17,10 +17,9 @@ package consulo.virtualFileSystem.http;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.component.internal.RootComponentHolder;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,19 +27,19 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RemoteFileManager {
-  public static RemoteFileManager getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(RemoteFileManager.class);
-  }
+    public static RemoteFileManager getInstance() {
+        return Application.get().getInstance(RemoteFileManager.class);
+    }
 
-  public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider, @Nonnull Disposable parentDisposable);
+    public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider, @Nonnull Disposable parentDisposable);
 
-  public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider);
+    public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider);
 
-  public abstract void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider);
+    public abstract void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider);
 
-  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener);
+    public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener);
 
-  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
+    public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeFileListener(@Nonnull HttpVirtualFileListener listener);
+    public abstract void removeFileListener(@Nonnull HttpVirtualFileListener listener);
 }

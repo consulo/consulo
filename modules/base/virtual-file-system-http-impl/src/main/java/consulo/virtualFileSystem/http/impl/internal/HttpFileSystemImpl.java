@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.http.event;
+package consulo.virtualFileSystem.http.impl.internal;
 
-import consulo.virtualFileSystem.VirtualFile;
-
-import jakarta.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 
 /**
  * @author nik
-*/
-public interface FileDownloadingListener {
-
-  void fileDownloaded(VirtualFile localFile);
-
-  void errorOccurred(@Nonnull String errorMessage);
-
-  void downloadingStarted();
-
-  void downloadingCancelled();
-
-  void progressMessageChanged(boolean indeterminate, @Nonnull String message);
-
-  void progressFractionChanged(double fraction);
+ */
+@ExtensionImpl
+public class HttpFileSystemImpl extends HttpXFileSystemImpl implements HttpFileSystem {
+    public HttpFileSystemImpl() {
+        super(PROTOCOL);
+    }
 }

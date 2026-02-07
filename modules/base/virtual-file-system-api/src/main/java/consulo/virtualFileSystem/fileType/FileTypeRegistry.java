@@ -134,4 +134,9 @@ public abstract class FileTypeRegistry {
     @Nullable
     @RequiredUIAccess
     public abstract FileType getKnownFileTypeOrAssociate(@Nonnull String fileName);
+
+    @Nullable
+    public FileType getFileTypeByMimeType(@Nullable String mimeType) {
+        return null;
+    }
 }

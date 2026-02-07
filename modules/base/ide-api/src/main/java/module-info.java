@@ -83,6 +83,7 @@ module consulo.ide.api {
   requires transitive consulo.language.duplicate.analysis.api;
   requires transitive consulo.diagram.api;
   requires transitive consulo.language.diagram.api;
+  requires transitive consulo.virtual.file.system.http.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
