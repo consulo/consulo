@@ -18,6 +18,8 @@ package consulo.execution.ui.terminal;
 import com.jediterm.terminal.Terminal;
 import com.jediterm.terminal.model.TerminalTextBuffer;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
  * @since 2026-01-31
@@ -26,4 +28,8 @@ public interface JediTerminalConsole extends TerminalConsole {
     Terminal getTerminal();
 
     TerminalTextBuffer getTerminalTextBuffer();
+
+    BoundedRangeModel getTerminalVerticalScrollModel();
+
+    boolean isShowing();
 }

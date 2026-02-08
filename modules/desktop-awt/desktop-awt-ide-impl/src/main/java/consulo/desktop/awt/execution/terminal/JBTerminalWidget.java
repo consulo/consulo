@@ -31,6 +31,11 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
         convertActions(this, getActions());
     }
 
+    @Override
+    public BoundedRangeModel getTerminalVerticalScrollModel() {
+        return myTerminalPanel.getBoundedRangeModel();
+    }
+
     @Nonnull
     @Override
     public Component getUIComponent() {
