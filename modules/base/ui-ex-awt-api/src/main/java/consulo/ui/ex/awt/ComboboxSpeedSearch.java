@@ -16,52 +16,90 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.util.function.Function;
 
 /**
  * @author Anna.Kozlova
  * @since 11-Jul-2006
  */
 public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
-  public ComboboxSpeedSearch(@Nonnull JComboBox comboBox) {
-    super(comboBox);
-    removeKeyStroke(comboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), KeyStroke.getKeyStroke(' ', 0));
-  }
-
-  private static void removeKeyStroke(@Nullable InputMap map, KeyStroke ks) {
-    while (map != null) {
-      map.remove(ks);
-      map = map.getParent();
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static <T> void installSpeedSearch(JComboBox<T> comboBox, Function<? super T, String> textGetter) {
+        ComboboxSpeedSearch search = new ComboboxSpeedSearch(comboBox, null) {
+            @Override
+            protected String getElementText(Object element) {
+                return textGetter.apply((T) element);
+            }
+        };
+        search.setupListeners();
     }
-  }
 
-  @Override
-  protected void selectElement(Object element, String selectedText) {
-    myComponent.setSelectedItem(element);
-    myComponent.repaint();
-  }
-
-  @Override
-  protected int getSelectedIndex() {
-    return myComponent.getSelectedIndex();
-  }
-
-  @Override
-  protected Object[] getAllElements() {
-    ListModel model = myComponent.getModel();
-    Object[] elements = new Object[model.getSize()];
-    for (int i = 0; i < elements.length; i++) {
-      elements[i] = model.getElementAt(i);
+    @Nonnull
+    public static ComboboxSpeedSearch installOn(@Nonnull JComboBox<?> comboBox) {
+        ComboboxSpeedSearch search = new ComboboxSpeedSearch(comboBox, null);
+        search.setupListeners();
+        return search;
     }
-    return elements;
-  }
 
-  @Override
-  protected String getElementText(Object element) {
-    return element.toString();
-  }
+    public ComboboxSpeedSearch(JComboBox component, @SuppressWarnings("unused") Void sig) {
+        super(component, sig);
+    }
+
+    /**
+     * @deprecated Use the static method {@link ComboboxSpeedSearch#installOn(JComboBox)} to install a speed search.
+     * <p>
+     * For inheritance use the non-deprecated constructor.
+     * <p>
+     * Also, note that non-deprecated constructor is side effect free, and you should call for {@link ComboboxSpeedSearch#setupListeners()}
+     * method to enable speed search
+     */
+    public ComboboxSpeedSearch(@Nonnull JComboBox comboBox) {
+        super(comboBox);
+        removeKeyStroke(comboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), KeyStroke.getKeyStroke(' ', 0));
+    }
+
+    @Override
+    protected void setupListeners() {
+        super.setupListeners();
+        removeKeyStroke(myComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), KeyStroke.getKeyStroke(' ', 0));
+    }
+
+    private static void removeKeyStroke(@Nullable InputMap map, KeyStroke ks) {
+        while (map != null) {
+            map.remove(ks);
+            map = map.getParent();
+        }
+    }
+
+    @Override
+    protected void selectElement(Object element, String selectedText) {
+        myComponent.setSelectedItem(element);
+        myComponent.repaint();
+    }
+
+    @Override
+    protected int getSelectedIndex() {
+        return myComponent.getSelectedIndex();
+    }
+
+    @Nonnull
+    @Override
+    protected Object[] getAllElements() {
+        ListModel model = myComponent.getModel();
+        Object[] elements = new Object[model.getSize()];
+        for (int i = 0; i < elements.length; i++) {
+            elements[i] = model.getElementAt(i);
+        }
+        return elements;
+    }
+
+    @Override
+    protected String getElementText(Object element) {
+        return element.toString();
+    }
 }
