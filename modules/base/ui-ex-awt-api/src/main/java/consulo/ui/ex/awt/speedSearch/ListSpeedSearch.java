@@ -16,59 +16,80 @@
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.ScrollingUtil;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.function.Function;
 
-public class ListSpeedSearch extends SpeedSearchBase<JList> {
-  private final Function<Object, String> myToStringConverter;
-
-  public ListSpeedSearch(JList list) {
-    super(list);
-    myToStringConverter = null;
-  }
-
-  public ListSpeedSearch(JList component, Function<Object, String> convertor) {
-    super(component);
-    myToStringConverter = convertor;
-  }
-
-  @Override
-  protected void selectElement(Object element, String selectedText) {
-    ScrollingUtil.selectItem(myComponent, element);
-  }
-
-  @Override
-  protected int getSelectedIndex() {
-    return myComponent.getSelectedIndex();
-  }
-
-  @Nonnull
-  @Override
-  protected Object[] getAllElements() {
-    return getAllListElements(myComponent);
-  }
-
-  public static Object[] getAllListElements(JList list) {
-    ListModel model = list.getModel();
-    if (model instanceof DefaultListModel) { // optimization
-      return ((DefaultListModel)model).toArray();
+public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
+    @Nonnull
+    public static <T> ListSpeedSearch<T> installOn(@Nonnull JList<T> list) {
+        return installOn(list, null);
     }
-    else {
-      Object[] elements = new Object[model.getSize()];
-      for (int i = 0; i < elements.length; i++) {
-        elements[i] = model.getElementAt(i);
-      }
-      return elements;
-    }
-  }
 
-  @Override
-  protected String getElementText(Object element) {
-    if (myToStringConverter != null) {
-      return myToStringConverter.apply(element);
+    @Nonnull
+    public static <T> ListSpeedSearch<T> installOn(@Nonnull JList<T> list, @Nullable Function<? super T, String> convertor) {
+        ListSpeedSearch<T> search = new ListSpeedSearch<>(list, null, convertor);
+        search.setupListeners();
+        return search;
     }
-    return element == null ? null : element.toString();
-  }
+
+    private final Function<? super T, String> myToStringConverter;
+
+    public ListSpeedSearch(JList<T> component, @SuppressWarnings("unused") Void sig, Function<? super T, String> convertor) {
+        super(component, sig);
+        myToStringConverter = convertor;
+    }
+
+    @Deprecated
+    public ListSpeedSearch(JList<T> list) {
+        super(list);
+        myToStringConverter = null;
+    }
+
+    @Deprecated
+    public ListSpeedSearch(JList<T> component, Function<? super T, String> convertor) {
+        super(component);
+        myToStringConverter = convertor;
+    }
+
+    @Override
+    protected void selectElement(Object element, String selectedText) {
+        ScrollingUtil.selectItem(myComponent, element);
+    }
+
+    @Override
+    protected int getSelectedIndex() {
+        return myComponent.getSelectedIndex();
+    }
+
+    @Nonnull
+    @Override
+    protected Object[] getAllElements() {
+        return getAllListElements(myComponent);
+    }
+
+    public static Object[] getAllListElements(JList list) {
+        ListModel model = list.getModel();
+        if (model instanceof DefaultListModel) { // optimization
+            return ((DefaultListModel) model).toArray();
+        }
+        else {
+            Object[] elements = new Object[model.getSize()];
+            for (int i = 0; i < elements.length; i++) {
+                elements[i] = model.getElementAt(i);
+            }
+            return elements;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected String getElementText(Object element) {
+        if (myToStringConverter != null) {
+            return myToStringConverter.apply((T) element);
+        }
+        return element == null ? null : element.toString();
+    }
 }

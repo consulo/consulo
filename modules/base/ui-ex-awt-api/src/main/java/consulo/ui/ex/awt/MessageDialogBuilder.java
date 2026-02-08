@@ -26,113 +26,141 @@ import jakarta.annotation.Nullable;
 @DeprecationInfo("Use Alert/Alerts class from ui-api")
 @SuppressWarnings("ALL")
 public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
-  protected final String myMessage;
-  protected final String myTitle;
-
-  protected String myYesText;
-  protected String myNoText;
-
-  protected Project myProject;
-  protected Image myIcon;
-  protected DialogWrapper.DoNotAskOption myDoNotAskOption;
-
-  private MessageDialogBuilder(@Nonnull String title, @Nonnull String message) {
-    myTitle = title;
-    myMessage = message;
-  }
-
-  @Nonnull
-  public static YesNo yesNo(@Nonnull String title, @Nonnull String message) {
-    return new YesNo(title, message).icon(Messages.getQuestionIcon());
-  }
-
-  public static YesNoCancel yesNoCancel(@Nonnull String title, @Nonnull String message) {
-    return new YesNoCancel(title, message).icon(Messages.getQuestionIcon());
-  }
-
-  protected abstract T getThis();
-
-  @Nonnull
-  public T project(@Nullable Project project) {
-    myProject = project;
-    return getThis();
-  }
-
-  /**
-   * @see {@link Messages#getInformationIcon()}
-   * @see {@link Messages#getWarningIcon()}
-   * @see {@link Messages#getErrorIcon()}
-   * @see {@link Messages#getQuestionIcon()}
-   */
-  public T icon(@Nullable Image icon) {
-    myIcon = icon;
-    return getThis();
-  }
-
-  @Nonnull
-  public T doNotAsk(@Nonnull DialogWrapper.DoNotAskOption doNotAskOption) {
-    myDoNotAskOption = doNotAskOption;
-    return getThis();
-  }
-
-  public T yesText(@Nonnull String yesText) {
-    myYesText = yesText;
-    return getThis();
-  }
-
-  public T noText(@Nonnull String noText) {
-    myNoText = noText;
-    return getThis();
-  }
-
-  public static final class YesNo extends MessageDialogBuilder<YesNo> {
-    private YesNo(@Nonnull String title, @Nonnull String message) {
-      super(title, message);
+    @Nonnull
+    public static OkCancel okCancel(@Nonnull String title, @Nonnull String message) {
+        return new OkCancel(title, message).icon(Messages.getQuestionIcon());
     }
 
-    @Override
-    protected YesNo getThis() {
-      return this;
+    @Nonnull
+    public static YesNo yesNo(@Nonnull String title, @Nonnull String message) {
+        return new YesNo(title, message).icon(Messages.getQuestionIcon());
     }
 
-    @Messages.YesNoResult
-    public int show() {
-      String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
-      String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
-
-      return Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.YES : Messages.NO;
+    public static YesNoCancel yesNoCancel(@Nonnull String title, @Nonnull String message) {
+        return new YesNoCancel(title, message).icon(Messages.getQuestionIcon());
     }
 
-    public boolean isYes() {
-      return show() == Messages.YES;
-    }
-  }
+    protected final String myMessage;
+    protected final String myTitle;
 
-  public static final class YesNoCancel extends MessageDialogBuilder<YesNoCancel> {
-    private String myCancelText;
+    protected String myYesText;
+    protected String myNoText;
 
-    private YesNoCancel(@Nonnull String title, @Nonnull String message) {
-      super(title, message);
-    }
+    protected Project myProject;
+    protected Image myIcon;
+    protected DialogWrapper.DoNotAskOption myDoNotAskOption;
 
-    public YesNoCancel cancelText(@Nonnull String cancelText) {
-      myCancelText = cancelText;
-      return getThis();
+    private MessageDialogBuilder(@Nonnull String title, @Nonnull String message) {
+        myTitle = title;
+        myMessage = message;
     }
 
-    @Override
-    protected YesNoCancel getThis() {
-      return this;
+    protected abstract T getThis();
+
+    @Nonnull
+    public T project(@Nullable Project project) {
+        myProject = project;
+        return getThis();
     }
 
-    @Messages.YesNoCancelResult
-    public int show() {
-      String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
-      String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
-      String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
-
-      int buttonNumber = Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText, cancelText}, 0, myIcon, myDoNotAskOption);
-      return buttonNumber == 0 ? Messages.YES : buttonNumber == 1 ? Messages.NO : Messages.CANCEL;
+    /**
+     * @see {@link Messages#getInformationIcon()}
+     * @see {@link Messages#getWarningIcon()}
+     * @see {@link Messages#getErrorIcon()}
+     * @see {@link Messages#getQuestionIcon()}
+     */
+    public T icon(@Nullable Image icon) {
+        myIcon = icon;
+        return getThis();
     }
-  }
+
+    @Nonnull
+    public T doNotAsk(@Nonnull DialogWrapper.DoNotAskOption doNotAskOption) {
+        myDoNotAskOption = doNotAskOption;
+        return getThis();
+    }
+
+    public T yesText(@Nonnull String yesText) {
+        myYesText = yesText;
+        return getThis();
+    }
+
+    public T noText(@Nonnull String noText) {
+        myNoText = noText;
+        return getThis();
+    }
+
+    public static final class OkCancel extends MessageDialogBuilder<OkCancel> {
+        private OkCancel(@Nonnull String title, @Nonnull String message) {
+            super(title, message);
+        }
+
+        @Override
+        protected OkCancel getThis() {
+            return this;
+        }
+
+        @Messages.OkCancelResult
+        public int show() {
+            String okText = ObjectUtil.chooseNotNull(myYesText, Messages.OK_BUTTON);
+            String cancelText = ObjectUtil.chooseNotNull(myNoText, Messages.CANCEL_BUTTON);
+
+            return Messages.showDialog(myProject, myMessage, myTitle, new String[]{okText, cancelText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.OK : Messages.CANCEL;
+        }
+
+        public boolean isOk() {
+            return show() == Messages.OK;
+        }
+    }
+
+    public static final class YesNo extends MessageDialogBuilder<YesNo> {
+        private YesNo(@Nonnull String title, @Nonnull String message) {
+            super(title, message);
+        }
+
+        @Override
+        protected YesNo getThis() {
+            return this;
+        }
+
+        @Messages.YesNoResult
+        public int show() {
+            String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
+            String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
+
+            return Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.YES : Messages.NO;
+        }
+
+        public boolean isYes() {
+            return show() == Messages.YES;
+        }
+    }
+
+    public static final class YesNoCancel extends MessageDialogBuilder<YesNoCancel> {
+        private String myCancelText;
+
+        private YesNoCancel(@Nonnull String title, @Nonnull String message) {
+            super(title, message);
+        }
+
+        public YesNoCancel cancelText(@Nonnull String cancelText) {
+            myCancelText = cancelText;
+            return getThis();
+        }
+
+        @Override
+        protected YesNoCancel getThis() {
+            return this;
+        }
+
+        @Messages.YesNoCancelResult
+        public int show() {
+            String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
+            String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
+            String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
+
+            int buttonNumber = Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText, cancelText}, 0, myIcon, myDoNotAskOption);
+            return buttonNumber == 0 ? Messages.YES : buttonNumber == 1 ? Messages.NO : Messages.CANCEL;
+        }
+    }
 }

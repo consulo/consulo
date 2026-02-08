@@ -23,9 +23,9 @@ import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.action.ScrollToTheEndToolbarAction;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.internal.action.ClearConsoleAction;
-import consulo.execution.action.ScrollToTheEndToolbarAction;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.localize.LocalizeValue;
@@ -34,6 +34,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -64,6 +65,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     @Nonnull
     private final SwitchDuplexConsoleViewAction mySwitchConsoleAction;
     private boolean myDisableSwitchConsoleActionOnProcessEnd = true;
+
+    private final Collection<DuplexConsoleListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
     public DuplexConsoleView(@Nonnull S primaryConsoleView, @Nonnull T secondaryConsoleView) {
         this(primaryConsoleView, secondaryConsoleView, null);
@@ -118,6 +121,15 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getSubConsoleView(primary).getComponent());
 
         myPrimary = primary;
+
+        for (DuplexConsoleListener listener : myListeners) {
+            listener.consoleEnabled(primary);
+        }
+    }
+
+    public void addSwitchListener(@Nonnull DuplexConsoleListener listener, @Nonnull Disposable parent) {
+        myListeners.add(listener);
+        Disposer.register(parent, () -> myListeners.remove(listener));
     }
 
     public boolean isPrimaryConsoleEnabled() {
