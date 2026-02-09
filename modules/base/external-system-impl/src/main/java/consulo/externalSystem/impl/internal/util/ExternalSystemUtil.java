@@ -87,6 +87,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /**
@@ -120,15 +121,15 @@ public class ExternalSystemUtil {
             return;
         }
 
-        for (ToolWindowFactory toolWindowFactory : project.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+        project.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(toolWindowFactory -> {
             if (toolWindowId.equals(toolWindowFactory.getId())) {
                 managerEx.initToolWindow(toolWindowFactory);
             }
-        }
+        });
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
+    @SuppressWarnings("unchecked")
     public static <T> T getToolWindowElement(
         @Nonnull Class<T> clazz,
         @Nonnull Project project,
@@ -236,16 +237,16 @@ public class ExternalSystemUtil {
     }
 
     private static long getTimeStamp(@Nonnull ExternalProjectSettings externalProjectSettings, @Nonnull ProjectSystemId externalSystemId) {
-        long timeStamp = 0;
-        for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensionList()) {
+        AtomicLong timeStamp = new AtomicLong(0);
+        Application.get().getExtensionPoint(ExternalSystemConfigLocator.class).forEach(locator -> {
             if (!externalSystemId.equals(locator.getTargetExternalSystemId())) {
-                continue;
+                return;
             }
             for (VirtualFile virtualFile : locator.findAll(externalProjectSettings)) {
-                timeStamp += virtualFile.getTimeStamp();
+                timeStamp.addAndGet(virtualFile.getTimeStamp());
             }
-        }
-        return timeStamp;
+        });
+        return timeStamp.get();
     }
 
     /**
@@ -338,7 +339,6 @@ public class ExternalSystemUtil {
      * @param externalProjectPath path of the target gradle project's file
      * @param callback            callback to be notified on refresh result
      * @param isPreviewMode       flag that identifies whether gradle libraries should be resolved during the refresh
-     * @return the most up-to-date gradle project (if any)
      */
     public static void refreshProject(
         @Nonnull Project project,
@@ -361,7 +361,6 @@ public class ExternalSystemUtil {
      * @param callback            callback to be notified on refresh result
      * @param isPreviewMode       flag that identifies whether gradle libraries should be resolved during the refresh
      * @param reportRefreshError  prevent to show annoying error notification, e.g. if auto-import mode used
-     * @return the most up-to-date gradle project (if any)
      */
     public static void refreshProject(
         @Nonnull Project project,
