@@ -24,5 +24,6 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CodeStyleSettingsProvider implements CodeStyleSettingsBase {
-  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CodeStyleSettingsProvider.class);
+    public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME =
+        ExtensionPointName.create(CodeStyleSettingsProvider.class);
 }
