@@ -18,17 +18,12 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,7 +44,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            myAction.actionPerformed(new AnActionEventWrapper(e, this));
+            myAction.actionPerformed(e);
         }
 
         @Override
@@ -86,19 +81,6 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         @Override
         public AnAction getDelegate() {
             return myDelegate;
-        }
-    }
-
-    public static final class AnActionEventWrapper extends AnActionEvent {
-        private final AnActionButton myPeer;
-
-        private AnActionEventWrapper(AnActionEvent e, AnActionButton peer) {
-            super(e.getInputEvent(), e.getDataContext(), e.getPlace(), e.getPresentation(), e.getActionManager(), e.getModifiers());
-            myPeer = peer;
-        }
-
-        public void showPopup(JBPopup popup) {
-            popup.show(myPeer.getPreferredPopupPoint());
         }
     }
 
@@ -217,21 +199,5 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     private boolean isContextComponentOk() {
         return myContextComponent == null
             || (myContextComponent.isVisible() && UIUtil.getParentOfType(JLayeredPane.class, myContextComponent) != null);
-    }
-
-    public final RelativePoint getPreferredPopupPoint() {
-        for (Container c = myContextComponent; (c = c.getParent()) != null;) {
-            if (c instanceof JComponent jComponent
-                && jComponent.getClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY) instanceof ActionToolbar toolbar) {
-                for (Component comp : jComponent.getComponents()) {
-                    if (comp instanceof ActionButtonComponent
-                        && comp instanceof AnActionHolder actionHolder
-                        && actionHolder.getIdeAction() == this) {
-                        return new RelativePoint(comp.getParent(), new Point(comp.getX(), comp.getY() + comp.getHeight()));
-                    }
-                }
-            }
-        }
-        return null;
     }
 }

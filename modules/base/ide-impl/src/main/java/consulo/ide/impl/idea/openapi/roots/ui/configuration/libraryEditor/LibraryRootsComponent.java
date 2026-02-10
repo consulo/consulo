@@ -26,7 +26,6 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.*;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
@@ -241,7 +240,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                 }
             }
         });
-        toolbarDecorator.setAddAction(button -> {
+        toolbarDecorator.setAddAction((b, e) -> {
             if (popupItems.isEmpty()) {
                 new AttachFilesAction(myDescriptor.getAttachFilesActionName()).actionPerformed(null);
                 return;
@@ -257,11 +256,11 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                 .createActionGroupPopup(
                     null,
                     group,
-                    DataManager.getInstance().getDataContext(button.getContextComponent()),
+                    e.getDataContext(),
                     JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
                     true
                 )
-                .show(button.getPreferredPopupPoint());
+                .showUnderneathOf(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
         });
 
         myPanel.add(toolbarDecorator.createPanel());

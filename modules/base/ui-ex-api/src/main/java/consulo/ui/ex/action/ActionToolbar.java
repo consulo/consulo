@@ -63,8 +63,6 @@ public interface ActionToolbar {
 
     Key<ActionToolbar> KEY = Key.of(ActionToolbar.class);
 
-    String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
-
     /**
      * This is default layout policy for the toolbar. It defines that
      * all toolbar component are in one row / column and they are not wrapped

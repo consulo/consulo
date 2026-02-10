@@ -114,7 +114,7 @@ public class TodoCheckinHandler extends CheckinHandler {
                     SetTodoFilterAction group = new SetTodoFilterAction(myProject, myConfiguration.myTodoPanelSettings, consumer);
                     ActionPopupMenu popupMenu =
                             ActionManager.getInstance().createActionPopupMenu(ActionPlaces.TODO_VIEW_TOOLBAR, group);
-                    popupMenu.showUnder(configureButton);
+                    popupMenu.showUnderneathOf(configureButton);
                 });
 
                 panel.add(configureButton);

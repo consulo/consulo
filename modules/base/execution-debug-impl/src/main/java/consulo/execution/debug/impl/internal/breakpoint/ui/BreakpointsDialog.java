@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.breakpoint.ui;
 import consulo.codeEditor.util.popup.DetailController;
 import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.codeEditor.util.popup.MasterController;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebuggerManager;
@@ -273,13 +272,13 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }
 
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(tree).
-            setAddAction(button -> JBPopupFactory.getInstance().createActionGroupPopup(
+            setAddAction((b, e) -> JBPopupFactory.getInstance().createActionGroupPopup(
                 null,
                 breakpointTypes,
-                DataManager.getInstance().getDataContext(button.getContextComponent()),
+                e.getDataContext(),
                 JBPopupFactory.ActionSelectionAid.NUMBERING,
                 false
-            ).show(button.getPreferredPopupPoint())).
+            ).show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT))).
             setRemoveAction(button -> myTreeController.removeSelectedBreakpoints(myProject)).
             setRemoveActionUpdater(e -> {
                 boolean enabled = false;

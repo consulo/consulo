@@ -23,11 +23,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -93,37 +91,34 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
 
         ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myRepositoriesList).disableUpDownActions();
 
-        toolbarDecorator.setAddAction(new AnActionButtonRunnable() {
-            @Override
-            public void run(AnActionButton anActionButton) {
-                DefaultActionGroup group = new DefaultActionGroup();
-                for (AnAction aMyAdditional : createActions) {
-                    group.add(aMyAdditional);
-                }
-                Set<TaskRepository> repositories = RecentTaskRepositories.getInstance().getRepositories();
-                repositories.removeAll(myRepositories);
-                if (!repositories.isEmpty()) {
-                    group.add(AnSeparator.getInstance());
-                    for (final TaskRepository repository : repositories) {
-                        group.add(new AnAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
-                            @Override
-                            public void actionPerformed(AnActionEvent e) {
-                                addRepository(repository);
-                            }
-                        });
-                    }
-                }
-
-                JBPopupFactory.getInstance()
-                    .createActionGroupPopup(
-                        "Add server",
-                        group,
-                        DataManager.getInstance().getDataContext(anActionButton.getContextComponent()),
-                        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                        false
-                    )
-                    .show(anActionButton.getPreferredPopupPoint());
+        toolbarDecorator.setAddAction((b, e) -> {
+            DefaultActionGroup group = new DefaultActionGroup();
+            for (AnAction aMyAdditional : createActions) {
+                group.add(aMyAdditional);
             }
+            Set<TaskRepository> repositories = RecentTaskRepositories.getInstance().getRepositories();
+            repositories.removeAll(myRepositories);
+            if (!repositories.isEmpty()) {
+                group.add(AnSeparator.getInstance());
+                for (final TaskRepository repository : repositories) {
+                    group.add(new AnAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
+                        @Override
+                        public void actionPerformed(AnActionEvent e) {
+                            addRepository(repository);
+                        }
+                    });
+                }
+            }
+
+            JBPopupFactory.getInstance()
+                .createActionGroupPopup(
+                    "Add server",
+                    group,
+                    DataManager.getInstance().getDataContext(b.getContextComponent()),
+                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                    false
+                )
+                .showUnderneathOf(Objects.requireNonNull(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)));
         });
 
         toolbarDecorator.setRemoveAction(new AnActionButtonRunnable() {

@@ -150,7 +150,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         };
         list.installCellRenderer(modulesRenderer);
         JPanel modulesPanel = ToolbarDecorator.createDecorator(list)
-            .setAddAction(button -> {
+            .setAddAction((b, e) -> {
                 Module[] all = ModuleManager.getInstance(myProject).getModules();
                 Arrays.sort(all, (o1, o2) -> o1.getName().compareTo(o2.getName()));
                 JBList modules = new JBList(all);
@@ -166,7 +166,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                         }
                         ((DefaultTreeModel) myTree.getModel()).reload();
                         TreeUtil.expandAll(myTree);
-                    }).createPopup().show(button.getPreferredPopupPoint());
+                    }).createPopup().show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
             })
             .setRemoveAction(button -> {
                 Object[] values = list.getSelectedValues();

@@ -256,7 +256,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
     public ToolbarDecorator setAddAction(AnActionButtonRunnable action) {
         myAddActionEnabled = action != null;
-        myAddAction = (b, inputDetails) -> action.run(b);
+        myAddAction = (b, e) -> action.run(b);
         return this;
     }
 
@@ -428,7 +428,6 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         installUpdaters();
         updateButtons();
         installDnD();
-        panel.putClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY, myActionsPanel.getComponent(0));
 
         if (myToolbarBackgroundColor != null) {
             myActionsPanel.setBackground(myToolbarBackgroundColor);

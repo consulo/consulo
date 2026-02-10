@@ -30,7 +30,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.module.*;
@@ -315,7 +314,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     private JComponent createTableWithButtons() {
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
         decorator.setPanelBorder(JBUI.Borders.empty());
-        decorator.setAddAction(this::showAddPopup);
+        decorator.setAddAction((button, event) -> showAddPopup(event));
         decorator.setRemoveAction(button -> removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable)));
         decorator.setRemoveActionUpdater(e -> isRemoveActionEnabled());
 
@@ -327,8 +326,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
-    private void showAddPopup(@Nonnull AnActionButton button) {
-        Map<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
+    private void showAddPopup(@Nonnull AnActionEvent event) {
+        SequencedMap<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
 
         AddModuleDependencyActionProvider.EP.forEachExtensionSafe(
             getProject().getApplication(),
@@ -341,17 +340,18 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             }
         );
 
-        // can't be empty - file adding avaliable always
+        // can't be empty - file adding available always
         if (contexts.size() == 1) {
-            Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry =
-                ContainerUtil.getFirstItem(contexts.entrySet());
+            Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry = contexts.sequencedEntrySet().getFirst();
 
             AddModuleDependencyListPopupStep.providerSelected(entry);
         }
         else {
             AddModuleDependencyListPopupStep step = new AddModuleDependencyListPopupStep(getRootModel(), contexts.entrySet());
-            ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
-            popup.show(button.getPreferredPopupPoint());
+
+            ListPopup popup = JBPopupFactory.getInstance().createListPopup(myState.getProject(), step);
+
+            popup.showUnderneathOf(event.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
         }
     }
 

@@ -28,9 +28,9 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsChangeProviders;
 import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myBoxlist);
     decorator = decorator.setAddActionUpdater(e -> !providers.isEmpty());
-    decorator = decorator.setAddAction(anActionButton -> {
+    decorator = decorator.setAddAction((b, e) -> {
 
       if (providers.size() > 1) {
         ListPopupStep<BackgroundTaskByVfsChangeProvider> listPopupStep = new BaseListPopupStep<BackgroundTaskByVfsChangeProvider>("Add", providers) {
@@ -108,8 +108,8 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
             return doFinalStep(() -> add(val));
           }
         };
-        ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(listPopupStep);
-        listPopup.show(anActionButton.getPreferredPopupPoint());
+        ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(myProject, listPopupStep);
+        listPopup.show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
       }
       else {
         add(providers.get(0));
