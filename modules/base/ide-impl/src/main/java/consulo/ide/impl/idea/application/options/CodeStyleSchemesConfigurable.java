@@ -438,7 +438,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         @Nonnull
         @Override
         public String getId() {
-            return "preferences.sourceCode." + getDisplayName().getKey().orElse(LocalizeKey.empty()).getLocalizeId();
+            return "preferences.sourceCode." + getDisplayName().getKey().orElse(LocalizeKey.empty()).toString();
         }
 
         @Override
