@@ -56,7 +56,13 @@ public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
 
     @Override
     protected void selectElement(Object element, String selectedText) {
-        ScrollingUtil.selectItem(myComponent, element);
+        if (element != null) {
+            //noinspection unchecked
+            ScrollingUtil.selectItem(myComponent, (T) element);
+        }
+        else {
+            myComponent.clearSelection();
+        }
     }
 
     @Override

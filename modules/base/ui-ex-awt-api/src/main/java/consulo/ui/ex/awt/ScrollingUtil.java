@@ -21,11 +21,11 @@ import consulo.logging.Logger;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.Couple;
-import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -82,10 +82,10 @@ public class ScrollingUtil {
         selectItem(list, selectedIndex);
     }
 
-    public static boolean selectItem(JList list, @Nonnull Object item) {
-        ListModel model = list.getModel();
+    public static <T> boolean selectItem(@Nonnull JList<T> list, @Nonnull T item) {
+        ListModel<T> model = list.getModel();
         for (int i = 0; i < model.getSize(); i++) {
-            Object anItem = model.getElementAt(i);
+            T anItem = model.getElementAt(i);
             if (item.equals(anItem)) {
                 selectItem(list, i);
                 return true;
