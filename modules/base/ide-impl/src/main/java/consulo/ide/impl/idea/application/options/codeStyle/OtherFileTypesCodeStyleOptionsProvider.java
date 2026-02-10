@@ -16,14 +16,12 @@
 package consulo.ide.impl.idea.application.options.codeStyle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Contains settings for non-language options, for example, text files.

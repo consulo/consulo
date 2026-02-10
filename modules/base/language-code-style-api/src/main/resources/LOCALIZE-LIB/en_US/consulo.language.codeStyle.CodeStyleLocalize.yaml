@@ -22,6 +22,16 @@ arrangement.action.rule.remove.text:
     text: Remove rule(s)
 arrangement.order.name:
     text: Order
+arrangement.settings.additional.force.combobox.name:
+    text: 'Force rearrange:'
+arrangement.settings.additional.force.rearrange.according.to.dialog:
+    text: Use the current mode (toggled in the Reformat Code dialog)
+arrangement.settings.additional.force.rearrange.always:
+    text: Always
+arrangement.settings.additional.force.rearrange.never:
+    text: Never
+arrangement.settings.additional.title:
+    text: Additional Settings
 arrangement.settings.groups.dependent.methods:
     text: Keep dependent methods together
 arrangement.settings.groups.getters.and.setters.together:
@@ -96,10 +106,16 @@ checkbox.align.multiline.ternary.operation:
     text: Ternary operation
 checkbox.align.multiline.throws.list:
     text: Throws list
+checkbox.block.comment.at.first.column:
+    text: Block comment at first column
 checkbox.indent.use.tab.character:
     text: Use tab character
 checkbox.keep.when.reformatting.control.statement.in.one.line:
     text: Control statement in one line
+checkbox.line.comment.add.space:
+    text: Add a space at comment start
+checkbox.line.comment.at.first.column:
+    text: Line comment at first column
 checkbox.spaces.additive.operators:
     text: Additive operators (+, -)
 checkbox.spaces.after.colon:
@@ -120,6 +136,10 @@ checkbox.spaces.annotation.parameters:
     text: Annotation parameters
 checkbox.spaces.annotation.parentheses:
     text: Annotation parentheses
+checkbox.spaces.around.lambda.arrow:
+    text: Lambda arrow
+checkbox.spaces.around.method.ref.dbl.colon.arrow:
+    text: Method reference double colon
 checkbox.spaces.around.unary.operator:
     text: Unary operators (!, -, +, ++, --)
 checkbox.spaces.array.initializer.left.brace:
@@ -130,6 +150,8 @@ checkbox.spaces.before.colon:
     text: Before ':'
 checkbox.spaces.before.comma:
     text: Before comma
+checkbox.spaces.before.opening.angle.bracket:
+    text: Before opening angle bracket
 checkbox.spaces.before.question:
     text: Before '?'
 checkbox.spaces.before.semicolon:
@@ -212,8 +234,14 @@ checkbox.spaces.within.braces:
     text: Code braces
 checkbox.spaces.within.brackets:
     text: Brackets
+checkbox.spaces.within.empty.array.initializer.braces:
+    text: Empty array initializer braces
 checkbox.spaces.within.parentheses:
     text: Grouping parentheses
+code.style.other.label:
+    text: 'Text files and unsupported file types:'
+code.style.scheme.import.unnamed:
+    text: Unnamed
 combobox.force.braces.do.while:
     text: 'do ... while():'
 combobox.force.braces.for:
@@ -224,12 +252,20 @@ combobox.force.braces.while:
     text: 'while ():'
 configurable.schemes.display.name:
     text: Code Style
+editbox.blanklines.around.field.in.interface:
+    text: 'Around field in interface:'
+editbox.blanklines.around.method.in.interface:
+    text: 'Around method in interface:'
+editbox.blanklines.before.class.end:
+    text: 'Before class end:'
 editbox.indent.continuation.indent:
     text: 'Continuation indent:'
 editbox.indent.indent:
     text: 'Indent:'
 editbox.indent.tab.size:
     text: 'Tab size:'
+editbox.right.margin.columns:
+    text: 'Right margin (columns):'
 editbox.scheme.name:
     text: 'Scheme:'
 group.spaces.after.right.brace:
@@ -254,6 +290,8 @@ group.spaces.within:
     text: Within
 html.project.uses.own.code.style:
     text: <html><body>The current project is configured to use its own code style.<br>Changes made to global code style settings will not affect formatting in the current project.<br>See Project Settings | Code Style.<br>Press \&quot;Edit Global Settings\&quot; button below if you still want to edit global settings.</body></html>
+import.scheme.shared:
+    text: Shared Scheme
 indent.status.bar.indent.tooltip:
     text: 'Indent:'
 indent.status.bar.spaces:
@@ -262,20 +300,36 @@ indent.status.bar.tab:
     text: Tab
 label.loading.page.please.wait:
     text: Loading...
+message.code.style.scheme.already.exists:
+    text: Code Style Scheme with name {0} already exists
+message.code.style.scheme.import.failure:
+    text: '{0} import failed with error message: {1}'
+message.code.style.scheme.import.success:
+    text: '{0} settings were imported to {1} scheme.'
+settings.code.style.default.general:
+    text: Default
 title.blank.lines:
     text: Blank Lines
 title.braces.placement:
     text: Braces Placement
+title.code.style.settings.import:
+    text: Code Style Settings Import
 title.edit.global.settings:
     text: Edit &Global Settings
 title.global.code.style:
     text: |-
         Global
         Code Style
+title.import.scheme.chooser:
+    text: Import Scheme
+title.import.scheme.from:
+    text: Import Scheme From
 title.keep.blank.lines:
     text: Keep Maximum Blank Lines
 title.minimum.blank.lines:
     text: Minimum Blank Lines
+title.naming.comment.code:
+    text: Comment Code
 title.place.on.new.line:
     text: Place on New Line
 title.save.code.style.scheme.as:
@@ -318,6 +372,8 @@ wrapping.brace.placement.class.declaration:
     text: In class declaration
 wrapping.brace.placement.end.of.line:
     text: End of line
+wrapping.brace.placement.lambda:
+    text: In lambda declaration
 wrapping.brace.placement.method.declaration:
     text: In method declaration
 wrapping.brace.placement.next.line:
@@ -330,6 +386,8 @@ wrapping.brace.placement.next.line.shifted:
     text: Next line shifted
 wrapping.brace.placement.other:
     text: Other
+wrapping.case.statements.on.one.line:
+    text: Each 'case' on a separate line
 wrapping.catch.on.new.line:
     text: '''catch'' on new line'
 wrapping.chained.method.call.first.on.new.line:
@@ -374,6 +432,8 @@ wrapping.force.braces.when.multiline:
     text: When multiline
 wrapping.if.statement:
     text: '''if()'' statement'
+wrapping.indent.break.from.case:
+    text: Indent 'break' from 'case'
 wrapping.indent.case.from.switch:
     text: Indent 'case' branches
 wrapping.keep.comment.at.first.column:
@@ -452,3 +512,5 @@ wrapping.wrap.on.typing.no.wrap:
     text: 'No'
 wrapping.wrap.on.typing.wrap:
     text: 'Yes'
+checkbox.indent.smart.tabs:
+    text: Smart tabs
