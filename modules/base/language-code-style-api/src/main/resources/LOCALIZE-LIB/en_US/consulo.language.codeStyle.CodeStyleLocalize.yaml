@@ -222,6 +222,8 @@ combobox.force.braces.if:
     text: 'if ():'
 combobox.force.braces.while:
     text: 'while ():'
+configurable.schemes.display.name:
+    text: Code Style
 editbox.indent.continuation.indent:
     text: 'Continuation indent:'
 editbox.indent.indent:
