@@ -151,7 +151,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         replaceToolbar1Actions.addAll(replaceToolbar2Actions.getChildren(null));
 
         mySearchActionsToolbar = createSearchToolbar1(searchToolbar1Actions);
-        mySearchActionsToolbar.setForceShowFirstComponent(true);
         JPanel searchPair = new NonOpaquePanel(new BorderLayout());
         searchPair.add(mySearchActionsToolbar.getComponent(), BorderLayout.CENTER);
 

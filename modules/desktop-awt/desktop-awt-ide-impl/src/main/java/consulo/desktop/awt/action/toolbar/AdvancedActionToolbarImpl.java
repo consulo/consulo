@@ -84,8 +84,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
     private int myFirstOutsideIndex = -1;
 
-    private boolean myForceShowFirstComponent;
-
     private JBPopup myPopup;
 
     private final ActionManagerEx myActionManager;
@@ -133,22 +131,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             Dimension minSize = TargetAWT.to(myMinimumButtonSize);
 
             Insets i = getInsets();
-            if (myForceShowFirstComponent && getComponentCount() > 0) {
-                Component c = getComponent(0);
-                Dimension firstSize = c.getPreferredSize();
-                if (getOrientation() == SwingConstants.HORIZONTAL) {
-                    return new Dimension(
-                        firstSize.width + PlatformIconGroup.ideLink().getWidth() + i.left + i.right,
-                        Math.max(firstSize.height, minSize.height) + i.top + i.bottom
-                    );
-                }
-                else {
-                    return new Dimension(
-                        Math.max(firstSize.width, PlatformIconGroup.ideLink().getWidth()) + i.left + i.right,
-                        firstSize.height + minSize.height + i.top + i.bottom
-                    );
-                }
-            }
             return new Dimension(PlatformIconGroup.ideLink().getWidth() + i.left + i.right, minSize.height + i.top + i.bottom);
         }
         else {
@@ -359,27 +341,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
 
         protected abstract void onOtherActionPerformed();
-    }
-
-    /**
-     * By default minimum size is to show chevron only.
-     * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
-     */
-    @Override
-    public void setForceShowFirstComponent(boolean showFirstComponent) {
-        myForceShowFirstComponent = showFirstComponent;
-    }
-
-    @Override
-    public void setMinimumButtonSize(@Nonnull Size2D size) {
-        myMinimumButtonSize = size;
-        for (int i = getComponentCount() - 1; i >= 0; i--) {
-            Component component = getComponent(i);
-            if (component instanceof ActionButton button) {
-                button.getComponent().setMinimumSize(TargetAWT.to(size));
-            }
-        }
-        revalidate();
     }
 
     @Override

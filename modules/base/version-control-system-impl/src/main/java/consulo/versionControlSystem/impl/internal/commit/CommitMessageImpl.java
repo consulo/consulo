@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.commit;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -87,7 +86,6 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, getToolbarActions(), withSeparator);
         toolbar.setTargetComponent(this);
         toolbar.updateActionsImmediately();
-        toolbar.setReservePlaceAutoPopupIcon(false);
         toolbar.getComponent().setBorder(BorderFactory.createEmptyBorder());
         if (withSeparator) {
             labelPanel.add(toolbar.getComponent(), BorderLayout.EAST);

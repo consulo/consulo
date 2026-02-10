@@ -118,7 +118,6 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
                     .build(),
                 true);
         myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
-        myToolbar.setReservePlaceAutoPopupIcon(false);
 
         JComponent component = myToolbar.getComponent();
         component.setBorder(JBUI.Borders.empty());
@@ -205,7 +204,6 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         myToolbarWest.setTargetComponent(this);
         myToolbarWest.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
-        myToolbarWest.setReservePlaceAutoPopupIcon(false);
 
         JComponent component = myToolbarWest.getComponent();
         component.setBorder(JBUI.Borders.empty());

@@ -144,7 +144,6 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(BRANCH_POPUP, actionGroup, true);
         toolbar.setMiniMode(true);
         toolbar.setTargetComponent(null);
-        toolbar.setReservePlaceAutoPopupIcon(false);
 
         getTitle().setRightComponent(toolbar.getComponent());
     }

@@ -98,11 +98,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     }
 
     @Override
-    public boolean hasVisibleActions() {
-        return false;
-    }
-
-    @Override
     public DataContext getToolbarDataContext() {
         return null;
     }

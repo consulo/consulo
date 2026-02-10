@@ -43,8 +43,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     private JComponent myTargetComponent;
 
-    private boolean myShowSeparatorTitles;
-
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
     protected final ActionToolbarEngine myEngine;
@@ -219,7 +217,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
                 if (i > 0 && i < actions.size() - 1) {
                     add(
                         SEPARATOR_CONSTRAINT,
-                        new ActionToolbarSeparator(this, myShowSeparatorTitles ? separator.getTextValue() : LocalizeValue.empty())
+                        new ActionToolbarSeparator(this, LocalizeValue.empty())
                     );
                     isLastElementSeparator = true;
                     continue;
@@ -350,11 +348,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Override
-    public boolean hasVisibleActions() {
-        return myEngine.hasVisibleActions();
-    }
-
-    @Override
     public void setTargetComponent(JComponent component) {
         if (myTargetComponent == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
@@ -372,11 +365,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     @Override
     public DataContext getToolbarDataContext() {
         return getDataContext();
-    }
-
-    @Override
-    public void setShowSeparatorTitles(boolean showSeparatorTitles) {
-        myShowSeparatorTitles = showSeparatorTitles;
     }
 
     @Nonnull

@@ -191,8 +191,4 @@ public abstract class ActionToolbarEngine {
         AnAction[] kids = myActionGroup.getChildren(null);
         return List.of(kids);
     }
-
-    public boolean hasVisibleActions() {
-        return !myVisibleActions.isEmpty();
-    }
 }

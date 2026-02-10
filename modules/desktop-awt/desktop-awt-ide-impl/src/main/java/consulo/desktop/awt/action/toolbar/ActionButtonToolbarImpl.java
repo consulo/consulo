@@ -257,11 +257,6 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @Override
-    public boolean hasVisibleActions() {
-        return myEngine.hasVisibleActions();
-    }
-
-    @Override
     public DataContext getToolbarDataContext() {
         return getDataContext();
     }

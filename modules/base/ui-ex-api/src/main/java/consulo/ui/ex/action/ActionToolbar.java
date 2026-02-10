@@ -17,12 +17,10 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
-import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
@@ -100,12 +98,6 @@ public interface ActionToolbar {
     String SEPARATOR_CONSTRAINT = "Constraint.Separator";
 
     /**
-     * Constraint that's passed to <code>Container.add</code> when a secondary action is added to the toolbar.
-     */
-    @Deprecated
-    String SECONDARY_ACTION_CONSTRAINT = "Constraint.SecondaryAction";
-
-    /**
      * @return component which represents the tool bar on UI
      */
     @Nonnull
@@ -148,12 +140,8 @@ public interface ActionToolbar {
     @RequiredUIAccess
     CompletableFuture<List<? extends AnAction>> updateActionsAsync();
 
-    @Deprecated
-    @DeprecationInfo("Need get it from update future, due result updated in async mode")
-    boolean hasVisibleActions();
-
     /**
-     * @param component will be used for datacontext computations
+     * @param component will be used for data context computations
      */
     default void setTargetComponent(javax.swing.JComponent component) {
         throw new AbstractMethodError();
@@ -168,76 +156,10 @@ public interface ActionToolbar {
     @Nonnull
     List<AnAction> getActions();
 
-    /**
-     * Enables showing titles of separators as labels in the toolbar (off by default).
-     */
-    default void setShowSeparatorTitles(boolean showSeparatorTitles) {
-    }
-
-    /**
-     * By default minimum size is to show chevron only.
-     * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
-     */
-    @Deprecated
-    default void setForceShowFirstComponent(boolean showFirstComponent) {
-    }
-
-    // region deprecated method
-    /**
-     * Sets minimum size of toolbar button. By default all buttons
-     * at toolbar has 25x25 pixels size.
-     *
-     * @throws IllegalArgumentException if <code>size</code>
-     *                                  is <code>null</code>
-     */
-    @Deprecated
-    default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
-        setMinimumButtonSize(new Size2D(size.width, size.height));
-    }
-
-    /**
-     * Sets minimum size of toolbar button. By default all buttons
-     * at toolbar has 25x25 pixels size.
-     *
-     * @throws IllegalArgumentException if <code>size</code>
-     *                                  is <code>null</code>
-     */
-    @Deprecated
-    default void setMinimumButtonSize(@Nonnull Size2D size) {
-    }
-
-    @Deprecated
-    default void setReservePlaceAutoPopupIcon(boolean reserve) {
-    }
-
     @Deprecated
     @DeprecationInfo("Use different style")
     default void setMiniMode(boolean minimalMode) {
     }
 
-    @Deprecated
-    default void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
-    }
-
-    @Deprecated
-    default void setSecondaryActionsIcon(Image icon) {
-    }
-
-    @Deprecated
-    default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
-    }
-
-    @Deprecated
-    default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
-    }
-
-    /**
-     * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
-     * toolbar will shrink further and show the auto popup chevron button.
-     */
-    @Deprecated
-    default void setForceMinimumSize(boolean force) {
-    }
-    
     //endregion
 }
