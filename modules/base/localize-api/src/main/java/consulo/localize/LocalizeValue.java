@@ -119,6 +119,9 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
+    String getId();
+
+    @Nonnull
     String getValue();
 
     byte getModificationCount();

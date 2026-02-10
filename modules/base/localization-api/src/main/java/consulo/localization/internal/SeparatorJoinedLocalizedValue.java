@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2025-09-13
  */
-public final class SeparatorJoinedLocalizedValue extends JoinedLocalizedValue {
+public final class SeparatorJoinedLocalizedValue extends AbstractJoinedLocalizedValue {
     @Nonnull
     private final String mySeparator;
 
@@ -35,6 +35,12 @@ public final class SeparatorJoinedLocalizedValue extends JoinedLocalizedValue {
     ) {
         super(manager, values);
         mySeparator = separator;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return super.getId() + "(\"" + mySeparator + "\")";
     }
 
     @Nonnull

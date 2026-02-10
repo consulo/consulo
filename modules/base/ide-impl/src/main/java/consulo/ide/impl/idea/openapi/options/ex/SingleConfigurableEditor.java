@@ -266,8 +266,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     protected static String createDimensionKey(Configurable configurable) {
-        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
-        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
+        return "#" + configurable.getDisplayName().getId();
     }
 
     protected class ApplyAction extends AbstractAction {

@@ -37,6 +37,12 @@ public final class ConstantLocalizedValue extends AbstractLocalizedValue {
 
     @Nonnull
     @Override
+    public String getId() {
+        return '"' + myValue + '"';
+    }
+
+    @Nonnull
+    @Override
     public String getValue() {
         return myValue;
     }

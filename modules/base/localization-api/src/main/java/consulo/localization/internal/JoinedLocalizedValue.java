@@ -19,42 +19,20 @@ import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.Arrays;
-
 /**
  * @author VISTALL
  * @author UNV
  * @since 2021-09-24
  */
-public sealed class JoinedLocalizedValue extends CachingLocalizedValue
-    permits SeparatorJoinedLocalizedValue, SeparatorJoinedLocalizedValue2 {
-    @Nonnull
-    protected final LocalizedValue[] myValues;
-
+public final class JoinedLocalizedValue extends AbstractJoinedLocalizedValue {
     public JoinedLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizedValue[] values) {
-        super(manager);
-        myValues = values;
-    }
-
-    @Nonnull
-    @Override
-    protected String calcValue() {
-        StringBuilder builder = new StringBuilder();
-        for (LocalizedValue value : myValues) {
-            builder.append(value.getValue());
-        }
-        return builder.toString();
-    }
-
-    @Override
-    protected int calcHashCode() {
-        return Arrays.hashCode(myValues);
+        super(manager, values);
     }
 
     @Override
     public boolean equals(Object o) {
         return o == this
-            || o instanceof JoinedLocalizedValue that
-            && Arrays.equals(myValues, that.myValues);
+            || super.equals(o)
+            && o instanceof JoinedLocalizedValue that;
     }
 }

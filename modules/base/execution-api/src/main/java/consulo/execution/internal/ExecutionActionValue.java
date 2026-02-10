@@ -64,6 +64,12 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
 
     @Nonnull
     @Override
+    public String getId() {
+        return myOriginal.getKey() + "->executionAction";
+    }
+
+    @Nonnull
+    @Override
     public String getValue() {
         return myOriginal.getValue().replace(myParamValue, myConfigurationName);
     }

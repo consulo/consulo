@@ -25,9 +25,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 2026-01-13
  */
 public class EmptyLocalizedValueTest {
+    LocalizedValue value = EmptyLocalizedValue.INSTANCE;
+
+    @Test
+    void testId() {
+        assertThat(value.getId())
+            .isEqualTo("empty");
+    }
+
     @Test
     void testValue() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         assertThat(value.getValue())
             .isEqualTo("")
             .isEqualTo(value.get())
@@ -37,41 +44,34 @@ public class EmptyLocalizedValueTest {
 
     @Test
     void testIsEmpty() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         assertThat(value.isEmpty()).isTrue();
         assertThat(value.isNotEmpty()).isFalse();
     }
 
     @Test
     void testOrIfEmpty() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         LocalizedValue otherValue = LocalizedValue.dot();
         assertThat(value.orIfEmpty(otherValue)).isSameAs(otherValue);
     }
 
     @Test
     void testKey() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         assertThat(value.getKey()).isNotPresent();
     }
 
     @Test
     void testMap() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         assertThat(value.map(string -> string + "foobar")).isSameAs(value);
         assertThat(value.map((manager, string) -> string + "foobar")).isSameAs(value);
     }
 
     @Test
     void testModificationCount() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         assertThat(value.getModificationCount()).isEqualTo((byte) 0);
     }
 
     @Test
     void testEquals() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
-
         assertThat(value)
             .isEqualTo(value)
             .isNotEqualTo(LocalizedValue.dot());
@@ -79,7 +79,6 @@ public class EmptyLocalizedValueTest {
 
     @Test
     void testCompareTo() {
-        LocalizedValue value = EmptyLocalizedValue.VALUE;
         LocalizedValue value1 = new ConstantLocalizedValue("Foo");
 
         assertThat(value.compareTo(value)).isEqualTo(0);

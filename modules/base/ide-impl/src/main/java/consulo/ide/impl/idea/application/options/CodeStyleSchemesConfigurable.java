@@ -31,7 +31,6 @@ import consulo.language.codeStyle.impl.internal.CodeStyleSchemeImpl;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemesModelImpl;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -438,7 +437,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         @Nonnull
         @Override
         public String getId() {
-            return "preferences.sourceCode." + getDisplayName().getKey().orElse(LocalizeKey.empty()).toString();
+            return "preferences.sourceCode." + getDisplayName().getId();
         }
 
         @Override

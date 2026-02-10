@@ -19,61 +19,55 @@ import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
 import jakarta.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @author UNV
- * @since 2025-09-18
- */
-public final class SeparatorJoinedLocalizedValue2 extends AbstractJoinedLocalizedValue {
-    @Nonnull
-    private final LocalizedValue mySeparator;
+import java.util.Arrays;
 
-    public SeparatorJoinedLocalizedValue2(
-        @Nonnull LocalizationManager manager,
-        @Nonnull LocalizedValue separator,
-        @Nonnull LocalizedValue[] values
-    ) {
-        super(manager, values);
-        mySeparator = separator;
+/**
+ * @author UNV
+ * @since 2026-02-10
+ */
+public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
+    permits JoinedLocalizedValue, SeparatorJoinedLocalizedValue, SeparatorJoinedLocalizedValue2 {
+
+    @Nonnull
+    protected final LocalizedValue[] myValues;
+
+    protected AbstractJoinedLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizedValue[] values) {
+        super(manager);
+        myValues = values;
     }
 
     @Nonnull
     @Override
     public String getId() {
-        return super.getId() + '(' + mySeparator.getId() + ')';
+        StringBuilder sb = new StringBuilder().append('[');
+        for (int i = 0, n = myValues.length; i < n; i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(myValues[i].getId());
+        }
+        return sb.append("]->join").toString();
     }
 
     @Nonnull
     @Override
     protected String calcValue() {
-        boolean needsSeparator = false;
         StringBuilder builder = new StringBuilder();
-        String separatorValue = mySeparator.getValue();
         for (LocalizedValue value : myValues) {
-            if (value == LocalizedValue.empty()) {
-                continue;
-            }
-
-            if (needsSeparator) {
-                builder.append(separatorValue);
-            }
-
             builder.append(value.getValue());
-            needsSeparator = true;
         }
         return builder.toString();
     }
 
     @Override
     protected int calcHashCode() {
-        return mySeparator.hashCode() + 29 * super.calcHashCode();
+        return Arrays.hashCode(myValues);
     }
 
     @Override
     public boolean equals(Object o) {
         return o == this
-            || super.equals(o)
-            && o instanceof SeparatorJoinedLocalizedValue2 that
-            && mySeparator.equals(that.mySeparator);
+            || o instanceof AbstractJoinedLocalizedValue that
+            && Arrays.equals(myValues, that.myValues);
     }
 }

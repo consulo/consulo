@@ -31,14 +31,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MappedLocalizedValueTest {
     LocalizationManager myManager = Mockito.mock(LocalizationManager.class);
 
+    LocalizedValue subValue = LocalizedValue.of("Foo");
+    LocalizedValue value = new MappedLocalizedValue(myManager, subValue, string -> string + "bar");
+
+    @Test
+    void testId() {
+        assertThat(value.getId())
+            .matches("\"Foo\"->consulo\\.localization\\.internal\\.MappedLocalizedValueTest\\$\\$Lambda/.*");
+    }
+
     @Test
     void testValue() {
-        LocalizedValue subValue = LocalizedValue.of("Foo");
-        LocalizedValue value = new MappedLocalizedValue(myManager, subValue, string -> string + "bar");
         assertThat(value.getValue())
             .isEqualTo("Foobar")
             .isEqualTo(value.get())
             .isEqualTo(value.toString());
+    }
+
+    @Test
+    void testKey() {
+        assertThat(value.getKey()).isNotPresent();
     }
 
     @Test
