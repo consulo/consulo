@@ -278,7 +278,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
         List<AsyncResult<Void>> results = new ArrayList<>();
 
-        for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
             AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
             results.add(toolWindowResult);
 
@@ -295,7 +295,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                     }
                 }
             }).notify(toolWindowResult);
-        }
+        });
 
         return AsyncResult.merge(results);
     }
@@ -314,31 +314,31 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @RequiredUIAccess
     private void revalidateToolWindows() {
-        for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
             boolean value = factory.validate(myProject);
 
             if (value) {
                 if (isToolWindowRegistered(factory.getId())) {
-                    continue;
+                    return;
                 }
                 initToolWindow(factory);
             }
             else {
                 unregisterToolWindow(factory.getId());
             }
-        }
+        });
     }
 
     @RequiredUIAccess
     public void activateOnProjectOpening() {
-        for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
             if (factory.activateOnProjectOpening() && isToolWindowRegistered(factory.getId())) {
                 ToolWindow toolWindow = getToolWindow(factory.getId());
                 if (toolWindow != null && !toolWindow.isActive()) {
                     toolWindow.activate(null);
                 }
             }
-        }
+        });
     }
 
     public boolean isToolWindowRegistered(String id) {
@@ -346,7 +346,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     /**
-     * Checkes whether the specified <code>id</code> defines installed tool
+     * Checks whether the specified <code>id</code> defines installed tool
      * window. If it's not then throws <code>IllegalStateException</code>.
      *
      * @throws IllegalStateException if tool window isn't installed.
@@ -912,11 +912,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void focusToolWindowByDefault(@Nullable String idToIngore) {
+    protected void focusToolWindowByDefault(@Nullable String idToIgnore) {
         String toFocus = null;
 
         for (String each : myActiveStack.getStack()) {
-            if (idToIngore != null && idToIngore.equalsIgnoreCase(each)) {
+            if (idToIgnore != null && idToIgnore.equalsIgnoreCase(each)) {
                 continue;
             }
 
@@ -928,7 +928,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         if (toFocus == null) {
             for (String each : myActiveStack.getPersistentStack()) {
-                if (idToIngore != null && idToIngore.equalsIgnoreCase(each)) {
+                if (idToIgnore != null && idToIgnore.equalsIgnoreCase(each)) {
                     continue;
                 }
 
