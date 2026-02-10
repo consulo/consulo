@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This panel contains all tool stripes and JLayeredPanle at the center area. All tool windows are
+ * This panel contains all tool stripes and JLayeredPanel at the center area. All tool windows are
  * located inside this layered pane.
  *
  * @author Anton Katilin
@@ -177,7 +177,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 myLayeredPane.setBounds(0, 0, size.width, size.height);
             }
             else {
-                myLayeredPane.setBounds(leftSize.width, topSize.height, size.width - leftSize.width - rightSize.width, size.height - topSize.height);
+                myLayeredPane.setBounds(
+                    leftSize.width,
+                    topSize.height,
+                    size.width - leftSize.width - rightSize.width,
+                    size.height - topSize.height
+                );
             }
         }
     }
@@ -226,7 +231,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @RequiredUIAccess
     @Override
-    public final void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    public final void addButton(
+        ToolWindowStripeButton button,
+        @Nonnull WindowInfo info,
+        @Nonnull Comparator<ToolWindowStripeButton> comparator
+    ) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
         myButton2Info.put((DesktopStripeButton) button, copiedInfo);
@@ -328,8 +337,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      * @param dirtyMode if <code>true</code> then JRootPane will not be validated and repainted after removing
      *                  the decorator. Moreover in this (dirty) mode animation doesn't work.
      */
+    @Override
     @RequiredUIAccess
-    @Nonnull
     public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
         Component decorator = getDecoratorById(id);
         WindowInfoImpl info = getDecoratorInfoById(id);
@@ -413,7 +422,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     /**
-     * @param id <code>ID</code> of tool stripe butoon.
+     * @param id <code>ID</code> of tool stripe button.
      * @return <code>WindowInfo</code> associated with specified tool stripe button.
      */
     private WindowInfoImpl getButtonInfoById(String id) {
@@ -613,10 +622,14 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
             if (cmp != null) {
                 if (wnd.getAnchor().isHorizontal()) {
-                    resizer = myVerticalSplitter.getFirstComponent() == cmp ? new Resizer.Splitter.FirstComponent(myVerticalSplitter) : new Resizer.Splitter.LastComponent(myVerticalSplitter);
+                    resizer =
+                        myVerticalSplitter.getFirstComponent() == cmp ? new Resizer.Splitter.FirstComponent(myVerticalSplitter) : new Resizer.Splitter.LastComponent(
+                            myVerticalSplitter);
                 }
                 else {
-                    resizer = myHorizontalSplitter.getFirstComponent() == cmp ? new Resizer.Splitter.FirstComponent(myHorizontalSplitter) : new Resizer.Splitter.LastComponent(myHorizontalSplitter);
+                    resizer =
+                        myHorizontalSplitter.getFirstComponent() == cmp ? new Resizer.Splitter.FirstComponent(myHorizontalSplitter) : new Resizer.Splitter.LastComponent(
+                            myHorizontalSplitter);
                 }
             }
         }
@@ -667,23 +680,31 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
         if (myLeftHorizontalSplit != uiSettings.getLeftHorizontalSplit()) {
             JComponent component = getComponentAt(ToolWindowAnchor.LEFT);
-            if (component instanceof Splitter) {
-                Splitter splitter = (Splitter) component;
+            if (component instanceof Splitter splitter) {
                 DesktopInternalDecorator first = (DesktopInternalDecorator) splitter.getFirstComponent();
                 DesktopInternalDecorator second = (DesktopInternalDecorator) splitter.getSecondComponent();
-                setComponent(splitter, ToolWindowAnchor.LEFT,
-                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.LEFT) ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+                setComponent(
+                    splitter,
+                    ToolWindowAnchor.LEFT,
+                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.LEFT)
+                        ? first.getWindowInfo().getWeight()
+                        : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight()
+                );
             }
             myLeftHorizontalSplit = uiSettings.getLeftHorizontalSplit();
         }
         if (myRightHorizontalSplit != uiSettings.getRightHorizontalSplit()) {
             JComponent component = getComponentAt(ToolWindowAnchor.RIGHT);
-            if (component instanceof Splitter) {
-                Splitter splitter = (Splitter) component;
+            if (component instanceof Splitter splitter) {
                 DesktopInternalDecorator first = (DesktopInternalDecorator) splitter.getFirstComponent();
                 DesktopInternalDecorator second = (DesktopInternalDecorator) splitter.getSecondComponent();
-                setComponent(splitter, ToolWindowAnchor.RIGHT,
-                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.RIGHT) ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+                setComponent(
+                    splitter,
+                    ToolWindowAnchor.RIGHT,
+                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.RIGHT)
+                        ? first.getWindowInfo().getWeight()
+                        : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight()
+                );
             }
             myRightHorizontalSplit = uiSettings.getRightHorizontalSplit();
         }
@@ -723,7 +744,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @FunctionalInterface
     interface Resizer {
         void setSize(int size);
-
 
         abstract class Splitter implements Resizer {
             ThreeComponentsSplitter mySplitter;
@@ -775,7 +795,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             abstract void _setSize(int size);
 
             static class Left extends LayeredPane {
-
                 Left(@Nonnull Component component) {
                     super(component);
                 }
@@ -843,7 +862,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         @Override
         public final void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
-            setComponent(myComponent, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
+            setComponent(myComponent, anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
             if (!myDirtyMode) {
                 myLayeredPane.validate();
                 myLayeredPane.repaint();
@@ -900,37 +919,38 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                     }
                 });
             }
-            JComponent c = getComponentAt(anchor);
             float newWeight;
-            if (c instanceof DesktopInternalDecorator) {
-                DesktopInternalDecorator oldComponent = (DesktopInternalDecorator) c;
+            if (getComponentAt(anchor) instanceof DesktopInternalDecorator oldComponent) {
                 if (myInfo.isSplit()) {
                     splitter.setFirstComponent(oldComponent);
                     splitter.setSecondComponent(myNewComponent);
-                    float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(), WindowInfoImpl
-                        .normalizeWeigh(oldComponent.getWindowInfo().getSideWeight() / (oldComponent.getWindowInfo().getSideWeight() + myInfo.getSideWeight())));
+                    float sideWeight = oldComponent.getWindowInfo().getSideWeight();
+                    float proportion = getPreferredSplitProportion(
+                        oldComponent.getWindowInfo().getId(),
+                        WindowInfoImpl.normalizeWeight(sideWeight / (sideWeight + myInfo.getSideWeight()))
+                    );
                     splitter.setProportion(proportion);
                     if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
-                        newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+                        newWeight = WindowInfoImpl.normalizeWeight(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
                     }
                     else {
-                        newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight());
+                        newWeight = WindowInfoImpl.normalizeWeight(oldComponent.getWindowInfo().getWeight());
                     }
                 }
                 else {
                     splitter.setFirstComponent(myNewComponent);
                     splitter.setSecondComponent(oldComponent);
-                    splitter.setProportion(WindowInfoImpl.normalizeWeigh(myInfo.getSideWeight()));
+                    splitter.setProportion(WindowInfoImpl.normalizeWeight(myInfo.getSideWeight()));
                     if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
-                        newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+                        newWeight = WindowInfoImpl.normalizeWeight(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
                     }
                     else {
-                        newWeight = WindowInfoImpl.normalizeWeigh(myInfo.getWeight());
+                        newWeight = WindowInfoImpl.normalizeWeight(myInfo.getWeight());
                     }
                 }
             }
             else {
-                newWeight = WindowInfoImpl.normalizeWeigh(myInfo.getWeight());
+                newWeight = WindowInfoImpl.normalizeWeight(myInfo.getWeight());
             }
             setComponent(splitter, anchor, newWeight);
 
@@ -1037,10 +1057,9 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         @Override
         public void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
-            JComponent c = getComponentAt(anchor);
-            if (c instanceof Splitter) {
-                Splitter splitter = (Splitter) c;
-                DesktopInternalDecorator component = myInfo.isSplit() ? (DesktopInternalDecorator) splitter.getFirstComponent() : (DesktopInternalDecorator) splitter.getSecondComponent();
+            if (getComponentAt(anchor) instanceof Splitter splitter) {
+                DesktopInternalDecorator component =
+                    (DesktopInternalDecorator) (myInfo.isSplit() ? splitter.getFirstComponent() : splitter.getSecondComponent());
                 if (myInfo.isSplit() && component != null) {
                     myId2SplitProportion.put(component.getWindowInfo().getId(), splitter.getProportion());
                 }
@@ -1175,13 +1194,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 return;
             }
             // Resize component at the DEFAULT layer. It should be only on component in that layer
-            Component[] components = getComponentsInLayer(JLayeredPane.DEFAULT_LAYER.intValue());
+            Component[] components = getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
             LOG.assertTrue(components.length <= 1);
             for (Component component : components) {
                 component.setBounds(0, 0, getWidth(), getHeight());
             }
             // Resize components at the PALETTE layer
-            components = getComponentsInLayer(JLayeredPane.PALETTE_LAYER.intValue());
+            components = getComponentsInLayer(JLayeredPane.PALETTE_LAYER);
             for (Component component : components) {
                 if (!(component instanceof DesktopInternalDecorator)) {
                     continue;

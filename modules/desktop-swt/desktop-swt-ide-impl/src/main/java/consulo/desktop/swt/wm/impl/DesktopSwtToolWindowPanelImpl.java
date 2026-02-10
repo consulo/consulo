@@ -31,6 +31,7 @@ import consulo.ui.layout.ThreeComponentSplitLayout;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,278 +41,284 @@ import java.util.Map;
  * @since 12/12/2021
  */
 public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
-  private static final Logger LOG = Logger.getInstance(DesktopSwtToolWindowPanelImpl.class);
+    private static final Logger LOG = Logger.getInstance(DesktopSwtToolWindowPanelImpl.class);
 
-  private final class AddToolStripeButtonCmd implements Runnable {
-    private final ToolWindowStripeButton myButton;
-    private final WindowInfoImpl myInfo;
-    private final Comparator<ToolWindowStripeButton> myComparator;
+    private final class AddToolStripeButtonCmd implements Runnable {
+        private final ToolWindowStripeButton myButton;
+        private final WindowInfoImpl myInfo;
+        private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-      myButton = button;
-      myInfo = info;
-      myComparator = comparator;
+        public AddToolStripeButtonCmd(
+            ToolWindowStripeButton button,
+            @Nonnull WindowInfoImpl info,
+            @Nonnull Comparator<ToolWindowStripeButton> comparator
+        ) {
+            myButton = button;
+            myInfo = info;
+            myComparator = comparator;
+        }
+
+        @Override
+        public final void run() {
+            ToolWindowAnchor anchor = myInfo.getAnchor();
+            if (ToolWindowAnchor.TOP == anchor) {
+                myTopStripe.addButton(myButton, myComparator);
+            }
+            else if (ToolWindowAnchor.LEFT == anchor) {
+                myLeftStripe.addButton(myButton, myComparator);
+            }
+            else if (ToolWindowAnchor.BOTTOM == anchor) {
+                myBottomStripe.addButton(myButton, myComparator);
+            }
+            else if (ToolWindowAnchor.RIGHT == anchor) {
+                myRightStripe.addButton(myButton, myComparator);
+            }
+            else {
+                LOG.error("unknown anchor: " + anchor);
+            }
+            //getVaadinComponent().markAsDirtyRecursive();
+        }
+    }
+
+    private final class UpdateButtonPositionCmd implements Runnable {
+        private final String myId;
+
+        private UpdateButtonPositionCmd(@Nonnull String id) {
+            myId = id;
+        }
+
+        @Override
+        public void run() {
+            DesktopSwtToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
+            if (stripeButton == null) {
+                return;
+            }
+
+            WindowInfo info = stripeButton.getWindowInfo();
+            ToolWindowAnchor anchor = info.getAnchor();
+
+            if (ToolWindowAnchor.TOP == anchor) {
+                //myTopStripe.markAsDirtyRecursive();
+            }
+            else if (ToolWindowAnchor.LEFT == anchor) {
+                // myLeftStripe.markAsDirtyRecursive();
+            }
+            else if (ToolWindowAnchor.BOTTOM == anchor) {
+                //myBottomStripe.markAsDirtyRecursive();
+            }
+            else if (ToolWindowAnchor.RIGHT == anchor) {
+                // myRightStripe.markAsDirtyRecursive();
+            }
+            else {
+                LOG.error("unknown anchor: " + anchor);
+            }
+        }
+    }
+
+    private final class AddDockedComponentCmd implements Runnable {
+        private final ToolWindowInternalDecorator myDecorator;
+        private final WindowInfoImpl myInfo;
+        private final boolean myDirtyMode;
+
+        public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+            myDecorator = decorator;
+            myInfo = info;
+            myDirtyMode = dirtyMode;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public final void run() {
+            ToolWindowAnchor anchor = myInfo.getAnchor();
+
+            setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+        }
+    }
+
+    private final class RemoveDockedComponentCmd implements Runnable {
+        private final WindowInfoImpl myInfo;
+        private final boolean myDirtyMode;
+
+        public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
+            myInfo = info;
+            myDirtyMode = dirtyMode;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public final void run() {
+            setComponent(null, myInfo.getAnchor(), 0);
+
+            if (!myDirtyMode) {
+                //toVaadinComponent().markAsDirtyRecursive();
+            }
+        }
+    }
+
+    private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.TOP);
+    private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.BOTTOM);
+    private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.LEFT);
+    private DesktopToolWindowStripeImpl myRightStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.RIGHT);
+
+    private final Map<String, DesktopSwtToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
+    private final Map<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
+    private final Map<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
+    private final Map<DesktopSwtToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
+
+
+    private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+    @Deprecated
+    @DeprecationInfo("Unsupported for now")
+    private ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
+
+    private boolean myWidescreen;
+
+    private DockLayout myRoot = DockLayout.create();
+
+    @RequiredUIAccess
+    public DesktopSwtToolWindowPanelImpl() {
+        myRoot.top(myTopStripe);
+        myRoot.bottom(myBottomStripe);
+        myRoot.left(myLeftStripe);
+        myRoot.right(myRightStripe);
+        myRoot.center(myHorizontalSplitter);
+    }
+
+    public DockLayout getComponent() {
+        return myRoot;
+    }
+
+    @RequiredUIAccess
+    private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, float weight) {
+        DesktopSwtToolWindowInternalDecorator decorator = (DesktopSwtToolWindowInternalDecorator) d;
+
+        consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
+
+        if (ToolWindowAnchor.TOP == anchor) {
+            //myVerticalSplitter.setFirstComponent(component);
+            //myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
+        }
+        else if (ToolWindowAnchor.LEFT == anchor) {
+            myHorizontalSplitter.setFirstComponent(component);
+            //myHorizontalSplitter.setFirstSize((int)(myLayeredPane.getWidth() * weight));
+        }
+        else if (ToolWindowAnchor.BOTTOM == anchor) {
+            //myVerticalSplitter.setLastComponent(component);
+            //myVerticalSplitter.setLastSize((int)(myLayeredPane.getHeight() * weight));
+        }
+        else if (ToolWindowAnchor.RIGHT == anchor) {
+            myHorizontalSplitter.setSecondComponent(component);
+            //myHorizontalSplitter.setLastSize((int)(myLayeredPane.getWidth() * weight));
+        }
+        else {
+            //LOG.error("unknown anchor: " + anchor);
+        }
+    }
+
+    @RequiredUIAccess
+    private void setDocumentComponent(Component component) {
+        (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
+    }
+
+    @Nullable
+    private DesktopSwtToolWindowStripeButtonImpl getButtonById(String id) {
+        return myId2Button.get(id);
     }
 
     @Override
-    public final void run() {
-      ToolWindowAnchor anchor = myInfo.getAnchor();
-      if (ToolWindowAnchor.TOP == anchor) {
-        myTopStripe.addButton(myButton, myComparator);
-      }
-      else if (ToolWindowAnchor.LEFT == anchor) {
-        myLeftStripe.addButton(myButton, myComparator);
-      }
-      else if (ToolWindowAnchor.BOTTOM == anchor) {
-        myBottomStripe.addButton(myButton, myComparator);
-      }
-      else if (ToolWindowAnchor.RIGHT == anchor) {
-        myRightStripe.addButton(myButton, myComparator);
-      }
-      else {
-        LOG.error("unknown anchor: " + anchor);
-      }
-      //getVaadinComponent().markAsDirtyRecursive();
-    }
-  }
-
-  private final class UpdateButtonPositionCmd implements Runnable {
-    private final String myId;
-
-    private UpdateButtonPositionCmd(@Nonnull String id) {
-      myId = id;
+    @RequiredUIAccess
+    public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+        WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
+        myId2Button.put(copiedInfo.getId(), (DesktopSwtToolWindowStripeButtonImpl) button);
+        new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
     }
 
     @Override
-    public void run() {
-      DesktopSwtToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
-      if (stripeButton == null) {
-        return;
-      }
-
-      WindowInfo info = stripeButton.getWindowInfo();
-      ToolWindowAnchor anchor = info.getAnchor();
-
-      if (ToolWindowAnchor.TOP == anchor) {
-        //myTopStripe.markAsDirtyRecursive();
-      }
-      else if (ToolWindowAnchor.LEFT == anchor) {
-        // myLeftStripe.markAsDirtyRecursive();
-      }
-      else if (ToolWindowAnchor.BOTTOM == anchor) {
-        //myBottomStripe.markAsDirtyRecursive();
-      }
-      else if (ToolWindowAnchor.RIGHT == anchor) {
-        // myRightStripe.markAsDirtyRecursive();
-      }
-      else {
-        LOG.error("unknown anchor: " + anchor);
-      }
-    }
-  }
-
-  private final class AddDockedComponentCmd implements Runnable {
-    private final ToolWindowInternalDecorator myDecorator;
-    private final WindowInfoImpl myInfo;
-    private final boolean myDirtyMode;
-
-    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
-      myDecorator = decorator;
-      myInfo = info;
-      myDirtyMode = dirtyMode;
+    @RequiredUIAccess
+    public void removeButton(@Nonnull String id) {
+        // todo
     }
 
+    @RequiredUIAccess
     @Override
-    public final void run() {
-      ToolWindowAnchor anchor = myInfo.getAnchor();
+    public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
+        ToolWindowInternalDecorator decorator = getDecoratorById(id);
+        WindowInfoImpl info = getDecoratorInfoById(id);
 
-      setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
+        myDecorator2Info.remove(decorator);
+        myId2Decorator.remove(id);
+
+        WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
+
+        if (info.isDocked()) {
+            if (sideInfo == null) {
+                new RemoveDockedComponentCmd(info, dirtyMode).run();
+            }
+            else {
+                //return new RemoveSplitAndDockedComponentCmd(info, dirtyMode, finishCallBack);
+            }
+        }
+        else if (info.isSliding()) {
+            //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
+        }
+        else {
+            throw new IllegalArgumentException("Unknown window type");
+        }
     }
-  }
 
-  private final class RemoveDockedComponentCmd implements Runnable {
-    private final WindowInfoImpl myInfo;
-    private final boolean myDirtyMode;
-
-    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
-      myInfo = info;
-      myDirtyMode = dirtyMode;
+    private WindowInfoImpl getDecoratorInfoById(String id) {
+        return myDecorator2Info.get(myId2Decorator.get(id));
     }
 
+    private ToolWindowInternalDecorator getDecoratorById(String id) {
+        return myId2Decorator.get(id);
+    }
+
+    @RequiredUIAccess
     @Override
-    public final void run() {
-      setComponent(null, myInfo.getAnchor(), 0);
+    public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
+        WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
+        String id = copiedInfo.getId();
 
-      if (!myDirtyMode) {
-        //toVaadinComponent().markAsDirtyRecursive();
-      }
-    }
-  }
+        myDecorator2Info.put(decorator, copiedInfo);
+        myId2Decorator.put(id, decorator);
 
-  private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.TOP);
-  private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.BOTTOM);
-  private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.LEFT);
-  private DesktopToolWindowStripeImpl myRightStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.RIGHT);
-
-  private final Map<String, DesktopSwtToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
-  private final Map<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
-  private final Map<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
-  private final Map<DesktopSwtToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
-
-
-  private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-  @Deprecated
-  @DeprecationInfo("Unsupported for now")
-  private ThreeComponentSplitLayout myVerticalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
-
-  private boolean myWidescreen;
-
-  private DockLayout myRoot = DockLayout.create();
-
-  public DesktopSwtToolWindowPanelImpl() {
-    myRoot.top(myTopStripe);
-    myRoot.bottom(myBottomStripe);
-    myRoot.left(myLeftStripe);
-    myRoot.right(myRightStripe);
-    myRoot.center(myHorizontalSplitter);
-  }
-
-  public DockLayout getComponent() {
-    return myRoot;
-  }
-
-  private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, float weight) {
-    DesktopSwtToolWindowInternalDecorator decorator = (DesktopSwtToolWindowInternalDecorator)d;
-
-    consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
-
-    if (ToolWindowAnchor.TOP == anchor) {
-      //myVerticalSplitter.setFirstComponent(component);
-      //myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
-    }
-    else if (ToolWindowAnchor.LEFT == anchor) {
-      myHorizontalSplitter.setFirstComponent(component);
-      //myHorizontalSplitter.setFirstSize((int)(myLayeredPane.getWidth() * weight));
-    }
-    else if (ToolWindowAnchor.BOTTOM == anchor) {
-      //myVerticalSplitter.setLastComponent(component);
-      //myVerticalSplitter.setLastSize((int)(myLayeredPane.getHeight() * weight));
-    }
-    else if (ToolWindowAnchor.RIGHT == anchor) {
-      myHorizontalSplitter.setSecondComponent(component);
-      //myHorizontalSplitter.setLastSize((int)(myLayeredPane.getWidth() * weight));
-    }
-    else {
-      //LOG.error("unknown anchor: " + anchor);
-    }
-  }
-
-  private void setDocumentComponent(Component component) {
-    (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
-  }
-
-  @Nullable
-  private DesktopSwtToolWindowStripeButtonImpl getButtonById(String id) {
-    return myId2Button.get(id);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-    WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
-    myId2Button.put(copiedInfo.getId(), (DesktopSwtToolWindowStripeButtonImpl)button);
-    new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
-  }
-
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public void removeButton(@Nonnull String id) {
-    // todo
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
-    ToolWindowInternalDecorator decorator = getDecoratorById(id);
-    WindowInfoImpl info = getDecoratorInfoById(id);
-
-    myDecorator2Info.remove(decorator);
-    myId2Decorator.remove(id);
-
-    WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
-
-    if (info.isDocked()) {
-      if (sideInfo == null) {
-        new RemoveDockedComponentCmd(info, dirtyMode).run();
-      }
-      else {
-
-        //return new RemoveSplitAndDockedComponentCmd(info, dirtyMode, finishCallBack);
-      }
-    }
-    else if (info.isSliding()) {
-      //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
-    }
-    else {
-      throw new IllegalArgumentException("Unknown window type");
-    }
-  }
-
-  private WindowInfoImpl getDecoratorInfoById(String id) {
-    return myDecorator2Info.get(myId2Decorator.get(id));
-  }
-
-  private ToolWindowInternalDecorator getDecoratorById(String id) {
-    return myId2Decorator.get(id);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
-    WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
-    String id = copiedInfo.getId();
-
-    myDecorator2Info.put(decorator, copiedInfo);
-    myId2Decorator.put(id, decorator);
-
-    if (info.isDocked()) {
-      WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
-      if (sideInfo == null) {
-        new AddDockedComponentCmd(decorator, (WindowInfoImpl)info, dirtyMode).run();
-      }
-      else {
-        //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
-      }
-    }
-    else if (info.isSliding()) {
-
-      //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
-    }
-    else {
-      throw new IllegalArgumentException("Unknown window type: " + info.getType());
-    }
-  }
-
-  private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
-    for (WindowInfoImpl info : myDecorator2Info.values()) {
-      if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
-        return info;
-      }
+        if (info.isDocked()) {
+            WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
+            if (sideInfo == null) {
+                new AddDockedComponentCmd(decorator, (WindowInfoImpl) info, dirtyMode).run();
+            }
+            else {
+                //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
+            }
+        }
+        else if (info.isSliding()) {
+            //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
+        }
+        else {
+            throw new IllegalArgumentException("Unknown window type: " + info.getType());
+        }
     }
 
-    return null;
-  }
+    private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
+        for (WindowInfoImpl info : myDecorator2Info.values()) {
+            if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
+                return info;
+            }
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void updateButtonPosition(@Nonnull String id) {
-    new UpdateButtonPositionCmd(id).run();
-  }
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setEditorComponent(Object component) {
-    setDocumentComponent((Component)component);
-  }
+    @RequiredUIAccess
+    @Override
+    public void updateButtonPosition(@Nonnull String id) {
+        new UpdateButtonPositionCmd(id).run();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setEditorComponent(Object component) {
+        setDocumentComponent((Component) component);
+    }
 }

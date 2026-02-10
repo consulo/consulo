@@ -212,3 +212,5 @@ show.coverage.per.test.action.text:
     text: Show Coverage per Test
 table.column.name.statistics:
     text: Statistics, %
+toolwindow.coverage.display.name:
+    text: Coverage
