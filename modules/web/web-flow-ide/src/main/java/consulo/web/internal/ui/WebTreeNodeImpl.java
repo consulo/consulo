@@ -27,105 +27,108 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 09-Sep-17
+ * @since 2017-09-09
  */
 public class WebTreeNodeImpl<N> implements TreeNode<N> {
-  public static class NotLoaded<K> extends WebTreeNodeImpl<K> {
-    public NotLoaded(@Nullable WebTreeNodeImpl<K> parent,
-                     @Nullable K node,
-                     Map<String, WebTreeNodeImpl<K>> stringWebTreeNodeMap) {
-      super(parent, node, stringWebTreeNodeMap);
+    public static class NotLoaded<K> extends WebTreeNodeImpl<K> {
+        public NotLoaded(
+            @Nullable WebTreeNodeImpl<K> parent,
+            @Nullable K node,
+            Map<String, WebTreeNodeImpl<K>> stringWebTreeNodeMap
+        ) {
+            super(parent, node, stringWebTreeNodeMap);
 
-      setLeaf(true);
-    }
-  }
-
-  private final WebTreeNodeImpl<N> myParent;
-  private final String myId;
-
-  private N myNode;
-
-  private List<WebTreeNodeImpl<N>> myChildren = List.of();
-  private BiConsumer<N, TextItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
-  private boolean myLeaf;
-
-  public WebTreeNodeImpl(@Nullable WebTreeNodeImpl<N> parent, @Nullable N node, Map<String, WebTreeNodeImpl<N>> nodeMap) {
-    myParent = parent;
-    myNode = node;
-    myId = parent == null ? "root" : UUID.randomUUID().toString();
-
-    if (!(this instanceof NotLoaded)) {
-      myChildren = List.of(new NotLoaded<>(this, null, nodeMap));
+            setLeaf(true);
+        }
     }
 
-    nodeMap.put(getId(), this);
-  }
+    private final WebTreeNodeImpl<N> myParent;
+    private final String myId;
 
-  public boolean isNotLoaded() {
-    return myChildren.size() == 1 && myChildren.get(0) instanceof NotLoaded;
-  }
+    private N myNode;
 
-  @Nullable
-  public WebTreeNodeImpl<N> getParent() {
-    return myParent;
-  }
+    private List<WebTreeNodeImpl<N>> myChildren = List.of();
+    private BiConsumer<N, TextItemPresentation> myRenderer =
+        (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
+    private boolean myLeaf;
 
-  @Nullable
-  @Override
-  public N getValue() {
-    return myNode;
-  }
+    public WebTreeNodeImpl(@Nullable WebTreeNodeImpl<N> parent, @Nullable N node, Map<String, WebTreeNodeImpl<N>> nodeMap) {
+        myParent = parent;
+        myNode = node;
+        myId = parent == null ? "root" : UUID.randomUUID().toString();
 
-  public String getId() {
-    return myId;
-  }
+        if (!(this instanceof NotLoaded)) {
+            myChildren = List.of(new NotLoaded<>(this, null, nodeMap));
+        }
 
-  public List<WebTreeNodeImpl<N>> getChildren() {
-    return myChildren;
-  }
-
-  public void setChildren(List<WebTreeNodeImpl<N>> children) {
-    myChildren = children;
-  }
-
-  @Override
-  public void setRender(@Nonnull BiConsumer<N, TextItemPresentation> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void setLeaf(boolean leaf) {
-    myLeaf = leaf;
-    if (leaf) {
-      myChildren = List.of();
+        nodeMap.put(getId(), this);
     }
-  }
 
-  @Override
-  public boolean isLeaf() {
-    return myLeaf;
-  }
-
-  public BiConsumer<N, TextItemPresentation> getRender() {
-    return myRender;
-  }
-
-  public int getLevel() {
-    // we start with -1, due we already has root node
-    int level = -1;
-
-    WebTreeNodeImpl parent = this;
-    while ((parent = parent.getParent()) != null) {
-      level++;
+    public boolean isNotLoaded() {
+        return myChildren.size() == 1 && myChildren.get(0) instanceof NotLoaded;
     }
-    return level;
-  }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("WebTreeNodeImpl{");
-    sb.append("myNode=").append(myNode);
-    sb.append('}');
-    return sb.toString();
-  }
+    @Nullable
+    public WebTreeNodeImpl<N> getParent() {
+        return myParent;
+    }
+
+    @Nullable
+    @Override
+    public N getValue() {
+        return myNode;
+    }
+
+    public String getId() {
+        return myId;
+    }
+
+    public List<WebTreeNodeImpl<N>> getChildren() {
+        return myChildren;
+    }
+
+    public void setChildren(List<WebTreeNodeImpl<N>> children) {
+        myChildren = children;
+    }
+
+    @Override
+    public void setRenderer(@Nonnull BiConsumer<N, TextItemPresentation> renderer) {
+        myRenderer = renderer;
+    }
+
+    @Override
+    public void setLeaf(boolean leaf) {
+        myLeaf = leaf;
+        if (leaf) {
+            myChildren = List.of();
+        }
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return myLeaf;
+    }
+
+    public BiConsumer<N, TextItemPresentation> getRenderer() {
+        return myRenderer;
+    }
+
+    public int getLevel() {
+        // we start with -1, due we already has root node
+        int level = -1;
+
+        WebTreeNodeImpl parent = this;
+        while ((parent = parent.getParent()) != null) {
+            level++;
+        }
+        return level;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("WebTreeNodeImpl{");
+        sb.append("myNode=").append(myNode);
+        sb.append('}');
+        return sb.toString();
+    }
 }

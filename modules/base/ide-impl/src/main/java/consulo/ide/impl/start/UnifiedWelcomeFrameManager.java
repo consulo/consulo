@@ -88,7 +88,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
         ListModel<AnAction> model = ListModel.of(Arrays.asList(recentProjectsActions));
 
         ListBox<AnAction> listSelect = ListBox.create(model);
-        listSelect.setRender((renderer, index, item) -> renderer.append(((ReopenProjectAction) item).getProjectName()));
+        listSelect.setRenderer((renderer, index, item) -> renderer.append(((ReopenProjectAction) item).getProjectName()));
         listSelect.addValueListener(event -> {
             ReopenProjectAction value = (ReopenProjectAction) event.getValue();
 

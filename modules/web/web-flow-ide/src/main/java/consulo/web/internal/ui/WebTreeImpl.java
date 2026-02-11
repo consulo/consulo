@@ -71,7 +71,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     item.append("Loading...");
                 }
                 else {
-                    node.getRender().accept(node.getValue(), item);
+                    node.getRenderer().accept(node.getValue(), item);
                 }
                 VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
                 toggle.getElement().setAttribute("leaf", node.isLeaf());

@@ -15,25 +15,32 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2017-09-13
  */
 public interface TreeNode<T> {
-  void setRender(@Nonnull BiConsumer<T, TextItemPresentation> render);
+    void setRenderer(@Nonnull BiConsumer<T, TextItemPresentation> renderer);
 
-  void setLeaf(boolean leaf);
+    @Deprecated
+    @DeprecationInfo("Use setRenderer")
+    default void setRender(@Nonnull BiConsumer<T, TextItemPresentation> renderer) {
+        setRenderer(renderer);
+    }
 
-  boolean isLeaf();
+    void setLeaf(boolean leaf);
 
-  /**
-   *
-   * @return if rootValue is null and treeNode wrap it
-   */
-  @Nullable
-  T getValue();
+    boolean isLeaf();
+
+    /**
+     * @return if rootValue is null and treeNode wrap it
+     */
+    @Nullable
+    T getValue();
 }

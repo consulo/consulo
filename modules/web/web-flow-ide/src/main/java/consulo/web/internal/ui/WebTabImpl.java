@@ -25,52 +25,52 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 class WebTabImpl implements Tab {
-  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
-  private BiConsumer<Tab, Component> myCloseHandler;
-  private WebTabbedLayoutImpl myTabbedLayout;
+    private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
+    private BiConsumer<Tab, Component> myCloseHandler;
+    private WebTabbedLayoutImpl myTabbedLayout;
 
-  private com.vaadin.flow.component.tabs.Tab myVaadinTab;
+    private com.vaadin.flow.component.tabs.Tab myVaadinTab;
 
-  public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
-    myTabbedLayout = tabbedLayout;
-  }
+    public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
+        myTabbedLayout = tabbedLayout;
+    }
 
-  @Override
-  public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
-    myRender = render;
-  }
+    @Override
+    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+        myRenderer = renderer;
+    }
 
-  @Override
-  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
-    myCloseHandler = closeHandler;
-  }
+    @Override
+    public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+        myCloseHandler = closeHandler;
+    }
 
-  @Override
-  public void update() {
-    WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-    myRender.accept(this, presentation);
+    @Override
+    public void update() {
+        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+        myRenderer.accept(this, presentation);
 
-    myVaadinTab.removeAll();
-    myVaadinTab.add(presentation.toComponent());
-  }
+        myVaadinTab.removeAll();
+        myVaadinTab.add(presentation.toComponent());
+    }
 
-  public BiConsumer<Tab, TextItemPresentation> getRender() {
-    return myRender;
-  }
+    public BiConsumer<Tab, TextItemPresentation> getRenderer() {
+        return myRenderer;
+    }
 
-  @Override
-  public void select() {
-    // TODO
-  }
+    @Override
+    public void select() {
+        // TODO
+    }
 
-  public BiConsumer<Tab, Component> getCloseHandler() {
-    return myCloseHandler;
-  }
+    public BiConsumer<Tab, Component> getCloseHandler() {
+        return myCloseHandler;
+    }
 
-  public void setVaadinTab(com.vaadin.flow.component.tabs.Tab vaadinTab) {
-    myVaadinTab = vaadinTab;
-  }
+    public void setVaadinTab(com.vaadin.flow.component.tabs.Tab vaadinTab) {
+        myVaadinTab = vaadinTab;
+    }
 }

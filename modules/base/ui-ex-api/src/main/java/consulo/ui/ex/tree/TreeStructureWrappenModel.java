@@ -56,7 +56,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
             apply.setLeaf(o instanceof consulo.ui.ex.tree.TreeNode && !((consulo.ui.ex.tree.TreeNode) o).isAlwaysShowPlus());
 
-            apply.setRender((fileElement, itemPresentation) -> {
+            apply.setRenderer((fileElement, itemPresentation) -> {
                 NodeDescriptor descriptor = myStructure.createDescriptor(element, null);
 
                 descriptor.update();

@@ -20,6 +20,7 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -30,55 +31,53 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 18/12/2021
+ * @since 2021-12-18
  */
 public class DesktopSwtTabImpl implements Tab {
-  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+    private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
 
-  private SWTComponentDelegate<? extends Control> myComponent;
+    private SWTComponentDelegate<? extends Control> myComponent;
 
-  private CTabItem myTabItem;
+    private CTabItem myTabItem;
 
-  @Override
-  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
-
-  }
-
-  @Override
-  public void select() {
-
-  }
-
-  @Override
-  public void setRender(BiConsumer<Tab, TextItemPresentation> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void update() {
-    DesktopSwtTextItemPresentation item = new DesktopSwtTextItemPresentation();
-    myRender.accept(this, item);
-
-    // TODO more impl
-    myTabItem.setText(item.toString());
-  }
-
-  public void setComponent(Component component) {
-    myComponent = (SWTComponentDelegate<? extends Control>)component;
-  }
-
-  public CTabItem getTabItem() {
-    return myTabItem;
-  }
-
-  public void initialize(CTabFolder component) {
-    myTabItem = new CTabItem(component, SWT.NULL);
-    myTabItem.setText(toString());
-
-    if (myComponent != null) {
-      myComponent.bind(component, null);
-
-      myTabItem.setControl(myComponent.toSWTComponent());
+    @Override
+    public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
     }
-  }
+
+    @Override
+    public void select() {
+    }
+
+    @Override
+    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+        myRenderer = renderer;
+    }
+
+    @Override
+    public void update() {
+        DesktopSwtTextItemPresentation item = new DesktopSwtTextItemPresentation();
+        myRenderer.accept(this, item);
+
+        // TODO more impl
+        myTabItem.setText(item.toString());
+    }
+
+    public void setComponent(Component component) {
+        myComponent = (SWTComponentDelegate<? extends Control>) component;
+    }
+
+    public CTabItem getTabItem() {
+        return myTabItem;
+    }
+
+    public void initialize(CTabFolder component) {
+        myTabItem = new CTabItem(component, SWT.NULL);
+        myTabItem.setText(toString());
+
+        if (myComponent != null) {
+            myComponent.bind(component, null);
+
+            myTabItem.setControl(myComponent.toSWTComponent());
+        }
+    }
 }

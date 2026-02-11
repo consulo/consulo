@@ -16,12 +16,12 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
-import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
@@ -30,254 +30,265 @@ import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.TimeoutUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2020-05-29
  */
 public class UITester {
-  private static class MyWindowWrapper extends DialogDescriptor {
-    public MyWindowWrapper() {
-      super(LocalizeValue.of("UI Tester"));
-    }
-
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
-      TabbedLayout tabbedLayout = TabbedLayout.create();
-
-      tabbedLayout.addTab("Layouts", layouts(uiDisposable)).setCloseHandler((tab, component) -> {
-      });
-      tabbedLayout.addTab("Components", components());
-      tabbedLayout.addTab("Components > Table", table());
-      tabbedLayout.addTab("Components > Tree", tree(uiDisposable));
-      tabbedLayout.addTab("Alerts", alerts());
-
-      return tabbedLayout;
-    }
-
-    @RequiredUIAccess
-    private Component layouts(Disposable uiDisposable) {
-      TabbedLayout tabbedLayout = TabbedLayout.create();
-
-      VerticalLayout fold = VerticalLayout.create();
-      fold.add(Label.create("Some label"));
-      fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), (e) -> Alerts.okError("Clicked!").showAsync()));
-
-      FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
-      layout.addOpenedListener(it -> Alerts.okInfo("State " + it.isOpened()).showAsync());
-
-      tabbedLayout.addTab("FoldoutLayout", layout);
-
-      TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-      splitLayout.setFirstComponent(DockLayout.create().center(Button.create("Left")));
-      splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
-
-      tabbedLayout.addTab("SplitLayout", splitLayout);
-
-      SwipeLayout swipeLayout = SwipeLayout.create();
-
-      swipeLayout.register("left", () -> swipeChildLayout(LocalizeValue.of("Right"), () -> swipeLayout.swipeRightTo("right")));
-      swipeLayout.register("right", () -> swipeChildLayout(LocalizeValue.of("Left"), () -> swipeLayout.swipeLeftTo("left")));
-
-      tabbedLayout.addTab("SwipeLayout", swipeLayout);
-
-      VerticalLayout borderLayout = VerticalLayout.create();
-      DockLayout dockLayout = DockLayout.create();
-      Button centerBtn = Button.create(LocalizeValue.of("Center"));
-      centerBtn.addClickListener(event -> {
-        dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))));
-      });
-
-      borderLayout.add(centerBtn).add(dockLayout);
-
-      borderLayout.add(centerBtn);
-
-      tabbedLayout.addTab("DockLayout", borderLayout);
-      tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
-
-      return tabbedLayout;
-    }
-
-    @Override
-    public boolean hasDefaultContentBorder() {
-      return false;
-    }
-
-    @RequiredUIAccess
-    private Layout swipeChildLayout(LocalizeValue text, @RequiredUIAccess Runnable runnable) {
-      DockLayout dockLayout = DockLayout.create();
-
-      dockLayout.center(HorizontalLayout.create().add(Button.create(text, e -> runnable.run())));
-
-      return dockLayout;
-    }
-
-    @RequiredUIAccess
-    private Component components() {
-      VerticalLayout layout = VerticalLayout.create();
-
-      FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
-      layout.add(builder.build());
-
-      ToggleSwitch toggleSwitch = ToggleSwitch.create(true);
-      toggleSwitch.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("toggle")).showAsync());
-
-      CheckBox checkBox = CheckBox.create(LocalizeValue.of("Check box"));
-      checkBox.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("checkBox")).showAsync());
-      checkBox.setToolTipText(LocalizeValue.of("Some Tooltip"));
-
-      layout.add(AdvancedLabel.create().updatePresentation(presentation -> {
-        presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
-        presentation.append(LocalizeValue.of("Label"), new TextAttribute(Font.STYLE_PLAIN, StandardColors.RED, StandardColors.BLACK));
-      }));
-
-      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Toggle Switch"))).add(toggleSwitch).add(checkBox));
-
-      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
-
-      ProgressBar spinnerBar = ProgressBar.create();
-      spinnerBar.addStyle(ProgressBarStyle.SPINNER);
-      spinnerBar.setIndeterminate(true);
-
-      layout.add(HorizontalLayout.create()
-          .add(Label.create(LocalizeValue.of("Spinner Progress")))
-          .add(spinnerBar));
-
-      IntSlider intSlider = IntSlider.create(3);
-      intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
-      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
-
-      layout.add(Hyperlink.create(LocalizeValue.localizeTODO("Some Link"), (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()));
-
-      HtmlView component = HtmlView.create();
-      component.render(new HtmlView.RenderData("<html><body><b>Some Bold Text</b> Test</body></html>"));
-      layout.add(component);
-      return layout;
-    }
-
-    @RequiredUIAccess
-    private Component table() {
-      DockLayout layout = DockLayout.create();
-      Map<String, String> map = new TreeMap<>();
-      map.put("test1", "1");
-      map.put("test2", "3");
-      map.put("test3", "5");
-
-      List<TableColumn<?, Map.Entry<String, String>>> columns = new ArrayList<>();
-      columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 1", Map.Entry::getKey).build());
-      columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 2", Map.Entry::getValue).build());
-
-      TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
-
-      layout.center(ScrollableLayout.create(Table.create(columns, model)));
-
-      return layout;
-    }
-
-    @RequiredUIAccess
-    private Component loadingLayout(Disposable uiDisposable) {
-      DockLayout layout = DockLayout.create();
-
-      DockLayout innerLayout = DockLayout.create();
-
-      LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(innerLayout, uiDisposable);
-
-      Button start = Button.create(LocalizeValue.of("Start"), event -> {
-        loadingLayout.startLoading();
-      });
-
-      Button stop = Button.create(LocalizeValue.of("Stop"), event -> {
-        loadingLayout.stopLoading(dockLayout -> {
-          dockLayout.removeAll();
-
-          dockLayout.center(Label.create(LocalizeValue.of(LocalDateTime.now().toString())));
-        });
-      });
-
-      Button startPooled = Button.create(LocalizeValue.of("Start Pooled"), event -> {
-        loadingLayout.startLoading(() -> {
-          TimeoutUtil.sleep(10000);
-          return "Some Value after 10 seconds";
-        }, (dockLayout, someValue) -> {
-          dockLayout.center(Label.create(LocalizeValue.of(someValue)));
-        });
-      });
-
-      layout.top(HorizontalLayout.create().add(start).add(stop).add(startPooled));
-      layout.center(loadingLayout);
-      return layout;
-    }
-
-    @RequiredUIAccess
-    private Component tree(Disposable uiDisposable) {
-      Tree<String> tree = Tree.create(new TreeModel<String>() {
-        @Override
-        @SuppressWarnings("ReturnValueIgnored")
-        public void buildChildren(@Nonnull Function<String, TreeNode<String>> nodeFactory, @Nullable String parentValue) {
-          if (parentValue == null) {
-            for (int i = 0; i < 50; i++) {
-              TreeNode<String> node = nodeFactory.apply("First Child = " + i);
-
-              List<Image> icons =
-                List.of(PlatformIconGroup.nodesClass(),
-                        PlatformIconGroup.nodesEnum(),
-                        PlatformIconGroup.nodesStruct(),
-                        PlatformIconGroup.nodesInterface(),
-                        PlatformIconGroup.nodesAttribute());
-              int r = new Random().nextInt(icons.size());
-
-              node.setRender((s, textItemPresentation) -> {
-                textItemPresentation.append(s);
-                textItemPresentation.withIcon(icons.get(r));
-              });
-            }
-          }
-          else {
-            for (int i = 0; i < 10; i++) {
-              nodeFactory.apply(parentValue + ", second child = " + i);
-            }
-          }
+    private static class MyWindowWrapper extends DialogDescriptor {
+        public MyWindowWrapper() {
+            super(LocalizeValue.of("UI Tester"));
         }
-      }, uiDisposable);
 
-      return ScrollableLayout.create(tree);
+        @RequiredUIAccess
+        @Nonnull
+        @Override
+        public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
+            TabbedLayout tabbedLayout = TabbedLayout.create();
+
+            tabbedLayout.addTab("Layouts", layouts(uiDisposable)).setCloseHandler((tab, component) -> {
+            });
+            tabbedLayout.addTab("Components", components());
+            tabbedLayout.addTab("Components > Table", table());
+            tabbedLayout.addTab("Components > Tree", tree(uiDisposable));
+            tabbedLayout.addTab("Alerts", alerts());
+
+            return tabbedLayout;
+        }
+
+        @RequiredUIAccess
+        private Component layouts(Disposable uiDisposable) {
+            TabbedLayout tabbedLayout = TabbedLayout.create();
+
+            VerticalLayout fold = VerticalLayout.create();
+            fold.add(Label.create("Some label"));
+            fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), (e) -> Alerts.okError("Clicked!").showAsync()));
+
+            FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
+            layout.addOpenedListener(it -> Alerts.okInfo("State " + it.isOpened()).showAsync());
+
+            tabbedLayout.addTab("FoldoutLayout", layout);
+
+            TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+            splitLayout.setFirstComponent(DockLayout.create().center(Button.create("Left")));
+            splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
+
+            tabbedLayout.addTab("SplitLayout", splitLayout);
+
+            SwipeLayout swipeLayout = SwipeLayout.create();
+
+            swipeLayout.register("left", () -> swipeChildLayout(LocalizeValue.of("Right"), () -> swipeLayout.swipeRightTo("right")));
+            swipeLayout.register("right", () -> swipeChildLayout(LocalizeValue.of("Left"), () -> swipeLayout.swipeLeftTo("left")));
+
+            tabbedLayout.addTab("SwipeLayout", swipeLayout);
+
+            VerticalLayout borderLayout = VerticalLayout.create();
+            DockLayout dockLayout = DockLayout.create();
+            Button centerBtn = Button.create(LocalizeValue.of("Center"));
+            centerBtn.addClickListener(
+                event -> dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))))
+            );
+
+            borderLayout.add(centerBtn).add(dockLayout);
+
+            borderLayout.add(centerBtn);
+
+            tabbedLayout.addTab("DockLayout", borderLayout);
+            tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
+
+            return tabbedLayout;
+        }
+
+        @Override
+        public boolean hasDefaultContentBorder() {
+            return false;
+        }
+
+        @RequiredUIAccess
+        private Layout swipeChildLayout(LocalizeValue text, @RequiredUIAccess Runnable runnable) {
+            DockLayout dockLayout = DockLayout.create();
+
+            dockLayout.center(HorizontalLayout.create().add(Button.create(text, e -> runnable.run())));
+
+            return dockLayout;
+        }
+
+        @RequiredUIAccess
+        private Component components() {
+            VerticalLayout layout = VerticalLayout.create();
+
+            FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
+            layout.add(builder.build());
+
+            ToggleSwitch toggleSwitch = ToggleSwitch.create(true);
+            toggleSwitch.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("toggle")).showAsync());
+
+            CheckBox checkBox = CheckBox.create(LocalizeValue.of("Check box"));
+            checkBox.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("checkBox")).showAsync());
+            checkBox.setToolTipText(LocalizeValue.of("Some Tooltip"));
+
+            layout.add(AdvancedLabel.create().updatePresentation(presentation -> {
+                presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
+                presentation.append(
+                    LocalizeValue.of("Label"),
+                    new TextAttribute(Font.STYLE_PLAIN, StandardColors.RED, StandardColors.BLACK)
+                );
+            }));
+
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Toggle Switch"))).add(toggleSwitch).add(checkBox));
+
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
+
+            ProgressBar spinnerBar = ProgressBar.create();
+            spinnerBar.addStyle(ProgressBarStyle.SPINNER);
+            spinnerBar.setIndeterminate(true);
+
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("Spinner Progress")))
+                .add(spinnerBar));
+
+            IntSlider intSlider = IntSlider.create(3);
+            intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
+
+            layout.add(Hyperlink.create(
+                LocalizeValue.localizeTODO("Some Link"),
+                (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()
+            ));
+
+            HtmlView component = HtmlView.create();
+            component.render(new HtmlView.RenderData("<html><body><b>Some Bold Text</b> Test</body></html>"));
+            layout.add(component);
+            return layout;
+        }
+
+        @RequiredUIAccess
+        private Component table() {
+            DockLayout layout = DockLayout.create();
+            Map<String, String> map = new TreeMap<>();
+            map.put("test1", "1");
+            map.put("test2", "3");
+            map.put("test3", "5");
+
+            List<TableColumn<?, Map.Entry<String, String>>> columns = new ArrayList<>();
+            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 1", Map.Entry::getKey).build());
+            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 2", Map.Entry::getValue).build());
+
+            TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
+
+            layout.center(ScrollableLayout.create(Table.create(columns, model)));
+
+            return layout;
+        }
+
+        @RequiredUIAccess
+        private Component loadingLayout(Disposable uiDisposable) {
+            DockLayout layout = DockLayout.create();
+
+            DockLayout innerLayout = DockLayout.create();
+
+            LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(innerLayout, uiDisposable);
+
+            Button start = Button.create(LocalizeValue.of("Start"), event -> loadingLayout.startLoading());
+
+            Button stop = Button.create(
+                LocalizeValue.of("Stop"),
+                event -> loadingLayout.stopLoading(dockLayout -> {
+                    dockLayout.removeAll();
+
+                    dockLayout.center(Label.create(LocalizeValue.of(LocalDateTime.now().toString())));
+                })
+            );
+
+            Button startPooled = Button.create(
+                LocalizeValue.of("Start Pooled"),
+                event -> loadingLayout.startLoading(
+                    () -> {
+                        TimeoutUtil.sleep(10000);
+                        return "Some Value after 10 seconds";
+                    },
+                    (dockLayout, someValue) -> dockLayout.center(Label.create(LocalizeValue.of(someValue)))
+                )
+            );
+
+            layout.top(HorizontalLayout.create().add(start).add(stop).add(startPooled));
+            layout.center(loadingLayout);
+            return layout;
+        }
+
+        @RequiredUIAccess
+        private Component tree(Disposable uiDisposable) {
+            Tree<String> tree = Tree.create(
+                (TreeModel<String>) (nodeFactory, parentValue) -> {
+                    if (parentValue == null) {
+                        for (int i = 0; i < 50; i++) {
+                            TreeNode<String> node = nodeFactory.apply("First Child = " + i);
+
+                            List<Image> icons =
+                                List.of(
+                                    PlatformIconGroup.nodesClass(),
+                                    PlatformIconGroup.nodesEnum(),
+                                    PlatformIconGroup.nodesStruct(),
+                                    PlatformIconGroup.nodesInterface(),
+                                    PlatformIconGroup.nodesAttribute()
+                                );
+                            int r = new Random().nextInt(icons.size());
+
+                            node.setRenderer((s, textItemPresentation) -> {
+                                textItemPresentation.append(s);
+                                textItemPresentation.withIcon(icons.get(r));
+                            });
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 10; i++) {
+                            nodeFactory.apply(parentValue + ", second child = " + i);
+                        }
+                    }
+                },
+                uiDisposable
+            );
+
+            return ScrollableLayout.create(tree);
+        }
+
+        @RequiredUIAccess
+        private Component alerts() {
+            VerticalLayout layout = VerticalLayout.create();
+            layout.add(
+                Button.create(LocalizeValue.of("Info. Hand Cursor"), event -> Alerts.okInfo(LocalizeValue.of("This is INFO")).showAsync())
+                    .withCursor(StandardCursors.HAND)
+            );
+            layout.add(Button.create(LocalizeValue.of("Warning"), event -> Alerts.okWarning(LocalizeValue.of("This is WARN")).showAsync()));
+            layout.add(
+                Button.create(
+                        LocalizeValue.of("Error. Wait Cursor"),
+                        event -> Alerts.okError(LocalizeValue.of("This is ERROR")).showAsync()
+                    )
+                    .withCursor(StandardCursors.WAIT)
+            );
+            layout.add(Button.create(
+                LocalizeValue.of("Question"),
+                event -> Alerts.okQuestion(LocalizeValue.of("This is QUESTION")).showAsync()
+            ));
+            return layout;
+        }
+
+        @Nullable
+        @Override
+        public Size2D getInitialSize() {
+            return new Size2D(500, 500);
+        }
     }
 
     @RequiredUIAccess
-    private Component alerts() {
-      VerticalLayout layout = VerticalLayout.create();
-      layout.add(Button.create(LocalizeValue.of("Info. Hand Cursor"), event -> {
-        Alerts.okInfo(LocalizeValue.of("This is INFO")).showAsync();
-      }).withCursor(StandardCursors.HAND));
-      layout.add(Button.create(LocalizeValue.of("Warning"), event -> {
-        Alerts.okWarning(LocalizeValue.of("This is WARN")).showAsync();
-      }));
-      layout.add(Button.create(LocalizeValue.of("Error. Wait Cursor"), event -> {
-        Alerts.okError(LocalizeValue.of("This is ERROR")).showAsync();
-      }).withCursor(StandardCursors.WAIT));
-      layout.add(Button.create(LocalizeValue.of("Question"), event -> {
-        Alerts.okQuestion(LocalizeValue.of("This is QUESTION")).showAsync();
-      }));
-      return layout;
+    public static void show(DialogService dialogService) {
+        dialogService.build(new MyWindowWrapper()).showAsync();
     }
-
-    @Nullable
-    @Override
-    public Size2D getInitialSize() {
-      return new Size2D(500, 500);
-    }
-  }
-
-  @RequiredUIAccess
-  public static void show(DialogService dialogService) {
-    dialogService.build(new MyWindowWrapper()).showAsync();
-  }
 }

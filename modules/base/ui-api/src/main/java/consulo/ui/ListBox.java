@@ -15,38 +15,46 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2017-09-12
  */
 public interface ListBox<E> extends ValueComponent<E> {
-  @SafeVarargs
-  @Nonnull
-  static <E> ListBox<E> create(@Nonnull E... elements) {
-    return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
-  }
+    @SafeVarargs
+    @Nonnull
+    static <E> ListBox<E> create(@Nonnull E... elements) {
+        return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
+    }
 
-  @Nonnull
-  static <E> ListBox<E> create(@Nonnull Collection<E> elements) {
-    return UIInternal.get()._Components_listBox(ListModel.create(elements));
-  }
+    @Nonnull
+    static <E> ListBox<E> create(@Nonnull Collection<E> elements) {
+        return UIInternal.get()._Components_listBox(ListModel.create(elements));
+    }
 
-  @Nonnull
-  static <E> ListBox<E> create(@Nonnull ListModel<E> model) {
-    return UIInternal.get()._Components_listBox(model);
-  }
+    @Nonnull
+    static <E> ListBox<E> create(@Nonnull ListModel<E> model) {
+        return UIInternal.get()._Components_listBox(model);
+    }
 
-  @Nonnull
-  ListModel<E> getListModel();
+    @Nonnull
+    ListModel<E> getListModel();
 
-  void setRender(@Nonnull TextItemRenderer<E> render);
+    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
 
-  void setValueByIndex(int index);
+    @Deprecated
+    @DeprecationInfo("Use setRenderer")
+    default void setRender(@Nonnull TextItemRenderer<E> renderer) {
+        setRenderer(renderer);
+    }
+
+    void setValueByIndex(int index);
 }
