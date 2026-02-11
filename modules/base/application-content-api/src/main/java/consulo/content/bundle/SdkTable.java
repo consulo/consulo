@@ -98,7 +98,7 @@ public abstract class SdkTable implements BundleHolder {
    */
   @Nonnull
   @Deprecated
-  @DeprecationInfo("Prefer createSdk(Platform,String,SdkTypeId)")
+  @DeprecationInfo("Prefer createSdk(Path,String,SdkTypeId)")
   public abstract Sdk createSdk(String name, SdkTypeId sdkType);
 
   /**
