@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.colors;
 
 import javax.swing.*;
 import java.util.Set;
 
-
 public interface OptionsPanel {
-  void addListener(ColorAndFontSettingsListener listener);
+    void addListener(ColorAndFontSettingsListener listener);
 
-  JPanel getPanel();
+    JPanel getPanel();
 
-  void updateOptionsList();
+    void updateOptionsList();
 
-  Runnable showOption(String option);
+    Runnable showOption(String option);
 
-  void applyChangesToScheme();
+    void applyChangesToScheme();
 
-  void selectOption(String typeToSelect);
+    void selectOption(String typeToSelect);
 
-  Set<String> processListOptions();
+    Set<String> processListOptions();
 }

@@ -108,6 +108,8 @@ checkbox.align.multiline.throws.list:
     text: Throws list
 checkbox.block.comment.at.first.column:
     text: Block comment at first column
+checkbox.indent.smart.tabs:
+    text: Smart tabs
 checkbox.indent.use.tab.character:
     text: Use tab character
 checkbox.keep.when.reformatting.control.statement.in.one.line:
@@ -308,6 +310,10 @@ message.code.style.scheme.import.success:
     text: '{0} settings were imported to {1} scheme.'
 settings.code.style.default.general:
     text: Default
+settings.default.value.prefix:
+    text: 'Default: {0}'
+settings.soft.margins.empty.list:
+    text: None
 title.blank.lines:
     text: Blank Lines
 title.braces.placement:
@@ -512,5 +518,3 @@ wrapping.wrap.on.typing.no.wrap:
     text: 'No'
 wrapping.wrap.on.typing.wrap:
     text: 'Yes'
-checkbox.indent.smart.tabs:
-    text: Smart tabs
