@@ -16,24 +16,24 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ConfigurationException;
-import consulo.localize.LocalizeValue;
-import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkType;
-import consulo.application.content.impl.internal.bundle.SdkImpl;
+import consulo.content.bundle.SdkUtil;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.bundle.SdkEditor;
 import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import consulo.content.bundle.SdkUtil;
-import consulo.ide.impl.bundle.SdkEditor;
-import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -73,7 +73,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("sdk.banner.text", ((SdkType)mySdk.getSdkType()).getPresentableName(), mySdk.getName());
+    return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName()).get();
   }
 
   @Override

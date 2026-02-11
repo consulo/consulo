@@ -15,31 +15,22 @@
  */
 package consulo.content.bundle;
 
-import consulo.annotation.DeprecationInfo;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 /**
  * @author yole
  */
 public interface SdkTypeId {
-  @Deprecated
-  @DeprecationInfo("Use #getId()")
-  String getName();
+    @Nonnull
+    String getId();
 
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  default String getId() {
-    return getName();
-  }
+    @Nullable
+    String getVersionString(Sdk sdk);
 
-  @Nullable
-  String getVersionString(Sdk sdk);
+    void saveAdditionalData(SdkAdditionalData additionalData, Element additional);
 
-  void saveAdditionalData(SdkAdditionalData additionalData, Element additional);
-
-  @Nullable
-  SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional);
+    @Nullable
+    SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional);
 }

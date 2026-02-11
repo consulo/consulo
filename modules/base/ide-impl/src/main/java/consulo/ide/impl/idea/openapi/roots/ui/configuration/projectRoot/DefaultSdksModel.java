@@ -26,6 +26,7 @@ import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
@@ -41,7 +42,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
@@ -293,10 +293,11 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         else {
             extensionPoint.collectFiltered(list, filter);
         }
-        Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true));
+
+        Collections.sort(list, (o1, o2) -> LocalizeValue.comparator().compare(o1.getDisplayName(), o2.getDisplayName()));
 
         for (SdkType type : list) {
-            AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, type.getIcon()) {
+            AnAction addAction = new DumbAwareAction(type.getDisplayName(), type.getDisplayName(), type.getIcon()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {

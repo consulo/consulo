@@ -15,8 +15,8 @@
  */
 package consulo.content.bundle;
 
-import consulo.platform.base.icon.PlatformIconGroup;import consulo.project.localize.ProjectLocalize;
-import consulo.ui.image.Image;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.util.Map;
@@ -36,10 +36,10 @@ public class UnknownSdkType extends SdkType {
     private static final Map<String, UnknownSdkType> ourTypeNameToInstanceMap = new ConcurrentHashMap<>();
 
     /**
-     * @param typeName the name of the SDK type that this SDK serves as a plug for
+     * @param id the name of the SDK type that this SDK serves as a plug for
      */
-    private UnknownSdkType(String typeName) {
-        super(typeName);
+    private UnknownSdkType(String id) {
+        super(id, ProjectLocalize.sdkUnknownName(), PlatformIconGroup.actionsHelp());
     }
 
     @Override
@@ -52,20 +52,9 @@ public class UnknownSdkType extends SdkType {
         return "";
     }
 
+    @Nonnull
     @Override
     public String suggestSdkName(String currentSdkName, String sdkHome) {
         return currentSdkName;
-    }
-
-    @Nonnull
-    @Override
-    public String getPresentableName() {
-        return ProjectLocalize.sdkUnknownName().get();
-    }
-
-    @Nonnull
-    @Override
-    public Image getIcon() {
-        return PlatformIconGroup.actionsHelp();
     }
 }

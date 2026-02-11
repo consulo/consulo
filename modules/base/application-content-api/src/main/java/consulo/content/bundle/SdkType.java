@@ -36,9 +36,15 @@ import java.util.Set;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
     private final String myId;
+    @Nonnull
+    private final LocalizeValue myDisplayName;
+    @Nonnull
+    private final Image myIcon;
 
-    public SdkType(@Nonnull String id) {
+    public SdkType(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
         myId = id;
+        myDisplayName = displayName;
+        myIcon = icon;
     }
 
     /**
@@ -88,7 +94,10 @@ public abstract class SdkType implements SdkTypeId {
     @Nullable
     public abstract String getVersionString(String sdkHome);
 
-    public abstract String suggestSdkName(String currentSdkName, String sdkHome);
+    @Nonnull
+    public String suggestSdkName(String currentSdkName, String sdkHome) {
+        return getDisplayName().get() + " " + getVersionString(sdkHome);
+    }
 
     public void setupSdkPaths(@Nonnull Sdk sdk) {
         SdkModificator sdkModificator = sdk.getSdkModificator();
@@ -118,11 +127,6 @@ public abstract class SdkType implements SdkTypeId {
         return null;
     }
 
-    @Override
-    public final String getName() {
-        return myId;
-    }
-
     @Nonnull
     @Override
     public final String getId() {
@@ -130,10 +134,14 @@ public abstract class SdkType implements SdkTypeId {
     }
 
     @Nonnull
-    public abstract String getPresentableName();
+    public final LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
 
     @Nonnull
-    public abstract Image getIcon();
+    public final Image getIcon() {
+        return myIcon;
+    }
 
     @Nonnull
     public Image getGroupIcon() {
@@ -174,15 +182,15 @@ public abstract class SdkType implements SdkTypeId {
                         valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
                         if (!valid) {
                             LocalizeValue message = files[0].isDirectory()
-                                ? ProjectLocalize.sdkConfigureHomeInvalidError(getPresentableName())
-                                : ProjectLocalize.sdkConfigureHomeFileInvalidError(getPresentableName());
+                                ? ProjectLocalize.sdkConfigureHomeInvalidError(getDisplayName())
+                                : ProjectLocalize.sdkConfigureHomeFileInvalidError(getDisplayName());
                             throw new Exception(message.get());
                         }
                     }
                 }
             }
         };
-        descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getPresentableName()));
+        descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
         return descriptor;
     }
 

@@ -239,7 +239,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
     @Nonnull
     private static MyNode createSdkGroupNode(SdkType key) {
-        return new MyNode(new TextConfigurable<>(key, LocalizeValue.ofNullable(key.getPresentableName()), "", "", key.getGroupIcon()), true);
+        return new MyNode(new TextConfigurable<>(key, key.getDisplayName(), "", "", key.getGroupIcon()), true);
     }
 
     @Nonnull

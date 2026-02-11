@@ -21,6 +21,7 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.BundleType;
 import consulo.content.bundle.SdkType;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -42,7 +43,7 @@ public class SandBundleType extends BundleType {
     public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.from(SdkType.class);
 
     public SandBundleType() {
-        super("SAND_BUNDLE");
+        super("SAND_BUNDLE", LocalizeValue.localizeTODO("Sand Bundle"), PlatformIconGroup.nodesStatic());
     }
 
     @Override
@@ -69,17 +70,5 @@ public class SandBundleType extends BundleType {
     @Override
     public boolean isRootTypeApplicable(OrderRootType type) {
         return type == BinariesOrderRootType.getInstance();
-    }
-
-    @Nonnull
-    @Override
-    public String getPresentableName() {
-        return "Sand Bundle";
-    }
-
-    @Nonnull
-    @Override
-    public Image getIcon() {
-        return PlatformIconGroup.nodesStatic();
     }
 }
