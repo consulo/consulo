@@ -15,12 +15,20 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.plain.PlainTextFileType;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,58 +42,122 @@ import java.awt.*;
  * @author Rustam Vishnyakov.
  */
 public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
-  private final IndentOptionsEditorWithSmartTabs myIndentOptionsEditor;
-  private JPanel myIndentOptionsPanel;
-  private JPanel myTopPanel;
+    private final IndentOptionsEditorWithSmartTabs myIndentOptionsEditor;
+    private JPanel myIndentOptionsPanel;
+    private JPanel myTopPanel;
 
-  protected OtherFileTypesCodeStyleOptionsForm(@Nonnull CodeStyleSettings settings) {
-    super(settings);
-    myIndentOptionsEditor = new IndentOptionsEditorWithSmartTabs();
-    myIndentOptionsPanel.add(myIndentOptionsEditor.createPanel(), BorderLayout.CENTER);
-    addPanelToWatch(myIndentOptionsPanel);
-  }
+    @RequiredUIAccess
+    protected OtherFileTypesCodeStyleOptionsForm(@Nonnull CodeStyleSettings settings) {
+        super(settings);
+        init();
+        myIndentOptionsEditor = new IndentOptionsEditorWithSmartTabs();
+        myIndentOptionsPanel.add(myIndentOptionsEditor.createPanel(), BorderLayout.CENTER);
+        addPanelToWatch(myIndentOptionsPanel);
+    }
 
-  @Override
-  protected int getRightMargin() {
-    return 0;
-  }
+    @Override
+    protected int getRightMargin() {
+        return 0;
+    }
 
-  @Nullable
-  @Override
-  protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
-    return null;
-  }
+    @Nullable
+    @Override
+    protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  protected FileType getFileType() {
-    return PlainTextFileType.INSTANCE;
-  }
+    @Nonnull
+    @Override
+    protected FileType getFileType() {
+        return PlainTextFileType.INSTANCE;
+    }
 
-  @Nullable
-  @Override
-  protected String getPreviewText() {
-    return null;
-  }
+    @Nullable
+    @Override
+    protected String getPreviewText() {
+        return null;
+    }
 
-  @Override
-  public void apply(CodeStyleSettings settings) throws ConfigurationException {
-    myIndentOptionsEditor.apply(settings, settings.OTHER_INDENT_OPTIONS);
-  }
+    @Override
+    public void apply(CodeStyleSettings settings) throws ConfigurationException {
+        myIndentOptionsEditor.apply(settings, settings.OTHER_INDENT_OPTIONS);
+    }
 
-  @Override
-  public boolean isModified(CodeStyleSettings settings) {
-    return myIndentOptionsEditor.isModified(settings, settings.OTHER_INDENT_OPTIONS);
-  }
+    @Override
+    public boolean isModified(CodeStyleSettings settings) {
+        return myIndentOptionsEditor.isModified(settings, settings.OTHER_INDENT_OPTIONS);
+    }
 
-  @Nullable
-  @Override
-  public JComponent getPanel() {
-    return myTopPanel;
-  }
+    @Nullable
+    @Override
+    public JComponent getPanel() {
+        return myTopPanel;
+    }
 
-  @Override
-  protected void resetImpl(CodeStyleSettings settings) {
-    myIndentOptionsEditor.reset(settings, settings.OTHER_INDENT_OPTIONS);
-  }
+    @Override
+    protected void resetImpl(CodeStyleSettings settings) {
+        myIndentOptionsEditor.reset(settings, settings.OTHER_INDENT_OPTIONS);
+    }
+
+    private void init() {
+        myTopPanel = new JPanel();
+        myTopPanel.setLayout(new GridLayoutManager(2, 2, JBUI.insetsLeft(20), -1, -1));
+        myIndentOptionsPanel = new JPanel();
+        myIndentOptionsPanel.setLayout(new BorderLayout(0, 0));
+        myIndentOptionsPanel.putClientProperty("BorderFactoryClass", "");
+        myTopPanel.add(
+            myIndentOptionsPanel,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myTopPanel.add(
+            new Spacer(),
+            new GridConstraints(
+                1,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myTopPanel.add(
+            TargetAWT.to(Label.create(CodeStyleLocalize.codeStyleOtherLabel())),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+    }
 }

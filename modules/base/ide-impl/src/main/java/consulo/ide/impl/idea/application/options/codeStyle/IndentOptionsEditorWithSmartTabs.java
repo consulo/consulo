@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import jakarta.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ class IndentOptionsEditorWithSmartTabs extends IndentOptionsEditor {
     @Override
     protected void addTabOptions() {
         super.addTabOptions();
-        myCbSmartTabs = new JCheckBox(ApplicationBundle.message("checkbox.indent.smart.tabs"));
+        myCbSmartTabs = new JCheckBox(CodeStyleLocalize.checkboxIndentSmartTabs().get());
         add(myCbSmartTabs, true);
     }
 
