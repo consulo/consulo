@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.codeStyle;
 
 import consulo.language.codeStyle.CodeStyleScheme;
@@ -28,125 +27,125 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.model.MutableListModel;
 
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodeStyleSchemesPanel {
+    private final CodeStyleSchemesModel myModel;
 
-  private final CodeStyleSchemesModel myModel;
+    private boolean myIsReset = false;
 
-  private boolean myIsReset = false;
+    private final HorizontalLayout myLayout;
+    private final ComboBox<CodeStyleScheme> mySchemeComboBox;
+    private final MutableListModel<CodeStyleScheme> mySchemeComboBoxModel;
 
-  private final HorizontalLayout myLayout;
-  private final ComboBox<CodeStyleScheme> mySchemeComboBox;
-  private final MutableListModel<CodeStyleScheme> mySchemeComboBoxModel;
+    @RequiredUIAccess
+    public CodeStyleSchemesPanel(CodeStyleSchemesModel model) {
+        myModel = model;
 
-  @RequiredUIAccess
-  public CodeStyleSchemesPanel(CodeStyleSchemesModel model) {
-    myModel = model;
+        myLayout = HorizontalLayout.create();
+        myLayout.add(Label.create(LocalizeValue.localizeTODO("Scheme:")));
 
-    myLayout = HorizontalLayout.create();
-    myLayout.add(Label.create(LocalizeValue.localizeTODO("Scheme:")));
+        mySchemeComboBoxModel = MutableListModel.of(List.of());
+        mySchemeComboBox = ComboBox.create(mySchemeComboBoxModel);
+        mySchemeComboBox.setRenderer((renderer, index, scheme) -> {
+            if (scheme == null) {
+                return;
+            }
 
-    mySchemeComboBoxModel = MutableListModel.of(List.of());
-    mySchemeComboBox = ComboBox.create(mySchemeComboBoxModel);
-    mySchemeComboBox.setRender((render, index, scheme) -> {
-      if (scheme == null) {
-        return;
-      }
+            if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
+                renderer.append(scheme.getName(), TextAttribute.REGULAR_BOLD);
+            }
+            else {
+                renderer.append(scheme.getName());
+            }
+        });
+        mySchemeComboBox.addValueListener(e -> {
+            if (!myIsReset) {
+                UIAccess.current().give(this::onCombo);
+            }
+        });
+        myLayout.add(mySchemeComboBox);
+        myLayout.addMirrorBorders(BorderStyle.EMPTY, null, 5, 8);
 
-      if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
-        render.append(scheme.getName(), TextAttribute.REGULAR_BOLD);
-      }
-      else {
-        render.append(scheme.getName());
-      }
-    });
-    mySchemeComboBox.addValueListener(e -> {
-      if (!myIsReset) {
-        UIAccess.current().give(this::onCombo);
-      }
-    });
-    myLayout.add(mySchemeComboBox);
-    myLayout.addMirrorBorders(BorderStyle.EMPTY, null, 5, 8);
+        Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage..."));
+        manageButton.addClickListener(event -> showManageSchemesDialog());
 
-    Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage..."));
-    manageButton.addClickListener(event -> showManageSchemesDialog());
-
-    myLayout.add(manageButton);
-  }
-
-  private void onCombo() {
-    CodeStyleScheme selected = getSelectedScheme();
-    if (selected != null) {
-      if (myModel.isProjectScheme(selected)) {
-        myModel.setUsePerProjectSettings(true);
-      }
-      else {
-        myModel.selectScheme(selected, this);
-        myModel.setUsePerProjectSettings(false);
-      }
+        myLayout.add(manageButton);
     }
-  }
 
-  @Nullable
-  private CodeStyleScheme getSelectedScheme() {
-    return mySchemeComboBox.getValue();
-  }
-
-  @RequiredUIAccess
-  public void resetSchemesCombo() {
-    myIsReset = true;
-    try {
-      List<CodeStyleScheme> schemes = new ArrayList<>();
-      schemes.addAll(myModel.getAllSortedSchemes());
-      mySchemeComboBoxModel.replaceAll(schemes);
-
-      if (myModel.isUsePerProjectSettings()) {
-        mySchemeComboBox.setValue(myModel.getProjectScheme());
-      }
-      else {
-        mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
-      }
+    private void onCombo() {
+        CodeStyleScheme selected = getSelectedScheme();
+        if (selected != null) {
+            if (myModel.isProjectScheme(selected)) {
+                myModel.setUsePerProjectSettings(true);
+            }
+            else {
+                myModel.selectScheme(selected, this);
+                myModel.setUsePerProjectSettings(false);
+            }
+        }
     }
-    finally {
-      myIsReset = false;
-    }
-  }
 
-  @RequiredUIAccess
-  public void onSelectedSchemeChanged() {
-    myIsReset = true;
-    try {
-      if (myModel.isUsePerProjectSettings()) {
-        mySchemeComboBox.setValue(myModel.getProjectScheme());
-      }
-      else {
-        mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
-      }
+    @Nullable
+    private CodeStyleScheme getSelectedScheme() {
+        return mySchemeComboBox.getValue();
     }
-    finally {
-      myIsReset = false;
-    }
-  }
 
-  public Component getLayout() {
-    return myLayout;
-  }
+    @RequiredUIAccess
+    public void resetSchemesCombo() {
+        myIsReset = true;
+        try {
+            List<CodeStyleScheme> schemes = new ArrayList<>();
+            schemes.addAll(myModel.getAllSortedSchemes());
+            mySchemeComboBoxModel.replaceAll(schemes);
 
-  @RequiredUIAccess
-  private void showManageSchemesDialog() {
-    ManageCodeStyleSchemesDialog manageSchemesDialog = new ManageCodeStyleSchemesDialog(TargetAWT.to(myLayout), myModel);
-    manageSchemesDialog.showAsync();
-  }
+            if (myModel.isUsePerProjectSettings()) {
+                mySchemeComboBox.setValue(myModel.getProjectScheme());
+            }
+            else {
+                mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
+            }
+        }
+        finally {
+            myIsReset = false;
+        }
+    }
 
-  @RequiredUIAccess
-  public void usePerProjectSettingsOptionChanged() {
-    if (myModel.isProjectScheme(myModel.getSelectedScheme())) {
-      mySchemeComboBox.setValue(myModel.getProjectScheme());
+    @RequiredUIAccess
+    public void onSelectedSchemeChanged() {
+        myIsReset = true;
+        try {
+            if (myModel.isUsePerProjectSettings()) {
+                mySchemeComboBox.setValue(myModel.getProjectScheme());
+            }
+            else {
+                mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
+            }
+        }
+        finally {
+            myIsReset = false;
+        }
     }
-    else {
-      mySchemeComboBox.setValue(myModel.getSelectedScheme());
+
+    public Component getLayout() {
+        return myLayout;
     }
-  }
+
+    @RequiredUIAccess
+    private void showManageSchemesDialog() {
+        ManageCodeStyleSchemesDialog manageSchemesDialog = new ManageCodeStyleSchemesDialog(TargetAWT.to(myLayout), myModel);
+        manageSchemesDialog.showAsync();
+    }
+
+    @RequiredUIAccess
+    public void usePerProjectSettingsOptionChanged() {
+        if (myModel.isProjectScheme(myModel.getSelectedScheme())) {
+            mySchemeComboBox.setValue(myModel.getProjectScheme());
+        }
+        else {
+            mySchemeComboBox.setValue(myModel.getSelectedScheme());
+        }
+    }
 }

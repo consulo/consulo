@@ -1,7 +1,6 @@
 package consulo.credentialStorage.impl.internal.ui;
 
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.SystemInfo;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.IdeaConfigurableUi;
 import consulo.credentialStorage.CredentialStore;
@@ -22,6 +21,7 @@ import consulo.credentialStorage.localize.CredentialStorageLocalize;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.*;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.*;
@@ -204,7 +204,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         usePgpKey = CheckBox.create(usePgpKeyText());
 
         pgpKeyCombo = ComboBox.create(pgpListModel);
-        pgpKeyCombo.setTextRender(pgpKey -> {
+        pgpKeyCombo.setTextRenderer(pgpKey -> {
             if (pgpKey == null) {
                 return LocalizeValue.empty();
             }
@@ -231,6 +231,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         return (JComponent) TargetAWT.to(labeledLayout);
     }
 
+    @RequiredUIAccess
     private boolean isKeepassFileLocationChanged(PasswordSafeSettings settings) {
         String newDb = getNewDbFileAsString();
         String currentDb = settings.getKeepassDb();
@@ -238,6 +239,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     }
 
     @Override
+    @RequiredUIAccess
     public void apply(@Nonnull PasswordSafeSettings settings) throws ConfigurationException {
         String newPgpKeyId = (getNewPgpKey() != null) ? getNewPgpKey().getKeyId() : null;
         boolean pgpKeyChanged = !StringUtil.equals(newPgpKeyId, this.settings.getState().getPgpKeyId());
@@ -266,7 +268,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
                 catch (UnsatisfiedLinkError e) {
                     SharedLogger.LOG.warn(e);
 
-                    if (SystemInfo.isLinux) {
+                    if (Platform.current().os().isLinux()) {
                         throw new ConfigurationException(CredentialStorageLocalize.settingsPasswordPackageLibsecret10IsNotInstalled());
                     }
                     else {
@@ -338,11 +340,13 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         }
     }
 
+    @RequiredUIAccess
     private Path getNewDbFile() {
         String pathStr = getNewDbFileAsString();
         return (pathStr != null) ? Paths.get(pathStr) : null;
     }
 
+    @RequiredUIAccess
     private String getNewDbFileAsString() {
         if (keePassDbFile == null) {
             return null;
@@ -371,6 +375,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         return (pgpListModel.getSize() > 0) ? pgpListModel.get(0) : null;
     }
 
+    @RequiredUIAccess
     private KeePassFileManager createKeePassFileManager() {
         Path newDb = getNewDbFile();
         if (newDb == null) {
@@ -425,6 +430,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             Path dbFile = getNewDbFile();
             e.getPresentation().setEnabled(dbFile != null && Files.exists(dbFile));
@@ -442,8 +448,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             super(CredentialStorageLocalize.actionTextPasswordSafeImport());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             closeCurrentStore();
 
@@ -499,6 +505,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getNewDbFileAsString() != null);
         }

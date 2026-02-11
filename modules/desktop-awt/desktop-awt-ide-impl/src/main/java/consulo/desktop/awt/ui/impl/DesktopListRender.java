@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
@@ -35,9 +35,9 @@ import java.util.function.Supplier;
  */
 class DesktopListRender<E> extends ColoredListCellRenderer<E> {
   private Supplier<AntialiasingType> myAntialiasingType = () -> DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent().to();
-  private Supplier<TextItemRender<E>> myRenderSupplier;
+  private Supplier<TextItemRenderer<E>> myRenderSupplier;
 
-  public DesktopListRender(Supplier<TextItemRender<E>> renderSupplier) {
+  public DesktopListRender(Supplier<TextItemRenderer<E>> renderSupplier) {
     myRenderSupplier = renderSupplier;
   }
 
