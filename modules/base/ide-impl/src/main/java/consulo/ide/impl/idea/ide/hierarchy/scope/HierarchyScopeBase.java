@@ -25,6 +25,6 @@ public abstract class HierarchyScopeBase implements HierarchyScope {
     @Nonnull
     @Override
     public String getId() {
-        return getPresentableName().getKey().get().getKey();
+        return getPresentableName().getId();
     }
 }

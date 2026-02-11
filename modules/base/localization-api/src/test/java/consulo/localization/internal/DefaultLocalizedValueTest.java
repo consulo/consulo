@@ -36,18 +36,31 @@ public class DefaultLocalizedValueTest {
     LocalizationKey myKey = mock(LocalizationKey.class);
     LocalizationManager myManager = mock(LocalizationManager.class);
 
+    LocalizedValue value = new DefaultLocalizedValue(myManager, myKey);
+
+    @Test
+    void testId() {
+        String id = "localizationId@key";
+        when(myKey.toString()).thenReturn(id);
+
+        assertThat(value.getId()).isEqualTo(id);
+    }
+
     @Test
     void testValue() {
         when(myManager.getUnformattedText(any())).thenReturn(Map.entry(Locale.ROOT, "-"));
         when(myManager.getUnformattedText(myKey)).thenReturn(Map.entry(Locale.ROOT, "Foo"));
-
-        LocalizedValue value = new DefaultLocalizedValue(myManager, myKey);
 
         assertThat(value.getValue())
             .isEqualTo("Foo")
             .isSameAs(value.get())
             .isSameAs(value.getNullIfEmpty())
             .isSameAs(value.toString());
+    }
+
+    @Test
+    void testKey() {
+        assertThat(value.getKey().get()).isEqualTo(myKey);
     }
 
     @Test
@@ -68,14 +81,12 @@ public class DefaultLocalizedValueTest {
 
     @Test
     void testIsEmpty() {
-        LocalizedValue value = new DefaultLocalizedValue(myManager, myKey);
         assertThat(value.isEmpty()).isFalse();
         assertThat(value.isNotEmpty()).isTrue();
     }
 
     @Test
     void testOrIfEmpty() {
-        LocalizedValue value = new DefaultLocalizedValue(myManager, myKey);
         LocalizedValue otherValue = LocalizedValue.dot();
         assertThat(value.orIfEmpty(otherValue)).isSameAs(value);
     }

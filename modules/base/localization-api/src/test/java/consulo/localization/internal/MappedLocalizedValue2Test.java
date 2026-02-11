@@ -30,15 +30,26 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MappedLocalizedValue2Test {
     LocalizationManager myManager = Mockito.mock(LocalizationManager.class);
+    LocalizedValue subValue = LocalizedValue.of("Foo");
+    LocalizedValue value = new MappedLocalizedValue2(myManager, subValue, (localizeManager, string) -> string + "bar");
+
+    @Test
+    void testId() {
+        assertThat(value.getId())
+            .matches("\"Foo\"->consulo\\.localization\\.internal\\.MappedLocalizedValue2Test\\$\\$Lambda/.*");
+    }
 
     @Test
     void testValue() {
-        LocalizedValue subValue = LocalizedValue.of("Foo");
-        LocalizedValue value = new MappedLocalizedValue2(myManager, subValue, (localizeManager, string) -> string + "bar");
         assertThat(value.getValue())
             .isEqualTo("Foobar")
             .isEqualTo(value.get())
             .isEqualTo(value.toString());
+    }
+
+    @Test
+    void testKey() {
+        assertThat(value.getKey()).isNotPresent();
     }
 
     @Test

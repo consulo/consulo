@@ -46,8 +46,7 @@ public abstract class RunAnythingGroup {
     public abstract LocalizeValue getTitle();
 
     public String getKey() {
-        Optional<LocalizeKey> key = getTitle().getKey();
-        return key.isPresent() ? key.get().getKey() : "";
+        return getTitle().getId();
     }
 
     public boolean isVisibleFor(@Nonnull Project project) {

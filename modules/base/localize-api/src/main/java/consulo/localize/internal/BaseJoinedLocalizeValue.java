@@ -19,22 +19,35 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @since 2025-09-18
- */
-public final class SeparatorJoinedLocalizeValue2 extends BaseJoinedLocalizeValue {
-    private final LocalizeValue mySeparator;
+import java.util.Locale;
+import java.util.Map;
 
-    public SeparatorJoinedLocalizeValue2(LocalizeValue separator, LocalizeValue[] values) {
+/**
+ * @author UNV
+ * @since 2026-02-10
+ */
+public abstract class BaseJoinedLocalizeValue extends BaseLocalizeValue {
+    protected BaseJoinedLocalizeValue(LocalizeValue[] values) {
         super(values);
-        mySeparator = separator;
     }
 
     @Nonnull
     @Override
     public String getId() {
-        return super.getId() + '(' + mySeparator.getId() + ')';
+        StringBuilder sb = new StringBuilder().append('[');
+        for (int i = 0, n = myArgs.length; i < n; i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(((LocalizeValue) myArgs[i]).getId());
+        }
+        return sb.append("]->join").toString();
+    }
+
+    @Nonnull
+    @Override
+    protected final Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+        throw new UnsupportedOperationException("This method should never be called");
     }
 
     @Nonnull
@@ -42,14 +55,8 @@ public final class SeparatorJoinedLocalizeValue2 extends BaseJoinedLocalizeValue
     protected String calcValue(LocalizeManager manager) {
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < myArgs.length; i++) {
-            if (i != 0) {
-                builder.append(mySeparator.getValue());
-            }
-
-            Object ar = myArgs[i];
-
-            String value = ar instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(ar);
+        for (Object arg : myArgs) {
+            String value = arg instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(arg);
 
             builder.append(value);
         }
@@ -60,7 +67,6 @@ public final class SeparatorJoinedLocalizeValue2 extends BaseJoinedLocalizeValue
     public boolean equals(Object o) {
         return o == this
             || super.equals(o)
-            && o instanceof SeparatorJoinedLocalizeValue2 that
-            && mySeparator.equals(that.mySeparator);
+            && o instanceof BaseJoinedLocalizeValue that;
     }
 }

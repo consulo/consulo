@@ -16,7 +16,6 @@
 package consulo.localize;
 
 import consulo.localize.internal.DefaultLocalizeKey;
-import consulo.localize.internal.EmptyLocalizeKey;
 import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
@@ -26,11 +25,6 @@ import java.util.Locale;
  * @since 2017-11-09
  */
 public interface LocalizeKey {
-    @Nonnull
-    static LocalizeKey empty() {
-        return EmptyLocalizeKey.INSTANCE;
-    }
-
     @Nonnull
     static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key) {
         return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));

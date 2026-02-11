@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 2017-11-09
  */
-public class ConstantLocalizeValue implements LocalizeValue {
+public final class ConstantLocalizeValue implements LocalizeValue {
     public static final ConstantLocalizeValue SPACE = new ConstantLocalizeValue(" ");
     public static final ConstantLocalizeValue COLON = new ConstantLocalizeValue(":");
     public static final ConstantLocalizeValue DOT = new ConstantLocalizeValue(".");
@@ -34,6 +34,12 @@ public class ConstantLocalizeValue implements LocalizeValue {
 
     public ConstantLocalizeValue(String value) {
         myValue = value;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return '"' + myValue + '"';
     }
 
     @Nonnull

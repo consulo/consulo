@@ -28,7 +28,7 @@ import java.util.function.Function;
  * @since 2025-12-06
  */
 public final class EmptyLocalizedValue implements LocalizedValue {
-    public static final EmptyLocalizedValue VALUE = new EmptyLocalizedValue();
+    public static final EmptyLocalizedValue INSTANCE = new EmptyLocalizedValue();
 
     private static final String EMPTY_STRING = "";
 
@@ -40,6 +40,12 @@ public final class EmptyLocalizedValue implements LocalizedValue {
     @Override
     public boolean isNotEmpty() {
         return false;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return "empty";
     }
 
     @Nonnull

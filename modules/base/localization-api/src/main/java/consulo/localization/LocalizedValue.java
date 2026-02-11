@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedValue> {
     @Nonnull
     static LocalizedValue empty() {
-        return EmptyLocalizedValue.VALUE;
+        return EmptyLocalizedValue.INSTANCE;
     }
 
     @Nonnull
@@ -102,6 +102,9 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     default boolean isNotEmpty() {
         return !isEmpty();
     }
+
+    @Nonnull
+    String getId();
 
     @Nonnull
     String getValue();
