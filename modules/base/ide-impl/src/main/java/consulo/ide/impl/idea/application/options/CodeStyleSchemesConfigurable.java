@@ -139,6 +139,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
     }
 
+    @RequiredUIAccess
     private void resetImpl() {
         if (myModel != null) {
             myModel.reset();
@@ -151,6 +152,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
     }
 
+    @RequiredUIAccess
     public synchronized void resetFromChild() {
         if (!myResetCompleted) {
             try {
@@ -162,6 +164,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
     }
 
+    @RequiredUIAccess
     public void revert() {
         if (myModel.isSchemeListModified() || isSomeSchemeModified()) {
             myRevertCompleted = false;
@@ -176,6 +179,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
     }
 
+    @RequiredUIAccess
     private boolean isSomeSchemeModified() {
         if (myPanels != null) {
             for (CodeStyleConfigurableWrapper panel : myPanels) {
@@ -256,6 +260,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return null;
     }
 
+    @RequiredUIAccess
     private boolean isSchemeModified(CodeStyleScheme scheme) {
         for (CodeStyleConfigurableWrapper panel : myPanels) {
             if (panel.isPanelModified(scheme)) {
@@ -340,9 +345,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return CONFIGURABLE_ID;
     }
 
+    @Nonnull
     @Override
+    @RequiredUIAccess
     public Set<String> processListOptions() {
-        HashSet<String> result = new HashSet<>();
+        Set<String> result = new HashSet<>();
         for (CodeStyleConfigurableWrapper panel : myPanels) {
             result.addAll(panel.processListOptions());
         }
@@ -363,6 +370,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public LocalizeValue getDisplayName() {
             LocalizeValue displayName = myProvider.getConfigurableDisplayName();
             if (displayName.isNotEmpty()) {
@@ -373,10 +381,12 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
 
         @Override
+        @RequiredUIAccess
         public String getHelpTopic() {
             return ensurePanel().getHelpTopic();
         }
 
+        @RequiredUIAccess
         private CodeStyleMainPanel ensurePanel() {
             if (myPanel == null) {
                 myPanel = new CodeStyleMainPanel(ensureModel(), myFactory);
@@ -407,6 +417,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             CodeStyleSchemesConfigurable.this.apply();
         }
 
+        @RequiredUIAccess
         public void resetPanel() {
             if (myPanel != null) {
                 myPanel.reset();
@@ -436,6 +447,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public String getId() {
             return "preferences.sourceCode." + getDisplayName().getId();
         }
@@ -449,6 +461,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             }
         }
 
+        @RequiredUIAccess
         public void selectTab(@Nonnull LocalizeValue tabName) {
             assert myPanel != null;
             myPanel.showTabOnCurrentPanel(tabName.get());
@@ -456,19 +469,23 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
+        @RequiredUIAccess
         public void selectTab(@Nonnull String tab) {
             assert myPanel != null;
             myPanel.showTabOnCurrentPanel(tab);
         }
 
+        @RequiredUIAccess
         public boolean isPanelModified(CodeStyleScheme scheme) {
             return myPanel != null && myPanel.isModified(scheme);
         }
 
+        @RequiredUIAccess
         public boolean isPanelModified() {
             return myPanel != null && myPanel.isModified();
         }
 
+        @RequiredUIAccess
         public void applyPanel() {
             if (myPanel != null) {
                 myPanel.apply();
@@ -476,6 +493,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
 
         @Override
+        @RequiredUIAccess
         public Set<String> processListOptions() {
             return ensurePanel().processListOptions();
         }

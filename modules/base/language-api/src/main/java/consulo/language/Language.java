@@ -46,6 +46,8 @@ import java.util.function.Supplier;
 public abstract class Language extends UserDataHolderBase {
     private static final Logger LOG = Logger.getInstance(Language.class);
 
+    public static final Language[] EMPTY_ARRAY = new Language[0];
+
     public static final Key<Language> KEY = Key.create(Language.class);
 
     public static final Comparator<Language> DISPLAY_NAME_COMPARATOR =
