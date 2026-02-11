@@ -95,7 +95,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private CheckBox mySmoothScrollingBox;
 
         private InitialStyleState myInitialStyle;
-        private boolean myStyledChaged;
+        private boolean myStyledChanged;
         private AtomicInteger myEventBlocker = new AtomicInteger();
 
         private boolean myApplied;
@@ -114,13 +114,13 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
             myStyleComboBox = ComboBox.create(StyleManager.get().getStyles());
             myStyleComboBox.addValueListener(event -> {
-                myStyledChaged = true;
+                myStyledChanged = true;
 
                 if (myEventBlocker.get() == 0) {
                     StyleManager.get().setCurrentStyle(event.getValue());
                 }
             });
-            myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
+            myStyleComboBox.setTextRenderer(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
             uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myStyleComboBox));
 
             List<Object> iconThemes = new ArrayList<>();
@@ -128,7 +128,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
             iconThemes.addAll(libraries.values());
             myIconThemeComboBox = ComboBox.create(iconThemes);
-            myIconThemeComboBox.setRender((render, index, item) -> {
+            myIconThemeComboBox.setRenderer((render, index, item) -> {
                 if (item == ObjectUtil.NULL) {
                     render.append(IdeLocalize.comboboxIconThemeUiDefault());
                 }
@@ -140,8 +140,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
             HorizontalLayout useCustomFontLine = HorizontalLayout.create();
             useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
-            Set<String> avaliableFontNames = FontManager.get().getAvailableFontNames();
-            useCustomFontLine.add(myFontCombo = ComboBox.create(avaliableFontNames));
+            Set<String> availableFontNames = FontManager.get().getAvailableFontNames();
+            useCustomFontLine.add(myFontCombo = ComboBox.create(availableFontNames));
             useCustomFontLine.add(LabeledBuilder.simple(
                 IdeLocalize.labelFontSize(),
                 myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
@@ -161,12 +161,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
 
             myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInIDE.setRender(buildItemRender(false));
+            myAntialiasingInIDE.setRenderer(buildItemRenderer(false));
 
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
 
             myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInEditor.setRender(buildItemRender(true));
+            myAntialiasingInEditor.setRenderer(buildItemRenderer(true));
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
 
             myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
@@ -204,38 +204,34 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
-            return (render, index, item) -> {
+        private TextItemRender<AntialiasingType> buildItemRenderer(boolean editor) {
+            return (renderer, index, item) -> {
                 if (item == null) {
                     return;
                 }
 
-                render.withAntialiasingType(item);
+                renderer.withAntialiasingType(item);
 
                 if (editor) {
                     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-                    render.withFont(FontManager.get().createFont(
+                    renderer.withFont(FontManager.get().createFont(
                         scheme.getEditorFontName(),
                         scheme.getEditorFontSize(),
                         Font.STYLE_PLAIN
                     ));
                 }
 
-                render.append(textForAntialiasingType(item));
+                renderer.append(textForAntialiasingType(item));
             };
         }
 
         private LocalizeValue textForAntialiasingType(@Nonnull AntialiasingType type) {
-            switch (type) {
-                case SUBPIXEL:
-                    return LocalizeValue.localizeTODO("Subpixel");
-                case GREYSCALE:
-                    return LocalizeValue.localizeTODO("Greyscale");
-                case OFF:
-                    return LocalizeValue.localizeTODO("No antialiasing");
-                default:
-                    throw new IllegalArgumentException(type.toString());
-            }
+            return switch (type) {
+                case SUBPIXEL -> LocalizeValue.localizeTODO("Subpixel");
+                case GREYSCALE -> LocalizeValue.localizeTODO("Greyscale");
+                case OFF -> LocalizeValue.localizeTODO("No antialiasing");
+                default -> throw new IllegalArgumentException(type.toString());
+            };
         }
 
         @Nonnull
@@ -278,7 +274,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         StyleManager styleManager = StyleManager.get();
 
         if (!component.myApplied
-            && component.myStyledChaged
+            && component.myStyledChanged
             && component.myInitialStyle != null
             && component.myInitialStyle.style() != styleManager.getCurrentStyle()) {
             styleManager.setCurrentStyle(component.myInitialStyle.style());
@@ -325,7 +321,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         isModified |= component.myHideNavigationPopupsCheckBox.getValue() != settings.HIDE_NAVIGATION_ON_FOCUS_LOSS;
         isModified |= component.myAltDNDCheckBox.getValue() != settings.DND_WITH_PRESSED_ALT_ONLY;
         isModified |= component.mySmoothScrollingBox.getValue() != settings.SMOOTH_SCROLLING;
-        isModified |= !Comparing.equal(component.myStyleComboBox.getValue(), StyleManager.get().getCurrentStyle()) || component.myStyledChaged;
+        isModified |= !Comparing.equal(component.myStyleComboBox.getValue(), StyleManager.get().getCurrentStyle()) || component.myStyledChanged;
         isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull());
 
         return isModified;

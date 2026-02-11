@@ -27,91 +27,92 @@ import org.eclipse.swt.widgets.Composite;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> implements ComboBox<E> {
-  private TextItemRender<E> myRender = (render, index, item) -> {
-    if (item == null) {
-      render.append("");
-    }
-    else {
-      render.append(item.toString());
-    }
-  };
+    private TextItemRender<E> myRenderer = (render, index, item) -> {
+        if (item == null) {
+            render.append("");
+        }
+        else {
+            render.append(item.toString());
+        }
+    };
 
-  private final ListModel<E> myModel;
+    private final ListModel<E> myModel;
 
-  private int mySelectedIndex = 0;
+    private int mySelectedIndex = 0;
 
-  public DesktopSwtComboBoxImpl(ListModel<E> model) {
-    myModel = model;
-  }
-
-  @Override
-  protected CCombo createSWT(Composite parent) {
-    return new CCombo(parent, SWT.BORDER | SWT.READ_ONLY);
-  }
-
-  @Override
-  protected void initialize(CCombo component) {
-    List<String> items = new ArrayList<>();
-
-    for (int i = 0; i < myModel.getSize(); i++) {
-      E element = myModel.get(i);
-
-      DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
-
-      myRender.render(presentation, i, element);
-
-      items.add(presentation.toString());
+    public DesktopSwtComboBoxImpl(ListModel<E> model) {
+        myModel = model;
     }
 
-    component.setItems(items.toArray(String[]::new));
-
-    component.select(mySelectedIndex);
-
-    component.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        mySelectedIndex = component.getSelectionIndex();
-      }
-    });
-  }
-
-  @Nonnull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
-
-  @Override
-  public void setRender(@Nonnull TextItemRender<E> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void setValueByIndex(int index) {
-    mySelectedIndex = index;
-
-    if(myComponent != null) {
-      myComponent.select(index);
+    @Override
+    protected CCombo createSWT(Composite parent) {
+        return new CCombo(parent, SWT.BORDER | SWT.READ_ONLY);
     }
-  }
 
-  @Nullable
-  @Override
-  public E getValue() {
-    return myModel.get(mySelectedIndex);
-  }
+    @Override
+    protected void initialize(CCombo component) {
+        List<String> items = new ArrayList<>();
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(E value, boolean fireListeners) {
-    setValueByIndex(myModel.indexOf(value));
-  }
+        for (int i = 0; i < myModel.getSize(); i++) {
+            E element = myModel.get(i);
+
+            DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
+
+            myRenderer.render(presentation, i, element);
+
+            items.add(presentation.toString());
+        }
+
+        component.setItems(items.toArray(String[]::new));
+
+        component.select(mySelectedIndex);
+
+        component.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                mySelectedIndex = component.getSelectionIndex();
+            }
+        });
+    }
+
+    @Nonnull
+    @Override
+    public ListModel<E> getListModel() {
+        return myModel;
+    }
+
+    @Override
+    public void setRenderer(@Nonnull TextItemRender<E> renderer) {
+        myRenderer = renderer;
+    }
+
+    @Override
+    public void setValueByIndex(int index) {
+        mySelectedIndex = index;
+
+        if (myComponent != null) {
+            myComponent.select(index);
+        }
+    }
+
+    @Nullable
+    @Override
+    public E getValue() {
+        return myModel.get(mySelectedIndex);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setValue(E value, boolean fireListeners) {
+        setValueByIndex(myModel.indexOf(value));
+    }
 }

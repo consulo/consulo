@@ -43,14 +43,14 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     public WebComboBoxImpl(ListModel<V> model) {
         super(model);
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRender.defaultRender());
     }
 
     @Override
-    public void setRender(@Nonnull TextItemRender<V> render) {
+    public void setRenderer(@Nonnull TextItemRender<V> renderer) {
         toVaadinComponent().setRenderer(new ComponentRenderer((c) -> {
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            render.render(presentation, myModel.indexOf((V) c), (V) c);
+            renderer.render(presentation, myModel.indexOf((V) c), (V) c);
             return presentation.toComponent();
         }));
     }
