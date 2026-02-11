@@ -16,7 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import org.eclipse.swt.SWT;
@@ -55,7 +55,7 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
   }
 
   @Override
-  public void setRender(@Nonnull TextItemRender<E> render) {
+  public void setRender(@Nonnull TextItemRenderer<E> render) {
 
   }
 

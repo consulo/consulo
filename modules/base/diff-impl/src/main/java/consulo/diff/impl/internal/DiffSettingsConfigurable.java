@@ -39,63 +39,63 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 24/09/2021
+ * @since 2021-09-24
  */
 @ExtensionImpl
 public class DiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
-    TextDiffSettingsHolder.TextDiffSettings textDiffSettings = TextDiffSettingsHolder.TextDiffSettings.getSettings();
-    DiffSettingsHolder.DiffSettings diffSettings = DiffSettingsHolder.DiffSettings.getSettings();
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+        TextDiffSettingsHolder.TextDiffSettings textDiffSettings = TextDiffSettingsHolder.TextDiffSettings.getSettings();
+        DiffSettingsHolder.DiffSettings diffSettings = DiffSettingsHolder.DiffSettings.getSettings();
 
-    VerticalLayout rootLayout = VerticalLayout.create();
+        VerticalLayout rootLayout = VerticalLayout.create();
 
-    VerticalLayout diffLayout = VerticalLayout.create();
+        VerticalLayout diffLayout = VerticalLayout.create();
 
-    List<Integer> modes = new ArrayList<>();
-    for (int mode : TextDiffSettingsHolder.CONTEXT_RANGE_MODES) {
-      modes.add(mode);
+        List<Integer> modes = new ArrayList<>();
+        for (int mode : TextDiffSettingsHolder.CONTEXT_RANGE_MODES) {
+            modes.add(mode);
+        }
+
+        ComboBox<Integer> contextRangeBox = ComboBox.create(modes);
+        contextRangeBox.selectFirst();
+        contextRangeBox.setTextRenderer(value -> {
+            int index = ArrayUtil.indexOf(TextDiffSettingsHolder.CONTEXT_RANGE_MODES, value);
+            return LocalizeValue.localizeTODO(TextDiffSettingsHolder.CONTEXT_RANGE_MODE_LABELS[index]);
+        });
+
+        diffLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Context lines:"), contextRangeBox));
+        propertyBuilder.add(contextRangeBox, textDiffSettings::getContextRange, textDiffSettings::setContextRange);
+
+        CheckBox goToNextFileBox = CheckBox.create(LocalizeValue.localizeTODO("Go to the next file after reaching last change"));
+        diffLayout.add(goToNextFileBox);
+        propertyBuilder.add(goToNextFileBox, diffSettings::isGoToNextFileOnNextDifference, diffSettings::setGoToNextFileOnNextDifference);
+
+        rootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Diff"), diffLayout));
+
+        CheckBox showDiffInEditorBox = CheckBox.create(LocalizeValue.localizeTODO("Show diff in editor"));
+        diffLayout.add(showDiffInEditorBox);
+        propertyBuilder.add(showDiffInEditorBox, diffSettings::isShowDiffInEditor, diffSettings::setShowDiffInEditor);
+        return rootLayout;
     }
 
-    ComboBox<Integer> contextRangeBox = ComboBox.create(modes);
-    contextRangeBox.selectFirst();
-    contextRangeBox.setTextRender(value -> {
-      int index = ArrayUtil.indexOf(TextDiffSettingsHolder.CONTEXT_RANGE_MODES, value);
-      return LocalizeValue.localizeTODO(TextDiffSettingsHolder.CONTEXT_RANGE_MODE_LABELS[index]);
-    });
+    @Nonnull
+    @Override
+    public String getId() {
+        return "diff.base";
+    }
 
-    diffLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Context lines:"), contextRangeBox));
-    propertyBuilder.add(contextRangeBox, textDiffSettings::getContextRange, textDiffSettings::setContextRange);
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Diff & Merge");
+    }
 
-    CheckBox goToNextFileBox = CheckBox.create(LocalizeValue.localizeTODO("Go to the next file after reaching last change"));
-    diffLayout.add(goToNextFileBox);
-    propertyBuilder.add(goToNextFileBox, diffSettings::isGoToNextFileOnNextDifference, diffSettings::setGoToNextFileOnNextDifference);
-
-    rootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Diff"), diffLayout));
-
-    CheckBox showDiffInEditorBox = CheckBox.create(LocalizeValue.localizeTODO("Show diff in editor"));
-    diffLayout.add(showDiffInEditorBox);
-    propertyBuilder.add(showDiffInEditorBox, diffSettings::isShowDiffInEditor, diffSettings::setShowDiffInEditor);
-    return rootLayout;
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "diff.base";
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Diff & Merge");
-  }
-
-  @Nullable
-  @Override
-  public String getParentId() {
-    return StandardConfigurableIds.VCS_GROUP;
-  }
+    @Nullable
+    @Override
+    public String getParentId() {
+        return StandardConfigurableIds.VCS_GROUP;
+    }
 }

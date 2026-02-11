@@ -175,17 +175,11 @@ final class BrowserSettingsPanel {
             myAlternativeBrowserPathBox.getComponent().setEnabled(customPathEnabled);
             updateCustomPathTextFieldValue(value);
         });
-        myDefaultBrowserPolicyComboBox.setTextRender(defaultBrowserPolicy -> {
-            switch (defaultBrowserPolicy) {
-                case SYSTEM:
-                    return LocalizeValue.localizeTODO("System default");
-                case FIRST:
-                    return LocalizeValue.localizeTODO("First listed");
-                case ALTERNATIVE:
-                    return LocalizeValue.localizeTODO("Custom path");
-                default:
-                    throw new IllegalArgumentException(defaultBrowserPolicies.toString());
-            }
+        myDefaultBrowserPolicyComboBox.setTextRenderer(defaultBrowserPolicy -> switch (defaultBrowserPolicy) {
+            case SYSTEM -> LocalizeValue.localizeTODO("System default");
+            case FIRST -> LocalizeValue.localizeTODO("First listed");
+            case ALTERNATIVE -> LocalizeValue.localizeTODO("Custom path");
+            default -> throw new IllegalArgumentException(defaultBrowserPolicies.toString());
         });
 
         TableModelEditor.DialogItemEditor<ConfigurableWebBrowser> itemEditor = new TableModelEditor.DialogItemEditor<>() {

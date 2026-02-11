@@ -18,7 +18,7 @@ package consulo.web.internal.ui.vaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.data.provider.HasListDataView;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
@@ -37,9 +37,8 @@ import jakarta.annotation.Nullable;
  */
 public abstract class WebSingleListComponentBase<V, C extends Component & HasListDataView & HasValue & FromVaadinComponentWrapper> extends VaadinComponentDelegate<C> implements ValueComponent<V> {
   protected final ListModel<V> myModel;
-  protected TextItemRender<V> myRender = (render, index, item) -> {
-     render.append(item == null ? "" : item.toString());
-  };
+  protected TextItemRenderer<V> myRenderer =
+    (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
 
   @SuppressWarnings("unchecked")
   protected WebSingleListComponentBase(ListModel<V> model) {

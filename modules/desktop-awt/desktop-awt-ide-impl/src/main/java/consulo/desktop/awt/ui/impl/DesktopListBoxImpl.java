@@ -43,7 +43,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         }
     }
 
-    private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+    private TextItemRenderer<E> myRender = ListItemRenderers.defaultRenderer();
 
     private ListModel<E> myModel;
 
@@ -67,7 +67,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
-    public void setRender(@Nonnull TextItemRender<E> render) {
+    public void setRender(@Nonnull TextItemRenderer<E> render) {
         myRender = render;
     }
 

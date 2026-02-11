@@ -120,9 +120,11 @@ public interface ComboBox<E> extends ValueComponent<E> {
         @Nonnull
         @SuppressWarnings("unchecked")
         public ComboBox<K> build() {
-            K[] objects = (K[])myValues.keySet().toArray();
+            K[] objects = (K[]) myValues.keySet().toArray();
             ComboBox<K> comboBox = ComboBox.create(objects);
-            comboBox.setRender((render, index, item) -> render.append(item == null ? LocalizeValue.empty() : myValues.get(item)));
+            comboBox.setRenderer(
+                (renderer, index, item) -> renderer.append(item == null ? LocalizeValue.empty() : myValues.get(item))
+            );
             return comboBox;
         }
     }
@@ -144,10 +146,22 @@ public interface ComboBox<E> extends ValueComponent<E> {
         }
     }
 
-    void setRender(@Nonnull TextItemRender<E> render);
+    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
 
+    @Deprecated
+    @DeprecationInfo("Use setRenderer")
+    default void setRender(@Nonnull TextItemRenderer<E> renderer) {
+        setRenderer(renderer);
+    }
+
+    default void setTextRenderer(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
+        setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use setTextRenderer")
     default void setTextRender(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
-        setRender((render, index, item) -> render.append(localizeValueFunction.apply(item)));
+        setTextRenderer(localizeValueFunction);
     }
 
     void setValueByIndex(int index);

@@ -47,132 +47,135 @@ import java.util.List;
  * @since 2019-08-26
  */
 public class ModuleImportProcessor {
-  private static final String LAST_IMPORTED_LOCATION = "last.imported.location";
+    private static final String LAST_IMPORTED_LOCATION = "last.imported.location";
 
-  /**
-   * Will execute module importing. Will show popup for selecting import providers if more that one, and then show import wizard
-   *
-   * @param project - null mean its new project creation
-   * @return
-   */
-  @RequiredUIAccess
-  public static <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showFileChooser(@Nullable Project project, @Nullable FileChooserDescriptor chooserDescriptor) {
-    boolean isModuleImport = project != null;
+    /**
+     * Will execute module importing. Will show popup for selecting import providers if more that one, and then show import wizard
+     *
+     * @param project - null mean its new project creation
+     * @return
+     */
+    @RequiredUIAccess
+    public static <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showFileChooser(
+        @Nullable Project project,
+        @Nullable FileChooserDescriptor chooserDescriptor
+    ) {
+        boolean isModuleImport = project != null;
 
-    FileChooserDescriptor descriptor = ObjectUtil.notNull(chooserDescriptor, createAllImportDescriptor(isModuleImport));
+        FileChooserDescriptor descriptor = ObjectUtil.notNull(chooserDescriptor, createAllImportDescriptor(isModuleImport));
 
-    VirtualFile toSelect = null;
-    String lastLocation = ApplicationPropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
-    if (lastLocation != null) {
-      toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
-    }
-
-    AsyncResult<Pair<C, ModuleImportProvider<C>>> result = AsyncResult.undefined();
-
-    AsyncResult<VirtualFile> fileChooseAsync = FileChooser.chooseFile(descriptor, project, toSelect);
-    fileChooseAsync.doWhenDone((f) -> {
-      ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
-
-      showImportChooser(project, f, AsyncResult.undefined());
-    });
-
-    fileChooseAsync.doWhenRejected((Runnable)result::setRejected);
-
-    return result;
-  }
-
-  @Nonnull
-  private static FileChooserDescriptor createAllImportDescriptor(boolean isModuleImport) {
-    FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
-      @Override
-      public Image getIcon(VirtualFile file) {
-        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(isModuleImport)) {
-          if (importProvider.canImport(VirtualFileUtil.virtualToIoFile(file))) {
-            return importProvider.getIcon();
-          }
+        VirtualFile toSelect = null;
+        String lastLocation = ApplicationPropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
+        if (lastLocation != null) {
+            toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
         }
-        return super.getIcon(file);
-      }
-    };
-    descriptor.setHideIgnored(false);
-    descriptor.setTitle("Select File or Directory to Import");
-    return descriptor;
-  }
 
-  @RequiredUIAccess
-  public static <C extends ModuleImportContext> void showImportChooser(
-    @Nullable Project project,
-    VirtualFile file,
-    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
-  ) {
-    boolean isModuleImport = project != null;
+        AsyncResult<Pair<C, ModuleImportProvider<C>>> result = AsyncResult.undefined();
 
-    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isModuleImport);
+        AsyncResult<VirtualFile> fileChooseAsync = FileChooser.chooseFile(descriptor, project, toSelect);
+        fileChooseAsync.doWhenDone((f) -> {
+            ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
 
-    File ioFile = VirtualFileUtil.virtualToIoFile(file);
-    List<ModuleImportProvider> avaliableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
-    if (avaliableProviders.isEmpty()) {
-      Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();
-      result.setRejected();
-      return;
+            showImportChooser(project, f, AsyncResult.undefined());
+        });
+
+        fileChooseAsync.doWhenRejected((Runnable) result::setRejected);
+
+        return result;
     }
 
-    showImportChooser(project, file, providers, result);
-  }
-
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  public static <C extends ModuleImportContext> void showImportChooser(
-    @Nullable Project project,
-    @Nonnull VirtualFile file,
-    @Nonnull List<ModuleImportProvider> providers,
-    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
-  ) {
-    if (providers.size() == 1) {
-      showImportWizard(project, file, providers.get(0), result);
+    @Nonnull
+    private static FileChooserDescriptor createAllImportDescriptor(boolean isModuleImport) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
+            @Override
+            public Image getIcon(VirtualFile file) {
+                for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(isModuleImport)) {
+                    if (importProvider.canImport(VirtualFileUtil.virtualToIoFile(file))) {
+                        return importProvider.getIcon();
+                    }
+                }
+                return super.getIcon(file);
+            }
+        };
+        descriptor.setHideIgnored(false);
+        descriptor.setTitle("Select File or Directory to Import");
+        return descriptor;
     }
-    else {
-      AsyncResult<ModuleImportProvider> importResult = showImportTarget(providers);
-      importResult.doWhenDone((r) -> showImportWizard(project, file, r, result));
+
+    @RequiredUIAccess
+    public static <C extends ModuleImportContext> void showImportChooser(
+        @Nullable Project project,
+        VirtualFile file,
+        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+    ) {
+        boolean isModuleImport = project != null;
+
+        List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isModuleImport);
+
+        File ioFile = VirtualFileUtil.virtualToIoFile(file);
+        List<ModuleImportProvider> availableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
+        if (availableProviders.isEmpty()) {
+            Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();
+            result.setRejected();
+            return;
+        }
+
+        showImportChooser(project, file, providers, result);
     }
-  }
 
-  @RequiredUIAccess
-  private static AsyncResult<ModuleImportProvider> showImportTarget(@Nonnull List<ModuleImportProvider> providers) {
-    ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
-    box.setRender((render, index, item) -> {
-      assert item != null;
-      render.withIcon(item.getIcon());
-      render.append(item.getName());
-    });
-    box.setValueByIndex(0);
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public static <C extends ModuleImportContext> void showImportChooser(
+        @Nullable Project project,
+        @Nonnull VirtualFile file,
+        @Nonnull List<ModuleImportProvider> providers,
+        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+    ) {
+        if (providers.size() == 1) {
+            showImportWizard(project, file, providers.get(0), result);
+        }
+        else {
+            AsyncResult<ModuleImportProvider> importResult = showImportTarget(providers);
+            importResult.doWhenDone((r) -> showImportWizard(project, file, r, result));
+        }
+    }
 
-    LabeledLayout layout = LabeledLayout.create(LocalizeValue.localizeTODO("Select import target"), box);
+    @RequiredUIAccess
+    private static AsyncResult<ModuleImportProvider> showImportTarget(@Nonnull List<ModuleImportProvider> providers) {
+        ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
+        box.setRenderer((renderer, index, item) -> {
+            assert item != null;
+            renderer.withIcon(item.getIcon());
+            renderer.append(item.getName());
+        });
+        box.setValueByIndex(0);
 
-    DialogBuilder builder = new DialogBuilder();
-    builder.setTitle("Import Target");
-    builder.setCenterPanel((JComponent)TargetAWT.to(layout));
+        LabeledLayout layout = LabeledLayout.create(LocalizeValue.localizeTODO("Select import target"), box);
 
-    AsyncResult<ModuleImportProvider> result = AsyncResult.undefined();
+        DialogBuilder builder = new DialogBuilder();
+        builder.setTitle("Import Target");
+        builder.setCenterPanel((JComponent) TargetAWT.to(layout));
 
-    AsyncResult<Void> showResult = builder.showAsync();
-    showResult.doWhenDone(() -> result.setDone(box.getValue()));
-    showResult.doWhenRejected((Runnable)result::setRejected);
-    return result;
-  }
+        AsyncResult<ModuleImportProvider> result = AsyncResult.undefined();
 
-  @RequiredUIAccess
-  private static <C extends ModuleImportContext> void showImportWizard(
-    @Nullable Project project,
-    @Nonnull VirtualFile targetFile,
-    @Nonnull ModuleImportProvider<C> moduleImportProvider,
-    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
-  ) {
-    ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
+        AsyncResult<Void> showResult = builder.showAsync();
+        showResult.doWhenDone(() -> result.setDone(box.getValue()));
+        showResult.doWhenRejected((Runnable) result::setRejected);
+        return result;
+    }
 
-    AsyncResult<Void> showAsync = dialog.showAsync();
+    @RequiredUIAccess
+    private static <C extends ModuleImportContext> void showImportWizard(
+        @Nullable Project project,
+        @Nonnull VirtualFile targetFile,
+        @Nonnull ModuleImportProvider<C> moduleImportProvider,
+        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+    ) {
+        ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
 
-    showAsync.doWhenDone(() -> result.setDone(Pair.create(dialog.getContext(), moduleImportProvider)));
-    showAsync.doWhenRejected(() -> result.setRejected(Pair.create(dialog.getContext(), moduleImportProvider)));
-  }
+        AsyncResult<Void> showAsync = dialog.showAsync();
+
+        showAsync.doWhenDone(() -> result.setDone(Pair.create(dialog.getContext(), moduleImportProvider)));
+        showAsync.doWhenRejected(() -> result.setRejected(Pair.create(dialog.getContext(), moduleImportProvider)));
+    }
 }
