@@ -47,6 +47,12 @@ public final class DefaultLocalizedValue extends CachingLocalizedValue {
 
     @Nonnull
     @Override
+    public String getId() {
+        return myLocalizationKey.toString();
+    }
+
+    @Nonnull
+    @Override
     public Optional<LocalizationKey> getKey() {
         return Optional.of(myLocalizationKey);
     }

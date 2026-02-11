@@ -430,15 +430,14 @@ public final class DaemonListeners implements Disposable {
     }
 
     private class MyCommandListener implements CommandListener {
-        private final LocalizeKey myCutActionKey;
+        private final String myCutActionId;
 
         private MyCommandListener(ActionManager actionManager) {
-            myCutActionKey = actionManager
+            myCutActionId = actionManager
                 .getAction(IdeActions.ACTION_EDITOR_CUT)
                 .getTemplatePresentation()
                 .getTextValue()
-                .getKey()
-                .get();
+                .getId();
         }
 
         @Override
@@ -448,9 +447,9 @@ public final class DaemonListeners implements Disposable {
                 return;
             }
 
-            LocalizeKey commandKey = event.getCommandNameValue().getKey().orElse(null);
+            String commandId = event.getCommandNameValue().getId();
 
-            cutOperationJustHappened = myCutActionKey.equals(commandKey);
+            cutOperationJustHappened = myCutActionId.equals(commandId);
             if (!myDaemonCodeAnalyzer.isRunning()) {
                 return;
             }

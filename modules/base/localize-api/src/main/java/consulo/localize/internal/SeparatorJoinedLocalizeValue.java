@@ -19,14 +19,11 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.Locale;
-import java.util.Map;
-
 /**
  * @author VISTALL
  * @since 2025-09-13
  */
-public final class SeparatorJoinedLocalizeValue extends BaseLocalizeValue {
+public final class SeparatorJoinedLocalizeValue extends BaseJoinedLocalizeValue {
     private final String mySeparator;
 
     public SeparatorJoinedLocalizeValue(String separator, LocalizeValue[] values) {
@@ -36,8 +33,8 @@ public final class SeparatorJoinedLocalizeValue extends BaseLocalizeValue {
 
     @Nonnull
     @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-        throw new UnsupportedOperationException("this method will never called");
+    public String getId() {
+        return super.getId() + "(\"" + mySeparator + "\")";
     }
 
     @Nonnull

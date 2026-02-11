@@ -29,14 +29,26 @@ import static org.mockito.Mockito.mock;
 public class JoinedLocalizedValueTest {
     LocalizationManager myManager = mock(LocalizationManager.class);
 
+    LocalizedValue[] subValues = {LocalizedValue.of("Foo"), LocalizedValue.empty(), LocalizedValue.of("bar")};
+    LocalizedValue value = new JoinedLocalizedValue(myManager, subValues);
+
+    @Test
+    void testId() {
+        assertThat(value.getId())
+            .isEqualTo("[\"Foo\",empty,\"bar\"]->join");
+    }
+
     @Test
     void testValue() {
-        LocalizedValue[] subValues = {LocalizedValue.of("Foo"), LocalizedValue.empty(), LocalizedValue.of("bar")};
-        LocalizedValue value = new JoinedLocalizedValue(myManager, subValues);
         assertThat(value.getValue())
             .isEqualTo("Foobar")
             .isEqualTo(value.get())
             .isEqualTo(value.toString());
+    }
+
+    @Test
+    void testKey() {
+        assertThat(value.getKey()).isNotPresent();
     }
 
     @Test

@@ -23,15 +23,14 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "codeStyleWidget", order = "after selectionModeWidget")
 public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Override
-    public
     @Nonnull
-    StatusBarWidget createWidget(@Nonnull Project project) {
+    @Override
+    public StatusBarWidget createWidget(@Nonnull Project project) {
         return new CodeStyleStatusBarWidget(project, this);
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return UILocalize.statusBarCodeStyleWidgetName().get();
     }
@@ -40,17 +39,19 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
     @RequiredReadAction
     public static DumbAwareAction createDefaultIndentConfigureAction(@Nonnull PsiFile psiFile) {
         LocalizeValue langName = getLangName(psiFile);
-        return DumbAwareAction.create(ApplicationLocalize.codeStyleWidgetConfigureIndents(langName), event -> {
-            Configurable configurable = findCodeStyleConfigurableId(psiFile.getProject(), langName.get());
-            if (configurable instanceof CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper) {
-                ShowSettingsUtil.getInstance().editConfigurable(
-                    event.getData(Project.KEY),
-                    configurable,
-                    () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper) configurable)
-                        .selectTab(ApplicationLocalize.titleTabsAndIndents().get())
-                );
+        return DumbAwareAction.create(
+            ApplicationLocalize.codeStyleWidgetConfigureIndents(langName),
+            event -> {
+                Configurable configurable = findCodeStyleConfigurableId(psiFile.getProject(), langName);
+                if (configurable instanceof CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper configurableWrapper) {
+                    ShowSettingsUtil.getInstance().editConfigurable(
+                        event.getData(Project.KEY),
+                        configurable,
+                        () -> configurableWrapper.selectTab(ApplicationLocalize.titleTabsAndIndents())
+                    );
+                }
             }
-        });
+        );
     }
 
     @Nonnull
@@ -68,9 +69,9 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
     }
 
     @Nullable
-    private static Configurable findCodeStyleConfigurableId(@Nonnull Project project, @Nonnull String langName) {
+    private static Configurable findCodeStyleConfigurableId(@Nonnull Project project, @Nonnull LocalizeValue langName) {
         CodeStyleSchemesConfigurable topConfigurable = new CodeStyleSchemesConfigurable(project);
         SearchableConfigurable found = topConfigurable.findSubConfigurable(langName);
-        return found != null ? found : topConfigurable.findSubConfigurable(OtherFileTypesCodeStyleConfigurable.getDisplayNameText().get());
+        return found != null ? found : topConfigurable.findSubConfigurable(OtherFileTypesCodeStyleConfigurable.getDisplayNameText());
     }
 }

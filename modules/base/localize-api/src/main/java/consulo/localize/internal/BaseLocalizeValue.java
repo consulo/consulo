@@ -19,7 +19,6 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.Comparator;
 import java.util.Locale;
 import java.util.Map;
 

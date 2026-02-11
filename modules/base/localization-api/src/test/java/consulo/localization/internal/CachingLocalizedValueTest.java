@@ -35,6 +35,12 @@ public class CachingLocalizedValueTest {
 
         @Nonnull
         @Override
+        public String getId() {
+            return "";
+        }
+
+        @Nonnull
+        @Override
         public String getValue() {
             return myValue;
         }

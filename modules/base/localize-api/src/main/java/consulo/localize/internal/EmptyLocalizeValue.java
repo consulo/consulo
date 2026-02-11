@@ -27,7 +27,7 @@ import java.util.function.Function;
  * @author UNV
  * @since 2025-12-06
  */
-public class EmptyLocalizeValue implements LocalizeValue {
+public final class EmptyLocalizeValue implements LocalizeValue {
     public static final EmptyLocalizeValue VALUE = new EmptyLocalizeValue();
 
     @Override
@@ -38,6 +38,12 @@ public class EmptyLocalizeValue implements LocalizeValue {
     @Override
     public boolean isNotEmpty() {
         return false;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return "empty";
     }
 
     @Nonnull

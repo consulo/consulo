@@ -40,6 +40,12 @@ public final class MappedLocalizeValue2 extends BaseLocalizeValue {
 
     @Nonnull
     @Override
+    public String getId() {
+        return myDelegate.getId() + "->" + Objects.toIdentityString(myMapper);
+    }
+
+    @Nonnull
+    @Override
     protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         String value = myDelegate.getValue();
         return Map.entry(localizeManager.getLocale(), myMapper.apply(localizeManager, value));

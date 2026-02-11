@@ -15,7 +15,11 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.application.ApplicationBundle;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import consulo.component.persist.scheme.SchemeImportException;
+import consulo.component.persist.scheme.SchemeImporter;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -24,34 +28,32 @@ import consulo.ide.impl.idea.application.options.ImportSchemeChooserDialog;
 import consulo.ide.impl.idea.application.options.ImportSourceChooserDialog;
 import consulo.ide.impl.idea.application.options.SaveSchemeDialog;
 import consulo.ide.impl.idea.application.options.SchemesToImportPopup;
-import consulo.component.persist.scheme.SchemeImportException;
-import consulo.component.persist.scheme.SchemeImporter;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemesModelImpl;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.localize.LocalizeValue;
 import consulo.project.ProjectManager;
+import consulo.ui.Button;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -61,410 +63,607 @@ import java.util.List;
  * @author rvishnyakov
  */
 public class ManageCodeStyleSchemesDialog extends DialogWrapper {
-  private JPanel myContentPane;
-  private JBTable mySchemesTable;
-  private JButton myDeleteButton;
-  private JButton mySaveAsButton;
-  private JButton myCopyToProjectButton;
-  private JButton myCloseButton;
-  private JButton myExportButton;
-  private JButton myImportButton;
-  private final MySchemesTableModel mySchemesTableModel;
-  private final CodeStyleSchemesModel myModel;
-  private final Component myParent;
+    private JPanel myContentPane;
+    private JBTable mySchemesTable;
+    private Button myDeleteButton;
+    private Button mySaveAsButton;
+    private Button myCopyToProjectButton;
+    private Button myCloseButton;
+    private Button myExportButton;
+    private Button myImportButton;
+    private final MySchemesTableModel mySchemesTableModel;
+    private final CodeStyleSchemesModel myModel;
+    private final Component myParent;
 
-  protected ManageCodeStyleSchemesDialog(Component parent, CodeStyleSchemesModel schemesModel) {
-    super(parent, true);
-    myParent = parent;
-    myModel = schemesModel;
-    setTitle("Code Style Schemes");
-    mySchemesTableModel = new MySchemesTableModel(schemesModel);
-    mySchemesTable.setModel(mySchemesTableModel);
-    mySchemesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    mySchemesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(@Nonnull ListSelectionEvent e) {
-        updateActions();
-      }
-    });
-    setDefaultSelection();
+    @RequiredUIAccess
+    protected ManageCodeStyleSchemesDialog(Component parent, CodeStyleSchemesModel schemesModel) {
+        super(parent, true);
+        myParent = parent;
+        myModel = schemesModel;
+        createUIComponents();
+        setTitle(LocalizeValue.localizeTODO("Code Style Schemes"));
+        mySchemesTableModel = new MySchemesTableModel(schemesModel);
+        mySchemesTable.setModel(mySchemesTableModel);
+        mySchemesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        mySchemesTable.getSelectionModel().addListSelectionListener(e -> updateActions());
+        setDefaultSelection();
 
+        myDeleteButton.addClickListener(e -> deleteSelected());
+        mySaveAsButton.addClickListener(e -> onSaveAs());
+        myCopyToProjectButton.addClickListener(e -> onCopyToProject());
+        myCloseButton.addClickListener(e -> doCancelAction());
 
-    myDeleteButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        deleteSelected();
-      }
-    });
-    mySaveAsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        onSaveAs();
-      }
-    });
-    myCopyToProjectButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        onCopyToProject();
-      }
-    });
-    myCloseButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        doCancelAction();
-      }
-    });
+        myExportButton.setVisible(false);
 
-    myExportButton.setVisible(false);
-
-    if (SchemeImporter.getExtensions(CodeStyleScheme.class).isEmpty()) {
-      myImportButton.setVisible(false);
-    }
-    else {
-      myImportButton.setVisible(true);
-      myImportButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(@Nonnull ActionEvent e) {
-          chooseAndImport();
+        if (SchemeImporter.getExtensions(CodeStyleScheme.class).isEmpty()) {
+            myImportButton.setVisible(false);
         }
-      });
+        else {
+            myImportButton.setVisible(true);
+            myImportButton.addClickListener(e -> chooseAndImport());
+        }
+
+        init();
     }
 
-    init();
-  }
-
-  private void chooseAndImport() {
-    ImportSourceChooserDialog<CodeStyleScheme> importSourceChooserDialog = new ImportSourceChooserDialog<CodeStyleScheme>(myContentPane, CodeStyleScheme.class);
-    if (importSourceChooserDialog.showAndGet()) {
-      if (importSourceChooserDialog.isImportFromSharedSelected()) {
-        new SchemesToImportPopup<CodeStyleScheme>(myContentPane) {
-          @Override
-          protected void onSchemeSelected(CodeStyleScheme scheme) {
-            if (scheme != null) {
-              myModel.addScheme(scheme, true);
-            }
-          }
-        }.show(myModel.getSchemes());
-      }
-      else {
-        String selectedImporterName = importSourceChooserDialog.getSelectedSourceName();
-        if (selectedImporterName != null) {
-          try {
-            String schemeName = importExternalCodeStyle(selectedImporterName);
-            if (schemeName != null) {
-              showStatus(myImportButton, ApplicationBundle.message("message.code.style.scheme.import.success", selectedImporterName, schemeName), MessageType.INFO);
-            }
-          }
-          catch (SchemeImportException e) {
-            showStatus(myImportButton, ApplicationBundle.message("message.code.style.scheme.import.failure", selectedImporterName, e.getMessage()), MessageType.ERROR);
-          }
-        }
-      }
-    }
-  }
-
-  private static void showStatus(Component component, String message, MessageType messageType) {
-    BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType.getDefaultIcon(), messageType.getPopupBackground(), null);
-    balloonBuilder.setFadeoutTime(5000);
-    Balloon balloon = balloonBuilder.createBalloon();
-    Rectangle rect = component.getBounds();
-    Point p = new Point(rect.x, rect.y + rect.height);
-    RelativePoint point = new RelativePoint(component, p);
-    balloon.show(point, Balloon.Position.below);
-    Disposer.register(ProjectManager.getInstance().getDefaultProject(), balloon);
-  }
-
-  @Nullable
-  private String importExternalCodeStyle(String importerName) throws SchemeImportException {
-    final SchemeImporter<CodeStyleScheme> importer = SchemeImporter.getImporter(importerName, CodeStyleScheme.class);
-    if (importer != null) {
-      FileChooserDialog fileChooser = FileChooserFactory.getInstance().createFileChooser(new FileChooserDescriptor(true, false, false, false, false, false) {
-        @Override
-        public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-          return file.isDirectory() || importer.getSourceExtension().equals(file.getExtension());
-        }
-
-        @Override
-        public boolean isFileSelectable(VirtualFile file) {
-          return !file.isDirectory() && importer.getSourceExtension().equals(file.getExtension());
-        }
-      }, null, myContentPane);
-      VirtualFile[] selection = fileChooser.choose(null, CodeStyleSchemesUIConfiguration.Util.getRecentImportFile());
-      if (selection.length == 1) {
-        VirtualFile selectedFile = selection[0];
-        selectedFile.refresh(false, false);
-        CodeStyleSchemesUIConfiguration.Util.setRecentImportFile(selectedFile);
-        try {
-          InputStream nameInputStream = selectedFile.getInputStream();
-          String[] schemeNames;
-          try {
-            schemeNames = importer.readSchemeNames(nameInputStream);
-          }
-          finally {
-            nameInputStream.close();
-          }
-          CodeStyleScheme currScheme = myModel.getSelectedScheme();
-          ImportSchemeChooserDialog schemeChooserDialog = new ImportSchemeChooserDialog(myContentPane, schemeNames, !currScheme.isDefault() ? currScheme.getName() : null);
-          if (schemeChooserDialog.showAndGet()) {
-            String schemeName = schemeChooserDialog.getSelectedName();
-            String targetName = schemeChooserDialog.getTargetName();
-            CodeStyleScheme targetScheme = null;
-            if (schemeChooserDialog.isUseCurrentScheme()) {
-              targetScheme = myModel.getSelectedScheme();
+    @RequiredUIAccess
+    private void chooseAndImport() {
+        ImportSourceChooserDialog<CodeStyleScheme> importSourceChooserDialog =
+            new ImportSourceChooserDialog<>(myContentPane, CodeStyleScheme.class);
+        if (importSourceChooserDialog.showAndGet()) {
+            if (importSourceChooserDialog.isImportFromSharedSelected()) {
+                new SchemesToImportPopup<CodeStyleScheme>(myContentPane) {
+                    @Override
+                    protected void onSchemeSelected(CodeStyleScheme scheme) {
+                        if (scheme != null) {
+                            myModel.addScheme(scheme, true);
+                        }
+                    }
+                }.show(myModel.getSchemes());
             }
             else {
-              if (targetName == null) targetName = ApplicationBundle.message("code.style.scheme.import.unnamed");
-              for (CodeStyleScheme scheme : myModel.getSchemes()) {
-                if (targetName.equals(scheme.getName())) {
-                  targetScheme = scheme;
-                  break;
+                String selectedImporterName = importSourceChooserDialog.getSelectedSourceName();
+                if (selectedImporterName != null) {
+                    try {
+                        String schemeName = importExternalCodeStyle(selectedImporterName);
+                        if (schemeName != null) {
+                            showStatus(
+                                TargetAWT.to(myImportButton),
+                                CodeStyleLocalize.messageCodeStyleSchemeImportSuccess(selectedImporterName, schemeName),
+                                MessageType.INFO
+                            );
+                        }
+                    }
+                    catch (SchemeImportException e) {
+                        showStatus(
+                            TargetAWT.to(myImportButton),
+                            CodeStyleLocalize.messageCodeStyleSchemeImportFailure(selectedImporterName, e.getMessage()),
+                            MessageType.ERROR
+                        );
+                    }
                 }
-              }
-              if (targetScheme == null) {
-                int row = mySchemesTableModel.createNewScheme(getSelectedScheme(), targetName);
-                mySchemesTable.getSelectionModel().setSelectionInterval(row, row);
-                targetScheme = mySchemesTableModel.getSchemeAt(row);
-              }
-              else {
-                int result = Messages.showYesNoDialog(myContentPane, ApplicationBundle.message("message.code.style.scheme.already.exists", targetName),
-                                                      ApplicationBundle.message("title.code.style.settings.import"), Messages.getQuestionIcon());
-                if (result != Messages.YES) {
-                  return null;
+            }
+        }
+    }
+
+    private static void showStatus(Component component, @Nonnull LocalizeValue message, MessageType messageType) {
+        BalloonBuilder balloonBuilder = JBPopupFactory.getInstance()
+            .createHtmlTextBalloonBuilder(message.get(), messageType.getDefaultIcon(), messageType.getPopupBackground(), null);
+        balloonBuilder.setFadeoutTime(5000);
+        Balloon balloon = balloonBuilder.createBalloon();
+        Rectangle rect = component.getBounds();
+        Point p = new Point(rect.x, rect.y + rect.height);
+        RelativePoint point = new RelativePoint(component, p);
+        balloon.show(point, Balloon.Position.below);
+        Disposer.register(ProjectManager.getInstance().getDefaultProject(), balloon);
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    private String importExternalCodeStyle(String importerName) throws SchemeImportException {
+        final SchemeImporter<CodeStyleScheme> importer = SchemeImporter.getImporter(importerName, CodeStyleScheme.class);
+        if (importer != null) {
+            FileChooserDialog fileChooser = FileChooserFactory.getInstance().createFileChooser(
+                new FileChooserDescriptor(true, false, false, false, false, false) {
+                    @Override
+                    public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
+                        return file.isDirectory() || importer.getSourceExtension().equals(file.getExtension());
+                    }
+
+                    @Override
+                    @RequiredUIAccess
+                    public boolean isFileSelectable(VirtualFile file) {
+                        return !file.isDirectory() && importer.getSourceExtension().equals(file.getExtension());
+                    }
+                },
+                null,
+                myContentPane
+            );
+            VirtualFile[] selection = fileChooser.choose(null, CodeStyleSchemesUIConfiguration.Util.getRecentImportFile());
+            if (selection.length == 1) {
+                VirtualFile selectedFile = selection[0];
+                selectedFile.refresh(false, false);
+                CodeStyleSchemesUIConfiguration.Util.setRecentImportFile(selectedFile);
+                try {
+                    InputStream nameInputStream = selectedFile.getInputStream();
+                    String[] schemeNames;
+                    try {
+                        schemeNames = importer.readSchemeNames(nameInputStream);
+                    }
+                    finally {
+                        nameInputStream.close();
+                    }
+                    CodeStyleScheme currScheme = myModel.getSelectedScheme();
+                    ImportSchemeChooserDialog schemeChooserDialog =
+                        new ImportSchemeChooserDialog(myContentPane, schemeNames, !currScheme.isDefault() ? currScheme.getName() : null);
+                    if (schemeChooserDialog.showAndGet()) {
+                        String schemeName = schemeChooserDialog.getSelectedName();
+                        String targetName = schemeChooserDialog.getTargetName();
+                        CodeStyleScheme targetScheme = null;
+                        if (schemeChooserDialog.isUseCurrentScheme()) {
+                            targetScheme = myModel.getSelectedScheme();
+                        }
+                        else {
+                            if (targetName == null) {
+                                targetName = CodeStyleLocalize.codeStyleSchemeImportUnnamed().get();
+                            }
+                            for (CodeStyleScheme scheme : myModel.getSchemes()) {
+                                if (targetName.equals(scheme.getName())) {
+                                    targetScheme = scheme;
+                                    break;
+                                }
+                            }
+                            if (targetScheme == null) {
+                                int row = mySchemesTableModel.createNewScheme(getSelectedScheme(), targetName);
+                                mySchemesTable.getSelectionModel().setSelectionInterval(row, row);
+                                targetScheme = mySchemesTableModel.getSchemeAt(row);
+                            }
+                            else {
+                                int result = Messages.showYesNoDialog(
+                                    myContentPane,
+                                    CodeStyleLocalize.messageCodeStyleSchemeAlreadyExists(targetName).get(),
+                                    CodeStyleLocalize.titleCodeStyleSettingsImport().get(),
+                                    UIUtil.getQuestionIcon()
+                                );
+                                if (result != Messages.YES) {
+                                    return null;
+                                }
+                            }
+                        }
+                        InputStream dataInputStream = selectedFile.getInputStream();
+                        try {
+                            importer.importScheme(dataInputStream, schemeName, targetScheme);
+                            myModel.fireSchemeChanged(targetScheme);
+                        }
+                        finally {
+                            dataInputStream.close();
+                        }
+                        return targetScheme.getName();
+                    }
                 }
-              }
+                catch (IOException e) {
+                    throw new SchemeImportException(e);
+                }
             }
-            InputStream dataInputStream = selectedFile.getInputStream();
-            try {
-              importer.importScheme(dataInputStream, schemeName, targetScheme);
-              myModel.fireSchemeChanged(targetScheme);
-            }
-            finally {
-              dataInputStream.close();
-            }
-            return targetScheme.getName();
-          }
         }
-        catch (IOException e) {
-          throw new SchemeImportException(e);
-        }
-      }
-    }
-    return null;
-  }
-
-  private void updateActions() {
-    CodeStyleScheme selectedScheme = getSelectedScheme();
-    myDeleteButton.setEnabled(!(selectedScheme.isDefault() || mySchemesTableModel.isProjectScheme(selectedScheme)));
-    myCopyToProjectButton.setEnabled(!mySchemesTableModel.isProjectScheme(selectedScheme));
-  }
-
-  @Nonnull
-  private CodeStyleScheme getSelectedScheme() {
-    int row = mySchemesTable.getSelectedRow();
-    assert row >= 0;
-    return mySchemesTableModel.getSchemeAt(row);
-  }
-
-  @Nonnull
-  @Override
-  protected Action[] createActions() {
-    return new Action[]{};
-  }
-
-  private void deleteSelected() {
-    int row = mySchemesTable.getSelectedRow();
-    if (row >= 0) {
-      int rowToSelect = row + 1;
-      if (rowToSelect >= mySchemesTableModel.getRowCount()) {
-        rowToSelect = mySchemesTableModel.getDefaultRow();
-      }
-      mySchemesTable.getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
-      mySchemesTableModel.deleteAt(row);
-    }
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return myContentPane;
-  }
-
-  private void createUIComponents() {
-    mySchemesTable = new MySchemesTable();
-  }
-
-  private class MySchemesTable extends JBTable {
-    private final TableCellRenderer myFixedItemsRenderer;
-
-    private MySchemesTable() {
-      myFixedItemsRenderer = new DefaultTableCellRenderer() {
-        @Nonnull
-        @Override
-        public Component getTableCellRendererComponent(@Nonnull JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-          Component defaultComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-          if (value instanceof CodeStyleScheme) {
-            CodeStyleScheme scheme = (CodeStyleScheme)value;
-            if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
-              defaultComponent.setFont(defaultComponent.getFont().deriveFont(Font.BOLD));
-            }
-          }
-          return defaultComponent;
-        }
-      };
+        return null;
     }
 
-    @Override
-    public TableCellRenderer getCellRenderer(int row, int column) {
-      return myFixedItemsRenderer;
+    @RequiredUIAccess
+    private void updateActions() {
+        CodeStyleScheme selectedScheme = getSelectedScheme();
+        myDeleteButton.setEnabled(!(selectedScheme.isDefault() || mySchemesTableModel.isProjectScheme(selectedScheme)));
+        myCopyToProjectButton.setEnabled(!mySchemesTableModel.isProjectScheme(selectedScheme));
     }
-  }
 
-  private static class MySchemesTableModel extends AbstractTableModel {
-    private final CodeStyleSchemesModel mySchemesModel;
-    private final List<CodeStyleScheme> mySchemes;
-
-    public MySchemesTableModel(CodeStyleSchemesModel schemesModel) {
-      mySchemesModel = schemesModel;
-      mySchemes = new ArrayList<CodeStyleScheme>();
-      updateSchemes();
+    @Nonnull
+    private CodeStyleScheme getSelectedScheme() {
+        int row = mySchemesTable.getSelectedRow();
+        assert row >= 0;
+        return mySchemesTableModel.getSchemeAt(row);
     }
 
     @Nonnull
     @Override
-    public String getColumnName(int column) {
-      assert column == 0;
-      return "Name";
+    protected Action[] createActions() {
+        return new Action[]{};
+    }
+
+    private void deleteSelected() {
+        int row = mySchemesTable.getSelectedRow();
+        if (row >= 0) {
+            int rowToSelect = row + 1;
+            if (rowToSelect >= mySchemesTableModel.getRowCount()) {
+                rowToSelect = mySchemesTableModel.getDefaultRow();
+            }
+            mySchemesTable.getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
+            mySchemesTableModel.deleteAt(row);
+        }
     }
 
     @Override
-    public int getRowCount() {
-      return mySchemes.size();
+    protected JComponent createCenterPanel() {
+        return myContentPane;
     }
 
-    @Override
-    public int getColumnCount() {
-      return 1;
+    private void createUIComponents() {
+        mySchemesTable = new MySchemesTable();
+        myContentPane = new JPanel();
+        myContentPane.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
+        JBScrollPane jBScrollPane1 = new JBScrollPane();
+        myContentPane.add(
+            jBScrollPane1,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                new Dimension(200, 200),
+                null,
+                0,
+                false
+            )
+        );
+        mySchemesTable.setStriped(true);
+        jBScrollPane1.setViewportView(mySchemesTable);
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(7, 1, JBUI.emptyInsets(), -1, -1));
+        myContentPane.add(
+            panel1,
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myDeleteButton = Button.create(LocalizeValue.localizeTODO("&Delete"));
+        panel1.add(
+            TargetAWT.to(myDeleteButton),
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        panel1.add(
+            new Spacer(),
+            new GridConstraints(
+                6,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_VERTICAL,
+                1,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        mySaveAsButton = Button.create(LocalizeValue.localizeTODO("&Save As..."));
+        panel1.add(
+            TargetAWT.to(mySaveAsButton),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myCopyToProjectButton = Button.create(LocalizeValue.localizeTODO("Copy to &Project"));
+        panel1.add(
+            TargetAWT.to(myCopyToProjectButton),
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myCloseButton = Button.create(LocalizeValue.localizeTODO("&Close"));
+        panel1.add(
+            TargetAWT.to(myCloseButton),
+            new GridConstraints(
+                5,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myExportButton = Button.create(LocalizeValue.localizeTODO("Export..."));
+        panel1.add(
+            TargetAWT.to(myExportButton),
+            new GridConstraints(
+                3,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myImportButton = Button.create(LocalizeValue.localizeTODO("Import..."));
+        panel1.add(
+            TargetAWT.to(myImportButton),
+            new GridConstraints(
+                4,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
     }
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-      assert columnIndex == 0;
-      return mySchemes.get(rowIndex);
-    }
+    private class MySchemesTable extends JBTable {
+        private final TableCellRenderer myFixedItemsRenderer;
 
-    public CodeStyleScheme getSchemeAt(int row) {
-      return mySchemes.get(row);
-    }
-
-    public void deleteAt(int row) {
-      CodeStyleScheme scheme = mySchemes.get(row);
-      mySchemesModel.removeScheme(scheme);
-      updateSchemes();
-      fireTableRowsDeleted(row, row);
-    }
-
-    public int createNewScheme(CodeStyleScheme selectedScheme, String schemeName) {
-      CodeStyleScheme newScheme = mySchemesModel.createNewScheme(schemeName, selectedScheme);
-      mySchemesModel.addScheme(newScheme, true);
-      updateSchemes();
-      int row = 0;
-      for (CodeStyleScheme scheme : mySchemes) {
-        if (scheme == newScheme) {
-          fireTableRowsInserted(row, row);
-          break;
+        private MySchemesTable() {
+            myFixedItemsRenderer = new DefaultTableCellRenderer() {
+                @Nonnull
+                @Override
+                public Component getTableCellRendererComponent(
+                    @Nonnull JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column
+                ) {
+                    Component defaultComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    if (value instanceof CodeStyleScheme) {
+                        CodeStyleScheme scheme = (CodeStyleScheme) value;
+                        if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
+                            defaultComponent.setFont(defaultComponent.getFont().deriveFont(Font.BOLD));
+                        }
+                    }
+                    return defaultComponent;
+                }
+            };
         }
-        row++;
-      }
-      return row;
-    }
 
-    public int getDefaultRow() {
-      int row = 0;
-      for (CodeStyleScheme scheme : mySchemes) {
-        if (scheme.isDefault()) return row;
-        row++;
-      }
-      return 0;
-    }
-
-    public void copyToProject(CodeStyleScheme scheme) {
-      mySchemesModel.copyToProject(scheme);
-      int switchToProject = Messages.showYesNoDialog("Scheme '" + scheme.getName() + "' was copied to be used as the project scheme.\n" + "Switch to this created scheme?", "Copy Scheme to Project",
-                                                     Messages.getQuestionIcon());
-      if (switchToProject == Messages.YES) {
-        mySchemesModel.setUsePerProjectSettings(true, true);
-      }
-    }
-
-    public int exportProjectScheme() {
-      String name = Messages.showInputDialog("Enter new scheme name:", "Copy Project Scheme to Global List", Messages.getQuestionIcon());
-      if (name != null && !CodeStyleSchemesModelImpl.PROJECT_SCHEME_NAME.equals(name)) {
-        CodeStyleScheme newScheme = mySchemesModel.exportProjectScheme(name);
-        updateSchemes();
-        int switchToGlobal =
-                Messages.showYesNoDialog("Project scheme was copied to global scheme list as '" + newScheme.getName() + "'.\n" + "Switch to this created scheme?", "Copy Project Scheme to Global List",
-                                         Messages.getQuestionIcon());
-        if (switchToGlobal == Messages.YES) {
-          mySchemesModel.setUsePerProjectSettings(false);
-          mySchemesModel.selectScheme(newScheme, null);
+        @Override
+        public TableCellRenderer getCellRenderer(int row, int column) {
+            return myFixedItemsRenderer;
         }
-        int row = 0;
-        for (CodeStyleScheme scheme : mySchemes) {
-          if (scheme == newScheme) {
-            fireTableRowsInserted(row, row);
-            return switchToGlobal == 0 ? row : -1;
-          }
-          row++;
+    }
+
+    private static class MySchemesTableModel extends AbstractTableModel {
+        private final CodeStyleSchemesModel mySchemesModel;
+        private final List<CodeStyleScheme> mySchemes;
+
+        public MySchemesTableModel(CodeStyleSchemesModel schemesModel) {
+            mySchemesModel = schemesModel;
+            mySchemes = new ArrayList<>();
+            updateSchemes();
         }
-      }
-      return -1;
+
+        @Nonnull
+        @Override
+        public String getColumnName(int column) {
+            assert column == 0;
+            return LocalizeValue.localizeTODO("Name").get();
+        }
+
+        @Override
+        public int getRowCount() {
+            return mySchemes.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 1;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            assert columnIndex == 0;
+            return mySchemes.get(rowIndex);
+        }
+
+        public CodeStyleScheme getSchemeAt(int row) {
+            return mySchemes.get(row);
+        }
+
+        public void deleteAt(int row) {
+            CodeStyleScheme scheme = mySchemes.get(row);
+            mySchemesModel.removeScheme(scheme);
+            updateSchemes();
+            fireTableRowsDeleted(row, row);
+        }
+
+        public int createNewScheme(CodeStyleScheme selectedScheme, String schemeName) {
+            CodeStyleScheme newScheme = mySchemesModel.createNewScheme(schemeName, selectedScheme);
+            mySchemesModel.addScheme(newScheme, true);
+            updateSchemes();
+            int row = 0;
+            for (CodeStyleScheme scheme : mySchemes) {
+                if (scheme == newScheme) {
+                    fireTableRowsInserted(row, row);
+                    break;
+                }
+                row++;
+            }
+            return row;
+        }
+
+        public int getDefaultRow() {
+            int row = 0;
+            for (CodeStyleScheme scheme : mySchemes) {
+                if (scheme.isDefault()) {
+                    return row;
+                }
+                row++;
+            }
+            return 0;
+        }
+
+        @RequiredUIAccess
+        public void copyToProject(CodeStyleScheme scheme) {
+            mySchemesModel.copyToProject(scheme);
+            int switchToProject = Messages.showYesNoDialog(
+                LocalizeValue.localizeTODO(
+                    "Scheme '" + scheme.getName() + "' was copied to be used as the project scheme.\n" +
+                        "Switch to this created scheme?"
+                ).get(),
+                LocalizeValue.localizeTODO("Copy Scheme to Project").get(),
+                UIUtil.getQuestionIcon()
+            );
+            if (switchToProject == Messages.YES) {
+                mySchemesModel.setUsePerProjectSettings(true, true);
+            }
+        }
+
+        @RequiredUIAccess
+        public int exportProjectScheme() {
+            String name = Messages.showInputDialog(
+                LocalizeValue.localizeTODO("Enter new scheme name:").get(),
+                LocalizeValue.localizeTODO("Copy Project Scheme to Global List").get(),
+                UIUtil.getQuestionIcon()
+            );
+            if (name != null && !CodeStyleSchemesModelImpl.PROJECT_SCHEME_NAME.equals(name)) {
+                CodeStyleScheme newScheme = mySchemesModel.exportProjectScheme(name);
+                updateSchemes();
+                int switchToGlobal = Messages.showYesNoDialog(
+                    LocalizeValue.localizeTODO(
+                        "Project scheme was copied to global scheme list as '" + newScheme.getName() + "'.\n" +
+                            "Switch to this created scheme?"
+                    ).get(),
+                    LocalizeValue.localizeTODO("Copy Project Scheme to Global List").get(),
+                    UIUtil.getQuestionIcon()
+                );
+                if (switchToGlobal == Messages.YES) {
+                    mySchemesModel.setUsePerProjectSettings(false);
+                    mySchemesModel.selectScheme(newScheme, null);
+                }
+                int row = 0;
+                for (CodeStyleScheme scheme : mySchemes) {
+                    if (scheme == newScheme) {
+                        fireTableRowsInserted(row, row);
+                        return switchToGlobal == 0 ? row : -1;
+                    }
+                    row++;
+                }
+            }
+            return -1;
+        }
+
+        private void updateSchemes() {
+            mySchemes.clear();
+            mySchemes.addAll(mySchemesModel.getAllSortedSchemes());
+        }
+
+        public boolean isProjectScheme(CodeStyleScheme scheme) {
+            return mySchemesModel.isProjectScheme(scheme);
+        }
     }
 
-    private void updateSchemes() {
-      mySchemes.clear();
-      mySchemes.addAll(mySchemesModel.getAllSortedSchemes());
+    @RequiredUIAccess
+    private void onSaveAs() {
+        if (mySchemesTableModel.isProjectScheme(getSelectedScheme())) {
+            int rowToSelect = mySchemesTableModel.exportProjectScheme();
+            if (rowToSelect > 0) {
+                mySchemesTable.getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
+            }
+        }
+        else {
+            CodeStyleScheme[] schemes = CodeStyleSchemes.getInstance().getSchemes();
+            List<String> names = new ArrayList<>();
+            for (CodeStyleScheme scheme : schemes) {
+                names.add(scheme.getName());
+            }
+            String selectedName = getSelectedScheme().getName();
+            SaveSchemeDialog saveDialog =
+                new SaveSchemeDialog(myParent, CodeStyleLocalize.titleSaveCodeStyleSchemeAs().get(), names, selectedName);
+            if (saveDialog.showAndGet()) {
+                int row = mySchemesTableModel.createNewScheme(getSelectedScheme(), saveDialog.getSchemeName());
+                mySchemesTable.getSelectionModel().setSelectionInterval(row, row);
+            }
+        }
     }
 
-
-    public boolean isProjectScheme(CodeStyleScheme scheme) {
-      return mySchemesModel.isProjectScheme(scheme);
+    @RequiredUIAccess
+    private void onCopyToProject() {
+        mySchemesTableModel.copyToProject(getSelectedScheme());
     }
 
-  }
-
-  private void onSaveAs() {
-    if (mySchemesTableModel.isProjectScheme(getSelectedScheme())) {
-      int rowToSelect = mySchemesTableModel.exportProjectScheme();
-      if (rowToSelect > 0) {
-        mySchemesTable.getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
-      }
+    private void setDefaultSelection() {
+        CodeStyleScheme selectedScheme = myModel.getSelectedScheme();
+        for (int i = 0; i < mySchemesTableModel.getRowCount(); i++) {
+            if (mySchemesTableModel.getSchemeAt(i).equals(selectedScheme)) {
+                mySchemesTable.getSelectionModel().setSelectionInterval(i, i);
+                return;
+            }
+        }
     }
-    else {
-      CodeStyleScheme[] schemes = CodeStyleSchemes.getInstance().getSchemes();
-      ArrayList<String> names = new ArrayList<String>();
-      for (CodeStyleScheme scheme : schemes) {
-        names.add(scheme.getName());
-      }
-      String selectedName = getSelectedScheme().getName();
-      SaveSchemeDialog saveDialog = new SaveSchemeDialog(myParent, ApplicationBundle.message("title.save.code.style.scheme.as"), names, selectedName);
-      if (saveDialog.showAndGet()) {
-        int row = mySchemesTableModel.createNewScheme(getSelectedScheme(), saveDialog.getSchemeName());
-        mySchemesTable.getSelectionModel().setSelectionInterval(row, row);
-      }
-    }
-  }
-
-  private void onCopyToProject() {
-    mySchemesTableModel.copyToProject(getSelectedScheme());
-  }
-
-  private void setDefaultSelection() {
-    CodeStyleScheme selectedScheme = myModel.getSelectedScheme();
-    for (int i = 0; i < mySchemesTableModel.getRowCount(); i++) {
-      if (mySchemesTableModel.getSchemeAt(i).equals(selectedScheme)) {
-        mySchemesTable.getSelectionModel().setSelectionInterval(i, i);
-        return;
-      }
-    }
-  }
-
 }

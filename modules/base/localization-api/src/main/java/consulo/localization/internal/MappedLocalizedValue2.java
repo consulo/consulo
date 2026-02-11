@@ -44,6 +44,12 @@ public final class MappedLocalizedValue2 extends CachingLocalizedValue {
 
     @Nonnull
     @Override
+    public String getId() {
+        return myDelegate.getId() + "->" + Objects.toIdentityString(myMapper);
+    }
+
+    @Nonnull
+    @Override
     protected String calcValue() {
         return myMapper.apply(myLocalizationManager, myDelegate.getValue());
     }

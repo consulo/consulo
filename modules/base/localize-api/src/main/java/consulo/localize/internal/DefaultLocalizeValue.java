@@ -46,6 +46,12 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
 
     @Nonnull
     @Override
+    public String getId() {
+        return myLocalizeKey.toString();
+    }
+
+    @Nonnull
+    @Override
     public Optional<LocalizeKey> getKey() {
         return Optional.of(myLocalizeKey);
     }

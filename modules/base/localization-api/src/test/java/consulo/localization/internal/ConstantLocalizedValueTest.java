@@ -25,9 +25,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 2025-11-19
  */
 public class ConstantLocalizedValueTest {
+    LocalizedValue value = new ConstantLocalizedValue("Foo");
+
+    @Test
+    void testId() {
+        assertThat(value.getId()).isEqualTo("\"Foo\"");
+    }
+
     @Test
     void testValue() {
-        LocalizedValue value = new ConstantLocalizedValue("Foo");
         assertThat(value.getValue())
             .isEqualTo("Foo")
             .isEqualTo(value.get())
@@ -36,13 +42,11 @@ public class ConstantLocalizedValueTest {
 
     @Test
     void testKey() {
-        LocalizedValue value = new ConstantLocalizedValue("Foo");
         assertThat(value.getKey()).isNotPresent();
     }
 
     @Test
     void testModificationCount() {
-        LocalizedValue value = new ConstantLocalizedValue("Foo");
         assertThat(value.getModificationCount()).isEqualTo((byte) 0);
     }
 
