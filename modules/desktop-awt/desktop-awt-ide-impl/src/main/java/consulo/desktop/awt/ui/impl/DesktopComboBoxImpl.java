@@ -40,7 +40,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     }
 
     private final ListModel<E> myModel;
-    private TextItemRender<E> myRenderer = ListItemRenders.defaultRender();
+    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
 
     public DesktopComboBoxImpl(ListModel<E> model) {
         myModel = model;
@@ -61,7 +61,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRender<E> renderer) {
+    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 

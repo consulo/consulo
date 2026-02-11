@@ -16,17 +16,18 @@
 package consulo.ui;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
-public interface TextItemRender<E> {
-    @Nonnull
-    static <V> TextItemRender<V> defaultRender() {
-        return (render, index, item) -> render.append(item == null ? "" : item.toString());
-    }
+public class ListItemRenderers {
+    private static final TextItemRenderer DEFAULT_RENDERER =
+        (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
 
-    void render(@Nonnull TextItemPresentation render, int index, @Nullable E item);
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public static <E> TextItemRenderer<E> defaultRenderer() {
+        return DEFAULT_RENDERER;
+    }
 }

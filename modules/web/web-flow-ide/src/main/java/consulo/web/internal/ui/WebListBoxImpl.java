@@ -17,23 +17,21 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Tag;
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 2023-05-27
  */
 public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Vaadin> implements ListBox<E> {
   @Tag("div")
   public class Vaadin extends com.vaadin.flow.component.listbox.ListBox implements FromVaadinComponentWrapper {
-
     @Nullable
     @Override
     public consulo.ui.Component toUIComponent() {
@@ -54,13 +52,11 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
   }
 
   @Override
-  public void setRender(@Nonnull TextItemRender render) {
-
+  public void setRender(@Nonnull TextItemRenderer render) {
   }
 
   @Override
   public void setValueByIndex(int index) {
-
   }
 
   @Nullable
@@ -69,10 +65,9 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     return null;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void setValue(Object value, boolean fireListeners) {
-
   }
 
   @Nonnull

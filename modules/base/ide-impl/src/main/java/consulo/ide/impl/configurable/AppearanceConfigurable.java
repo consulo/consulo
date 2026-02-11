@@ -128,12 +128,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
             iconThemes.addAll(libraries.values());
             myIconThemeComboBox = ComboBox.create(iconThemes);
-            myIconThemeComboBox.setRenderer((render, index, item) -> {
+            myIconThemeComboBox.setRenderer((renderer, index, item) -> {
                 if (item == ObjectUtil.NULL) {
-                    render.append(IdeLocalize.comboboxIconThemeUiDefault());
+                    renderer.append(IdeLocalize.comboboxIconThemeUiDefault());
                 }
                 else {
-                    render.append(((IconLibrary) item).getName());
+                    renderer.append(((IconLibrary) item).getName());
                 }
             });
             uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxIconTheme(), myIconThemeComboBox));
@@ -204,7 +204,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        private TextItemRender<AntialiasingType> buildItemRenderer(boolean editor) {
+        private TextItemRenderer<AntialiasingType> buildItemRenderer(boolean editor) {
             return (renderer, index, item) -> {
                 if (item == null) {
                     return;

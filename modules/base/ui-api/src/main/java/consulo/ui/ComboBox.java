@@ -146,11 +146,11 @@ public interface ComboBox<E> extends ValueComponent<E> {
         }
     }
 
-    void setRenderer(@Nonnull TextItemRender<E> renderer);
+    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
 
     @Deprecated
     @DeprecationInfo("Use setRenderer")
-    default void setRender(@Nonnull TextItemRender<E> renderer) {
+    default void setRender(@Nonnull TextItemRenderer<E> renderer) {
         setRenderer(renderer);
     }
 

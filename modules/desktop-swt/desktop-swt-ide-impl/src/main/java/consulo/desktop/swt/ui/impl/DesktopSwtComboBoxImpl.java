@@ -16,7 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.ComboBox;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import org.eclipse.swt.SWT;
@@ -36,12 +36,12 @@ import java.util.List;
  * @since 2021-04-29
  */
 public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> implements ComboBox<E> {
-    private TextItemRender<E> myRenderer = (render, index, item) -> {
+    private TextItemRenderer<E> myRenderer = (renderer, index, item) -> {
         if (item == null) {
-            render.append("");
+            renderer.append("");
         }
         else {
-            render.append(item.toString());
+            renderer.append(item.toString());
         }
     };
 
@@ -91,7 +91,7 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRender<E> renderer) {
+    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 
@@ -110,8 +110,8 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
         return myModel.get(mySelectedIndex);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setValue(E value, boolean fireListeners) {
         setValueByIndex(myModel.indexOf(value));
     }
