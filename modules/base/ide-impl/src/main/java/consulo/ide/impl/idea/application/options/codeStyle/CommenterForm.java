@@ -24,10 +24,11 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,50 +39,54 @@ import javax.swing.*;
  */
 public class CommenterForm implements CodeStyleSettingsCustomizable {
     private JPanel myCommenterPanel;
-    private JBCheckBox myLineCommentAtFirstColumnCb;
-    private JBCheckBox myLineCommentAddSpaceCb;
-    private JBCheckBox myBlockCommentAtFirstJBCheckBox;
+    private CheckBox myLineCommentAtFirstColumnCb;
+    private CheckBox myLineCommentAddSpaceCb;
+    private CheckBox myBlockCommentAtFirstJBCheckBox;
 
     private final Language myLanguage;
 
+    @RequiredUIAccess
     public CommenterForm(Language language) {
         this(language, CodeStyleLocalize.titleNamingCommentCode().get());
     }
 
+    @RequiredUIAccess
     public CommenterForm(Language language, @Nullable String title) {
+        init();
         myLanguage = language;
         if (title != null) {
             myCommenterPanel.setBorder(IdeBorderFactory.createTitledBorder(title));
         }
-        myLineCommentAtFirstColumnCb.addActionListener(e -> {
-            if (myLineCommentAtFirstColumnCb.isSelected()) {
-                myLineCommentAddSpaceCb.setSelected(false);
+        myLineCommentAtFirstColumnCb.addClickListener(e -> {
+            if (myLineCommentAtFirstColumnCb.getValue()) {
+                myLineCommentAddSpaceCb.setValue(false);
             }
-            myLineCommentAddSpaceCb.setEnabled(!myLineCommentAtFirstColumnCb.isSelected());
+            myLineCommentAddSpaceCb.setEnabled(!myLineCommentAtFirstColumnCb.getValue());
         });
         customizeSettings();
     }
 
+    @RequiredUIAccess
     public void reset(@Nonnull CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
-        myLineCommentAtFirstColumnCb.setSelected(langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
-        myBlockCommentAtFirstJBCheckBox.setSelected(langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN);
-        myLineCommentAddSpaceCb.setSelected(langSettings.LINE_COMMENT_ADD_SPACE && !langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
+        myLineCommentAtFirstColumnCb.setValue(langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
+        myBlockCommentAtFirstJBCheckBox.setValue(langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN);
+        myLineCommentAddSpaceCb.setValue(langSettings.LINE_COMMENT_ADD_SPACE && !langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
         myLineCommentAddSpaceCb.setEnabled(!langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
     }
 
     public void apply(@Nonnull CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
-        langSettings.LINE_COMMENT_AT_FIRST_COLUMN = myLineCommentAtFirstColumnCb.isSelected();
-        langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN = myBlockCommentAtFirstJBCheckBox.isSelected();
-        langSettings.LINE_COMMENT_ADD_SPACE = myLineCommentAddSpaceCb.isSelected();
+        langSettings.LINE_COMMENT_AT_FIRST_COLUMN = myLineCommentAtFirstColumnCb.getValue();
+        langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN = myBlockCommentAtFirstJBCheckBox.getValue();
+        langSettings.LINE_COMMENT_ADD_SPACE = myLineCommentAddSpaceCb.getValue();
     }
 
     public boolean isModified(@Nonnull CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
-        return myLineCommentAtFirstColumnCb.isSelected() != langSettings.LINE_COMMENT_AT_FIRST_COLUMN
-            || myBlockCommentAtFirstJBCheckBox.isSelected() != langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN
-            || myLineCommentAddSpaceCb.isSelected() != langSettings.LINE_COMMENT_ADD_SPACE;
+        return myLineCommentAtFirstColumnCb.getValue() != langSettings.LINE_COMMENT_AT_FIRST_COLUMN
+            || myBlockCommentAtFirstJBCheckBox.getValue() != langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN
+            || myLineCommentAddSpaceCb.getValue() != langSettings.LINE_COMMENT_ADD_SPACE;
     }
 
     public JPanel getCommenterPanel() {
@@ -89,11 +94,13 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
     }
 
     @Override
+    @RequiredUIAccess
     public void showAllStandardOptions() {
         setAllOptionsVisible(true);
     }
 
     @Override
+    @RequiredUIAccess
     public void showStandardOptions(String... optionNames) {
         for (String optionName : optionNames) {
             if (CommenterOption.LINE_COMMENT_ADD_SPACE.name().equals(optionName)) {
@@ -108,12 +115,14 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
         }
     }
 
+    @RequiredUIAccess
     private void setAllOptionsVisible(boolean isVisible) {
         myLineCommentAtFirstColumnCb.setVisible(isVisible);
         myLineCommentAddSpaceCb.setVisible(isVisible);
         myBlockCommentAtFirstJBCheckBox.setVisible(isVisible);
     }
 
+    @RequiredUIAccess
     private void customizeSettings() {
         setAllOptionsVisible(false);
         LanguageCodeStyleSettingsProvider settingsProvider = LanguageCodeStyleSettingsProvider.forLanguage(myLanguage);
@@ -123,26 +132,14 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
         myCommenterPanel.setVisible(myLineCommentAtFirstColumnCb.isVisible() || myLineCommentAddSpaceCb.isVisible() || myBlockCommentAtFirstJBCheckBox.isVisible());
     }
 
-    {
-// GUI initializer generated by Consulo GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
-    /**
-     * Method generated by Consulo GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     */
-    private void $$$setupUI$$$() {
+    @RequiredUIAccess
+    private void init() {
         myCommenterPanel = new JPanel();
         myCommenterPanel.setLayout(new GridLayoutManager(4, 1, JBUI.emptyInsets(), -1, -1));
         myCommenterPanel.setBorder(BorderFactory.createTitledBorder(CodeStyleLocalize.titleNamingCommentCode().get()));
-        myLineCommentAtFirstColumnCb = new JBCheckBox();
-        this.$$$loadButtonText$$$(myLineCommentAtFirstColumnCb, CodeStyleLocalize.checkboxLineCommentAtFirstColumn());
+        myLineCommentAtFirstColumnCb = CheckBox.create(CodeStyleLocalize.checkboxLineCommentAtFirstColumn());
         myCommenterPanel.add(
-            myLineCommentAtFirstColumnCb,
+            TargetAWT.to(myLineCommentAtFirstColumnCb),
             new GridConstraints(
                 0,
                 0,
@@ -178,10 +175,9 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
                 false
             )
         );
-        myLineCommentAddSpaceCb = new JBCheckBox();
-        this.$$$loadButtonText$$$(myLineCommentAddSpaceCb, CodeStyleLocalize.checkboxLineCommentAddSpace());
+        myLineCommentAddSpaceCb = CheckBox.create(CodeStyleLocalize.checkboxLineCommentAddSpace());
         myCommenterPanel.add(
-            myLineCommentAddSpaceCb,
+            TargetAWT.to(myLineCommentAddSpaceCb),
             new GridConstraints(
                 1,
                 0,
@@ -198,10 +194,9 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
                 false
             )
         );
-        myBlockCommentAtFirstJBCheckBox = new JBCheckBox();
-        this.$$$loadButtonText$$$(myBlockCommentAtFirstJBCheckBox, CodeStyleLocalize.checkboxBlockCommentAtFirstColumn());
+        myBlockCommentAtFirstJBCheckBox = CheckBox.create(CodeStyleLocalize.checkboxBlockCommentAtFirstColumn());
         myCommenterPanel.add(
-            myBlockCommentAtFirstJBCheckBox,
+            TargetAWT.to(myBlockCommentAtFirstJBCheckBox),
             new GridConstraints(
                 2,
                 0,
@@ -218,36 +213,5 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
                 false
             )
         );
-    }
-
-    private void $$$loadButtonText$$$(AbstractButton component, @Nonnull LocalizeValue text0) {
-        StringBuilder result = new StringBuilder();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        String text = text0.get();
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    public JComponent $$$getRootComponent$$$() {
-        return myCommenterPanel;
     }
 }
