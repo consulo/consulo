@@ -53,7 +53,7 @@ public class ShowLogAction extends AnAction implements DumbAware {
         Platform platform = Platform.current();
 
         Presentation presentation = e.getPresentation();
-        presentation.setVisible(platform.supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER));
+        presentation.setVisible(platform.supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANAGER));
         presentation.setTextValue(ActionLocalize.showLogInActionText(platform.fileManagerName()));
     }
 }

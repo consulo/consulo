@@ -51,8 +51,8 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     @Override
     public boolean supportsFeature(@Nonnull PlatformFeature feature) {
         switch (feature) {
-            case OPEN_DIRECTORY_IN_FILE_MANANGER:
-            case OPEN_FILE_IN_FILE_MANANGER:
+            case OPEN_DIRECTORY_IN_FILE_MANAGER:
+            case OPEN_FILE_IN_FILE_MANAGER:
                 return FileManagerProxy.isSupported();
         }
         return false;

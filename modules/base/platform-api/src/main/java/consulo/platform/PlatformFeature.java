@@ -20,6 +20,6 @@ package consulo.platform;
  * @since 2025-09-05
  */
 public enum PlatformFeature {
-    OPEN_FILE_IN_FILE_MANANGER,
-    OPEN_DIRECTORY_IN_FILE_MANANGER,
+    OPEN_FILE_IN_FILE_MANAGER,
+    OPEN_DIRECTORY_IN_FILE_MANAGER,
 }

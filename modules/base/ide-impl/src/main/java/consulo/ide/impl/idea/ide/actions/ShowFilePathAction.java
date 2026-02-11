@@ -86,7 +86,7 @@ public class ShowFilePathAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        boolean visible = Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER);
+        boolean visible = Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANAGER);
         e.getPresentation().setVisible(visible);
         if (visible) {
             VirtualFile file = e.getData(VirtualFile.KEY);
@@ -117,7 +117,7 @@ public class ShowFilePathAction extends AnAction {
     }
 
     public static void show(@Nonnull UIAccess uiAccess, @Nullable Project project, VirtualFile file, Consumer<ListPopup> action) {
-        if (!Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER)) {
+        if (!Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANAGER)) {
             return;
         }
 
