@@ -343,7 +343,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         gbConstraints.gridx = 1;
         gbConstraints.insets = JBUI.insetsLeft(4);
         myExpandByCombo = ComboBox.create(ExpandByKey.values());
-        myExpandByCombo.setTextRender(ExpandByKey::getTitle);
+        myExpandByCombo.setTextRenderer(ExpandByKey::getTitle);
         panel.add(TargetAWT.to(myExpandByCombo), gbConstraints);
 
         gbConstraints.gridx = 2;

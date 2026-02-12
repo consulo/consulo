@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -22,14 +23,20 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface Tab {
-  void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render);
+    void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer);
 
-  void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
+    @Deprecated
+    @DeprecationInfo("Use setRenderer")
+    default void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+        setRenderer(renderer);
+    }
 
-  void update();
+    void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
-  void select();
+    void update();
+
+    void select();
 }

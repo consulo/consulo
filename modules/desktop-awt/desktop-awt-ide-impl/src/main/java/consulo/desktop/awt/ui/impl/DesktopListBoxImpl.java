@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2017-09-12
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
@@ -43,7 +43,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         }
     }
 
-    private TextItemRenderer<E> myRender = ListItemRenderers.defaultRenderer();
+    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
 
     private ListModel<E> myModel;
 
@@ -56,7 +56,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(myModel);
 
         MyJBList<E> component = new MyJBList<>(wrapper);
-        component.setCellRenderer(new DesktopListRender<>(() -> myRender));
+        component.setCellRenderer(new DesktopListRender<>(() -> myRenderer));
         return  component;
     }
 
@@ -67,8 +67,8 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
-    public void setRender(@Nonnull TextItemRenderer<E> render) {
-        myRender = render;
+    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+        myRenderer = renderer;
     }
 
     @Override

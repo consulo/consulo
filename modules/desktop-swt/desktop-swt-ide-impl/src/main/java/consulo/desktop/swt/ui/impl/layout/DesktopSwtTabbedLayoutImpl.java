@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 18/12/2021
+ * @since 2021-12-18
  */
 public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder> implements TabbedLayout {
     private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
@@ -85,12 +85,12 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         return tab;
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
         DesktopSwtTabImpl tab = new DesktopSwtTabImpl();
-        tab.setRender((t, p) -> p.append(tabName));
+        tab.setRenderer((t, p) -> p.append(tabName));
 
         myTabs.add(tab);
         tab.setComponent(component);
@@ -102,6 +102,5 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
 
     @Override
     public void removeTab(@Nonnull Tab tab) {
-
     }
 }

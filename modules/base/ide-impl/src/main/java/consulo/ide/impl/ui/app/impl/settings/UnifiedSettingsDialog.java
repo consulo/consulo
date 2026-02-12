@@ -108,7 +108,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
                     boolean b = configurable instanceof Configurable.Composite composite && composite.getConfigurables().length > 0;
                     node.setLeaf(!b);
 
-                    node.setRender((item, itemPresentation) -> itemPresentation.append(item.getDisplayName()));
+                    node.setRenderer((item, itemPresentation) -> itemPresentation.append(item.getDisplayName()));
                 }
             }
         };

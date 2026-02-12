@@ -44,24 +44,23 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 14/07/2021
+ * @since 2021-07-14
  */
 public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree> implements Tree<E> {
-
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
 
         private final K myValue;
 
-        private BiConsumer<K, TextItemPresentation> myRender = (e, t) -> t.append(e == null ? "null" : e.toString());
+        private BiConsumer<K, TextItemPresentation> myRenderer = (e, t) -> t.append(e == null ? "null" : e.toString());
 
         private MyTreeNodeImpl(K value) {
             myValue = value;
         }
 
         @Override
-        public void setRender(@Nonnull BiConsumer<K, TextItemPresentation> render) {
-            myRender = render;
+        public void setRenderer(@Nonnull BiConsumer<K, TextItemPresentation> renderer) {
+            myRenderer = renderer;
         }
 
         @Override
@@ -82,7 +81,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     private static class MyNodeDescriptor<K> extends PresentableNodeDescriptor {
-
         private final Object myRootElement;
         private final Object myElement;
 
@@ -101,7 +99,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
             MyTreeNodeImpl<K> node = (MyTreeNodeImpl) myElement;
 
-            BiConsumer<K, TextItemPresentation> render = node.myRender;
+            BiConsumer<K, TextItemPresentation> render = node.myRenderer;
 
             render.accept(node.myValue, new TextItemPresentation() {
                 @Override
@@ -207,7 +205,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             super(new AsyncTreeModel(new StructureTreeModel<>(new MyStructureWrapper<>(rootValue, model), disposable), disposable));
         }
 
-
         @Nonnull
         @Override
         public Component toUIComponent() {
@@ -267,6 +264,5 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     @Override
     public void expand(@Nonnull TreeNode<E> node) {
-
     }
 }

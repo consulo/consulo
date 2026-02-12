@@ -30,49 +30,49 @@ import jakarta.annotation.Nullable;
  * @since 2023-05-27
  */
 public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Vaadin> implements ListBox<E> {
-  @Tag("div")
-  public class Vaadin extends com.vaadin.flow.component.listbox.ListBox implements FromVaadinComponentWrapper {
+    @Tag("div")
+    public class Vaadin extends com.vaadin.flow.component.listbox.ListBox implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public consulo.ui.Component toUIComponent() {
+            return WebListBoxImpl.this;
+        }
+    }
+
+    private final ListModel<E> myModel;
+
+    public WebListBoxImpl(ListModel<E> model) {
+        myModel = model;
+    }
+
+    @Nonnull
+    @Override
+    public ListModel<E> getListModel() {
+        return myModel;
+    }
+
+    @Override
+    public void setRenderer(@Nonnull TextItemRenderer renderer) {
+    }
+
+    @Override
+    public void setValueByIndex(int index) {
+    }
+
     @Nullable
     @Override
-    public consulo.ui.Component toUIComponent() {
-      return WebListBoxImpl.this;
+    public E getValue() {
+        return null;
     }
-  }
 
-  private final ListModel<E> myModel;
+    @Override
+    @RequiredUIAccess
+    public void setValue(Object value, boolean fireListeners) {
+    }
 
-  public WebListBoxImpl(ListModel<E> model) {
-    myModel = model;
-  }
-
-  @Nonnull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
-
-  @Override
-  public void setRender(@Nonnull TextItemRenderer render) {
-  }
-
-  @Override
-  public void setValueByIndex(int index) {
-  }
-
-  @Nullable
-  @Override
-  public E getValue() {
-    return null;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setValue(Object value, boolean fireListeners) {
-  }
-
-  @Nonnull
-  @Override
-  public WebListBoxImpl.Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Nonnull
+    @Override
+    public WebListBoxImpl.Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 }

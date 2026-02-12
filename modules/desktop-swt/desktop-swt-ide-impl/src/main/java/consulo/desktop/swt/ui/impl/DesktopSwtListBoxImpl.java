@@ -28,51 +28,47 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> implements ListBox<E> {
+    private final ListModel<E> myModel;
 
-  private final ListModel<E> myModel;
+    public DesktopSwtListBoxImpl(ListModel<E> model) {
+        myModel = model;
+    }
 
-  public DesktopSwtListBoxImpl(ListModel<E> model) {
-    myModel = model;
-  }
+    @Override
+    protected List createSWT(Composite parent) {
+        return new List(parent, SWT.NONE);
+    }
 
-  @Override
-  protected List createSWT(Composite parent) {
-    return new List(parent, SWT.NONE);
-  }
+    @Override
+    protected void initialize(List component) {
+        component.setItems("1", "2");
+    }
 
-  @Override
-  protected void initialize(List component) {
-    component.setItems("1", "2");
-  }
+    @Nonnull
+    @Override
+    public ListModel<E> getListModel() {
+        return myModel;
+    }
 
-  @Nonnull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
+    @Override
+    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    }
 
-  @Override
-  public void setRender(@Nonnull TextItemRenderer<E> render) {
+    @Override
+    public void setValueByIndex(int index) {
+    }
 
-  }
+    @Nullable
+    @Override
+    public E getValue() {
+        return null;
+    }
 
-  @Override
-  public void setValueByIndex(int index) {
-
-  }
-
-  @Nullable
-  @Override
-  public E getValue() {
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(E value, boolean fireListeners) {
-
-  }
+    @Override
+    @RequiredUIAccess
+    public void setValue(E value, boolean fireListeners) {
+    }
 }
