@@ -28,12 +28,6 @@ import java.util.function.BiConsumer;
 public interface Tab {
     void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer);
 
-    @Deprecated
-    @DeprecationInfo("Use setRenderer")
-    default void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
-        setRenderer(renderer);
-    }
-
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
     void update();

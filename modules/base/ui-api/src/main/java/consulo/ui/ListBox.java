@@ -50,11 +50,5 @@ public interface ListBox<E> extends ValueComponent<E> {
 
     void setRenderer(@Nonnull TextItemRenderer<E> renderer);
 
-    @Deprecated
-    @DeprecationInfo("Use setRenderer")
-    default void setRender(@Nonnull TextItemRenderer<E> renderer) {
-        setRenderer(renderer);
-    }
-
     void setValueByIndex(int index);
 }

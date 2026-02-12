@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,12 +26,6 @@ import java.util.function.BiConsumer;
  */
 public interface TreeNode<T> {
     void setRenderer(@Nonnull BiConsumer<T, TextItemPresentation> renderer);
-
-    @Deprecated
-    @DeprecationInfo("Use setRenderer")
-    default void setRender(@Nonnull BiConsumer<T, TextItemPresentation> renderer) {
-        setRenderer(renderer);
-    }
 
     void setLeaf(boolean leaf);
 
