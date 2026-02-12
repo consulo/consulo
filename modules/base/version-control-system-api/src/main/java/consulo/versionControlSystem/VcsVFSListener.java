@@ -225,11 +225,6 @@ public abstract class VcsVFSListener implements Disposable {
         myAddOption = myVcsManager.getStandardConfirmation(VcsConfiguration.StandardConfirmation.ADD, vcs);
         myRemoveOption = myVcsManager.getStandardConfirmation(VcsConfiguration.StandardConfirmation.REMOVE, vcs);
 
-        MessageBusConnection busConnection = project.getApplication().getMessageBus().connect(this);
-        busConnection.subscribe(CommandListener.class, new MyCommandAdapter());
-
-        VirtualFileManager.getInstance().addAsyncFileListener(new MyAsyncVfsListener(), this);
-
         myProcessor = new DiryFilesStateProcessor(myChangeListManager, VcsFileListenerContextHelper.getInstance(project)) {
             @Override
             protected boolean isFileCopyingFromTrackingSupported() {
@@ -275,6 +270,11 @@ public abstract class VcsVFSListener implements Disposable {
                 executeMoveRename();
             }
         };
+        
+        MessageBusConnection busConnection = project.getApplication().getMessageBus().connect(this);
+        busConnection.subscribe(CommandListener.class, new MyCommandAdapter());
+
+        VirtualFileManager.getInstance().addAsyncFileListener(new MyAsyncVfsListener(), this);
     }
 
     @Override
