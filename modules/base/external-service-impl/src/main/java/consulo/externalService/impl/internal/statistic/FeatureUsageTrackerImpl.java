@@ -32,6 +32,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 import java.util.Set;
 
@@ -39,147 +40,152 @@ import java.util.Set;
 @ServiceImpl
 @State(name = "FeatureUsageStatistics", storages = @Storage(value = "feature.usage.statistics.xml", roamingType = RoamingType.DISABLED))
 public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements PersistentStateComponent<Element> {
-  private static final int HOUR = 1000 * 60 * 60;
-  private static final long DAY = HOUR * 24;
-  private CompletionStatistics myCompletionStats = new CompletionStatistics();
-  private CumulativeStatistics myFixesStats = new CumulativeStatistics();
-  private boolean HAVE_BEEN_SHOWN = false;
+    private static final int HOUR = 1000 * 60 * 60;
+    private static final long DAY = HOUR * 24;
+    private CompletionStatistics myCompletionStats = new CompletionStatistics();
+    private CumulativeStatistics myFixesStats = new CumulativeStatistics();
+    private boolean HAVE_BEEN_SHOWN = false;
 
-  private final ProductivityFeaturesRegistry myRegistry;
+    private final ProductivityFeaturesRegistry myRegistry;
 
-  private static final String FEATURE_TAG = "feature";
-  private static final String ATT_ID = "id";
-  private static final String COMPLETION_STATS_TAG = "completionStatsTag";
-  private static final String FIXES_STATS_TAG = "fixesStatsTag";
-  private static final String ATT_HAVE_BEEN_SHOWN = "have-been-shown";
+    private static final String FEATURE_TAG = "feature";
+    private static final String ATT_ID = "id";
+    private static final String COMPLETION_STATS_TAG = "completionStatsTag";
+    private static final String FIXES_STATS_TAG = "fixesStatsTag";
+    private static final String ATT_HAVE_BEEN_SHOWN = "have-been-shown";
 
-  @Inject
-  public FeatureUsageTrackerImpl(ProductivityFeaturesRegistry productivityFeaturesRegistry) {
-    myRegistry = productivityFeaturesRegistry;
-  }
-
-  @Override
-  public boolean isToBeShown(String featureId, ComponentManager project) {
-    return isToBeShown(featureId, project, DAY);
-  }
-
-  private boolean isToBeShown(String featureId, ComponentManager project, long timeUnit) {
-    ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-    FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
-    if (descriptor == null || !descriptor.isUnused()) return false;
-
-    String[] dependencyFeatures = descriptor.getDependencyFeatures();
-    boolean locked = dependencyFeatures.length > 0;
-    for (int i = 0; locked && i < dependencyFeatures.length; i++) {
-      if (!registry.getFeatureDescriptor(dependencyFeatures[i]).isUnused()) {
-        locked = false;
-      }
-    }
-    if (locked) return false;
-
-    long current = System.currentTimeMillis();
-    long succesive_interval = descriptor.getDaysBetweenSuccesiveShowUps() * timeUnit + descriptor.getShownCount() * 2;
-    long firstShowUpInterval = descriptor.getDaysBeforeFirstShowUp() * timeUnit;
-    long lastTimeUsed = descriptor.getLastTimeUsed();
-    long lastTimeShown = descriptor.getLastTimeShown();
-    return lastTimeShown == 0 && firstShowUpInterval + getFirstRunTime() < current ||
-           lastTimeShown > 0 && current - lastTimeShown > succesive_interval && current - lastTimeUsed > succesive_interval;
-  }
-
-  @Override
-  public boolean isToBeAdvertisedInLookup(@NonNls String featureId, ComponentManager project) {
-    FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
-    if (descriptor != null && System.currentTimeMillis() - descriptor.getLastTimeUsed() > 10 * DAY) {
-      return true;
-    }
-    
-    return isToBeShown(featureId, project, HOUR);
-  }
-
-  @Override
-  @Nonnull
-  public CompletionStatistics getCompletionStatistics() {
-    return myCompletionStats;
-  }
-
-  @Override
-  public CumulativeStatistics getFixesStats() {
-    return myFixesStats;
-  }
-
-  public long getFirstRunTime() {
-    return PermanentInstallationID.date();
-  }
-
-  @Override
-  public void loadState(Element element) {
-    List featuresList = element.getChildren(FEATURE_TAG);
-    for (Object aFeaturesList : featuresList) {
-      Element featureElement = (Element)aFeaturesList;
-      FeatureDescriptor descriptor =
-        ((ProductivityFeaturesRegistryImpl)myRegistry).getFeatureDescriptorEx(featureElement.getAttributeValue(ATT_ID));
-      if (descriptor != null) {
-        descriptor.readStatistics(featureElement);
-      }
+    @Inject
+    public FeatureUsageTrackerImpl(ProductivityFeaturesRegistry productivityFeaturesRegistry) {
+        myRegistry = productivityFeaturesRegistry;
     }
 
-    Element stats = element.getChild(COMPLETION_STATS_TAG);
-    if (stats != null) {
-      myCompletionStats = XmlSerializer.deserialize(stats, CompletionStatistics.class);
+    @Override
+    public boolean isToBeShown(String featureId, ComponentManager project) {
+        return isToBeShown(featureId, project, DAY);
     }
 
-    Element fStats = element.getChild(FIXES_STATS_TAG);
-    if (fStats != null) {
-      myFixesStats = XmlSerializer.deserialize(fStats, CumulativeStatistics.class);
+    private boolean isToBeShown(String featureId, ComponentManager project, long timeUnit) {
+        ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+        FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
+        if (descriptor == null || !descriptor.isUnused()) {
+            return false;
+        }
+
+        String[] dependencyFeatures = descriptor.getDependencyFeatures();
+        boolean locked = dependencyFeatures.length > 0;
+        for (int i = 0; locked && i < dependencyFeatures.length; i++) {
+            if (!registry.getFeatureDescriptor(dependencyFeatures[i]).isUnused()) {
+                locked = false;
+            }
+        }
+        if (locked) {
+            return false;
+        }
+
+        long current = System.currentTimeMillis();
+        long successiveInterval = descriptor.getDaysBetweenSuccesiveShowUps() * timeUnit + descriptor.getShownCount() * 2;
+        long firstShowUpInterval = descriptor.getDaysBeforeFirstShowUp() * timeUnit;
+        long lastTimeUsed = descriptor.getLastTimeUsed();
+        long lastTimeShown = descriptor.getLastTimeShown();
+        return lastTimeShown == 0 && firstShowUpInterval + getFirstRunTime() < current ||
+            lastTimeShown > 0 && current - lastTimeShown > successiveInterval && current - lastTimeUsed > successiveInterval;
     }
 
-    HAVE_BEEN_SHOWN = Boolean.valueOf(element.getAttributeValue(ATT_HAVE_BEEN_SHOWN));
-  }
+    @Override
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean isToBeAdvertisedInLookup(String featureId, ComponentManager project) {
+        FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
+        if (descriptor != null && System.currentTimeMillis() - descriptor.getLastTimeUsed() > 10 * DAY) {
+            return true;
+        }
 
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
-    ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-    Set<String> ids = registry.getFeatureIds();
-    for (String id: ids) {
-      Element featureElement = new Element(FEATURE_TAG);
-      featureElement.setAttribute(ATT_ID, id);
-      FeatureDescriptor descriptor = registry.getFeatureDescriptor(id);
-      descriptor.writeStatistics(featureElement);
-      element.addContent(featureElement);
+        return isToBeShown(featureId, project, HOUR);
     }
 
-    Element statsTag = new Element(COMPLETION_STATS_TAG);
-    XmlSerializer.serializeInto(myCompletionStats, statsTag);
-    element.addContent(statsTag);
-
-    Element fstatsTag = new Element(FIXES_STATS_TAG);
-    XmlSerializer.serializeInto(myFixesStats, fstatsTag);
-    element.addContent(fstatsTag);
-
-    element.setAttribute(ATT_HAVE_BEEN_SHOWN, String.valueOf(HAVE_BEEN_SHOWN));
-
-    return element;
-  }
-
-  @Override
-  public void triggerFeatureUsed(String featureId) {
-    ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-    FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
-    if (descriptor == null) {
-     // TODO: LOG.error("Feature '" + featureId +"' must be registered prior triggerFeatureUsed() is called");
+    @Nonnull
+    @Override
+    public CompletionStatistics getCompletionStatistics() {
+        return myCompletionStats;
     }
-    else {
-      descriptor.triggerUsed();
-    }
-  }
 
-  @Override
-  public void triggerFeatureShown(String featureId) {
-    FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
-    if (descriptor != null) {
-      descriptor.triggerShown();
+    @Nonnull
+    @Override
+    public CumulativeStatistics getFixesStats() {
+        return myFixesStats;
     }
-  }
 
+    public long getFirstRunTime() {
+        return PermanentInstallationID.date();
+    }
+
+    @Override
+    public void loadState(Element element) {
+        List featuresList = element.getChildren(FEATURE_TAG);
+        for (Object aFeaturesList : featuresList) {
+            Element featureElement = (Element) aFeaturesList;
+            FeatureDescriptor descriptor =
+                ((ProductivityFeaturesRegistryImpl) myRegistry).getFeatureDescriptorEx(featureElement.getAttributeValue(ATT_ID));
+            if (descriptor != null) {
+                descriptor.readStatistics(featureElement);
+            }
+        }
+
+        Element stats = element.getChild(COMPLETION_STATS_TAG);
+        if (stats != null) {
+            myCompletionStats = XmlSerializer.deserialize(stats, CompletionStatistics.class);
+        }
+
+        Element fStats = element.getChild(FIXES_STATS_TAG);
+        if (fStats != null) {
+            myFixesStats = XmlSerializer.deserialize(fStats, CumulativeStatistics.class);
+        }
+
+        HAVE_BEEN_SHOWN = Boolean.valueOf(element.getAttributeValue(ATT_HAVE_BEEN_SHOWN));
+    }
+
+    @Override
+    public Element getState() {
+        Element element = new Element("state");
+        ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+        Set<String> ids = registry.getFeatureIds();
+        for (String id : ids) {
+            Element featureElement = new Element(FEATURE_TAG);
+            featureElement.setAttribute(ATT_ID, id);
+            FeatureDescriptor descriptor = registry.getFeatureDescriptor(id);
+            descriptor.writeStatistics(featureElement);
+            element.addContent(featureElement);
+        }
+
+        Element statsTag = new Element(COMPLETION_STATS_TAG);
+        XmlSerializer.serializeInto(myCompletionStats, statsTag);
+        element.addContent(statsTag);
+
+        Element fStatsTag = new Element(FIXES_STATS_TAG);
+        XmlSerializer.serializeInto(myFixesStats, fStatsTag);
+        element.addContent(fStatsTag);
+
+        element.setAttribute(ATT_HAVE_BEEN_SHOWN, String.valueOf(HAVE_BEEN_SHOWN));
+
+        return element;
+    }
+
+    @Override
+    public void triggerFeatureUsed(String featureId) {
+        ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+        FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
+        if (descriptor == null) {
+            // TODO: LOG.error("Feature '" + featureId +"' must be registered prior triggerFeatureUsed() is called");
+        }
+        else {
+            descriptor.triggerUsed();
+        }
+    }
+
+    @Override
+    public void triggerFeatureShown(String featureId) {
+        FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
+        if (descriptor != null) {
+            descriptor.triggerShown();
+        }
+    }
 }

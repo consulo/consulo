@@ -275,8 +275,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
                     PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
 
-                    if (pluginDescriptor instanceof PluginNode) {
-                        ((PluginNode) pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+                    if (pluginDescriptor instanceof PluginNode pluginNode) {
+                        pluginNode.setInstallStatus(PluginNode.STATUS_DOWNLOADED);
 
                         if (myType == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
                             updateHistory.setShowExperimentalWarning(true);

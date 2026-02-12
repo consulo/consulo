@@ -31,7 +31,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class StatisticsUploadAssistant {
-
     private static final Logger LOG = Logger.getInstance(StatisticsUploadAssistant.class);
 
     @Nonnull
@@ -58,7 +57,6 @@ public class StatisticsUploadAssistant {
                     descriptor.subValue(sentUsage.getValue());
                 }
             }
-
         }
 
         return packCollection(patchedUsages, patchedUsage -> patchedUsage.getDelta() != 0);

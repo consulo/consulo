@@ -30,23 +30,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DevelopersLoader {
-  @Nonnull
-  public static List<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
-    ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
+    @Nonnull
+    public static List<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
+        ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
 
-    ThreeState state = externalServiceConfiguration.getState(ExternalService.DEVELOPER_LIST);
-    if(state == ThreeState.NO) {
-      return List.of(Developer.NULL);
+        ThreeState state = externalServiceConfiguration.getState(ExternalService.DEVELOPER_LIST);
+        if (state == ThreeState.NO) {
+            return List.of(Developer.NULL);
+        }
+
+        UserAccount[] userAccounts = WebServiceApiSender.doGet(WebServiceApi.DEVELOPER_API, "list", UserAccount[].class);
+
+        List<Developer> developers = new ArrayList<>();
+        developers.add(Developer.NULL);
+
+        for (UserAccount userAccount : userAccounts) {
+            developers.add(new Developer(userAccount.id, userAccount.username));
+        }
+        return developers;
     }
-
-    UserAccount[] userAccounts = WebServiceApiSender.doGet(WebServiceApi.DEVELOPER_API, "list", UserAccount[].class);
-
-    List<Developer> developers = new ArrayList<>();
-    developers.add(Developer.NULL);
-
-    for (UserAccount userAccount : userAccounts) {
-      developers.add(new Developer(userAccount.id, userAccount.username));
-    }
-    return developers;
-  }
 }

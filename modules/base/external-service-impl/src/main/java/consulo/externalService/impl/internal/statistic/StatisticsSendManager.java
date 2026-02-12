@@ -123,16 +123,20 @@ public class StatisticsSendManager implements Disposable {
     }
 
     private void runWithDelay() {
-        myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable) () -> {
-            try {
-                UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
+        myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(
+            (Runnable) () -> {
+                try {
+                    UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
 
-                sendNow(component);
-            }
-            finally {
-                myFuture = null;
-            }
-        }, DELAY_IN_MIN, TimeUnit.MINUTES);
+                    sendNow(component);
+                }
+                finally {
+                    myFuture = null;
+                }
+            },
+            DELAY_IN_MIN,
+            TimeUnit.MINUTES
+        );
     }
 
     public void sendNow(UsageStatisticsPersistenceComponent component) {

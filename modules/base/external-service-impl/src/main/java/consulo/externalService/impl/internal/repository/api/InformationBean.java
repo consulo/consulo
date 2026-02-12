@@ -27,27 +27,27 @@ import java.util.Locale;
  */
 @SuppressWarnings("unused")
 public abstract class InformationBean {
-  private final String osName = SystemProperties.getOsName();
-  private final String osVersion = SystemProperties.getOsVersion();
-  private final String javaVersion = SystemProperties.getJavaVersion();
-  private final String javaVmVendor = SystemProperties.getJavaVmVendor();
-  private final String locale = Locale.getDefault().toString();
+    private final String osName = SystemProperties.getOsName();
+    private final String osVersion = SystemProperties.getOsVersion();
+    private final String javaVersion = SystemProperties.getJavaVersion();
+    private final String javaVmVendor = SystemProperties.getJavaVmVendor();
+    private final String locale = Locale.getDefault().toString();
 
-  private final String appName;
-  private final UpdateChannel appUpdateChannel;
-  private final String appBuild;
-  private final String appVersionMajor;
-  private final String appVersionMinor;
-  private final String appBuildDate;
+    private final String appName;
+    private final UpdateChannel appUpdateChannel;
+    private final String appBuild;
+    private final String appVersionMajor;
+    private final String appVersionMinor;
+    private final String appBuildDate;
 
-  public InformationBean(UpdateChannel appUpdateChannel) {
-    this.appUpdateChannel = appUpdateChannel;
+    public InformationBean(UpdateChannel appUpdateChannel) {
+        this.appUpdateChannel = appUpdateChannel;
 
-    ApplicationInfo appInfo = ApplicationInfo.getInstance();
-    appName = appInfo.getName();
-    appBuild = appInfo.getBuild().asString();
-    appVersionMajor = appInfo.getMajorVersion();
-    appVersionMinor = appInfo.getMinorVersion();
-    appBuildDate = appInfo.getBuildDate() == null ? null : String.valueOf(appInfo.getBuildDate().getTimeInMillis());
-  }
+        ApplicationInfo appInfo = ApplicationInfo.getInstance();
+        appName = appInfo.getName();
+        appBuild = appInfo.getBuild().asString();
+        appVersionMajor = appInfo.getMajorVersion();
+        appVersionMinor = appInfo.getMinorVersion();
+        appBuildDate = String.valueOf(appInfo.getBuildDate().getTimeInMillis());
+    }
 }

@@ -15,19 +15,17 @@
  */
 package consulo.externalService.impl.internal.repository.api.pluginHistory;
 
-import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryEntry;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 19/08/2023
+ * @since 2023-08-19
  */
 public class PluginHistoryResponse {
-  public static class PluginHistory extends PluginHistoryEntry {
-    public String id;
-  }
+    public static class PluginHistory extends PluginHistoryEntry {
+        public String id;
+    }
 
-  public List<PluginHistory> entries = new ArrayList<>();
+    public List<PluginHistory> entries = new ArrayList<>();
 }

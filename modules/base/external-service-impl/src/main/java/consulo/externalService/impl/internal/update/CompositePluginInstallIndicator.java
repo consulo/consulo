@@ -23,19 +23,19 @@ import consulo.application.progress.ProgressIndicator;
  * @since 2024-06-30
  */
 public class CompositePluginInstallIndicator extends DelegatingProgressIndicator {
-  private final int myCurrentIndex;
-  private float myProgressModifier;
+    private final int myCurrentIndex;
+    private float myProgressModifier;
 
-  public CompositePluginInstallIndicator(ProgressIndicator progressIndicator, int currentIndex, int pluginsCount) {
-    super(progressIndicator);
-    myCurrentIndex = currentIndex;
-    myProgressModifier = 1f / pluginsCount;
-  }
+    public CompositePluginInstallIndicator(ProgressIndicator progressIndicator, int currentIndex, int pluginsCount) {
+        super(progressIndicator);
+        myCurrentIndex = currentIndex;
+        myProgressModifier = 1f / pluginsCount;
+    }
 
-  @Override
-  public void setFraction(double fraction) {
-    double f = myProgressModifier * myCurrentIndex + myProgressModifier * fraction;
+    @Override
+    public void setFraction(double fraction) {
+        double f = myProgressModifier * myCurrentIndex + myProgressModifier * fraction;
 
-    getOriginalProgressIndicator().setFraction(f);
-  }
+        getOriginalProgressIndicator().setFraction(f);
+    }
 }

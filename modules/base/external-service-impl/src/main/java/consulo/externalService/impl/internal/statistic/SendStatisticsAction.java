@@ -25,25 +25,28 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 public class SendStatisticsAction extends DumbAwareAction {
-  private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponent;
-  private final Provider<StatisticsSendManager> myStatisticsSendManager;
+    private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponent;
+    private final Provider<StatisticsSendManager> myStatisticsSendManager;
 
-  @Inject
-  public SendStatisticsAction(Provider<UsageStatisticsPersistenceComponent> usageStatisticsPersistenceComponent, Provider<StatisticsSendManager> statisticsSendManager) {
-    myUsageStatisticsPersistenceComponent = usageStatisticsPersistenceComponent;
-    myStatisticsSendManager = statisticsSendManager;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Inject
+    public SendStatisticsAction(
+        Provider<UsageStatisticsPersistenceComponent> usageStatisticsPersistenceComponent,
+        Provider<StatisticsSendManager> statisticsSendManager
+    ) {
+        myUsageStatisticsPersistenceComponent = usageStatisticsPersistenceComponent;
+        myStatisticsSendManager = statisticsSendManager;
     }
 
-    myStatisticsSendManager.get().sendNow(myUsageStatisticsPersistenceComponent.get());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    Alerts.okInfo("Sended").showAsync();
-  }
+        myStatisticsSendManager.get().sendNow(myUsageStatisticsPersistenceComponent.get());
+
+        Alerts.okInfo("Sent").showAsync();
+    }
 }

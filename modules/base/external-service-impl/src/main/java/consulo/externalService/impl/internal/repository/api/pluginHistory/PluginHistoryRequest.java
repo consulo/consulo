@@ -19,36 +19,35 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 19/08/2023
+ * @since 2023-08-19
  */
 public class PluginHistoryRequest {
-  public static class PluginInfo {
-    public String id;
+    public static class PluginInfo {
+        public String id;
 
-    public String fromVersion;
+        public String fromVersion;
 
-    public String toVersion;
+        public String toVersion;
 
-    public boolean includeFromVersion = true;
+        public boolean includeFromVersion = true;
 
+        public PluginInfo(String id, String version) {
+            this.id = id;
+            this.fromVersion = version;
+            this.toVersion = version;
+        }
 
-    public PluginInfo(String id, String version) {
-      this.id = id;
-      this.fromVersion = version;
-      this.toVersion = version;
+        public PluginInfo(String id, String fromVersion, String toVersion, boolean includeFromVersion) {
+            this.id = id;
+            this.fromVersion = fromVersion;
+            this.toVersion = toVersion;
+            this.includeFromVersion = includeFromVersion;
+        }
     }
 
-    public PluginInfo(String id, String fromVersion, String toVersion, boolean includeFromVersion) {
-      this.id = id;
-      this.fromVersion = fromVersion;
-      this.toVersion = toVersion;
-      this.includeFromVersion = includeFromVersion;
+    public List<PluginInfo> plugins = List.of();
+
+    public PluginHistoryRequest(List<PluginInfo> plugins) {
+        this.plugins = plugins;
     }
-  }
-
-  public List<PluginInfo> plugins = List.of();
-
-  public PluginHistoryRequest(List<PluginInfo> plugins) {
-    this.plugins = plugins;
-  }
 }

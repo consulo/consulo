@@ -26,32 +26,33 @@ import jakarta.inject.Provider;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 10-Jul-22
+ * @since 2022-07-10
  */
 @ExtensionImpl
 public class UsageTriggerCollector extends UsagesCollector {
-  private final Provider<UsageTrigger> myUsageTrigger;
+    private final Provider<UsageTrigger> myUsageTrigger;
 
-  @Inject
-  public UsageTriggerCollector(Provider<UsageTrigger> usageTrigger) {
-    myUsageTrigger = usageTrigger;
-  }
+    @Inject
+    public UsageTriggerCollector(Provider<UsageTrigger> usageTrigger) {
+        myUsageTrigger = usageTrigger;
+    }
 
-  @Override
-  @Nonnull
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    UsageTriggerImpl.State state = ((UsageTriggerImpl)myUsageTrigger.get()).getState();
+    @Override
+    @Nonnull
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+        UsageTriggerImpl.State state = ((UsageTriggerImpl) myUsageTrigger.get()).getState();
 
-    return ContainerUtil.map2Set(state.myValues.entrySet(), e -> new UsageDescriptor(e.getKey(), e.getValue()));
-  }
+        return ContainerUtil.map2Set(state.myValues.entrySet(), e -> new UsageDescriptor(e.getKey(), e.getValue()));
+    }
 
-  @Override
-  @Nonnull
-  public String getGroupId() {
-    return "consulo.platform.base:features.count";
-  }
+    @Override
+    @Nonnull
+    public String getGroupId() {
+        return "consulo.platform.base:features.count";
+    }
 }

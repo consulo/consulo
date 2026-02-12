@@ -27,6 +27,7 @@ import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginActio
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
@@ -63,31 +64,44 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
 
         UIAccess uiAccess = Application.get().getLastUIAccess();
 
-        Task.Backgroundable.queue(null, "Loading Plugins...", progressIndicator -> {
-            UpdateChannel channel = UpdateSettings.getInstance().getChannel();
-            EarlyAccessProgramManager earlyAccessProgramManager = EarlyAccessProgramManager.getInstance();
-            try {
-                List<PluginDescriptor> pluginDescriptors =
-                    RepositoryHelper.loadOnlyPluginsFromRepository(progressIndicator, channel, earlyAccessProgramManager);
+        Task.Backgroundable.queue(
+            null,
+            LocalizeValue.localizeTODO("Loading Plugins..."),
+            progressIndicator -> {
+                UpdateChannel channel = UpdateSettings.getInstance().getChannel();
+                EarlyAccessProgramManager earlyAccessProgramManager = EarlyAccessProgramManager.getInstance();
+                try {
+                    List<PluginDescriptor> pluginDescriptors =
+                        RepositoryHelper.loadOnlyPluginsFromRepository(progressIndicator, channel, earlyAccessProgramManager);
 
-                PluginId pluginId = PluginId.getId(pluginIdStr);
+                    PluginId pluginId = PluginId.getId(pluginIdStr);
 
-                Optional<PluginDescriptor> target = pluginDescriptors
-                    .stream()
-                    .filter(pluginDescriptor -> Objects.equals(pluginDescriptor.getPluginId(), pluginId))
-                    .findFirst();
+                    Optional<PluginDescriptor> target = pluginDescriptors
+                        .stream()
+                        .filter(pluginDescriptor -> Objects.equals(pluginDescriptor.getPluginId(), pluginId))
+                        .findFirst();
 
-                if (target.isEmpty()) {
-                    LOG.warn("Plugin can't installed: " + pluginIdStr);
-                    return;
+                    if (target.isEmpty()) {
+                        LOG.warn("Plugin can't installed: " + pluginIdStr);
+                        return;
+                    }
+
+                    uiAccess.give(() -> InstallPluginAction.install(
+                        uiAccess,
+                        null,
+                        null,
+                        null,
+                        target.get(),
+                        pluginDescriptors,
+                        true,
+                        null
+                    ));
                 }
-
-                uiAccess.give(() -> InstallPluginAction.install(uiAccess, null, null, null, target.get(), pluginDescriptors, true, null));
+                catch (Exception e) {
+                    LOG.warn(e);
+                }
             }
-            catch (Exception e) {
-                LOG.warn(e);
-            }
-        });
+        );
         return JsonResponse.asSuccess(Map.of("pluginId", pluginIdStr));
     }
 }

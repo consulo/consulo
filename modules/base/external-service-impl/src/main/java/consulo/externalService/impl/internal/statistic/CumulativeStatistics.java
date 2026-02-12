@@ -52,5 +52,4 @@ public class CumulativeStatistics implements InvocationCounter {
             dayCount++;
         }
     }
-
 }

@@ -27,15 +27,15 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ExperimentalPluginsDescriptor extends EarlyAccessProgramDescriptor {
-  @Nonnull
-  @Override
-  public LocalizeValue getName() {
-    return LocalizeValue.localizeTODO("Experimental Plugins");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("Experimental Plugins");
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.localizeTODO("Allow install experimental plugins");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Allow install experimental plugins");
+    }
 }

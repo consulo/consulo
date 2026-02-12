@@ -16,23 +16,23 @@
 package consulo.externalService.impl.internal.statistic;
 
 public enum SendPeriod {
-  DAILY("daily", 24L * 60 * 60 * 1000),
-  WEEKLY("weekly", 7L * 24 * 60 * 60 * 1000),
-  MONTHLY("monthly", 30L * 24 * 60 * 60 * 1000);
+    DAILY("daily", 24L * 60 * 60 * 1000),
+    WEEKLY("weekly", 7L * 24 * 60 * 60 * 1000),
+    MONTHLY("monthly", 30L * 24 * 60 * 60 * 1000);
 
-  private final String myName;
-  private final long myPeriod;
+    private final String myName;
+    private final long myPeriod;
 
-  SendPeriod(String name, long period) {
-    myName = name;
-    myPeriod = period;
-  }
+    SendPeriod(String name, long period) {
+        myName = name;
+        myPeriod = period;
+    }
 
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  public long getMillis() {
-    return myPeriod;
-  }
+    public long getMillis() {
+        return myPeriod;
+    }
 }
