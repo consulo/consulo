@@ -51,6 +51,7 @@ import java.util.*;
 public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstractPanel implements CodeStyleSettingsCustomizable {
     private static final Logger LOG = Logger.getInstance(CustomizableLanguageCodeStylePanel.class);
 
+    @RequiredUIAccess
     protected CustomizableLanguageCodeStylePanel(CodeStyleSettings settings) {
         super(settings);
     }
