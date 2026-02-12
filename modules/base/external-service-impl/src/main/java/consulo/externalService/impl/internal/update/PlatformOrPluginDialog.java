@@ -153,24 +153,24 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             protected PluginsListRender createRender(PluginsPanel pluginsPanel) {
                 return new PluginsListRender(null) {
                     @Override
-                    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode) {
+                    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginDescriptor) {
                         PlatformOrPluginNode node =
-                            ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginNode.getPluginId()));
+                            ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginDescriptor.getPluginId()));
                         assert node != null;
 
                         PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
                         if (currentDescriptor != null) {
                             myCategory.setText(
                                 currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " +
-                                    (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion())
+                                    (node.getFutureDescriptor() == null ? "??" : pluginDescriptor.getVersion())
                             );
                         }
                         else {
-                            myCategory.setText(pluginNode.getVersion());
+                            myCategory.setText(pluginDescriptor.getVersion());
                         }
 
                         FileStatus status = FileStatus.MODIFIED;
-                        if (myGreenStrategy.test(pluginNode.getPluginId())) {
+                        if (myGreenStrategy.test(pluginDescriptor.getPluginId())) {
                             status = FileStatus.ADDED;
                         }
                         if (node.getFutureDescriptor() == null) {

@@ -59,9 +59,9 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         }
     }
 
-    @RequiredUIAccess
     @Nullable
     @Override
+    @RequiredUIAccess
     public JComponent createComponent(@Nonnull Disposable parentDisposable) {
         if (myPanel == null) {
             myPanel = new PluginsPanel();
@@ -83,14 +83,11 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         if (myPanel != null) {
             int selectedIndex = myPanel.getSelectedIndex();
 
-            switch (selectedIndex) {
-                case PluginsPanel.INSTALLED:
-                    suffix = "/#installed";
-                    break;
-                case PluginsPanel.FROM_REPOSITORY:
-                    suffix = "/#from-repository";
-                    break;
-            }
+            suffix = switch (selectedIndex) {
+                case PluginsPanel.INSTALLED -> "/#installed";
+                case PluginsPanel.FROM_REPOSITORY -> "/#from-repository";
+                default -> suffix;
+            };
         }
         return getId() + suffix;
     }
@@ -101,36 +98,36 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         return CONFIGURABLE_ID;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         return myPanel != null && myPanel.isModified();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         if (myPanel != null) {
             myPanel.apply();
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void reset() {
         if (myPanel != null) {
             myPanel.reset();
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void disposeUIResources() {
         myPanel = null;
     }
 
-    @Override
     @Nullable
+    @Override
     public Runnable enableSearch(String option) {
         return () -> {
             if (myPanel != null) {
@@ -139,6 +136,7 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         };
     }
 
+    @Override
     public void selectInstalled(PluginId pluginId) {
         myPanel.selectInstalled(pluginId);
     }

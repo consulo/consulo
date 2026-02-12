@@ -34,8 +34,8 @@ public class ReloadAllAction extends DumbAwareAction {
         myTabs = tabs;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         for (PluginTab tab : myTabs) {
             tab.reload();

@@ -38,6 +38,7 @@ import java.util.concurrent.CompletableFuture;
  * @author anna
  */
 public class RepositoryPluginsTab extends PluginTab {
+    @RequiredUIAccess
     public RepositoryPluginsTab(PluginsPanel pluginsPanel) {
         super(pluginsPanel);
         init();
@@ -51,13 +52,12 @@ public class RepositoryPluginsTab extends PluginTab {
         return loadPluginsFromHostInBackground(earlyAccessProgramManager);
     }
 
+    @Override
     @RequiredUIAccess
     public void reload() {
         UIAccess uiAccess = UIAccess.current();
 
-        loadAvailablePlugins().whenCompleteAsync((o, throwable) -> {
-            myPluginList.reset();
-        }, uiAccess);
+        loadAvailablePlugins().whenCompleteAsync((o, throwable) -> myPluginList.reset(), uiAccess);
     }
 
     /**
@@ -101,7 +101,7 @@ public class RepositoryPluginsTab extends PluginTab {
                         ExternalServiceLocalize.titlePlugins().get(),
                         CommonLocalize.buttonRetry().get(),
                         CommonLocalize.buttonCancel().get(),
-                        Messages.getErrorIcon()
+                        UIUtil.getErrorIcon()
                     ) == Messages.OK) {
                         loadPluginsFromHostInBackground(earlyAccessProgramManager);
                     }
