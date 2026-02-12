@@ -36,34 +36,33 @@ import java.util.Map;
 @ServiceImpl
 @State(name = "UsageTrigger", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 public class UsageTriggerImpl implements UsageTrigger, PersistentStateComponent<UsageTriggerImpl.State> {
-
-  public static class State {
-    @Tag("counts")
-    @MapAnnotation(surroundWithTag = false, keyAttributeName = "feature", valueAttributeName = "count")
-    public Map<String, Integer> myValues = new HashMap<>();
-  }
-
-  private State myState = new State();
-
-  @Override
-  public void doTrigger(String feature) {
-    ConvertUsagesUtil.assertDescriptorName(feature);
-    Integer count = myState.myValues.get(feature);
-    if (count == null) {
-      myState.myValues.put(feature, 1);
+    public static class State {
+        @Tag("counts")
+        @MapAnnotation(surroundWithTag = false, keyAttributeName = "feature", valueAttributeName = "count")
+        public Map<String, Integer> myValues = new HashMap<>();
     }
-    else {
-      myState.myValues.put(feature, count + 1);
+
+    private State myState = new State();
+
+    @Override
+    public void doTrigger(String feature) {
+        ConvertUsagesUtil.assertDescriptorName(feature);
+        Integer count = myState.myValues.get(feature);
+        if (count == null) {
+            myState.myValues.put(feature, 1);
+        }
+        else {
+            myState.myValues.put(feature, count + 1);
+        }
     }
-  }
 
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Override
+    public State getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
+    @Override
+    public void loadState(State state) {
+        myState = state;
+    }
 }

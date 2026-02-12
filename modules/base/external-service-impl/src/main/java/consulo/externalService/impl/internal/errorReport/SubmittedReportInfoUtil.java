@@ -25,19 +25,17 @@ import jakarta.annotation.Nullable;
  */
 public class SubmittedReportInfoUtil {
     public static void appendSubmissionInformation(SubmittedReportInfo info, StringBuilder out, @Nullable String url) {
-      if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED) {
-        out.append(" ").append(ExternalServiceLocalize.errorListMessageSubmissionFailed());
-      }
-      else {
-        if (info.getLinkText() != null) {
-          out.append(" ").append(ExternalServiceLocalize.errorListMessageSubmittedAsLink(url, info.getLinkText()));
-          if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
-            out.append(" ").append(ExternalServiceLocalize.errorListMessageDuplicate());
-          }
+        if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED) {
+            out.append(" ").append(ExternalServiceLocalize.errorListMessageSubmissionFailed());
+        }
+        else if (info.getLinkText() != null) {
+            out.append(" ").append(ExternalServiceLocalize.errorListMessageSubmittedAsLink(url, info.getLinkText()));
+            if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
+                out.append(" ").append(ExternalServiceLocalize.errorListMessageDuplicate());
+            }
         }
         else {
-          out.append(ExternalServiceLocalize.errorListMessageSubmitted());
+            out.append(ExternalServiceLocalize.errorListMessageSubmitted());
         }
-      }
     }
 }

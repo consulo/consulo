@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ComponentScope;
@@ -43,7 +42,6 @@ import java.util.*;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent implements PersistentStateComponent<Element> {
-
     @Nonnull
     public static UsageStatisticsPersistenceComponent getInstance() {
         return Application.get().getInstance(UsageStatisticsPersistenceComponent.class);

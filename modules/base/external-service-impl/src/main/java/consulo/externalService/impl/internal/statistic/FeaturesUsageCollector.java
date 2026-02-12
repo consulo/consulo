@@ -24,31 +24,31 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
 public class FeaturesUsageCollector extends UsagesCollector {
-
-  @Nonnull
-  @Override
-  public String getGroupId() {
-    return "consulo.platform.base:productivity";
-  }
-
-  @Nonnull
-  @Override
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    Set<UsageDescriptor> usages = new HashSet<UsageDescriptor>();
-
-    ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-    for (String featureId : registry.getFeatureIds()) {
-      FeatureDescriptor featureDescriptor = registry.getFeatureDescriptor(featureId);
-      if (featureDescriptor != null) {
-        usages.add(new UsageDescriptor(featureId, featureDescriptor.getUsageCount()));
-      }
+    @Nonnull
+    @Override
+    public String getGroupId() {
+        return "consulo.platform.base:productivity";
     }
 
-    return usages;
-  }
+    @Nonnull
+    @Override
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+        Set<UsageDescriptor> usages = new HashSet<>();
+
+        ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+        for (String featureId : registry.getFeatureIds()) {
+            FeatureDescriptor featureDescriptor = registry.getFeatureDescriptor(featureId);
+            if (featureDescriptor != null) {
+                usages.add(new UsageDescriptor(featureId, featureDescriptor.getUsageCount()));
+            }
+        }
+
+        return usages;
+    }
 }

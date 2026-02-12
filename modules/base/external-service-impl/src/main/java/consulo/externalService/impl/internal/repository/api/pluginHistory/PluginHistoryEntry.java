@@ -16,19 +16,18 @@
 package consulo.externalService.impl.internal.repository.api.pluginHistory;
 
 /**
+ * @link https://github.com/consulo/hub.consulo.io/blob/master/backend/src/main/java/consulo/hub/backend/repository/RestPluginHistoryEntry.java
  * @author VISTALL
  * @since 20/11/2021
- *
- * @link https://github.com/consulo/hub.consulo.io/blob/master/backend/src/main/java/consulo/hub/backend/repository/RestPluginHistoryEntry.java
  */
 public class PluginHistoryEntry {
-  public String pluginVersion;
+    public String pluginVersion;
 
-  public String repoUrl;
+    public String repoUrl;
 
-  //private String commitUrl;
-  public String commitHash;
-  public String commitMessage;
-  public long commitTimestamp;
-  public String commitAuthor;
+    //private String commitUrl;
+    public String commitHash;
+    public String commitMessage;
+    public long commitTimestamp;
+    public String commitAuthor;
 }

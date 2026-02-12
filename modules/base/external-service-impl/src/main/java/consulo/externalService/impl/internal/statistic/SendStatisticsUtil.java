@@ -31,45 +31,45 @@ import java.util.*;
  * @since 2020-05-30
  */
 public class SendStatisticsUtil {
-  private static final Logger LOG = Logger.getInstance(SendStatisticsUtil.class);
+    private static final Logger LOG = Logger.getInstance(SendStatisticsUtil.class);
 
-  @Nonnull
-  public static StatisticsBean getBean(UsageStatisticsPersistenceComponent component) {
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+    @Nonnull
+    public static StatisticsBean getBean(UsageStatisticsPersistenceComponent component) {
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 
-    Map<String, Set<PatchedUsage>> map = getPatchedUsages(Collections.emptySet(), openProjects);
+        Map<String, Set<PatchedUsage>> map = getPatchedUsages(Collections.emptySet(), openProjects);
 
-    List<StatisticsBean.UsageGroup> groups = new ArrayList<>();
-    for (Map.Entry<String, Set<PatchedUsage>> entry : map.entrySet()) {
-      StatisticsBean.UsageGroup usageGroup = new StatisticsBean.UsageGroup();
+        List<StatisticsBean.UsageGroup> groups = new ArrayList<>();
+        for (Map.Entry<String, Set<PatchedUsage>> entry : map.entrySet()) {
+            StatisticsBean.UsageGroup usageGroup = new StatisticsBean.UsageGroup();
 
-      List<StatisticsBean.UsageGroupValue> values = new ArrayList<>();
-      for (PatchedUsage patchedUsage : entry.getValue()) {
-        values.add(new StatisticsBean.UsageGroupValue(patchedUsage.getKey(), patchedUsage.getValue()));
-      }
+            List<StatisticsBean.UsageGroupValue> values = new ArrayList<>();
+            for (PatchedUsage patchedUsage : entry.getValue()) {
+                values.add(new StatisticsBean.UsageGroupValue(patchedUsage.getKey(), patchedUsage.getValue()));
+            }
 
-      usageGroup.id = entry.getKey();
-      usageGroup.values = ContainerUtil.toArray(values, StatisticsBean.UsageGroupValue[]::new);
+            usageGroup.id = entry.getKey();
+            usageGroup.values = ContainerUtil.toArray(values, StatisticsBean.UsageGroupValue[]::new);
 
-      groups.add(usageGroup);
+            groups.add(usageGroup);
+        }
+
+        StatisticsBean bean = new StatisticsBean();
+        bean.key = component.getSecretKey();
+        bean.installationID = PermanentInstallationID.get();
+        bean.groups = ContainerUtil.toArray(groups, StatisticsBean.UsageGroup[]::new);
+        return bean;
     }
 
-    StatisticsBean bean = new StatisticsBean();
-    bean.key = component.getSecretKey();
-    bean.installationID = PermanentInstallationID.get();
-    bean.groups = ContainerUtil.toArray(groups, StatisticsBean.UsageGroup[]::new);
-    return bean;
-  }
+    @Nonnull
+    private static Map<String, Set<PatchedUsage>> getPatchedUsages(@Nonnull Set<String> disabledGroups, @Nonnull Project[] projects) {
+        Map<String, Set<PatchedUsage>> usages = new LinkedHashMap<>();
 
-  @Nonnull
-  private static Map<String, Set<PatchedUsage>> getPatchedUsages(@Nonnull Set<String> disabledGroups, @Nonnull Project[] projects) {
-    Map<String, Set<PatchedUsage>> usages = new LinkedHashMap<>();
+        for (Project project : projects) {
+            Map<String, Set<UsageDescriptor>> allUsages = StatisticsUploadAssistant.getAllUsages(project, disabledGroups);
 
-    for (Project project : projects) {
-      Map<String, Set<UsageDescriptor>> allUsages = StatisticsUploadAssistant.getAllUsages(project, disabledGroups);
-
-      usages.putAll(StatisticsUploadAssistant.getPatchedUsages(allUsages, Collections.emptyMap()));
+            usages.putAll(StatisticsUploadAssistant.getPatchedUsages(allUsages, Collections.emptyMap()));
+        }
+        return usages;
     }
-    return usages;
-  }
 }

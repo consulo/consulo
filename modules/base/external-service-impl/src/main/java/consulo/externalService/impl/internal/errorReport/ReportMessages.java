@@ -24,7 +24,6 @@ import consulo.project.ui.notification.NotificationGroup;
  * @since 2003-03-18
  */
 public class ReportMessages {
-
-  public static final NotificationGroup GROUP =
-      new NotificationGroup("ErrorReport", ExternalServiceLocalize.errorReportTitle(), NotificationDisplayType.BALLOON, true);
+    public static final NotificationGroup GROUP =
+        new NotificationGroup("ErrorReport", ExternalServiceLocalize.errorReportTitle(), NotificationDisplayType.BALLOON, true);
 }

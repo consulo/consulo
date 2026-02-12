@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.externalService.statistic.UsageDescriptor;
@@ -23,13 +22,12 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class SentUsagesPersistence {
+    public abstract void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptors);
 
-  public abstract void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptors);
+    @Nonnull
+    public abstract Map<String, Set<UsageDescriptor>> getSentUsages();
 
-  @Nonnull
-  public abstract Map<String, Set<UsageDescriptor>> getSentUsages();
+    public abstract boolean isAllowed();
 
-  public abstract boolean isAllowed();
-
-  public abstract long getLastTimeSent();
+    public abstract long getLastTimeSent();
 }

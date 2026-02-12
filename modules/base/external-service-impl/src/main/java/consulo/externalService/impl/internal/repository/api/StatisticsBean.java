@@ -20,29 +20,29 @@ package consulo.externalService.impl.internal.repository.api;
  * @since 2020-05-30
  */
 public class StatisticsBean {
-  public static class UsageGroup {
-    public String id;
+    public static class UsageGroup {
+        public String id;
 
-    public UsageGroupValue[] values = new UsageGroupValue[0];
-  }
-
-  public static class UsageGroupValue {
-    public String id;
-
-    public int count;
-
-    public UsageGroupValue() {
+        public UsageGroupValue[] values = new UsageGroupValue[0];
     }
 
-    public UsageGroupValue(String id, int count) {
-      this.id = id;
-      this.count = count;
+    public static class UsageGroupValue {
+        public String id;
+
+        public int count;
+
+        public UsageGroupValue() {
+        }
+
+        public UsageGroupValue(String id, int count) {
+            this.id = id;
+            this.count = count;
+        }
     }
-  }
 
-  public String key;
+    public String key;
 
-  public String installationID;
+    public String installationID;
 
-  public UsageGroup[] groups = new UsageGroup[0];
+    public UsageGroup[] groups = new UsageGroup[0];
 }

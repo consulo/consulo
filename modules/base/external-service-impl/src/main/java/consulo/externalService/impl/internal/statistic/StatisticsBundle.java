@@ -23,17 +23,17 @@ import org.jetbrains.annotations.PropertyKey;
  * @since 2013-04-25
  */
 public class StatisticsBundle extends AbstractBundle {
-  private static final StatisticsBundle ourInstance = new StatisticsBundle();
+    private static final StatisticsBundle ourInstance = new StatisticsBundle();
 
-  private StatisticsBundle() {
-    super("messages.StatisticsBundle");
-  }
+    private StatisticsBundle() {
+        super("messages.StatisticsBundle");
+    }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key) {
-    return ourInstance.getMessage(key);
-  }
+    public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key) {
+        return ourInstance.getMessage(key);
+    }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key, Object... params) {
-    return ourInstance.getMessage(key, params);
-  }
+    public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key, Object... params) {
+        return ourInstance.getMessage(key, params);
+    }
 }

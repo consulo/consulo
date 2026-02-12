@@ -17,14 +17,14 @@ package consulo.externalService.impl.internal.repository.api;
 
 /**
  * @author VISTALL
- * @since 04/09/2021
+ * @since 2021-09-04
  */
 public class UserAccount {
-  public static final int ROLE_DEVELOPER = 1 << 4;
+    public static final int ROLE_DEVELOPER = 1 << 4;
 
-  public long id;
+    public long id;
 
-  public String username;
+    public String username;
 
-  public int rights;
+    public int rights;
 }

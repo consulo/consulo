@@ -20,16 +20,17 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
 @ExtensionImpl
 public class ReportMessagesNotificationGroupContributor implements NotificationGroupContributor {
-  @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(ReportMessages.GROUP);
-  }
+    @Override
+    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+        registrator.accept(ReportMessages.GROUP);
+    }
 }

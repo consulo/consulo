@@ -16,56 +16,56 @@
 package consulo.externalService.impl.internal.errorReport;
 
 public class Developer {
-  public static final Developer NULL = new NullDeveloper();
+    public static final Developer NULL = new NullDeveloper();
 
-  private long myId;
+    private long myId;
 
-  private String myName;
+    private String myName;
 
-  private Developer() {
-  }
+    private Developer() {
+    }
 
-  public Developer(long id, String name) {
-    myId = id;
-    myName = name;
-  }
+    public Developer(long id, String name) {
+        myId = id;
+        myName = name;
+    }
 
-  public long getId() {
-    return myId;
-  }
-
-  public String getDisplayText() {
-    return myName;
-  }
-
-  public String getSearchableText() {
-    return myName;
-  }
-
-  @Override
-  public String toString() {
-    return String.format("%d - %s", myId, myName);
-  }
-
-  private static class NullDeveloper extends Developer {
-    @Override
     public long getId() {
-      return 0;
+        return myId;
     }
 
-    @Override
     public String getDisplayText() {
-      return "<none>";
+        return myName;
     }
 
-    @Override
     public String getSearchableText() {
-      return "";
+        return myName;
     }
 
     @Override
     public String toString() {
-      return "NullDeveloper";
+        return String.format("%d - %s", myId, myName);
     }
-  }
+
+    private static class NullDeveloper extends Developer {
+        @Override
+        public long getId() {
+            return 0;
+        }
+
+        @Override
+        public String getDisplayText() {
+            return "<none>";
+        }
+
+        @Override
+        public String getSearchableText() {
+            return "";
+        }
+
+        @Override
+        public String toString() {
+            return "NullDeveloper";
+        }
+    }
 }

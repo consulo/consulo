@@ -20,12 +20,12 @@ import consulo.ui.ex.awt.ListCellRendererWrapper;
 import javax.swing.*;
 
 class DeveloperRenderer extends ListCellRendererWrapper {
-  DeveloperRenderer(ListCellRenderer listCellRenderer) {
-    super();
-  }
+    DeveloperRenderer(ListCellRenderer listCellRenderer) {
+        super();
+    }
 
-  @Override
-  public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-    setText(value == null ? "<unavailable>" : ((Developer) value).getDisplayText());
-  }
+    @Override
+    public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+        setText(value == null ? "<unavailable>" : ((Developer) value).getDisplayText());
+    }
 }

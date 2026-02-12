@@ -16,14 +16,19 @@
 package consulo.externalService.impl.internal.errorReport;
 
 import java.util.function.Consumer;
+
 import consulo.logging.internal.IdeaLoggingEvent;
 import consulo.logging.internal.SubmittedReportInfo;
 
 import java.awt.*;
 
 public abstract class ErrorReportSubmitter {
-
-  public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
-    return true;
-  }
+    public boolean trySubmitAsync(
+        IdeaLoggingEvent[] events,
+        String additionalInfo,
+        Component parentComponent,
+        Consumer<SubmittedReportInfo> consumer
+    ) {
+        return true;
+    }
 }

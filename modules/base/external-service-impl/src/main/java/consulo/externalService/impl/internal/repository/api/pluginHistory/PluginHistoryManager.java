@@ -25,41 +25,41 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 20/11/2021
+ * @since 2021-11-20
  */
 public class PluginHistoryManager {
-  private static final Logger LOG = Logger.getInstance(PluginHistoryManager.class);
+    private static final Logger LOG = Logger.getInstance(PluginHistoryManager.class);
 
-  @Nonnull
-  public static PluginHistoryResponse fetchBatchHistory(@Nonnull PluginHistoryRequest request) {
-    try {
-      return WebServiceApiSender.doPost(WebServiceApi.REPOSITORY_API, "history/request", request, PluginHistoryResponse.class);
-    }
-    catch (Exception e) {
-      LOG.warn(e);
-      return new PluginHistoryResponse();
-    }
-  }
-
-  @Nonnull
-  public static PluginHistoryEntry[] fetchHistory(@Nonnull String pluginId, @Nonnull String fromVersion, @Nonnull String toVersion) {
-    Map<String, String> params;
-    String baseUrl;
-    if (fromVersion.equals(toVersion)) {
-      baseUrl = "history/listByVersion";
-      params = Map.of("id", pluginId, "version", fromVersion/*, "includeFromVersion", "false"*/);
-    }
-    else {
-      baseUrl = "history/listByVersionRange";
-      params = Map.of("id", pluginId, "fromVersion", fromVersion, "toVersion", toVersion/*, "includeFromVersion", "false"*/);
+    @Nonnull
+    public static PluginHistoryResponse fetchBatchHistory(@Nonnull PluginHistoryRequest request) {
+        try {
+            return WebServiceApiSender.doPost(WebServiceApi.REPOSITORY_API, "history/request", request, PluginHistoryResponse.class);
+        }
+        catch (Exception e) {
+            LOG.warn(e);
+            return new PluginHistoryResponse();
+        }
     }
 
-    try {
-      return WebServiceApiSender.doGet(WebServiceApi.REPOSITORY_API, baseUrl, params, PluginHistoryEntry[].class);
+    @Nonnull
+    public static PluginHistoryEntry[] fetchHistory(@Nonnull String pluginId, @Nonnull String fromVersion, @Nonnull String toVersion) {
+        Map<String, String> params;
+        String baseUrl;
+        if (fromVersion.equals(toVersion)) {
+            baseUrl = "history/listByVersion";
+            params = Map.of("id", pluginId, "version", fromVersion/*, "includeFromVersion", "false"*/);
+        }
+        else {
+            baseUrl = "history/listByVersionRange";
+            params = Map.of("id", pluginId, "fromVersion", fromVersion, "toVersion", toVersion/*, "includeFromVersion", "false"*/);
+        }
+
+        try {
+            return WebServiceApiSender.doGet(WebServiceApi.REPOSITORY_API, baseUrl, params, PluginHistoryEntry[].class);
+        }
+        catch (IOException e) {
+            LOG.warn(e);
+            return new PluginHistoryEntry[0];
+        }
     }
-    catch (IOException e) {
-      LOG.warn(e);
-      return new PluginHistoryEntry[0];
-    }
-  }
 }

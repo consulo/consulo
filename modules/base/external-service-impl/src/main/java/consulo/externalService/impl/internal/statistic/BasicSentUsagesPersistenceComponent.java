@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -26,50 +25,50 @@ import java.util.Map;
 import java.util.Set;
 
 public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
+    protected Map<String, Set<UsageDescriptor>> mySentDescriptors = new HashMap<>();
 
-  protected Map<String, Set<UsageDescriptor>> mySentDescriptors = new HashMap<>();
+    private long mySentTime = 0;
 
-  private long mySentTime = 0;
-
-  @Override
-  public boolean isAllowed() {
-    return true;
-  }
-
-  @Override
-  public long getLastTimeSent() {
-    return mySentTime;
-  }
-
-  public void setSentTime(long time) {
-    mySentTime = time;
-  }
-
-  @Override
-  public void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
-    for (Map.Entry<String, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
-      String groupDescriptor = entry.getKey();
-      for (PatchedUsage patchedUsage : entry.getValue()) {
-        UsageDescriptor usageDescriptor = StatisticsUploadAssistant.findDescriptor(mySentDescriptors, Pair.create(groupDescriptor, patchedUsage.getKey()));
-        if (usageDescriptor != null) {
-          usageDescriptor.setValue(usageDescriptor.getValue() + patchedUsage.getDelta());
-        }
-        else {
-          if (!mySentDescriptors.containsKey(groupDescriptor)) {
-            mySentDescriptors.put(groupDescriptor, new HashSet<>());
-          }
-          mySentDescriptors.get(groupDescriptor).add(new UsageDescriptor(patchedUsage.getKey(), patchedUsage.getValue()));
-        }
-      }
+    @Override
+    public boolean isAllowed() {
+        return true;
     }
 
-    setSentTime(System.currentTimeMillis());
-  }
+    @Override
+    public long getLastTimeSent() {
+        return mySentTime;
+    }
+
+    public void setSentTime(long time) {
+        mySentTime = time;
+    }
+
+    @Override
+    public void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
+        for (Map.Entry<String, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
+            String groupDescriptor = entry.getKey();
+            for (PatchedUsage patchedUsage : entry.getValue()) {
+                UsageDescriptor usageDescriptor =
+                    StatisticsUploadAssistant.findDescriptor(mySentDescriptors, Couple.of(groupDescriptor, patchedUsage.getKey()));
+                if (usageDescriptor != null) {
+                    usageDescriptor.setValue(usageDescriptor.getValue() + patchedUsage.getDelta());
+                }
+                else {
+                    if (!mySentDescriptors.containsKey(groupDescriptor)) {
+                        mySentDescriptors.put(groupDescriptor, new HashSet<>());
+                    }
+                    mySentDescriptors.get(groupDescriptor).add(new UsageDescriptor(patchedUsage.getKey(), patchedUsage.getValue()));
+                }
+            }
+        }
+
+        setSentTime(System.currentTimeMillis());
+    }
 
 
-  @Override
-  @Nonnull
-  public Map<String, Set<UsageDescriptor>> getSentUsages() {
-    return mySentDescriptors;
-  }
+    @Override
+    @Nonnull
+    public Map<String, Set<UsageDescriptor>> getSentUsages() {
+        return mySentDescriptors;
+    }
 }

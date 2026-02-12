@@ -198,7 +198,7 @@ public class PluginDownloader {
 
             try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
                 TarArchiveEntry tempEntry;
-                while ((tempEntry = (TarArchiveEntry) ais.getNextEntry()) != null) {
+                while ((tempEntry = ais.getNextEntry()) != null) {
                     String name = tempEntry.getName();
                     // we interest only in new build
                     if (name.startsWith(prefix) && name.length() != prefix.length()) {
@@ -271,11 +271,8 @@ public class PluginDownloader {
     }
 
     @Nonnull
-    private Pair<File, String> downloadPlugin(
-        @Nonnull ProgressIndicator indicator,
-        String expectedChecksum,
-        int tryIndex
-    ) throws IOException {
+    private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator, String expectedChecksum, int tryIndex)
+        throws IOException {
         File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
         if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
             throw new IOException(ExternalServiceLocalize.errorCannotCreateTempDir(pluginsTemp).get());

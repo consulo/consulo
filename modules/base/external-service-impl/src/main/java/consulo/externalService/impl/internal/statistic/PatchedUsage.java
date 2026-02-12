@@ -18,24 +18,23 @@ package consulo.externalService.impl.internal.statistic;
 import consulo.externalService.statistic.UsageDescriptor;
 
 public class PatchedUsage extends UsageDescriptor {
+    public PatchedUsage(UsageDescriptor descriptor) {
+        super(descriptor.getKey(), descriptor.getValue());
+    }
 
-  public PatchedUsage(UsageDescriptor descriptor) {
-    super(descriptor.getKey(), descriptor.getValue());
-  }
+    public PatchedUsage(String key, int value) {
+        super(key, value);
+    }
 
-  public PatchedUsage(String key, int value) {
-    super(key, value);
-  }
+    public int getDelta() {
+        return getValue();
+    }
 
-  public int getDelta() {
-    return getValue();
-  }
+    public void addValue(int add) {
+        setValue(getValue() + add);
+    }
 
-  public void addValue(int add) {
-    setValue(getValue() + add);
-  }
-
-  public void subValue(int sub) {
-    setValue(getValue() - sub);
-  }
+    public void subValue(int sub) {
+        setValue(getValue() - sub);
+    }
 }
