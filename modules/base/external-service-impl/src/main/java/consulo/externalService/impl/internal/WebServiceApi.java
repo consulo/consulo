@@ -21,36 +21,36 @@ import java.util.Locale;
 
 /**
  * @author VISTALL
- * @since 24-Sep-16
+ * @since 2016-09-24
  */
 public enum WebServiceApi {
-  MAIN("https://consulo.io"),
-  HELP("https://consulo.help/"),
-  ERROR_REPORTER_API("https://api.consulo.io/errorReporter/"),
-  ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
-  STATISTICS_API("https://api.consulo.io/statistics/"),
-  DEVELOPER_API("https://api.consulo.io/developer/"),
-  STORAGE_API("https://api.consulo.io/storage/"),
-  OAUTH_API("https://api.consulo.io/oauth/"),
-  LINK_CONSULO("https://hub.consulo.io/link"),
-  REPOSITORY_API("https://api.consulo.io/repository/"),
-  DISCUSSION("https://github.com/orgs/consulo/discussions");
+    MAIN("https://consulo.io/"),
+    HELP("https://consulo.help/"),
+    ERROR_REPORTER_API("https://api.consulo.io/errorReporter/"),
+    ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
+    STATISTICS_API("https://api.consulo.io/statistics/"),
+    DEVELOPER_API("https://api.consulo.io/developer/"),
+    STORAGE_API("https://api.consulo.io/storage/"),
+    OAUTH_API("https://api.consulo.io/oauth/"),
+    LINK_CONSULO("https://hub.consulo.io/link/"),
+    REPOSITORY_API("https://api.consulo.io/repository/"),
+    DISCUSSION("https://github.com/orgs/consulo/discussions/");
 
-  private String myDefaultUrl;
-  private String myOverrideProperty;
+    private String myDefaultUrl;
+    private String myOverrideProperty;
 
-  WebServiceApi(@Nonnull String defaultUrl) {
-    myDefaultUrl = defaultUrl;
-    myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
-  }
+    WebServiceApi(@Nonnull String defaultUrl) {
+        myDefaultUrl = defaultUrl;
+        myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
+    }
 
-  @Nonnull
-  public String buildUrl(@Nonnull String urlPart) {
-    return buildUrl() + urlPart;
-  }
+    @Nonnull
+    public String buildUrl(@Nonnull String urlPart) {
+        return buildUrl() + urlPart;
+    }
 
-  @Nonnull
-  public String buildUrl() {
-    return System.getProperty(myOverrideProperty, myDefaultUrl);
-  }
+    @Nonnull
+    public String buildUrl() {
+        return System.getProperty(myOverrideProperty, myDefaultUrl);
+    }
 }

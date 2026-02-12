@@ -34,9 +34,10 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Provider;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.net.InetAddress;
-import java.net.URLEncoder;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
@@ -45,76 +46,74 @@ import java.nio.charset.StandardCharsets;
  * @since 2017-03-01
  */
 public class LoginAction extends AnAction implements RightAlignedToolbarAction, DumbAware {
-  private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+    private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
 
-  public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
-    myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
-
-    Presentation presentation = e.getPresentation();
-
-    String email = configuration.getEmail();
-    if (email == null) {
-      presentation.setText("Not authorized...");
-      presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
+    public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
+        super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
+        myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
     }
-    else {
-      presentation.setTextValue(LocalizeValue.of(email));
 
-      Image userIcon = configuration.getUserIcon();
-      presentation.setIcon(ObjectUtil.notNull(userIcon, PlatformIconGroup.actionsLoginavatar()));
-    }
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
+        Presentation presentation = e.getPresentation();
 
-    if(configuration.getEmail() != null) {
-      Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().doWhenDone(value -> {
-        if(value) {
-          // call internal implementation
-          ((ExternalServiceConfigurationImpl) configuration).reset();
+        String email = configuration.getEmail();
+        if (email == null) {
+            presentation.setText("Not authorized...");
+            presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
         }
-      });
-    } else {
-      String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
-      
-      int localPort = BuiltInServerManager.getInstance().getPort();
+        else {
+            presentation.setTextValue(LocalizeValue.of(email));
 
-      StringBuilder builder = new StringBuilder(WebServiceApi.LINK_CONSULO.buildUrl());
-      builder.append("?");
-      builder.append("token=").append(tokenForAuth).append("&");
-      builder.append("host=").append(URLEncoder.encode(getHostName(), StandardCharsets.UTF_8)).append("&");
-      
-      String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
-      redirectUrl = redirectUrl.replace("&", "%26");
-      redirectUrl = redirectUrl.replace("/", "%2F");
-      redirectUrl = redirectUrl.replace(":", "%3A");
-
-      builder.append("redirect=").append(redirectUrl);
-
-      Platform.current().openInBrowser(builder.toString());
-    }
-  }
-
-  private String getHostName() {
-    String hostname = "Unknown";
-
-    try {
-      InetAddress addr;
-      addr = InetAddress.getLocalHost();
-      hostname = addr.getHostName();
-    }
-    catch (UnknownHostException ignored) {
+            Image userIcon = configuration.getUserIcon();
+            presentation.setIcon(ObjectUtil.notNull(userIcon, PlatformIconGroup.actionsLoginavatar()));
+        }
     }
 
-    return hostname;
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
+
+        if (configuration.getEmail() != null) {
+            Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().doWhenDone(value -> {
+                if (value) {
+                    // call internal implementation
+                    ((ExternalServiceConfigurationImpl) configuration).reset();
+                }
+            });
+        }
+        else {
+            String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
+
+            int localPort = BuiltInServerManager.getInstance().getPort();
+            String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
+
+            try {
+                URIBuilder builder0 = new URIBuilder(WebServiceApi.LINK_CONSULO.buildUrl(), StandardCharsets.UTF_8)
+                    .addParameter("token", tokenForAuth)
+                    .addParameter("host", getHostName())
+                    .addParameter("redirect", redirectUrl);
+                Platform.current().openInBrowser(builder0.toString());
+            }
+            catch (URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    private String getHostName() {
+        String hostname = "Unknown";
+
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            hostname = addr.getHostName();
+        }
+        catch (UnknownHostException ignored) {
+        }
+
+        return hostname;
+    }
 }

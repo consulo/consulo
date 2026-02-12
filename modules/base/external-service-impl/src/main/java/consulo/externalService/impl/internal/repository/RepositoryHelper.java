@@ -33,10 +33,12 @@ import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +50,16 @@ import java.util.List;
 public class RepositoryHelper {
     @Nonnull
     private static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion, boolean addObsoletePlatformsV2) {
-        return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
-            .append("?platformVersion=")
-            .append(platformVersion)
-            .append("&channel=")
-            .append(channel)
-            .append("&addObsoletePlatformsV2=")
-            .append(addObsoletePlatformsV2)
-            .toString();
+        try {
+            return new URIBuilder(WebServiceApi.REPOSITORY_API.buildUrl("list"))
+                .addParameter("platformVersion", platformVersion)
+                .addParameter("channel", channel.toString())
+                .addParameter("addObsoletePlatformsV2", Boolean.toString(addObsoletePlatformsV2))
+                .toString();
+        }
+        catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Nonnull
@@ -71,27 +75,29 @@ public class RepositoryHelper {
             platformVersion = ApplicationInfo.getInstance().getBuild().asString();
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(WebServiceApi.REPOSITORY_API.buildUrl("download"));
-        builder.append("?platformVersion=");
-        builder.append(platformVersion);
-        builder.append("&channel=");
-        builder.append(channel);
-        builder.append("&id=");
-        builder.append(pluginId);
+        URIBuilder builder;
+        try {
+            builder = new URIBuilder(WebServiceApi.REPOSITORY_API.buildUrl("download"))
+                .addParameter("platformVersion", platformVersion)
+                .addParameter("channel", channel.toString())
+                .addParameter("id", pluginId);
+        }
+        catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 
         if (!noTracking) {
             noTracking = SystemProperties.getBooleanProperty("consulo.repository.no.tracking", false);
         }
 
         if (noTracking) {
-            builder.append("&noTracking=true");
+            builder.addParameter("noTracking", "true");
         }
         if (viaUpdate) {
-            builder.append("&viaUpdate=true");
+            builder.addParameter("viaUpdate", "true");
         }
         if (noRedirect) {
-            builder.append("&noRedirect=true");
+            builder.addParameter("noRedirect", "true");
         }
         return builder.toString();
     }
@@ -110,6 +116,7 @@ public class RepositoryHelper {
         return ContainerUtil.filter(ideaPluginDescriptors, it -> isPluginAllowed(it, eapManager));
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     private static boolean isPluginAllowed(PluginDescriptor pluginDescriptor, EarlyAccessProgramManager earlyAccessProgramManager) {
         if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
             return false;
