@@ -148,20 +148,8 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
     void setRenderer(@Nonnull TextItemRenderer<E> renderer);
 
-    @Deprecated
-    @DeprecationInfo("Use setRenderer")
-    default void setRender(@Nonnull TextItemRenderer<E> renderer) {
-        setRenderer(renderer);
-    }
-
     default void setTextRenderer(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
         setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use setTextRenderer")
-    default void setTextRender(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
-        setTextRenderer(localizeValueFunction);
     }
 
     void setValueByIndex(int index);
