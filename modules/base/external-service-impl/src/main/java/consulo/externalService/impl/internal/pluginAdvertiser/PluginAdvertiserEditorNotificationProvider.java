@@ -61,10 +61,12 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     private final PluginAdvertiserRequester myPluginAdvertiserRequester;
 
     @Inject
-    public PluginAdvertiserEditorNotificationProvider(Project project,
-                                                      UnknownFeaturesCollector unknownFeaturesCollector,
-                                                      EditorNotifications notifications,
-                                                      PluginAdvertiserRequester pluginAdvertiserRequester) {
+    public PluginAdvertiserEditorNotificationProvider(
+        Project project,
+        UnknownFeaturesCollector unknownFeaturesCollector,
+        EditorNotifications notifications,
+        PluginAdvertiserRequester pluginAdvertiserRequester
+    ) {
         myProject = project;
         myUnknownFeaturesCollector = unknownFeaturesCollector;
         myNotifications = notifications;
@@ -80,7 +82,11 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     @RequiredReadAction
     @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    public EditorNotificationBuilder buildNotification(
+        @Nonnull VirtualFile file,
+        @Nonnull FileEditor fileEditor,
+        @Nonnull Supplier<EditorNotificationBuilder> builderFactory
+    ) {
         if (!isValidFile(file)) {
             return null;
         }
@@ -118,25 +124,34 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         return file.getFileType() instanceof PlainTextLikeFileType;
     }
 
-    @RequiredReadAction
     @Nonnull
-    private EditorNotificationBuilder build(VirtualFile virtualFile,
-                                            Set<PluginDescriptor> plugins,
-                                            List<PluginDescriptor> allPlugins,
-                                            EditorNotificationBuilder builder) {
+    @RequiredReadAction
+    private EditorNotificationBuilder build(
+        VirtualFile virtualFile,
+        Set<PluginDescriptor> plugins,
+        List<PluginDescriptor> allPlugins,
+        EditorNotificationBuilder builder
+    ) {
         String extension = virtualFile.getExtension();
 
         builder.withText(ExternalServiceLocalize.pluginAdvestiserNotificationText(plugins.size()));
         if (plugins.size() == 1) {
             PluginDescriptor item = ContainerUtil.getFirstItem(plugins);
 
-            builder.withAction(ExternalServiceLocalize.pluginAdvestiserNotificationInstallPluginLink(item.getName()), (i) -> {
-                InstallPluginAction.downloadAndInstallPlugins(myProject, List.of(item), allPlugins, false, p -> myProject.getUIAccess().give(() -> {
-                    if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-                        Application.get().restart(true);
-                    }
-                }));
-            });
+            builder.withAction(
+                ExternalServiceLocalize.pluginAdvestiserNotificationInstallPluginLink(item.getName()),
+                (i) -> InstallPluginAction.downloadAndInstallPlugins(
+                    myProject,
+                    List.of(item),
+                    allPlugins,
+                    false,
+                    p -> myProject.getUIAccess().give(() -> {
+                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                            Application.get().restart(true);
+                        }
+                    })
+                )
+            );
         }
         else {
             builder.withAction(ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()), (i) -> {

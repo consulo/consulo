@@ -18,40 +18,42 @@ package consulo.externalService.impl.internal;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.prefs.Preferences;
 
 /**
  * UUID identifying pair user@computer
- *
- * FIXME [VISTALL] review this code for Web Plaform
+ * <p>
+ * FIXME [VISTALL] review this code for Web Platform
  */
 public class PermanentInstallationID {
-  private static final String INSTALLATION_ID_KEY = "user_id_on_machine";
-  private static final String INSTALLATION_DATE_KEY = "user_date_on_machine";
+    private static final String INSTALLATION_ID_KEY = "user_id_on_machine";
+    private static final String INSTALLATION_DATE_KEY = "user_date_on_machine";
 
-  private static final String INSTALLATION_ID = calculateValue(INSTALLATION_ID_KEY, () -> UUID.randomUUID().toString());
-  private static final long INSTALLATION_DATE = Long.parseLong(calculateValue(INSTALLATION_DATE_KEY, () -> String.valueOf(System.currentTimeMillis())));
+    private static final String INSTALLATION_ID = calculateValue(INSTALLATION_ID_KEY, () -> UUID.randomUUID().toString());
+    private static final long INSTALLATION_DATE =
+        Long.parseLong(calculateValue(INSTALLATION_DATE_KEY, () -> String.valueOf(System.currentTimeMillis())));
 
-  @Nonnull
-  public static String get() {
-    return INSTALLATION_ID;
-  }
-
-  public static long date() {
-    return INSTALLATION_DATE;
-  }
-
-  private static String calculateValue(String key, Supplier<String> factory) {
-    Preferences prefs = Preferences.userRoot().node("consulo");
-
-    String value = prefs.get(key, null);
-    if (StringUtil.isEmptyOrSpaces(value)) {
-      value = factory.get();
-      prefs.put(key, value);
+    @Nonnull
+    public static String get() {
+        return INSTALLATION_ID;
     }
 
-    return value;
-  }
+    public static long date() {
+        return INSTALLATION_DATE;
+    }
+
+    private static String calculateValue(String key, Supplier<String> factory) {
+        Preferences prefs = Preferences.userRoot().node("consulo");
+
+        String value = prefs.get(key, null);
+        if (StringUtil.isEmptyOrSpaces(value)) {
+            value = factory.get();
+            prefs.put(key, value);
+        }
+
+        return value;
+    }
 }

@@ -20,8 +20,8 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 12/09/2021
+ * @since 2021-09-12
  */
 public class InfoAllBeanResponse {
-  public Map<String, Long> files = new HashMap<>();
+    public Map<String, Long> files = new HashMap<>();
 }

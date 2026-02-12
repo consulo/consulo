@@ -24,13 +24,13 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 04/01/2022
+ * @since 2022-01-04
  */
 @Singleton
 @ServiceImpl
 public class HelpManagerImpl implements HelpManager {
-  @Override
-  public void invokeHelp(@Nullable String id) {
-    Platform.current().openInBrowser(WebServiceApi.HELP.buildUrl(StringUtil.notNullize(id)));
-  }
+    @Override
+    public void invokeHelp(@Nullable String id) {
+        Platform.current().openInBrowser(WebServiceApi.HELP.buildUrl(StringUtil.notNullize(id)));
+    }
 }

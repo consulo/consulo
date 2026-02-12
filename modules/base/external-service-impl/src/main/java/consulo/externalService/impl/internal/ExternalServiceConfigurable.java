@@ -47,7 +47,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 04/09/2021
+ * @since 2021-09-04
  */
 @ExtensionImpl
 public class ExternalServiceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {

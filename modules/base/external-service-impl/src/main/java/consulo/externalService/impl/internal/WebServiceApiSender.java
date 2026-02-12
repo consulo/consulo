@@ -90,20 +90,14 @@ public class WebServiceApiSender {
 
             return httpClient.execute(request, response -> {
                 int statusCode = response.getStatusLine().getStatusCode();
-                switch (statusCode) {
-                    case HttpURLConnection.HTTP_OK:
-                        return EntityUtils.toByteArray(response.getEntity());
-                    case HttpURLConnection.HTTP_UNAUTHORIZED:
-                        throw new AuthorizationFailedException();
-                    case HttpURLConnection.HTTP_NOT_MODIFIED:
-                        throw new NotModifiedException();
-                    case HttpURLConnection.HTTP_NOT_FOUND:
-                        throw new NotFoundException();
-                    case HttpURLConnection.HTTP_NO_CONTENT:
-                        throw new NoContentException();
-                    default:
-                        throw new WebServiceException(ExternalServiceLocalize.errorHttpResultCode(statusCode).get(), statusCode);
-                }
+                return switch (statusCode) {
+                    case HttpURLConnection.HTTP_OK -> EntityUtils.toByteArray(response.getEntity());
+                    case HttpURLConnection.HTTP_UNAUTHORIZED -> throw new AuthorizationFailedException();
+                    case HttpURLConnection.HTTP_NOT_MODIFIED -> throw new NotModifiedException();
+                    case HttpURLConnection.HTTP_NOT_FOUND -> throw new NotFoundException();
+                    case HttpURLConnection.HTTP_NO_CONTENT -> throw new NoContentException();
+                    default -> throw new WebServiceException(ExternalServiceLocalize.errorHttpResultCode(statusCode).get(), statusCode);
+                };
             });
         }
     }
@@ -147,33 +141,22 @@ public class WebServiceApiSender {
         ExternalServiceConfigurationImpl externalServiceConfiguration =
             (ExternalServiceConfigurationImpl) Application.get().getInstance(ExternalServiceConfiguration.class);
 
-        ThreeState state = externalServiceConfiguration.getState(service);
-        switch (state) {
-            case NO:
-                throw new UnsupportedOperationException("Can't send any data for api: " + api);
-            case YES:
-                return ObjectUtil.notNull(externalServiceConfiguration.getOAuthKey(), "bad-key");
-            case UNSURE:
-            default:
-                return null;
-        }
+        return switch (externalServiceConfiguration.getState(service)) {
+            case NO -> throw new UnsupportedOperationException("Can't send any data for api: " + api);
+            case YES -> ObjectUtil.notNull(externalServiceConfiguration.getOAuthKey(), "bad-key");
+            default -> null;
+        };
     }
 
     @Nullable
     private static ExternalService map(WebServiceApi api) {
-        switch (api) {
-            case ERROR_REPORTER_API:
-                return ExternalService.ERROR_REPORTING;
-            case STATISTICS_API:
-                return ExternalService.STATISTICS;
-            case DEVELOPER_API:
-                return ExternalService.DEVELOPER_LIST;
-            case STORAGE_API:
-                return ExternalService.STORAGE;
-            case REPOSITORY_API:
-                return null;
-            default:
-                throw new IllegalArgumentException(api.name() + " not supported");
-        }
+        return switch (api) {
+            case ERROR_REPORTER_API -> ExternalService.ERROR_REPORTING;
+            case STATISTICS_API -> ExternalService.STATISTICS;
+            case DEVELOPER_API -> ExternalService.DEVELOPER_LIST;
+            case STORAGE_API -> ExternalService.STORAGE;
+            case REPOSITORY_API -> null;
+            default -> throw new IllegalArgumentException(api.name() + " not supported");
+        };
     }
 }

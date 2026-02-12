@@ -19,7 +19,7 @@ import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 12/09/2021
+ * @since 2021-09-12
  */
 public class NotFoundException extends IOException {
 }

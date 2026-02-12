@@ -16,7 +16,7 @@
 package consulo.externalService.impl.internal.plugin;
 
 import consulo.component.extension.preview.ExtensionPreview;
-import consulo.component.internal.PluginDescritorWithExtensionPreview;
+import consulo.component.internal.PluginDescriptorWithExtensionPreview;
 import consulo.container.plugin.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
@@ -30,7 +30,7 @@ import java.util.*;
 /**
  * @author stathik
  */
-public class PluginNode extends PluginDescriptorStub implements PluginDescritorWithExtensionPreview {
+public class PluginNode extends PluginDescriptorStub implements PluginDescriptorWithExtensionPreview {
     public static final int STATUS_UNKNOWN = 0;
     public static final int STATUS_INSTALLED = 1;
     public static final int STATUS_MISSING = 2;
@@ -335,7 +335,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     public void addDependency(PluginId... depends) {
         if (myDependencies.isEmpty()) {
-            myDependencies = new ArrayList<PluginId>();
+            myDependencies = new ArrayList<>();
         }
 
         Collections.addAll(myDependencies, depends);
@@ -343,7 +343,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     public void addOptionalDependency(PluginId... depends) {
         if (myOptionalDependencies.isEmpty()) {
-            myOptionalDependencies = new ArrayList<PluginId>();
+            myOptionalDependencies = new ArrayList<>();
         }
 
         Collections.addAll(myOptionalDependencies, depends);
@@ -397,16 +397,12 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     @Nullable
     public String getStatusText() {
-        switch (myInstallStatus) {
-            case STATUS_UNKNOWN:
-                return "Available";
-            case STATUS_INSTALLED:
-                return "Installed";
-            case STATUS_NEWEST:
-                return "Ready to update";
-            default:
-                return null;
-        }
+        return switch (myInstallStatus) {
+            case STATUS_UNKNOWN -> "Available";
+            case STATUS_INSTALLED -> "Installed";
+            case STATUS_NEWEST -> "Ready to update";
+            default -> null;
+        };
     }
 
     public void setInstalledVersion(String installedVersion) {

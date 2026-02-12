@@ -29,45 +29,46 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 11-Feb-17
+ * @since 2017-02-11
  */
 public class ExternalStorageStreamProvider extends StreamProvider {
-  private final ExternalStorage myStorage;
-  private final ExternalServiceConfiguration myExternalServiceConfiguration;
+    private final ExternalStorage myStorage;
+    private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
-  public ExternalStorageStreamProvider(ExternalStorage externalStorage, ExternalServiceConfiguration externalServiceConfiguration) {
-    myExternalServiceConfiguration = externalServiceConfiguration;
-    myStorage = externalStorage;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    if(!myStorage.isInitialized()) {
-      return false;
+    public ExternalStorageStreamProvider(ExternalStorage externalStorage, ExternalServiceConfiguration externalServiceConfiguration) {
+        myExternalServiceConfiguration = externalServiceConfiguration;
+        myStorage = externalStorage;
     }
 
-    return myExternalServiceConfiguration.getState(ExternalService.STORAGE) == ThreeState.YES;
-  }
+    @Override
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean isEnabled() {
+        if (!myStorage.isInitialized()) {
+            return false;
+        }
 
-  @Nonnull
-  @Override
-  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
-    return myStorage.listSubFiles(fileSpec, roamingType);
-  }
+        return myExternalServiceConfiguration.getState(ExternalService.STORAGE) == ThreeState.YES;
+    }
 
-  @Override
-  public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException {
-    myStorage.saveContent(fileSpec, roamingType, content);
-  }
+    @Nonnull
+    @Override
+    public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+        return myStorage.listSubFiles(fileSpec, roamingType);
+    }
 
-  @Nullable
-  @Override
-  public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
-    return myStorage.loadContent(fileSpec, roamingType);
-  }
+    @Override
+    public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException {
+        myStorage.saveContent(fileSpec, roamingType, content);
+    }
 
-  @Override
-  public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
-    myStorage.delete(fileSpec, roamingType);
-  }
+    @Nullable
+    @Override
+    public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
+        return myStorage.loadContent(fileSpec, roamingType);
+    }
+
+    @Override
+    public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+        myStorage.delete(fileSpec, roamingType);
+    }
 }
