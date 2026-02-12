@@ -19,44 +19,49 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Shein
- * @since 15.09.2015.
+ * @since 2015-09-15
  */
 public class CodeStyleBoundedIntegerSettingPresentation extends CodeStyleSettingPresentation {
+    protected int myLowerBound;
+    protected int myUpperBound;
+    protected int myDefaultValue;
+    protected String myDefaultValueUiName;
 
-  protected int myLowerBound;
-  protected int myUpperBound;
-  protected int myDefaultValue;
-  protected String myDefaultValueUiName;
-
-  public CodeStyleBoundedIntegerSettingPresentation(@Nonnull String fieldName, @Nonnull String uiName, int lowerBound, int upperBound, int defaultValue, String defaultValueUiName) {
-    super(fieldName, uiName);
-    myLowerBound = lowerBound;
-    myUpperBound = upperBound;
-    myDefaultValue = defaultValue;
-    myDefaultValueUiName = defaultValueUiName;
-  }
-
-  public int getLowerBound() {
-    return myLowerBound;
-  }
-
-  public int getUpperBound() {
-    return myUpperBound;
-  }
-
-  public int getDefaultValue() {
-    return myDefaultValue;
-  }
-
-  @Override
-  @Nonnull
-  public String getValueUiName(@Nonnull Object value) {
-    if (value instanceof Integer) {
-      int intValue = (Integer)value;
-      return intValue == myDefaultValue ? myDefaultValueUiName : super.getValueUiName(value);
+    public CodeStyleBoundedIntegerSettingPresentation(
+        @Nonnull String fieldName,
+        @Nonnull String uiName,
+        int lowerBound,
+        int upperBound,
+        int defaultValue,
+        String defaultValueUiName
+    ) {
+        super(fieldName, uiName);
+        myLowerBound = lowerBound;
+        myUpperBound = upperBound;
+        myDefaultValue = defaultValue;
+        myDefaultValueUiName = defaultValueUiName;
     }
-    else {
-      return super.getValueUiName(value);
+
+    public int getLowerBound() {
+        return myLowerBound;
     }
-  }
+
+    public int getUpperBound() {
+        return myUpperBound;
+    }
+
+    public int getDefaultValue() {
+        return myDefaultValue;
+    }
+
+    @Nonnull
+    @Override
+    public String getValueUiName(@Nonnull Object value) {
+        if (value instanceof Integer intValue) {
+            return intValue == myDefaultValue ? myDefaultValueUiName : super.getValueUiName(value);
+        }
+        else {
+            return super.getValueUiName(value);
+        }
+    }
 }

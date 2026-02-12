@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
     class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
@@ -71,9 +71,9 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         return new DesktopTabImpl(this);
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
 
@@ -86,12 +86,12 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         return tab;
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
         Tab tab = createTab();
-        tab.setRender((t, p) -> p.append(tabName));
+        tab.setRenderer((t, p) -> p.append(tabName));
         return addTab(tab, component);
     }
 

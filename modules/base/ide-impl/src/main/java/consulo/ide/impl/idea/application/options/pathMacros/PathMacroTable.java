@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.application.options.pathMacros;
 
-import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.macro.PathMacros;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.table.JBTable;
 import consulo.component.store.internal.PathMacrosService;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -35,250 +36,284 @@ import java.util.List;
 import java.util.*;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 public class PathMacroTable extends JBTable {
-  private static final Logger LOG = Logger.getInstance(PathMacroTable.class);
-  private final PathMacros myPathMacros = PathMacros.getInstance();
-  private final MyTableModel myTableModel = new MyTableModel();
-  private static final int NAME_COLUMN = 0;
-  private static final int VALUE_COLUMN = 1;
+    private static final Logger LOG = Logger.getInstance(PathMacroTable.class);
+    private final PathMacros myPathMacros = PathMacros.getInstance();
+    private final MyTableModel myTableModel = new MyTableModel();
+    private static final int NAME_COLUMN = 0;
+    private static final int VALUE_COLUMN = 1;
 
-  private final List<Pair<String, String>> myMacros = new ArrayList<Pair<String, String>>();
-  private static final Comparator<Pair<String, String>> MACRO_COMPARATOR = new Comparator<Pair<String, String>>() {
-    public int compare(Pair<String, String> pair, Pair<String, String> pair1) {
-      return pair.getFirst().compareTo(pair1.getFirst());
-    }
-  };
+    private final List<Pair<String, String>> myMacros = new ArrayList<>();
+    private static final Comparator<Pair<String, String>> MACRO_COMPARATOR =
+        (pair, pair1) -> pair.getFirst().compareTo(pair1.getFirst());
 
-  private final Collection<String> myUndefinedMacroNames;
+    private final Collection<String> myUndefinedMacroNames;
 
-  public PathMacroTable() {
-    this(null);
-  }
-
-  public PathMacroTable(Collection<String> undefinedMacroNames) {
-    myUndefinedMacroNames = undefinedMacroNames;
-    setModel(myTableModel);
-    TableColumn column = getColumnModel().getColumn(NAME_COLUMN);
-    column.setCellRenderer(new DefaultTableCellRenderer() {
-      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        String macroValue = getMacroValueAt(row);
-        component.setForeground(macroValue.length() == 0
-                                ? JBColor.RED
-                                : isSelected ? table.getSelectionForeground() : table.getForeground());
-        return component;
-      }
-    });
-    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //obtainData();
-
-    getEmptyText().setText(ApplicationLocalize.textNoPathVariables());
-  }
-
-  public String getMacroValueAt(int row) {
-    return (String) getValueAt(row, VALUE_COLUMN);
-  }
-
-  public String getMacroNameAt(int row) {
-    return (String)getValueAt(row, NAME_COLUMN);
-  }
-
-  public void addMacro() {
-    String title = ApplicationBundle.message("title.add.variable");
-    PathMacroEditor macroEditor = new PathMacroEditor(title, "", "", new AddValidator(title));
-    macroEditor.show();
-    if (macroEditor.isOK()) {
-      String name = macroEditor.getName();
-      myMacros.add(new Pair<String, String>(name, macroEditor.getValue()));
-      Collections.sort(myMacros, MACRO_COMPARATOR);
-      int index = indexOfMacroWithName(name);
-      LOG.assertTrue(index >= 0);
-      myTableModel.fireTableDataChanged();
-      setRowSelectionInterval(index, index);
-    }
-  }
-
-  private boolean isValidRow(int selectedRow) {
-    return selectedRow >= 0 && selectedRow < myMacros.size();
-  }
-
-  public void removeSelectedMacros() {
-    int[] selectedRows = getSelectedRows();
-    if(selectedRows.length == 0) return;
-    Arrays.sort(selectedRows);
-    int originalRow = selectedRows[0];
-    for (int i = selectedRows.length - 1; i >= 0; i--) {
-      int selectedRow = selectedRows[i];
-      if (isValidRow(selectedRow)) {
-        myMacros.remove(selectedRow);
-      }
-    }
-    myTableModel.fireTableDataChanged();
-    if (originalRow < getRowCount()) {
-      setRowSelectionInterval(originalRow, originalRow);
-    } else if (getRowCount() > 0) {
-      int index = getRowCount() - 1;
-      setRowSelectionInterval(index, index);
-    }
-  }
-
-  public void commit() {
-    myPathMacros.removeAllMacros();
-    for (Pair<String, String> pair : myMacros) {
-      String value = pair.getSecond();
-      if (value != null && value.trim().length() > 0) {
-        String path = value.replace(File.separatorChar, '/');
-        if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
-        myPathMacros.setMacro(pair.getFirst(), path);
-      }
-    }
-  }
-
-  public void reset() {
-    obtainData();
-  }
-
-  private boolean hasMacroWithName(String name) {
-    if (PathMacros.getInstance().getSystemMacroNames().contains(name)) {
-      return true;
+    public PathMacroTable() {
+        this(null);
     }
 
-    for (Pair<String, String> macro : myMacros) {
-      if (name.equals(macro.getFirst())) {
-        return true;
-      }
-    }
-    return false;
-  }
+    public PathMacroTable(Collection<String> undefinedMacroNames) {
+        myUndefinedMacroNames = undefinedMacroNames;
+        setModel(myTableModel);
+        TableColumn column = getColumnModel().getColumn(NAME_COLUMN);
+        column.setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+            ) {
+                Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                String macroValue = getMacroValueAt(row);
+                component.setForeground(macroValue.length() == 0
+                    ? JBColor.RED
+                    : isSelected ? table.getSelectionForeground() : table.getForeground());
+                return component;
+            }
+        });
+        setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        //obtainData();
 
-  private int indexOfMacroWithName(String name) {
-    for (int i = 0; i < myMacros.size(); i++) {
-      Pair<String, String> pair = myMacros.get(i);
-      if (name.equals(pair.getFirst())) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  private void obtainData() {
-    obtainMacroPairs(myMacros);
-    myTableModel.fireTableDataChanged();
-  }
-
-  private void obtainMacroPairs(List<Pair<String, String>> macros) {
-    macros.clear();
-    Set<String> macroNames = myPathMacros.getUserMacroNames();
-    for (String name : macroNames) {
-      macros.add(Pair.create(name, myPathMacros.getValue(name).replace('/', File.separatorChar)));
+        getEmptyText().setText(ApplicationLocalize.textNoPathVariables());
     }
 
-    if (myUndefinedMacroNames != null) {
-      for (String undefinedMacroName : myUndefinedMacroNames) {
-        macros.add(new Pair<String, String>(undefinedMacroName, ""));
-      }
-    }
-    Collections.sort(macros, MACRO_COMPARATOR);
-  }
-
-  public void editMacro() {
-    if (getSelectedRowCount() != 1) {
-      return;
-    }
-    int selectedRow = getSelectedRow();
-    Pair<String, String> pair = myMacros.get(selectedRow);
-    String title = ApplicationBundle.message("title.edit.variable");
-    String macroName = pair.getFirst();
-    PathMacroEditor macroEditor = new PathMacroEditor(title, macroName, pair.getSecond(), new EditValidator());
-    macroEditor.show();
-    if (macroEditor.isOK()) {
-      myMacros.remove(selectedRow);
-      myMacros.add(Pair.create(macroEditor.getName(), macroEditor.getValue()));
-      Collections.sort(myMacros, MACRO_COMPARATOR);
-      myTableModel.fireTableDataChanged();
-    }
-  }
-
-  public boolean isModified() {
-    ArrayList<Pair<String, String>> macros = new ArrayList<Pair<String, String>>();
-    obtainMacroPairs(macros);
-    return !macros.equals(myMacros);
-  }
-
-  private class MyTableModel extends AbstractTableModel{
-    public int getColumnCount() {
-      return 2;
+    public String getMacroValueAt(int row) {
+        return (String) getValueAt(row, VALUE_COLUMN);
     }
 
-    public int getRowCount() {
-      return myMacros.size();
+    public String getMacroNameAt(int row) {
+        return (String) getValueAt(row, NAME_COLUMN);
     }
 
-    public Class getColumnClass(int columnIndex) {
-      return String.class;
+    @RequiredUIAccess
+    public void addMacro() {
+        String title = ApplicationLocalize.titleAddVariable().get();
+        PathMacroEditor macroEditor = new PathMacroEditor(title, "", "", new AddValidator(title));
+        macroEditor.show();
+        if (macroEditor.isOK()) {
+            String name = macroEditor.getName();
+            myMacros.add(Couple.of(name, macroEditor.getValue()));
+            Collections.sort(myMacros, MACRO_COMPARATOR);
+            int index = indexOfMacroWithName(name);
+            LOG.assertTrue(index >= 0);
+            myTableModel.fireTableDataChanged();
+            setRowSelectionInterval(index, index);
+        }
     }
 
-    public Object getValueAt(int rowIndex, int columnIndex) {
-      Pair<String, String> pair = myMacros.get(rowIndex);
-      switch (columnIndex) {
-        case NAME_COLUMN: return pair.getFirst();
-        case VALUE_COLUMN: return pair.getSecond();
-      }
-      LOG.error("Wrong indices");
-      return null;
+    private boolean isValidRow(int selectedRow) {
+        return selectedRow >= 0 && selectedRow < myMacros.size();
     }
 
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    public void removeSelectedMacros() {
+        int[] selectedRows = getSelectedRows();
+        if (selectedRows.length == 0) {
+            return;
+        }
+        Arrays.sort(selectedRows);
+        int originalRow = selectedRows[0];
+        for (int i = selectedRows.length - 1; i >= 0; i--) {
+            int selectedRow = selectedRows[i];
+            if (isValidRow(selectedRow)) {
+                myMacros.remove(selectedRow);
+            }
+        }
+        myTableModel.fireTableDataChanged();
+        if (originalRow < getRowCount()) {
+            setRowSelectionInterval(originalRow, originalRow);
+        }
+        else if (getRowCount() > 0) {
+            int index = getRowCount() - 1;
+            setRowSelectionInterval(index, index);
+        }
     }
 
-    public String getColumnName(int columnIndex) {
-      switch (columnIndex) {
-        case NAME_COLUMN: return ApplicationBundle.message("column.name");
-        case VALUE_COLUMN: return ApplicationBundle.message("column.value");
-      }
-      return null;
+    public void commit() {
+        myPathMacros.removeAllMacros();
+        for (Pair<String, String> pair : myMacros) {
+            String value = pair.getSecond();
+            if (value != null && value.trim().length() > 0) {
+                String path = value.replace(File.separatorChar, '/');
+                if (path.endsWith("/")) {
+                    path = path.substring(0, path.length() - 1);
+                }
+                myPathMacros.setMacro(pair.getFirst(), path);
+            }
+        }
     }
 
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-      return false;
-    }
-  }
-
-  private class AddValidator implements PathMacroEditor.Validator {
-    private final String myTitle;
-
-    public AddValidator(String title) {
-      myTitle = title;
+    public void reset() {
+        obtainData();
     }
 
-    public boolean checkName(String name) {
-      if (name.length() == 0) return false;
-      return PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
-    }
+    private boolean hasMacroWithName(String name) {
+        if (PathMacros.getInstance().getSystemMacroNames().contains(name)) {
+            return true;
+        }
 
-    public boolean isOK(String name, String value) {
-      if(name.length() == 0) return false;
-      if (hasMacroWithName(name)) {
-        Messages.showErrorDialog(PathMacroTable.this,
-                                 ApplicationBundle.message("error.variable.already.exists", name), myTitle);
+        for (Pair<String, String> macro : myMacros) {
+            if (name.equals(macro.getFirst())) {
+                return true;
+            }
+        }
         return false;
-      }
-      return true;
-    }
-  }
-
-  private static class EditValidator implements PathMacroEditor.Validator {
-    public boolean checkName(String name) {
-      if (name.length() == 0) return false;
-      if (PathMacros.getInstance().getSystemMacroNames().contains(name)) return false;
-
-      return PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
     }
 
-    public boolean isOK(String name, String value) {
-      return checkName(name);
+    private int indexOfMacroWithName(String name) {
+        for (int i = 0; i < myMacros.size(); i++) {
+            Pair<String, String> pair = myMacros.get(i);
+            if (name.equals(pair.getFirst())) {
+                return i;
+            }
+        }
+        return -1;
     }
-  }
+
+    private void obtainData() {
+        obtainMacroPairs(myMacros);
+        myTableModel.fireTableDataChanged();
+    }
+
+    private void obtainMacroPairs(List<Pair<String, String>> macros) {
+        macros.clear();
+        Set<String> macroNames = myPathMacros.getUserMacroNames();
+        for (String name : macroNames) {
+            macros.add(Couple.of(name, myPathMacros.getValue(name).replace('/', File.separatorChar)));
+        }
+
+        if (myUndefinedMacroNames != null) {
+            for (String undefinedMacroName : myUndefinedMacroNames) {
+                macros.add(Couple.of(undefinedMacroName, ""));
+            }
+        }
+        Collections.sort(macros, MACRO_COMPARATOR);
+    }
+
+    @RequiredUIAccess
+    public void editMacro() {
+        if (getSelectedRowCount() != 1) {
+            return;
+        }
+        int selectedRow = getSelectedRow();
+        Pair<String, String> pair = myMacros.get(selectedRow);
+        String title = ApplicationLocalize.titleEditVariable().get();
+        String macroName = pair.getFirst();
+        PathMacroEditor macroEditor = new PathMacroEditor(title, macroName, pair.getSecond(), new EditValidator());
+        macroEditor.show();
+        if (macroEditor.isOK()) {
+            myMacros.remove(selectedRow);
+            myMacros.add(Couple.of(macroEditor.getName(), macroEditor.getValue()));
+            Collections.sort(myMacros, MACRO_COMPARATOR);
+            myTableModel.fireTableDataChanged();
+        }
+    }
+
+    public boolean isModified() {
+        List<Pair<String, String>> macros = new ArrayList<>();
+        obtainMacroPairs(macros);
+        return !macros.equals(myMacros);
+    }
+
+    private class MyTableModel extends AbstractTableModel {
+        @Override
+        public int getColumnCount() {
+            return 2;
+        }
+
+        @Override
+        public int getRowCount() {
+            return myMacros.size();
+        }
+
+        @Override
+        public Class getColumnClass(int columnIndex) {
+            return String.class;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Pair<String, String> pair = myMacros.get(rowIndex);
+            switch (columnIndex) {
+                case NAME_COLUMN:
+                    return pair.getFirst();
+                case VALUE_COLUMN:
+                    return pair.getSecond();
+            }
+            LOG.error("Wrong indices");
+            return null;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        }
+
+        @Override
+        public String getColumnName(int columnIndex) {
+            return switch (columnIndex) {
+                case NAME_COLUMN -> ApplicationLocalize.columnName().get();
+                case VALUE_COLUMN -> ApplicationLocalize.columnValue().get();
+                default -> null;
+            };
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return false;
+        }
+    }
+
+    private class AddValidator implements PathMacroEditor.Validator {
+        private final String myTitle;
+
+        public AddValidator(String title) {
+            myTitle = title;
+        }
+
+        @Override
+        public boolean checkName(String name) {
+            return name.length() != 0 && PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean isOK(String name, String value) {
+            if (name.length() == 0) {
+                return false;
+            }
+            if (hasMacroWithName(name)) {
+                Messages.showErrorDialog(
+                    PathMacroTable.this,
+                    ApplicationLocalize.errorVariableAlreadyExists(name).get(),
+                    myTitle
+                );
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private static class EditValidator implements PathMacroEditor.Validator {
+        @Override
+        public boolean checkName(String name) {
+            if (name.length() == 0) {
+                return false;
+            }
+            if (PathMacros.getInstance().getSystemMacroNames().contains(name)) {
+                return false;
+            }
+
+            return PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
+        }
+
+        @Override
+        public boolean isOK(String name, String value) {
+            return checkName(name);
+        }
+    }
 }

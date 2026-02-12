@@ -17,7 +17,6 @@ package consulo.language.codeStyle.ui.setting;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.HighlighterLayer;
@@ -33,6 +32,7 @@ import consulo.document.internal.DocumentFactory;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.ui.internal.ChangesDiffCalculator;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -436,10 +436,10 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     protected abstract void resetImpl(CodeStyleSettings settings);
 
     protected static void fillWrappingCombo(JComboBox wrapCombo) {
-        wrapCombo.addItem(ApplicationLocalize.wrappingDoNotWrap().get());
-        wrapCombo.addItem(ApplicationLocalize.wrappingWrapIfLong().get());
-        wrapCombo.addItem(ApplicationLocalize.wrappingChopDownIfLong().get());
-        wrapCombo.addItem(ApplicationLocalize.wrappingWrapAlways().get());
+        wrapCombo.addItem(CodeStyleLocalize.wrappingDoNotWrap().get());
+        wrapCombo.addItem(CodeStyleLocalize.wrappingWrapIfLong().get());
+        wrapCombo.addItem(CodeStyleLocalize.wrappingChopDownIfLong().get());
+        wrapCombo.addItem(CodeStyleLocalize.wrappingWrapAlways().get());
     }
 
     @Nonnull

@@ -17,23 +17,23 @@ package consulo.ui;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2017-09-13
  */
 public interface TreeNode<T> {
-  void setRender(@Nonnull BiConsumer<T, TextItemPresentation> render);
+    void setRenderer(@Nonnull BiConsumer<T, TextItemPresentation> renderer);
 
-  void setLeaf(boolean leaf);
+    void setLeaf(boolean leaf);
 
-  boolean isLeaf();
+    boolean isLeaf();
 
-  /**
-   *
-   * @return if rootValue is null and treeNode wrap it
-   */
-  @Nullable
-  T getValue();
+    /**
+     * @return if rootValue is null and treeNode wrap it
+     */
+    @Nullable
+    T getValue();
 }

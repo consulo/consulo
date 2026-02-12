@@ -156,7 +156,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
             ComboBox<Locale> localeBox = ComboBox.create(locales);
             localeBox.setValue(Locale.ROOT);
-            localeBox.setTextRender(locale -> {
+            localeBox.setTextRenderer(locale -> {
                 if (locale == null || locale == Locale.ROOT) {
                     Locale detectedLocale = LocalizeManager.get().getAutoDetectedLocale();
                     return IdeLocalize.optionsLocaleAutoLocale(detectedLocale.getDisplayName());

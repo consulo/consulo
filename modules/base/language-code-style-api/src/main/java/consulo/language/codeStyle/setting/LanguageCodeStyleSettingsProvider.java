@@ -3,6 +3,7 @@ package consulo.language.codeStyle.setting;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
@@ -12,11 +13,9 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -107,11 +106,9 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
 
     @Nonnull
     public static Language[] getLanguagesWithCodeStyleSettings() {
-        ArrayList<Language> languages = new ArrayList<>();
-        for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
-            languages.add(provider.getLanguage());
-        }
-        return languages.toArray(new Language[0]);
+        return Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
+            .collectMapped(LanguageCodeStyleSettingsProvider::getLanguage)
+            .toArray(Language.EMPTY_ARRAY);
     }
 
     @Nullable
@@ -181,12 +178,8 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
 
     @Nullable
     public static LanguageCodeStyleSettingsProvider forLanguage(Language language) {
-        for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
-            if (provider.getLanguage().equals(language)) {
-                return provider;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
+            .findFirstSafe(provider -> provider.getLanguage().equals(language));
     }
 
     @Nullable

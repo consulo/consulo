@@ -27,75 +27,85 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class ContinuationOption implements CodeStyleConstraints {
-  private
-  @Nullable
-  IntegerField myField;
-  private boolean mySupported;
-  private final String myName;
-  private final Function<CommonCodeStyleSettings.IndentOptions, Integer> myGetter;
-  private final BiConsumer<CommonCodeStyleSettings.IndentOptions, Integer> mySetter;
-  private final int myDefaultValue;
-  private JLabel myLabel;
+    private
+    @Nullable
+    IntegerField myField;
+    private boolean mySupported;
+    private final String myName;
+    private final Function<CommonCodeStyleSettings.IndentOptions, Integer> myGetter;
+    private final BiConsumer<CommonCodeStyleSettings.IndentOptions, Integer> mySetter;
+    private final int myDefaultValue;
+    private JLabel myLabel;
 
-  public ContinuationOption(String name, Function<CommonCodeStyleSettings.IndentOptions, Integer> getter, BiConsumer<CommonCodeStyleSettings.IndentOptions, Integer> setter, int defaultValue) {
-    myName = name;
-    myGetter = getter;
-    mySetter = setter;
-    myDefaultValue = defaultValue;
-  }
-
-  public void addToEditor(@Nonnull IndentOptionsEditor editor) {
-    if (mySupported) {
-      myLabel = new JLabel(myName);
-      myField = editor.createIndentTextField("Continuation indent", MIN_INDENT_SIZE, MAX_INDENT_SIZE, myDefaultValue);
-      editor.add(myLabel, myField);
+    public ContinuationOption(
+        String name,
+        Function<CommonCodeStyleSettings.IndentOptions, Integer> getter,
+        BiConsumer<CommonCodeStyleSettings.IndentOptions, Integer> setter,
+        int defaultValue
+    ) {
+        myName = name;
+        myGetter = getter;
+        mySetter = setter;
+        myDefaultValue = defaultValue;
     }
-  }
 
-
-  public void setSupported(boolean supported) {
-    mySupported = supported;
-  }
-
-  public void setEnabled(boolean isEnabled) {
-    if (mySupported && myField != null && myLabel != null) {
-      myField.setEnabled(isEnabled);
-      myLabel.setEnabled(isEnabled);
+    public void addToEditor(@Nonnull IndentOptionsEditor editor) {
+        if (mySupported) {
+            myLabel = new JLabel(myName);
+            myField = editor.createIndentTextField(
+                "Continuation indent",
+                MIN_INDENT_SIZE,
+                MAX_INDENT_SIZE,
+                myDefaultValue
+            );
+            editor.add(myLabel, myField);
+        }
     }
-  }
 
-  public boolean isModified(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
-    return mySupported && myField != null && !myField.getValue().equals(myGetter.apply(options));
-  }
 
-  public void reset(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
-    if (mySupported && myField != null) {
-      myField.setValue(myGetter.apply(options));
-      setDefaultValueToDisplay(options.CONTINUATION_INDENT_SIZE);
+    public void setSupported(boolean supported) {
+        mySupported = supported;
     }
-  }
 
-  public void apply(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
-    if (mySupported && myField != null) {
-      mySetter.accept(options, myField.getValue());
+    public void setEnabled(boolean isEnabled) {
+        if (mySupported && myField != null && myLabel != null) {
+            myField.setEnabled(isEnabled);
+            myLabel.setEnabled(isEnabled);
+        }
     }
-  }
 
-  public void addListener(@Nonnull ValueEditor.Listener<Integer> listener) {
-    assert myField != null;
-    myField.getValueEditor().addListener(listener);
-  }
-
-  public void setDefaultValueToDisplay(int value) {
-    if (mySupported && myField != null) {
-      myField.setDefaultValueText(Integer.toString(value));
+    public boolean isModified(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+        return mySupported && myField != null && !myField.getValue().equals(myGetter.apply(options));
     }
-  }
 
-  public void setVisible(boolean visible) {
-    if (myField != null && myLabel != null) {
-      myLabel.setVisible(visible);
-      myField.setVisible(visible);
+    public void reset(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+        if (mySupported && myField != null) {
+            myField.setValue(myGetter.apply(options));
+            setDefaultValueToDisplay(options.CONTINUATION_INDENT_SIZE);
+        }
     }
-  }
+
+    public void apply(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+        if (mySupported && myField != null) {
+            mySetter.accept(options, myField.getValue());
+        }
+    }
+
+    public void addListener(@Nonnull ValueEditor.Listener<Integer> listener) {
+        assert myField != null;
+        myField.getValueEditor().addListener(listener);
+    }
+
+    public void setDefaultValueToDisplay(int value) {
+        if (mySupported && myField != null) {
+            myField.setDefaultValueText(Integer.toString(value));
+        }
+    }
+
+    public void setVisible(boolean visible) {
+        if (myField != null && myLabel != null) {
+            myLabel.setVisible(visible);
+            myField.setVisible(visible);
+        }
+    }
 }

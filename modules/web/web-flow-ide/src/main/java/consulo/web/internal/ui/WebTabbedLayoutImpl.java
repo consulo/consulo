@@ -33,7 +33,6 @@ import jakarta.annotation.Nullable;
  */
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
     public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
-
         @Nullable
         @Override
         public Component toUIComponent() {
@@ -57,9 +56,9 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     public void addStyle(LayoutStyle style) {
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
         WebTabImpl webTab = (WebTabImpl) tab;
 
@@ -70,12 +69,12 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         return tab;
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
         WebTabImpl tab = new WebTabImpl(this);
-        tab.setRender((t, p) -> p.append(tabName));
+        tab.setRenderer((t, p) -> p.append(tabName));
         return addTab(tab, component);
     }
 

@@ -15,92 +15,103 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.OptionGroup;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class ForceArrangementPanel {
-
-  @Nonnull
-  private final JComboBox myForceRearrangeComboBox;
-  @Nonnull
-  private final JPanel myPanel;
-
-  public ForceArrangementPanel() {
-    myForceRearrangeComboBox = new JComboBox();
-    myForceRearrangeComboBox.setModel(new EnumComboBoxModel<SelectedMode>(SelectedMode.class));
-    myForceRearrangeComboBox.setMaximumSize(myForceRearrangeComboBox.getPreferredSize());
-    myPanel = createPanel();
-  }
-
-  public int getRearrangeMode() {
-    return getSelectedMode().rearrangeMode;
-  }
-
-  public void setSelectedMode(@Nonnull SelectedMode mode) {
-    myForceRearrangeComboBox.setSelectedItem(mode);
-  }
-
-  public void setSelectedMode(int mode) {
-    SelectedMode toSetUp = SelectedMode.getByMode(mode);
-    assert(toSetUp != null);
-    setSelectedMode(toSetUp);
-  }
-
-  @Nonnull
-  public JPanel getPanel() {
-    return myPanel;
-  }
-
-  @Nonnull
-  private JPanel createPanel() {
-    OptionGroup group = new OptionGroup(ApplicationBundle.message("arrangement.settings.additional.title"));
-    JPanel textWithComboPanel = new JPanel();
-    textWithComboPanel.setLayout(new BoxLayout(textWithComboPanel, BoxLayout.LINE_AXIS));
-    textWithComboPanel.add(new JLabel(ApplicationBundle.message("arrangement.settings.additional.force.combobox.name")));
-    textWithComboPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-    textWithComboPanel.add(myForceRearrangeComboBox);
-    group.add(textWithComboPanel);
-    return group.createPanel();
-  }
-
-  @Nonnull
-  private SelectedMode getSelectedMode() {
-    return (SelectedMode)myForceRearrangeComboBox.getSelectedItem();
-  }
-
-  private enum SelectedMode {
-    FROM_DIALOG(ApplicationBundle.message("arrangement.settings.additional.force.rearrange.according.to.dialog"), CommonCodeStyleSettings.REARRANGE_ACCORDIND_TO_DIALOG),
-    ALWAYS(ApplicationBundle.message("arrangement.settings.additional.force.rearrange.always"), CommonCodeStyleSettings.REARRANGE_ALWAYS),
-    NEVER(ApplicationBundle.message("arrangement.settings.additional.force.rearrange.never"), CommonCodeStyleSettings.REARRANGE_NEVER);
-
-    public final int rearrangeMode;
     @Nonnull
-    private final String myName;
-
-    SelectedMode(@Nonnull String name, int mode) {
-      myName = name;
-      rearrangeMode = mode;
-    }
-
-    @Nullable
-    private static SelectedMode getByMode(int mode) {
-      for (SelectedMode currentMode: values()) {
-        if (currentMode.rearrangeMode == mode) return currentMode;
-      }
-      return null;
-    }
-
-    @Override
+    private final JComboBox<SelectedMode> myForceRearrangeComboBox;
     @Nonnull
-    public String toString() {
-      return myName;
+    private final JPanel myPanel;
+
+    public ForceArrangementPanel() {
+        myForceRearrangeComboBox = new JComboBox<>();
+        myForceRearrangeComboBox.setModel(new EnumComboBoxModel<>(SelectedMode.class));
+        myForceRearrangeComboBox.setMaximumSize(myForceRearrangeComboBox.getPreferredSize());
+        myPanel = createPanel();
     }
-  }
+
+    public int getRearrangeMode() {
+        return getSelectedMode().rearrangeMode;
+    }
+
+    public void setSelectedMode(@Nonnull SelectedMode mode) {
+        myForceRearrangeComboBox.setSelectedItem(mode);
+    }
+
+    public void setSelectedMode(int mode) {
+        SelectedMode toSetUp = SelectedMode.getByMode(mode);
+        assert (toSetUp != null);
+        setSelectedMode(toSetUp);
+    }
+
+    @Nonnull
+    public JPanel getPanel() {
+        return myPanel;
+    }
+
+    @Nonnull
+    private JPanel createPanel() {
+        OptionGroup group = new OptionGroup(CodeStyleLocalize.arrangementSettingsAdditionalTitle().get());
+        JPanel textWithComboPanel = new JPanel();
+        textWithComboPanel.setLayout(new BoxLayout(textWithComboPanel, BoxLayout.LINE_AXIS));
+        textWithComboPanel.add(new JLabel(CodeStyleLocalize.arrangementSettingsAdditionalForceComboboxName().get()));
+        textWithComboPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        textWithComboPanel.add(myForceRearrangeComboBox);
+        group.add(textWithComboPanel);
+        return group.createPanel();
+    }
+
+    @Nonnull
+    private SelectedMode getSelectedMode() {
+        return (SelectedMode) myForceRearrangeComboBox.getSelectedItem();
+    }
+
+    private enum SelectedMode {
+        FROM_DIALOG(
+            CodeStyleLocalize.arrangementSettingsAdditionalForceRearrangeAccordingToDialog(),
+            CommonCodeStyleSettings.REARRANGE_ACCORDIND_TO_DIALOG
+        ),
+        ALWAYS(
+            CodeStyleLocalize.arrangementSettingsAdditionalForceRearrangeAlways(),
+            CommonCodeStyleSettings.REARRANGE_ALWAYS
+        ),
+        NEVER(
+            CodeStyleLocalize.arrangementSettingsAdditionalForceRearrangeNever(),
+            CommonCodeStyleSettings.REARRANGE_NEVER
+        );
+
+        public final int rearrangeMode;
+        @Nonnull
+        private final LocalizeValue myName;
+
+        SelectedMode(@Nonnull LocalizeValue name, int mode) {
+            myName = name;
+            rearrangeMode = mode;
+        }
+
+        @Nullable
+        private static SelectedMode getByMode(int mode) {
+            for (SelectedMode currentMode : values()) {
+                if (currentMode.rearrangeMode == mode) {
+                    return currentMode;
+                }
+            }
+            return null;
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return myName.get();
+        }
+    }
 }

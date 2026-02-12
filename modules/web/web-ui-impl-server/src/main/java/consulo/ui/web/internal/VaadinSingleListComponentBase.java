@@ -31,23 +31,23 @@ import java.util.List;
  * @since 2019-02-19
  */
 public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
-  private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+  private TextItemRender<E> myRenderer = ListItemRenders.defaultRender();
   private ListModel<E> myModel;
 
   public void setModel(ListModel<E> model) {
     myModel = model;
   }
 
-  public void setRender(TextItemRender<E> render) {
-    myRender = render;
+  public void setRenderer(TextItemRenderer<E> render) {
+    myRenderer = render;
   }
 
   public ListModel<E> getModel() {
     return myModel;
   }
 
-  public TextItemRender<E> getRender() {
-    return myRender;
+  public TextItemRenderer<E> getRenderer() {
+    return myRenderer;
   }
 
   @Override
@@ -78,7 +78,7 @@ public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
 
   private void buildItem(List<ComboBoxState.Item> children, int i, @Nullable E e) {
     WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-    myRender.render(presentation, i, e);
+    myRenderer.render(presentation, i, e);
 
     children.add(presentation.getItem());
   }

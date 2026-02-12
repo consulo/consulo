@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.application.Application;
@@ -32,7 +31,6 @@ import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class ExportToHTMLDialog extends DialogWrapper {
     myDirectoryName = directoryName;
     this.myIsSelectedTextEnabled = isSelectedTextEnabled;
     setTitle(CodeEditorBundle.message("export.to.html.title"));
-    myExtensions = new ArrayList<UnnamedConfigurable>();
+    myExtensions = new ArrayList<>();
     for (PrintOption extension : Application.get().getExtensionList(PrintOption.class)) {
       myExtensions.add(extension.createConfigurable());
     }
@@ -95,12 +93,7 @@ public class ExportToHTMLDialog extends DialogWrapper {
     buttonGroup.add(myRbSelectedText);
     buttonGroup.add(myRbCurrentPackage);
 
-    ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myCbIncludeSubpackages.setEnabled(myRbCurrentPackage.isSelected());
-      }
-    };
+    ActionListener actionListener = e -> myCbIncludeSubpackages.setEnabled(myRbCurrentPackage.isSelected());
 
     myRbCurrentFile.addActionListener(actionListener);
     myRbSelectedText.addActionListener(actionListener);

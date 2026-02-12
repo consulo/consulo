@@ -109,17 +109,17 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         myGlobalInspectionContext = null;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
         dialog.setAnalyzeInjectedCode(true);
 
         MutableListModel<InspectionProfile> model = MutableListModel.of(List.of());
         ComboBox<InspectionProfile> profiles = ComboBox.create(model);
-        profiles.setRender((render, index, profile) -> {
+        profiles.setRenderer((renderer, index, profile) -> {
             if (profile != null) {
-                render.append(profile.getName());
-                render.withIcon(PlatformIconGroup.generalGearplain());
+                renderer.append(profile.getName());
+                renderer.withIcon(PlatformIconGroup.generalGearplain());
             }
         });
 

@@ -22,14 +22,14 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface Tab {
-  void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render);
+    void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer);
 
-  void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
+    void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
-  void update();
+    void update();
 
-  void select();
+    void select();
 }

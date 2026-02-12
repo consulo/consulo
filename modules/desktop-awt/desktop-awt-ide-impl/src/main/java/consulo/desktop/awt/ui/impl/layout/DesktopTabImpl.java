@@ -61,7 +61,7 @@ public class DesktopTabImpl implements Tab {
         }
     }
 
-    private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+    private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
 
     private final TabInfo myTabInfo = new TabInfo(null);
 
@@ -85,7 +85,7 @@ public class DesktopTabImpl implements Tab {
 
     @Override
     public void update() {
-        myRender.accept(this, new TextItemPresentation() {
+        myRenderer.accept(this, new TextItemPresentation() {
             @Override
             public void clearText() {
                 myTabInfo.setText("");
@@ -107,8 +107,8 @@ public class DesktopTabImpl implements Tab {
     }
 
     @Override
-    public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
-        myRender = render;
+    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+        myRenderer = renderer;
     }
 
     @Override

@@ -19,63 +19,69 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Shein
- * @since 16.09.2015.
+ * @since 2015-09-16
  */
 public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresentation {
+    @Nonnull
+    protected int[] myValues;
+    @Nonnull
+    protected String[] myValueUiNames;
 
-  @Nonnull
-  protected int[] myValues;
-  @Nonnull
-  protected String[] myValueUiNames;
+    protected int myLowerBound;
+    protected int myUpperBound;
 
-  protected int myLowerBound;
-  protected int myUpperBound;
+    public CodeStyleSelectSettingPresentation(
+        @Nonnull String fieldName,
+        @Nonnull String uiName,
+        @Nonnull int[] values,
+        @Nonnull String[] valueUiNames
+    ) {
+        super(fieldName, uiName);
 
-  public CodeStyleSelectSettingPresentation(@Nonnull String fieldName, @Nonnull String uiName, @Nonnull int[] values, @Nonnull String[] valueUiNames) {
-    super(fieldName, uiName);
+        assert (values.length == valueUiNames.length);
+        assert (values.length > 0);
 
-    assert (values.length == valueUiNames.length);
-    assert (values.length > 0);
+        myValues = values;
+        myValueUiNames = valueUiNames;
 
-    myValues = values;
-    myValueUiNames = valueUiNames;
-
-    //TODO get bounds more gracefully
-    myLowerBound = values[0];
-    myUpperBound = values[0];
-    for (int value : values) {
-      myLowerBound = Math.min(value, myLowerBound);
-      myUpperBound = Math.max(value, myUpperBound);
+        //TODO get bounds more gracefully
+        myLowerBound = values[0];
+        myUpperBound = values[0];
+        for (int value : values) {
+            myLowerBound = Math.min(value, myLowerBound);
+            myUpperBound = Math.max(value, myUpperBound);
+        }
     }
-  }
 
-  @Override
-  @Nonnull
-  public String getValueUiName(@Nonnull Object value) {
-    if (value instanceof Integer) {
-      int intValue = (Integer)value;
-      for (int i = 0; i < myValues.length; ++i) {
-        if (myValues[i] == intValue) return myValueUiNames[i];
-      }
+    @Nonnull
+    @Override
+    public String getValueUiName(@Nonnull Object value) {
+        if (value instanceof Integer) {
+            int intValue = (Integer) value;
+            for (int i = 0; i < myValues.length; ++i) {
+                if (myValues[i] == intValue) {
+                    return myValueUiNames[i];
+                }
+            }
+        }
+        return super.getValueUiName(value);
     }
-    return super.getValueUiName(value);
-  }
 
-  public int getLowerBound() {
-    return myLowerBound;
-  }
+    public int getLowerBound() {
+        return myLowerBound;
+    }
 
-  public int getUpperBound() {
-    return myUpperBound;
-  }
+    public int getUpperBound() {
+        return myUpperBound;
+    }
 
-  @Nonnull
-  public int[] getValues() {
-    return myValues;
-  }
+    @Nonnull
+    public int[] getValues() {
+        return myValues;
+    }
 
-  @Nonnull
-  public String[] getOptions() {
-    return myValueUiNames;
-  }
+    @Nonnull
+    public String[] getOptions() {
+        return myValueUiNames;
+    }
 }

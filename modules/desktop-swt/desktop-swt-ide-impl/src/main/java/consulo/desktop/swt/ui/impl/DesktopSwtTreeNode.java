@@ -18,77 +18,79 @@ package consulo.desktop.swt.ui.impl;
 import consulo.desktop.swt.ui.impl.image.DesktopSwtImage;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
+import consulo.ui.image.Image;
 import org.eclipse.swt.widgets.TreeItem;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtTreeNode<E> implements TreeNode<E> {
-  private BiConsumer<E, TextItemPresentation> myRender;
+    private BiConsumer<E, TextItemPresentation> myRenderer;
 
-  private final E myValue;
+    private final E myValue;
 
-  private TreeItem myTreeItem;
+    private TreeItem myTreeItem;
 
-  private boolean myLeaf;
+    private boolean myLeaf;
 
-  public DesktopSwtTreeNode(E value) {
-    myValue = value;
-  }
-
-  public void setTreeItem(TreeItem treeItem) {
-    myTreeItem = treeItem;
-  }
-
-  public TreeItem getTreeItem() {
-    return myTreeItem;
-  }
-
-  public void render() {
-    if (myRender == null) {
-      myRender = (e, presentation) -> {
-        if (e == null) {
-          presentation.append("");
-        }
-        else {
-          presentation.append(e.toString());
-        }
-      };
+    public DesktopSwtTreeNode(E value) {
+        myValue = value;
     }
 
-    DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
-    myRender.accept(myValue, presentation);
-    myTreeItem.setText(presentation.toString());
-
-    consulo.ui.image.Image uiImage = presentation.getImage();
-    if(uiImage != null) {
-      myTreeItem.setImage(DesktopSwtImage.toSWTImage(uiImage));
+    public void setTreeItem(TreeItem treeItem) {
+        myTreeItem = treeItem;
     }
-  }
 
-  @Override
-  public void setRender(@Nonnull BiConsumer<E, TextItemPresentation> render) {
-    myRender = render;
-  }
+    public TreeItem getTreeItem() {
+        return myTreeItem;
+    }
 
-  @Override
-  public void setLeaf(boolean leaf) {
-    myLeaf = leaf;
-  }
+    public void render() {
+        if (myRenderer == null) {
+            myRenderer = (e, presentation) -> {
+                if (e == null) {
+                    presentation.append("");
+                }
+                else {
+                    presentation.append(e.toString());
+                }
+            };
+        }
 
-  @Override
-  public boolean isLeaf() {
-    return myLeaf;
-  }
+        DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
+        myRenderer.accept(myValue, presentation);
+        myTreeItem.setText(presentation.toString());
 
-  @Nullable
-  @Override
-  public E getValue() {
-    return myValue;
-  }
+        Image uiImage = presentation.getImage();
+        if (uiImage != null) {
+            myTreeItem.setImage(DesktopSwtImage.toSWTImage(uiImage));
+        }
+    }
+
+    @Override
+    public void setRenderer(@Nonnull BiConsumer<E, TextItemPresentation> renderer) {
+        myRenderer = renderer;
+    }
+
+    @Override
+    public void setLeaf(boolean leaf) {
+        myLeaf = leaf;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return myLeaf;
+    }
+
+    @Nullable
+    @Override
+    public E getValue() {
+        return myValue;
+    }
 }

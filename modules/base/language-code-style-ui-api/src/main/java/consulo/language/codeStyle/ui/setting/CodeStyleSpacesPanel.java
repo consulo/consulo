@@ -26,34 +26,35 @@ import java.util.List;
 import java.util.Map;
 
 public class CodeStyleSpacesPanel extends OptionTreeWithPreviewPanel {
-  public CodeStyleSpacesPanel(CodeStyleSettings settings) {
-    super(settings);
-    init();
-  }
-
-  @Override
-  public LanguageCodeStyleSettingsProvider.SettingsType getSettingsType() {
-    return LanguageCodeStyleSettingsProvider.SettingsType.SPACING_SETTINGS;
-  }
-
-  @Override
-  protected void initTables() {
-    Map<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> settingsMap = CodeStyleSettingPresentation.getStandardSettings(getSettingsType());
-
-    for (Map.Entry<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> entry : settingsMap.entrySet()) {
-      String groupName = entry.getKey().name;
-      for (CodeStyleSettingPresentation setting : entry.getValue()) {
-        initBooleanField(setting.getFieldName(), setting.getUiName(), groupName);
-      }
+    public CodeStyleSpacesPanel(CodeStyleSettings settings) {
+        super(settings);
+        init();
     }
-    for (String customOptionsGroup : myCustomOptions.keySet()) {
-      initCustomOptions(customOptionsGroup);
-    }
-  }
 
-  @Nonnull
-  @Override
-  protected LocalizeValue getTabTitle() {
-    return ApplicationLocalize.titleSpaces();
-  }
+    @Override
+    public LanguageCodeStyleSettingsProvider.SettingsType getSettingsType() {
+        return LanguageCodeStyleSettingsProvider.SettingsType.SPACING_SETTINGS;
+    }
+
+    @Override
+    protected void initTables() {
+        Map<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> settingsMap =
+            CodeStyleSettingPresentation.getStandardSettings(getSettingsType());
+
+        for (Map.Entry<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> entry : settingsMap.entrySet()) {
+            String groupName = entry.getKey().name;
+            for (CodeStyleSettingPresentation setting : entry.getValue()) {
+                initBooleanField(setting.getFieldName(), setting.getUiName(), groupName);
+            }
+        }
+        for (String customOptionsGroup : myCustomOptions.keySet()) {
+            initCustomOptions(customOptionsGroup);
+        }
+    }
+
+    @Nonnull
+    @Override
+    protected LocalizeValue getTabTitle() {
+        return ApplicationLocalize.titleSpaces();
+    }
 }

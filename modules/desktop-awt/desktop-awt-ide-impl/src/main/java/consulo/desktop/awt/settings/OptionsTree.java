@@ -483,7 +483,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
 
         @Override
-        public void setRender(@Nonnull BiConsumer<Configurable, TextItemPresentation> render) {
+        public void setRenderer(@Nonnull BiConsumer<Configurable, TextItemPresentation> renderer) {
             throw new UnsupportedOperationException("just stub, for comparator");
         }
 

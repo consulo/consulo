@@ -284,7 +284,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         gbConstraints.gridx = 1;
         gbConstraints.insets = JBUI.insetsLeft(4);
         myExpandByCombo = ComboBox.create(ExpandByKey.values());
-        myExpandByCombo.setTextRender(key -> key.getTitle(myDefaultShortcut));
+        myExpandByCombo.setTextRenderer(key -> key.getTitle(myDefaultShortcut));
         myExpandByCombo.addValueListener(e -> myTemplate.setShortcutChar(myExpandByCombo.getValueOrError().getShortcutChar()));
         expandWithLabel.setTarget(myExpandByCombo);
 

@@ -26,101 +26,106 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Set;
 
 public abstract class CodeStyleAbstractConfigurable implements Configurable, OptionsContainingConfigurable {
-  private CodeStyleAbstractPanel myPanel;
-  private final CodeStyleSettings mySettings;
-  private final CodeStyleSettings myCloneSettings;
-  private final LocalizeValue myDisplayName;
+    private CodeStyleAbstractPanel myPanel;
+    private final CodeStyleSettings mySettings;
+    private final CodeStyleSettings myCloneSettings;
+    private final LocalizeValue myDisplayName;
 
-  public CodeStyleAbstractConfigurable(@Nonnull CodeStyleSettings settings,
-                                       CodeStyleSettings cloneSettings,
-                                       LocalizeValue displayName) {
-    mySettings = settings;
-    myCloneSettings = cloneSettings;
-    myDisplayName = displayName;
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return myDisplayName;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
-    myPanel = createPanel(myCloneSettings);
-    return myPanel.getPanel();
-  }
-
-  protected abstract CodeStyleAbstractPanel createPanel(CodeStyleSettings settings);
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    if (myPanel != null) {
-      myPanel.apply(mySettings);
+    public CodeStyleAbstractConfigurable(
+        @Nonnull CodeStyleSettings settings,
+        CodeStyleSettings cloneSettings,
+        LocalizeValue displayName
+    ) {
+        mySettings = settings;
+        myCloneSettings = cloneSettings;
+        myDisplayName = displayName;
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    reset(mySettings);
-  }
-
-  public void resetFromClone(){
-    reset(myCloneSettings);
-  }
-
-  public void reset(CodeStyleSettings settings) {
-    if (myPanel != null) {
-      myPanel.reset(settings);
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return myPanel != null && myPanel.isModified(mySettings);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    if (myPanel != null) {
-      Disposer.dispose(myPanel);
-      myPanel = null;
+    @Override
+    @RequiredUIAccess
+    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+        myPanel = createPanel(myCloneSettings);
+        return myPanel.getPanel();
     }
-  }
 
-  @Nullable
-  public CodeStyleAbstractPanel getPanel() {
-    return myPanel;
-  }
+    protected abstract CodeStyleAbstractPanel createPanel(CodeStyleSettings settings);
 
-  public void setModel(@Nonnull CodeStyleSchemesModel model) {
-    if (myPanel != null) {
-      myPanel.setModel(model);
+    @Override
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        if (myPanel != null) {
+            myPanel.apply(mySettings);
+        }
     }
-  }
 
-  public void onSomethingChanged() {
-    if (myPanel == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void reset() {
+        reset(mySettings);
     }
-    myPanel.onSomethingChanged();
-  }
 
-  @Override
-  public Set<String> processListOptions() {
-    return myPanel.processListOptions();
-  }
+    public void resetFromClone() {
+        reset(myCloneSettings);
+    }
 
-  protected CodeStyleSettings getCurrentSettings() {
-    return mySettings;
-  }
+    public void reset(CodeStyleSettings settings) {
+        if (myPanel != null) {
+            myPanel.reset(settings);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean isModified() {
+        return myPanel != null && myPanel.isModified(mySettings);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        if (myPanel != null) {
+            Disposer.dispose(myPanel);
+            myPanel = null;
+        }
+    }
+
+    @Nullable
+    public CodeStyleAbstractPanel getPanel() {
+        return myPanel;
+    }
+
+    public void setModel(@Nonnull CodeStyleSchemesModel model) {
+        if (myPanel != null) {
+            myPanel.setModel(model);
+        }
+    }
+
+    @RequiredUIAccess
+    public void onSomethingChanged() {
+        if (myPanel == null) {
+            return;
+        }
+        myPanel.onSomethingChanged();
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> processListOptions() {
+        return myPanel.processListOptions();
+    }
+
+    protected CodeStyleSettings getCurrentSettings() {
+        return mySettings;
+    }
 }
