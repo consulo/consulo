@@ -25,7 +25,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2024-08-17
  */
-public interface PluginDescritorWithExtensionPreview extends PluginDescriptor {
+public interface PluginDescriptorWithExtensionPreview extends PluginDescriptor {
     @Nonnull
     default List<ExtensionPreview> getExtensionPreviews() {
         return List.of();

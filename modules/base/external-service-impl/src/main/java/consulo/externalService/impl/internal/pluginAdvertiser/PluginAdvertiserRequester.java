@@ -72,26 +72,30 @@ public class PluginAdvertiserRequester {
             return CompletableFuture.completedFuture(myLoadedPluginDescriptors);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
-            List<PluginDescriptor> pluginDescriptors = List.of();
-            
-            try {
-                pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null,
-                    updateSettings.getChannel(),
-                    EarlyAccessProgramManager.getInstance()
-                );
-            }
-            catch (Exception ignored) {
-            }
+        return CompletableFuture.supplyAsync(
+            () -> {
+                List<PluginDescriptor> pluginDescriptors = List.of();
 
-            if (myApplication.isDisposed()) {
-                return List.of();
-            }
+                try {
+                    pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(
+                        null,
+                        updateSettings.getChannel(),
+                        EarlyAccessProgramManager.getInstance()
+                    );
+                }
+                catch (Exception ignored) {
+                }
 
-            update(pluginDescriptors);
+                if (myApplication.isDisposed()) {
+                    return List.of();
+                }
 
-            return pluginDescriptors;
-        }, myApplicationConcurrency.executor());
+                update(pluginDescriptors);
+
+                return pluginDescriptors;
+            },
+            myApplicationConcurrency.executor()
+        );
     }
 
     public void update(@Nullable List<PluginDescriptor> list) {
@@ -105,9 +109,9 @@ public class PluginAdvertiserRequester {
                 if (installed != null) {
                     int state = StringUtil.compareVersionNumbers(newPluginDescriptor.getVersion(), installed.getVersion());
 
-                    if (state > 0 &&
-                        !PluginValidator.isIncompatible(newPluginDescriptor) &&
-                        !pluginsState.getUpdatedPlugins().contains(newPluginDescriptor.getPluginId())) {
+                    if (state > 0
+                        && !PluginValidator.isIncompatible(newPluginDescriptor)
+                        && !pluginsState.getUpdatedPlugins().contains(newPluginDescriptor.getPluginId())) {
                         pluginsState.getOutdatedPlugins().add(newPluginDescriptor.getPluginId());
                     }
                 }

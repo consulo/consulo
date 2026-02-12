@@ -27,25 +27,25 @@ import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
- * @since 18/08/2021
+ * @since 2021-08-18
  */
 @ExtensionImpl
 public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPointActionProvider {
-  private LoginAction myLoginAction;
+    private LoginAction myLoginAction;
 
-  private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+    private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
 
-  @Inject
-  public ServiceAuthSettingsEntryPointProvider(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
-  }
-
-  @Nonnull
-  @Override
-  public AnAction getUpdateActionOrGroup() {
-    if (myLoginAction == null) {
-      myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
+    @Inject
+    public ServiceAuthSettingsEntryPointProvider(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
+        myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
     }
-    return ActionGroup.of(myLoginAction, AnSeparator.create());
-  }
+
+    @Nonnull
+    @Override
+    public AnAction getUpdateActionOrGroup() {
+        if (myLoginAction == null) {
+            myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
+        }
+        return ActionGroup.of(myLoginAction, AnSeparator.create());
+    }
 }

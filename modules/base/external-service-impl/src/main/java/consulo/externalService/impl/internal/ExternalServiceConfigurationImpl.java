@@ -36,6 +36,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.LinkedHashMap;
@@ -43,136 +44,138 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 06-Mar-17
+ * @since 2017-03-06
  */
 @Singleton
 @State(name = "ExternalServiceConfiguration", storages = @Storage(value = "externalService.xml", roamingType = RoamingType.DISABLED))
 @ServiceImpl
-public class ExternalServiceConfigurationImpl implements PersistentStateComponent<ExternalServiceConfigurationImpl.State>, ExternalServiceConfiguration {
-  private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
+public class ExternalServiceConfigurationImpl
+    implements PersistentStateComponent<ExternalServiceConfigurationImpl.State>, ExternalServiceConfiguration {
+    private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
 
-  public static class State {
-    public String email;
-    public String oauthKey;
-    public String iconBytes;
+    public static class State {
+        public String email;
+        public String oauthKey;
+        public String iconBytes;
 
-    public Map<ExternalService, ThreeState> states = new LinkedHashMap<>();
-  }
-
-  private final State myState = new State();
-  private Image myUserIcon;
-
-  private final Application myApplication;
-
-  @Inject
-  public ExternalServiceConfigurationImpl(Application application) {
-    myApplication = application;
-  }
-
-  @Override
-  public void updateIcon() {
-    myUserIcon = null;
-
-    String email = myState.email;
-    if (email == null) {
-      myState.iconBytes = null;
-      return;
+        public Map<ExternalService, ThreeState> states = new LinkedHashMap<>();
     }
 
-    // get node size
-    int size = (int)Math.ceil(Image.DEFAULT_ICON_SIZE * JBUI.sysScale());
-    Application.get().executeOnPooledThread(() -> {
-      String emailHash = DigestUtils.md5Hex(email.toLowerCase().trim());
+    private final State myState = new State();
+    private Image myUserIcon;
 
-      try {
-        byte[] bytes = HttpRequests.request("https://www.gravatar.com/avatar/" + emailHash + ".png?s=" + size + "&d=identicon").readBytes(null);
+    private final Application myApplication;
 
-        myState.iconBytes = Base64.getEncoder().encodeToString(bytes);
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    });
-  }
-
-  @Override
-  @Nullable
-  public Image getUserIcon() {
-    if (myUserIcon != null) {
-      return myUserIcon;
+    @Inject
+    public ExternalServiceConfigurationImpl(Application application) {
+        myApplication = application;
     }
 
-    String iconBytes = myState.iconBytes;
-    if (iconBytes != null) {
-      byte[] bytes = Base64.getDecoder().decode(iconBytes);
-      try {
-        myUserIcon = Image.fromBytes(Image.ImageType.PNG, bytes, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-      }
-      catch (IOException ignored) {
-      }
+    @Override
+    public void updateIcon() {
+        myUserIcon = null;
+
+        String email = myState.email;
+        if (email == null) {
+            myState.iconBytes = null;
+            return;
+        }
+
+        // get node size
+        int size = (int) Math.ceil(Image.DEFAULT_ICON_SIZE * JBUI.sysScale());
+        myApplication.executeOnPooledThread(() -> {
+            String emailHash = DigestUtils.md5Hex(email.toLowerCase().trim());
+
+            try {
+                byte[] bytes = HttpRequests.request("https://www.gravatar.com/avatar/" + emailHash + ".png?s=" + size + "&d=identicon")
+                    .readBytes(null);
+
+                myState.iconBytes = Base64.getEncoder().encodeToString(bytes);
+            }
+            catch (IOException e) {
+                LOG.error(e);
+            }
+        });
     }
-    return myUserIcon;
-  }
 
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Nullable
+    @Override
+    public Image getUserIcon() {
+        if (myUserIcon != null) {
+            return myUserIcon;
+        }
 
-  @Override
-  public void loadState(State state) {
-    XmlSerializerUtil.copyBean(state, myState);
-  }
-
-  @Override
-  public void afterLoadState() {
-    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
-  }
-
-  @Override
-  @Nonnull
-  public ThreeState getState(@Nonnull ExternalService externalService) {
-    ThreeState state = myState.states.getOrDefault(externalService, externalService.getDefaultState());
-    if(state == ThreeState.YES && !isAuthorized()) {
-      return ThreeState.NO;
+        String iconBytes = myState.iconBytes;
+        if (iconBytes != null) {
+            byte[] bytes = Base64.getDecoder().decode(iconBytes);
+            try {
+                myUserIcon = Image.fromBytes(Image.ImageType.PNG, bytes, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+            }
+            catch (IOException ignored) {
+            }
+        }
+        return myUserIcon;
     }
-    return state;
-  }
 
-  @Override
-  public void setState(@Nonnull ExternalService externalService, @Nonnull ThreeState state) {
-    if(externalService.getDefaultState() == state) {
-      myState.states.remove(externalService);
+    @Override
+    public State getState() {
+        return myState;
     }
-    else {
-      myState.states.put(externalService, state);
+
+    @Override
+    public void loadState(State state) {
+        XmlSerializerUtil.copyBean(state, myState);
     }
-  }
 
-  @Override
-  @Nullable
-  public String getEmail() {
-    return myState.email;
-  }
+    @Override
+    public void afterLoadState() {
+        myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
+    }
 
-  @Nullable
-  public String getOAuthKey() {
-    return myState.oauthKey;
-  }
+    @Nonnull
+    @Override
+    public ThreeState getState(@Nonnull ExternalService externalService) {
+        ThreeState state = myState.states.getOrDefault(externalService, externalService.getDefaultState());
+        if (state == ThreeState.YES && !isAuthorized()) {
+            return ThreeState.NO;
+        }
+        return state;
+    }
 
-  public void authorize(@Nonnull String email, @Nonnull String token) {
-    myState.email = email;
-    myState.oauthKey = token;
-  }
+    @Override
+    public void setState(@Nonnull ExternalService externalService, @Nonnull ThreeState state) {
+        if (externalService.getDefaultState() == state) {
+            myState.states.remove(externalService);
+        }
+        else {
+            myState.states.put(externalService, state);
+        }
+    }
 
-  @Override
-  public boolean isAuthorized() {
-    return getEmail() != null;
-  }
+    @Nullable
+    @Override
+    public String getEmail() {
+        return myState.email;
+    }
 
-  public void reset() {
-    myState.email = null;
-    myState.iconBytes = null;
-    myState.oauthKey = null;
-  }
+    @Nullable
+    public String getOAuthKey() {
+        return myState.oauthKey;
+    }
+
+    public void authorize(@Nonnull String email, @Nonnull String token) {
+        myState.email = email;
+        myState.oauthKey = token;
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return getEmail() != null;
+    }
+
+    public void reset() {
+        myState.email = null;
+        myState.iconBytes = null;
+        myState.oauthKey = null;
+    }
 }

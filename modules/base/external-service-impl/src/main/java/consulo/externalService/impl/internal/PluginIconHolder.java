@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 07/12/2020
+ * @since 2020-12-07
  */
 public class PluginIconHolder {
     private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
@@ -44,12 +44,19 @@ public class PluginIconHolder {
 
     @Nonnull
     public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
-        return deferImage(pluginDescriptor, it -> ImageEffects.canvas(ICON_SIZE, ICON_SIZE, canvas2D -> {
-            // canvas state will dropped on theme change
-            Image pluginImage = initializeImage(pluginDescriptor);
+        return deferImage(
+            pluginDescriptor,
+            it -> ImageEffects.canvas(
+                ICON_SIZE,
+                ICON_SIZE,
+                canvas2D -> {
+                    // canvas state will dropped on theme change
+                    Image pluginImage = initializeImage(pluginDescriptor);
 
-            canvas2D.drawImage(pluginImage, 0, 0);
-        }));
+                    canvas2D.drawImage(pluginImage, 0, 0);
+                }
+            )
+        );
     }
 
     public static void put(@Nonnull PluginDescriptor descriptor, @Nonnull Image image) {
@@ -59,7 +66,10 @@ public class PluginIconHolder {
     private static Image deferImage(PluginDescriptor pluginDescriptor, Function<PluginDescriptor, Image> imageFunc) {
         Image base = ourDecoratedDefaultImage.get();
 
-        return pluginDescriptor.computeUserData(PLUGIN_ICON_KEY, s -> IconDeferrer.getInstance().defer(base, pluginDescriptor.getPluginId(), pluginId -> imageFunc.apply(pluginDescriptor)));
+        return pluginDescriptor.computeUserData(
+            PLUGIN_ICON_KEY,
+            s -> IconDeferrer.getInstance().defer(base, pluginDescriptor.getPluginId(), pluginId -> imageFunc.apply(pluginDescriptor))
+        );
     }
 
     @Nonnull

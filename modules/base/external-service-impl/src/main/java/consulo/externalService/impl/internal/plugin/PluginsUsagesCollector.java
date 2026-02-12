@@ -31,18 +31,19 @@ import java.util.Set;
 
 @ExtensionImpl
 public class PluginsUsagesCollector extends UsagesCollector {
-  @Override
-  @Nonnull
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    List<PluginDescriptor> enabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
+    @Nonnull
+    @Override
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+        List<PluginDescriptor> plugins = PluginManager.getPlugins();
+        List<PluginDescriptor> enabledPlugins =
+            ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
 
-    return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
-  }
+        return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
+    }
 
-  @Override
-  @Nonnull
-  public String getGroupId() {
-    return "consulo.platform.base:plugins";
-  }
+    @Nonnull
+    @Override
+    public String getGroupId() {
+        return "consulo.platform.base:plugins";
+    }
 }

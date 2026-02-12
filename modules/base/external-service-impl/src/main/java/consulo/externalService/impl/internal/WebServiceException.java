@@ -22,15 +22,15 @@ import java.io.IOException;
  * @since 2020-05-30
  */
 public class WebServiceException extends IOException {
-  private final int myCode;
+    private final int myCode;
 
-  public WebServiceException(String message, int code) {
-    super(message);
-    myCode = code;
-  }
+    public WebServiceException(String message, int code) {
+        super(message);
+        myCode = code;
+    }
 
-  public int getCode() {
-    return myCode;
-  }
+    public int getCode() {
+        return myCode;
+    }
 }
 

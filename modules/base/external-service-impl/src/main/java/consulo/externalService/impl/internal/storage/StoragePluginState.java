@@ -16,10 +16,10 @@
 package consulo.externalService.impl.internal.storage;
 
 /**
+ * See hub impl.
+ *
  * @author VISTALL
- * @since 13/09/2021
- * <p>
- * see hub impl
+ * @since 2021-09-13
  */
 public enum StoragePluginState {
     ENABLED,

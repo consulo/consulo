@@ -32,81 +32,81 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * @author VISTALL
- * @since 14-Jun-17
- * <p>
  * Main idea from IDEA version consulo.ide.impl.idea.ide.plugins.InstalledPluginsState
  * <p>
  * A service to hold a state of plugin changes in a current session (i.e. before the changes are applied on restart).
+ *
+ * @author VISTALL
+ * @since 2017-06-14
  */
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InstalledPluginsState {
-  @Nonnull
-  public static InstalledPluginsState getInstance() {
-    Application application = ApplicationManager.getApplication();
-    if (application == null) {
-      throw new IllegalArgumentException("app is not loaded");
+    @Nonnull
+    public static InstalledPluginsState getInstance() {
+        Application application = ApplicationManager.getApplication();
+        if (application == null) {
+            throw new IllegalArgumentException("app is not loaded");
+        }
+        return application.getInstance(InstalledPluginsState.class);
     }
-    return application.getInstance(InstalledPluginsState.class);
-  }
 
-  private Set<PluginId> myOutdatedPlugins = new TreeSet<>();
-  private Set<PluginId> myInstalledPlugins = new TreeSet<>();
-  private Set<PluginId> myUpdatedPlugins = new HashSet<>();
+    private Set<PluginId> myOutdatedPlugins = new TreeSet<>();
+    private Set<PluginId> myInstalledPlugins = new TreeSet<>();
+    private Set<PluginId> myUpdatedPlugins = new HashSet<>();
 
-  private Set<PluginId> myNewVersions = new HashSet<>();
+    private Set<PluginId> myNewVersions = new HashSet<>();
 
-  private final Set<PluginDescriptor> myAllPlugins = new HashSet<>();
+    private final Set<PluginDescriptor> myAllPlugins = new HashSet<>();
 
-  public void updateExistingPlugin(@Nonnull PluginDescriptor descriptor, @Nonnull PluginDescriptor installed) {
-    updateExistingPluginInfo(descriptor, installed);
-    myUpdatedPlugins.add(installed.getPluginId());
-  }
-
-  public void updateExistingPluginInfo(PluginDescriptor descr, PluginDescriptor existing) {
-    int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
-    PluginId pluginId = existing.getPluginId();
-    Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
-    if (!installedPlugins.contains(pluginId) && !existing.isDeleted()) {
-      installedPlugins.add(pluginId);
+    public void updateExistingPlugin(@Nonnull PluginDescriptor descriptor, @Nonnull PluginDescriptor installed) {
+        updateExistingPluginInfo(descriptor, installed);
+        myUpdatedPlugins.add(installed.getPluginId());
     }
-    if (state > 0 && !PluginValidator.isIncompatible(descr) && !myUpdatedPlugins.contains(descr.getPluginId())) {
-      myNewVersions.add(pluginId);
 
-      myOutdatedPlugins.add(pluginId);
+    public void updateExistingPluginInfo(PluginDescriptor descr, PluginDescriptor existing) {
+        int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
+        PluginId pluginId = existing.getPluginId();
+        Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+        if (!installedPlugins.contains(pluginId) && !existing.isDeleted()) {
+            installedPlugins.add(pluginId);
+        }
+        if (state > 0 && !PluginValidator.isIncompatible(descr) && !myUpdatedPlugins.contains(descr.getPluginId())) {
+            myNewVersions.add(pluginId);
+
+            myOutdatedPlugins.add(pluginId);
+        }
+        else {
+            myOutdatedPlugins.remove(pluginId);
+
+            if (myNewVersions.remove(pluginId)) {
+                myUpdatedPlugins.add(pluginId);
+            }
+        }
     }
-    else {
-      myOutdatedPlugins.remove(pluginId);
 
-      if (myNewVersions.remove(pluginId)) {
-        myUpdatedPlugins.add(pluginId);
-      }
+    public boolean hasNewerVersion(PluginId descr) {
+        return !wasUpdated(descr) && (myNewVersions.contains(descr) || myOutdatedPlugins.contains(descr));
     }
-  }
 
-  public boolean hasNewerVersion(PluginId descr) {
-    return !wasUpdated(descr) && (myNewVersions.contains(descr) || myOutdatedPlugins.contains(descr));
-  }
+    public boolean wasUpdated(PluginId descr) {
+        return myUpdatedPlugins.contains(descr);
+    }
 
-  public boolean wasUpdated(PluginId descr) {
-    return myUpdatedPlugins.contains(descr);
-  }
+    public Set<PluginId> getUpdatedPlugins() {
+        return myUpdatedPlugins;
+    }
 
-  public Set<PluginId> getUpdatedPlugins() {
-    return myUpdatedPlugins;
-  }
+    public Set<PluginId> getInstalledPlugins() {
+        return myInstalledPlugins;
+    }
 
-  public Set<PluginId> getInstalledPlugins() {
-    return myInstalledPlugins;
-  }
+    public Set<PluginId> getOutdatedPlugins() {
+        return myOutdatedPlugins;
+    }
 
-  public Set<PluginId> getOutdatedPlugins() {
-    return myOutdatedPlugins;
-  }
-
-  public Set<PluginDescriptor> getAllPlugins() {
-    return myAllPlugins;
-  }
+    public Set<PluginDescriptor> getAllPlugins() {
+        return myAllPlugins;
+    }
 }

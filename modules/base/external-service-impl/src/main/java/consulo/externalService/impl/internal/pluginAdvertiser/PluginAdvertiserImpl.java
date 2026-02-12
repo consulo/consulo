@@ -21,7 +21,7 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
-import consulo.component.internal.PluginDescritorWithExtensionPreview;
+import consulo.component.internal.PluginDescriptorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.fileEditor.EditorNotifications;
 import consulo.localize.LocalizeValue;
@@ -156,11 +156,11 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
         Set<PluginDescriptor> filter = new LinkedHashSet<>();
         for (PluginDescriptor descriptor : descriptors) {
-            if (!(descriptor instanceof PluginDescritorWithExtensionPreview pluginDescritorWithExtensionPreview)) {
+            if (!(descriptor instanceof PluginDescriptorWithExtensionPreview pluginDescriptorWithExtensionPreview)) {
                 continue;
             }
 
-            List<ExtensionPreview> extensionPreviews = pluginDescritorWithExtensionPreview.getExtensionPreviews();
+            List<ExtensionPreview> extensionPreviews = pluginDescriptorWithExtensionPreview.getExtensionPreviews();
             if (extensionPreviews.isEmpty()) {
                 continue;
             }
@@ -183,9 +183,9 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
     private static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
         ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 
-        ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(extensionPreviewAcceptor -> {
-            return Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.apiClassName());
-        });
+        ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(
+            extensionPreviewAcceptor -> Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.apiClassName())
+        );
         return ObjectUtil.notNull(acceptor, ExtensionPreviewAcceptor.DEFAULT);
     }
 }

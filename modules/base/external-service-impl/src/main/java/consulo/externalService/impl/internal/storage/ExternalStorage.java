@@ -32,6 +32,7 @@ import org.jdom.JDOMException;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,298 +46,303 @@ import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
- * @since 12-Feb-17
+ * @since 2017-02-12
  */
 public class ExternalStorage {
-  private static final Logger LOG = Logger.getInstance(ExternalStorage.class);
+    private static final Logger LOG = Logger.getInstance(ExternalStorage.class);
 
-  public static final String INITIALIZED_FILE_NAME = "initialized";
-  public static final String MODCOUNT_EXTENSION = ".modcount";
+    public static final String INITIALIZED_FILE_NAME = "initialized";
+    public static final String MODCOUNT_EXTENSION = ".modcount";
 
-  private final Path myProxyDirectory;
+    private final Path myProxyDirectory;
 
-  private Boolean myInitializedState;
+    private Boolean myInitializedState;
 
-  private final ScheduledExecutorService myExecutorService;
+    private final ScheduledExecutorService myExecutorService;
 
-  public ExternalStorage() {
-    myProxyDirectory = Path.of(ContainerPathManager.get().getSystemPath(), "externalStorage");
-    myExecutorService = AppExecutorUtil.createBoundedScheduledExecutorService("External Storage Pool", 1);
-  }
+    public ExternalStorage() {
+        myProxyDirectory = Path.of(ContainerPathManager.get().getSystemPath(), "externalStorage");
+        myExecutorService = AppExecutorUtil.createBoundedScheduledExecutorService("External Storage Pool", 1);
+    }
 
-  public Map<String, Long> getModificationInfo() throws IOException {
-    Map<String, Long> files = new TreeMap<>();
+    public Map<String, Long> getModificationInfo() throws IOException {
+        Map<String, Long> files = new TreeMap<>();
 
-    Files.walkFileTree(myProxyDirectory, new FileVisitor<>() {
-      @Override
-      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-        return FileVisitResult.CONTINUE;
-      }
+        Files.walkFileTree(myProxyDirectory, new FileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
 
-      @Override
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        if (file.getFileName().toString().endsWith(MODCOUNT_EXTENSION)) {
-          return FileVisitResult.CONTINUE;
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file.getFileName().toString().endsWith(MODCOUNT_EXTENSION)) {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                Path modFile = file.getParent().resolve(file.toString() + MODCOUNT_EXTENSION);
+                if (Files.exists(modFile)) {
+                    Path fileSpec = myProxyDirectory.relativize(file);
+
+                    files.put(FileUtil.toSystemIndependentName(fileSpec.toString()), Long.parseLong(Files.readString(modFile)));
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return files;
+    }
+
+    public void wipe() throws IOException {
+        if (!FileUtil.delete(myProxyDirectory)) {
+            throw new IOException("Failed to remove directory: " + myProxyDirectory);
         }
 
-        Path modFile = file.getParent().resolve(file.toString() + MODCOUNT_EXTENSION);
-        if (Files.exists(modFile)) {
-          Path fileSpec = myProxyDirectory.relativize(file);
+        Files.createDirectory(myProxyDirectory);
+    }
 
-          files.put(FileUtil.toSystemIndependentName(fileSpec.toString()), Long.parseLong(Files.readString(modFile)));
+    public void setInitialized(boolean state) {
+        try {
+            Path initializeFile = myProxyDirectory.resolve(INITIALIZED_FILE_NAME);
+
+            if (state) {
+                if (Files.exists(initializeFile)) {
+                    return;
+                }
+
+                Files.writeString(initializeFile, "initialized", StandardCharsets.UTF_8);
+            }
+            else {
+                Files.deleteIfExists(initializeFile);
+            }
+
+            resetInitialized();
         }
-        return FileVisitResult.CONTINUE;
-      }
-
-      @Override
-      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-        return FileVisitResult.CONTINUE;
-      }
-
-      @Override
-      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-        return FileVisitResult.CONTINUE;
-      }
-    });
-    return files;
-  }
-
-  public void wipe() throws IOException {
-    if (!FileUtil.delete(myProxyDirectory)) {
-      throw new IOException("Failed to remove directory: " + myProxyDirectory);
+        catch (IOException e) {
+            LOG.error(e);
+        }
     }
 
-    Files.createDirectory(myProxyDirectory);
-  }
+    @Nonnull
+    public File getInitializedFile() {
+        return myProxyDirectory.resolve(INITIALIZED_FILE_NAME).toFile();
+    }
 
-  public void setInitialized(boolean state) {
-    try {
-      Path initializeFile = myProxyDirectory.resolve(INITIALIZED_FILE_NAME);
+    public boolean isInitialized() {
+        Boolean state = myInitializedState;
+        if (state == null) {
+            myInitializedState = state = Files.exists(myProxyDirectory.resolve(INITIALIZED_FILE_NAME));
+        }
+        return state;
+    }
 
-      if (state) {
-        if (Files.exists(initializeFile)) {
-          return;
+    private void resetInitialized() {
+        myInitializedState = null;
+    }
+
+    public void writeModCount(String fullFileSpec, long modCount) throws IOException {
+        Path filePath = myProxyDirectory.resolve(fullFileSpec + MODCOUNT_EXTENSION);
+
+        Files.writeString(
+            filePath,
+            String.valueOf(modCount),
+            StandardCharsets.UTF_8,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.CREATE
+        );
+    }
+
+    @Nonnull
+    public OutputStream openFile(String fileName) throws IOException {
+        Path filePath = myProxyDirectory.resolve(fileName);
+        if (!Files.exists(filePath)) {
+            Files.createDirectories(filePath.getParent());
+        }
+        return Files.newOutputStream(filePath, StandardOpenOption.CREATE);
+    }
+
+    @Nullable
+    public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
+        return loadContent(buildFileSpec(roamingType, fileSpec));
+    }
+
+    @Nullable
+    public InputStream loadContent(@Nonnull String fullFileSpec) throws IOException {
+        Path file = myProxyDirectory.resolve(fullFileSpec);
+        if (Files.exists(file)) {
+            return Files.newInputStream(file);
         }
 
-        Files.writeString(initializeFile, "initialized", StandardCharsets.UTF_8);
-      }
-      else {
-        Files.deleteIfExists(initializeFile);
-      }
-
-      resetInitialized();
-    }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-  }
-
-  @Nonnull
-  public File getInitializedFile() {
-    return myProxyDirectory.resolve(INITIALIZED_FILE_NAME).toFile();
-  }
-
-  public boolean isInitialized() {
-    Boolean state = myInitializedState;
-    if (state == null) {
-      myInitializedState = state = Files.exists(myProxyDirectory.resolve(INITIALIZED_FILE_NAME));
-    }
-    return state;
-  }
-
-  private void resetInitialized() {
-    myInitializedState = null;
-  }
-
-  public void writeModCount(String fullFileSpec, long modCount) throws IOException {
-    Path filePath = myProxyDirectory.resolve(fullFileSpec + MODCOUNT_EXTENSION);
-
-    Files.writeString(filePath, String.valueOf(modCount), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-  }
-
-  @Nonnull
-  public OutputStream openFile(String fileName) throws IOException {
-    Path filePath = myProxyDirectory.resolve(fileName);
-    if (!Files.exists(filePath)) {
-      Files.createDirectories(filePath.getParent());
-    }
-    return Files.newOutputStream(filePath, StandardOpenOption.CREATE);
-  }
-
-  @Nullable
-  public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
-    return loadContent(buildFileSpec(roamingType, fileSpec));
-  }
-
-  @Nullable
-  public InputStream loadContent(@Nonnull String fullFileSpec) throws IOException {
-    Path file = myProxyDirectory.resolve(fullFileSpec);
-    if (Files.exists(file)) {
-      return Files.newInputStream(file);
+        return null;
     }
 
-    return null;
-  }
+    public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content) throws IOException {
+        // write data without compress
+        writeLocalFile(fileSpec, roamingType, content, -1);
 
-  public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content) throws IOException {
-    // write data without compress
-    writeLocalFile(fileSpec, roamingType, content, -1);
-
-    saveContentOnServer(fileSpec, roamingType, content);
-  }
-
-  private void saveContentOnServer(@Nonnull String fileSpec, RoamingType roamingType, byte[] content) {
-    myExecutorService.execute(() -> {
-      try {
-        // compress data with -1 mod count - for local, server will update it after pushing data
-        byte[] compressedData = DataCompressor.compress(content, -1);
-
-        String buildFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
-
-        PushFileRequestBean bean = new PushFileRequestBean(UpdateSettings.getInstance().getChannel(), buildFileSpec, compressedData);
-
-        PushFileResponseBean pushFileResponse = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "pushFile", bean, PushFileResponseBean.class);
-
-        assert pushFileResponse != null;
-
-        writeModCount(buildFileSpec, pushFileResponse.modCount);
-
-        LOG.info("Updated file at server: " + buildFileSpec + ", new mod count: " + pushFileResponse.modCount);
-      }
-      catch (Exception e) {
-        LOG.warn(e);
-      }
-    });
-  }
-
-  public void writeLocalFile(@Nonnull String fileSpec, RoamingType roamingType, byte[] data, long modCount) throws IOException {
-    String fullFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
-
-    writeLocalFile(fullFileSpec, data, modCount);
-  }
-
-  public void writeLocalFile(@Nonnull String fullFileSpec, byte[] data, long modCount) throws IOException {
-    Path file = myProxyDirectory.resolve(fullFileSpec);
-
-    if (!Files.exists(file)) {
-      Files.createDirectories(file.getParent());
+        saveContentOnServer(fileSpec, roamingType, content);
     }
 
-    Files.write(file, data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+    private void saveContentOnServer(@Nonnull String fileSpec, RoamingType roamingType, byte[] content) {
+        myExecutorService.execute(() -> {
+            try {
+                // compress data with -1 mod count - for local, server will update it after pushing data
+                byte[] compressedData = DataCompressor.compress(content, -1);
 
-    if (modCount != -1) {
-      writeModCount(fullFileSpec, modCount);
+                String buildFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
+
+                PushFileRequestBean bean =
+                    new PushFileRequestBean(UpdateSettings.getInstance().getChannel(), buildFileSpec, compressedData);
+
+                PushFileResponseBean pushFileResponse =
+                    WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "pushFile", bean, PushFileResponseBean.class);
+
+                assert pushFileResponse != null;
+
+                writeModCount(buildFileSpec, pushFileResponse.modCount);
+
+                LOG.info("Updated file at server: " + buildFileSpec + ", new mod count: " + pushFileResponse.modCount);
+            }
+            catch (Exception e) {
+                LOG.warn(e);
+            }
+        });
     }
-  }
 
-  @Nonnull
-  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
-    fileSpec = buildFileSpec(roamingType, fileSpec);
-
-    File proxy = new File(myProxyDirectory.toFile(), fileSpec);
-    if (proxy.isDirectory()) {
-      return Arrays.stream(proxy.list()).filter(it -> !it.endsWith(MODCOUNT_EXTENSION)).collect(Collectors.toList());
-    }
-    return Collections.emptyList();
-  }
-
-  public boolean delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
-    boolean deleted = deleteWithoutServer(fileSpec, roamingType);
-
-    deleteFromServer(fileSpec, roamingType);
-
-    return deleted;
-  }
-
-  private void deleteFromServer(String fileSpec, RoamingType roamingType) {
-    myExecutorService.execute(() -> {
-      try {
+    public void writeLocalFile(@Nonnull String fileSpec, RoamingType roamingType, byte[] data, long modCount) throws IOException {
         String fullFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
 
-        LOG.info("Deleting file: " + fullFileSpec);
-
-        WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "deleteFile", Map.of("filePath", fullFileSpec), Object.class);
-      }
-      catch (NotFoundException ignored) {
-      }
-      catch (Exception e) {
-        LOG.warn(e);
-      }
-    });
-  }
-
-  public boolean deleteWithoutServer(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
-    String fullFileSpec = buildFileSpec(roamingType, fileSpec);
-
-    return deleteWithoutServer(fullFileSpec);
-  }
-
-  public boolean deleteWithoutServer(@Nonnull String fullFileSpec) {
-    LOG.info("Removing local file: " + fullFileSpec);
-
-    Path file = myProxyDirectory.resolve(fullFileSpec);
-    if (Files.exists(file)) {
-      try {
-        return Files.deleteIfExists(file);
-      }
-      catch (IOException ignored) {
-      }
+        writeLocalFile(fullFileSpec, data, modCount);
     }
 
-    Path modCount = myProxyDirectory.resolve(fullFileSpec + MODCOUNT_EXTENSION);
-    try {
-      Files.deleteIfExists(modCount);
-    }
-    catch (IOException ignored) {
-    }
-    return false;
-  }
+    public void writeLocalFile(@Nonnull String fullFileSpec, byte[] data, long modCount) throws IOException {
+        Path file = myProxyDirectory.resolve(fullFileSpec);
 
-  @Nonnull
-  public static String buildFileSpec(@Nonnull RoamingType roamingType, @Nonnull String fileSpec) {
-    switch (roamingType) {
-      case PER_OS:
-        return "$OS$/" + getOsPrefix() + "/" + fileSpec;
-      case DEFAULT:
-        return "$GLOBAL$/" + fileSpec;
-      default:
-        throw new UnsupportedOperationException(roamingType.name());
-    }
-  }
+        if (!Files.exists(file)) {
+            Files.createDirectories(file.getParent());
+        }
 
-  @Nonnull
-  public static Set<String> readComponentNames(@Nonnull InputStream stream) throws IOException, JDOMException {
-    Set<String> names = new TreeSet<>();
-    Element rootElement = JDOMUtil.load(stream);
+        Files.write(file, data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
-    for (Element childElement : rootElement.getChildren("component")) {
-      String name = childElement.getAttributeValue("name");
-
-      if (name != null) {
-        names.add(name);
-      }
+        if (modCount != -1) {
+            writeModCount(fullFileSpec, modCount);
+        }
     }
 
-    return names;
-  }
+    @Nonnull
+    public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+        fileSpec = buildFileSpec(roamingType, fileSpec);
 
-  @Nonnull
-  private static String getOsPrefix() {
-    if (Platform.current().os().isWindows()) {
-      return "win";
+        File proxy = new File(myProxyDirectory.toFile(), fileSpec);
+        if (proxy.isDirectory()) {
+            return Arrays.stream(proxy.list()).filter(it -> !it.endsWith(MODCOUNT_EXTENSION)).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
-    else if (Platform.current().os().isMac()) {
-      return "mac";
+
+    public boolean delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+        boolean deleted = deleteWithoutServer(fileSpec, roamingType);
+
+        deleteFromServer(fileSpec, roamingType);
+
+        return deleted;
     }
-    else if (Platform.current().os().isLinux()) {
-      return "linux";
+
+    private void deleteFromServer(String fileSpec, RoamingType roamingType) {
+        myExecutorService.execute(() -> {
+            try {
+                String fullFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
+
+                LOG.info("Deleting file: " + fullFileSpec);
+
+                WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "deleteFile", Map.of("filePath", fullFileSpec), Object.class);
+            }
+            catch (NotFoundException ignored) {
+            }
+            catch (Exception e) {
+                LOG.warn(e);
+            }
+        });
     }
-    else if (SystemInfo.isFreeBSD) {
-      return "bsd";
+
+    public boolean deleteWithoutServer(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+        String fullFileSpec = buildFileSpec(roamingType, fileSpec);
+
+        return deleteWithoutServer(fullFileSpec);
     }
-    else if (Platform.current().os().isUnix()) {
-      return "unix";
+
+    public boolean deleteWithoutServer(@Nonnull String fullFileSpec) {
+        LOG.info("Removing local file: " + fullFileSpec);
+
+        Path file = myProxyDirectory.resolve(fullFileSpec);
+        if (Files.exists(file)) {
+            try {
+                return Files.deleteIfExists(file);
+            }
+            catch (IOException ignored) {
+            }
+        }
+
+        Path modCount = myProxyDirectory.resolve(fullFileSpec + MODCOUNT_EXTENSION);
+        try {
+            Files.deleteIfExists(modCount);
+        }
+        catch (IOException ignored) {
+        }
+        return false;
     }
-    return "other";
-  }
+
+    @Nonnull
+    public static String buildFileSpec(@Nonnull RoamingType roamingType, @Nonnull String fileSpec) {
+        return switch (roamingType) {
+            case PER_OS -> "$OS$/" + getOsPrefix() + "/" + fileSpec;
+            case DEFAULT -> "$GLOBAL$/" + fileSpec;
+            default -> throw new UnsupportedOperationException(roamingType.name());
+        };
+    }
+
+    @Nonnull
+    public static Set<String> readComponentNames(@Nonnull InputStream stream) throws IOException, JDOMException {
+        Set<String> names = new TreeSet<>();
+        Element rootElement = JDOMUtil.load(stream);
+
+        for (Element childElement : rootElement.getChildren("component")) {
+            String name = childElement.getAttributeValue("name");
+
+            if (name != null) {
+                names.add(name);
+            }
+        }
+
+        return names;
+    }
+
+    @Nonnull
+    private static String getOsPrefix() {
+        if (Platform.current().os().isWindows()) {
+            return "win";
+        }
+        else if (Platform.current().os().isMac()) {
+            return "mac";
+        }
+        else if (Platform.current().os().isLinux()) {
+            return "linux";
+        }
+        else if (SystemInfo.isFreeBSD) {
+            return "bsd";
+        }
+        else if (Platform.current().os().isUnix()) {
+            return "unix";
+        }
+        return "other";
+    }
 }

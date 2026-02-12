@@ -17,18 +17,18 @@ package consulo.externalService.impl.internal.storage;
 
 /**
  * @author VISTALL
- * @since 13/09/2021
+ * @since 2021-09-13
  */
 public class StoragePlugin {
-  public String id;
+    public String id;
 
-  public StoragePluginState state;
+    public StoragePluginState state;
 
-  public StoragePlugin() {
-  }
+    public StoragePlugin() {
+    }
 
-  public StoragePlugin(String id, StoragePluginState state) {
-    this.id = id;
-    this.state = state;
-  }
+    public StoragePlugin(String id, StoragePluginState state) {
+        this.id = id;
+        this.state = state;
+    }
 }

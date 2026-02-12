@@ -25,13 +25,13 @@ import java.util.Base64;
  * @since 2019-02-11
  */
 public class PushFileRequestBean extends InformationBean {
-  private String bytes;
-  private String filePath;
+    private String bytes;
+    private String filePath;
 
-  public PushFileRequestBean(UpdateChannel updateChannel, String filePath, byte[] data) {
-    super(updateChannel);
-    
-    this.filePath = filePath;
-    bytes = Base64.getEncoder().encodeToString(data);
-  }
+    public PushFileRequestBean(UpdateChannel updateChannel, String filePath, byte[] data) {
+        super(updateChannel);
+
+        this.filePath = filePath;
+        bytes = Base64.getEncoder().encodeToString(data);
+    }
 }

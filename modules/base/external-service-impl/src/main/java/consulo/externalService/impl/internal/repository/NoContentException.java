@@ -19,7 +19,7 @@ import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 13/09/2021
+ * @since 2021-09-13
  */
 public class NoContentException extends IOException {
 }

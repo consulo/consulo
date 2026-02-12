@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
- * @since 11-Feb-17
+ * @since 2017-02-11
  */
 @ExtensionImpl
 public class ExternalStorageAppListener implements ApplicationLoadListener {
@@ -36,8 +36,10 @@ public class ExternalStorageAppListener implements ApplicationLoadListener {
     private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
     @Inject
-    public ExternalStorageAppListener(@Nonnull Application application,
-                                      @Nonnull ExternalServiceConfiguration externalServiceConfiguration) {
+    public ExternalStorageAppListener(
+        @Nonnull Application application,
+        @Nonnull ExternalServiceConfiguration externalServiceConfiguration
+    ) {
         myExternalServiceConfiguration = externalServiceConfiguration;
         myApplication = application;
     }

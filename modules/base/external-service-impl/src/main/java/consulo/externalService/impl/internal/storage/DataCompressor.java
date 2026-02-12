@@ -33,85 +33,85 @@ import java.io.InputStream;
  * @since 2019-02-11
  */
 public class DataCompressor {
-  public static final byte V1_SNAPPY = 1;
-  public static final byte V2_LZ4J = 2;
+    public static final byte V1_SNAPPY = 1;
+    public static final byte V2_LZ4J = 2;
 
-  // data info
-  // 1 byte -> version
-  // 4 bytes -> modification count
-  // 2 bytes -> content length
-  // > content (compressed or not - based on version)
-  private static final int ourVersion = V2_LZ4J;
+    // data info
+    // 1 byte -> version
+    // 4 bytes -> modification count
+    // 2 bytes -> content length
+    // > content (compressed or not - based on version)
+    private static final int ourVersion = V2_LZ4J;
 
-  public static byte[] compress(byte[] content, int modificationCount) throws IOException {
-    byte[] compressedData = null;
+    public static byte[] compress(byte[] content, int modificationCount) throws IOException {
+        byte[] compressedData = null;
 
-    switch (ourVersion) {
-      //case V1_SNAPPY: {
-      //  UnsyncByteArrayOutputStream compressStream = new UnsyncByteArrayOutputStream(content.length);
-      //  try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(compressStream)) {
-      //    snappyOutputStream.write(content);
-      //  }
-      //  compressedData = compressStream.toByteArray();
-      //  break;
-      //}
-      case V2_LZ4J: {
-        UnsyncByteArrayOutputStream compressStream = new UnsyncByteArrayOutputStream(content.length);
-        try (LZ4BlockOutputStream lz4BlockOutputStream = new LZ4BlockOutputStream(compressStream)) {
-          lz4BlockOutputStream.write(content);
+        switch (ourVersion) {
+            //case V1_SNAPPY: {
+            //    UnsyncByteArrayOutputStream compressStream = new UnsyncByteArrayOutputStream(content.length);
+            //    try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(compressStream)) {
+            //        snappyOutputStream.write(content);
+            //    }
+            //    compressedData = compressStream.toByteArray();
+            //    break;
+            //}
+            case V2_LZ4J: {
+                UnsyncByteArrayOutputStream compressStream = new UnsyncByteArrayOutputStream(content.length);
+                try (LZ4BlockOutputStream lz4BlockOutputStream = new LZ4BlockOutputStream(compressStream)) {
+                    lz4BlockOutputStream.write(content);
+                }
+                compressedData = compressStream.toByteArray();
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown version " + ourVersion);
         }
-        compressedData = compressStream.toByteArray();
-        break;
-      }
-      default:
-        throw new UnsupportedOperationException("Unknown version " + ourVersion);
-    }
 
-    UnsyncByteArrayOutputStream outStream = new UnsyncByteArrayOutputStream(compressedData.length + 3);
-    try (DataOutputStream outputStream = new DataOutputStream(outStream)) {
-      outputStream.write(ourVersion);
-      outputStream.writeInt(modificationCount);
-      outputStream.writeShort(compressedData.length);
-      outputStream.write(compressedData);
-    }
-
-    return outStream.toByteArray();
-  }
-
-  /**
-   * @return pair bytes and modification count
-   */
-  public static Pair<byte[], Integer> uncompress(@Nonnull InputStream stream) throws IOException {
-    try (DataInputStream inputStream = new DataInputStream(stream)) {
-      byte version = inputStream.readByte();
-      int modCount = inputStream.readInt();
-      int length = inputStream.readUnsignedShort();
-      switch (version) {
-        //case V1_SNAPPY: {
-        //  byte[] compressedData = new byte[length];
-        //  int read = inputStream.read(compressedData);
-        //  if (read != length) {
-        //    throw new IllegalArgumentException("Can't read full byte array");
-        //  }
-        //
-        //  try (SnappyInputStream snappyInputStream = new SnappyInputStream(new UnsyncByteArrayInputStream(compressedData))) {
-        //    return Pair.create(StreamUtil.loadFromStream(snappyInputStream), modCount);
-        //  }
-        //}
-        case V2_LZ4J: {
-          byte[] compressedData = new byte[length];
-          int read = inputStream.read(compressedData);
-          if (read != length) {
-            throw new IllegalArgumentException("Can't read full byte array");
-          }
-
-          try (LZ4BlockInputStream lz4BlockInputStream = new LZ4BlockInputStream(new UnsyncByteArrayInputStream(compressedData))) {
-            return Pair.create(StreamUtil.loadFromStream(lz4BlockInputStream), modCount);
-          }
+        UnsyncByteArrayOutputStream outStream = new UnsyncByteArrayOutputStream(compressedData.length + 3);
+        try (DataOutputStream outputStream = new DataOutputStream(outStream)) {
+            outputStream.write(ourVersion);
+            outputStream.writeInt(modificationCount);
+            outputStream.writeShort(compressedData.length);
+            outputStream.write(compressedData);
         }
-        default:
-          throw new UnsupportedOperationException("Unknown version " + version);
-      }
+
+        return outStream.toByteArray();
     }
-  }
+
+    /**
+     * @return pair bytes and modification count
+     */
+    public static Pair<byte[], Integer> uncompress(@Nonnull InputStream stream) throws IOException {
+        try (DataInputStream inputStream = new DataInputStream(stream)) {
+            byte version = inputStream.readByte();
+            int modCount = inputStream.readInt();
+            int length = inputStream.readUnsignedShort();
+            switch (version) {
+                //case V1_SNAPPY: {
+                //    byte[] compressedData = new byte[length];
+                //    int read = inputStream.read(compressedData);
+                //    if (read != length) {
+                //        throw new IllegalArgumentException("Can't read full byte array");
+                //    }
+                //
+                //    try (SnappyInputStream snappyInputStream = new SnappyInputStream(new UnsyncByteArrayInputStream(compressedData))) {
+                //        return Pair.create(StreamUtil.loadFromStream(snappyInputStream), modCount);
+                //    }
+                //}
+                case V2_LZ4J: {
+                    byte[] compressedData = new byte[length];
+                    int read = inputStream.read(compressedData);
+                    if (read != length) {
+                        throw new IllegalArgumentException("Can't read full byte array");
+                    }
+
+                    try (LZ4BlockInputStream lz4BlockInputStream = new LZ4BlockInputStream(new UnsyncByteArrayInputStream(compressedData))) {
+                        return Pair.create(StreamUtil.loadFromStream(lz4BlockInputStream), modCount);
+                    }
+                }
+                default:
+                    throw new UnsupportedOperationException("Unknown version " + version);
+            }
+        }
+    }
 }

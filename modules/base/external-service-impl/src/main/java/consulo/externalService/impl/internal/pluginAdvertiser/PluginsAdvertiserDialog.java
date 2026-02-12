@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22-Jun-17
+ * @since 2017-06-22
  */
 public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Nullable
@@ -45,7 +45,11 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Nonnull
     private final List<PluginDescriptor> myAllPlugins;
 
-    public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<PluginDescriptor> allPlugins, @Nonnull List<PluginDescriptor> toInstallPlugins) {
+    public PluginsAdvertiserDialog(
+        @Nullable Project project,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        @Nonnull List<PluginDescriptor> toInstallPlugins
+    ) {
         super(project);
         myAllPlugins = allPlugins;
 
@@ -55,9 +59,9 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
         init();
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         PluginsList pluginsList = new PluginsList(null);
         pluginsList.modifyPluginsList(myToInstallPlugins);
@@ -71,9 +75,10 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
             }
         });
 
-        UiNotifyConnector.doWhenFirstShown(pluginsList.getComponent(), () -> {
-            ScrollingUtil.ensureSelectionExists(pluginsList.getComponent());
-        });
+        UiNotifyConnector.doWhenFirstShown(
+            pluginsList.getComponent(),
+            () -> ScrollingUtil.ensureSelectionExists(pluginsList.getComponent())
+        );
 
         return Couple.<JComponent>of(ScrollPaneFactory.createScrollPane(pluginsList.getComponent(), true), descriptionPanel.getPanel());
     }
@@ -105,6 +110,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
 
     @Nullable
     @Override
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
         // no actions buttons
         return null;
