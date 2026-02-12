@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.FontPreferences;
@@ -25,6 +24,7 @@ import consulo.ide.impl.idea.application.options.OptionsConstants;
 import consulo.ide.impl.idea.ui.FontComboBox;
 import consulo.ide.impl.idea.ui.FontInfoRenderer;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -37,335 +37,337 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.event.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 public class FontOptions implements OptionsPanel {
-  private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
-    @Override
-    protected boolean isEditorFont() {
-      return true;
+    private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
+        @Override
+        protected boolean isEditorFont() {
+            return true;
+        }
+    };
+    private static final String HELP_URL = "https://confluence.jetbrains.com/display/IDEADEV/Support+for+Ligatures+in+Editor";
+
+    private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
+
+    @Nonnull
+    private final ColorAndFontOptions myOptions;
+
+    @Nonnull
+    private final JTextField myEditorFontSizeField = new JTextField(4);
+    @Nonnull
+    private final JTextField myLineSpacingField = new JTextField(4);
+    private final FontComboBox myPrimaryCombo = new FontComboBox();
+    private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationLocalize.secondaryFont().get());
+    private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationLocalize.useLigatures().get());
+    private final JLabel myLigaturesInfoLinkLabel;
+    private final FontComboBox mySecondaryCombo = new FontComboBox();
+
+    @Nonnull
+    private final JBCheckBox myOnlyMonospacedCheckBox = new JBCheckBox(ApplicationLocalize.checkboxShowOnlyMonospacedFonts().get());
+
+    private boolean myIsInSchemeChange;
+
+    private final JPanel myRootPanel;
+
+    public FontOptions(ColorAndFontOptions options) {
+        this(options, ApplicationLocalize.groupEditorFont().get());
     }
-  };
-  private static final String HELP_URL = "https://confluence.jetbrains.com/display/IDEADEV/Support+for+Ligatures+in+Editor";
 
-  private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
+    protected FontOptions(@Nonnull ColorAndFontOptions options, String title) {
+        JPanel mainPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
+        mainPanel.setBorder(JBUI.Borders.empty(5));
 
-  @Nonnull
-  private final ColorAndFontOptions myOptions;
+        myOptions = options;
+        mainPanel.add(myOnlyMonospacedCheckBox);
 
-  @Nonnull
-  private final JTextField myEditorFontSizeField = new JTextField(4);
-  @Nonnull
-  private final JTextField myLineSpacingField = new JTextField(4);
-  private final FontComboBox myPrimaryCombo = new FontComboBox();
-  private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationBundle.message("secondary.font"));
-  private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationBundle.message("use.ligatures"));
-  private final JLabel myLigaturesInfoLinkLabel;
-  private final FontComboBox mySecondaryCombo = new FontComboBox();
+        JPanel primaryFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+        primaryFontPanel.setBorder(JBUI.Borders.emptyLeft(20));
+        mainPanel.add(primaryFontPanel);
 
-  @Nonnull
-  private final JBCheckBox myOnlyMonospacedCheckBox = new JBCheckBox(ApplicationBundle.message("checkbox.show.only.monospaced.fonts"));
+        primaryFontPanel.add(LabeledComponent.left(myPrimaryCombo, ApplicationLocalize.primaryFont().get()));
+        primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationLocalize.editboxFontSize().get()));
+        primaryFontPanel.add(LabeledComponent.left(myLineSpacingField, ApplicationLocalize.editboxLineSpacing().get()));
 
-  private boolean myIsInSchemeChange;
+        JLabel infoLabel = new JLabel(ApplicationLocalize.labelFallbackFontsListDescription().get());
+        infoLabel.setFont(JBUI.Fonts.smallFont());
+        infoLabel.setForeground(TargetAWT.to(StandardColors.GRAY));
+        mainPanel.add(infoLabel);
 
-  private final JPanel myRootPanel;
+        JPanel secondFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+        mainPanel.add(secondFontPanel);
 
-  public FontOptions(ColorAndFontOptions options) {
-    this(options, ApplicationBundle.message("group.editor.font"));
-  }
+        secondFontPanel.add(myUseSecondaryFontCheckbox);
+        secondFontPanel.add(mySecondaryCombo);
 
-  protected FontOptions(@Nonnull ColorAndFontOptions options, String title) {
-    JPanel mainPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
-    mainPanel.setBorder(JBUI.Borders.empty(5));
+        JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+        ligaturesPanel.setEnabled(true);
+        myEnableLigaturesCheckbox.setBorder(null);
+        ligaturesPanel.add(myEnableLigaturesCheckbox);
+        myLigaturesInfoLinkLabel = new LinkLabel<>(
+            ApplicationLocalize.ligaturesMoreInfo().get(),
+            null,
+            (LinkListener<String>) (aSource, aLinkData) -> BrowserUtil.browse(HELP_URL)
+        );
+        myLigaturesInfoLinkLabel.setBorder(JBUI.Borders.emptyLeft(5));
+        ligaturesPanel.add(myLigaturesInfoLinkLabel);
+        mainPanel.add(ligaturesPanel);
 
-    myOptions = options;
-    mainPanel.add(myOnlyMonospacedCheckBox);
+        myOnlyMonospacedCheckBox.setBorder(null);
+        myUseSecondaryFontCheckbox.setBorder(null);
+        mySecondaryCombo.setEnabled(false);
 
-    JPanel primaryFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    primaryFontPanel.setBorder(JBUI.Borders.emptyLeft(20));
-    mainPanel.add(primaryFontPanel);
-
-    primaryFontPanel.add(LabeledComponent.left(myPrimaryCombo, ApplicationBundle.message("primary.font")));
-    primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationBundle.message("editbox.font.size")));
-    primaryFontPanel.add(LabeledComponent.left(myLineSpacingField, ApplicationBundle.message("editbox.line.spacing")));
-
-    JLabel infoLabel = new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"));
-    infoLabel.setFont(JBUI.Fonts.smallFont());
-    infoLabel.setForeground(TargetAWT.to(StandardColors.GRAY));
-    mainPanel.add(infoLabel);
-
-    JPanel secondFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    mainPanel.add(secondFontPanel);
-
-    secondFontPanel.add(myUseSecondaryFontCheckbox);
-    secondFontPanel.add(mySecondaryCombo);
-
-    JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    ligaturesPanel.setEnabled(true);
-    myEnableLigaturesCheckbox.setBorder(null);
-    ligaturesPanel.add(myEnableLigaturesCheckbox);
-    myLigaturesInfoLinkLabel = new LinkLabel<>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {
-      @Override
-      public void linkSelected(LinkLabel aSource, String aLinkData) {
-        BrowserUtil.browse(HELP_URL);
-      }
-    });
-    myLigaturesInfoLinkLabel.setBorder(JBUI.Borders.emptyLeft(5));
-    ligaturesPanel.add(myLigaturesInfoLinkLabel);
-    mainPanel.add(ligaturesPanel);
-
-    myOnlyMonospacedCheckBox.setBorder(null);
-    myUseSecondaryFontCheckbox.setBorder(null);
-    mySecondaryCombo.setEnabled(false);
-
-    myOnlyMonospacedCheckBox.setSelected(EditorColorsManager.getInstance().isUseOnlyMonospacedFonts());
-    myOnlyMonospacedCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        EditorColorsManager.getInstance().setUseOnlyMonospacedFonts(myOnlyMonospacedCheckBox.isSelected());
+        myOnlyMonospacedCheckBox.setSelected(EditorColorsManager.getInstance().isUseOnlyMonospacedFonts());
+        myOnlyMonospacedCheckBox.addActionListener(e -> {
+            EditorColorsManager.getInstance().setUseOnlyMonospacedFonts(myOnlyMonospacedCheckBox.isSelected());
+            myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+            mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+        });
         myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+        myPrimaryCombo.setRenderer(RENDERER);
+
         mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
-      }
-    });
-    myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
-    myPrimaryCombo.setRenderer(RENDERER);
+        mySecondaryCombo.setRenderer(RENDERER);
 
-    mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
-    mySecondaryCombo.setRenderer(RENDERER);
+        myUseSecondaryFontCheckbox.addActionListener(e -> {
+            mySecondaryCombo.setEnabled(myUseSecondaryFontCheckbox.isSelected());
+            FontOptions.this.syncFontFamilies();
+        });
+        ItemListener itemListener = e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                FontOptions.this.syncFontFamilies();
+            }
+        };
+        myPrimaryCombo.addItemListener(itemListener);
+        mySecondaryCombo.addItemListener(itemListener);
 
-    myUseSecondaryFontCheckbox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        mySecondaryCombo.setEnabled(myUseSecondaryFontCheckbox.isSelected());
-        FontOptions.this.syncFontFamilies();
-      }
-    });
-    ItemListener itemListener = new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-          FontOptions.this.syncFontFamilies();
+        ActionListener actionListener = e -> FontOptions.this.syncFontFamilies();
+        myPrimaryCombo.addActionListener(actionListener);
+        mySecondaryCombo.addActionListener(actionListener);
+
+        myEditorFontSizeField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            public void textChanged(DocumentEvent event) {
+                if (myIsInSchemeChange || !SwingUtilities.isEventDispatchThread()) {
+                    return;
+                }
+                String selectedFont = myPrimaryCombo.getFontName();
+                if (selectedFont != null) {
+                    ModifiableFontPreferences fontPreferences = getFontPreferences();
+                    fontPreferences.register(selectedFont, getFontSizeFromField());
+                }
+                updateDescription(true);
+            }
+        });
+        myEditorFontSizeField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) {
+                    return;
+                }
+                boolean up = e.getKeyCode() == KeyEvent.VK_UP;
+                try {
+                    int value = Integer.parseInt(myEditorFontSizeField.getText());
+                    value += (up ? 1 : -1);
+                    value = Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE, Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, value));
+                    myEditorFontSizeField.setText(String.valueOf(value));
+                }
+                catch (NumberFormatException ignored) {
+                }
+            }
+        });
+
+        myLineSpacingField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            public void textChanged(DocumentEvent event) {
+                if (myIsInSchemeChange) {
+                    return;
+                }
+                float lineSpacing = getLineSpacingFromField();
+                if (getLineSpacing() != lineSpacing) {
+                    setCurrentLineSpacing(lineSpacing);
+                }
+                updateDescription(true);
+            }
+        });
+        myLineSpacingField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) {
+                    return;
+                }
+                boolean up = e.getKeyCode() == KeyEvent.VK_UP;
+                try {
+                    float value = Float.parseFloat(myLineSpacingField.getText());
+                    value += (up ? 1 : -1) * .1F;
+                    value = Math.min(OptionsConstants.MAX_EDITOR_LINE_SPACING, Math.max(OptionsConstants.MIN_EDITOR_LINE_SPACING, value));
+                    myLineSpacingField.setText(String.format(Locale.ENGLISH, "%.1f", value));
+                }
+                catch (NumberFormatException ignored) {
+                }
+            }
+        });
+        myEnableLigaturesCheckbox.addActionListener(e -> FontOptions.this.getFontPreferences()
+            .setUseLigatures(myEnableLigaturesCheckbox.isSelected()));
+
+        Wrapper wrapper = new Wrapper(mainPanel);
+        wrapper.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
+        myRootPanel = wrapper;
+    }
+
+    private int getFontSizeFromField() {
+        try {
+            return Math.min(
+                OptionsConstants.MAX_EDITOR_FONT_SIZE,
+                Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText()))
+            );
         }
-      }
-    };
-    myPrimaryCombo.addItemListener(itemListener);
-    mySecondaryCombo.addItemListener(itemListener);
+        catch (NumberFormatException e) {
+            return OptionsConstants.DEFAULT_EDITOR_FONT_SIZE;
+        }
+    }
 
-    ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        FontOptions.this.syncFontFamilies();
-      }
-    };
-    myPrimaryCombo.addActionListener(actionListener);
-    mySecondaryCombo.addActionListener(actionListener);
+    private float getLineSpacingFromField() {
+        try {
+            return Math.min(
+                OptionsConstants.MAX_EDITOR_LINE_SPACING,
+                Math.max(OptionsConstants.MIN_EDITOR_LINE_SPACING, Float.parseFloat(myLineSpacingField.getText()))
+            );
+        }
+        catch (NumberFormatException e) {
+            return OptionsConstants.DEFAULT_EDITOR_LINE_SPACING;
+        }
+    }
 
-    myEditorFontSizeField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      public void textChanged(DocumentEvent event) {
-        if (myIsInSchemeChange || !SwingUtilities.isEventDispatchThread()) return;
-        String selectedFont = myPrimaryCombo.getFontName();
-        if (selectedFont != null) {
-          ModifiableFontPreferences fontPreferences = getFontPreferences();
-          fontPreferences.register(selectedFont, getFontSizeFromField());
+    private void syncFontFamilies() {
+        if (myIsInSchemeChange) {
+            return;
+        }
+        ModifiableFontPreferences fontPreferences = getFontPreferences();
+        fontPreferences.clearFonts();
+        String primaryFontFamily = myPrimaryCombo.getFontName();
+        String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
+        int fontSize = getFontSizeFromField();
+        if (primaryFontFamily != null) {
+            if (!FontPreferences.DEFAULT_FONT_NAME.equals(primaryFontFamily)) {
+                fontPreferences.addFontFamily(primaryFontFamily);
+            }
+            fontPreferences.register(primaryFontFamily, JBUI.scale(fontSize));
+        }
+        if (secondaryFontFamily != null) {
+            if (!FontPreferences.DEFAULT_FONT_NAME.equals(secondaryFontFamily)) {
+                fontPreferences.addFontFamily(secondaryFontFamily);
+            }
+            fontPreferences.register(secondaryFontFamily, JBUI.scale(fontSize));
         }
         updateDescription(true);
-      }
-    });
-    myEditorFontSizeField.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) return;
-        boolean up = e.getKeyCode() == KeyEvent.VK_UP;
-        try {
-          int value = Integer.parseInt(myEditorFontSizeField.getText());
-          value += (up ? 1 : -1);
-          value = Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE, Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, value));
-          myEditorFontSizeField.setText(String.valueOf(value));
+    }
+
+    @RequiredUIAccess
+    public static void showReadOnlyMessage(JComponent parent, boolean sharedScheme) {
+        if (!sharedScheme) {
+            Messages.showMessageDialog(
+                parent,
+                ApplicationLocalize.errorReadonlySchemeCannotBeModified().get(),
+                ApplicationLocalize.titleCannotModifyReadonlyScheme().get(),
+                UIUtil.getInformationIcon()
+            );
         }
-        catch (NumberFormatException ignored) {
+        else {
+            Messages.showMessageDialog(
+                parent,
+                ApplicationLocalize.errorSharedSchemeCannotBeModified().get(),
+                ApplicationLocalize.titleCannotModifyReadonlyScheme().get(),
+                UIUtil.getInformationIcon()
+            );
         }
-      }
-    });
+    }
 
-    myLineSpacingField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      public void textChanged(DocumentEvent event) {
-        if (myIsInSchemeChange) return;
-        float lineSpacing = getLineSpacingFromField();
-        if (getLineSpacing() != lineSpacing) {
-          setCurrentLineSpacing(lineSpacing);
+    @Override
+    public void updateOptionsList() {
+        myIsInSchemeChange = true;
+
+        myLineSpacingField.setText(Float.toString(getLineSpacing()));
+        FontPreferences fontPreferences = getFontPreferences();
+        List<String> fontFamilies = fontPreferences.getEffectiveFontFamilies();
+        myPrimaryCombo.setFontName(fontPreferences.getFontFamily());
+        boolean isThereSecondaryFont = fontFamilies.size() > 1;
+        myUseSecondaryFontCheckbox.setSelected(isThereSecondaryFont);
+        mySecondaryCombo.setFontName(isThereSecondaryFont ? fontFamilies.get(1) : null);
+        myEditorFontSizeField.setText(String.valueOf(fontPreferences.getSize(fontPreferences.getFontFamily())));
+
+        boolean readOnly = ColorAndFontOptions.isReadOnly(myOptions.getSelectedScheme());
+        myPrimaryCombo.setEnabled(!readOnly);
+        mySecondaryCombo.setEnabled(isThereSecondaryFont && !readOnly);
+        myOnlyMonospacedCheckBox.setEnabled(!readOnly);
+        myLineSpacingField.setEnabled(!readOnly);
+        myEditorFontSizeField.setEnabled(!readOnly);
+        myUseSecondaryFontCheckbox.setEnabled(!readOnly);
+
+        myEnableLigaturesCheckbox.setEnabled(!readOnly);
+        myLigaturesInfoLinkLabel.setEnabled(!readOnly);
+        myEnableLigaturesCheckbox.setSelected(fontPreferences.useLigatures());
+
+        myIsInSchemeChange = false;
+    }
+
+    @Nonnull
+    protected ModifiableFontPreferences getFontPreferences() {
+        return (ModifiableFontPreferences) getCurrentScheme().getFontPreferences();
+    }
+
+    protected float getLineSpacing() {
+        return getCurrentScheme().getLineSpacing();
+    }
+
+    protected void setCurrentLineSpacing(float lineSpacing) {
+        getCurrentScheme().setLineSpacing(lineSpacing);
+    }
+
+    @Override
+    @Nullable
+    public Runnable showOption(String option) {
+        return null;
+    }
+
+    @Override
+    public void applyChangesToScheme() {
+    }
+
+    @Override
+    public void selectOption(String typeToSelect) {
+    }
+
+    protected EditorColorsScheme getCurrentScheme() {
+        return myOptions.getSelectedScheme();
+    }
+
+    public boolean updateDescription(boolean modified) {
+        EditorColorsScheme scheme = myOptions.getSelectedScheme();
+
+        if (modified && (ColorAndFontOptions.isReadOnly(scheme))) {
+            return false;
         }
-        updateDescription(true);
-      }
-    });
-    myLineSpacingField.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) return;
-        boolean up = e.getKeyCode() == KeyEvent.VK_UP;
-        try {
-          float value = Float.parseFloat(myLineSpacingField.getText());
-          value += (up ? 1 : -1) * .1F;
-          value = Math.min(OptionsConstants.MAX_EDITOR_LINE_SPACING, Math.max(OptionsConstants.MIN_EDITOR_LINE_SPACING, value));
-          myLineSpacingField.setText(String.format(Locale.ENGLISH, "%.1f", value));
-        }
-        catch (NumberFormatException ignored) {
-        }
-      }
-    });
-    myEnableLigaturesCheckbox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        FontOptions.this.getFontPreferences().setUseLigatures(myEnableLigaturesCheckbox.isSelected());
-      }
-    });
 
-    Wrapper wrapper = new Wrapper(mainPanel);
-    wrapper.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
-    myRootPanel = wrapper;
-  }
+        myDispatcher.getMulticaster().fontChanged();
 
-  private int getFontSizeFromField() {
-    try {
-      return Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE, Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText())));
-    }
-    catch (NumberFormatException e) {
-      return OptionsConstants.DEFAULT_EDITOR_FONT_SIZE;
-    }
-  }
-
-  private float getLineSpacingFromField() {
-    try {
-      return Math.min(OptionsConstants.MAX_EDITOR_LINE_SPACING, Math.max(OptionsConstants.MIN_EDITOR_LINE_SPACING, Float.parseFloat(myLineSpacingField.getText())));
-    }
-    catch (NumberFormatException e) {
-      return OptionsConstants.DEFAULT_EDITOR_LINE_SPACING;
-    }
-  }
-
-  private void syncFontFamilies() {
-    if (myIsInSchemeChange) {
-      return;
-    }
-    ModifiableFontPreferences fontPreferences = getFontPreferences();
-    fontPreferences.clearFonts();
-    String primaryFontFamily = myPrimaryCombo.getFontName();
-    String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
-    int fontSize = getFontSizeFromField();
-    if (primaryFontFamily != null) {
-      if (!FontPreferences.DEFAULT_FONT_NAME.equals(primaryFontFamily)) {
-        fontPreferences.addFontFamily(primaryFontFamily);
-      }
-      fontPreferences.register(primaryFontFamily, JBUI.scale(fontSize));
-    }
-    if (secondaryFontFamily != null) {
-      if (!FontPreferences.DEFAULT_FONT_NAME.equals(secondaryFontFamily)) {
-        fontPreferences.addFontFamily(secondaryFontFamily);
-      }
-      fontPreferences.register(secondaryFontFamily, JBUI.scale(fontSize));
-    }
-    updateDescription(true);
-  }
-
-
-  public static void showReadOnlyMessage(JComponent parent, boolean sharedScheme) {
-    if (!sharedScheme) {
-      Messages.showMessageDialog(parent, ApplicationBundle.message("error.readonly.scheme.cannot.be.modified"), ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
-                                 Messages.getInformationIcon());
-    }
-    else {
-      Messages.showMessageDialog(parent, ApplicationBundle.message("error.shared.scheme.cannot.be.modified"), ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
-                                 Messages.getInformationIcon());
-    }
-  }
-
-  @Override
-  public void updateOptionsList() {
-    myIsInSchemeChange = true;
-
-    myLineSpacingField.setText(Float.toString(getLineSpacing()));
-    FontPreferences fontPreferences = getFontPreferences();
-    List<String> fontFamilies = fontPreferences.getEffectiveFontFamilies();
-    myPrimaryCombo.setFontName(fontPreferences.getFontFamily());
-    boolean isThereSecondaryFont = fontFamilies.size() > 1;
-    myUseSecondaryFontCheckbox.setSelected(isThereSecondaryFont);
-    mySecondaryCombo.setFontName(isThereSecondaryFont ? fontFamilies.get(1) : null);
-    myEditorFontSizeField.setText(String.valueOf(fontPreferences.getSize(fontPreferences.getFontFamily())));
-
-    boolean readOnly = ColorAndFontOptions.isReadOnly(myOptions.getSelectedScheme());
-    myPrimaryCombo.setEnabled(!readOnly);
-    mySecondaryCombo.setEnabled(isThereSecondaryFont && !readOnly);
-    myOnlyMonospacedCheckBox.setEnabled(!readOnly);
-    myLineSpacingField.setEnabled(!readOnly);
-    myEditorFontSizeField.setEnabled(!readOnly);
-    myUseSecondaryFontCheckbox.setEnabled(!readOnly);
-
-    myEnableLigaturesCheckbox.setEnabled(!readOnly);
-    myLigaturesInfoLinkLabel.setEnabled(!readOnly);
-    myEnableLigaturesCheckbox.setSelected(fontPreferences.useLigatures());
-
-    myIsInSchemeChange = false;
-  }
-
-  @Nonnull
-  protected ModifiableFontPreferences getFontPreferences() {
-    return (ModifiableFontPreferences)getCurrentScheme().getFontPreferences();
-  }
-
-  protected float getLineSpacing() {
-    return getCurrentScheme().getLineSpacing();
-  }
-
-  protected void setCurrentLineSpacing(float lineSpacing) {
-    getCurrentScheme().setLineSpacing(lineSpacing);
-  }
-
-  @Override
-  @Nullable
-  public Runnable showOption(String option) {
-    return null;
-  }
-
-  @Override
-  public void applyChangesToScheme() {
-  }
-
-  @Override
-  public void selectOption(String typeToSelect) {
-  }
-
-  protected EditorColorsScheme getCurrentScheme() {
-    return myOptions.getSelectedScheme();
-  }
-
-  public boolean updateDescription(boolean modified) {
-    EditorColorsScheme scheme = myOptions.getSelectedScheme();
-
-    if (modified && (ColorAndFontOptions.isReadOnly(scheme))) {
-      return false;
+        return true;
     }
 
-    myDispatcher.getMulticaster().fontChanged();
+    @Override
+    public void addListener(ColorAndFontSettingsListener listener) {
+        myDispatcher.addListener(listener);
+    }
 
-    return true;
-  }
+    @Override
+    public JPanel getPanel() {
+        return myRootPanel;
+    }
 
-  @Override
-  public void addListener(ColorAndFontSettingsListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
-  @Override
-  public JPanel getPanel() {
-    return myRootPanel;
-  }
-
-  @Override
-  public Set<String> processListOptions() {
-    return new HashSet<>();
-  }
+    @Override
+    public Set<String> processListOptions() {
+        return Set.of();
+    }
 }

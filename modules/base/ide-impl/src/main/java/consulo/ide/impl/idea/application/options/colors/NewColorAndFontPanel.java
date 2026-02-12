@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.localize.LocalizeValue;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -36,174 +35,178 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NewColorAndFontPanel extends JPanel {
-  private final ColorSettingsPage mySettingsPage;
-  private final SchemesPanel mySchemesPanel;
-  private final OptionsPanel myOptionsPanel;
-  private final PreviewPanel myPreviewPanel;
-  private final AbstractAction myCopyAction;
-  private final LocalizeValue myCategory;
-  private final Collection<String> myOptionList;
+    private final ColorSettingsPage mySettingsPage;
+    private final SchemesPanel mySchemesPanel;
+    private final OptionsPanel myOptionsPanel;
+    private final PreviewPanel myPreviewPanel;
+    private final AbstractAction myCopyAction;
+    private final LocalizeValue myCategory;
+    private final Collection<String> myOptionList;
 
-  public NewColorAndFontPanel(
-    final SchemesPanel schemesPanel,
-    final OptionsPanel optionsPanel,
-    final PreviewPanel previewPanel,
-    LocalizeValue category,
-    Collection<String> optionList,
-    ColorSettingsPage page
-  ) {
-    super(new BorderLayout(0, 10));
-    mySchemesPanel = schemesPanel;
-    myOptionsPanel = optionsPanel;
-    myPreviewPanel = previewPanel;
-    myCategory = category;
-    myOptionList = optionList;
-    mySettingsPage = page;
+    public NewColorAndFontPanel(
+        final SchemesPanel schemesPanel,
+        final OptionsPanel optionsPanel,
+        final PreviewPanel previewPanel,
+        LocalizeValue category,
+        Collection<String> optionList,
+        ColorSettingsPage page
+    ) {
+        super(new BorderLayout(0, 10));
+        mySchemesPanel = schemesPanel;
+        myOptionsPanel = optionsPanel;
+        myPreviewPanel = previewPanel;
+        myCategory = category;
+        myOptionList = optionList;
+        mySettingsPage = page;
 
-    JPanel top = new JPanel(new BorderLayout());
+        JPanel top = new JPanel(new BorderLayout());
 
-    top.add(TargetAWT.to(mySchemesPanel.getComponent()), BorderLayout.NORTH);
-    top.add(myOptionsPanel.getPanel(), BorderLayout.CENTER);
-    if (optionsPanel instanceof ConsoleFontOptions) {
-      JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-      myCopyAction = new AbstractAction(ApplicationLocalize.actionApplyEditorFontSettings().get()) {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          EditorColorsScheme scheme = ((ConsoleFontOptions)myOptionsPanel).getCurrentScheme();
-          scheme.setConsoleFontName(scheme.getEditorFontName());
-          scheme.setConsoleFontPreferences(scheme.getFontPreferences());
-          scheme.setConsoleFontSize(scheme.getEditorFontSize());
-          scheme.setConsoleLineSpacing(scheme.getLineSpacing());
-          myOptionsPanel.updateOptionsList();
-          myPreviewPanel.updateView();
-        }
-      };
-      wrapper.add(new JButton(myCopyAction));
-      top.add(wrapper, BorderLayout.SOUTH);
-    }
-    else {
-      myCopyAction = null;
-    }
-
-    // We don't want to show non-used preview panel (it's considered to be not in use if it doesn't contain text).
-    if (myPreviewPanel.getPanel() != null && (page == null || !StringUtil.isEmptyOrSpaces(page.getDemoText()))) {
-      OnePixelSplitter splitter = new OnePixelSplitter(true);
-      splitter.setFirstComponent(top);
-      splitter.setSecondComponent((JComponent)myPreviewPanel.getPanel());
-      add(splitter, BorderLayout.CENTER);
-    }
-    else {
-      add(top, BorderLayout.CENTER);
-    }
-
-    previewPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
-      @Override
-      public void selectionInPreviewChanged(String typeToSelect) {
-        optionsPanel.selectOption(typeToSelect);
-      }
-    });
-
-    optionsPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
-      @Override
-      public void settingsChanged() {
-        if (schemesPanel.updateDescription(true)) {
-          optionsPanel.applyChangesToScheme();
-          previewPanel.updateView();
-        }
-      }
-
-      @Override
-      public void selectedOptionChanged(Object selected) {
-        if (Application.get().isDispatchThread()) {
-          myPreviewPanel.blinkSelectedHighlightType(selected);
-        }
-      }
-    });
-    mySchemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
-      @Override
-      public void schemeChanged(Object source) {
-        myOptionsPanel.updateOptionsList();
-        myPreviewPanel.updateView();
+        top.add(TargetAWT.to(mySchemesPanel.getComponent()), BorderLayout.NORTH);
+        top.add(myOptionsPanel.getPanel(), BorderLayout.CENTER);
         if (optionsPanel instanceof ConsoleFontOptions) {
-          ConsoleFontOptions options = (ConsoleFontOptions)optionsPanel;
-          boolean readOnly = ColorAndFontOptions.isReadOnly(options.getCurrentScheme());
-          myCopyAction.setEnabled(!readOnly);
+            JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+            myCopyAction = new AbstractAction(ApplicationLocalize.actionApplyEditorFontSettings().get()) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    EditorColorsScheme scheme = ((ConsoleFontOptions) myOptionsPanel).getCurrentScheme();
+                    scheme.setConsoleFontName(scheme.getEditorFontName());
+                    scheme.setConsoleFontPreferences(scheme.getFontPreferences());
+                    scheme.setConsoleFontSize(scheme.getEditorFontSize());
+                    scheme.setConsoleLineSpacing(scheme.getLineSpacing());
+                    myOptionsPanel.updateOptionsList();
+                    myPreviewPanel.updateView();
+                }
+            };
+            wrapper.add(new JButton(myCopyAction));
+            top.add(wrapper, BorderLayout.SOUTH);
         }
-      }
-    });
-  }
+        else {
+            myCopyAction = null;
+        }
 
-  @RequiredUIAccess
-  public static NewColorAndFontPanel create(PreviewPanel previewPanel,
-                                            LocalizeValue category,
-                                            ColorAndFontOptions options,
-                                            Collection<String> optionList, ColorSettingsPage page) {
-    SchemesPanel schemesPanel = new SchemesPanel(options);
+        // We don't want to show non-used preview panel (it's considered to be not in use if it doesn't contain text).
+        if (myPreviewPanel.getPanel() != null && (page == null || !StringUtil.isEmptyOrSpaces(page.getDemoText()))) {
+            OnePixelSplitter splitter = new OnePixelSplitter(true);
+            splitter.setFirstComponent(top);
+            splitter.setSecondComponent((JComponent) myPreviewPanel.getPanel());
+            add(splitter, BorderLayout.CENTER);
+        }
+        else {
+            add(top, BorderLayout.CENTER);
+        }
 
-    OptionsPanel optionsPanel = new OptionsPanelImpl(options, schemesPanel, category);
+        previewPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
+            @Override
+            public void selectionInPreviewChanged(String typeToSelect) {
+                optionsPanel.selectOption(typeToSelect);
+            }
+        });
 
-    return new NewColorAndFontPanel(schemesPanel, optionsPanel, previewPanel, category, optionList, page);
-  }
+        optionsPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
+            @Override
+            public void settingsChanged() {
+                if (schemesPanel.updateDescription(true)) {
+                    optionsPanel.applyChangesToScheme();
+                    previewPanel.updateView();
+                }
+            }
 
-  public Runnable showOption(String option) {
-    return myOptionsPanel.showOption(option);
-  }
-
-  @Nonnull
-  public Set<String> processListOptions() {
-    if (myOptionList == null) {
-      return myOptionsPanel.processListOptions();
+            @Override
+            public void selectedOptionChanged(Object selected) {
+                if (UIAccess.isUIThread()) {
+                    myPreviewPanel.blinkSelectedHighlightType(selected);
+                }
+            }
+        });
+        mySchemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
+            @Override
+            public void schemeChanged(Object source) {
+                myOptionsPanel.updateOptionsList();
+                myPreviewPanel.updateView();
+                if (optionsPanel instanceof ConsoleFontOptions options) {
+                    boolean readOnly = ColorAndFontOptions.isReadOnly(options.getCurrentScheme());
+                    myCopyAction.setEnabled(!readOnly);
+                }
+            }
+        });
     }
-    else {
-      HashSet<String> result = new HashSet<>();
-      for (String s : myOptionList) {
-        result.add(s);
-      }
-      return result;
+
+    @RequiredUIAccess
+    public static NewColorAndFontPanel create(
+        PreviewPanel previewPanel,
+        LocalizeValue category,
+        ColorAndFontOptions options,
+        Collection<String> optionList,
+        ColorSettingsPage page
+    ) {
+        SchemesPanel schemesPanel = new SchemesPanel(options);
+
+        OptionsPanel optionsPanel = new OptionsPanelImpl(options, schemesPanel, category);
+
+        return new NewColorAndFontPanel(schemesPanel, optionsPanel, previewPanel, category, optionList, page);
     }
-  }
 
-  public LocalizeValue getDisplayName() {
-    return myCategory;
-  }
+    public Runnable showOption(String option) {
+        return myOptionsPanel.showOption(option);
+    }
 
-  public void reset(Object source) {
-    resetSchemesCombo(source);
-  }
+    @Nonnull
+    public Set<String> processListOptions() {
+        if (myOptionList == null) {
+            return myOptionsPanel.processListOptions();
+        }
+        else {
+            Set<String> result = new HashSet<>();
+            for (String s : myOptionList) {
+                result.add(s);
+            }
+            return result;
+        }
+    }
 
-  public void disposeUIResources() {
-    myPreviewPanel.disposeUIResources();
-  }
+    public LocalizeValue getDisplayName() {
+        return myCategory;
+    }
 
-  public void addSchemesListener(ColorAndFontSettingsListener schemeListener) {
-    mySchemesPanel.addListener(schemeListener);
-  }
+    @RequiredUIAccess
+    public void reset(Object source) {
+        resetSchemesCombo(source);
+    }
 
-  private void resetSchemesCombo(Object source) {
-    mySchemesPanel.resetSchemesCombo(source);
-  }
+    public void disposeUIResources() {
+        myPreviewPanel.disposeUIResources();
+    }
 
-  public boolean contains(EditorSchemeAttributeDescriptor descriptor) {
-    return descriptor.getGroup().getValue().equals(myCategory.get());
-  }
+    public void addSchemesListener(ColorAndFontSettingsListener schemeListener) {
+        mySchemesPanel.addListener(schemeListener);
+    }
 
-  public JComponent getPanel() {
-    return this;
-  }
+    @RequiredUIAccess
+    private void resetSchemesCombo(Object source) {
+        mySchemesPanel.resetSchemesCombo(source);
+    }
 
-  public void updatePreview() {
-    myPreviewPanel.updateView();
-  }
+    public boolean contains(EditorSchemeAttributeDescriptor descriptor) {
+        return descriptor.getGroup().getValue().equals(myCategory.get());
+    }
 
-  public void addDescriptionListener(ColorAndFontSettingsListener listener) {
-    myOptionsPanel.addListener(listener);
-  }
+    public JComponent getPanel() {
+        return this;
+    }
 
-  public boolean containsFontOptions() {
-    return false;
-  }
+    public void updatePreview() {
+        myPreviewPanel.updateView();
+    }
 
-  public ColorSettingsPage getSettingsPage() {
-    return mySettingsPage;
-  }
+    public void addDescriptionListener(ColorAndFontSettingsListener listener) {
+        myOptionsPanel.addListener(listener);
+    }
+
+    public boolean containsFontOptions() {
+        return false;
+    }
+
+    public ColorSettingsPage getSettingsPage() {
+        return mySettingsPage;
+    }
 }
