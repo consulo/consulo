@@ -15,10 +15,8 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;

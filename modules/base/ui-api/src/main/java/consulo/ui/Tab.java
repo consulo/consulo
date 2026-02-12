@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
