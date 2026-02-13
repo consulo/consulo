@@ -68,6 +68,7 @@ public class PluginsPanel implements Disposable {
 
     private final Map<PluginId, Set<PluginId>> myDependentToRequiredListMap = new HashMap<>();
 
+    @RequiredUIAccess
     public PluginsPanel() {
         myTabbedPane = new JTabbedPane();
 
@@ -103,9 +104,11 @@ public class PluginsPanel implements Disposable {
         group.add(AnSeparator.create());
         group.add(new ReloadAllAction(myRepositoryTab, myInstalledTab));
 
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(getClass().getSimpleName() + "Toolbar",
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(
+            getClass().getSimpleName() + "Toolbar",
             ActionGroup.newImmutableBuilder().add(group).build(),
-            true);
+            true
+        );
         toolbar.setTargetComponent(myTabbedPane);
 
         myTabbedPane.putClientProperty("JTabbedPane.trailingComponent", toolbar.getComponent());
@@ -213,16 +216,14 @@ public class PluginsPanel implements Disposable {
 
         if (!notInstalled.isEmpty()) {
             Messages.showWarningDialog(
-                "Plugin " + pluginDescriptor.getName() + " depends on unknown plugin" + (notInstalled.size() > 1 ? "s " : " ") + StringUtil.join(
-                    notInstalled,
-                    PluginId::toString,
-                    ", "
-                ),
+                "Plugin " + pluginDescriptor.getName() + " depends on unknown plugin" + (notInstalled.size() > 1 ? "s " : " ") +
+                    StringUtil.join(notInstalled, PluginId::toString, ", "),
                 CommonLocalize.titleWarning().get()
             );
         }
     }
 
+    @RequiredUIAccess
     public boolean appendOrUpdateDescriptor(PluginDescriptor descriptor) {
         PluginId descrId = descriptor.getPluginId();
         PluginDescriptor installed = PluginManager.findPlugin(descrId);
@@ -249,6 +250,7 @@ public class PluginsPanel implements Disposable {
         return PluginValidator.isIncompatible(descriptor) || hasProblematicDependencies(descriptor.getPluginId());
     }
 
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         String applyMessage = myInstalledTab.apply();
         myRepositoryTab.apply();

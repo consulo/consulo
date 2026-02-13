@@ -25,6 +25,7 @@ import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -58,6 +59,7 @@ public class PluginHeaderPanel {
         RESTART
     }
 
+    @RequiredUIAccess
     private ActionListener myActionListener;
     private ActionListener myEnableDisableListener;
 
@@ -66,10 +68,12 @@ public class PluginHeaderPanel {
         initComponents();
     }
 
-    public void update(@Nonnull PluginDescriptor plugin,
-                       @Nullable PluginTab installedTab,
-                       @Nonnull List<PluginDescriptor> allPlugins,
-                       boolean forceInstall) {
+    public void update(
+        @Nonnull PluginDescriptor plugin,
+        @Nullable PluginTab installedTab,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        boolean forceInstall
+    ) {
         PluginAction action = PluginAction.INSTALL;
 
         myRoot.setVisible(true);
@@ -182,7 +186,8 @@ public class PluginHeaderPanel {
                     if (installedTab != null) {
                         installedTab.apply();
                     }
-                    DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
+                    DialogWrapper dialog =
+                        DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
                     if (dialog != null) {
                         dialog.doOKActionPublic();
 

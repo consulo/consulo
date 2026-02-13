@@ -31,6 +31,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,15 +48,16 @@ import java.util.stream.Collectors;
  */
 public class InstallPluginAction {
     @RequiredUIAccess
-    public static void install(@Nonnull UIAccess uiAccess,
-                               @Nullable PluginsPanel pluginsPanel,
-                               @Nullable PluginTab installedTab,
-                               @Nullable Project project,
-                               @Nonnull PluginDescriptor descr,
-                               @Nonnull List<PluginDescriptor> allPlugins,
-                               boolean alwaysShowDialog,
-                               @Nullable Runnable onSuccess) {
-
+    public static void install(
+        @Nonnull UIAccess uiAccess,
+        @Nullable PluginsPanel pluginsPanel,
+        @Nullable PluginTab installedTab,
+        @Nullable Project project,
+        @Nonnull PluginDescriptor descr,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        boolean alwaysShowDialog,
+        @Nullable Runnable onSuccess
+    ) {
         List<PluginDescriptor> list = new ArrayList<>();
         PluginNode pluginNode = null;
         if (descr instanceof PluginNode) {
@@ -76,7 +78,7 @@ public class InstallPluginAction {
                 if (Messages.showOkCancelDialog(
                     "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
                     Application.get().getName().get(),
-                    Messages.getWarningIcon()
+                    UIUtil.getWarningIcon()
                 ) != Messages.OK) {
                     return;
                 }
@@ -108,14 +110,18 @@ public class InstallPluginAction {
     }
 
     @RequiredUIAccess
-    public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                                    @Nonnull List<PluginDescriptor> toInstall,
-                                                    @Nonnull List<PluginDescriptor> allPlugins,
-                                                    boolean alwaysShowDialog,
-                                                    @Nullable Consumer<Collection<PluginDescriptor>> afterCallback) {
+    public static boolean downloadAndInstallPlugins(
+        @Nullable Project project,
+        @Nonnull List<PluginDescriptor> toInstall,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        boolean alwaysShowDialog,
+        @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
+    ) {
         Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
-        List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
+        List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream()
+            .map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x))
+            .collect(Collectors.toList());
         PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_INSTALL, remap);
         Predicate<PluginId> greenNodeStrategy = pluginId -> {
             // do not mark target node as green, only depend
@@ -135,8 +141,11 @@ public class InstallPluginAction {
             return dialog.showAndGet();
         }
     }
-    private static void installedPluginsToModel(@Nullable PluginsPanel pluginsPanel,
-                                                Collection<PluginDescriptor> list) {
+
+    private static void installedPluginsToModel(
+        @Nullable PluginsPanel pluginsPanel,
+        Collection<PluginDescriptor> list
+    ) {
         for (PluginDescriptor pluginNode : list) {
             PluginId id = pluginNode.getPluginId();
             InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();

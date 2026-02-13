@@ -105,7 +105,13 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends PluginDescriptor> list, PluginDescriptor value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(
+        JList<? extends PluginDescriptor> list,
+        PluginDescriptor value,
+        int index,
+        boolean isSelected,
+        boolean cellHasFocus
+    ) {
         myName.clear();
 
         if (value == null) {
@@ -120,7 +126,8 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         if (!isSelected && !cellHasFocus) {
             if (value.isDeleted()) {
                 backgroundColor = LightColors.RED;
-            } else if (PluginsPanel.isDownloaded(value))  {
+            }
+            else if (PluginsPanel.isDownloaded(value)) {
                 backgroundColor = LightColors.SLIGHTLY_GREEN;
             }
         }
@@ -156,15 +163,17 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         return myPanel;
     }
 
-    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode) {
-        PluginDescriptor installed = PluginManager.findPlugin(pluginNode.getPluginId());
-        if (PluginsPanel.isDownloaded(pluginNode) || installed != null && InstalledPluginsState.getInstance().wasUpdated(installed.getPluginId())) {
+    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginDescriptor) {
+        PluginDescriptor installed = PluginManager.findPlugin(pluginDescriptor.getPluginId());
+        if (PluginsPanel.isDownloaded(pluginDescriptor)
+            || installed != null && InstalledPluginsState.getInstance().wasUpdated(installed.getPluginId())) {
             if (!isSelected) {
                 myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
             }
         }
-        else if (pluginNode instanceof PluginNode && ((PluginNode) pluginNode).getInstallStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
-            PluginId pluginId = pluginNode.getPluginId();
+        else if (pluginDescriptor instanceof PluginNode pluginNode1 && pluginNode1.getInstallStatus() == PluginNode.STATUS_INSTALLED
+            || installed != null) {
+            PluginId pluginId = pluginDescriptor.getPluginId();
             boolean hasNewerVersion = InstalledPluginsState.getInstance().hasNewerVersion(pluginId);
             if (hasNewerVersion) {
                 if (!isSelected) {
@@ -173,10 +182,10 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
             }
         }
 
-        if (myPluginsPanel != null && myPluginsPanel.isIncompatible(pluginNode)) {
-            myPanel.setToolTipText(whyIncompatible(pluginNode));
+        if (myPluginsPanel != null && myPluginsPanel.isIncompatible(pluginDescriptor)) {
+            myPanel.setToolTipText(whyIncompatible(pluginDescriptor));
             if (!isSelected) {
-                myName.setForeground(pluginNode.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM ? JBColor.GRAY : JBColor.RED);
+                myName.setForeground(pluginDescriptor.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM ? JBColor.GRAY : JBColor.RED);
             }
         }
     }
@@ -194,10 +203,14 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
 
             sb.append(ExternalServiceLocalize.pluginManagerIncompatibleNotLoadedTooltip()).append('\n');
 
-            String deps = StringUtil.join(required, id -> {
-                PluginDescriptor plugin = PluginManager.findPlugin(id);
-                return plugin != null ? plugin.getName() : id.getIdString();
-            }, ", ");
+            String deps = StringUtil.join(
+                required,
+                id -> {
+                    PluginDescriptor plugin = PluginManager.findPlugin(id);
+                    return plugin != null ? plugin.getName() : id.getIdString();
+                },
+                ", "
+            );
             sb.append(ExternalServiceLocalize.pluginManagerIncompatibleDepsTooltip(required.size(), deps));
 
             return sb.toString();

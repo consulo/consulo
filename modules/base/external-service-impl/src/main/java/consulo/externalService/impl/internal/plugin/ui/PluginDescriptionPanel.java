@@ -48,12 +48,12 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
 
 /**
  * @author VISTALL
- * @since 08/11/2021
+ * @since 2021-11-08
  */
 public class PluginDescriptionPanel {
     // repository not support rating. disable stars for now
     public static final boolean ENABLED_STARS = true;
-    
+
     private static final float mgByte = 1024.0f * 1024.0f;
     private static final float kByte = 1024.0f;
 
@@ -123,11 +123,13 @@ public class PluginDescriptionPanel {
         myPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
     }
 
-    public void update(@Nullable PluginDescriptor plugin,
-                       @Nullable PluginTab installedTab,
-                       @Nonnull List<PluginDescriptor> allPlugins,
-                       @Nullable String filter,
-                       boolean forceInstall) {
+    public void update(
+        @Nullable PluginDescriptor plugin,
+        @Nullable PluginTab installedTab,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        @Nullable String filter,
+        boolean forceInstall
+    ) {
         if (plugin == null) {
             setTextValue(null, filter, myDescriptionTextArea);
             myPluginHeaderPanel.getPanel().setVisible(false);
@@ -156,7 +158,9 @@ public class PluginDescriptionPanel {
         }
 
         if (noPermissions) {
-            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">").append(XmlStringUtil.escapeString("<no special permissions>")).append("</span><br>");
+            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">")
+                .append(XmlStringUtil.escapeString("<no special permissions>"))
+                .append("</span><br>");
         }
 
         sb.append("<br>");
@@ -185,7 +189,13 @@ public class PluginDescriptionPanel {
                 sb.append("&nbsp;&nbsp;").append(vendor);
             }
             if (!isEmptyOrSpaces(vendorEmail)) {
-                sb.append("&nbsp;").append(HTML_PREFIX).append("mailto:").append(vendorEmail).append("\">").append(vendorEmail).append(HTML_SUFFIX);
+                sb.append("&nbsp;")
+                    .append(HTML_PREFIX)
+                    .append("mailto:")
+                    .append(vendorEmail)
+                    .append("\">")
+                    .append(vendorEmail)
+                    .append(HTML_SUFFIX);
             }
             if (!isEmptyOrSpaces(vendorUrl)) {
                 sb.append("&nbsp;").append(composeHref(vendorUrl));
@@ -258,7 +268,11 @@ public class PluginDescriptionPanel {
 
             for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
                 sb.append("&nbsp;&nbsp;");
-                sb.append("<a href=\"").append("plugin://").append(pluginDescriptor.getPluginId()).append("\">").append(pluginDescriptor.getName());
+                sb.append("<a href=\"")
+                    .append("plugin://")
+                    .append(pluginDescriptor.getPluginId())
+                    .append("\">")
+                    .append(pluginDescriptor.getName());
                 sb.append("</a>");
                 sb.append("<br>");
             }

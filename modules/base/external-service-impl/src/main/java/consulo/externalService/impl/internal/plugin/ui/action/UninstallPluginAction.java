@@ -27,6 +27,7 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class UninstallPluginAction {
             host.getMainPanel(),
             message.get(),
             ExternalServiceLocalize.titlePluginUninstall().get(),
-            Messages.getQuestionIcon()
+            UIUtil.getQuestionIcon()
         ) != Messages.YES) {
             return;
         }
@@ -70,7 +71,7 @@ public class UninstallPluginAction {
                     host.getMainPanel(),
                     message.get(),
                     ExternalServiceLocalize.titlePluginUninstall().get(),
-                    Messages.getQuestionIcon()
+                    UIUtil.getQuestionIcon()
                 ) == Messages.YES);
             }
 
@@ -80,7 +81,9 @@ public class UninstallPluginAction {
         }
 
         if (!uninstalledPluginIds.isEmpty()) {
-            Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
+            Application.get().getMessageBus()
+                .syncPublisher(PluginActionListener.class)
+                .pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
         }
     }
 

@@ -57,8 +57,8 @@ public class InstalledPluginsTab extends PluginTab {
         reload();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void reload() {
         List<PluginDescriptor> pluginDescriptors = new ArrayList<>(PluginManager.getPlugins());
         pluginDescriptors.addAll(InstalledPluginsState.getInstance().getAllPlugins());
@@ -123,10 +123,14 @@ public class InstalledPluginsTab extends PluginTab {
         if (!dependentToRequiredListMap.isEmpty()) {
             return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
                 (dependentToRequiredListMap.size() == 1 ? " " : "s ") +
-                StringUtil.join(dependentToRequiredListMap.keySet(), pluginId -> {
-                    PluginDescriptor ideaPluginDescriptor = PluginManager.findPlugin(pluginId);
-                    return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
-                }, ", ") +
+                StringUtil.join(
+                    dependentToRequiredListMap.keySet(),
+                    pluginId -> {
+                        PluginDescriptor ideaPluginDescriptor = PluginManager.findPlugin(pluginId);
+                        return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
+                    },
+                    ", "
+                ) +
                 " won't be able to load.</body></html>";
         }
         return super.canApply();

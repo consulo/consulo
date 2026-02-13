@@ -143,8 +143,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                 }
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void onSuccess() {
                 Collection<Developer> developers = myDevelopers[0];
                 myDetailsTabForm.setDevelopers(developers);
@@ -265,6 +265,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createCenterPanel() {
         DefaultActionGroup goBack = new DefaultActionGroup();
         BackAction back = new BackAction();
@@ -448,7 +449,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private void updateAttachmentWarning(AbstractMessage message) {
         List<Attachment> includedAttachments;
         if (message instanceof LogMessageEx logMessageEx
-                && !(includedAttachments = ContainerUtil.filter(logMessageEx.getAttachments(), Attachment::isIncluded)).isEmpty()) {
+            && !(includedAttachments = ContainerUtil.filter(logMessageEx.getAttachments(), Attachment::isIncluded)).isEmpty()) {
             myAttachmentWarningPanel.setVisible(true);
             if (includedAttachments.size() == 1) {
                 myAttachmentWarningLabel.setHtmlText(
@@ -602,6 +603,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myForeignPluginWarningPanel.setVisible(false);
     }
 
+    @RequiredUIAccess
     private void updateTabs() {
         myMute = true;
         try {

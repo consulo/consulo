@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.action;
 
-import consulo.application.CommonBundle;
 import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.container.internal.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
@@ -26,6 +25,7 @@ import consulo.externalService.impl.internal.update.PluginDownloader;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -46,8 +46,8 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
         myPluginsPanel = pluginsPanel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
             @RequiredUIAccess
@@ -68,12 +68,14 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
         try {
             PluginDescriptor pluginDescriptor = InstalledPluginsTab.loadDescriptorFromArchive(file);
             if (pluginDescriptor == null) {
-                Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
+                Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonLocalize.titleError().get());
                 return;
             }
             if (PluginValidator.isIncompatible(pluginDescriptor)) {
-                Messages.showErrorDialog("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation",
-                    CommonBundle.getErrorTitle());
+                Messages.showErrorDialog(
+                    "Plugin " + pluginDescriptor.getName() + " is incompatible with current installation",
+                    CommonLocalize.titleError().get()
+                );
                 return;
             }
             PluginDescriptor alreadyInstalledPlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
@@ -94,11 +96,12 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
             else {
                 Messages.showInfoMessage(myPluginsPanel.getComponent(),
                     "Plugin " + pluginDescriptor.getName() + " was already installed",
-                    CommonBundle.getWarningTitle());
+                    CommonLocalize.titleWarning().get()
+                );
             }
         }
         catch (IOException ex) {
-            Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
+            Messages.showErrorDialog(ex.getMessage(), CommonLocalize.titleError().get());
         }
     }
 }
