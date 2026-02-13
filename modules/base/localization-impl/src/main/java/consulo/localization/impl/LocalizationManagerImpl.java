@@ -25,6 +25,9 @@ import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizationManagerListener;
 import consulo.localization.LocalizedValue;
 import consulo.localization.internal.LocalizationManagerEx;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.io.URLUtil;
@@ -44,7 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 2019-04-11
  */
 @SuppressWarnings("deprecation")
-public class LocalizationManagerImpl implements LocalizationManager, LocalizationManagerEx {
+public class LocalizationManagerImpl implements LocalizeManager, LocalizationManagerEx {
     private record PluginFileInfo(String id, PluginDescriptor descriptor, String path, Set<String> files) {
     }
 
@@ -323,13 +326,13 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
 
     @Nonnull
     @Override
-    public LocalizedValue fromStringKey(@Nonnull String localizeKeyInfo) {
+    public LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
         if (values.size() != 2) {
-            return LocalizedValue.of(localizeKeyInfo);
+            return LocalizeValue.of(localizeKeyInfo);
         }
 
-        LocalizationKey localizationKey = LocalizationKey.of(values.get(0), values.get(1));
+        LocalizeKey localizationKey = LocalizeKey.of(values.get(0), values.get(1));
         return localizationKey.getValue();
     }
 

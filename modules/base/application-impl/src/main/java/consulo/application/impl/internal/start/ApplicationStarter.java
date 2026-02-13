@@ -36,8 +36,6 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.localization.LocalizationManager;
 import consulo.localization.internal.LocalizationManagerEx;
-import consulo.localize.LocalizeManager;
-import consulo.localize.internal.LocalizeManagerEx;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.platform.Platform;
@@ -128,7 +126,6 @@ public abstract class ApplicationStarter {
 
         StatCollector libraryStats = new StatCollector();
         LocalizationManagerEx localizationManager = (LocalizationManagerEx) LocalizationManager.get();
-        LocalizeManagerEx localizeManager = (LocalizeManagerEx) LocalizeManager.get();
         BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
 
         Map<String, Set<String>> filesWithMarkers = new HashMap<>();
@@ -142,7 +139,6 @@ public abstract class ApplicationStarter {
         libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
         libraryStats.markWith("localization.initialize", localizationManager::initialize);
-        libraryStats.markWith("localize.initialize", localizeManager::initialize);
         libraryStats.markWith(
             "icon.initialize",
             () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY))

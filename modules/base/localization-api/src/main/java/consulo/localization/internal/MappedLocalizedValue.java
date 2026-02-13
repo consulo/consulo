@@ -26,7 +26,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2020-07-30
  */
-public final class MappedLocalizedValue extends CachingLocalizedValue {
+public /*final*/ class MappedLocalizedValue extends CachingLocalizedValue {
     @Nonnull
     private final LocalizedValue myDelegate;
     @Nonnull

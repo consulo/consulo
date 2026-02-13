@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2021-09-24
  */
-public final class JoinedLocalizedValue extends AbstractJoinedLocalizedValue {
+public /*final*/ class JoinedLocalizedValue extends AbstractJoinedLocalizedValue {
     public JoinedLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizedValue[] values) {
         super(manager, values);
     }

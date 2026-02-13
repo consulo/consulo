@@ -15,40 +15,46 @@
  */
 package consulo.localize.internal;
 
-import consulo.localization.LocalizationManager;
+import consulo.localization.LocalizedValue;
 import consulo.localization.internal.EmptyLocalizedValue;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * @author UNV
  * @since 2026-01-12
  */
 @SuppressWarnings("deprecation")
-public final class EmptyLocalizeValue extends EmptyLocalizedValue implements LocalizeValue {
-    public static final EmptyLocalizeValue VALUE = new EmptyLocalizeValue();
+public class LocalizedValueWrapper implements LocalizeValue {
+    private final LocalizedValue myLocalizedValue;
 
-    @Nonnull
-    @Override
-    public LocalizeValue map(@Nonnull Function<String, String> mapper) {
-        return this;
+    @SuppressWarnings("deprecation")
+    public static LocalizeValue wrap(LocalizedValue localizedValue) {
+        return switch (localizedValue) {
+            case LocalizeValue lv -> lv;
+            case EmptyLocalizedValue empty -> EmptyLocalizeValue.VALUE;
+            default -> new LocalizedValueWrapper(localizedValue);
+        };
     }
 
     @Nonnull
     @Override
-    public LocalizeValue map(@Nonnull BiFunction<LocalizationManager, String, String> mapper) {
-        return this;
+    public String getId() {
+        return myLocalizedValue.getId();
     }
 
     @Nonnull
     @Override
-    public LocalizeValue orIfEmpty(LocalizeValue defaultValue) {
-        return defaultValue;
+    public String getValue() {
+        return myLocalizedValue.getValue();
     }
 
-    protected EmptyLocalizeValue() {
+    @Override
+    public byte getModificationCount() {
+        return myLocalizedValue.getModificationCount();
+    }
+
+    private LocalizedValueWrapper(LocalizedValue localizedValue) {
+        myLocalizedValue = localizedValue;
     }
 }
