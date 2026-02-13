@@ -1,12 +1,18 @@
 package consulo.externalService.impl.internal.errorReport;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.logging.attachment.Attachment;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.Label;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -62,6 +68,7 @@ public class AttachmentsTabForm {
         };
 
     public AttachmentsTabForm() {
+        createUIComponents();
         myFileTextArea.getTextComponent().setEditable(false);
         myFileTextArea.setTitle(ExternalServiceLocalize.errorDialogFilecontentTitle().get());
         myTable.getSelectionModel().addListSelectionListener(e -> {
@@ -123,5 +130,75 @@ public class AttachmentsTabForm {
                 break;
             }
         }
+    }
+
+    private void createUIComponents() {
+        myContentPane = new JPanel();
+        myContentPane.setLayout(new GridLayoutManager(3, 1, JBUI.insets(5), -1, 5));
+        myContentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), null));
+        JBScrollPane jBScrollPane1 = new JBScrollPane();
+        myContentPane.add(
+            jBScrollPane1,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myTable = new TableView<>();
+        jBScrollPane1.setViewportView(myTable);
+        myFileTextArea = new LabeledTextComponent();
+        myContentPane.add(
+            myFileTextArea.getContentPane(),
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Label label1 = Label.create(
+            "<html>" +
+                "These files will be attached to the bug report. We recommend to include all the files providing maximum information.<br/>" +
+                "<b>Note:</b> all the data you send will be kept private." +
+                "</html>"
+        );
+        myContentPane.add(
+            TargetAWT.to(label1),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
     }
 }

@@ -1,9 +1,13 @@
 package consulo.externalService.impl.internal.errorReport;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.ui.ex.awt.ComboboxSpeedSearch;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ComparatorUtil;
 import jakarta.annotation.Nullable;
 
@@ -22,13 +26,14 @@ public class DetailsTabForm {
     private LabeledTextComponent myCommentsArea;
     private JPanel myDetailsHolder;
     private JButton myAnalyzeStacktraceButton;
-    private JComboBox myAssigneeComboBox;
+    private JComboBox<Developer> myAssigneeComboBox;
     private JPanel myAssigneePanel;
 
     private long myAssigneeId;
     private boolean myProcessEvents = true;
 
     public DetailsTabForm(@Nullable Action analyzeAction, boolean internalMode) {
+        createUIComponents();
         myCommentsArea.setTitle(ExternalServiceLocalize.errorDialogCommentPrompt().get());
         myCommentsArea.setLabelPosition(BorderLayout.NORTH);
         myDetailsPane.setBackground(UIUtil.getTextFieldBackground());
@@ -42,12 +47,7 @@ public class DetailsTabForm {
         }
         myAssigneeComboBox.setRenderer(new DeveloperRenderer(myAssigneeComboBox.getRenderer()));
         myAssigneeComboBox.setPrototypeDisplayValue(new Developer(0, "Here Goes Some Very Long String"));
-        myAssigneeComboBox.addActionListener(new ActionListenerProxy(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myAssigneeId = getAssigneeId();
-            }
-        }));
+        myAssigneeComboBox.addActionListener(new ActionListenerProxy(e -> myAssigneeId = getAssigneeId()));
         new ComboboxSpeedSearch(myAssigneeComboBox) {
             @Override
             protected String getElementText(Object element) {
@@ -93,11 +93,13 @@ public class DetailsTabForm {
         myAssigneePanel.setVisible(visible);
     }
 
+    @RequiredUIAccess
     public void setDevelopers(Collection<Developer> developers) {
         myAssigneeComboBox.setModel(new DefaultComboBoxModel(developers.toArray()));
         updateSelectedDeveloper();
     }
 
+    @RequiredUIAccess
     public void setAssigneeId(long assigneeId) {
         myAssigneeId = assigneeId;
         if (myAssigneeComboBox.getItemCount() > 0) {
@@ -105,12 +107,13 @@ public class DetailsTabForm {
         }
     }
 
+    @RequiredUIAccess
     private void updateSelectedDeveloper() {
         myProcessEvents = false;
 
         Integer index = null;
-        for (int i = 0; i < myAssigneeComboBox.getItemCount(); i++) {
-            Developer developer = (Developer) myAssigneeComboBox.getItemAt(i);
+        for (int i = 0, n = myAssigneeComboBox.getItemCount(); i < n; i++) {
+            Developer developer = myAssigneeComboBox.getItemAt(i);
             if (ComparatorUtil.equalsNullable(developer.getId(), myAssigneeId)) {
                 index = i;
                 break;
@@ -121,6 +124,7 @@ public class DetailsTabForm {
         myProcessEvents = true;
     }
 
+    @RequiredUIAccess
     private void setSelectedAssigneeIndex(Integer index) {
         if (index == null) {
             myAssigneeComboBox.setSelectedItem(null);
@@ -137,6 +141,154 @@ public class DetailsTabForm {
 
     public void addAssigneeListener(ActionListener listener) {
         myAssigneeComboBox.addActionListener(new ActionListenerProxy(listener));
+    }
+
+    private void createUIComponents() {
+        myContentPane = new JPanel();
+        myContentPane.setLayout(new GridLayoutManager(4, 1, JBUI.emptyInsets(), -1, -1));
+        myContentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null));
+        myDetailsHolder = new JPanel();
+        myDetailsHolder.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
+        myContentPane.add(
+            myDetailsHolder,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JBScrollPane jBScrollPane1 = new JBScrollPane();
+        jBScrollPane1.setHorizontalScrollBarPolicy(32);
+        myDetailsHolder.add(
+            jBScrollPane1,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myDetailsPane = new JTextPane();
+        myDetailsPane.setEditable(false);
+        myDetailsPane.putClientProperty("JEditorPane.honorDisplayProperties", Boolean.TRUE);
+        jBScrollPane1.setViewportView(myDetailsPane);
+        myAnalyzeStacktraceButton = new JButton();
+        myAnalyzeStacktraceButton.setText("Analyze Stacktrace");
+        myContentPane.add(
+            myAnalyzeStacktraceButton,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_EAST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myAssigneePanel = new JPanel();
+        myAssigneePanel.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
+        myContentPane.add(
+            myAssigneePanel,
+            new GridConstraints(
+                3,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_VERTICAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Label label1 = Label.create(LocalizeValue.localizeTODO("&Assignee:"));
+        myAssigneePanel.add(
+            TargetAWT.to(label1),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myAssigneeComboBox = new JComboBox<>();
+        myAssigneePanel.add(
+            myAssigneeComboBox,
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myCommentsArea = new LabeledTextComponent();
+        myContentPane.add(
+            myCommentsArea.getContentPane(),
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(-1, 150),
+                null,
+                0,
+                false
+            )
+        );
+        label1.setTarget(TargetAWT.wrap(myAssigneeComboBox));
     }
 
     private class ActionListenerProxy implements ActionListener {

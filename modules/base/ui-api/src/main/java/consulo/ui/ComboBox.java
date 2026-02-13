@@ -152,6 +152,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
         setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
     }
 
+    @RequiredUIAccess
     void setValueByIndex(int index);
 
     @RequiredUIAccess
