@@ -1709,52 +1709,6 @@ please.edit.repository.url:
     text: Please edit repository URL
 please.input.repository.url:
     text: Please input repository URL
-plugin.advestiser.notification.install.link:
-    text: Install {0, choice, 1#plugin|2#plugins}
-plugin.advestiser.notification.text:
-    text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
-plugin.deleted.status.tooltip:
-    text: Plugin will be deleted on next startup
-plugin.download.status.tooltip:
-    text: Plugin will be activated on next startup
-plugin.info.not.available:
-    text: n/a
-plugin.info.unknown:
-    text: unknown
-plugin.install.dialog.title:
-    text: Plugin Install
-plugin.is.already.installed.status.tooltip:
-    text: Plugin is installed
-plugin.manager.dependencies.detected.message:
-    text: The plugin you want to install requires other plugin{0, choice, 1#|2#s} ({1}) which have to be installed as well. Proceed?
-plugin.manager.dependencies.detected.title:
-    text: Plugin Dependencies Detected
-plugin.manager.enable.column.title:
-    text: Enable
-plugin.manager.incompatible.deps.tooltip:
-    text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
-plugin.manager.incompatible.not.loaded.tooltip:
-    text: The plugin was not loaded
-plugin.manager.incompatible.tooltip:
-    text: Plugin is incompatible with current installation
-plugin.manager.optional.dependencies.detected.message:
-    text: The plugin you want to install optionally requires other plugin{0, choice, 1#|2#s} ({1}). Should those be installed as well?
-plugin.manager.tooltip.warning:
-    text: Required plugin ''{0}'' is not included
-plugin.outdated.version.status.tooltip:
-    text: Plugin has newer version
-plugin.size.label:
-    text: 'Size:'
-plugin.status.available:
-    text: Available
-plugin.status.installed:
-    text: Installed
-plugin.status.not.specified:
-    text: (not specified)
-plugin.updated.status.tooltip:
-    text: Updated plugin will be activated on next startup
-plugin.version.label:
-    text: Version
 popup.title.edit.shortcuts:
     text: Edit Shortcuts
 popup.title.play.saved.macros:
