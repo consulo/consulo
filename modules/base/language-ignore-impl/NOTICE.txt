@@ -1,0 +1,1 @@
+Contains some parts from https://github.com/JetBrains/idea-gitignore

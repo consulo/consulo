@@ -90,6 +90,8 @@
     <module>modules/base/module-content-impl</module>
     <module>modules/base/file-chooser-api</module>
     <module>modules/base/language-api</module>
+    <module>modules/base/language-ignore-api</module>
+    <module>modules/base/language-ignore-impl</module>
     <module>modules/base/index-io</module>
     <module>modules/base/datacontext-api</module>
     <module>modules/base/diagram-api</module>
