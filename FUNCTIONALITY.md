@@ -56,7 +56,7 @@
 | [.NET (.NET Core)](https://github.com/consulo/consulo-dotnet-core)      | 🟢 [MSBuild](https://github.com/consulo/consulo-msbuild) | 🟢 | 🔵
 | [Unity](https://github.com/consulo/consulo-unity3d)                     | 🟢 | 🟢 | 🟢
 | [PHP](https://github.com/consulo/consulo-php)                           | 🔵 | 🔵 | 🔴
-| [Node.js](https://github.com/consulo/consulo-nodejs)                    | 🔵 | 🔵 | 🔴
+| [Node.js](https://github.com/consulo/consulo-nodejs)                    | 🔵 | 🔵 | 🔵
 | [JavaScript in Chrome](https://github.com/consulo/chrome-consulo-debugger-extension)  | ⚪ | ⚪ | 🔵
 
 ### Version Control
