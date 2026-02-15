@@ -53,10 +53,11 @@
 | [Java](https://github.com/consulo/consulo-java) | 🟢 [Maven](https://github.com/consulo/consulo-maven) / 🟢 [Gradle](https://github.com/consulo/consulo-gradle) | 🟢 | 🟢
 | [.NET Framework](https://github.com/consulo/consulo-dotnet-microsoft)   | 🟢 [MSBuild](https://github.com/consulo/consulo-msbuild) | 🟢 | 🟢
 | [Mono (.NET Framework)](https://github.com/consulo/consulo-dotnet-mono) | 🟢 [MSBuild](https://github.com/consulo/consulo-msbuild) | 🟢 | 🟢
-| [.NET (.NET Core)](https://github.com/consulo/consulo-dotnet-core)      | 🟢 [MSBuild](https://github.com/consulo/consulo-msbuild) | 🟢 | 🔴
+| [.NET (.NET Core)](https://github.com/consulo/consulo-dotnet-core)      | 🟢 [MSBuild](https://github.com/consulo/consulo-msbuild) | 🟢 | 🔵
 | [Unity](https://github.com/consulo/consulo-unity3d)                     | 🟢 | 🟢 | 🟢
 | [PHP](https://github.com/consulo/consulo-php)                           | 🔵 | 🔵 | 🔴
 | [Node.js](https://github.com/consulo/consulo-nodejs)                    | 🔵 | 🔵 | 🔴
+| [JavaScript in Chrome](https://github.com/consulo/chrome-consulo-debugger-extension)  | ⚪ | ⚪ | 🔵
 
 ### Version Control
 | Name | Cloning | Committing | Viewing Log|
@@ -67,6 +68,7 @@
 
 
 Legend 
+  - ⚪ ▸ not applicable
   - 🟢 ▸ fully supported
   - 🔵 ▸ partially supported
   - 🔴 ▸ not supported
