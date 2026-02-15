@@ -32,66 +32,81 @@ import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.util.io.StreamUtil;
 import jakarta.annotation.Nonnull;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
- * @since 04/09/2021
+ * @since 2021-09-04
  */
 @ExtensionImpl
 public class RedirectAuthHttpHandler extends HttpRequestHandler {
-  private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
+    private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
 
-  public static class OAuthRequestResult {
-    public UserAccount userAccount;
-    public String token;
-  }
-
-  @Override
-  public boolean isSupported(HttpRequest request) {
-    return request.method() == HTTPMethod.GET && HttpRequestHandler.checkPrefix(request.uri(), "redirectAuth");
-  }
-
-  @Nonnull
-  @Override
-  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
-    String token = request.getParameterValue("token");
-    if (token != null) {
-      doGetToken(token);
+    public static class OAuthRequestResult {
+        public UserAccount userAccount;
+        public String token;
     }
 
-    InputStream stream = RedirectAuthHttpHandler.class.getResourceAsStream("/html/redirectAuth.html");
+    @Override
+    public boolean isSupported(HttpRequest request) {
+        return request.method() == HTTPMethod.GET && HttpRequestHandler.checkPrefix(request.uri(), "redirectAuth");
+    }
 
-    String html = StreamUtil.readText(stream, StandardCharsets.UTF_8);
+    @Nonnull
+    @Override
+    public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+        String token = request.getParameterValue("token");
+        if (token != null) {
+            doGetToken(token);
+        }
 
-    return HttpResponse.ok("text/html; charset=utf-8", html.getBytes(StandardCharsets.UTF_8));
-  }
+        InputStream stream = RedirectAuthHttpHandler.class.getResourceAsStream("/html/redirectAuth.html");
 
-  private static void doGetToken(String sharedToken) {
-    Task.Backgroundable.queue(null, "Requesting oauth token...", indicator -> {
-      UIAccess uiAccess = Application.get().getLastUIAccess();
+        String html = StreamUtil.readText(stream, StandardCharsets.UTF_8);
 
-      try {
-        String json = HttpRequests.request(WebServiceApi.OAUTH_API.buildUrl("request?token=" + sharedToken)).readString(indicator);
+        return HttpResponse.ok("text/html; charset=utf-8", html.getBytes(StandardCharsets.UTF_8));
+    }
 
-        OAuthRequestResult requestResult = new Gson().fromJson(json, OAuthRequestResult.class);
+    private static void doGetToken(String sharedToken) {
+        Task.Backgroundable.queue(
+            null,
+            "Requesting oauth token...",
+            indicator -> {
+                UIAccess uiAccess = Application.get().getLastUIAccess();
 
-        ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
+                try {
+                    String url = new URIBuilder(WebServiceApi.OAUTH_API.buildUrl("request"))
+                        .addParameter("token", sharedToken)
+                        .toString();
 
-        ((ExternalServiceConfigurationImpl)externalServiceConfiguration).authorize(requestResult.userAccount.username, requestResult.token);
+                    String json = HttpRequests.request(url).readString(indicator);
 
-        externalServiceConfiguration.updateIcon();
+                    OAuthRequestResult requestResult = new Gson().fromJson(json, OAuthRequestResult.class);
 
-        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + requestResult.userAccount.username)).showAsync());
-      }
-      catch (IOException e) {
-        LOG.warn(e);
+                    ExternalServiceConfiguration externalServiceConfiguration =
+                        Application.get().getInstance(ExternalServiceConfiguration.class);
 
-        uiAccess.give(() -> Alerts.okError(LocalizeValue.localizeTODO("Failed to request oauth token")).showAsync());
-      }
-    });
-  }
+                    ((ExternalServiceConfigurationImpl) externalServiceConfiguration).authorize(
+                        requestResult.userAccount.username,
+                        requestResult.token
+                    );
+
+                    externalServiceConfiguration.updateIcon();
+
+                    uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + requestResult.userAccount.username))
+                        .showAsync());
+                }
+                catch (IOException | URISyntaxException e) {
+                    LOG.warn(e);
+
+                    uiAccess.give(() -> Alerts.okError(LocalizeValue.localizeTODO("Failed to request oauth token")).showAsync());
+                }
+            }
+        );
+    }
 }
