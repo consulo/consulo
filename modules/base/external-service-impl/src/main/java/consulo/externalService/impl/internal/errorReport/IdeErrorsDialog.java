@@ -15,6 +15,8 @@
  */
 package consulo.externalService.impl.internal.errorReport;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.ApplicationPropertiesComponent;
@@ -109,8 +111,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private boolean myMute;
     private final Project myProject;
 
+    @RequiredUIAccess
     public IdeErrorsDialog(MessagePool messagePool, @Nullable Project project, @Nullable LogMessage defaultMessage) {
         super(project, true);
+        createUIComponents();
         myMessagePool = messagePool;
         myProject = project;
         myInternalMode = ApplicationProperties.isInSandbox();
@@ -120,7 +124,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         if (defaultMessage == null || !moveSelectionToMessage(defaultMessage)) {
             moveSelectionToEarliestMessage();
         }
-        setCancelButtonText(CommonLocalize.closeActionName().get());
+        setCancelButtonText(CommonLocalize.closeActionName());
         setModal(false);
         loadDevelopersAsynchronously();
     }
@@ -153,6 +157,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         ProgressManager.getInstance().run(task);
     }
 
+    @RequiredUIAccess
     private boolean moveSelectionToMessage(LogMessage defaultMessage) {
         int index = -1;
         for (int i = 0; i < myMergedMessages.size(); i++) {
@@ -218,6 +223,82 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     protected void createDefaultActions() {
         super.createDefaultActions();
         getCancelAction().putValue(DEFAULT_ACTION, Boolean.TRUE);
+    }
+
+    private void createUIComponents() {
+        myContentPane = new JPanel();
+        myContentPane.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        myContentPane.add(
+            panel1,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new BorderLayout(0, 0));
+        panel1.add(panel2, BorderLayout.NORTH);
+        JPanel panel3 = new JPanel();
+        panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        panel2.add(panel3, BorderLayout.WEST);
+        myBackButtonPanel = new JPanel();
+        myBackButtonPanel.setLayout(new BorderLayout(0, 0));
+        panel3.add(myBackButtonPanel);
+        myCountLabel = new JLabel();
+        myCountLabel.setHorizontalAlignment(0);
+        myCountLabel.setHorizontalTextPosition(0);
+        myCountLabel.setText("1 of 3");
+        panel3.add(myCountLabel);
+        myNextButtonPanel = new JPanel();
+        myNextButtonPanel.setLayout(new BorderLayout(0, 0));
+        panel3.add(myNextButtonPanel);
+        JPanel panel4 = new JPanel();
+        panel4.setLayout(new BorderLayout(0, 3));
+        panel2.add(panel4, BorderLayout.CENTER);
+        panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0), null));
+        JPanel panel5 = new JPanel();
+        panel5.setLayout(new BorderLayout(0, 0));
+        panel4.add(panel5, BorderLayout.CENTER);
+        myInfoLabel = new HyperlinkLabel.Croppable();
+        panel5.add(myInfoLabel, BorderLayout.WEST);
+        myDisableLink = new HyperlinkLabel.Croppable();
+        panel5.add(myDisableLink, BorderLayout.CENTER);
+        myForeignPluginWarningPanel = new JPanel();
+        myForeignPluginWarningPanel.setLayout(new BorderLayout(0, 0));
+        panel4.add(myForeignPluginWarningPanel, BorderLayout.SOUTH);
+        myForeignPluginWarningLabel = new HyperlinkLabel.Croppable();
+        myForeignPluginWarningPanel.add(myForeignPluginWarningLabel, BorderLayout.CENTER);
+        myTabsPanel = new JPanel();
+        myTabsPanel.setLayout(new BorderLayout(0, 0));
+        panel1.add(myTabsPanel, BorderLayout.CENTER);
+        JPanel panel6 = new JPanel();
+        panel6.setLayout(new BorderLayout(0, 0));
+        panel1.add(panel6, BorderLayout.SOUTH);
+        myCredentialsPanel = new JPanel();
+        myCredentialsPanel.setLayout(new BorderLayout(0, 0));
+        panel6.add(myCredentialsPanel, BorderLayout.NORTH);
+        myCredentialsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0), null));
+        myCredentialsLabel = new HyperlinkLabel();
+        myCredentialsPanel.add(myCredentialsLabel, BorderLayout.EAST);
+        myAttachmentWarningPanel = new JPanel();
+        myAttachmentWarningPanel.setLayout(new BorderLayout(0, 0));
+        panel6.add(myAttachmentWarningPanel, BorderLayout.SOUTH);
+        myAttachmentWarningPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0), null));
+        myAttachmentWarningLabel = new HyperlinkLabel();
+        myAttachmentWarningPanel.add(myAttachmentWarningLabel, BorderLayout.EAST);
     }
 
     private class ForwardAction extends AnAction implements DumbAware {
@@ -369,6 +450,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         return myContentPane;
     }
 
+    @RequiredUIAccess
     private void moveSelectionToEarliestMessage() {
         myIndex = 0;
         for (int i = 0; i < myMergedMessages.size(); i++) {
@@ -418,16 +500,19 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
     }
 
+    @RequiredUIAccess
     private void goBack() {
         myIndex--;
         updateControls();
     }
 
+    @RequiredUIAccess
     private void goForward() {
         myIndex++;
         updateControls();
     }
 
+    @RequiredUIAccess
     private void updateControls() {
         updateCountLabel();
         AbstractMessage message = getSelectedMessage();
@@ -577,7 +662,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                     }
                     else {
                         myForeignPluginWarningLabel.setHyperlinkText(
-                            ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor().get() + " ",
+                            ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor() + " ",
                             contactInfo,
                             "."
                         );
@@ -586,12 +671,12 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                 }
                 else if (StringUtil.isEmpty(contactInfo)) {
                     myForeignPluginWarningLabel.setText(
-                        ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor().get() + " " + vendor + "."
+                        ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor() + " " + vendor + "."
                     );
                 }
                 else {
                     myForeignPluginWarningLabel.setHyperlinkText(
-                        ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor().get()
+                        ExternalServiceLocalize.errorDialogForeignPluginWarningTextVendor()
                             + " " + vendor + " (", contactInfo, ")."
                     );
                     myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
@@ -772,6 +857,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             boolean closeDialog = myMergedMessages.size() == 1;
             AbstractMessage logMessage = getSelectedMessage();
@@ -787,6 +873,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             }
         }
 
+        @RequiredUIAccess
         private boolean reportMessage(AbstractMessage logMessage, boolean dialogClosed) {
             ErrorReportSubmitter submitter = getSubmitter(logMessage.getThrowable());
 
@@ -870,6 +957,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
     }
 
+    @RequiredUIAccess
     protected void updateOnSubmit() {
         updateControls();
     }

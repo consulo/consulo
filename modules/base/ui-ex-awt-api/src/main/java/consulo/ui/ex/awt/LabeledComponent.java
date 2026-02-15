@@ -20,7 +20,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,8 +88,8 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
         return text;
     }
 
-    public void setComponentClass(@NonNls String className) throws ClassNotFoundException, InstantiationException,
-        IllegalAccessException {
+    public void setComponentClass(String className)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         if (className != null) {
             Class<Comp> aClass = (Class<Comp>) getClass().getClassLoader().loadClass(className);
             Comp component = aClass.newInstance();
@@ -110,8 +109,8 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
             add(myComponent, mySided ? BorderLayout.EAST : BorderLayout.CENTER);
         }
 
-        if (myComponent instanceof ComponentWithBrowseButton && !(myComponent instanceof TextFieldWithBrowseButton)) {
-            myLabel.setLabelFor(((ComponentWithBrowseButton) myComponent).getChildComponent());
+        if (myComponent instanceof ComponentWithBrowseButton componentWithBrowse && !(myComponent instanceof TextFieldWithBrowseButton)) {
+            myLabel.setLabelFor(componentWithBrowse.getChildComponent());
         }
         else {
             myLabel.setLabelFor(myComponent);
@@ -138,7 +137,7 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
         myLabel.setEnabled(enabled);
     }
 
-    public LabeledComponent<Comp> setLabelLocation(@NonNls String borderConstrains) {
+    public LabeledComponent<Comp> setLabelLocation(String borderConstrains) {
         String constrains = findBorderConstrains(borderConstrains);
         if (constrains == null || constrains.equals(myLabelConstraints)) {
             return this;
@@ -195,29 +194,29 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
 
     public static class TextWithMnemonic {
         private final String myText;
-        private final int myMnemoniIndex;
+        private final int myMnemonicIndex;
 
-        public TextWithMnemonic(String text, int mnemoniIndex) {
+        public TextWithMnemonic(String text, int mnemonicIndex) {
             myText = text;
-            myMnemoniIndex = mnemoniIndex;
+            myMnemonicIndex = mnemonicIndex;
         }
 
         public void setToLabel(JLabel label) {
             label.setText(myText);
-            if (myMnemoniIndex != -1) {
-                label.setDisplayedMnemonic(myText.charAt(myMnemoniIndex));
+            if (myMnemonicIndex != -1) {
+                label.setDisplayedMnemonic(myText.charAt(myMnemonicIndex));
             }
             else {
                 label.setDisplayedMnemonic(0);
             }
-            label.setDisplayedMnemonicIndex(myMnemoniIndex);
+            label.setDisplayedMnemonicIndex(myMnemonicIndex);
         }
 
         public String getTextWithMnemonic() {
-            if (myMnemoniIndex == -1) {
+            if (myMnemonicIndex == -1) {
                 return myText;
             }
-            return myText.substring(0, myMnemoniIndex) + "&" + myText.substring(myMnemoniIndex);
+            return myText.substring(0, myMnemonicIndex) + "&" + myText.substring(myMnemonicIndex);
         }
 
         public static TextWithMnemonic fromTextWithMnemonic(String textWithMnemonic) {

@@ -1,10 +1,9 @@
 package consulo.externalService.impl.internal.errorReport;
 
-import consulo.ui.ex.awt.LabeledComponent;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -24,6 +23,8 @@ public class LabeledTextComponent {
     private final JTextPane myTextPane;
 
     public LabeledTextComponent() {
+        createUIComponents();
+
         myTextPane = new JTextPane();
 
         myComponent.setLabelLocation(BorderLayout.NORTH);
@@ -32,6 +33,32 @@ public class LabeledTextComponent {
         myTextPane.setBackground(UIUtil.getTextFieldBackground());
         myComponent.getComponent().add(new JBScrollPane(myTextPane));
         myComponent.getComponent().setBorder(IdeBorderFactory.createBorder());
+    }
+
+    private void createUIComponents() {
+        myContentPane = new JPanel();
+        myContentPane.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
+        myComponent = new LabeledComponent<>();
+        myComponent.setComponent(new JPanel());
+        myComponent.setText("title");
+        myContentPane.add(
+            myComponent,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
     }
 
     public void setLabelPosition(String position) {
