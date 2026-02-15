@@ -39,12 +39,7 @@ public class LabeledTextComponent {
         myContentPane = new JPanel();
         myContentPane.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
         myComponent = new LabeledComponent<>();
-        try {
-            myComponent.setComponentClass("javax.swing.JPanel");
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        myComponent.setComponent(new JPanel());
         myComponent.setText("title");
         myContentPane.add(
             myComponent,

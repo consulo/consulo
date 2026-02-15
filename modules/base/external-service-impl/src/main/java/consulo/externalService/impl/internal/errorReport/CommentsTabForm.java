@@ -60,12 +60,7 @@ public class CommentsTabForm {
         myContentPane.setLayout(new GridLayoutManager(2, 2, JBUI.emptyInsets(), -1, 15));
         myContentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null));
         myErrorComponent = new LabeledComponent<>();
-        try {
-            myErrorComponent.setComponentClass("javax.swing.JTextField");
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        myErrorComponent.setComponent(new JTextField());
         myErrorComponent.setText("&Error message");
         myContentPane.add(
             myErrorComponent,
