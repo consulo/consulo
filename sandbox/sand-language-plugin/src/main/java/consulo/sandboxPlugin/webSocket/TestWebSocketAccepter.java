@@ -18,9 +18,7 @@ package consulo.sandboxPlugin.webSocket;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
-
 import jakarta.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -28,11 +26,6 @@ import java.nio.charset.StandardCharsets;
  */
 @ExtensionImpl
 public class TestWebSocketAccepter implements WebSocketAccepter {
-  @Override
-  public void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array) {
-    connection.send("this was byte array".getBytes(StandardCharsets.UTF_8));
-  }
-
   @Override
   public void accept(@Nonnull WebSocketConnection connection, @Nonnull String text) {
     connection.send("reply for " + text);

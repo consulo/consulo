@@ -19,13 +19,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import jakarta.annotation.Nonnull;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author VISTALL
  * @since 2020-06-14
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WebSocketAccepter {
-    void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array);
+    default void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array) {
+        accept(connection, new String(array, StandardCharsets.UTF_8));
+    }
 
     void accept(@Nonnull WebSocketConnection connection, @Nonnull String text);
 }

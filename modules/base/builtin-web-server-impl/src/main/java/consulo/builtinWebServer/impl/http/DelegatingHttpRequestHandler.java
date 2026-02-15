@@ -71,7 +71,7 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
     }
 
     private void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketURL(req), null, true);
+        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketURL(req), null, true, Integer.MAX_VALUE);
         WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
