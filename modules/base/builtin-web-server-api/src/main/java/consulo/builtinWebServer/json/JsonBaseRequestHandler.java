@@ -20,7 +20,7 @@ import consulo.application.json.JsonService;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -82,5 +82,5 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
   }
 
   @Nonnull
-  protected abstract HTTPMethod2 getMethod();
+  protected abstract HttpMethod getMethod();
 }

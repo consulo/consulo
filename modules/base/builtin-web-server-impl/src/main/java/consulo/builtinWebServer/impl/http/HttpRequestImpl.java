@@ -16,7 +16,7 @@
 package consulo.builtinWebServer.impl.http;
 
 import consulo.builtinWebServer.http.HttpRequest;
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 import consulo.util.collection.ContainerUtil;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -35,7 +35,7 @@ import java.nio.charset.Charset;
 public class HttpRequestImpl implements HttpRequest {
   private final FullHttpRequest myFullHttpRequest;
 
-  private final HTTPMethod2 myMethod;
+  private final HttpMethod myMethod;
 
   private final ChannelHandlerContext myContext;
 
@@ -43,14 +43,14 @@ public class HttpRequestImpl implements HttpRequest {
 
   public HttpRequestImpl(FullHttpRequest fullHttpRequest, QueryStringDecoder urlDecoder, ChannelHandlerContext context) {
     myFullHttpRequest = fullHttpRequest;
-    myMethod = HTTPMethod2.valueOf(myFullHttpRequest.method().name());
+    myMethod = HttpMethod.valueOf(myFullHttpRequest.method().name());
     myContext = context;
     myQueryStringDecoder = urlDecoder;
   }
 
   @Nonnull
   @Override
-  public HTTPMethod2 method() {
+  public HttpMethod method() {
     return myMethod;
   }
 

@@ -17,7 +17,7 @@ package consulo.builtinWebServer.http.util;
 
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.builtinWebServer.http.HttpRequest;
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
@@ -58,9 +58,9 @@ public class HttpRequestUtil {
 
   // forbid POST requests from browser without Origin
   public static boolean isWriteFromBrowserWithoutOrigin(HttpRequest request) {
-    HTTPMethod2 method = request.method();
+    HttpMethod method = request.method();
 
-    return StringUtil.isEmpty(getOrigin(request)) && isRegularBrowser(request) && (method == HTTPMethod2.POST || method == HTTPMethod2.PATCH || method == HTTPMethod2.PUT || method == HTTPMethod2.DELETE);
+    return StringUtil.isEmpty(getOrigin(request)) && isRegularBrowser(request) && (method == HttpMethod.POST || method == HttpMethod.PATCH || method == HttpMethod.PUT || method == HttpMethod.DELETE);
   }
 
   public static boolean isRegularBrowser(HttpRequest request) {

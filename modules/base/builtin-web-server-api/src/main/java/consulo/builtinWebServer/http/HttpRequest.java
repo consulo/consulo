@@ -15,7 +15,7 @@
  */
 package consulo.builtinWebServer.http;
 
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
  */
 public interface HttpRequest {
   @Nonnull
-  HTTPMethod2 method();
+  HttpMethod method();
 
   @Nonnull
   String getContentAsString(@Nonnull Charset charset) throws IOException;

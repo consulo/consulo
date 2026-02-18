@@ -18,7 +18,7 @@ package consulo.builtinWebServer.http;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public abstract class HttpRequestHandler {
     }
 
     public boolean isSupported(HttpRequest request) {
-        return request.method() == HTTPMethod2.GET || request.method() == HTTPMethod2.HEAD;
+        return request.method() == HttpMethod.GET || request.method() == HttpMethod.HEAD;
     }
 
     /**

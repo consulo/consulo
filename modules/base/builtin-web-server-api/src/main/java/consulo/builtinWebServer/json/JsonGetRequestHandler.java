@@ -17,7 +17,7 @@ package consulo.builtinWebServer.json;
 
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
-import consulo.http.HTTPMethod2;
+import consulo.http.HttpMethod;
 import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
 
@@ -42,8 +42,8 @@ public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
 
   @Nonnull
   @Override
-  protected HTTPMethod2 getMethod() {
-    return HTTPMethod2.GET;
+  protected HttpMethod getMethod() {
+    return HttpMethod.GET;
   }
 
   @Nonnull
