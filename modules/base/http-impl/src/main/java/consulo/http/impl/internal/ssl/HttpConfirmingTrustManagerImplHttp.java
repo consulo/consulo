@@ -1,8 +1,8 @@
 package consulo.http.impl.internal.ssl;
 
 import consulo.application.Application;
-import consulo.http.ssl.ClientOnlyTrustManager;
-import consulo.http.ssl.ConfirmingTrustManager;
+import consulo.http.ssl.HttpClientOnlyTrustManager;
+import consulo.http.ssl.HttpConfirmingTrustManagerHttp;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.ArrayUtil;
@@ -36,10 +36,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Mikhail Golubev
  */
-public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
-    private static final Logger LOG = Logger.getInstance(ConfirmingTrustManagerImpl.class);
+public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustManagerHttp {
+    private static final Logger LOG = Logger.getInstance(HttpConfirmingTrustManagerImplHttp.class);
     private static final X509Certificate[] NO_CERTIFICATES = new X509Certificate[0];
-    private static final X509TrustManager MISSING_TRUST_MANAGER = new ClientOnlyTrustManager() {
+    private static final X509TrustManager MISSING_TRUST_MANAGER = new HttpClientOnlyTrustManager() {
         @Override
         public void checkServerTrusted(X509Certificate[] certificates, String s) throws CertificateException {
             LOG.debug("Trust manager is missing. Retreating.");
@@ -52,8 +52,8 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
         }
     };
 
-    public static ConfirmingTrustManagerImpl createForStorage(@Nonnull String path, @Nonnull String password) {
-        return new ConfirmingTrustManagerImpl(getSystemDefault(), new MutableTrustManager(path, password));
+    public static HttpConfirmingTrustManagerImplHttp createForStorage(@Nonnull String path, @Nonnull String password) {
+        return new HttpConfirmingTrustManagerImplHttp(getSystemDefault(), new MutableTrustManagerHttp(path, password));
     }
 
     private static X509TrustManager getSystemDefault() {
@@ -74,10 +74,10 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
     }
 
     private final X509TrustManager mySystemManager;
-    private final MutableTrustManager myCustomManager;
+    private final MutableTrustManagerHttp myCustomManager;
 
 
-    private ConfirmingTrustManagerImpl(X509TrustManager system, MutableTrustManager custom) {
+    private HttpConfirmingTrustManagerImplHttp(X509TrustManager system, MutableTrustManagerHttp custom) {
         mySystemManager = system;
         myCustomManager = custom;
     }
@@ -125,7 +125,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
             LOG.debug("Image Fetcher thread is detected. Certificate check will be skipped.");
             return true;
         }
-        CertificateManagerImpl.Config config = CertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerImpl.Config config = HttpCertificateManagerImpl.getInstance().getState();
         Application app = Application.get();
         if (app.isUnitTestMode() || app.isHeadlessEnvironment() || config.ACCEPT_AUTOMATICALLY) {
             LOG.debug("Certificate will be accepted automatically");
@@ -134,7 +134,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
             }
             return true;
         }
-        boolean accepted = askUser && CertificateManagerImpl.showAcceptDialog(() -> {
+        boolean accepted = askUser && HttpCertificateManagerImpl.showAcceptDialog(() -> {
             // TODO may be another kind of warning, if default trust store is missing
             return CertificateWarningDialog.createUntrustedCertificateWarning(endPoint);
         });
@@ -156,7 +156,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
         return mySystemManager;
     }
 
-    public MutableTrustManager getCustomManager() {
+    public MutableTrustManagerHttp getCustomManager() {
         return myCustomManager;
     }
 
@@ -166,7 +166,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
      *
      * @see CertificateListener
      */
-    public static class MutableTrustManager implements ClientOnlyTrustManager {
+    public static class MutableTrustManagerHttp implements HttpClientOnlyTrustManager {
         private final String myPath;
         private final String myPassword;
         private final TrustManagerFactory myFactory;
@@ -179,7 +179,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
 
         private final EventDispatcher<CertificateListener> myDispatcher = EventDispatcher.create(CertificateListener.class);
 
-        private MutableTrustManager(@Nonnull String path, @Nonnull String password) {
+        private MutableTrustManagerHttp(@Nonnull String path, @Nonnull String password) {
             myPath = path;
             myPassword = password;
             // initialization step

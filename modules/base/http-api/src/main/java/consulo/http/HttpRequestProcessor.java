@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.http.ssl;
+package consulo.http;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import jakarta.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @since 02/06/2023
- */
-public interface ConfirmingTrustManager extends ClientOnlyTrustManager {
-  void checkServerTrusted(X509Certificate[] certificates,
-                          String s,
-                          boolean addToKeyStore,
-                          boolean askUser) throws CertificateException;
+import java.io.IOException;
+
+public interface HttpRequestProcessor<T> {
+    T process(@Nonnull HttpRequest request) throws IOException;
 }

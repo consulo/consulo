@@ -28,7 +28,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.disposer.Disposable;
-import consulo.http.HttpRequests;
+import consulo.http.HttpStatusException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -829,7 +829,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
                     reason = e.getMessage();
                 }
                 //noinspection InstanceofCatchParameter
-                if (e instanceof SocketTimeoutException || e instanceof HttpRequests.HttpStatusException) {
+                if (e instanceof SocketTimeoutException || e instanceof HttpStatusException) {
                     LOG.warn("Can't connect to " + repository + ": " + e.getMessage());
                 }
                 else {

@@ -16,16 +16,7 @@
 package consulo.http;
 
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.security.MessageDigest;
 
 /**
  * Handy class for reading data from HTTP connections with built-in support for HTTP redirects and gzipped content and automatic cleanup.
@@ -37,89 +28,15 @@ import java.security.MessageDigest;
  * });
  * }</pre>
  */
+@Deprecated
 public final class HttpRequests {
     private HttpRequests() {
     }
 
-    public interface Request {
-        @Nonnull
-        String getURL();
-
-        @Nonnull
-        URLConnection getConnection() throws IOException;
-
-        @Nonnull
-        InputStream getInputStream() throws IOException;
-
-        @Nonnull
-        BufferedReader getReader() throws IOException;
-
-        @Nonnull
-        BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException;
-
-        /**
-         * @deprecated Called automatically on open connection. Use {@link RequestBuilder#tryConnect()} to get response code
-         */
-        boolean isSuccessful() throws IOException;
-
-        @Nonnull
-        default File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
-            return saveToFile(file, null, indicator);
-        }
-
-        @Nonnull
-        File saveToFile(@Nonnull File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException;
-
-        @Nonnull
-        byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException;
-
-        @Nonnull
-        String readString(@Nullable ProgressIndicator indicator) throws IOException;
-    }
-
-    public interface RequestProcessor<T> {
-        T process(@Nonnull Request request) throws IOException;
-    }
-
-    public interface ConnectionTuner {
-        void tune(@Nonnull URLConnection connection) throws IOException;
-    }
-
-    public static class HttpStatusException extends IOException {
-        private int myStatusCode;
-        private String myUrl;
-
-        public HttpStatusException(@Nonnull String message, int statusCode, @Nonnull String url) {
-            super(message);
-            myStatusCode = statusCode;
-            myUrl = url;
-        }
-
-        public int getStatusCode() {
-            return myStatusCode;
-        }
-
-        @Nonnull
-        public String getUrl() {
-            return myUrl;
-        }
-
-        @Override
-        public String getMessage() {
-            return "Status: " + myStatusCode;
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + ". Status=" + myStatusCode + ", Url=" + myUrl;
-        }
-    }
-
     @Nonnull
     @Deprecated
-    public static RequestBuilder request(@Nonnull String url) {
-        HttpRequestFactory factory = Application.get().getInstance(HttpRequestFactory.class);
-        
-        return factory.request(url);
+    public static HttpRequestBuilder request(@Nonnull String url) {
+        HttpRequestBuilderFactory factory = Application.get().getInstance(HttpRequestBuilderFactory.class);
+        return factory.newBuilder(url, HttpMethod.GET);
     }
 }

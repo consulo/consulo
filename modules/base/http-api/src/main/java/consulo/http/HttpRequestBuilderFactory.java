@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @since 2026-02-13
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface HttpRequestFactory {
+public interface HttpRequestBuilderFactory {
     @Nonnull
-    RequestBuilder request(@Nonnull String url);
+    HttpRequestBuilder newBuilder(@Nonnull String url, @Nonnull HttpMethod httpMethod);
 }

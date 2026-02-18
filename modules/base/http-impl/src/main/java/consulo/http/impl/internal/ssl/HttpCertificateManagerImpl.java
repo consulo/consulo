@@ -8,7 +8,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.container.boot.ContainerPathManager;
-import consulo.http.CertificateManager;
+import consulo.http.HttpCertificateManager;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
@@ -68,11 +68,11 @@ import java.util.concurrent.atomic.AtomicReference;
 @Singleton
 @State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
 @ServiceImpl
-public class CertificateManagerImpl implements CertificateManager, PersistentStateComponent<CertificateManagerImpl.Config> {
+public class HttpCertificateManagerImpl implements HttpCertificateManager, PersistentStateComponent<HttpCertificateManagerImpl.Config> {
     private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
     private static final String DEFAULT_PASSWORD = "changeit";
 
-    private static final Logger LOG = Logger.getInstance(CertificateManagerImpl.class);
+    private static final Logger LOG = Logger.getInstance(HttpCertificateManagerImpl.class);
 
     /**
      * Special version of hostname verifier, that asks user whether he accepts certificate, which subject's common name
@@ -86,15 +86,15 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
      */
     static final long DIALOG_VISIBILITY_TIMEOUT = 5000; // ms
 
-    public static CertificateManagerImpl getInstance() {
-        return (CertificateManagerImpl)Application.get().getInstance(CertificateManager.class);
+    public static HttpCertificateManagerImpl getInstance() {
+        return (HttpCertificateManagerImpl)Application.get().getInstance(HttpCertificateManager.class);
     }
 
     private final String myCacertsPath;
     private final String myPassword;
     private final Config myConfig;
 
-    private final ConfirmingTrustManagerImpl myTrustManager;
+    private final HttpConfirmingTrustManagerImplHttp myTrustManager;
 
     /**
      * Lazy initialized
@@ -104,11 +104,11 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     /**
      * Component initialization constructor
      */
-    public CertificateManagerImpl() {
+    public HttpCertificateManagerImpl() {
         myCacertsPath = DEFAULT_PATH;
         myPassword = DEFAULT_PASSWORD;
         myConfig = new Config();
-        myTrustManager = ConfirmingTrustManagerImpl.createForStorage(myCacertsPath, myPassword);
+        myTrustManager = HttpConfirmingTrustManagerImplHttp.createForStorage(myCacertsPath, myPassword);
         initComponent();
     }
 
@@ -275,12 +275,12 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
 
     @Override
     @Nonnull
-    public ConfirmingTrustManagerImpl getTrustManager() {
+    public HttpConfirmingTrustManagerImplHttp getTrustManager() {
         return myTrustManager;
     }
 
     @Nonnull
-    public ConfirmingTrustManagerImpl.MutableTrustManager getCustomTrustManager() {
+    public HttpConfirmingTrustManagerImplHttp.MutableTrustManagerHttp getCustomTrustManager() {
         return myTrustManager.getCustomManager();
     }
 

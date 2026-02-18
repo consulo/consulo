@@ -18,11 +18,10 @@ package consulo.http.adapter.httpclient4;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.http.CertificateManager;
+import consulo.http.HttpCertificateManager;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
@@ -34,17 +33,17 @@ import org.apache.http.impl.client.HttpClients;
 @ServiceImpl
 @Singleton
 public class HttpClient4Factory {
-    private final CertificateManager myCertificateManager;
+    private final HttpCertificateManager myHttpCertificateManager;
 
     @Inject
-    public HttpClient4Factory(CertificateManager certificateManager) {
-        myCertificateManager = certificateManager;
+    public HttpClient4Factory(HttpCertificateManager httpCertificateManager) {
+        myHttpCertificateManager = httpCertificateManager;
     }
 
     @Nonnull
     public HttpClientBuilder createBuilder() {
         return HttpClients.custom()
-            .setSSLContext(myCertificateManager.getSslContext())
-            .setSSLHostnameVerifier(myCertificateManager.getHostnameVerifier());
+            .setSSLContext(myHttpCertificateManager.getSslContext())
+            .setSSLHostnameVerifier(myHttpCertificateManager.getHostnameVerifier());
     }
 }

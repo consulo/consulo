@@ -34,77 +34,77 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface HttpProxyManager {
-  public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("consulo.connection.timeout", 10000);
-  public static final int READ_TIMEOUT = SystemProperties.getIntProperty("consulo.read.timeout", 60000);
-  public static final int REDIRECT_LIMIT = SystemProperties.getIntProperty("consulo.redirect.limit", 10);
+    public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("consulo.connection.timeout", 10000);
+    public static final int READ_TIMEOUT = SystemProperties.getIntProperty("consulo.read.timeout", 60000);
+    public static final int REDIRECT_LIMIT = SystemProperties.getIntProperty("consulo.redirect.limit", 10);
 
-  @Nonnull
-  static HttpProxyManager getInstance() {
-    return Application.get().getInstance(HttpProxyManager.class);
-  }
-
-  /**
-   * Opens HTTP connection to a given location using configured http proxy settings.
-   *
-   * @param location url to connect to
-   * @return instance of {@link HttpURLConnection}
-   * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Prefer HttpRequests")
-  default HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
-    URLConnection urlConnection = openConnection(location);
-    if (urlConnection instanceof HttpURLConnection) {
-      return (HttpURLConnection)urlConnection;
+    @Nonnull
+    static HttpProxyManager getInstance() {
+        return Application.get().getInstance(HttpProxyManager.class);
     }
-    else {
-      throw new IOException("Expected " + HttpURLConnection.class + ", but got " + urlConnection.getClass());
+
+    /**
+     * Opens HTTP connection to a given location using configured http proxy settings.
+     *
+     * @param location url to connect to
+     * @return instance of {@link HttpURLConnection}
+     * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
+     */
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer HttpRequests")
+    default HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
+        URLConnection urlConnection = openConnection(location);
+        if (urlConnection instanceof HttpURLConnection) {
+            return (HttpURLConnection) urlConnection;
+        }
+        else {
+            throw new IOException("Expected " + HttpURLConnection.class + ", but got " + urlConnection.getClass());
+        }
     }
-  }
 
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Prefer HttpRequests")
-  URLConnection openConnection(@Nonnull String location) throws IOException;
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer HttpRequests")
+    URLConnection openConnection(@Nonnull String location) throws IOException;
 
-  boolean isHttpProxyEnabled();
+    boolean isHttpProxyEnabled();
 
-  boolean isPacProxyEnabled();
+    boolean isPacProxyEnabled();
 
-  boolean isProxyAuthenticationEnabled();
+    boolean isProxyAuthenticationEnabled();
 
-  boolean isHttpProxyEnabledForUrl(@Nullable String url);
+    boolean isHttpProxyEnabledForUrl(@Nullable String url);
 
-  /**
-   * todo [all] It is NOT necessary to call anything if you obey common IDEA proxy settings;
-   * todo if you want to define your own behaviour, refer to {@link CommonProxy}
-   * <p>
-   * also, this method is useful in a way that it test connection to the host [through proxy]
-   *
-   * @param url URL for HTTP connection
-   */
-  public void prepareURL(@Nonnull String url) throws IOException;
+    /**
+     * todo [all] It is NOT necessary to call anything if you obey common IDE proxy settings;
+     * todo if you want to define your own behaviour, refer to {@link CommonProxy}
+     * <p>
+     * also, this method is useful in a way that it test connection to the host [through proxy]
+     *
+     * @param url URL for HTTP connection
+     */
+    void prepareURL(@Nonnull String url) throws IOException;
 
-  String getProxyHost();
+    String getProxyHost();
 
-  int getProxyPort();
+    int getProxyPort();
 
-  String getProxyLogin();
+    String getProxyLogin();
 
-  String getPlainProxyPassword();
+    String getPlainProxyPassword();
 
-  @Nonnull
-  List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri);
+    @Nonnull
+    List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri);
 
-  @Nonnull
-  List<String> getProxyExceptions();
+    @Nonnull
+    List<String> getProxyExceptions();
 
-  boolean isRealProxy(@Nonnull Proxy proxy);
+    boolean isRealProxy(@Nonnull Proxy proxy);
 
-  @Nonnull
-  ProxySelector getOnlyBySettingsSelector();
+    @Nonnull
+    ProxySelector getOnlyBySettingsSelector();
 
-  @Nullable
-  PasswordAuthentication getGenericPassword(@Nonnull String host, int port);
+    @Nullable
+    PasswordAuthentication getGenericPassword(@Nonnull String host, int port);
 }

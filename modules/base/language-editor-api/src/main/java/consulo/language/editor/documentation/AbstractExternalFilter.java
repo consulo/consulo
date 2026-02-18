@@ -18,6 +18,8 @@ package consulo.language.editor.documentation;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
+import consulo.http.HttpRequest;
+import consulo.http.HttpRequestProcessor;
 import consulo.http.HttpRequests;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
@@ -385,9 +387,9 @@ public abstract class AbstractExternalFilter {
         else {
           URL parsedUrl = VirtualFileUtil.getURL(url);
           if (parsedUrl != null) {
-            HttpRequests.request(parsedUrl.toString()).gzip(false).connect(new HttpRequests.RequestProcessor<Void>() {
+            HttpRequests.request(parsedUrl.toString()).gzip(false).connect(new HttpRequestProcessor<Void>() {
               @Override
-              public Void process(@Nonnull HttpRequests.Request request) throws IOException {
+              public Void process(@Nonnull HttpRequest request) throws IOException {
                 byte[] bytes = request.readBytes(null);
                 String contentEncoding = null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
@@ -404,7 +406,7 @@ public abstract class AbstractExternalFilter {
                 }
 
                 if (contentEncoding == null) {
-                  contentEncoding = request.getConnection().getContentEncoding();
+                  contentEncoding = request.getContentEncoding();
                 }
 
                 //noinspection IOResourceOpenedButNotSafelyClosed

@@ -65,7 +65,7 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
 
     @Override
     public void verify(String host, X509Certificate cert) throws SSLException {
-        if (!CertificateManagerImpl.getInstance().getState().CHECK_HOSTNAME) {
+        if (!HttpCertificateManagerImpl.getInstance().getState().CHECK_HOSTNAME) {
             return;
         }
         try {
@@ -82,7 +82,7 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
     }
 
     private static boolean accepted(String host, X509Certificate cert) {
-        return CertificateManagerImpl.showAcceptDialog(() -> CertificateWarningDialog.createHostnameMismatchWarning(cert, host));
+        return HttpCertificateManagerImpl.showAcceptDialog(() -> CertificateWarningDialog.createHostnameMismatchWarning(cert, host));
     }
 
     // Copied from httpclient 4.2 sources, read class level commentary for explanation.

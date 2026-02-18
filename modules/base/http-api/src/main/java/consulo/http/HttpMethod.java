@@ -20,5 +20,12 @@ package consulo.http;
  * @author Konstantin Bulenkov
  */
 public enum HttpMethod {
-  GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    OPTIONS,
+    TRACE,
+    PATCH
 }
