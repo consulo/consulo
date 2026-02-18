@@ -32,6 +32,9 @@ public interface HttpRequest {
     @Nullable
     String getContentEncoding() throws IOException;
 
+    @Nullable
+    String getContentType() throws IOException;
+
     @Nonnull
     InputStream getInputStream() throws IOException;
 

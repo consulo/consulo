@@ -66,6 +66,12 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return getConnection().getContentEncoding();
     }
 
+    @Nullable
+    @Override
+    public String getContentType() throws IOException {
+        return getConnection().getContentType();
+    }
+
     @Nonnull
     @Override
     public InputStream getInputStream() throws IOException {
