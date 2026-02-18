@@ -24,7 +24,7 @@ import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.internal.repository.api.UserAccount;
-import consulo.http.HTTPMethod;
+import consulo.http.HTTPMethod2;
 import consulo.http.HttpRequests;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -52,7 +52,7 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
   @Override
   public boolean isSupported(HttpRequest request) {
-    return request.method() == HTTPMethod.GET && HttpRequestHandler.checkPrefix(request.uri(), "redirectAuth");
+    return request.method() == HTTPMethod2.GET && HttpRequestHandler.checkPrefix(request.uri(), "redirectAuth");
   }
 
   @Nonnull

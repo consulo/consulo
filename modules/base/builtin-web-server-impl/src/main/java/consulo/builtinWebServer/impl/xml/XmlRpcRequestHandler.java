@@ -20,7 +20,7 @@ import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.xml.XmlRpcServer;
-import consulo.http.HTTPMethod;
+import consulo.http.HTTPMethod2;
 
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.io.IOException;
 public final class XmlRpcRequestHandler extends HttpRequestHandler {
   @Override
   public boolean isSupported(@Nonnull HttpRequest request) {
-    return request.method() == HTTPMethod.POST || request.method() == HTTPMethod.OPTIONS;
+    return request.method() == HTTPMethod2.POST || request.method() == HTTPMethod2.OPTIONS;
   }
 
   @Nonnull

@@ -19,6 +19,6 @@ package consulo.http;
 /**
  * @author Konstantin Bulenkov
  */
-public enum HTTPMethod {
+public enum HTTPMethod2 {
   GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH
 }

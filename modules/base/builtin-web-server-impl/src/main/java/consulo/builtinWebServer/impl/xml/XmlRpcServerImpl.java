@@ -20,7 +20,7 @@ import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.impl.http.HttpRequestImpl;
 import consulo.builtinWebServer.xml.XmlRpcServer;
-import consulo.http.HTTPMethod;
+import consulo.http.HTTPMethod2;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
@@ -95,7 +95,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
       return HttpResponse.notFound();
     }
 
-    if (request.method() != HTTPMethod.POST) {
+    if (request.method() != HTTPMethod2.POST) {
       return HttpResponse.notFound();
     }
 
