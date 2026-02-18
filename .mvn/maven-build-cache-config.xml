@@ -25,6 +25,10 @@
         </local>
         <attachedOutputs>
             <dirNames>
+                <!--
+                It's for running tests inside Consulo by built-in test runner, which loads classes of dependent modules from target/classes
+                folder and not from target/***.jar, but Maven build cache restores only JAR file and not target/classes contents.
+                -->
                 <dirName>classes</dirName>
             </dirNames>
         </attachedOutputs>
