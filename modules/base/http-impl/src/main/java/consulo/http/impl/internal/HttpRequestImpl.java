@@ -19,6 +19,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.http.HttpRequest;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.CountingGZIPInputStream;
 import consulo.util.io.FileUtil;
@@ -31,11 +33,13 @@ import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.util.List;
+import java.util.Map;
 
 /**
-* @author VISTALL
-* @since 2026-02-18
-*/
+ * @author VISTALL
+ * @since 2026-02-18
+ */
 class HttpRequestImpl implements HttpRequest, AutoCloseable {
     private final HttpRequestBuilderImpl myBuilder;
     private URLConnection myConnection;
@@ -50,6 +54,38 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     @Override
     public String getURL() {
         return myBuilder.myUrl;
+    }
+
+    @Override
+    public int statusCode() throws IOException {
+        URLConnection connection = getConnection();
+        if (connection instanceof HttpURLConnection httpURLConnection) {
+            return httpURLConnection.getResponseCode();
+        }
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public String statusMessage() throws IOException {
+        URLConnection connection = getConnection();
+        if (connection instanceof HttpURLConnection httpURLConnection) {
+            return httpURLConnection.getResponseMessage();
+        }
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> responseHeaders() throws IOException {
+        URLConnection connection = getConnection();
+
+        Map<String, String> headers = Maps.newHashMap(HashingStrategy.caseInsensitive());
+        Map<String, List<String>> headerFields = connection.getHeaderFields();
+        for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+            headers.put(entry.getKey(), String.join(", ", entry.getValue()));
+        }
+        return headers;
     }
 
     @Nonnull

@@ -24,10 +24,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.Map;
 
 public interface HttpRequest {
     @Nonnull
     String getURL();
+
+    int statusCode() throws IOException;
+
+    @Nullable
+    String statusMessage() throws IOException;
+
+    @Nonnull
+    Map<String, String> responseHeaders() throws IOException;
 
     @Nullable
     String getContentEncoding() throws IOException;
