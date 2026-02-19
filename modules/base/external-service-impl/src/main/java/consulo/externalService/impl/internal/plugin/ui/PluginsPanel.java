@@ -115,7 +115,7 @@ public class PluginsPanel implements Disposable {
     }
 
     public static boolean isDownloaded(@Nonnull PluginDescriptor node) {
-        if (node instanceof PluginNode && ((PluginNode) node).getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
+        if (node instanceof PluginNode pluginNode && pluginNode.getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
             return true;
         }
         PluginId pluginId = node.getPluginId();
@@ -262,7 +262,7 @@ public class PluginsPanel implements Disposable {
         if (myInstalledTab.isRequireShutdown()) {
             Application app = Application.get();
 
-            int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
+            int response = app.isRestartCapable() ? PluginInstallUtil.showRestartDialog() : PluginInstallUtil.showShutDownDialog();
             if (response == Messages.YES) {
                 app.restart(true);
             }

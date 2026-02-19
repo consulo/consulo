@@ -258,8 +258,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     }
 
     /**
-     * In complex environment use PluginManagerColumnInfo.getRealNodeState () method instead.
-     *
      * @return Status of plugin
      */
     public int getInstallStatus() {
@@ -330,7 +328,9 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof PluginNode && id.equals(((PluginNode) object).getPluginId());
+        return object == this
+            || object instanceof PluginNode that
+            && id.equals(that.id);
     }
 
     public void addDependency(PluginId... depends) {
@@ -357,7 +357,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     public PluginId getPluginId() {
         return id;
     }
-
 
     @Override
     @Nonnull

@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ui.debugger.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ui.debugger.UiDebuggerExtension;
-import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -36,15 +37,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.util.List;
 
 @ExtensionImpl
 public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListener, ListSelectionListener {
-    private static final Logger LOG = Logger.getInstance(FocusDebugger.class);
-
     private JComponent myComponent;
 
-    private JList myLog;
+    private JList<FocusElement> myLog;
     private DefaultListModel myLogModel;
     private JEditorPane myAllocation;
 
@@ -61,7 +60,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         JPanel result = new JPanel(new BorderLayout());
 
         myLogModel = new DefaultListModel();
-        myLog = new JBList(myLogModel);
+        myLog = new JBList<>(myLogModel);
         myLog.setCellRenderer(new FocusElementRenderer());
 
 
@@ -97,7 +96,8 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             myLogModel.clear();
         }
     }
@@ -151,15 +151,12 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         text.append(" oldValue=" + evt.getOldValue(), maybeGrayOut(SimpleTextAttributes.REGULAR_ATTRIBUTES, affectsDebugger));
 
         myLogModel.addElement(new FocusElement(text, new Throwable()));
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (myLog != null && myLog.isShowing()) {
-                    int h = myLog.getFixedCellHeight();
-                    myLog.scrollRectToVisible(new Rectangle(0, myLog.getPreferredSize().height - h, myLog.getWidth(), h));
-                    if (myLog.getModel().getSize() > 0) {
-                        myLog.setSelectedIndex(myLog.getModel().getSize() - 1);
-                    }
+        SwingUtilities.invokeLater(() -> {
+            if (myLog != null && myLog.isShowing()) {
+                int h = myLog.getFixedCellHeight();
+                myLog.scrollRectToVisible(new Rectangle(0, myLog.getPreferredSize().height - h, myLog.getWidth(), h));
+                if (myLog.getModel().getSize() > 0) {
+                    myLog.setSelectedIndex(myLog.getModel().getSize() - 1);
                 }
             }
         });
@@ -169,14 +166,13 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         return greyOut ? attr.derive(attr.getStyle(), Color.gray, attr.getBgColor(), attr.getWaveColor()) : attr;
     }
 
-    static class FocusElementRenderer extends ColoredListCellRenderer {
+    static class FocusElementRenderer extends ColoredListCellRenderer<FocusElement> {
         @Override
-        protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(@Nonnull JList list, FocusElement value, int index, boolean selected, boolean hasFocus) {
             clear();
-            FocusElement element = (FocusElement) value;
-            SimpleColoredText text = element.getText();
-            ArrayList<String> strings = text.getTexts();
-            ArrayList<SimpleTextAttributes> attributes = element.getText().getAttributes();
+            SimpleColoredText text = value.getText();
+            List<String> strings = text.getTexts();
+            List<SimpleTextAttributes> attributes = value.getText().getAttributes();
             for (int i = 0; i < strings.size(); i++) {
                 append(strings.get(i), attributes.get(i));
             }

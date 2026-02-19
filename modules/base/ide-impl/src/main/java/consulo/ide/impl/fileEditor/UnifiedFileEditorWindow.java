@@ -100,8 +100,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public Component getUIComponent() {
         return myTabbedLayout;
     }
@@ -126,37 +126,30 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setBackgroundColorAt(int index, Color color) {
-
     }
 
     @Override
     protected void setToolTipTextAt(int index, String text) {
-
     }
 
     @Override
     protected void setForegroundAt(int index, Color color) {
-
     }
 
     @Override
     protected void setWaveColor(int index, @Nullable Color color) {
-
     }
 
     @Override
     protected void setIconAt(int index, Image icon) {
-
     }
 
     @Override
     protected void setTabLayoutPolicy(int policy) {
-
     }
 
     @Override
     protected void trimToSize(int limit, @Nullable VirtualFile fileToIgnore, boolean transferFocus) {
-
     }
 
     @Nonnull
@@ -173,7 +166,6 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void unsplit(boolean setCurrent) {
-
     }
 
     @Override
@@ -258,61 +250,65 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     @Override
     public void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
         FileEditorManagerImpl editorManager = getManager();
-        editorManager.runChange(splitters -> {
-            List<FileEditorWithProviderComposite> editors = splitters.findEditorComposites(file);
-            if (editors.isEmpty()) {
-                return;
-            }
-            try {
-                FileEditorWithProviderComposite editor = findFileComposite(file);
-
-                FileEditorManagerBeforeListener beforePublisher =
-                    editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
-
-                beforePublisher.beforeFileClosed(editorManager, file);
-
-                if (editor != null) {
-                    TabInfo tab = myEditors.remove(editor);
-                    if (tab != null) {
-                        editorManager.disposeComposite(editor);
-                    }
+        editorManager.runChange(
+            splitters -> {
+                List<FileEditorWithProviderComposite> editors = splitters.findEditorComposites(file);
+                if (editors.isEmpty()) {
+                    return;
                 }
-                else {
-                    if (inSplitter()) {
-                        //Splitter splitter = (Splitter)myPanel.getParent();
-                        //JComponent otherComponent = splitter.getOtherComponent(myPanel);
+                try {
+                    FileEditorWithProviderComposite editor = findFileComposite(file);
 
-                        //if (otherComponent != null) {
-                        //  IdeFocusManager.findInstance().requestFocus(otherComponent, true);
-                        //}
-                    }
+                    FileEditorManagerBeforeListener beforePublisher =
+                        editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
 
-                    //myPanel.removeAll();
+                    beforePublisher.beforeFileClosed(editorManager, file);
+
                     if (editor != null) {
-                        editorManager.disposeComposite(editor);
+                        TabInfo tab = myEditors.remove(editor);
+                        if (tab != null) {
+                            editorManager.disposeComposite(editor);
+                        }
                     }
+                    else {
+                        if (inSplitter()) {
+                            //Splitter splitter = (Splitter)myPanel.getParent();
+                            //JComponent otherComponent = splitter.getOtherComponent(myPanel);
+
+                            //if (otherComponent != null) {
+                            //  IdeFocusManager.findInstance().requestFocus(otherComponent, true);
+                            //}
+                        }
+
+                        //myPanel.removeAll();
+                        if (editor != null) {
+                            editorManager.disposeComposite(editor);
+                        }
+                    }
+
+                    //myPanel.revalidate();
+                    //if (myTabbedPane == null) {
+                    //  // in tabless mode
+                    //  myPanel.repaint();
+                    //}
                 }
+                finally {
+                    editorManager.removeSelectionRecord(file, this);
 
-                //myPanel.revalidate();
-                //if (myTabbedPane == null) {
-                //  // in tabless mode
-                //  myPanel.repaint();
-                //}
-            }
-            finally {
-                editorManager.removeSelectionRecord(file, this);
+                    editorManager.notifyPublisher(() -> {
+                        Project project = editorManager.getProject();
+                        if (!project.isDisposed()) {
+                            FileEditorManagerListener afterPublisher =
+                                project.getMessageBus().syncPublisher(FileEditorManagerListener.class);
+                            afterPublisher.fileClosed(editorManager, file);
+                        }
+                    });
 
-                editorManager.notifyPublisher(() -> {
-                    Project project = editorManager.getProject();
-                    if (!project.isDisposed()) {
-                        FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.class);
-                        afterPublisher.fileClosed(editorManager, file);
-                    }
-                });
-
-                ((UnifiedFileEditorsSplitters) splitters).afterFileClosed(file);
-            }
-        }, myOwner);
+                    ((UnifiedFileEditorsSplitters) splitters).afterFileClosed(file);
+                }
+            },
+            myOwner
+        );
     }
 
     @Override
@@ -322,7 +318,6 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void setTabsPlacement(int placement) {
-
     }
 
     @Override
@@ -332,7 +327,6 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void setFilePinned(VirtualFile file, boolean pinned) {
-
     }
 
     @Override
@@ -347,12 +341,10 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void changeOrientation() {
-
     }
 
     @Override
     public void unsplitAll() {
-
     }
 
     @RequiredUIAccess
@@ -391,7 +383,6 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void setAsCurrentWindow(boolean value) {
-
     }
 
     @Override
@@ -401,7 +392,6 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void restoreClosedTab() {
-
     }
 
     @Override
@@ -411,11 +401,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public void requestFocus(boolean force) {
-
     }
 
     @Override
     public void dispose() {
-
     }
 }

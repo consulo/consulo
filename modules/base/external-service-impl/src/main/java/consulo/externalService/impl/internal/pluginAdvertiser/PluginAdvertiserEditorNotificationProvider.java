@@ -146,7 +146,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
                     allPlugins,
                     false,
                     p -> myProject.getUIAccess().give(() -> {
-                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                        if (PluginInstallUtil.showRestartDialog() == Messages.YES) {
                             Application.get().restart(true);
                         }
                     })

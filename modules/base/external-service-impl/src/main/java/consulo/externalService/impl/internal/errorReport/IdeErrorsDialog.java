@@ -695,8 +695,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             if (myInternalMode) {
                 boolean hasAttachment = false;
                 for (ArrayList<AbstractMessage> merged : myMergedMessages) {
-                    AbstractMessage message = merged.get(0);
-                    if (message instanceof LogMessageEx logMessageEx && !logMessageEx.getAttachments().isEmpty()) {
+                    if (merged.get(0) instanceof LogMessageEx logMessageEx && !logMessageEx.getAttachments().isEmpty()) {
                         hasAttachment = true;
                         break;
                     }

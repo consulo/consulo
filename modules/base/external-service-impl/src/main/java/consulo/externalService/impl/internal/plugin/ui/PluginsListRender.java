@@ -146,7 +146,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         myDownloads.setForeground(grayedFg);
         myDownloads.setText("");
 
-        PluginNode pluginNode = value instanceof PluginNode ? (PluginNode) value : null;
+        PluginNode pluginNode = value instanceof PluginNode node ? node : null;
         if (pluginNode != null) {
             String downloads = String.valueOf(pluginNode.getDownloads());
 
@@ -171,14 +171,12 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
                 myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
             }
         }
-        else if (pluginDescriptor instanceof PluginNode pluginNode1 && pluginNode1.getInstallStatus() == PluginNode.STATUS_INSTALLED
+        else if (pluginDescriptor instanceof PluginNode node && node.getInstallStatus() == PluginNode.STATUS_INSTALLED
             || installed != null) {
             PluginId pluginId = pluginDescriptor.getPluginId();
             boolean hasNewerVersion = InstalledPluginsState.getInstance().hasNewerVersion(pluginId);
-            if (hasNewerVersion) {
-                if (!isSelected) {
-                    myName.setForeground(TargetAWT.to(FileStatus.MODIFIED.getColor()));
-                }
+            if (hasNewerVersion && !isSelected) {
+                myName.setForeground(TargetAWT.to(FileStatus.MODIFIED.getColor()));
             }
         }
 
