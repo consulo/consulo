@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.ExceptionUtil;
 
 public class DisposedPsiManagerCheck {
-  private static final Logger LOG = Logger.getInstance(DisposedPsiManagerCheck.class);
-  private final Throwable myAllocationPlace;
-  private final Project myProject;
+    private static final Logger LOG = Logger.getInstance(DisposedPsiManagerCheck.class);
+    private final Throwable myAllocationPlace;
+    private final Project myProject;
 
-  public DisposedPsiManagerCheck(Project project) {
-    myProject = project;
-    myAllocationPlace = new Throwable();
-  }
+    public DisposedPsiManagerCheck(Project project) {
+        myProject = project;
+        myAllocationPlace = new Throwable();
+    }
 
-  public void performCheck() {
-    PsiManager psiManager = PsiManager.getInstance(myProject);
-    if (psiManager == null)
-      log("Is null");
-    else if (psiManager.isDisposed())
-      log("Disposed");
-  }
+    public void performCheck() {
+        PsiManager psiManager = PsiManager.getInstance(myProject);
+        if (psiManager == null) {
+            log("Is null");
+        }
+        else if (psiManager.isDisposed()) {
+            log("Disposed");
+        }
+    }
 
-  private void log(@NonNls String message) {
-    LOG.error(message + "\n" + StringUtil.getThrowableText(myAllocationPlace));
-  }
+    private void log(String message) {
+        LOG.error(message + "\n" + ExceptionUtil.getThrowableText(myAllocationPlace));
+    }
 }

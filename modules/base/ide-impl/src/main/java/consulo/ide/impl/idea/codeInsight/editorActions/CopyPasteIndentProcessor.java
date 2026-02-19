@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.PreserveIndentOnPaste;
 import consulo.language.editor.CodeInsightSettings;
@@ -190,5 +190,4 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
     if (line >= document.getLineCount()) return document.getTextLength();
     return document.getLineStartOffset(line);
   }
-
 }
