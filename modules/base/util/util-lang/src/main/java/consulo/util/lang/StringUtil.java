@@ -17,7 +17,7 @@ package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;

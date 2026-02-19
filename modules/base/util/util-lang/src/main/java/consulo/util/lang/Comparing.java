@@ -4,7 +4,7 @@ package consulo.util.lang;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**

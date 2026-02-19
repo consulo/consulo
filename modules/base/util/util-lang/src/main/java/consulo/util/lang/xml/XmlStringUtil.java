@@ -21,7 +21,7 @@ import consulo.util.lang.internal.Verifier;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.xml.CommonXmlStrings.*;
 
@@ -49,11 +49,11 @@ public class XmlStringUtil {
     return escapeString(str, false);
   }
 
-  public static String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
+  public static @Nullable String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
     return escapeString(str, escapeWhiteSpace, true);
   }
 
-  public static String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
+  public static @Nullable String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
     if (str == null) return null;
     StringBuilder buffer = null;
     for (int i = 0; i < str.length(); i++) {

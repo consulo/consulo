@@ -15,7 +15,7 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 import java.util.function.Function;
 

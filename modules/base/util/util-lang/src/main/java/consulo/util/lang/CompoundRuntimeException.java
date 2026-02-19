@@ -16,7 +16,7 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;

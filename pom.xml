@@ -13,7 +13,9 @@
 
   <modules>
     <module>arch/managment</module>
+    <module>arch/managment-nullaway-java</module>
     <module>arch/managment-low-java</module>
+
     <module>arch/global</module>
     <module>arch/ide</module>
 

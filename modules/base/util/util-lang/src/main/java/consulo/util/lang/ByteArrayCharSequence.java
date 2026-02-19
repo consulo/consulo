@@ -16,7 +16,7 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -90,8 +90,7 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
     return myStart == 0 && myEnd == myChars.length ? myChars : Arrays.copyOfRange(myChars, myStart, myEnd);
   }
 
-  @Nullable
-  static byte[] toBytesIfPossible(@Nonnull CharSequence seq) {
+  static @Nullable byte[] toBytesIfPossible(@Nonnull CharSequence seq) {
     if (seq instanceof ByteArrayCharSequence) {
       return ((ByteArrayCharSequence)seq).getBytes();
     }

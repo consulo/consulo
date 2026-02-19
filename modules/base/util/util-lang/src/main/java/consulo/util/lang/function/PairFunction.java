@@ -16,8 +16,8 @@
 package consulo.util.lang.function;
 
 import consulo.annotation.DeprecationInfo;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**

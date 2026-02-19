@@ -2,8 +2,8 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Has its own {@code null}-object instance, which is hidden from outside world, preventing accidental &quot;unwrapping&quot;.

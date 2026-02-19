@@ -28,7 +28,7 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A pruned and optimized version of javolution.text.Text
