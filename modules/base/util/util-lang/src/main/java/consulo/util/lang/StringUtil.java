@@ -172,7 +172,12 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static String capitalizeWords(@Nonnull String text, @Nonnull String tokenizerDelim, boolean allWords, boolean leaveOriginalDelims) {
+    public static String capitalizeWords(
+        @Nonnull String text,
+        @Nonnull String tokenizerDelim,
+        boolean allWords,
+        boolean leaveOriginalDelims
+    ) {
         StringTokenizer tokenizer = new StringTokenizer(text, tokenizerDelim, leaveOriginalDelims);
         StringBuilder out = new StringBuilder(text.length());
         boolean toCapitalize = true;
@@ -192,7 +197,10 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String firstLast(@Nonnull String text, int length) {
-        return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(text.length() - length / 2 - 1, text.length()) : text;
+        return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(
+            text.length() - length / 2 - 1,
+            text.length()
+        ) : text;
     }
 
     @Contract(pure = true)
@@ -533,6 +541,26 @@ public final class StringUtil {
         return escapeToRegexp(text, result).toString();
     }
 
+    @Nonnull
+    @Contract(pure = true)
+    public static List<String> findMatches(@Nonnull String s, @Nonnull Pattern pattern) {
+        return findMatches(s, pattern, 1);
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static List<String> findMatches(@Nonnull String s, @Nonnull Pattern pattern, int groupIndex) {
+        List<String> result = new ArrayList<>();
+        Matcher m = pattern.matcher(s);
+        while (m.find()) {
+            String group = m.group(groupIndex);
+            if (group != null) {
+                result.add(group);
+            }
+        }
+        return result;
+    }
+
     /**
      * Strip out all characters not accepted by given filter
      *
@@ -578,6 +606,31 @@ public final class StringUtil {
         return (excludeEmptyStrings ? EOL_SPLIT_PATTERN : EOL_SPLIT_PATTERN_WITH_EMPTY).split(string);
     }
 
+    @Nonnull
+    @Contract(pure = true)
+    public static List<Pair<String, Integer>> getWordsWithOffset(@Nonnull String s) {
+        List<Pair<String, Integer>> res = new ArrayList<>();
+        s += " ";
+        StringBuilder name = new StringBuilder();
+        int startInd = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isWhitespace(s.charAt(i))) {
+                if (name.length() > 0) {
+                    res.add(Pair.create(name.toString(), startInd));
+                    name.setLength(0);
+                    startInd = -1;
+                }
+            }
+            else {
+                if (startInd == -1) {
+                    startInd = i;
+                }
+                name.append(s.charAt(i));
+            }
+        }
+        return res;
+    }
+
     @Contract(pure = true)
     public static int parseInt(@Nullable String string, int defaultValue) {
         if (string == null) {
@@ -608,6 +661,16 @@ public final class StringUtil {
     public static double parseDouble(String string, double defaultValue) {
         try {
             return Double.parseDouble(string);
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    @Contract(pure = true)
+    public static boolean parseBoolean(String string, boolean defaultValue) {
+        try {
+            return Boolean.parseBoolean(string);
         }
         catch (Exception e) {
             return defaultValue;
@@ -669,7 +732,9 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String join(@Nullable String... strings) {
-        if (strings == null || strings.length == 0) return "";
+        if (strings == null || strings.length == 0) {
+            return "";
+        }
 
         StringBuilder builder = new StringBuilder();
         for (String string : strings) {
@@ -749,7 +814,12 @@ public final class StringUtil {
     }
 
     @Nonnull
-    public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+    public static String convertLineSeparators(
+        @Nonnull String text,
+        @Nonnull String newSeparator,
+        @Nullable int[] offsetsToKeep,
+        boolean keepCarriageReturn
+    ) {
         return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
     }
 
@@ -793,7 +863,12 @@ public final class StringUtil {
     }
 
     @Nonnull
-    public static CharSequence unifyLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+    public static CharSequence unifyLineSeparators(
+        @Nonnull CharSequence text,
+        @Nonnull String newSeparator,
+        @Nullable int[] offsetsToKeep,
+        boolean keepCarriageReturn
+    ) {
         StringBuilder buffer = null;
         int intactLength = 0;
         boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
@@ -1177,12 +1252,16 @@ public final class StringUtil {
 
         for (; start < end; start++) {
             char ch = s.charAt(start);
-            if (filter.accept(ch)) break;
+            if (filter.accept(ch)) {
+                break;
+            }
         }
 
         for (; start < end; end--) {
             char ch = s.charAt(end - 1);
-            if (filter.accept(ch)) break;
+            if (filter.accept(ch)) {
+                break;
+            }
         }
 
         return s.substring(start, end);
@@ -1299,7 +1378,11 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> String join(@Nonnull Collection<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
+    public static <T> String join(
+        @Nonnull Collection<? extends T> items,
+        @Nonnull Function<? super T, String> f,
+        @Nonnull String separator
+    ) {
         if (items.isEmpty()) {
             return "";
         }
@@ -1509,11 +1592,20 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> String join(@Nonnull T[] items, @Nonnull java.util.function.Function<T, String> f, @Nonnull @NonNls String separator) {
+    public static <T> String join(
+        @Nonnull T[] items,
+        @Nonnull java.util.function.Function<T, String> f,
+        @Nonnull @NonNls String separator
+    ) {
         return join(Arrays.asList(items), f, separator);
     }
 
-    public static <T> void join(@Nonnull Iterable<? extends T> items, @Nonnull java.util.function.Function<? super T, String> f, @Nonnull String separator, @Nonnull StringBuilder result) {
+    public static <T> void join(
+        @Nonnull Iterable<? extends T> items,
+        @Nonnull java.util.function.Function<? super T, String> f,
+        @Nonnull String separator,
+        @Nonnull StringBuilder result
+    ) {
         boolean isFirst = true;
         for (T item : items) {
             String string = f.apply(item);
@@ -1898,12 +1990,23 @@ public final class StringUtil {
     }
 
     @Nonnull
-    public static StringBuilder escapeStringCharacters(int length, @Nonnull String str, @Nullable String additionalChars, @Nonnull StringBuilder buffer) {
+    public static StringBuilder escapeStringCharacters(
+        int length,
+        @Nonnull String str,
+        @Nullable String additionalChars,
+        @Nonnull StringBuilder buffer
+    ) {
         return escapeStringCharacters(length, str, additionalChars, true, buffer);
     }
 
     @Nonnull
-    public static StringBuilder escapeStringCharacters(int length, @Nonnull String str, @Nullable String additionalChars, boolean escapeSlash, @Nonnull StringBuilder buffer) {
+    public static StringBuilder escapeStringCharacters(
+        int length,
+        @Nonnull String str,
+        @Nullable String additionalChars,
+        boolean escapeSlash,
+        @Nonnull StringBuilder buffer
+    ) {
         char prev = 0;
         for (int idx = 0; idx < length; idx++) {
             char ch = str.charAt(idx);
@@ -2226,7 +2329,12 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static List<CharSequence> split(@Nonnull CharSequence s, @Nonnull CharSequence separator, boolean excludeSeparator, boolean excludeEmptyStrings) {
+    public static List<CharSequence> split(
+        @Nonnull CharSequence s,
+        @Nonnull CharSequence separator,
+        boolean excludeSeparator,
+        boolean excludeEmptyStrings
+    ) {
         if (separator.length() == 0) {
             return List.of();
         }
@@ -2282,8 +2390,16 @@ public final class StringUtil {
      * Works in O(1), but retains references to the passed char sequences, so please use something else if you want them to be garbage-collected.
      */
     @Nonnull
-    public static MergingCharSequence replaceSubSequence(@Nonnull CharSequence charSeq, int start, int end, @Nonnull CharSequence replacement) {
-        return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
+    public static MergingCharSequence replaceSubSequence(
+        @Nonnull CharSequence charSeq,
+        int start,
+        int end,
+        @Nonnull CharSequence replacement
+    ) {
+        return new MergingCharSequence(
+            new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement),
+            new CharSequenceSubSequence(charSeq, end, charSeq.length())
+        );
     }
 
     @Nonnull
@@ -2360,7 +2476,8 @@ public final class StringUtil {
         }
 
         if (slashRIndex != -1) {
-            String context = String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
+            String context =
+                String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
             context = escapeStringCharacters(context);
             LOG.error("Wrong line separators: '" + context + "' at offset " + slashRIndex);
         }
@@ -2466,7 +2583,13 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String formatDuration(long duration, String spaceBeforeUnits) {
-        return formatValue(duration, " ", new String[]{"ms", "s", "m", "h", "d", "w", "mo", "yr", "c", "ml", "ep"}, new long[]{1000, 60, 60, 24, 7, 4, 12, 100, 10, 10000}, spaceBeforeUnits);
+        return formatValue(
+            duration,
+            " ",
+            new String[]{"ms", "s", "m", "h", "d", "w", "mo", "yr", "c", "ml", "ep"},
+            new long[]{1000, 60, 60, 24, 7, 4, 12, 100, 10, 10000},
+            spaceBeforeUnits
+        );
     }
 
     @Nonnull
@@ -2665,7 +2788,13 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String formatFileSize(long fileSize, String spaceBeforeUnits) {
-        return formatValue(fileSize, null, new String[]{"B", "K", "M", "G", "T", "P", "E"}, new long[]{1000, 1000, 1000, 1000, 1000, 1000}, spaceBeforeUnits);
+        return formatValue(
+            fileSize,
+            null,
+            new String[]{"B", "K", "M", "G", "T", "P", "E"},
+            new long[]{1000, 1000, 1000, 1000, 1000, 1000},
+            spaceBeforeUnits
+        );
     }
 
     /**
@@ -2713,6 +2842,16 @@ public final class StringUtil {
             }
         }
         return false;
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static Function<String, String> escaper(boolean escapeSlash, @Nullable String additionalChars) {
+        return (@Nonnull String dom) -> {
+            StringBuilder builder = new StringBuilder(dom.length());
+            escapeStringCharacters(dom.length(), dom, additionalChars, escapeSlash, builder);
+            return builder.toString();
+        };
     }
 
     @Nonnull
@@ -3345,10 +3484,14 @@ public final class StringUtil {
     @Contract(pure = true)
     public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
         int suffixLen = suffix.length();
-        if (end < suffixLen) return false;
+        if (end < suffixLen) {
+            return false;
+        }
 
         for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
-            if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) return false;
+            if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) {
+                return false;
+            }
         }
 
         return true;
