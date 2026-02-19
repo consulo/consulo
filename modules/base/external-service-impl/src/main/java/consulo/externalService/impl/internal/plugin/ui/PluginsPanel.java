@@ -115,7 +115,7 @@ public class PluginsPanel implements Disposable {
     }
 
     public static boolean isDownloaded(@Nonnull PluginDescriptor node) {
-        if (node instanceof PluginNode && ((PluginNode) node).getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
+        if (node instanceof PluginNode pluginNode && pluginNode.getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
             return true;
         }
         PluginId pluginId = node.getPluginId();

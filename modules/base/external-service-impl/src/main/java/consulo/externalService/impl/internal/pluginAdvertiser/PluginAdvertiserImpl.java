@@ -23,14 +23,16 @@ import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
 import consulo.component.internal.PluginDescriptorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.fileEditor.EditorNotifications;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.PluginAdvertiser;
 import consulo.project.PluginAdvertiserExtension;
 import consulo.project.Project;
 import consulo.project.internal.UnknownFeaturesCollector;
-import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
@@ -52,7 +54,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
     public static final NotificationGroup ourGroup = new NotificationGroup(
         "pluginSuggestion",
-        LocalizeValue.localizeTODO("Plugins Suggestion"),
+        ExternalServiceLocalize.messagePluginsSuggestion(),
         NotificationDisplayType.STICKY_BALLOON,
         true
     );
@@ -133,13 +135,13 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         }
 
         myNotificationService.newInfo(ourGroup)
-            .content(LocalizeValue.localizeTODO("Features covered by non-installed plugins are detected."))
+            .content(ExternalServiceLocalize.messagePluginsSuggestionNotification())
             .addClosingAction(
-                LocalizeValue.localizeTODO("Install plugins..."),
+                ExternalServiceLocalize.actionPluginsSuggestionInstallText(),
                 () -> new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync()
             )
             .addClosingAction(
-                LocalizeValue.localizeTODO("Ignore"),
+                ExternalServiceLocalize.actionPluginsSuggestionIgnoreText(),
                 () -> {
                     for (ExtensionPreview feature : previews) {
                         collectorSuggester.ignoreFeature(feature);

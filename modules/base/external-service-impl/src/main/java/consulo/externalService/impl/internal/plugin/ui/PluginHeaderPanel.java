@@ -15,8 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -24,6 +23,7 @@ import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -84,9 +84,7 @@ public class PluginHeaderPanel {
         myName.setText(plugin.getName());
         myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
 
-        if (plugin instanceof PluginNode) {
-            PluginNode node = (PluginNode) plugin;
-
+        if (plugin instanceof PluginNode node) {
             myDownloads.setText(node.getDownloads() + " downloads");
             myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
             action = switch (node.getInstallStatus()) {
@@ -127,13 +125,13 @@ public class PluginHeaderPanel {
 
         switch (action) {
             case INSTALL:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Install));
+                myInstallButton.setIcon(TargetAWT.to(PlatformIconGroup.actionsInstall()));
                 break;
             case UNINSTALL:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Cancel));
+                myInstallButton.setIcon(TargetAWT.to(PlatformIconGroup.actionsCancel()));
                 break;
             case RESTART:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Restart));
+                myInstallButton.setIcon(TargetAWT.to(PlatformIconGroup.actionsRestart()));
                 break;
         }
 
@@ -191,7 +189,7 @@ public class PluginHeaderPanel {
                     if (dialog != null) {
                         dialog.doOKActionPublic();
 
-                        ApplicationManager.getApplication().restart(true);
+                        Application.get().restart(true);
                     }
                     break;
             }
@@ -202,7 +200,7 @@ public class PluginHeaderPanel {
         myExperimentalLabel.setText("Experimental");
         myExperimentalLabel.setVisible(plugin.isExperimental());
         if (plugin.isExperimental()) {
-            myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
+            myExperimentalLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalBalloonwarning()));
             myExperimentalLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
             myExperimentalLabel.setForeground(JBColor.RED);
         }

@@ -26,126 +26,129 @@ import consulo.util.lang.Couple;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 28.07.2015
+ * @since 2015-07-28
  */
 public abstract class WholeWestDialogWrapper extends DialogWrapper {
-  protected final TitlelessDecorator myTitlelessDecorator;
+    protected final TitlelessDecorator myTitlelessDecorator;
 
-  public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent) {
-    super(project, canBeParent);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent, IdeModalityType ideModalityType) {
-    super(project, canBeParent, ideModalityType);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(@Nullable Project project) {
-    super(project);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(boolean canBeParent) {
-    super(canBeParent);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(boolean canBeParent, boolean applicationModalIfPossible) {
-    super(canBeParent, applicationModalIfPossible);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(Project project, boolean canBeParent, boolean applicationModalIfPossible) {
-    super(project, canBeParent, applicationModalIfPossible);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  public WholeWestDialogWrapper(@Nonnull Component parent, boolean canBeParent) {
-    super(parent, canBeParent);
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
-  }
-
-  @Override
-  protected void init() {
-    super.init();
-    myTitlelessDecorator.install(getWindow());
-  }
-
-  @Override
-  protected LayoutManager createRootLayout() {
-    return new BorderLayout();
-  }
-
-  @Nonnull
-  public String getSplitterKey() {
-    return getClass().getName();
-  }
-
-  public float getSplitterDefaultValue() {
-    return 0.3f;
-  }
-
-  public Size2D getDefaultSize() {
-    return new Size2D(500, 500);
-  }
-
-  @Nonnull
-  @RequiredUIAccess
-  public abstract Couple<JComponent> createSplitterComponents(JPanel rootPanel);
-
-  @Override
-  protected final JComponent createCenterPanel() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void initRootPanel(@Nonnull JPanel rootPanel) {
-    JBSplitter splitter = new OnePixelSplitter();
-    splitter.setProportion(getSplitterDefaultValue());
-    splitter.setSplitterProportionKey(getSplitterKey());
-
-    rootPanel.add(splitter, BorderLayout.CENTER);
-
-    Couple<JComponent> splitterComponents = createSplitterComponents(rootPanel);
-
-    JComponent first = splitterComponents.getFirst();
-    assert first != null;
-    splitter.setFirstComponent(first);
-    myTitlelessDecorator.makeLeftComponentLower(first);
-
-    JPanel rightComponent = new JPanel(new BorderLayout());
-    rightComponent.setBorder(createContentPaneBorder());
-    splitter.setSecondComponent(rightComponent);
-
-    JComponent second = splitterComponents.getSecond();
-    assert second != null;
-    rightComponent.add(myTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
-    myErrorPane = second;
-
-    JPanel southSection = new JPanel(new BorderLayout());
-    rightComponent.add(southSection, BorderLayout.SOUTH);
-
-    southSection.add(myErrorText, BorderLayout.CENTER);
-    JComponent south = createSouthPanel();
-    if (south != null) {
-      southSection.add(south, BorderLayout.SOUTH);
+    public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent) {
+        super(project, canBeParent);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
     }
 
-    String dimensionKey = getDimensionKey();
-    if (dimensionKey != null) {
-      Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
-      WindowStateService stateService = projectGuess == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(projectGuess);
-      Size2D size = stateService.getSize(dimensionKey);
-      if (size == null) {
-        stateService.putSize(dimensionKey, getDefaultSize());
-      }
+    public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent, IdeModalityType ideModalityType) {
+        super(project, canBeParent, ideModalityType);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
     }
-  }
+
+    public WholeWestDialogWrapper(@Nullable Project project) {
+        super(project);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+    }
+
+    public WholeWestDialogWrapper(boolean canBeParent) {
+        super(canBeParent);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+    }
+
+    public WholeWestDialogWrapper(boolean canBeParent, boolean applicationModalIfPossible) {
+        super(canBeParent, applicationModalIfPossible);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+    }
+
+    public WholeWestDialogWrapper(Project project, boolean canBeParent, boolean applicationModalIfPossible) {
+        super(project, canBeParent, applicationModalIfPossible);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+    }
+
+    public WholeWestDialogWrapper(@Nonnull Component parent, boolean canBeParent) {
+        super(parent, canBeParent);
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        myTitlelessDecorator.install(getWindow());
+    }
+
+    @Override
+    protected LayoutManager createRootLayout() {
+        return new BorderLayout();
+    }
+
+    @Nonnull
+    public String getSplitterKey() {
+        return getClass().getName();
+    }
+
+    public float getSplitterDefaultValue() {
+        return 0.3f;
+    }
+
+    public Size2D getDefaultSize() {
+        return new Size2D(500, 500);
+    }
+
+    @Nonnull
+    @RequiredUIAccess
+    public abstract Couple<JComponent> createSplitterComponents(JPanel rootPanel);
+
+    @Override
+    protected final JComponent createCenterPanel() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void initRootPanel(@Nonnull JPanel rootPanel) {
+        JBSplitter splitter = new OnePixelSplitter();
+        splitter.setProportion(getSplitterDefaultValue());
+        splitter.setSplitterProportionKey(getSplitterKey());
+
+        rootPanel.add(splitter, BorderLayout.CENTER);
+
+        Couple<JComponent> splitterComponents = createSplitterComponents(rootPanel);
+
+        JComponent first = splitterComponents.getFirst();
+        assert first != null;
+        splitter.setFirstComponent(first);
+        myTitlelessDecorator.makeLeftComponentLower(first);
+
+        JPanel rightComponent = new JPanel(new BorderLayout());
+        rightComponent.setBorder(createContentPaneBorder());
+        splitter.setSecondComponent(rightComponent);
+
+        JComponent second = splitterComponents.getSecond();
+        assert second != null;
+        rightComponent.add(myTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
+        myErrorPane = second;
+
+        JPanel southSection = new JPanel(new BorderLayout());
+        rightComponent.add(southSection, BorderLayout.SOUTH);
+
+        southSection.add(myErrorText, BorderLayout.CENTER);
+        JComponent south = createSouthPanel();
+        if (south != null) {
+            southSection.add(south, BorderLayout.SOUTH);
+        }
+
+        String dimensionKey = getDimensionKey();
+        if (dimensionKey != null) {
+            Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
+            WindowStateService stateService = projectGuess == null
+                ? ApplicationWindowStateService.getInstance()
+                : ProjectWindowStateService.getInstance(projectGuess);
+            Size2D size = stateService.getSize(dimensionKey);
+            if (size == null) {
+                stateService.putSize(dimensionKey, getDefaultSize());
+            }
+        }
+    }
 }

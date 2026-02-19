@@ -41,14 +41,10 @@ import java.util.Set;
 public class UninstallPluginAction {
     @RequiredUIAccess
     public static void uninstall(PluginTab host, PluginDescriptor... selection) {
-        LocalizeValue message;
+        LocalizeValue message = selection.length == 1
+            ? ExternalServiceLocalize.promptUninstallPlugin(selection[0].getName())
+            : ExternalServiceLocalize.promptUninstallSeveralPlugins(selection.length);
 
-        if (selection.length == 1) {
-            message = ExternalServiceLocalize.promptUninstallPlugin(selection[0].getName());
-        }
-        else {
-            message = ExternalServiceLocalize.promptUninstallSeveralPlugins(selection.length);
-        }
         if (Messages.showYesNoDialog(
             host.getMainPanel(),
             message.get(),
@@ -62,8 +58,8 @@ public class UninstallPluginAction {
         for (PluginDescriptor descriptor : selection) {
             boolean actualDelete = true;
 
-            //  Get the list of plugins which depend on this one. If this list is
-            //  not empty - issue warning instead of simple prompt.
+            // Get the list of plugins which depend on this one. If this list is
+            // not empty - issue warning instead of simple prompt.
             List<PluginDescriptor> dependant = host.getDependentList(descriptor);
             if (dependant.size() > 0) {
                 message = ExternalServiceLocalize.severalPluginsDependOn0ContinueToRemove(descriptor.getName());
@@ -93,8 +89,8 @@ public class UninstallPluginAction {
         try {
             PluginInstallUtil.prepareToUninstall(pluginId);
 
-            if (descriptor instanceof PluginDescriptorImpl) {
-                ((PluginDescriptorImpl) descriptor).setDeleted(true);
+            if (descriptor instanceof PluginDescriptorImpl descriptorImpl) {
+                descriptorImpl.setDeleted(true);
             }
 
             Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();

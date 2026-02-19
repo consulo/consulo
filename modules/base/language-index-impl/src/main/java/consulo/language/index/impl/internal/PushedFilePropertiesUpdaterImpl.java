@@ -3,8 +3,8 @@ package consulo.language.index.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.internal.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
@@ -24,6 +24,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.internal.DebugStackTrace;
 import consulo.project.*;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -53,7 +54,8 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     private final Project myProject;
 
     private final ClearableLazyValue<List<FilePropertyPusher>> myFilePushers = ClearableLazyValue.create(
-        () -> ContainerUtil.findAll(FilePropertyPusher.EP_NAME.getExtensionList(), pusher -> !pusher.pushDirectoriesOnly())
+        () -> Application.get().getExtensionPoint(FilePropertyPusher.class)
+            .collectFiltered(pusher -> !pusher.pushDirectoriesOnly())
     );
 
     private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
@@ -125,17 +127,20 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
 
     @Override
     public void initializeProperties() {
-        myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
-            @Override
-            public void rootsChanged(@Nonnull ModuleRootEvent event) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace(new Throwable("Processing roots changed event (caused by file type change: " + event.isCausedByFileTypesChange() + ")"));
-                }
+        myProject.getMessageBus().connect().subscribe(
+            ModuleRootListener.class,
+            new ModuleRootListener() {
+                @Override
+                public void rootsChanged(@Nonnull ModuleRootEvent event) {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace(new Throwable("Processing roots changed event (caused by file type change: " + event.isCausedByFileTypesChange() + ")"));
+                    }
 
-                myProject.getApplication().getExtensionPoint(FilePropertyPusher.class)
-                    .forEach(filePropertyPusher -> filePropertyPusher.afterRootsChanged(myProject));
+                    myProject.getApplication().getExtensionPoint(FilePropertyPusher.class)
+                        .forEach(filePropertyPusher -> filePropertyPusher.afterRootsChanged(myProject));
+                }
             }
-        });
+        );
 
         myProject.getApplication().getExtensionPoint(FilePropertyPusher.class).forEach(pusher -> pusher.initExtra(myProject));
     }
@@ -156,7 +161,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
             // delay calling event.getFile() until background to avoid expensive VFileCreateEvent.getFile() in EDT
             VirtualFile dir = getFile(event);
             ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-            if (dir != null && AccessRule.read(() -> fileIndex.isInContent(dir)) && !ProjectCoreUtil.isProjectOrWorkspaceFile(dir)) {
+            if (dir != null && ReadAction.compute(() -> fileIndex.isInContent(dir)) && !ProjectCoreUtil.isProjectOrWorkspaceFile(dir)) {
                 doPushRecursively(dir, pushers, fileIndex);
             }
         };
@@ -272,12 +277,12 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     private void doPushAll(@Nonnull List<? extends FilePropertyPusher> pushers) {
-        Module[] modules = AccessRule.read(() -> ModuleManager.getInstance(myProject).getModules());
+        Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules());
 
         List<Runnable> tasks = new ArrayList<>();
 
         for (Module module : modules) {
-            Runnable iteration = AccessRule.read((ThrowableSupplier<Runnable, RuntimeException>)() -> {
+            Runnable iteration = ReadAction.compute((ThrowableSupplier<Runnable, RuntimeException>) () -> {
                 if (module.isDisposed()) {
                     return EmptyRunnable.INSTANCE;
                 }
@@ -352,7 +357,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     private void applyPushersToFile(VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, Object[] moduleValues) {
-        Application.get().runReadAction(() -> {
+        ReadAction.run(() -> {
             ProgressManager.checkCanceled();
             if (!fileOrDir.isValid()) {
                 return;
@@ -371,7 +376,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
             boolean isDir = fileOrDir.isDirectory();
             for (int i = 0; i < pushers.size(); i++) {
                 //noinspection unchecked
-                pusher = (FilePropertyPusher<Object>)pushers.get(i);
+                pusher = (FilePropertyPusher<Object>) pushers.get(i);
                 if (isDir ? !pusher.acceptsDirectory(fileOrDir, myProject) : pusher.pushDirectoriesOnly() || !pusher.acceptsFile(
                     fileOrDir,
                     myProject
@@ -419,11 +424,12 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         }
     }
 
+    @RequiredReadAction
     private static void reloadPsi(VirtualFile file, Project project) {
-        FileManagerImpl fileManager = (FileManagerImpl)PsiManagerEx.getInstanceEx(project).getFileManager();
+        FileManagerImpl fileManager = (FileManagerImpl) PsiManagerEx.getInstanceEx(project).getFileManager();
         if (fileManager.findCachedViewProvider(file) != null) {
             Runnable runnable = () -> WriteAction.run(() -> fileManager.forceReload(file));
-            if (Application.get().isDispatchThread()) {
+            if (UIAccess.isUIThread()) {
                 runnable.run();
             }
             else {

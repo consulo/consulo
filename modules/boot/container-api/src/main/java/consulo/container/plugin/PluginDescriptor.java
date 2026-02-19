@@ -27,91 +27,91 @@ import java.util.Set;
  * @since 2019-07-17
  */
 public interface PluginDescriptor {
-  PluginDescriptor[] EMPTY_ARRAY = new PluginDescriptor[0];
+    PluginDescriptor[] EMPTY_ARRAY = new PluginDescriptor[0];
 
-  public interface UserDataCalculator<Param, Result> {
-    Result calc(Param param);
-  }
+    public interface UserDataCalculator<Param, Result> {
+        Result calc(Param param);
+    }
 
-  String EXPERIMENTAL_TAG = "experimental";
+    String EXPERIMENTAL_TAG = "experimental";
 
-  PluginId getPluginId();
+    PluginId getPluginId();
 
-  ClassLoader getPluginClassLoader();
+    ClassLoader getPluginClassLoader();
 
-  File getPath();
+    File getPath();
 
-  Path getNioPath();
+    Path getNioPath();
 
-  String getDescription();
+    String getDescription();
 
-  String getChangeNotes();
+    String getChangeNotes();
 
-  String getName();
+    String getName();
 
-  PluginId[] getDependentPluginIds();
+    PluginId[] getDependentPluginIds();
 
-  PluginId[] getOptionalDependentPluginIds();
+    PluginId[] getOptionalDependentPluginIds();
 
-  PluginId[] getIncompatibleWithPlugindIds();
+    PluginId[] getIncompatibleWithPlugindIds();
 
-  String getVendor();
+    String getVendor();
 
-  String getVersion();
+    String getVersion();
 
-  String getPlatformVersion();
+    String getPlatformVersion();
 
-  String getResourceBundleBaseName();
+    String getResourceBundleBaseName();
 
-  String getLocalize();
+    String getLocalize();
 
-  Set<String> getTags();
+    Set<String> getTags();
 
-  List<SimpleXmlElement> getActionsDescriptionElements();
+    List<SimpleXmlElement> getActionsDescriptionElements();
 
-  String getVendorEmail();
+    String getVendorEmail();
 
-  String getVendorUrl();
+    String getVendorUrl();
 
-  String getUrl();
+    String getUrl();
 
-  int getDownloads();
+    int getDownloads();
 
-  PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
+    PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
-  /**
-   * If return not null, plugin loaded in module mode.
-   */
-  ModuleLayer getModuleLayer();
+    /**
+     * If return not null, plugin loaded in module mode.
+     */
+    ModuleLayer getModuleLayer();
 
-  @Deprecated
-  //@DeprecationInfo("use #getIconBytes(darkOrLight)")
-  byte[] getIconBytes();
+    @Deprecated
+        //@DeprecationInfo("use #getIconBytes(darkOrLight)")
+    byte[] getIconBytes();
 
-  byte[] getIconBytes(boolean isDarkTheme);
+    byte[] getIconBytes(boolean isDarkTheme);
 
-  @Deprecated
-  //@DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
-  boolean isBundled();
+    @Deprecated
+    //@DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
+    boolean isBundled();
 
-  @Deprecated
-  // same as getStatus() == PluginDescriptorStatus.OK
-  boolean isEnabled();
+    @Deprecated
+    // same as getStatus() == PluginDescriptorStatus.OK
+    boolean isEnabled();
 
-  PluginDescriptorStatus getStatus();
+    PluginDescriptorStatus getStatus();
 
-  boolean isLoaded();
+    boolean isLoaded();
 
-  boolean isDeleted();
+    boolean isDeleted();
 
-  boolean isExperimental();
+    boolean isExperimental();
 
-  String getChecksumSHA3_256();
+    String getChecksumSHA3_256();
 
-  <K, V> V getUserData(K key);
+    <K, V> V getUserData(K key);
 
-  /**
-   * Put user data data
-   */
-  <K, V> V computeUserData(K key, UserDataCalculator<K, V> function);
+    /**
+     * Put user data data
+     */
+    <K, V> V computeUserData(K key, UserDataCalculator<K, V> function);
 }

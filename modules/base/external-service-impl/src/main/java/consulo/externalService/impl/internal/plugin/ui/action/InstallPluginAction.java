@@ -60,8 +60,8 @@ public class InstallPluginAction {
     ) {
         List<PluginDescriptor> list = new ArrayList<>();
         PluginNode pluginNode = null;
-        if (descr instanceof PluginNode) {
-            pluginNode = (PluginNode) descr;
+        if (descr instanceof PluginNode descrNode) {
+            pluginNode = descrNode;
         }
         else if (descr.isLoaded()) {
             PluginId pluginId = descr.getPluginId();

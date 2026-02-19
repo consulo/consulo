@@ -205,6 +205,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             return;
         }
 
+        Application application = Application.get();
+
         PlatformOrPluginNode brokenPlugin = myNodes.stream()
             .filter(c -> c.getFutureDescriptor() == null)
             .findFirst()
@@ -213,7 +215,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             if (Messages.showOkCancelDialog(
                 myProject,
                 ExternalServiceLocalize.messageIdeaFewPluginsWillBeNotUpdated().get(),
-                Application.get().getName().get(),
+                application.getName().get(),
                 UIUtil.getErrorIcon()
             ) != Messages.OK) {
                 return;
@@ -258,7 +260,6 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
             indicator.setTextValue(ExternalServiceLocalize.progressInstallingPlugins());
 
-            Application application = Application.get();
             UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
 
             InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
@@ -324,7 +325,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                     updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
 
                     if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-                        Application.get().restart(true);
+                        application.restart(true);
                     }
                 });
             }

@@ -37,6 +37,7 @@ import consulo.externalService.impl.internal.repository.api.pluginHistory.Plugin
 import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryResponse;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
 import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -260,7 +261,11 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                         children.add(HtmlChunk.nbsp());
                         String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
                         HtmlChunk.Element commitSpan = HtmlChunk.span();
-                        commitSpan = commitSpan.addText("(" + ExternalServiceLocalize.whatsnewCommitLabel() + " ");
+                        commitSpan = commitSpan.addText(LocalizeValue.join(
+                            LocalizeValue.of('('),
+                            ExternalServiceLocalize.whatsnewCommitLabel(),
+                            LocalizeValue.space()
+                        ));
                         String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
                         if (commitUrl != null) {
                             commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));
@@ -288,7 +293,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
             }
         }
         else {
-            body = body.child(HtmlChunk.span().addText(ExternalServiceLocalize.whatsnewNoChangesText().get()));
+            body = body.child(HtmlChunk.span().addText(ExternalServiceLocalize.whatsnewNoChangesText()));
         }
 
         html.append(body);

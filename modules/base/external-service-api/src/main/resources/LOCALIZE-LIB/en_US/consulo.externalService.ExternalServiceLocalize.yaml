@@ -1,5 +1,9 @@
 action.download.and.install.plugin:
     text: Download and Install
+action.plugins.suggestion.ignore.text:
+    text: Ignore
+action.plugins.suggestion.install.text:
+    text: Install plugins…
 action.postpone.text:
     text: Postpone
 action.restart.app.text:
@@ -232,6 +236,10 @@ message.idea.restart.required:
     text: Restart {0} to activate changes in plugins?
 message.idea.shutdown.required:
     text: Shutdown {0} to activate changes in plugins?
+message.plugins.suggestion:
+    text: Plugins Suggestion
+message.plugins.suggestion.notification:
+    text: Features covered by non-installed plugins are detected.
 notification.group.platform.or.plugins.update.display.name:
     text: Platform Or Plugins Update
 plugin.advestiser.notification.install.link:

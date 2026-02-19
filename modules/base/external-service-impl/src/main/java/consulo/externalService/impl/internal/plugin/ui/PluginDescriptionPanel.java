@@ -51,9 +51,6 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
  * @since 2021-11-08
  */
 public class PluginDescriptionPanel {
-    // repository not support rating. disable stars for now
-    public static final boolean ENABLED_STARS = true;
-
     private static final float mgByte = 1024.0f * 1024.0f;
     private static final float kByte = 1024.0f;
 
@@ -62,8 +59,7 @@ public class PluginDescriptionPanel {
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 JEditorPane pane = (JEditorPane) e.getSource();
-                if (e instanceof HTMLFrameHyperlinkEvent) {
-                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
+                if (e instanceof HTMLFrameHyperlinkEvent evt) {
                     HTMLDocument doc = (HTMLDocument) pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 }
@@ -207,7 +203,7 @@ public class PluginDescriptionPanel {
             sb.append("<h3>Plugin homepage</h3>").append(composeHref(pluginDescriptorUrl));
         }
 
-        String size = plugin instanceof PluginNode ? ((PluginNode) plugin).getSize() : null;
+        String size = plugin instanceof PluginNode pluginNode ? pluginNode.getSize() : null;
         if (!isEmptyOrSpaces(size)) {
             sb.append("<h3>Size</h3>").append(getFormattedSize(size));
         }
