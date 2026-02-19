@@ -668,6 +668,18 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
+    public static String join(@Nullable String... strings) {
+        if (strings == null || strings.length == 0) return "";
+
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            builder.append(string);
+        }
+        return builder.toString();
+    }
+
+    @Nonnull
+    @Contract(pure = true)
     public static String join(@Nonnull String[] strings, @Nonnull String separator) {
         return join(strings, 0, strings.length, separator);
     }
@@ -1380,6 +1392,11 @@ public final class StringUtil {
     @Contract(pure = true)
     public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
         return s != null && s.length() != 0 && s.charAt(0) == prefix;
+    }
+
+    @Contract(pure = true)
+    public static boolean startsWithWhitespace(@Nonnull String text) {
+        return !text.isEmpty() && Character.isWhitespace(text.charAt(0));
     }
 
     public static int stringHashCode(@Nonnull CharSequence chars) {
