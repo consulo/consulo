@@ -46,13 +46,13 @@ public class PluginInstallUtil {
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    public static int showShutDownIDEADialog() {
-        return showShutDownIDEADialog(ExternalServiceLocalize.titlePluginsChanged());
+    public static int showShutDownDialog() {
+        return showShutDownDialog(ExternalServiceLocalize.titlePluginsChanged());
     }
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    private static int showShutDownIDEADialog(@Nonnull LocalizeValue title) {
+    private static int showShutDownDialog(@Nonnull LocalizeValue title) {
         return Messages.showYesNoDialog(
             ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get(),
             title.get(),
@@ -64,13 +64,13 @@ public class PluginInstallUtil {
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    public static int showRestartIDEADialog() {
-        return showRestartIDEADialog(ExternalServiceLocalize.titlePluginsChanged());
+    public static int showRestartDialog() {
+        return showRestartDialog(ExternalServiceLocalize.titlePluginsChanged());
     }
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    private static int showRestartIDEADialog(@Nonnull LocalizeValue title) {
+    private static int showRestartDialog(@Nonnull LocalizeValue title) {
         return Messages.showYesNoDialog(
             ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName()).get(),
             title.get(),
@@ -83,7 +83,7 @@ public class PluginInstallUtil {
     @RequiredUIAccess
     public static void shutdownOrRestartApp(@Nonnull LocalizeValue title) {
         ApplicationEx app = (ApplicationEx) Application.get();
-        int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
+        int response = app.isRestartCapable() ? showRestartDialog(title) : showShutDownDialog(title);
         if (response == Messages.YES) {
             app.restart(true);
         }

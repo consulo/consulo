@@ -190,7 +190,7 @@ public class ExternalStorageManager {
             if (wantRestart) {
                 myApplication.invokeLater(
                     () -> {
-                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                        if (PluginInstallUtil.showRestartDialog() == Messages.YES) {
                             myApplication.restart(true);
                         }
                     },

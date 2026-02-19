@@ -262,7 +262,7 @@ public class PluginsPanel implements Disposable {
         if (myInstalledTab.isRequireShutdown()) {
             Application app = Application.get();
 
-            int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
+            int response = app.isRestartCapable() ? PluginInstallUtil.showRestartDialog() : PluginInstallUtil.showShutDownDialog();
             if (response == Messages.YES) {
                 app.restart(true);
             }
