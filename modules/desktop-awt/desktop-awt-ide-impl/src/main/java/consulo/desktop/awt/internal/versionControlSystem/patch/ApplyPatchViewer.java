@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AllIcons;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.dataContext.DataProvider;
@@ -46,10 +45,10 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
+import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
 import consulo.versionControlSystem.impl.internal.patch.tool.ApplyPatchRequest;
 import consulo.versionControlSystem.impl.internal.patch.tool.PatchChangeBuilder;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -514,7 +513,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         onChangeResolved();
     }
 
-    @RequiredUIAccess
+    @RequiredWriteAction
     public void replaceChange(@Nonnull ApplyPatchChange change) {
         LineRange resultRange = change.getResultRange();
         LineRange patchRange = change.getPatchInsertionRange();
@@ -535,7 +534,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         private ApplySelectedChangesAction(boolean shortcut) {
             super(shortcut);
             getTemplatePresentation().setText("Accept");
-            getTemplatePresentation().setIcon(AllIcons.Actions.Checked);
+            getTemplatePresentation().setIcon(PlatformIconGroup.actionsChecked());
             copyShortcutFrom(ActionManager.getInstance().getAction("Diff.ApplyRightSide"));
         }
 
@@ -545,7 +544,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        @RequiredUIAccess
+        @RequiredWriteAction
         protected void apply(@Nonnull List<ApplyPatchChange> changes) {
             for (int i = changes.size() - 1; i >= 0; i--) {
                 replaceChange(changes.get(i));
@@ -557,7 +556,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         private IgnoreSelectedChangesAction(boolean shortcut) {
             super(shortcut);
             getTemplatePresentation().setText("Ignore");
-            getTemplatePresentation().setIcon(AllIcons.Diff.Remove);
+            getTemplatePresentation().setIcon(PlatformIconGroup.diffRemove());
             setShortcutSet(new CompositeShortcutSet(
                 ActionManager.getInstance().getAction("Diff.IgnoreRightSide").getShortcutSet(),
                 ActionManager.getInstance().getAction("Diff.ApplyLeftSide").getShortcutSet()
@@ -850,6 +849,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             super(new EditorEx[]{editor}, disposable);
         }
 
+        @RequiredUIAccess
         public void install(
             @Nullable List<ApplyPatchChange> changes,
             @Nonnull FoldingModelSupport.Settings settings
