@@ -3444,6 +3444,17 @@ public final class StringUtil {
         return -1;
     }
 
+    @Contract(pure = true)
+    public static int lastIndexOfIgnoreCase(@Nonnull String where, char what, int fromIndex) {
+        for (int i = Math.min(fromIndex, where.length() - 1); i >= 0; i--) {
+            if (charsEqualIgnoreCase(where.charAt(i), what)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     /**
      * Finds the next position in the supplied CharSequence which is neither a space nor a tab.
      *

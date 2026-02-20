@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
 import consulo.content.library.LibraryRootType;
 import consulo.content.library.ui.DetectedLibraryRoot;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -27,46 +27,46 @@ import java.util.Map;
  * @author nik
  */
 class SuggestedChildRootInfo {
-  private final VirtualFile myRootCandidate;
-  private final DetectedLibraryRoot myDetectedRoot;
-  private final Map<LibraryRootType, String> myRootTypeNames;
-  private LibraryRootType mySelectedRootType;
+    private final VirtualFile myRootCandidate;
+    private final DetectedLibraryRoot myDetectedRoot;
+    private final Map<LibraryRootType, String> myRootTypeNames;
+    private LibraryRootType mySelectedRootType;
 
-  SuggestedChildRootInfo(VirtualFile rootCandidate, DetectedLibraryRoot detectedRoot, Map<LibraryRootType, String> rootTypeNames) {
-    myRootCandidate = rootCandidate;
-    myDetectedRoot = detectedRoot;
-    myRootTypeNames = rootTypeNames;
-    mySelectedRootType = detectedRoot.getTypes().get(0);
-  }
-
-  public VirtualFile getRootCandidate() {
-    return myRootCandidate;
-  }
-
-  public DetectedLibraryRoot getDetectedRoot() {
-    return myDetectedRoot;
-  }
-
-  public String getRootTypeName(LibraryRootType type) {
-    return myRootTypeNames.get(type);
-  }
-
-  public LibraryRootType getSelectedRootType() {
-    return mySelectedRootType;
-  }
-
-  public void setSelectedRootType(String selectedRootType) {
-    for (LibraryRootType type : myDetectedRoot.getTypes()) {
-      if (getRootTypeName(type).equals(selectedRootType)) {
-        mySelectedRootType = type;
-        break;
-      }
+    SuggestedChildRootInfo(VirtualFile rootCandidate, DetectedLibraryRoot detectedRoot, Map<LibraryRootType, String> rootTypeNames) {
+        myRootCandidate = rootCandidate;
+        myDetectedRoot = detectedRoot;
+        myRootTypeNames = rootTypeNames;
+        mySelectedRootType = detectedRoot.getTypes().get(0);
     }
-  }
 
-  public String[] getRootTypeNames() {
-    String[] types = ArrayUtil.toStringArray(myRootTypeNames.values());
-    Arrays.sort(types, String.CASE_INSENSITIVE_ORDER);
-    return types;
-  }
+    public VirtualFile getRootCandidate() {
+        return myRootCandidate;
+    }
+
+    public DetectedLibraryRoot getDetectedRoot() {
+        return myDetectedRoot;
+    }
+
+    public String getRootTypeName(LibraryRootType type) {
+        return myRootTypeNames.get(type);
+    }
+
+    public LibraryRootType getSelectedRootType() {
+        return mySelectedRootType;
+    }
+
+    public void setSelectedRootType(String selectedRootType) {
+        for (LibraryRootType type : myDetectedRoot.getTypes()) {
+            if (getRootTypeName(type).equals(selectedRootType)) {
+                mySelectedRootType = type;
+                break;
+            }
+        }
+    }
+
+    public String[] getRootTypeNames() {
+        String[] types = ArrayUtil.toStringArray(myRootTypeNames.values());
+        Arrays.sort(types, String.CASE_INSENSITIVE_ORDER);
+        return types;
+    }
 }

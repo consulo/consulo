@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -78,7 +78,7 @@ public class Comparing {
       if (c1 == c2) {
         continue;
       }
-      if (!caseSensitive && StringUtilRt.charsEqualIgnoreCase(c1, c2)) continue;
+      if (!caseSensitive && StringUtil.charsEqualIgnoreCase(c1, c2)) continue;
       return false;
     }
 
