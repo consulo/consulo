@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.execution.wsl;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -11,6 +10,7 @@ import consulo.process.event.ProcessListener;
 import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -148,9 +148,8 @@ public class WSLDistribution {
       throw new ExecutionException("Unable to copy files to " + windowsPath);
     }
     command.add(targetWslPath + "/");
-    return executeOnWsl(handlerConsumer, ArrayUtilRt.toStringArray(command));
+    return executeOnWsl(handlerConsumer, ArrayUtil.toStringArray(command));
   }
-
 
   /**
    * Patches passed command line to make it runnable in WSL context, e.g changes {@code date} to {@code ubuntu run "date"}.<p/>
