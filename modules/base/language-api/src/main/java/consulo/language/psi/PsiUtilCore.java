@@ -681,7 +681,7 @@ public class PsiUtilCore {
         sb.append("\nproject=").append(project.getName())
             .append(" default=").append(project.isDefault())
             .append(" open=").append(project.isOpen());
-        sb.append("\nfileType=").append(fileType.getName()).append("/").append(fileType.getClass().getName());
+        sb.append("\nfileType=").append(fileType.getId()).append("/").append(fileType.getClass().getName());
         sb.append("\nisIgnored=").append(ignored);
         sb.append(" underIgnored=").append(indexFacade.isUnderIgnored(file));
         sb.append(" inLibrary=").append(indexFacade.isInLibrarySource(file) || indexFacade.isInLibraryClasses(file));

@@ -191,7 +191,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
 
         public String getText() {
-            return myFileType != null ? myFileType.getName() + " file" : myExtension.getName();
+            return myFileType != null ? myFileType.getDisplayName() + " file" : myExtension.getName();
         }
 
         @Nullable

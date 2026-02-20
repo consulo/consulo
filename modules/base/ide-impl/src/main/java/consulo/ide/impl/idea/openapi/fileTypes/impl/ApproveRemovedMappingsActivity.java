@@ -42,7 +42,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
                         .newWarn(GROUP)
                         .title(LocalizeValue.localizeTODO("File type recognized"))
                         .content(LocalizeValue.localizeTODO(
-                            "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +
+                            "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getDisplayName() +
                                 " <a href='revert'>Revert</a>"
                         ))
                         .hyperlinkListener(new NotificationListener.Adapter() {
@@ -51,7 +51,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
                             protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
                                 Application.get().runWriteAction(() -> {
                                     FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
-                                    removedMappings.add(matcher, fileType.getName(), true);
+                                    removedMappings.add(matcher, fileType.getId(), true);
                                 });
                                 notification.expire();
                             }

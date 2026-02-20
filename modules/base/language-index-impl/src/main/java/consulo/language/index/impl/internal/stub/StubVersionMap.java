@@ -112,7 +112,7 @@ class StubVersionMap {
 
     if (canUsePreviousMappings && (!addedFileTypes.isEmpty() || !removedFileTypes.isEmpty())) {
       StubUpdatingIndex.LOG.info("requesting complete stub index rebuild due to changes: " +
-                                 (addedFileTypes.isEmpty() ? "" : "added file types:" + StringUtil.join(addedFileTypes, FileType::getName, ",") + ";") +
+                                 (addedFileTypes.isEmpty() ? "" : "added file types:" + StringUtil.join(addedFileTypes, FileType::getId, ",") + ";") +
                                  (removedFileTypes.isEmpty() ? "" : "removed file types:" + StringUtil.join(removedFileTypes, ",")));
       throw new IOException(); // StubVersionMap will be recreated
     }
@@ -125,11 +125,11 @@ class StubVersionMap {
 
     if (!addedFileTypes.isEmpty() || !updatedFileTypes.isEmpty() || !removedFileTypes.isEmpty()) {
       if (!addedFileTypes.isEmpty()) {
-        StubUpdatingIndex.LOG.info("Following new file types will be indexed:" + StringUtil.join(addedFileTypes, FileType::getName, ","));
+        StubUpdatingIndex.LOG.info("Following new file types will be indexed:" + StringUtil.join(addedFileTypes, FileType::getId, ","));
       }
 
       if (!updatedFileTypes.isEmpty()) {
-        StubUpdatingIndex.LOG.info("Stub version was changed for " + StringUtil.join(updatedFileTypes, FileType::getName, ","));
+        StubUpdatingIndex.LOG.info("Stub version was changed for " + StringUtil.join(updatedFileTypes, FileType::getId, ","));
       }
 
       if (!removedFileTypes.isEmpty()) {
@@ -142,7 +142,7 @@ class StubVersionMap {
       for (FileType fileType : fileTypeToVersionOwner.keySet()) {
         Object owner = fileTypeToVersionOwner.get(fileType);
         long timestamp = fileTypeToVersion.get(fileType);
-        allFileTypes.append(fileType.getName()).append(RECORD_SEPARATOR).append(typeAndVersion(owner)).append(RECORD_SEPARATOR).append(timestamp).append(LINE_SEPARATOR);
+        allFileTypes.append(fileType.getId()).append(RECORD_SEPARATOR).append(typeAndVersion(owner)).append(RECORD_SEPARATOR).append(timestamp).append(LINE_SEPARATOR);
       }
       FileUtil.writeToFile(allIndexedFiles, allFileTypes.toString().getBytes(ourEncoding));
     }

@@ -358,7 +358,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     @RequiredReadAction
     public void putInfo(@Nonnull Map<String, String> info) {
         info.put("fileName", getName());
-        info.put("fileType", getFileType().getName());
+        info.put("fileType", getFileType().getId());
     }
 
     @Override

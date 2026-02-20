@@ -67,7 +67,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
                     if (fileType != null) {
                         setIcon(fileType.getIcon());
                         append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                        append("(" + fileType.getDescription() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                        append("(" + fileType.getDisplayName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
                     }
                 }
             }

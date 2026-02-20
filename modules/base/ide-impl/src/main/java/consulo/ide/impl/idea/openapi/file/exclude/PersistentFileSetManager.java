@@ -37,7 +37,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
     if (file.isDirectory()) {
       throw new IllegalArgumentException("file must not be directory but got: " + file + "; File.isDirectory():" + new File(file.getPath()).isDirectory());
     }
-    String value = type.getName();
+    String value = type.getId();
     String prevValue = myMap.put(file, value);
     if (!value.equals(prevValue)) {
       onFileSettingsChanged(Collections.singleton(file));
@@ -79,7 +79,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
       Element element = new Element(FILE_ELEMENT);
       element.setAttribute(URL_ATTR, VfsUtilCore.pathToUrl(e.getKey().getPath()));
       String fileTypeName = e.getValue();
-      if (fileTypeName != null && !PlainTextFileType.INSTANCE.getName().equals(fileTypeName)) {
+      if (fileTypeName != null && !PlainTextFileType.INSTANCE.getId().equals(fileTypeName)) {
         element.setAttribute(VALUE_ATTR, fileTypeName);
       }
       root.addContent(element);
@@ -98,7 +98,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
         VirtualFile vf = VirtualFileManager.getInstance().findFileByUrl(url);
         if (vf != null) {
           String value = fileElement.getAttributeValue(VALUE_ATTR);
-          myMap.put(vf, Objects.requireNonNullElse(value, PlainTextFileType.INSTANCE.getName()));
+          myMap.put(vf, Objects.requireNonNullElse(value, PlainTextFileType.INSTANCE.getId()));
         }
       }
     }

@@ -131,7 +131,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
         @Override
         protected String textForFilterValue(@Nonnull FileType value) {
-            return value.getName();
+            return value.getDisplayName().get();
         }
 
         @Override
@@ -174,7 +174,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
             if (!o1.isBinary() && o2.isBinary()) {
                 return -1;
             }
-            return o1.getName().compareToIgnoreCase(o2.getName());
+            return o1.getDisplayName().compareTo(o2.getDisplayName());
         }
     }
 }

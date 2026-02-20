@@ -131,7 +131,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
         synchronized (myLock) {
             LOG.debug(
                 "Downloading finished, size = " + myLocalFile.length() + "," +
-                    " file type=" + (fileType != null ? fileType.getName() : "null")
+                    " file type=" + (fileType != null ? fileType.getId() : "null")
             );
             if (fileType != null) {
                 String fileName = myLocalFile.getName();

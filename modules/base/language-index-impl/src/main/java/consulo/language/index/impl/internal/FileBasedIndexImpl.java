@@ -257,7 +257,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                         Set<String> removedExtensions = new HashSet<>(strings);
                         removedExtensions.removeAll(newTypeToExtensionsMap.get(fileType));
                         rebuildAllIndices(
-                            fileType.getName() + " is no longer associated with extension(s) " + String.join(",", removedExtensions)
+                            fileType.getDisplayName() + " is no longer associated with extension(s) " + String.join(",", removedExtensions)
                         );
                         return;
                     }

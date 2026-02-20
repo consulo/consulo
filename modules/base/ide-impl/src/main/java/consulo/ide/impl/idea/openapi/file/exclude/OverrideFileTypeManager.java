@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 public final class OverrideFileTypeManager extends PersistentFileSetManager {
   public boolean isMarkedPlainText(@Nonnull VirtualFile file) {
-    return PlainTextFileType.INSTANCE.getName().equals(getFileValue(file));
+    return PlainTextFileType.INSTANCE.getId().equals(getFileValue(file));
   }
 
   public static OverrideFileTypeManager getInstance() {

@@ -106,7 +106,7 @@ public class FileTypeChooser extends DialogWrapper {
         myPanel.add(myInstallPluginFromRepository);
 
         FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-        Arrays.sort(fileTypes, (fileType1, fileType2) -> fileType1.getDescription().get().compareToIgnoreCase(fileType2.getDescription().get()));
+        Arrays.sort(fileTypes, (fileType1, fileType2) -> fileType1.getDisplayName().get().compareToIgnoreCase(fileType2.getDisplayName().get()));
 
         DefaultListModel<FileType> model = new DefaultListModel<>();
         for (FileType type : fileTypes) {

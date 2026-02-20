@@ -23,81 +23,86 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
  */
 public class SubstitutedFileType extends LanguageFileType {
-  @Nonnull
-  private final FileType myOriginalFileType;
-  @Nonnull
-  private final FileType myFileType;
+    @Nonnull
+    private final FileType myOriginalFileType;
+    @Nonnull
+    private final FileType myFileType;
 
-  private SubstitutedFileType(@Nonnull FileType originalFileType, @Nonnull LanguageFileType substitutionFileType, @Nonnull Language substitutedLanguage) {
-    super(substitutedLanguage);
-    myOriginalFileType = originalFileType;
-    myFileType = substitutionFileType;
-  }
-
-  @Nonnull
-  public static FileType substituteFileType(VirtualFile file, @Nonnull FileType fileType, Project project) {
-    if (project == null) {
-      return fileType;
-    }
-    if (fileType instanceof LanguageFileType) {
-      Language language = ((LanguageFileType)fileType).getLanguage();
-      Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
-      LanguageFileType substFileType = substitutedLanguage.getAssociatedFileType();
-      if (!substitutedLanguage.equals(language) && substFileType != null) {
-        return new SubstitutedFileType(fileType, substFileType, substitutedLanguage);
-      }
+    private SubstitutedFileType(@Nonnull FileType originalFileType, @Nonnull LanguageFileType substitutionFileType, @Nonnull Language substitutedLanguage) {
+        super(substitutedLanguage);
+        myOriginalFileType = originalFileType;
+        myFileType = substitutionFileType;
     }
 
-    return fileType;
-  }
+    @Nonnull
+    public static FileType substituteFileType(VirtualFile file, @Nonnull FileType fileType, Project project) {
+        if (project == null) {
+            return fileType;
+        }
+        if (fileType instanceof LanguageFileType) {
+            Language language = ((LanguageFileType) fileType).getLanguage();
+            Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
+            LanguageFileType substFileType = substitutedLanguage.getAssociatedFileType();
+            if (!substitutedLanguage.equals(language) && substFileType != null) {
+                return new SubstitutedFileType(fileType, substFileType, substitutedLanguage);
+            }
+        }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return myFileType.getId();
-  }
+        return fileType;
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDescription() {
-    return myFileType.getDescription();
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return myFileType.getId();
+    }
 
-  @Nonnull
-  @Override
-  public String getDefaultExtension() {
-    return myFileType.getDefaultExtension();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return myFileType.getDescription();
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return myFileType.getIcon();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return myFileType.getDisplayName();
+    }
 
-  @Override
-  public String getCharset(@Nonnull VirtualFile file, byte[] content) {
-    return myFileType.getCharset(file, content);
-  }
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return myFileType.getDefaultExtension();
+    }
 
-  @Nonnull
-  public FileType getOriginalFileType() {
-    return myOriginalFileType;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return myFileType.getIcon();
+    }
 
-  @Nonnull
-  public FileType getFileType() {
-    return myFileType;
-  }
+    @Override
+    public String getCharset(@Nonnull VirtualFile file, byte[] content) {
+        return myFileType.getCharset(file, content);
+    }
 
-  public boolean isSameFileType() {
-    return myFileType.equals(myOriginalFileType);
-  }
+    @Nonnull
+    public FileType getOriginalFileType() {
+        return myOriginalFileType;
+    }
+
+    @Nonnull
+    public FileType getFileType() {
+        return myFileType;
+    }
+
+    public boolean isSameFileType() {
+        return myFileType.equals(myOriginalFileType);
+    }
 }

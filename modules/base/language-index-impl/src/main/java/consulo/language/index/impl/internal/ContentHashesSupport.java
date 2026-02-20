@@ -91,7 +91,7 @@ class ContentHashesSupport {
         MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
         Charset defaultCharset = Charset.defaultCharset();
-        messageDigest.update(fileType.getName().getBytes(defaultCharset));
+        messageDigest.update(fileType.getId().getBytes(defaultCharset));
         messageDigest.update((byte) 0);
         messageDigest.update(String.valueOf(bytes.length).getBytes(defaultCharset));
         messageDigest.update((byte) 0);

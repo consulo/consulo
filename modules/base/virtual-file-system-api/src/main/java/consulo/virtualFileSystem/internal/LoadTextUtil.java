@@ -506,7 +506,7 @@ public final class LoadTextUtil {
         return text;
       }
 
-      throw new IllegalArgumentException("Attempt to load text for binary file which doesn't have a decompiler plugged in: " + file.getPresentableUrl() + ". File type: " + type.getName());
+      throw new IllegalArgumentException("Attempt to load text for binary file which doesn't have a decompiler plugged in: " + file.getPresentableUrl() + ". File type: " + type.getId());
     }
     return loadText(file, UNLIMITED);
   }
@@ -524,7 +524,7 @@ public final class LoadTextUtil {
   public static CharSequence loadText(@Nonnull VirtualFile file, int limit) {
     FileType type = file.getFileType();
     if (type.isBinary())
-      throw new IllegalArgumentException("Attempt to load truncated text for binary file: " + file.getPresentableUrl() + ". File type: " + type.getName());
+      throw new IllegalArgumentException("Attempt to load truncated text for binary file: " + file.getPresentableUrl() + ". File type: " + type.getId());
 
     if (file instanceof TextLightVirtualFileBase) {
       return limitCharSequence(((TextLightVirtualFileBase)file).getContent(), limit);
