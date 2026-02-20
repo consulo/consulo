@@ -11,7 +11,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.localize.LocalizeValue;
@@ -118,7 +117,7 @@ public class EncodingUtil {
     ) {
         try {
             String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
-            CharSequence textToSave = lineSeparator.equals("\n") ? text : StringUtilRt.convertLineSeparators(text, lineSeparator);
+            CharSequence textToSave = lineSeparator.equals("\n") ? text : StringUtil.convertLineSeparators(text, lineSeparator);
 
             Pair<Charset, byte[]> chosen =
                 LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave.toString());
