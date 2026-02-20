@@ -15,13 +15,11 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.AllIcons;
 import consulo.component.PropertyName;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
@@ -29,6 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -136,25 +135,22 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
             return null;
         });
 
-        JBList list = new JBList(new ResourceModules().getModuleNames());
-        NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<>() {
-            @Nonnull
-            @Override
-            public JComponent apply(Object dom) {
-                return new JBLabel(
-                    dom instanceof Module module ? module.getName() : dom.toString(),
-                    AllIcons.Nodes.Package,
-                    SwingConstants.LEFT
-                );
-            }
-        };
-        list.installCellRenderer(modulesRenderer);
+        JBList<String> list = new JBList<>(new ResourceModules().getModuleNames());
+        list.installCellRenderer(moduleName -> new JBLabel(
+            moduleName,
+            PlatformIconGroup.nodesPackage(),
+            SwingConstants.LEFT
+        ));
         JPanel modulesPanel = ToolbarDecorator.createDecorator(list)
             .setAddAction((b, e) -> {
                 Module[] all = ModuleManager.getInstance(myProject).getModules();
                 Arrays.sort(all, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-                JBList modules = new JBList(all);
-                modules.installCellRenderer(modulesRenderer);
+                JBList<Module> modules = new JBList<>(all);
+                modules.installCellRenderer(module -> new JBLabel(
+                    module.getName(),
+                    PlatformIconGroup.nodesPackage(),
+                    SwingConstants.LEFT
+                ));
                 new PopupChooserBuilder<>(modules)
                     .setTitle("Add Resource Module")
                     .setFilteringEnabled(o -> ((Module) o).getName())
@@ -166,7 +162,9 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                         }
                         ((DefaultTreeModel) myTree.getModel()).reload();
                         TreeUtil.expandAll(myTree);
-                    }).createPopup().show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
+                    })
+                    .createPopup()
+                    .show(e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
             })
             .setRemoveAction(button -> {
                 Object[] values = list.getSelectedValues();
@@ -314,7 +312,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     private class MyCellRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            JTree tree,
+            @Nonnull JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -326,7 +324,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                 VirtualFile file = fileNode.getUserObject();
                 Module module = ModuleUtil.findModuleForFile(file, myProject);
                 if (module != null) {
-                    setIcon(AllIcons.Nodes.Module);
+                    setIcon(PlatformIconGroup.nodesModule());
                     append(
                         "[" + module.getName() + "] ",
                         new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, UIUtil.getTreeForeground())
