@@ -30,7 +30,7 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
+import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;

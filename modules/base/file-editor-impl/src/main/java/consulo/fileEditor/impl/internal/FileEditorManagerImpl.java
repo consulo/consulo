@@ -241,6 +241,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                 }
             }
         }
+
+        refreshIconsAsync();
     }
 
     public static boolean isDumbAware(@Nonnull FileEditor editor) {

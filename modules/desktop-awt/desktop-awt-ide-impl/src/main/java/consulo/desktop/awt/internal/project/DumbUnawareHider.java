@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.project;
+package consulo.desktop.awt.internal.project;
+
+import consulo.disposer.Disposable;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +29,29 @@ import java.awt.*;
  * @author peter
  */
 public class DumbUnawareHider extends JPanel {
+    public static DumbUnawareHider wrapGently(@Nonnull Project project,
+                                              @Nonnull JComponent dumbUnawareContent,
+                                              @Nonnull Disposable parentDisposable) {
+        DumbService dumbService = DumbService.getInstance(project);
+
+        final DumbUnawareHider wrapper = new DumbUnawareHider(dumbUnawareContent);
+        wrapper.setContentVisible(!dumbService.isDumb());
+        project.getMessageBus().connect(parentDisposable).subscribe(DumbModeListener.class, new DumbModeListener() {
+
+            @Override
+            public void enteredDumbMode() {
+                wrapper.setContentVisible(false);
+            }
+
+            @Override
+            public void exitDumbMode() {
+                wrapper.setContentVisible(true);
+            }
+        });
+
+        return wrapper;
+    }
+
     private static final String CONTENT = "content";
     private static final String EXCUSE = "excuse";
 

@@ -7,10 +7,10 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.internal.CheckCanceledHook;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.SuspenderProgressManager;
+import consulo.application.internal.UnsafeProgressIndicator;
 import consulo.application.progress.*;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -20,7 +20,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.SystemNotifications;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -33,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class ProgressManagerImpl extends CoreProgressManager implements Disposable, SuspenderProgressManager {
-    private static final Key<Boolean> SAFE_PROGRESS_INDICATOR = Key.create("SAFE_PROGRESS_INDICATOR");
     private final Set<CheckCanceledHook> myHooks = ConcurrentHashMap.newKeySet();
     private final CheckCanceledHook mySleepHook = __ -> sleepIfNeededToGivePriorityToAnotherThread();
 
@@ -44,18 +42,9 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
 
     @Override
     public boolean hasUnsafeProgressIndicator() {
-        return super.hasUnsafeProgressIndicator() || ContainerUtil.exists(getCurrentIndicators(), ProgressManagerImpl::isUnsafeIndicator);
-    }
-
-    private static boolean isUnsafeIndicator(ProgressIndicator indicator) {
-        return indicator instanceof ProgressWindow && ((ProgressWindow) indicator).getUserData(SAFE_PROGRESS_INDICATOR) == null;
-    }
-
-    /**
-     * The passes progress won't count in {@link #hasUnsafeProgressIndicator()} and won't stop from application exiting.
-     */
-    public void markProgressSafe(@Nonnull ProgressWindow progress) {
-        progress.putUserData(SAFE_PROGRESS_INDICATOR, true);
+        return super.hasUnsafeProgressIndicator() || ContainerUtil.exists(getCurrentIndicators(), it -> {
+            return it instanceof UnsafeProgressIndicator pi && pi.isUnsafeIndicator();
+        });
     }
 
     @Override
