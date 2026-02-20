@@ -6,7 +6,7 @@ import consulo.content.internal.LibraryEx;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.TriConsumer;
@@ -95,7 +95,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
     for (LightFilePointer pointer : pointers) {
       urls.add(pointer.getUrl());
     }
-    return ArrayUtilRt.toStringArray(urls);
+    return ArrayUtil.toStringArray(urls);
   }
 
   @Nonnull
