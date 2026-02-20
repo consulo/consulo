@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.WindowResizeListener;
 import consulo.ide.impl.idea.usages.impl.UsagePreviewPanel;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -116,6 +115,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -1099,7 +1099,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         Image hoveredIcon,
         Image selectedIcon,
         AtomicBoolean state,
-        Producer<Boolean> enableStateProvider
+        Supplier<Boolean> enableStateProvider
     ) {
         return new DumbAwareToggleAction(message, LocalizeValue.empty(), icon) {
             {
@@ -1124,7 +1124,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
             @Override
             public void update(@Nonnull AnActionEvent e) {
-                e.getPresentation().setEnabled(enableStateProvider.produce());
+                e.getPresentation().setEnabled(enableStateProvider.get());
                 Toggleable.setSelected(e.getPresentation(), state.get());
             }
 
