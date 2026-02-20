@@ -6,18 +6,15 @@ package consulo.ide.impl.idea.openapi.progress.impl;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.internal.CheckCanceledHook;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWindow;
-import consulo.application.progress.PerformInBackgroundOption;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.application.progress.TaskInfo;
+import consulo.application.internal.CheckCanceledHook;
+import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.internal.SuspenderProgressManager;
+import consulo.application.progress.*;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
-import consulo.application.progress.PingProgress;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -35,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
-public class ProgressManagerImpl extends CoreProgressManager implements Disposable {
+public class ProgressManagerImpl extends CoreProgressManager implements Disposable, SuspenderProgressManager {
     private static final Key<Boolean> SAFE_PROGRESS_INDICATOR = Key.create("SAFE_PROGRESS_INDICATOR");
     private final Set<CheckCanceledHook> myHooks = ConcurrentHashMap.newKeySet();
     private final CheckCanceledHook mySleepHook = __ -> sleepIfNeededToGivePriorityToAnotherThread();
@@ -69,8 +66,8 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     @Nonnull
     @Override
     public ProgressIndicator newBackgroundableProcessIndicator(@Nullable ComponentManager project,
-                                                                @Nonnull TaskInfo info,
-                                                                @Nonnull PerformInBackgroundOption option) {
+                                                               @Nonnull TaskInfo info,
+                                                               @Nonnull PerformInBackgroundOption option) {
         return new BackgroundableProcessIndicator((Project) project, info, option);
     }
 
@@ -136,13 +133,15 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
      * An absolutely guru method, very dangerous, don't use unless you're desperate,
      * because hooks will be executed on every checkCanceled and can dramatically slow down everything in the IDE.
      */
-    void addCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
+    @Override
+    public void addCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
         if (myHooks.add(hook)) {
             updateShouldCheckCanceled();
         }
     }
 
-    void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
+    @Override
+    public void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
         if (myHooks.remove(hook)) {
             updateShouldCheckCanceled();
         }

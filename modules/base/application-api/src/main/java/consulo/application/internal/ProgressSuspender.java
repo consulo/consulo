@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.progress.impl;
+package consulo.application.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.internal.CheckCanceledHook;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -25,13 +24,12 @@ import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.application.internal.ProgressIndicatorEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author peter
@@ -48,7 +46,7 @@ public class ProgressSuspender implements AutoCloseable {
     private final ProgressSuspenderListener myPublisher;
     private volatile boolean mySuspended;
     private final CheckCanceledHook myHook = this::freezeIfNeeded;
-    private final Set<ProgressIndicator> myProgresses = ContainerUtil.newConcurrentSet();
+    private final Set<ProgressIndicator> myProgresses = ConcurrentHashMap.newKeySet();
     private boolean myClosed;
 
     private ProgressSuspender(@Nonnull ProgressIndicatorEx progress, @Nonnull LocalizeValue suspendedText) {
@@ -74,7 +72,7 @@ public class ProgressSuspender implements AutoCloseable {
         synchronized (myLock) {
             myClosed = true;
             mySuspended = false;
-            ((ProgressManagerImpl)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
+            ((SuspenderProgressManager)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
         }
         for (ProgressIndicator progress : myProgresses) {
             ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, null);
@@ -121,7 +119,7 @@ public class ProgressSuspender implements AutoCloseable {
             mySuspended = true;
             myTempReason = reason;
 
-            ((ProgressManagerImpl)ProgressManager.getInstance()).addCheckCanceledHook(myHook);
+            ((SuspenderProgressManager)ProgressManager.getInstance()).addCheckCanceledHook(myHook);
         }
 
         myPublisher.suspendedStatusChanged(this);
@@ -136,7 +134,7 @@ public class ProgressSuspender implements AutoCloseable {
             mySuspended = false;
             myTempReason = null;
 
-            ((ProgressManagerImpl)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
+            ((SuspenderProgressManager)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
 
             myLock.notifyAll();
         }

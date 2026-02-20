@@ -24,7 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
+import consulo.application.internal.ProgressSuspender;
 import consulo.ide.impl.idea.util.exception.FrequentErrorLogger;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.impl.util.NoAccessDuringPsiEvents;
