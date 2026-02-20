@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui;
+package consulo.compiler.impl.internal.setting;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicGraphicsUtils;

@@ -158,8 +158,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.bundle;
     exports consulo.ide.impl.command;
     exports consulo.ide.impl.compiler;
-    exports consulo.ide.impl.compiler.resourceCompiler;
-    exports consulo.ide.impl.compiler.setting;
     exports consulo.ide.impl.configurationStore.vcs;
     exports consulo.ide.impl.desktop;
     exports consulo.ide.impl.diff;

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler.resourceCompiler;
+package consulo.compiler.impl.internal.setting;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.configurable.Configurable;
@@ -24,17 +23,16 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.Comparing;
 import consulo.project.Project;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.regex.PatternSyntaxException;

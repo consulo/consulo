@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler.setting;
+package consulo.compiler.impl.internal.setting;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerManager;
@@ -27,7 +27,6 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 

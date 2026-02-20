@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.compiler.setting;
+package consulo.compiler.impl.internal.setting;
 
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
-import consulo.ui.ex.JBColor;
-import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.table.JBTable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.swing.*;
 import javax.swing.table.*;
