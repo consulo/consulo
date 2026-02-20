@@ -18,6 +18,7 @@ package consulo.http.impl.internal;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.http.HttpRequest;
+import consulo.http.HttpVersion;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -33,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +55,9 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     @Nonnull
     @Override
     public String getURL() {
+        if (myConnection != null) {
+            return myConnection.getURL().toExternalForm();
+        }
         return myBuilder.myUrl;
     }
 
@@ -77,13 +82,25 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
 
     @Nonnull
     @Override
-    public Map<String, String> responseHeaders() throws IOException {
+    public HttpVersion version() {
+        // TODO unsupported for now
+        return HttpVersion.HTTP_1_1;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, List<String>> responseHeaders() throws IOException {
         URLConnection connection = getConnection();
 
-        Map<String, String> headers = Maps.newHashMap(HashingStrategy.caseInsensitive());
+        Map<String, List<String>> headers = Maps.newHashMap(HashingStrategy.caseInsensitive());
         Map<String, List<String>> headerFields = connection.getHeaderFields();
         for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
-            headers.put(entry.getKey(), String.join(", ", entry.getValue()));
+            String key = entry.getKey();
+            if (key == null) {
+                continue;
+            }
+
+            headers.put(key, new ArrayList<>(entry.getValue()));
         }
         return headers;
     }

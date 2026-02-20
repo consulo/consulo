@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 @ServiceImpl
 @Singleton
 public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory {
-    private static final Logger LOG = Logger.getInstance(HttpRequests.class);
+    private static final Logger LOG = Logger.getInstance(HttpRequestBuilderFactoryImpl.class);
 
     static final int BLOCK_SIZE = 16 * 1024;
 

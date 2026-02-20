@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Map;
 
 public interface HttpRequest {
@@ -36,7 +37,17 @@ public interface HttpRequest {
     String statusMessage() throws IOException;
 
     @Nonnull
-    Map<String, String> responseHeaders() throws IOException;
+    Map<String, List<String>> responseHeaders() throws IOException;
+
+    @Nonnull
+    HttpVersion version();
+
+    @Nullable
+    default String headerValue(@Nonnull String header) throws IOException {
+        Map<String, List<String>> map = responseHeaders();
+        List<String> headers = map.get(header);
+        return headers == null || headers.isEmpty() ? null : headers.getFirst();
+    }
 
     @Nullable
     String getContentEncoding() throws IOException;
