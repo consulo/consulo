@@ -16,13 +16,14 @@
 package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.ui.ex.awt.JBTextField;
-import consulo.ide.impl.idea.util.BooleanFunction;
+
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
  * @since 2019-11-07
  */
-public class TextFieldPlaceholderFunction implements BooleanFunction<JBTextField> {
+public class TextFieldPlaceholderFunction implements Predicate<JBTextField> {
   public static void install(JBTextField textField) {
     textField.putClientProperty("StatusVisibleFunction", INSTANCE);
   }
@@ -30,7 +31,7 @@ public class TextFieldPlaceholderFunction implements BooleanFunction<JBTextField
   private static final TextFieldPlaceholderFunction INSTANCE = new TextFieldPlaceholderFunction();
 
   @Override
-  public boolean fun(JBTextField textField) {
+  public boolean test(JBTextField textField) {
     return textField.getText().length() == 0;
   }
 }

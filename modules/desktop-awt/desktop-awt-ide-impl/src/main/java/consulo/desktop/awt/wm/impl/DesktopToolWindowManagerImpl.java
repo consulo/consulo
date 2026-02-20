@@ -42,7 +42,6 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -688,21 +687,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             position.set(Balloon.Position.atLeft);
         }
 
-        MessageType messageType = null;
-
-        switch (type) {
-            case INFO:
-                messageType = MessageType.INFO;
-                break;
-            case WARNING:
-                messageType = MessageType.WARNING;
-                break;
-            case ERROR:
-                messageType = MessageType.ERROR;
-                break;
-            case QUESTION:
-                throw new IllegalArgumentException();
-        }
+        MessageType messageType = switch (type) {
+            case INFO -> MessageType.INFO;
+            case WARNING -> MessageType.WARNING;
+            case ERROR -> MessageType.ERROR;
+            case QUESTION -> throw new IllegalArgumentException();
+        };
 
         BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
         Balloon balloon = JBPopupFactory.getInstance()
@@ -874,11 +864,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public void doContentRename(@Nonnull DataContext context,
-                                @Nonnull ToolWindow toolWindow,
-                                @Nullable Content content,
-                                @Nonnull LocalizeValue labelText,
-                                @Nonnull BiConsumer<Content, String> renameConsumer) {
+    public void doContentRename(
+        @Nonnull DataContext context,
+        @Nonnull ToolWindow toolWindow,
+        @Nullable Content content,
+        @Nonnull LocalizeValue labelText,
+        @Nonnull BiConsumer<Content, String> renameConsumer
+    ) {
         Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (component == null || content == null || !context.hasData(Content.KEY)) {
             return;
@@ -887,13 +879,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         showContentRenamePopup(component, content, labelText, renameConsumer);
     }
 
-    private void showContentRenamePopup(Component baseLabel,
-                                        Content content,
-                                        LocalizeValue labelText,
-                                        @Nonnull BiConsumer<Content, String> renameConsumer) {
+    private void showContentRenamePopup(
+        Component baseLabel,
+        Content content,
+        LocalizeValue labelText,
+        @Nonnull BiConsumer<Content, String> renameConsumer
+    ) {
         JBTextField textField = new JBTextField(content.getDisplayName());
         textField.getEmptyText().setText(content.getDisplayName());
-        textField.putClientProperty("StatusVisibleFunction", (BooleanFunction<JBTextField>) o -> o.getText().isEmpty());
+        textField.putClientProperty("StatusVisibleFunction", (Predicate<JBTextField>) o -> o.getText().isEmpty());
         textField.selectAll();
 
         JBLabel label = new JBLabel(labelText.get());
