@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.util.containers;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
@@ -1673,7 +1672,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> List<T> unfold(@Nullable T t, @Nonnull NullableFunction<T, T> next) {
+    public static <T> List<T> unfold(@Nullable T t, @Nonnull Function<T, T> next) {
         if (t == null) {
             return emptyList();
         }
