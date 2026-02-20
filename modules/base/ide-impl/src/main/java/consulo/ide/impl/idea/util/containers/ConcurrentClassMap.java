@@ -17,11 +17,13 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.collection.ClassMap;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author peter
  */
 public class ConcurrentClassMap<T> extends ClassMap<T> {
-  public ConcurrentClassMap() {
-    super(ContainerUtil.newConcurrentMap());
-  }
+    public ConcurrentClassMap() {
+        super(new ConcurrentHashMap<>());
+    }
 }

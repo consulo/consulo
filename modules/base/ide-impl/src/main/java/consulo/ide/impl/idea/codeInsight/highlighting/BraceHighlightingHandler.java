@@ -30,7 +30,6 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -56,6 +55,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.util.ColorValueUtil;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -85,7 +85,7 @@ public class BraceHighlightingHandler {
      * Is intended to be used to avoid submitting unnecessary new processing request from EDT, i.e. it's assumed that the collection
      * is accessed from the single thread (EDT).
      */
-    private static final Set<Editor> PROCESSED_EDITORS = Collections.newSetFromMap(ContainerUtil.createWeakMap());
+    private static final Set<Editor> PROCESSED_EDITORS = Collections.newSetFromMap(Maps.newWeakHashMap());
 
     @Nonnull
     private final Project myProject;
@@ -174,6 +174,7 @@ public class BraceHighlightingHandler {
         });
     }
 
+    @RequiredReadAction
     private static boolean isValidFile(PsiFile file) {
         return file != null && file.isValid() && !file.getProject().isDisposed();
     }
@@ -517,6 +518,7 @@ public class BraceHighlightingHandler {
             int startLine = myEditor.offsetToLogicalPosition(lBrace.getStartOffset()).line;
             int endLine = myEditor.offsetToLogicalPosition(rBrace.getEndOffset()).line;
             if (endLine - startLine > 0) {
+                @RequiredUIAccess
                 Runnable runnable = () -> {
                     if (myProject.isDisposed() || myEditor.isDisposed()) {
                         return;
@@ -546,10 +548,8 @@ public class BraceHighlightingHandler {
                 showScopeHint(lBrace.getStartOffset(), lBrace.getEndOffset());
             }
         }
-        else {
-            if (!myCodeInsightSettings.HIGHLIGHT_SCOPE) {
-                removeLineMarkers();
-            }
+        else if (!myCodeInsightSettings.HIGHLIGHT_SCOPE) {
+            removeLineMarkers();
         }
     }
 

@@ -28,13 +28,13 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
@@ -97,13 +97,11 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     }
 
     private class MyResetAction extends MyAction {
-
         protected MyResetAction() {
             super("All your changes will be lost");
         }
 
         @Override
-        @NonNls
         protected JComponent createBaseComponent() {
             return installLeftIndentToLabel(new JLabel("Reset to Default Settings"));
         }
