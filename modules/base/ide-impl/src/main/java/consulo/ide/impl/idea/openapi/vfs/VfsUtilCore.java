@@ -16,12 +16,9 @@
 package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.containers.DistinctRootsCollection;
-import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
@@ -38,14 +35,14 @@ import jakarta.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static consulo.virtualFileSystem.util.VirtualFileVisitor.VisitorException;
 
 @Deprecated
 @DeprecationInfo("use VirtualFileUtil")
 public class VfsUtilCore {
-    private static final Logger LOG = Logger.getInstance(VfsUtilCore.class);
-
     public static final String LOCALHOST_URI_PATH_PREFIX = URLUtil.LOCALHOST_URI_PATH_PREFIX;
     public static final char VFS_SEPARATOR_CHAR = VirtualFileUtil.VFS_SEPARATOR_CHAR;
 
@@ -169,7 +166,12 @@ public class VfsUtilCore {
      * @throws IOException if file failed to be copied
      */
     @Nonnull
-    public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String newName) throws IOException {
+    public static VirtualFile copyFile(
+        Object requestor,
+        @Nonnull VirtualFile file,
+        @Nonnull VirtualFile toDir,
+        @Nonnull String newName
+    ) throws IOException {
         return VirtualFileUtil.copyFile(requestor, file, toDir, newName);
     }
 
@@ -179,7 +181,10 @@ public class VfsUtilCore {
     }
 
     @Nonnull
-    public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) throws IOException {
+    public static InputStream inputStreamSkippingBOM(
+        @Nonnull InputStream stream,
+        @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file
+    ) throws IOException {
         return VirtualFileUtil.inputStreamSkippingBOM(stream, file);
     }
 
@@ -188,17 +193,28 @@ public class VfsUtilCore {
         return VirtualFileUtil.outputStreamAddingBOM(stream, file);
     }
 
-    public static boolean iterateChildrenRecursively(@Nonnull VirtualFile root, @Nullable VirtualFileFilter filter, @Nonnull ContentIterator iterator) {
+    public static boolean iterateChildrenRecursively(
+        @Nonnull VirtualFile root,
+        @Nullable VirtualFileFilter filter,
+        @Nonnull ContentIterator iterator
+    ) {
         return VirtualFileUtil.iterateChildrenRecursively(root, filter, iterator);
     }
 
     @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
     @Nonnull
-    public static VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor<?> visitor) throws VisitorException {
+    public static VirtualFileVisitor.Result visitChildrenRecursively(
+        @Nonnull VirtualFile file,
+        @Nonnull VirtualFileVisitor<?> visitor
+    ) throws VisitorException {
         return VirtualFileUtil.visitChildrenRecursively(file, visitor);
     }
 
-    public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor visitor, @Nonnull Class<E> eClass) throws E {
+    public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(
+        @Nonnull VirtualFile file,
+        @Nonnull VirtualFileVisitor visitor,
+        @Nonnull Class<E> eClass
+    ) throws E {
         return VirtualFileUtil.visitChildrenRecursively(file, visitor, eClass);
     }
 
@@ -315,8 +331,8 @@ public class VfsUtilCore {
         return VirtualFileUtil.findRelativeFile(uri, base);
     }
 
-    public static boolean processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor) {
-        if (!processor.process(root)) {
+    public static boolean processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor) {
+        if (!processor.test(root)) {
             return false;
         }
 
@@ -329,7 +345,7 @@ public class VfsUtilCore {
                 VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
-                    if (!processor.process(file)) {
+                    if (!processor.test(file)) {
                         return false;
                     }
                     if (file.isDirectory()) {
@@ -435,13 +451,17 @@ public class VfsUtilCore {
         }
     }
 
-    public static void processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor, @Nonnull Convertor<VirtualFile, Boolean> directoryFilter) {
-        if (!processor.process(root)) {
+    public static void processFilesRecursively(
+        @Nonnull VirtualFile root,
+        @Nonnull Predicate<VirtualFile> processor,
+        @Nonnull Function<VirtualFile, Boolean> directoryFilter
+    ) {
+        if (!processor.test(root)) {
             return;
         }
 
-        if (root.isDirectory() && directoryFilter.convert(root)) {
-            LinkedList<VirtualFile[]> queue = new LinkedList<>();
+        if (root.isDirectory() && directoryFilter.apply(root)) {
+            List<VirtualFile[]> queue = new LinkedList<>();
 
             queue.add(root.getChildren());
 
@@ -449,10 +469,10 @@ public class VfsUtilCore {
                 VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
-                    if (!processor.process(file)) {
+                    if (!processor.test(file)) {
                         return;
                     }
-                    if (file.isDirectory() && directoryFilter.convert(file)) {
+                    if (file.isDirectory() && directoryFilter.apply(file)) {
                         queue.add(file.getChildren());
                     }
                 }

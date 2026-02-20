@@ -16,18 +16,17 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.AllIcons;
 import consulo.application.ui.NonFocusableSetting;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.generation.*;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,10 +44,9 @@ import consulo.ui.image.Image;
 import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -88,13 +86,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
     protected LinkedHashSet<T> mySelectedElements;
 
-    @NonNls
     private static final String PROP_SORTED = "MemberChooser.sorted";
-    @NonNls
     private static final String PROP_SHOWCLASSES = "MemberChooser.showClasses";
-    @NonNls
     private static final String PROP_COPYJAVADOC = "MemberChooser.copyJavadoc";
 
+    @RequiredUIAccess
     public MemberChooser(
         T[] elements,
         boolean allowEmptySelection,
@@ -108,10 +104,12 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         init();
     }
 
+    @RequiredUIAccess
     public MemberChooser(T[] elements, boolean allowEmptySelection, boolean allowMultiSelection, @Nonnull Project project) {
         this(elements, allowEmptySelection, allowMultiSelection, project, false);
     }
 
+    @RequiredUIAccess
     public MemberChooser(
         T[] elements,
         boolean allowEmptySelection,
@@ -122,6 +120,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         this(elements, allowEmptySelection, allowMultiSelection, project, isInsertOverrideVisible, null);
     }
 
+    @RequiredUIAccess
     public MemberChooser(
         T[] elements,
         boolean allowEmptySelection,
@@ -155,15 +154,18 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         mySortAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.ALT_MASK)), myTree);
     }
 
+    @RequiredUIAccess
     protected void resetElementsWithDefaultComparator(T[] elements, boolean restoreSelectedElements) {
         myComparator = myAlphabeticallySorted ? new AlphaComparator() : new OrderComparator();
         resetElements(elements, null, restoreSelectedElements);
     }
 
+    @RequiredUIAccess
     public void resetElements(T[] elements) {
         resetElements(elements, null, false);
     }
 
+    @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public void resetElements(T[] elements, @Nullable Comparator<T> sortComparator, boolean restoreSelectedElements) {
         List<T> selectedElements = restoreSelectedElements && mySelectedElements != null ? new ArrayList<>(mySelectedElements) : null;
@@ -219,8 +221,8 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
      */
     private DefaultTreeModel buildModel() {
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-        Ref<Integer> count = new Ref<>(0);
-        Ref<Map<MemberChooserObject, ParentNode>> mapRef = new Ref<>();
+        SimpleReference<Integer> count = new SimpleReference<>(0);
+        SimpleReference<Map<MemberChooserObject, ParentNode>> mapRef = new SimpleReference<>();
         mapRef.set(FactoryMap.create(key -> {
             ParentNode node = null;
             DefaultMutableTreeNode parentNode1 = rootNode;
@@ -254,7 +256,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return new DefaultTreeModel(rootNode);
     }
 
-    protected MemberNode createMemberNode(Ref<Integer> count, T object, ParentNode parentNode) {
+    protected MemberNode createMemberNode(SimpleReference<Integer> count, T object, ParentNode parentNode) {
         return new MemberNodeImpl(parentNode, object, count);
     }
 
@@ -317,6 +319,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -464,10 +467,9 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     protected void installSpeedSearch() {
-        TreeSpeedSearch treeSpeedSearch = new TreeSpeedSearch(myTree, new Convertor<>() {
-            @Nullable
-            @Override
-            public String convert(TreePath path) {
+        TreeSpeedSearch treeSpeedSearch = new TreeSpeedSearch(
+            myTree,
+            path -> {
                 ElementNode lastPathComponent = (ElementNode) path.getLastPathComponent();
                 if (lastPathComponent == null) {
                     return null;
@@ -478,7 +480,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
                 }
                 return text;
             }
-        });
+        );
         treeSpeedSearch.setComparator(getSpeedSearchComparator());
     }
 
@@ -486,6 +488,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return new SpeedSearchComparator(false);
     }
 
+    @RequiredUIAccess
     protected void disableAlphabeticalSorting(AnActionEvent event) {
         mySortAction.setSelected(event, false);
     }
@@ -504,10 +507,10 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
         if (!supportsNestedContainers()) {
             ShowContainersAction showContainersAction = getShowContainersAction();
-            showContainersAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(
-                KeyEvent.VK_C,
-                InputEvent.ALT_MASK
-            )), myTree);
+            showContainersAction.registerCustomShortcutSet(
+                new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK)),
+                myTree
+            );
             setShowClasses(PropertiesComponent.getInstance().getBoolean(PROP_SHOWCLASSES, true));
             group.add(showContainersAction);
         }
@@ -552,6 +555,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return mySelectedElements != null && !mySelectedElements.isEmpty();
     }
 
+    @RequiredUIAccess
     public void setCopyJavadocVisible(boolean state) {
         myCopyJavadocCheckbox.setVisible(state);
     }
@@ -620,7 +624,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         if (!myShowClasses || myContainerNodes.isEmpty()) {
             List<ParentNode> otherObjects = new ArrayList<>();
             Enumeration<TreeNode> children = getRootNodeChildren();
-            ParentNode newRoot = new ParentNode(null, new MemberChooserObjectBase(getAllContainersNodeName()), new Ref<>(0));
+            ParentNode newRoot = new ParentNode(null, new MemberChooserObjectBase(getAllContainersNodeName()), new SimpleReference<>(0));
             while (children.hasMoreElements()) {
                 ParentNode nextElement = (ParentNode) children.nextElement();
                 if (nextElement instanceof ContainerNode) {
@@ -793,7 +797,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         private final int myOrder;
         private final MemberChooserObject myDelegate;
 
-        public ElementNodeImpl(@Nullable DefaultMutableTreeNode parent, MemberChooserObject delegate, Ref<Integer> order) {
+        public ElementNodeImpl(@Nullable DefaultMutableTreeNode parent, MemberChooserObject delegate, SimpleReference<Integer> order) {
             myOrder = order.get();
             order.set(myOrder + 1);
             myDelegate = delegate;
@@ -814,19 +818,19 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     protected static class MemberNodeImpl extends ElementNodeImpl implements MemberNode {
-        public MemberNodeImpl(ParentNode parent, ClassMember delegate, Ref<Integer> order) {
+        public MemberNodeImpl(ParentNode parent, ClassMember delegate, SimpleReference<Integer> order) {
             super(parent, delegate, order);
         }
     }
 
     protected static class ParentNode extends ElementNodeImpl {
-        public ParentNode(@Nullable DefaultMutableTreeNode parent, MemberChooserObject delegate, Ref<Integer> order) {
+        public ParentNode(@Nullable DefaultMutableTreeNode parent, MemberChooserObject delegate, SimpleReference<Integer> order) {
             super(parent, delegate, order);
         }
     }
 
     protected static class ContainerNode extends ParentNode {
-        public ContainerNode(DefaultMutableTreeNode parent, MemberChooserObject delegate, Ref<Integer> order) {
+        public ContainerNode(DefaultMutableTreeNode parent, MemberChooserObject delegate, SimpleReference<Integer> order) {
             super(parent, delegate, order);
         }
     }
@@ -884,7 +888,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
             super(
                 IdeLocalize.actionSortAlphabetically(),
                 IdeLocalize.actionSortAlphabetically(),
-                AllIcons.ObjectBrowser.Sorted
+                PlatformIconGroup.objectbrowserSorted()
             );
         }
 
@@ -894,6 +898,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             myAlphabeticallySorted = flag;
             setSortComparator(flag ? new AlphaComparator() : new OrderComparator());
@@ -904,7 +909,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     protected ShowContainersAction getShowContainersAction() {
-        return new ShowContainersAction(IdeLocalize.actionShowClasses(), AllIcons.Nodes.Class);
+        return new ShowContainersAction(IdeLocalize.actionShowClasses(), PlatformIconGroup.nodesClass());
     }
 
     protected class ShowContainersAction extends ToggleAction {
@@ -918,6 +923,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             setShowClasses(flag);
         }
@@ -936,7 +942,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
             super(
                 IdeLocalize.actionExpandAll(),
                 IdeLocalize.actionExpandAll(),
-                AllIcons.Actions.Expandall
+                PlatformIconGroup.actionsExpandall()
             );
         }
 
@@ -952,7 +958,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
             super(
                 IdeLocalize.actionCollapseAll(),
                 IdeLocalize.actionCollapseAll(),
-                AllIcons.Actions.Collapseall
+                PlatformIconGroup.actionsCollapseall()
             );
         }
 

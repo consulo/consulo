@@ -16,10 +16,8 @@
 package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -32,7 +30,6 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,6 +39,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Deprecated
 @DeprecationInfo("use VirtualFileUtil")
@@ -64,7 +62,12 @@ public class VfsUtil extends VfsUtilCore {
      * @param filter    {@link VirtualFileFilter}
      * @throws IOException if files failed to be copied
      */
-    public static void copyDirectory(Object requestor, @Nonnull VirtualFile fromDir, @Nonnull VirtualFile toDir, @Nullable VirtualFileFilter filter) throws IOException {
+    public static void copyDirectory(
+        Object requestor,
+        @Nonnull VirtualFile fromDir,
+        @Nonnull VirtualFile toDir,
+        @Nullable VirtualFileFilter filter
+    ) throws IOException {
         @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = fromDir.getChildren();
         for (VirtualFile child : children) {
             if (!child.is(VFileProperty.SYMLINK) && !child.is(VFileProperty.SPECIAL) && (filter == null || filter.accept(child))) {
@@ -89,7 +92,7 @@ public class VfsUtil extends VfsUtilCore {
      * @param resourceUrl url of the resource to be copied
      * @throws IOException if resource not found or copying failed
      */
-    public static void copyFromResource(@Nonnull VirtualFile file, @NonNls @Nonnull String resourceUrl) throws IOException {
+    public static void copyFromResource(@Nonnull VirtualFile file, @Nonnull String resourceUrl) throws IOException {
         InputStream out = VfsUtil.class.getResourceAsStream(resourceUrl);
         if (out == null) {
             throw new FileNotFoundException(resourceUrl);
@@ -135,7 +138,7 @@ public class VfsUtil extends VfsUtilCore {
     @Nonnull
     public static VirtualFile[] getCommonAncestors(@Nonnull VirtualFile[] files) {
         // Separate files by first component in the path.
-        HashMap<VirtualFile, Set<VirtualFile>> map = new HashMap<VirtualFile, Set<VirtualFile>>();
+        Map<VirtualFile, Set<VirtualFile>> map = new HashMap<>();
         for (VirtualFile aFile : files) {
             VirtualFile directory = aFile.isDirectory() ? aFile : aFile.getParent();
             if (directory == null) {
@@ -148,13 +151,13 @@ public class VfsUtil extends VfsUtilCore {
                 filesSet = map.get(firstPart);
             }
             else {
-                filesSet = new HashSet<VirtualFile>();
+                filesSet = new HashSet<>();
                 map.put(firstPart, filesSet);
             }
             filesSet.add(directory);
         }
         // Find common ancestor for each set of files.
-        ArrayList<VirtualFile> ancestorsList = new ArrayList<VirtualFile>();
+        List<VirtualFile> ancestorsList = new ArrayList<>();
         for (Set<VirtualFile> filesSet : map.values()) {
             VirtualFile ancestor = null;
             for (VirtualFile file : filesSet) {
@@ -218,7 +221,12 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.findFileByIoFile(file, refreshIfNeeded);
     }
 
-    public static VirtualFile copyFileRelative(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String relativePath) throws IOException {
+    public static VirtualFile copyFileRelative(
+        Object requestor,
+        @Nonnull VirtualFile file,
+        @Nonnull VirtualFile toDir,
+        @Nonnull String relativePath
+    ) throws IOException {
         StringTokenizer tokenizer = new StringTokenizer(relativePath, "/");
         VirtualFile curDir = toDir;
 
@@ -300,7 +308,12 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.getUrlForLibraryRoot(libraryRoot);
     }
 
-    public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension) throws IOException {
+    public static VirtualFile createChildSequent(
+        Object requestor,
+        @Nonnull VirtualFile dir,
+        @Nonnull String prefix,
+        @Nonnull String extension
+    ) throws IOException {
         String dotExt = PathUtil.makeFileName("", extension);
         String fileName = prefix + dotExt;
         int i = 1;
@@ -341,7 +354,7 @@ public class VfsUtil extends VfsUtilCore {
      */
     @Nonnull
     public static List<VirtualFile> collectChildrenRecursively(@Nonnull VirtualFile root) {
-        List<VirtualFile> result = new ArrayList<VirtualFile>();
+        List<VirtualFile> result = new ArrayList<>();
         processFilesRecursively(root, t -> {
             result.add(t);
             return true;
@@ -349,14 +362,9 @@ public class VfsUtil extends VfsUtilCore {
         return result;
     }
 
-
-    public static void processFileRecursivelyWithoutIgnored(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor) {
-        final FileTypeManager ftm = FileTypeManager.getInstance();
-        processFilesRecursively(root, processor, new Convertor<VirtualFile, Boolean>() {
-            public Boolean convert(VirtualFile vf) {
-                return !ftm.isFileIgnored(vf);
-            }
-        });
+    public static void processFileRecursivelyWithoutIgnored(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor) {
+        FileTypeManager ftm = FileTypeManager.getInstance();
+        processFilesRecursively(root, processor, vf -> !ftm.isFileIgnored(vf));
     }
 
     @Nullable

@@ -13,7 +13,6 @@ import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
-import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -39,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
@@ -64,6 +64,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     private final JPanel myReplaceToolbarWrapper;
 
+    @Nullable
     private final Project myProject;
     private final JComponent myTargetComponent;
 
@@ -81,6 +82,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
     private final List<AnAction> myReplaceSuffixActions = new ArrayList<>();
 
+    @RequiredUIAccess
     SearchReplaceComponentImpl(
         @Nullable Project project,
         @Nonnull JComponent targetComponent,
@@ -105,7 +107,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         for (AnAction action : searchToolbar2Actions.getChildren(null)) {
             if (action instanceof Embeddable) {
                 mySearchSuffixActions.add(action);
-                
+
                 searchToolbar2Actions.remove(action);
             }
         }
@@ -342,6 +344,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Nonnull
+    @Override
     public JTextComponent getSearchTextComponent() {
         return mySearchTextComponent;
     }
@@ -351,7 +354,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         return myReplaceTextComponent;
     }
 
-
+    @RequiredUIAccess
     private void updateSearchComponent(@Nonnull String textToSet) {
         if (!updateTextComponent(true)) {
             replaceTextInTextComponentEnsuringSelection(textToSet, mySearchTextComponent);
@@ -477,13 +480,13 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
             if (search) {
                 findInProjectSettings.addStringToFind(text);
                 if (mySearchFieldWrapper.getTargetComponent() instanceof SearchTextField) {
-                    ((SearchTextField)mySearchFieldWrapper.getTargetComponent()).addCurrentTextToHistory();
+                    ((SearchTextField) mySearchFieldWrapper.getTargetComponent()).addCurrentTextToHistory();
                 }
             }
             else {
                 findInProjectSettings.addStringToReplace(text);
                 if (myReplaceFieldWrapper.getTargetComponent() instanceof SearchTextField) {
-                    ((SearchTextField)myReplaceFieldWrapper.getTargetComponent()).addCurrentTextToHistory();
+                    ((SearchTextField) myReplaceFieldWrapper.getTargetComponent()).addCurrentTextToHistory();
                 }
             }
         }
@@ -540,7 +543,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         // Display empty text only when focused
         textComponent.putClientProperty(
             "StatusVisibleFunction",
-            (BooleanFunction<JTextComponent>)(c -> c.getText().isEmpty() && c.isFocusOwner())
+            (Predicate<JTextComponent>) c -> c.getText().isEmpty() && c.isFocusOwner()
         );
 
         wrapper.setContent(textArea);
@@ -599,10 +602,10 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         for (AnAction action : actions) {
             ShortcutSet shortcut = null;
             if (action instanceof ContextAwareShortcutProvider) {
-                shortcut = ((ContextAwareShortcutProvider)action).getShortcut(context);
+                shortcut = ((ContextAwareShortcutProvider) action).getShortcut(context);
             }
             else if (action instanceof ShortcutProvider) {
-                shortcut = ((ShortcutProvider)action).getShortcut();
+                shortcut = ((ShortcutProvider) action).getShortcut();
             }
             if (shortcut != null) {
                 action.registerCustomShortcutSet(shortcut, shortcutHolder);
@@ -620,7 +623,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         for (AnAction anAction : group.getChildren(null)) {
             if (anAction instanceof EditorHeaderSetSearchContextAction) {
                 contextGroup.add(anAction);
-            } else {
+            }
+            else {
                 toolbarGroup.add(anAction);
             }
         }
@@ -640,7 +644,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Nonnull
     private ActionToolbar createToolbar(@Nonnull ActionGroup group) {
-        ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR,
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+            ActionPlaces.EDITOR_TOOLBAR,
             group,
             ActionToolbar.Style.INPLACE
         );

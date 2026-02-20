@@ -713,11 +713,11 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     @Nonnull
-    public static <K, V> Map<K, V> newMapFromKeys(@Nonnull Iterator<K> keys, @Nonnull Convertor<K, V> valueConvertor) {
+    public static <K, V> Map<K, V> newMapFromKeys(@Nonnull Iterator<K> keys, @Nonnull Function<K, V> valueConvertor) {
         Map<K, V> map = newHashMap();
         while (keys.hasNext()) {
             K key = keys.next();
-            map.put(key, valueConvertor.convert(key));
+            map.put(key, valueConvertor.apply(key));
         }
         return map;
     }
