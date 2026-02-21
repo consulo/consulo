@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class DetailsComponent {
@@ -165,7 +166,7 @@ public class DetailsComponent {
     }
 
     public void update() {
-        ArrayList<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
         if (myPrefix != null) {
             ContainerUtil.addAll(strings, myPrefix);
         }

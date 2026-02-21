@@ -251,8 +251,8 @@ public class ActionUrl implements JDOMExternalizable {
         }
     }
 
-    public static ArrayList<String> getGroupPath(TreePath treePath) {
-        ArrayList<String> result = new ArrayList<>();
+    public static List<String> getGroupPath(TreePath treePath) {
+        List<String> result = new ArrayList<>();
         for (int i = 0; i < treePath.getPath().length - 1; i++) {
             Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
             if (o instanceof KeymapGroupImpl keymapGroup) {

@@ -35,7 +35,7 @@ public final class CloseSearchTask extends SearchTaskBase {
         long pagesAmount;
         int tailLength;
         long curPageNumber;
-        ArrayList<SearchResult> allMatchesAtFrame;
+        List<SearchResult> allMatchesAtFrame;
         int index;
 
         searcher = createFrameSearcher(options, project);

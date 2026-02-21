@@ -126,7 +126,7 @@ public class TextPatchBuilder {
       catch (FilesTooBigForDiffException e) {
         throw new VcsException("File '" + myBasePath + "' is too big and there are too many changes to build diff", e);
       }
-      ArrayList<LineFragment> fragments = new DiffFragmentsProcessorOld().process(step1lineFragments);
+      List<LineFragment> fragments = new DiffFragmentsProcessorOld().process(step1lineFragments);
 
       if (fragments.size() > 1 || (fragments.size() == 1 && fragments.get(0).getType() != null && fragments.get(0).getType() != TextDiffTypeEnum.NONE)) {
         TextFilePatch patch = buildPatchHeading(myBasePath, beforeRevision, afterRevision);

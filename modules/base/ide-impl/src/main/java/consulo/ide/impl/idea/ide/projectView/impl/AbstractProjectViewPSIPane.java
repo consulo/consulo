@@ -48,6 +48,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane {
@@ -200,8 +201,8 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         ActionCallback cb = new ActionCallback();
         AbstractTreeBuilder builder = getTreeBuilder();
         if (restoreExpandedPaths && builder != null) {
-            ArrayList<Object> pathsToExpand = new ArrayList<>();
-            ArrayList<Object> selectionPaths = new ArrayList<>();
+            List<Object> pathsToExpand = new ArrayList<>();
+            List<Object> selectionPaths = new ArrayList<>();
             TreeBuilderUtil.storePaths(builder, (DefaultMutableTreeNode) myTree.getModel().getRoot(), pathsToExpand, selectionPaths, true);
             afterUpdate = () -> {
                 if (myTree != null && !builder.isDisposed()) {

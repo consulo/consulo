@@ -311,12 +311,12 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     private List<ActionUrl> findActionsUnderSelection() {
-        ArrayList<ActionUrl> actions = new ArrayList<>();
+        List<ActionUrl> actions = new ArrayList<>();
         TreePath[] selectionPaths = myActionsTree.getSelectionPaths();
         if (selectionPaths != null) {
             for (TreePath path : selectionPaths) {
                 ActionUrl selectedUrl = CustomizationUtil.getActionUrl(path, ActionUrl.MOVE);
-                ArrayList<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
+                List<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
                 Object component = selectedUrl.getComponent();
                 if (component instanceof KeymapGroupImpl keymapGroup) {
                     selectedGroupPath.add(keymapGroup.getName());

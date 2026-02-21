@@ -21,6 +21,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Deprecated
 @SuppressWarnings("deprecation")
@@ -125,7 +126,7 @@ public interface DiffCorrectionOld {
   }
 
   class BaseFragmentRunner<ActualRunner extends BaseFragmentRunner> {
-    private final ArrayList<DiffFragmentOld> myItems = new ArrayList<DiffFragmentOld>();
+    private final List<DiffFragmentOld> myItems = new ArrayList<>();
     private int myIndex = 0;
     private DiffFragmentOld[] myFragments;
 

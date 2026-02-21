@@ -908,7 +908,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       }
       return;
     }
-    ArrayList<CommittedChangeList> listCopy = new ArrayList<>(changes);
+    List<CommittedChangeList> listCopy = new ArrayList<>(changes);
     fireIncomingChangesUpdated(listCopy);
   }
 

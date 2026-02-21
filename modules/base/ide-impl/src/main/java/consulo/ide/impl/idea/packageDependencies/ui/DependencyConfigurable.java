@@ -142,8 +142,8 @@ public class DependencyConfigurable implements Configurable {
   public void reset() {
     DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     DependencyRule[] rules = validationManager.getAllRules();
-    ArrayList<DependencyRule> denyList = new ArrayList<DependencyRule>();
-    ArrayList<DependencyRule> allowList = new ArrayList<DependencyRule>();
+    List<DependencyRule> denyList = new ArrayList<>();
+    List<DependencyRule> allowList = new ArrayList<>();
     for (DependencyRule rule : rules) {
       if (rule.isDenyRule()) {
         denyList.add(rule.createCopy());
@@ -268,7 +268,7 @@ public class DependencyConfigurable implements Configurable {
 
     @Override
     public void addRow() {
-      ArrayList<DependencyRule> newList = new ArrayList<DependencyRule>(getItems());
+      List<DependencyRule> newList = new ArrayList<>(getItems());
       NamedScope scope = DefaultScopesProvider.getAllScope();
       newList.add(new DependencyRule(scope, scope, myDenyRule));
       setItems(newList);
@@ -276,7 +276,7 @@ public class DependencyConfigurable implements Configurable {
 
     @Override
     public void exchangeRows(int index1, int index2) {
-      ArrayList<DependencyRule> newList = new ArrayList<DependencyRule>(getItems());
+      List<DependencyRule> newList = new ArrayList<>(getItems());
       DependencyRule r1 = newList.get(index1);
       DependencyRule r2 = newList.get(index2);
       newList.set(index1, r2);

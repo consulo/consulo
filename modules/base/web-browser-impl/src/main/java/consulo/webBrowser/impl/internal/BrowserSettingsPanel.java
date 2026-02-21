@@ -34,6 +34,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -155,7 +156,7 @@ final class BrowserSettingsPanel {
         VerticalLayout bottomPanel = VerticalLayout.create();
         root.add(TargetAWT.to(bottomPanel), BorderLayout.SOUTH);
 
-        ArrayList<DefaultBrowserPolicy> defaultBrowserPolicies = new ArrayList<>();
+        List<DefaultBrowserPolicy> defaultBrowserPolicies = new ArrayList<>();
         if (BrowserLauncherAppless.canUseSystemDefaultBrowserPolicy()) {
             defaultBrowserPolicies.add(DefaultBrowserPolicy.SYSTEM);
         }

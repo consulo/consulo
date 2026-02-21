@@ -888,7 +888,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         finally {
             if (!generatedFiles.isEmpty()) {
                 List<VirtualFile> vFiles = DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
-                    ArrayList<VirtualFile> vFiles1 = new ArrayList<>(generatedFiles.size());
+                    List<VirtualFile> vFiles1 = new ArrayList<>(generatedFiles.size());
                     for (File generatedFile : generatedFiles) {
                         VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(generatedFile);
                         if (vFile != null) {

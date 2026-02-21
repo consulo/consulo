@@ -238,8 +238,8 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
 
     private List<LookupElement> sortByPresentation(Iterable<? extends LookupElement> source) {
-        ArrayList<LookupElement> startMatches = new ArrayList<>();
-        ArrayList<LookupElement> middleMatches = new ArrayList<>();
+        List<LookupElement> startMatches = new ArrayList<>();
+        List<LookupElement> middleMatches = new ArrayList<>();
         for (LookupElement element : source) {
             (itemMatcher(element).isStartMatch(element) ? startMatches : middleMatches).add(element);
         }

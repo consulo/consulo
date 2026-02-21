@@ -135,7 +135,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
   }
 
   protected List<Filter> createFilters() {
-    ArrayList<Filter> result = new ArrayList<Filter>();
+    List<Filter> result = new ArrayList<>();
     addDateFilter(USE_DATE_BEFORE_FILTER, getDateBefore(), result, true);
     addDateFilter(USE_DATE_AFTER_FILTER, getDateAfter(), result, false);
 
@@ -178,7 +178,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     return result;
   }
 
-  private static void addDateFilter(boolean useFilter, final Date date, ArrayList<Filter> result, final boolean before) {
+  private static void addDateFilter(boolean useFilter, final Date date, List<Filter> result, final boolean before) {
     if (useFilter) {
       assert date != null;
       result.add(new Filter() {

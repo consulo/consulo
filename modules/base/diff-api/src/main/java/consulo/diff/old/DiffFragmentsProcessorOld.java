@@ -15,11 +15,11 @@
  */
 package consulo.diff.old;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Deprecated
 public class DiffFragmentsProcessorOld {
-  public ArrayList<LineFragment> process(DiffFragmentOld[] fragments) {
+  public List<LineFragment> process(DiffFragmentOld[] fragments) {
     LineFragmentsCollector collector = new LineFragmentsCollector();
     for (int i = 0; i < fragments.length; i++) {
       DiffFragmentOld fragment = fragments[i];

@@ -10,13 +10,14 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class DocumentOfPagesModel {
 
     private static final Logger LOG = Logger.getInstance(DocumentOfPagesModel.class);
 
     private final Document myDocument;
-    private final ArrayList<Page> pagesInDocument = new ArrayList<>();
+    private final List<Page> pagesInDocument = new ArrayList<>();
 
     /**
      * corresponding symbol offset to each page in {@code pagesInDocument}
@@ -27,7 +28,7 @@ public final class DocumentOfPagesModel {
      *   symbolOffsetToEndOfPage.get(i-1) +
      *   pagesInDocument.get(i).getText().length() <pre/>
      */
-    private final ArrayList<Integer> symbolOffsetToEndOfPage = new ArrayList<>();
+    private final List<Integer> symbolOffsetToEndOfPage = new ArrayList<>();
 
     DocumentOfPagesModel(Document document) {
         myDocument = document;
@@ -41,7 +42,7 @@ public final class DocumentOfPagesModel {
         return pagesInDocument.size();
     }
 
-    public ArrayList<Page> getPagesList() {
+    public List<Page> getPagesList() {
         return pagesInDocument;
     }
 

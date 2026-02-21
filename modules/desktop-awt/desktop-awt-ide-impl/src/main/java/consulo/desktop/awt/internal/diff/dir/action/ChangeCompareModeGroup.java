@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
@@ -39,7 +40,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
     public ChangeCompareModeGroup(DirDiffTableModel model) {
         mySettings = model.getSettings();
         getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
-        ArrayList<ChangeCompareModeAction> actions = new ArrayList<ChangeCompareModeAction>();
+        List<ChangeCompareModeAction> actions = new ArrayList<>();
         if (model.getSettings().showCompareModes) {
             for (DirDiffSettings.CompareMode mode : DirDiffSettings.CompareMode.values()) {
                 actions.add(new ChangeCompareModeAction(model, mode));

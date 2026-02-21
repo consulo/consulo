@@ -174,7 +174,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
             throw new ConfigurationException(errorString[0]);
         }
         Sdk[] allFromTable = mySdkTableProvider.get().getAllSdks();
-        ArrayList<Sdk> itemsInTable = new ArrayList<>();
+        List<Sdk> itemsInTable = new ArrayList<>();
         // Delete removed and fill itemsInTable
         Application app = Application.get();
         app.runWriteAction(() -> {

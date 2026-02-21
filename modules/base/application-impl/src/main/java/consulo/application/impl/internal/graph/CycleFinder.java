@@ -94,7 +94,7 @@ public class CycleFinder<Node> {
       for (Node toNode : inNodes) {
         List<Node> shortestPath = finder.findPath(fromNode, toNode);
         if (shortestPath != null) {
-          ArrayList<Node> path = new ArrayList<Node>();
+          List<Node> path = new ArrayList<>();
           path.addAll(shortestPath);
           path.add(node);
           result.add(path);

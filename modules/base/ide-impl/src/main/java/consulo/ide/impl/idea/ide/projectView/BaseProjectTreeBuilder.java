@@ -302,7 +302,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
             }
             else {
                 DefaultMutableTreeNode rootNode = getNodeForElement(root);
-                ArrayList<AbstractTreeNode> kids = new ArrayList<>();
+                List<AbstractTreeNode> kids = new ArrayList<>();
                 if (rootNode != null && getTree().isExpanded(new TreePath(rootNode.getPath()))) {
                     kids.addAll(collectChildren(rootNode));
                 }

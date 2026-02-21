@@ -106,8 +106,8 @@ public abstract class AbstractBlockWrapper {
    *
    * @return the list of wraps.
    */
-  public ArrayList<WrapImpl> getWraps() {
-    ArrayList<WrapImpl> result = new ArrayList<>(3);
+  public List<WrapImpl> getWraps() {
+    List<WrapImpl> result = new ArrayList<>(3);
     AbstractBlockWrapper current = this;
     while (current != null && current.getStartOffset() == getStartOffset()) {
       WrapImpl wrap = current.getOwnWrap();
@@ -169,7 +169,7 @@ public abstract class AbstractBlockWrapper {
 
   @Nullable
   public WrapImpl getWrap() {
-    ArrayList<WrapImpl> wraps = getWraps();
+    List<WrapImpl> wraps = getWraps();
     if (wraps.size() == 0) return null;
     return wraps.get(0);
   }

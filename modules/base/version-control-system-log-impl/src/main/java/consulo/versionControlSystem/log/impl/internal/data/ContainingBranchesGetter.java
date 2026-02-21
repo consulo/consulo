@@ -212,7 +212,7 @@ public class ContainingBranchesGetter {
                     }
                     branchesRefs = ContainerUtil.sorted(branchesRefs, provider.getReferenceManager().getLabelsOrderComparator());
 
-                    ArrayList<String> branchesList = new ArrayList<>();
+                    List<String> branchesList = new ArrayList<>();
                     for (VcsRef ref : branchesRefs) {
                         branchesList.add(ref.getName());
                     }

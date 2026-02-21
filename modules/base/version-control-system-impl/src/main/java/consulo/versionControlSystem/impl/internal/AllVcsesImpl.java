@@ -135,7 +135,7 @@ public class AllVcsesImpl implements AllVcses, Disposable {
   @Nonnull
   @Override
   public Collection<AbstractVcs> getSupportedVcses() {
-    ArrayList<String> names;
+    List<String> names;
     synchronized (myLock) {
       names = new ArrayList<>(myVcses.keySet());
     }

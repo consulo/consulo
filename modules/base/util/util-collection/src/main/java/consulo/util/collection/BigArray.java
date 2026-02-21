@@ -26,7 +26,7 @@ import java.util.List;
 @UsedInPlugin
 public class BigArray<T> implements StepList<T> {
     private final int mySize2Power;
-    private final List<ArrayList<T>> myList;
+    private final List<List<T>> myList;
     private int myPack;
     private int mySize;
 
@@ -34,7 +34,7 @@ public class BigArray<T> implements StepList<T> {
     public BigArray(int size2Power) {
         assert (size2Power > 1) && (size2Power < 16);
         mySize2Power = size2Power;
-        myList = new ArrayList<ArrayList<T>>();
+        myList = new ArrayList<>();
         myPack = (int) Math.pow(2, size2Power);
         mySize = 0;
     }
@@ -47,9 +47,9 @@ public class BigArray<T> implements StepList<T> {
 
     @Override
     public void add(T t) {
-        ArrayList<T> commits;
+        List<T> commits;
         if (myList.isEmpty() || (myList.get(myList.size() - 1).size() == myPack)) {
-            commits = new ArrayList<T>(myPack);
+            commits = new ArrayList<>(myPack);
             myList.add(commits);
         }
         else {
@@ -67,11 +67,13 @@ public class BigArray<T> implements StepList<T> {
         int itemNumber = idxFromIncluded >> mySize2Power;
         int insideIdx = idxFromIncluded ^ (itemNumber << mySize2Power);
 
-        ArrayList<T> start = myList.get(itemNumber);
-        NotRegularReadonlyList<T> result =
-            new NotRegularReadonlyList<T>(new ArrayList<ArrayList<T>>(myList.subList(itemNumber + 1, myList.size())),
-                mySize2Power, start.subList(insideIdx, start.size()));
-        myList.set(itemNumber, new ArrayList<T>(start.subList(0, insideIdx)));
+        List<T> start = myList.get(itemNumber);
+        NotRegularReadonlyList<T> result = new NotRegularReadonlyList<>(
+            new ArrayList<>(myList.subList(itemNumber + 1, myList.size())),
+            mySize2Power,
+            start.subList(insideIdx, start.size())
+        );
+        myList.set(itemNumber, new ArrayList<>(start.subList(0, insideIdx)));
         for (int i = myList.size() - 1; i > itemNumber; --i) {
             myList.remove(i);
         }
@@ -98,10 +100,10 @@ public class BigArray<T> implements StepList<T> {
     private static class NotRegularReadonlyList<T> implements ReadonlyList<T> {
         private final int mySize2Power;
         private final List<T> myStart;
-        private final List<ArrayList<T>> myList;
+        private final List<List<T>> myList;
         private int myPack;
 
-        private NotRegularReadonlyList(List<ArrayList<T>> list, int size2Power, List<T> start) {
+        private NotRegularReadonlyList(List<List<T>> list, int size2Power, List<T> start) {
             myList = list;
             mySize2Power = size2Power;
             myStart = start;

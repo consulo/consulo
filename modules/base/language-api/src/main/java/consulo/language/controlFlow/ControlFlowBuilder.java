@@ -66,7 +66,7 @@ public class ControlFlowBuilder {
     public final @Nonnull ControlFlow completeControlFlow() {
         if (transparentInstructionCount == 0) return getControlFlow();
 
-        ArrayList<Instruction> result = new ArrayList<>(instructionCount);
+        List<Instruction> result = new ArrayList<>(instructionCount);
         int processedTransparentInstructions = 0;
         for (Instruction instruction : instructions) {
             if (instruction instanceof TransparentInstruction) {

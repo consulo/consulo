@@ -659,7 +659,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     @Override
     public DesktopFileEditorWindow[] findSiblings() {
         checkConsistency();
-        ArrayList<DesktopFileEditorWindow> res = new ArrayList<>();
+        List<DesktopFileEditorWindow> res = new ArrayList<>();
         if (myPanel.getParent() instanceof Splitter splitter) {
             for (DesktopFileEditorWindow win : myOwner.getWindows()) {
                 if (win != this && SwingUtilities.isDescendingFrom(win.myPanel, splitter)) {

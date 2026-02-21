@@ -44,7 +44,7 @@ import java.util.List;
 public class ActionMacro implements JDOMExternalizable {
   private String myName;
 
-  private final ArrayList<ActionDescriptor> myActions = new ArrayList<ActionDescriptor>();
+  private final List<ActionDescriptor> myActions = new ArrayList<ActionDescriptor>();
   public static final String MACRO_ACTION_PREFIX = "Macro.";
   private static final String ATTRIBUTE_NAME = "name";
   private static final String ELEMENT_TYPING = "typing";

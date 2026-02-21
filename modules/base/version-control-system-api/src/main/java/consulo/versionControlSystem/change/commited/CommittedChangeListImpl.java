@@ -23,6 +23,7 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yole
@@ -34,7 +35,7 @@ public class CommittedChangeListImpl implements CommittedChangeList {
   private final String myName;
   private String myComment;
   private final long myNumber;
-  protected ArrayList<Change> myChanges;
+  protected List<Change> myChanges;
 
   public CommittedChangeListImpl(String name, String comment, String committerName,
                                  long number, Date commitDate, Collection<Change> changes) {
@@ -42,7 +43,7 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     myCommitDate = commitDate;
     myName = name;
     myComment = comment;
-    myChanges = new ArrayList<Change>(changes);
+    myChanges = new ArrayList<>(changes);
     myNumber = number;
   }
 

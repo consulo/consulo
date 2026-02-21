@@ -195,7 +195,7 @@ public class DisposerTest extends Assertions {
         Disposer.dispose(root);
 
 
-        ArrayList<String> expected = new ArrayList<>();
+        List<String> expected = new ArrayList<>();
         expected.add("beforeDispose: root");
         expected.add("beforeDispose: subFolder");
         expected.add("dispose: leaf1");

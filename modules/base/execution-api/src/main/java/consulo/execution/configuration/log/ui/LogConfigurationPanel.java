@@ -86,7 +86,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
     myScrollPanel.add(
       ToolbarDecorator.createDecorator(myFilesTable)
         .setAddAction(button -> {
-          ArrayList<LogFileOptions> newList = new ArrayList<>(myModel.getItems());
+          List<LogFileOptions> newList = new ArrayList<>(myModel.getItems());
           LogFileOptions newOptions = new LogFileOptions("", "", true, true, false);
           if (showEditorDialog(newOptions)) {
             newList.add(newOptions);
@@ -201,14 +201,14 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
 
   @Override
   protected void resetEditorFrom(RunConfigurationBase configuration) {
-    ArrayList<LogFileOptions> list = new ArrayList<>();
-    ArrayList<LogFileOptions> logFiles = configuration.getLogFiles();
+    List<LogFileOptions> list = new ArrayList<>();
+    List<LogFileOptions> logFiles = configuration.getLogFiles();
     for (LogFileOptions setting : logFiles) {
       list.add(new LogFileOptions(setting.getName(), setting.getPathPattern(), setting.isEnabled(), setting.isSkipContent(), setting.isShowAll()));
     }
     myLog2Predefined.clear();
     myUnresolvedPredefined.clear();
-    ArrayList<PredefinedLogFile> predefinedLogFiles = configuration.getPredefinedLogFiles();
+    List<PredefinedLogFile> predefinedLogFiles = configuration.getPredefinedLogFiles();
     for (PredefinedLogFile predefinedLogFile : predefinedLogFiles) {
       PredefinedLogFile logFile = new PredefinedLogFile(predefinedLogFile);
       LogFileOptions options = configuration.getOptionsForPredefinedLogFile(logFile);

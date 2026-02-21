@@ -30,13 +30,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 // todo: move to lang-impl ?
 public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private static final Logger LOG = Logger.getInstance(CompositeAppearance.class);
 
   private Image myIcon;
-  private final ArrayList<TextSection> mySections = new ArrayList<TextSection>();
+  private final List<TextSection> mySections = new ArrayList<>();
   private int myInsertionIndex = 0;
 
   @Override

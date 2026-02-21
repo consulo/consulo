@@ -41,7 +41,7 @@ class BlockUtil {
     assert !(parent instanceof DataLanguageBlockWrapper) : parent.getClass();
     List<Block> children = parent.getSubBlocks();
     if (children.size() == 0) return Collections.emptyList();
-    ArrayList<DataLanguageBlockWrapper> result = new ArrayList<DataLanguageBlockWrapper>(children.size());
+    List<DataLanguageBlockWrapper> result = new ArrayList<>(children.size());
     DataLanguageBlockWrapper prevWrapper = null;
     for (Block child : children) {
       DataLanguageBlockWrapper currWrapper = createAndAddBlock(result, child, null);
@@ -56,9 +56,9 @@ class BlockUtil {
 
   public static Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>> splitBlocksByRightBound(@Nonnull Block parent, @Nonnull TextRange bounds) {
     List<Block> subBlocks = parent.getSubBlocks();
-    if (subBlocks.size() == 0) return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(Collections.<DataLanguageBlockWrapper>emptyList(), Collections.<DataLanguageBlockWrapper>emptyList());
-    ArrayList<DataLanguageBlockWrapper> before = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
-    ArrayList<DataLanguageBlockWrapper> after = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
+    if (subBlocks.size() == 0) return new Pair<>(Collections.<DataLanguageBlockWrapper>emptyList(), Collections.<DataLanguageBlockWrapper>emptyList());
+    List<DataLanguageBlockWrapper> before = new ArrayList<>(subBlocks.size() / 2);
+    List<DataLanguageBlockWrapper> after = new ArrayList<>(subBlocks.size() / 2);
     splitByRightBoundAndCollectBlocks(subBlocks, before, after, bounds);
     return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(before, after);
   }
@@ -93,7 +93,7 @@ class BlockUtil {
 
 
   public static List<Block> mergeBlocks(@Nonnull List<TemplateLanguageBlock> tlBlocks, @Nonnull List<DataLanguageBlockWrapper> foreignBlocks) {
-    ArrayList<Block> result = new ArrayList<Block>(tlBlocks.size() + foreignBlocks.size());
+    List<Block> result = new ArrayList<>(tlBlocks.size() + foreignBlocks.size());
     int vInd = 0;
     int fInd = 0;
     while (vInd < tlBlocks.size() && fInd < foreignBlocks.size()) {

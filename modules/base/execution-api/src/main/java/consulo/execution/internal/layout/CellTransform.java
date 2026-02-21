@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.internal.layout;
 
 import consulo.util.concurrent.ActionCallback;
@@ -27,7 +26,7 @@ public interface CellTransform {
     ActionCallback restoreInGrid();
 
     class List implements Restore {
-      private final ArrayList<Restore> myActions = new ArrayList();
+      private final java.util.List<Restore> myActions = new ArrayList<>();
       private boolean myRestoringNow;
 
       public void add(Restore restore) {
