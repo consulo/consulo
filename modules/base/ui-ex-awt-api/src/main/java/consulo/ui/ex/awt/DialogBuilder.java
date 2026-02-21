@@ -46,7 +46,7 @@ public class DialogBuilder implements Disposable {
     private LocalizeValue myTitle;
     private JComponent myPreferedFocusComponent;
     private String myDimensionServiceKey;
-    private ArrayList<ActionDescriptor> myActions = null;
+    private List<ActionDescriptor> myActions = null;
     private final MyDialogWrapper myDialogWrapper;
     private Runnable myCancelOperation = null;
     private Runnable myOkOperation = null;
@@ -172,7 +172,7 @@ public class DialogBuilder implements Disposable {
         return actionDescriptor;
     }
 
-    private ArrayList<ActionDescriptor> getActionDescriptors() {
+    private List<ActionDescriptor> getActionDescriptors() {
         if (myActions == null) {
             removeAllActions();
         }
@@ -521,7 +521,7 @@ public class DialogBuilder implements Disposable {
             if (myActions == null) {
                 return super.createActions();
             }
-            ArrayList<Action> actions = new ArrayList<>(myActions.size());
+            List<Action> actions = new ArrayList<>(myActions.size());
             for (ActionDescriptor actionDescriptor : myActions) {
                 actions.add(actionDescriptor.getAction(this));
             }

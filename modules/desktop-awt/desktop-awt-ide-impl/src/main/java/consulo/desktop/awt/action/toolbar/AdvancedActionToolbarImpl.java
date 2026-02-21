@@ -396,7 +396,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     @Override
     @Nonnull
     public Dimension getPreferredSize() {
-        ArrayList<Rectangle> bounds = new ArrayList<>();
+        List<Rectangle> bounds = new ArrayList<>();
         calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
         if (bounds.isEmpty()) {
             return JBUI.emptySize();
@@ -404,7 +404,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         int forcedHeight = 0;
         int orientation = getOrientation();
         if (getWidth() > 0 && getLayoutPolicy() == ActionToolbar.WRAP_LAYOUT_POLICY && orientation == SwingConstants.HORIZONTAL) {
-            ArrayList<Rectangle> limitedBounds = new ArrayList<>();
+            List<Rectangle> limitedBounds = new ArrayList<>();
             calculateBounds(new Dimension(getWidth(), Integer.MAX_VALUE), limitedBounds);
             Rectangle union = null;
             for (Rectangle bound : limitedBounds) {

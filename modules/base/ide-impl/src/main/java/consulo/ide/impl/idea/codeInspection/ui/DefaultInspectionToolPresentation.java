@@ -371,7 +371,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
             synchronized (lock) {
                 CommonProblemDescriptor[] descriptors = problemElements.get(refEntity);
                 if (descriptors != null) {
-                    ArrayList<CommonProblemDescriptor> newDescriptors = new ArrayList<>(Arrays.asList(descriptors));
+                    List<CommonProblemDescriptor> newDescriptors = new ArrayList<>(Arrays.asList(descriptors));
                     newDescriptors.remove(problem);
                     getQuickFixActions().put(refEntity, null);
                     if (!newDescriptors.isEmpty()) {

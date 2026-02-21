@@ -37,6 +37,7 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Gregory.Shrago
@@ -85,7 +86,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
         other.setDisplayName(displayName);
         boolean enabled = true;
         StringBuilder sb = new StringBuilder();
-        ArrayList<InjectionPlace> places = new ArrayList<>();
+        List<InjectionPlace> places = new ArrayList<>();
         for (String s : myTextArea.getText().split("\\s*\n\\s*")) {
             boolean nextEnabled;
             if (s.startsWith("+")) {

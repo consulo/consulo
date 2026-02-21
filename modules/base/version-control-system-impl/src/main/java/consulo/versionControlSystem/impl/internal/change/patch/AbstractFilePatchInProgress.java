@@ -205,7 +205,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
   public abstract DiffRequestProducer getDiffRequestProducers(Project project, PatchReader baseContents);
 
   public List<VirtualFile> getAutoBasesCopy() {
-    ArrayList<VirtualFile> result = new ArrayList<>(myAutoBases.size() + 1);
+    List<VirtualFile> result = new ArrayList<>(myAutoBases.size() + 1);
     result.addAll(myAutoBases);
     return result;
   }

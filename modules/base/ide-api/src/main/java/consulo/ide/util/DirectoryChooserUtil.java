@@ -30,6 +30,7 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DirectoryChooserUtil {
@@ -53,7 +54,7 @@ public class DirectoryChooserUtil {
   public static PsiDirectory selectDirectory(Project project, PsiDirectory[] packageDirectories, PsiDirectory defaultDirectory, String postfixToShow) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 
-    ArrayList<PsiDirectory> possibleDirs = new ArrayList<>();
+    List<PsiDirectory> possibleDirs = new ArrayList<>();
     for (PsiDirectory dir : packageDirectories) {
       if (!dir.isValid()) continue;
       if (!dir.isWritable()) continue;

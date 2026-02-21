@@ -41,7 +41,7 @@ import java.util.List;
 @ServiceImpl
 public class ActionMacroManagerState implements JDOMExternalizable {
     private static final String ELEMENT_MACRO = "macro";
-    private ArrayList<ActionMacro> myMacros = new ArrayList<>();
+    private List<ActionMacro> myMacros = new ArrayList<>();
 
     private final Provider<ActionMacroManager> myActionMacroManagerProvider;
 
@@ -87,7 +87,7 @@ public class ActionMacroManagerState implements JDOMExternalizable {
         myMacros = new ArrayList<>();
     }
 
-    public ArrayList<ActionMacro> getMacros() {
+    public List<ActionMacro> getMacros() {
         return myMacros;
     }
 

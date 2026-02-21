@@ -18,6 +18,7 @@ package consulo.ui.ex.awt;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is intended to lay out added components vertically.
@@ -34,9 +35,9 @@ public final class VerticalLayout implements LayoutManager2 {
     public static final String BOTTOM = "BOTTOM";
     public static final String CENTER = "CENTER";
 
-    private final ArrayList<Component> myTop = new ArrayList<>();
-    private final ArrayList<Component> myBottom = new ArrayList<>();
-    private final ArrayList<Component> myCenter = new ArrayList<>();
+    private final List<Component> myTop = new ArrayList<>();
+    private final List<Component> myBottom = new ArrayList<>();
+    private final List<Component> myCenter = new ArrayList<>();
     private final int myAlignment;
     private final int myGap;
 
@@ -183,7 +184,7 @@ public final class VerticalLayout implements LayoutManager2 {
         }
     }
 
-    private int layout(ArrayList<Component> list, int y, int width, Insets insets) {
+    private int layout(List<Component> list, int y, int width, Insets insets) {
         for (Component component : list) {
             if (component.isVisible()) {
                 Dimension size = component.getPreferredSize();
@@ -218,7 +219,7 @@ public final class VerticalLayout implements LayoutManager2 {
         return result;
     }
 
-    private Dimension getPreferredSize(ArrayList<Component> list) {
+    private Dimension getPreferredSize(List<Component> list) {
         Dimension result = null;
         for (Component component : list) {
             if (component.isVisible()) {

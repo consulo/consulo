@@ -75,7 +75,7 @@ public class ColorOptionsTree extends Tree {
   }
 
   private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@Nonnull ColorAndFontOptions options) {
-    ArrayList<EditorSchemeAttributeDescriptor> list = new ArrayList<>();
+    List<EditorSchemeAttributeDescriptor> list = new ArrayList<>();
     for (EditorSchemeAttributeDescriptor description : options.getCurrentDescriptions()) {
       if (!isMyDescriptor(description)) continue;
       list.add(description);

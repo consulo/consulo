@@ -304,7 +304,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
         Rectangle layoutRec = new Rectangle(new Point(myInsets.left, myInsets.top), size);
 
-        List<ArrayList<Balloon>> columns = createColumns(layoutRec);
+        List<List<Balloon>> columns = createColumns(layoutRec);
         while (columns.size() > 1) {
             remove(myBalloons.get(0), true);
             columns = createColumns(layoutRec);
@@ -335,10 +335,10 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
         }
     }
 
-    private List<ArrayList<Balloon>> createColumns(Rectangle layoutRec) {
-        List<ArrayList<Balloon>> columns = new ArrayList<>();
+    private List<List<Balloon>> createColumns(Rectangle layoutRec) {
+        List<List<Balloon>> columns = new ArrayList<>();
 
-        ArrayList<Balloon> eachColumn = new ArrayList<>();
+        List<Balloon> eachColumn = new ArrayList<>();
         columns.add(eachColumn);
 
         int eachColumnHeight = 0;

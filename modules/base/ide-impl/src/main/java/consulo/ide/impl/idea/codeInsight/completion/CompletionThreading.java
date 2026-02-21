@@ -80,7 +80,7 @@ class SyncCompletion extends CompletionThreadingBase {
 
 class AsyncCompletion extends CompletionThreadingBase {
     private static final Logger LOG = Logger.getInstance(AsyncCompletion.class);
-    private final ArrayList<CompletionResult> myBatchList = new ArrayList<>();
+    private final List<CompletionResult> myBatchList = new ArrayList<>();
     private final LinkedBlockingQueue<Computable<Boolean>> myQueue = new LinkedBlockingQueue<>();
 
     @Override
@@ -152,7 +152,7 @@ class AsyncCompletion extends CompletionThreadingBase {
 
     @Override
     protected void flushBatchResult(CompletionProgressIndicator indicator) {
-        ArrayList<CompletionResult> batchListCopy = new ArrayList<>(myBatchList);
+        List<CompletionResult> batchListCopy = new ArrayList<>(myBatchList);
         myBatchList.clear();
 
         myQueue.offer(() -> {

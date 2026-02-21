@@ -286,7 +286,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
             myTree.setTarget(myTrg);
             myTree.update(mySettings);
 
-            ArrayList<DirDiffElementImpl> elements = new ArrayList<>();
+            List<DirDiffElementImpl> elements = new ArrayList<>();
             fillElements(myTree, elements);
             myElements.clear();
             myElements.addAll(elements);
@@ -340,7 +340,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                 return;
             }
             myTree.updateVisibility(mySettings);
-            ArrayList<DirDiffElementImpl> elements = new ArrayList<>();
+            List<DirDiffElementImpl> elements = new ArrayList<>();
             fillElements(myTree, elements);
             Runnable uiThread = () -> {
                 if (myDisposed) {
@@ -551,7 +551,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
 
     public List<DirDiffElementImpl> getSelectedElements() {
         int[] rows = myTable.getSelectedRows();
-        ArrayList<DirDiffElementImpl> elements = new ArrayList<>();
+        List<DirDiffElementImpl> elements = new ArrayList<>();
         for (int row : rows) {
             DirDiffElementImpl element = getElementAt(row);
             if (element == null || element.isSeparator()) {

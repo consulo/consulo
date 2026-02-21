@@ -390,7 +390,7 @@ public class DiffString implements CharSequence {
 
     @Nonnull
     public DiffString[] execute() {
-      ArrayList<DiffString> lines = new ArrayList<>();
+      List<DiffString> lines = new ArrayList<>();
       doExecute(lines);
       return lines.toArray(new DiffString[lines.size()]);
     }

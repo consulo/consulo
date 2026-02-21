@@ -35,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author nik
@@ -178,7 +179,7 @@ public class CheckboxTreeTable extends TreeTableView {
 
   @SuppressWarnings("unchecked")
   public <T> T[] getCheckedNodes(final Class<T> nodeType) {
-    final ArrayList<T> nodes = new ArrayList<T>();
+    final List<T> nodes = new ArrayList<>();
     Object root = getTree().getModel().getRoot();
     if (!(root instanceof CheckedTreeNode)) {
       throw new IllegalStateException("The root must be instance of the " + CheckedTreeNode.class.getName() + ": " + root.getClass().getName());

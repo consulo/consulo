@@ -367,7 +367,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
         @Nullable
         private Integer getLineEntry() {
-            ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
+            List<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
             LineData data = getLineData(myLineNumber);
             int currentStatus = data != null ? data.getStatus() : LineCoverage.NONE;

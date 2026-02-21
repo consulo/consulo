@@ -41,7 +41,7 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   @Nonnull
   private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
   @Nullable private final AnnotationSourceSwitcher mySwitcher;
-  private final ArrayList<AnAction> myActions = new ArrayList<>();
+  private final List<AnAction> myActions = new ArrayList<>();
 
   @Nonnull
   private final Disposable myDisposable;

@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class DeleteHandler {
     private DeleteHandler() {
@@ -240,7 +241,7 @@ public class DeleteHandler {
                     if (elementToDelete instanceof PsiDirectory directory) {
                         VirtualFile virtualFile = directory.getVirtualFile();
                         if (virtualFile.isInLocalFileSystem() && !virtualFile.is(VFileProperty.SYMLINK)) {
-                            ArrayList<VirtualFile> readOnlyFiles = new ArrayList<>();
+                            List<VirtualFile> readOnlyFiles = new ArrayList<>();
                             CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
 
                             if (!readOnlyFiles.isEmpty()) {

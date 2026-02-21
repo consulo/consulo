@@ -58,7 +58,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
 
   public void flushOutputFile() {
     synchronized (myNestedPrintables) {
-      ArrayList<Printable> printables = new ArrayList<>(myNestedPrintables);
+      List<Printable> printables = new ArrayList<>(myNestedPrintables);
       invokeInAlarm(() -> printOutputFile(printables));
     }
   }
@@ -77,7 +77,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
   }
 
   public void printOn(Printer printer) {
-    ArrayList<Printable> printables;
+    List<Printable> printables;
     synchronized (myNestedPrintables) {
       printables = new ArrayList<>(myNestedPrintables);
     }
@@ -210,7 +210,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
 
     public void flush(List<Printable> printables) {
       if (printables.isEmpty()) return;
-      ArrayList<Printable> currentPrintables = new ArrayList<>(printables);
+      List<Printable> currentPrintables = new ArrayList<>(printables);
       //move out from AWT thread
       Runnable request = () -> {
         synchronized (myFileLock) {

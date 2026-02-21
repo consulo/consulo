@@ -18,10 +18,11 @@ package consulo.diff.old;
 import consulo.util.collection.ArrayUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Deprecated
 class BufferedStringList {
-  private final ArrayList<String> myStrings = new ArrayList<String>();
+  private final List<String> myStrings = new ArrayList<>();
   private final StringBuffer myLast = new StringBuffer();
 
   public void add(String string) {

@@ -105,7 +105,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   public Collection<M> getSelectedMemberInfos() {
-    ArrayList<M> list = new ArrayList<>(myMemberInfos.size());
+    List<M> list = new ArrayList<>(myMemberInfos.size());
     for (M info : myMemberInfos) {
       if (isMemberInfoSelected(info)) {
 //      if (info.isChecked() || (!myMemberInfoModel.isMemberEnabled(info) && myMemberInfoModel.isCheckedWhenDisabled(info))) {

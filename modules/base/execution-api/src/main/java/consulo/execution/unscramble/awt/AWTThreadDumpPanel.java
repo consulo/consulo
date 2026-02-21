@@ -238,7 +238,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         public void actionPerformed(@Nonnull AnActionEvent e) {
             DefaultListModel model = (DefaultListModel) myThreadList.getModel();
             ThreadState selected = (ThreadState) myThreadList.getSelectedValue();
-            ArrayList<ThreadState> states = new ArrayList<ThreadState>();
+            List<ThreadState> states = new ArrayList<>();
             for (int i = 0; i < model.getSize(); i++) {
                 states.add((ThreadState) model.getElementAt(i));
             }

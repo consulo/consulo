@@ -1096,7 +1096,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         final RunManagerEx manager,
         RunnerAndConfigurationSettings selectedConfiguration
     ) {
-        ArrayList<RunnerAndConfigurationSettings> contextConfigurations = new ArrayList<>();
+        List<RunnerAndConfigurationSettings> contextConfigurations = new ArrayList<>();
         if (!EventQueue.isDispatchThread()) {
             return Collections.emptyList();
         }

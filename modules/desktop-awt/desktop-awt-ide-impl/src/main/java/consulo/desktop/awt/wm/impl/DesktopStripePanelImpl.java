@@ -51,7 +51,7 @@ import java.util.List;
  */
 final class DesktopStripePanelImpl extends JPanel {
     private final int myAnchor;
-    private final ArrayList<DesktopStripeButton> myButtons = new ArrayList<>();
+    private final List<DesktopStripeButton> myButtons = new ArrayList<>();
     private final MyKeymapManagerListener myWeakKeymapManagerListener;
     private final MyUISettingsListener myUISettingsListener;
 

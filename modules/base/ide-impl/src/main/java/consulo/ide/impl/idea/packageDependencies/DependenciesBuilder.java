@@ -128,7 +128,7 @@ public abstract class DependenciesBuilder {
     Set<PsiFile> reachable = getDirectDependencies().get(from);
     if (reachable != null) {
       if (reachable.contains(to)) {
-        ArrayList<PsiFile> path = new ArrayList<PsiFile>();
+        List<PsiFile> path = new ArrayList<PsiFile>();
         result.add(path);
         return result;
       }

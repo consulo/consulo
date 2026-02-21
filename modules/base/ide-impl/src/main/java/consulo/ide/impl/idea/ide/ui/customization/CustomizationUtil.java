@@ -74,7 +74,7 @@ public class CustomizationUtil {
     static AnAction[] getReordableChildren(ActionGroup group, CustomActionsSchemaImpl schema, String defaultGroupName, AnActionEvent e) {
         String text = group.getTemplatePresentation().getText();
         ActionManager actionManager = ActionManager.getInstance();
-        ArrayList<AnAction> reorderedChildren = new ArrayList<>();
+        List<AnAction> reorderedChildren = new ArrayList<>();
         ContainerUtil.addAll(reorderedChildren, group.getChildren(e));
         List<ActionUrl> actions = schema.getActions();
         for (ActionUrl actionUrl : actions) {
@@ -125,7 +125,7 @@ public class CustomizationUtil {
         schema.fillActionGroups(root);
         JTree defaultTree = new Tree(new DefaultTreeModel(root));
 
-        ArrayList<ActionUrl> actions = new ArrayList<>();
+        List<ActionUrl> actions = new ArrayList<>();
 
         TreeUtil.traverseDepth(
             (TreeNode)tree.getModel().getRoot(),
@@ -157,7 +157,7 @@ public class CustomizationUtil {
         schema.setActions(actions);
     }
 
-    private static void computeDiff(ActionUrl[] defaultUserObjects, ActionUrl[] currentUserObjects, ArrayList<ActionUrl> actions) {
+    private static void computeDiff(ActionUrl[] defaultUserObjects, ActionUrl[] currentUserObjects, List<ActionUrl> actions) {
         Diff.Change change = null;
         try {
             change = Diff.buildChanges(defaultUserObjects, currentUserObjects);
@@ -257,8 +257,8 @@ public class CustomizationUtil {
 
 
     private static ActionUrl[] getChildUserObjects(DefaultMutableTreeNode node, ActionUrl parent) {
-        ArrayList<ActionUrl> result = new ArrayList<>();
-        ArrayList<String> groupPath = new ArrayList<>();
+        List<ActionUrl> result = new ArrayList<>();
+        List<String> groupPath = new ArrayList<>();
         groupPath.addAll(parent.getGroupPath());
         for (int i = 0; i < node.getChildCount(); i++) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(i);
