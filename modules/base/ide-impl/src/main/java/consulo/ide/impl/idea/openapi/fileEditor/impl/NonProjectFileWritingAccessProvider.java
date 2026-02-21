@@ -25,8 +25,9 @@ import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.util.dataholder.UserDataHolder;
@@ -76,6 +77,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Collection<VirtualFile> requestWriting(VirtualFile... files) {
         if (isAllAccessAllowed()) {
             return Collections.emptyList();
@@ -108,6 +110,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     }
 
     @Nullable
+    @RequiredUIAccess
     private UnlockOption askToUnlock(@Nonnull List<VirtualFile> files) {
         NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
         if (!dialog.showAndGet()) {
@@ -135,11 +138,8 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
             return true;
         }
 
-        if (!getApp().isUnitTestMode() && FileUtil.isAncestor(
-            new File(FileUtil.getTempDirectory()),
-            VirtualFileUtil.virtualToIoFile(file),
-            true
-        )) {
+        if (!getApp().isUnitTestMode()
+            && FileUtil.isAncestor(new File(FileUtil.getTempDirectory()), VirtualFileUtil.virtualToIoFile(file), true)) {
             return true;
         }
 
@@ -154,25 +154,27 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         return isProjectFile(file, project);
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     private static boolean isProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-        for (NonProjectFileWritingAccessExtension each : NonProjectFileWritingAccessExtension.EP_NAME.getExtensionList(project)) {
+        Boolean writable = project.getExtensionPoint(NonProjectFileWritingAccessExtension.class).computeSafeIfAny(each -> {
             if (each.isWritable(file)) {
                 return true;
             }
             if (each.isNotWritable(file)) {
                 return false;
             }
+            return null;
+        });
+
+        if (writable != null) {
+            return writable;
         }
 
         ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
         if (fileIndex.isInContent(file)) {
             return true;
         }
-        if (!Registry.is("ide.hide.excluded.files") && fileIndex.isExcluded(file) && !fileIndex.isUnderIgnored(file)) {
-            return true;
-        }
-
-        return false;
+        return !Registry.is("ide.hide.excluded.files") && fileIndex.isExcluded(file) && !fileIndex.isUnderIgnored(file);
     }
 
     public static void allowWriting(VirtualFile... allowedFiles) {
@@ -207,11 +209,12 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         });
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     private static boolean isAllAccessAllowed() {
         Application app = getApp();
 
         // disable checks in tests, if not asked
-        if (app.isUnitTestMode() && !Objects.equals(app.getUserData(ENABLE_IN_TESTS), Boolean.TRUE)) {
+        if (app.isUnitTestMode() && !Boolean.TRUE.equals(app.getUserData(ENABLE_IN_TESTS))) {
             return true;
         }
         return ACCESS_ALLOWED.getValue(app).get() > 0;
