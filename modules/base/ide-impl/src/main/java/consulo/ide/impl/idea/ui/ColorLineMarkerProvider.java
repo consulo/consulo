@@ -22,7 +22,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.extension.ExtensionPoint;
-import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
@@ -62,7 +61,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
                 element.getTextRange(),
                 ImageEffects.colorFilled(12, 12, color),
                 Pass.UPDATE_ALL,
-                FunctionUtil.nullConstant(),
+                a -> null,
                 new GutterIconNavigationHandler<>() {
                     @Override
                     @RequiredUIAccess
@@ -144,7 +143,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         @Nonnull
         @Override
         public Function<? super PsiElement, String> getCommonTooltip(@Nonnull List<MergeableLineMarkerInfo> infos) {
-            return FunctionUtil.nullConstant();
+            return a -> null;
         }
     }
 

@@ -162,6 +162,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     InputEvent myDisposeEvent;
 
     private Runnable myFinalRunnable;
+    @Nullable
     private Runnable myOkHandler;
     @Nullable
     private Predicate<? super KeyEvent> myKeyEventHandler;
@@ -789,7 +790,23 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Override
     public final void closeOk(@Nullable InputEvent e) {
         setOk(true);
-        myFinalRunnable = FunctionUtil.composeRunnables(myOkHandler, myFinalRunnable);
+        if (myOkHandler != null) {
+            myFinalRunnable = () -> {
+                try {
+                    myOkHandler.run();
+                }
+                catch (RuntimeException | Error ex) {
+                    try {
+                        myFinalRunnable.run();
+                    }
+                    catch (RuntimeException | Error ex2) {
+                        ex.addSuppressed(ex2);
+                    }
+                    throw ex;
+                }
+                myFinalRunnable.run();
+            };
+        }
         cancel(e);
     }
 

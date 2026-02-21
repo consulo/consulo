@@ -21,6 +21,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Weighted;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
@@ -32,11 +33,10 @@ import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.internal.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.internal.TabFactoryBuilderImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
-import consulo.project.DumbService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -203,7 +203,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         JPanel component = new JPanel(new BorderLayout());
         JComponent comp = editor.getComponent();
         if (!FileEditorManagerImpl.isDumbAware(editor)) {
-            comp = DumbService.getInstance(myFileEditorManager.getProject()).wrapGently(comp, editor);
+            comp = DumbUnawareHider.wrapGently(myFileEditorManager.getProject(), comp, editor);
         }
 
         component.add(comp, BorderLayout.CENTER);

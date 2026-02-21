@@ -21,9 +21,9 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
@@ -34,31 +34,30 @@ import java.util.Set;
  */
 public abstract class AbstractRunConfigurationTypeUsagesCollector extends AbstractApplicationUsagesCollector {
 
-  protected abstract boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration);
+    protected abstract boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration);
 
-  @Nonnull
-  @Override
-  public final Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) {
-    final Set<String> runConfigurationTypes = new HashSet<String>();
-    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed()) return;
-        RunManager runManager = RunManager.getInstance(project);
-        for (RunConfiguration runConfiguration : runManager.getAllConfigurationsList()) {
-          if (runConfiguration != null && isApplicable(runManager, runConfiguration)) {
-            ConfigurationFactory configurationFactory = runConfiguration.getFactory();
-            ConfigurationType configurationType = configurationFactory.getType();
-            StringBuilder keyBuilder = new StringBuilder();
-            keyBuilder.append(configurationType.getId());
-            if (configurationType.getConfigurationFactories().length > 1) {
-              keyBuilder.append(".").append(configurationFactory.getIcon());
+    @Nonnull
+    @Override
+    public final Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
+        Set<String> runConfigurationTypes = new HashSet<>();
+        UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
+            if (project.isDisposed()) {
+                return;
             }
-            runConfigurationTypes.add(keyBuilder.toString());
-          }
-        }
-      }
-    });
-    return ContainerUtil.map2Set(runConfigurationTypes, runConfigurationType -> new UsageDescriptor(runConfigurationType, 1));
-  }
+            RunManager runManager = RunManager.getInstance(project);
+            for (RunConfiguration runConfiguration : runManager.getAllConfigurationsList()) {
+                if (runConfiguration != null && isApplicable(runManager, runConfiguration)) {
+                    ConfigurationFactory configurationFactory = runConfiguration.getFactory();
+                    ConfigurationType configurationType = configurationFactory.getType();
+                    StringBuilder keyBuilder = new StringBuilder();
+                    keyBuilder.append(configurationType.getId());
+                    if (configurationType.getConfigurationFactories().length > 1) {
+                        keyBuilder.append(".").append(configurationFactory.getIcon());
+                    }
+                    runConfigurationTypes.add(keyBuilder.toString());
+                }
+            }
+        });
+        return ContainerUtil.map2Set(runConfigurationTypes, runConfigurationType -> new UsageDescriptor(runConfigurationType, 1));
+    }
 }

@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
-import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -234,7 +233,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 if (pairs.isEmpty()) {
                     return null;
                 }
-                Set<PsiElement> psiSelection = pairs.map(Functions.pairSecond()).toSet();
+                Set<PsiElement> psiSelection = pairs.map(pair -> Pair.getSecond(pair)).toSet();
 
                 String text = StringUtil.join(
                     pairs,

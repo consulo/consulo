@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.NoAccessDuringPsiEventsService;
 import consulo.application.util.RecursionManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -27,7 +28,6 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.*;
@@ -125,7 +125,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   @Override
   @Nullable
   public ObjectStubTree readFromVFile(Project project, VirtualFile vFile) {
-    if (DumbService.getInstance(project).isDumb() || NoAccessDuringPsiEvents.isInsideEventProcessing()) {
+    if (DumbService.getInstance(project).isDumb() || NoAccessDuringPsiEventsService.getInstance().isInsideEventProcessing()) {
       return null;
     }
 

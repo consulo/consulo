@@ -15,15 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
-import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
-import consulo.ide.impl.idea.openapi.fileTypes.FileTypesBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeRenderer;
-import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.internal.FileTypeManagerEx;
@@ -32,12 +29,14 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -49,6 +48,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 public class FileTypeChooser extends DialogWrapper {
     private JList<FileType> myList;
@@ -65,11 +65,11 @@ public class FileTypeChooser extends DialogWrapper {
         super(true);
 
         myPanel = new JPanel(new VerticalFlowLayout());
-        myPanel.add(new JBLabel(FileTypesBundle.message("filetype.chooser.prompt", fileName)));
+        myPanel.add(new JBLabel(FileTypeLocalize.filetypeChooserPrompt(fileName).get()));
 
         myPattern = new ComboBox<>();
         myPattern.setEditable(true);
-        myPanel.add(LabeledComponent.create(myPattern, FileTypesBundle.message("filetype.chooser.file.pattern")));
+        myPanel.add(LabeledComponent.create(myPattern, FileTypeLocalize.filetypeChooserFilePattern().get()));
 
         ButtonGroup group = new ButtonGroup();
         myOpenInIdea = new JBRadioButton("Open matching files as type:");
@@ -100,7 +100,7 @@ public class FileTypeChooser extends DialogWrapper {
         group.add(myOpenAsNative);
 
         myPanel.add(myOpenAsNative);
-        myInstallPluginFromRepository = new JBRadioButton(FileTypesBundle.message("filetype.chooser.install.plugin"));
+        myInstallPluginFromRepository = new JBRadioButton(FileTypeLocalize.filetypeChooserInstallPlugin().get());
         group.add(myInstallPluginFromRepository);
 
         myPanel.add(myInstallPluginFromRepository);
@@ -115,7 +115,7 @@ public class FileTypeChooser extends DialogWrapper {
             }
         }
         myList.setModel(model);
-        myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
+        myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, Function.<String>identity()), patterns.get(0)));
 
         ExtensionPreview fileFeatureForChecking = ExtensionPreview.of(FileTypeFactory.class, fileName);
         PluginAdvertiserHelper.PluginsInfo info = PluginAdvertiserHelper.getInstance().getLoadedPlugins(fileFeatureForChecking);
@@ -143,7 +143,7 @@ public class FileTypeChooser extends DialogWrapper {
             myInstallPluginFromRepository.setVisible(false);
         }
 
-        setTitle(FileTypesBundle.message("filetype.chooser.title"));
+        setTitle(FileTypeLocalize.filetypeChooserTitle());
         init();
     }
 
@@ -232,7 +232,7 @@ public class FileTypeChooser extends DialogWrapper {
             return null;
         }
 
-        ApplicationManager.getApplication().runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String) chooser.myPattern.getSelectedItem()));
+        WriteAction.run(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String) chooser.myPattern.getSelectedItem()));
 
         return type;
     }

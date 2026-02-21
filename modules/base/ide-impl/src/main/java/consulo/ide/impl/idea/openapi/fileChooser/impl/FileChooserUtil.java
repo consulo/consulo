@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -32,64 +32,70 @@ import java.util.Collection;
 import java.util.List;
 
 public final class FileChooserUtil {
-  private static final String LAST_OPENED_FILE_PATH = "last_opened_file_path";
+    private static final String LAST_OPENED_FILE_PATH = "last_opened_file_path";
 
-  @Nullable
-  public static VirtualFile getLastOpenedFile(@Nullable Project project) {
-    if (project != null) {
-      String path = PropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
-      if (path != null) {
-        return LocalFileSystem.getInstance().findFileByPath(path);
-      }
-    }
-    return null;
-  }
-
-  public static void setLastOpenedFile(@Nullable Project project, @Nullable VirtualFile file) {
-    if (project != null && !project.isDisposed() && file != null) {
-      PropertiesComponent.getInstance(project).setValue(LAST_OPENED_FILE_PATH, file.getPath());
-    }
-  }
-
-  @Nullable
-  public static VirtualFile getFileToSelect(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project,
-                                            @Nullable VirtualFile toSelect, @Nullable VirtualFile lastPath) {
-    boolean chooseDir = descriptor instanceof FileSaverDescriptor;
-    VirtualFile result;
-
-    if (toSelect == null && lastPath == null) {
-      result = project == null? null : project.getBaseDir();
-    }
-    else if (toSelect != null && lastPath != null) {
-      if (Boolean.TRUE.equals(descriptor.getUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT))) {
-        result = lastPath;
-      }
-      else {
-        result = toSelect;
-      }
-    }
-    else if (toSelect == null) {
-      result = lastPath;
-    }
-    else {
-      result = toSelect;
+    @Nullable
+    public static VirtualFile getLastOpenedFile(@Nullable Project project) {
+        if (project != null) {
+            String path = PropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
+            if (path != null) {
+                return LocalFileSystem.getInstance().findFileByPath(path);
+            }
+        }
+        return null;
     }
 
-    if (result != null) {
-      if (chooseDir && !result.isDirectory()) {
-        result = result.getParent();
-      }
-    }
-    else if (Platform.current().os().isUnix()) {
-      result = VfsUtil.getUserHomeDir();
+    public static void setLastOpenedFile(@Nullable Project project, @Nullable VirtualFile file) {
+        if (project != null && !project.isDisposed() && file != null) {
+            PropertiesComponent.getInstance(project).setValue(LAST_OPENED_FILE_PATH, file.getPath());
+        }
     }
 
-    return result;
-  }
+    @Nullable
+    public static VirtualFile getFileToSelect(
+        @Nonnull FileChooserDescriptor descriptor,
+        @Nullable Project project,
+        @Nullable VirtualFile toSelect,
+        @Nullable VirtualFile lastPath
+    ) {
+        boolean chooseDir = descriptor instanceof FileSaverDescriptor;
+        VirtualFile result;
 
-  @Nonnull
-  public static List<VirtualFile> getChosenFiles(@Nonnull FileChooserDescriptor descriptor,
-                                                 @Nonnull Collection<VirtualFile> selectedFiles) {
-    return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
-  }
+        if (toSelect == null && lastPath == null) {
+            result = project == null ? null : project.getBaseDir();
+        }
+        else if (toSelect != null && lastPath != null) {
+            if (Boolean.TRUE.equals(descriptor.getUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT))) {
+                result = lastPath;
+            }
+            else {
+                result = toSelect;
+            }
+        }
+        else if (toSelect == null) {
+            result = lastPath;
+        }
+        else {
+            result = toSelect;
+        }
+
+        if (result != null) {
+            if (chooseDir && !result.isDirectory()) {
+                result = result.getParent();
+            }
+        }
+        else if (Platform.current().os().isUnix()) {
+            result = VfsUtil.getUserHomeDir();
+        }
+
+        return result;
+    }
+
+    @Nonnull
+    public static List<VirtualFile> getChosenFiles(
+        @Nonnull FileChooserDescriptor descriptor,
+        @Nonnull Collection<VirtualFile> selectedFiles
+    ) {
+        return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
+    }
 }

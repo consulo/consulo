@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.project;
+package consulo.project.impl.internal;
 
-import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
@@ -9,11 +8,7 @@ import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.ProgressWindow;
-import consulo.application.internal.AbstractProgressIndicatorExBase;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorEx;
+import consulo.application.internal.*;
 import consulo.application.progress.*;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.registry.Registry;
@@ -22,12 +17,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
-import consulo.ide.impl.idea.util.exception.FrequentErrorLogger;
-import consulo.ide.localize.IdeLocalize;
-import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
@@ -39,6 +28,7 @@ import consulo.project.DumbModeTask;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.internal.DumbServiceInternal;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -62,7 +52,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -184,7 +173,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Nonnull
     private AccessToken heavyActivityStarted(@Nonnull LocalizeValue activityName) {
-        LocalizeValue reason = IdeLocalize.dumbServiceIndexingPausedDueTo(activityName);
+        LocalizeValue reason = ProjectLocalize.dumbServiceIndexingPausedDueTo(activityName);
         synchronized (myRequestedSuspensions) {
             myRequestedSuspensions.add(reason);
         }
@@ -304,14 +293,14 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
 
         Exception trace = new Exception();
-        
+
         indicator.pushState();
         ((CoreProgressManager) ProgressManager.getInstance()).suppressPrioritizing();
         try {
             ProgressIndicator finalIndicator = indicator;
             HeavyProcessLatch.INSTANCE.performOperation(
                 HeavyProcessLatch.Type.Indexing,
-                IdeLocalize.progressPerformingIndexingTasks().get(),
+                ProjectLocalize.progressPerformingIndexingTasks().get(),
                 () -> task.performInDumbMode(finalIndicator, trace)
             );
         }
@@ -322,7 +311,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    @VisibleForTesting
     void queueAsynchronousTask(@Nonnull DumbModeTask task) {
         Exception trace = new Exception(); // please report exceptions here to peter
         myProject.getUIAccess().giveIfNeed(() -> queueTaskOnEdt(task, trace));
@@ -414,7 +402,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
         try {
             myPublisher.exitDumbMode();
-            FileEditorManager.getInstance(myProject).refreshIconsAsync();
         }
         finally {
             // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
@@ -469,26 +456,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
-        final DumbUnawareHider wrapper = new DumbUnawareHider(dumbUnawareContent);
-        wrapper.setContentVisible(!isDumb());
-        getProject().getMessageBus().connect(parentDisposable).subscribe(DumbModeListener.class, new DumbModeListener() {
-
-            @Override
-            public void enteredDumbMode() {
-                wrapper.setContentVisible(false);
-            }
-
-            @Override
-            public void exitDumbMode() {
-                wrapper.setContentVisible(true);
-            }
-        });
-
-        return wrapper;
-    }
-
-    @Override
     public void smartInvokeLater(@Nonnull Runnable runnable) {
         smartInvokeLater(runnable, Application.get().getDefaultModalityState());
     }
@@ -525,11 +492,11 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private void showModalProgress() {
         Exception trace = new Exception();
-        NoAccessDuringPsiEvents.checkCallContext();
+        NoAccessDuringPsiEventsService.getInstance().checkCallContext();
         try {
             ((ApplicationEx) myApplication).executeSuspendingWriteAction(
                 myProject,
-                IdeLocalize.progressIndexing().get(),
+                ProjectLocalize.progressIndexing().get(),
                 () -> {
                     assertState(State.SCHEDULED_TASKS);
                     runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator(), trace);
@@ -566,7 +533,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private void startBackgroundProcess(@Nonnull Exception startTrace) {
         try {
-            ProgressManager.getInstance().run(new Task.Backgroundable(myProject, IdeLocalize.progressIndexing(), false) {
+            ProgressManager.getInstance().run(new Task.Backgroundable(myProject, ProjectLocalize.progressIndexing(), false) {
                 @Override
                 public void run(@Nonnull ProgressIndicator visibleIndicator) {
                     runBackgroundProcess(visibleIndicator, startTrace);
@@ -580,7 +547,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     private void runBackgroundProcess(@Nonnull ProgressIndicator visibleIndicator, @Nonnull Exception trace) {
-        ((ProgressManagerImpl) ProgressManager.getInstance()).markProgressSafe((ProgressWindow) visibleIndicator);
+        ((UnsafeProgressIndicator) visibleIndicator).markAsUnsafeIndicator();
 
         if (!myState.compareAndSet(State.SCHEDULED_TASKS, State.RUNNING_DUMB_TASKS)) {
             return;
@@ -622,7 +589,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                     DumbModeTask finalTask = task;
                     HeavyProcessLatch.INSTANCE.performOperation(
                         HeavyProcessLatch.Type.Indexing,
-                        IdeLocalize.progressPerformingIndexingTasks().get(),
+                        ProjectLocalize.progressPerformingIndexingTasks().get(),
                         () -> runSingleTask(finalTask, taskIndicator, trace)
                     );
                 }
@@ -654,7 +621,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                     taskIndicator.checkCanceled();
 
                     taskIndicator.setIndeterminate(true);
-                    taskIndicator.setTextValue(IdeLocalize.progressIndexingScanning());
+                    taskIndicator.setTextValue(ProjectLocalize.progressIndexingScanning());
 
                     task.performInDumbMode(taskIndicator, trace);
                 }

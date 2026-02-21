@@ -15,45 +15,43 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.execution.ExecutionManager;
-import consulo.execution.executor.Executor;
+import consulo.execution.action.CloseAction;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.execution.executor.Executor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.action.CloseAction;
-import consulo.language.scratch.ScratchFileService;
-import consulo.ide.impl.idea.ide.script.IdeScriptBindings;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.StringUtil;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.ide.script.IdeScriptBindings;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.impl.psi.LeafPsiElement;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.document.Document;
-import consulo.document.util.TextRange;
-import consulo.language.psi.*;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.script.IdeScriptEngine;
 import consulo.ide.impl.script.IdeScriptEngineManager;
-
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.scratch.ScratchFileService;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -63,6 +61,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author gregsh
@@ -89,7 +88,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
         DefaultActionGroup actions = new DefaultActionGroup(ContainerUtil.map(
             languages,
-            (NotNullFunction<String, AnAction>) language -> new DumbAwareAction(language) {
+            (Function<String, AnAction>) language -> new DumbAwareAction(language) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e1) {
@@ -133,6 +132,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         }
     }
 
+    @RequiredReadAction
     private static void executeQuery(
         @Nonnull Project project,
         @Nonnull VirtualFile file,
@@ -186,6 +186,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static String getCommandText(@Nonnull Project project, @Nonnull Editor editor) {
         TextRange selectedRange = EditorUtil.getSelectionInAnyMode(editor);
         Document document = editor.getDocument();
@@ -226,6 +227,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static RunContentDescriptor getConsoleView(@Nonnull Project project, @Nonnull VirtualFile file) {
         PsiFile psiFile = ObjectUtil.assertNotNull(PsiManager.getInstance(project).findFile(file));
         WeakReference<RunContentDescriptor> ref = psiFile.getCopyableUserData(DESCRIPTOR_KEY);
@@ -238,6 +240,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static RunContentDescriptor createConsoleView(@Nonnull Project project, @Nonnull PsiFile psiFile) {
         ConsoleView consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
 

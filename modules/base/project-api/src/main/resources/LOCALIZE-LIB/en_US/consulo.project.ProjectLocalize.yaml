@@ -121,6 +121,8 @@ display.name.artifacts:
     text: Artifacts
 drag.n.drop.text.0.packaging.elements:
     text: '{0} elements'
+dumb.service.indexing.paused.due.to:
+    text: Indexing paused due to {0}
 element.kind.name.facet:
     text: facet
 element.kind.name.module:
@@ -466,6 +468,14 @@ path.0.is.invalid.error.message:
     text: Path ''{0}'' is invalid
 popup.recent.projects.title:
     text: Recent Projects
+progress.indexing:
+    text: Updating indices...
+progress.indexing.scanning:
+    text: Scanning files to index...
+progress.indexing.updating:
+    text: Indexing...
+progress.performing.indexing.tasks:
+    text: Performing indexing tasks
 progress.text.searching.frameworks:
     text: Searching for frameworks. Please wait.
 progress.title.deleting.files:

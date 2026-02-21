@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
-
-import jakarta.annotation.Nullable;
-import java.util.function.Function;
+package consulo.application.internal;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 2026-02-21
  */
-@Deprecated
-public interface NullableFunction<Param, Result> extends Function<Param, Result> {
-  @Override
-  @Nullable
-  Result apply(Param param);
+public interface UnsafeProgressIndicator {
+    boolean isUnsafeIndicator();
 
-  NullableFunction NULL = o -> null;
+    void markAsUnsafeIndicator();
 }

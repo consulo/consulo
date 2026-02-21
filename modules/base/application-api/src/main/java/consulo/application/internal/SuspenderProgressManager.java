@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.internal;
+package consulo.application.internal;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2026-02-21
  */
-public class RestartInfoAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    Application app = ApplicationManager.getApplication();
-    if (app.isRestartCapable()) {
-      app.restart();
-    }
-  }
+public interface SuspenderProgressManager {
+    void addCheckCanceledHook(@Nonnull CheckCanceledHook hook);
+
+    void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook);
 }

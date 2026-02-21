@@ -50,6 +50,7 @@ module consulo.application.impl {
         consulo.desktop.awt.os.mac,
         consulo.test.impl,
         consulo.compiler.impl,
+        consulo.project.impl,
         consulo.desktop.ide.impl,
         consulo.virtual.file.system.impl,
         consulo.desktop.swt.ide.impl;

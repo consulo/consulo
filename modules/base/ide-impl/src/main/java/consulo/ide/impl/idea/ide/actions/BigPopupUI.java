@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
@@ -16,6 +15,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     protected JBPopup myHint;
     protected Runnable searchFinishedHandler = () -> {
     };
-    protected final List<ViewTypeListener> myViewTypeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    protected final List<ViewTypeListener> myViewTypeListeners = Lists.newLockFreeCopyOnWriteList();
     protected ViewType myViewType = ViewType.SHORT;
     protected JLabel myHintLabel;
 
