@@ -19,40 +19,45 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ScopeOrderComparator;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
  * @author Dmitry Batkovich
  */
 public class MultiScopeSeverityIcon {
-  @Nullable
-  public static Image create(Map<String, HighlightSeverity> scopeToAverageSeverityMap, String defaultScopeName, InspectionProfileImpl inspectionProfile) {
-    List<String> sortedScopeNames = new ArrayList<String>(scopeToAverageSeverityMap.keySet());
-    LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
-    Collections.sort(sortedScopeNames, new ScopeOrderComparator(inspectionProfile));
-    sortedScopeNames.remove(defaultScopeName);
-    sortedScopeNames.add(defaultScopeName);
-    for (String scopeName : sortedScopeNames) {
-      HighlightSeverity severity = scopeToAverageSeverityMap.get(scopeName);
-      if (severity == null) {
-        continue;
-      }
-      HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
-      if (level == null) {
-        continue;
-      }
-      myScopeToAverageSeverityMap.put(scopeName, level);
-    }
+    @Nullable
+    public static Image create(
+        Map<String, HighlightSeverity> scopeToAverageSeverityMap,
+        String defaultScopeName,
+        InspectionProfileImpl inspectionProfile
+    ) {
+        List<String> sortedScopeNames = new ArrayList<>(scopeToAverageSeverityMap.keySet());
+        LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
+        Collections.sort(sortedScopeNames, new ScopeOrderComparator(inspectionProfile));
+        sortedScopeNames.remove(defaultScopeName);
+        sortedScopeNames.add(defaultScopeName);
+        for (String scopeName : sortedScopeNames) {
+            HighlightSeverity severity = scopeToAverageSeverityMap.get(scopeName);
+            if (severity == null) {
+                continue;
+            }
+            HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
+            if (level == null) {
+                continue;
+            }
+            myScopeToAverageSeverityMap.put(scopeName, level);
+        }
 
-    if (myScopeToAverageSeverityMap.size() == 1) {
-      HighlightDisplayLevel firstItem = ContainerUtil.getFirstItem(myScopeToAverageSeverityMap.values());
-      assert firstItem != null;
-      return firstItem.getIcon();
+        if (myScopeToAverageSeverityMap.size() == 1) {
+            HighlightDisplayLevel firstItem = ContainerUtil.getFirstItem(myScopeToAverageSeverityMap.values());
+            assert firstItem != null;
+            return firstItem.getIcon();
+        }
+        return null;
     }
-    return null;
-  }
 }

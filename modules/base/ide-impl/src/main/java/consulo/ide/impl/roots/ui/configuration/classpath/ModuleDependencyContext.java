@@ -20,59 +20,64 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ide.setting.module.ClasspathPanel;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
  * @author VISTALL
- * @since 27.09.14
+ * @since 2014-09-27
  */
 public class ModuleDependencyContext extends AddModuleDependencyContext<List<Module>> {
-  private final List<Module> myNotAddedModules;
+    private final List<Module> myNotAddedModules;
 
-  public ModuleDependencyContext(ClasspathPanel panel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
-    super(panel, modulesConfigurator, librariesConfigurator);
-    myNotAddedModules = calcNotAddedModules();
-  }
-
-  private List<Module> calcNotAddedModules() {
-    ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
-    Set<Module> addedModules = new HashSet<>(Arrays.asList(rootModel.getModuleDependencies(true)));
-    addedModules.add(rootModel.getModule());
-
-    Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesConfigurator().getModules();
-    List<Module> elements = new ArrayList<>();
-    for (Module module : modules) {
-      if (!addedModules.contains(module)) {
-        elements.add(module);
-      }
+    public ModuleDependencyContext(
+        ClasspathPanel panel,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        super(panel, modulesConfigurator, librariesConfigurator);
+        myNotAddedModules = calcNotAddedModules();
     }
-    ContainerUtil.sort(elements, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
-    return elements;
-  }
 
-  public List<Module> getNotAddedModules() {
-    return myNotAddedModules;
-  }
+    private List<Module> calcNotAddedModules() {
+        ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
+        Set<Module> addedModules = new HashSet<>(Arrays.asList(rootModel.getModuleDependencies(true)));
+        addedModules.add(rootModel.getModule());
 
-  @Override
-  public boolean isEmpty() {
-    return myNotAddedModules.isEmpty();
-  }
-
-  @Nonnull
-  @Override
-  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Module> value) {
-    List<OrderEntry> orderEntries = new ArrayList<>();
-    for (Module selectedValue : value) {
-      orderEntries.add(layer.addModuleOrderEntry(selectedValue));
+        Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesConfigurator().getModules();
+        List<Module> elements = new ArrayList<>();
+        for (Module module : modules) {
+            if (!addedModules.contains(module)) {
+                elements.add(module);
+            }
+        }
+        ContainerUtil.sort(elements, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
+        return elements;
     }
-    return orderEntries;
-  }
+
+    public List<Module> getNotAddedModules() {
+        return myNotAddedModules;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return myNotAddedModules.isEmpty();
+    }
+
+    @Nonnull
+    @Override
+    public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Module> value) {
+        List<OrderEntry> orderEntries = new ArrayList<>();
+        for (Module selectedValue : value) {
+            orderEntries.add(layer.addModuleOrderEntry(selectedValue));
+        }
+        return orderEntries;
+    }
 }

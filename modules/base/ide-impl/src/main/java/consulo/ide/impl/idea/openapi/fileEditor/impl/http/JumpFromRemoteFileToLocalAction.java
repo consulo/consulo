@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -32,6 +31,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
@@ -39,7 +39,7 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author nik
@@ -103,14 +103,12 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
         }
     }
 
-    public static Collection<VirtualFile> findLocalFiles(Project project, String url, String fileName) {
-        for (LocalFileFinder finder : LocalFileFinder.EP_NAME.getExtensions()) {
-            VirtualFile file = finder.findLocalFile(url, project);
-            if (file != null) {
-                return Collections.singletonList(file);
-            }
+    public static Collection<VirtualFile> findLocalFiles(@Nonnull Project project, @Nonnull String url, @Nonnull String fileName) {
+        VirtualFile file = project.getApplication().getExtensionPoint(LocalFileFinder.class)
+            .computeSafeIfAny(finder -> finder.findLocalFile(url, project));
+        if (file != null) {
+            return List.of(file);
         }
-
         return FilenameIndex.getVirtualFilesByName(project, fileName, GlobalSearchScope.allScope(project));
     }
 
