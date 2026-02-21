@@ -117,7 +117,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
 
   public void directoryMappingChanged() {
     // copy myData under lock
-    HashSet<String> keys;
+    Set<String> keys;
     synchronized (myLock) {
       keys = new HashSet<>(myData.keySet());
     }

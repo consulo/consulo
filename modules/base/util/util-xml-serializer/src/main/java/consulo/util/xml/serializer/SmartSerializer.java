@@ -23,9 +23,10 @@ import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 public final class SmartSerializer {
-  private LinkedHashSet<String> mySerializedAccessorNameTracker;
+  private Set<String> mySerializedAccessorNameTracker;
   private Map<String, Float> myOrderedBindings;
   private final SerializationFilter mySerializationFilter;
 
@@ -87,7 +88,7 @@ public final class SmartSerializer {
       binding.serializeInto(bean, element, mySerializationFilter);
     }
     else {
-      LinkedHashSet<String> oldTracker = mySerializedAccessorNameTracker;
+      Set<String> oldTracker = mySerializedAccessorNameTracker;
       try {
         mySerializedAccessorNameTracker = null;
         binding.serializeInto(bean, element, mySerializationFilter);

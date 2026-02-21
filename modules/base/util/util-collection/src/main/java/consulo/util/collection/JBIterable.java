@@ -515,7 +515,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   @Nonnull
   public final JBIterable<E> unique(@Nonnull final Function<? super E, ?> identity) {
     return filter(new SCond<E>() {
-      HashSet<Object> visited;
+      Set<Object> visited;
 
       @Override
       public boolean test(E e) {
@@ -912,7 +912,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
     if (this == EMPTY) return Collections.emptySet();
     E single = asElement();
     if (single != null) return Collections.singleton(single);
-    LinkedHashSet<E> result = new LinkedHashSet<>();
+    Set<E> result = new LinkedHashSet<>();
     for (E e : this) {
       result.add(e);
     }

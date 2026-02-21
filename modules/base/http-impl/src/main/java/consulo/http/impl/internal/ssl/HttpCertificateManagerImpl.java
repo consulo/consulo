@@ -33,6 +33,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -361,7 +362,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         @Tag("expired")
         @Property(surroundWithTag = false)
         @AbstractCollection(elementTag = "commonName")
-        public LinkedHashSet<String> BROKEN_CERTIFICATES = new LinkedHashSet<>();
+        public Set<String> BROKEN_CERTIFICATES = new LinkedHashSet<>();
 
         /**
          * Do not show the dialog and accept untrusted certificates automatically.

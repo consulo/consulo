@@ -312,7 +312,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
     private String createUniqueName() {
         String str = InspectionLocalize.inspectionProfileUnnamed().get();
-        HashSet<String> treeScopes = new HashSet<>();
+        Set<String> treeScopes = new HashSet<>();
         obtainCurrentScopes(treeScopes);
         if (!treeScopes.contains(str)) {
             return str;
@@ -326,7 +326,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
     }
 
-    private void obtainCurrentScopes(HashSet<String> scopes) {
+    private void obtainCurrentScopes(Set<String> scopes) {
         for (int i = 0; i < myRoot.getChildCount(); i++) {
             MyNode node = (MyNode) myRoot.getChildAt(i);
             NamedScope scope = (NamedScope) node.getConfigurable().getEditableObject();

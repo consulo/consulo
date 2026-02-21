@@ -93,7 +93,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
             en.productionOnly();
         }
 
-        LinkedHashSet<Module> modules = new LinkedHashSet<>();
+        Set<Module> modules = new LinkedHashSet<>();
 
         en.forEach(each -> {
             if (each instanceof ModuleOrderEntry moduleOrderEntry) {

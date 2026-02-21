@@ -260,7 +260,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     }
 
     List<ExecutionTargetProvider> providers = ExecutionTargetProvider.EXTENSION_NAME.getExtensionList();
-    LinkedHashSet<ExecutionTarget> result = new LinkedHashSet<>();
+    Set<ExecutionTarget> result = new LinkedHashSet<>();
 
     Set<ExecutionTarget> specifiedTargets = new HashSet<>();
     doWithEachNonCompoundWithSpecifiedTarget(runManager, configuration, (subConfiguration, executionTarget) -> {

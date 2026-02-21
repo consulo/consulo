@@ -269,7 +269,7 @@ public class TextPatchBuilder {
     return result;
   }
 
-  private static List<LineFragment> getAdjacentFragments(ArrayList<LineFragment> fragments) {
+  private static List<LineFragment> getAdjacentFragments(List<LineFragment> fragments) {
     List<LineFragment> result = new ArrayList<LineFragment>();
     int endLine = -1;
     while(!fragments.isEmpty()) {

@@ -125,7 +125,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
 
     @Override
     public Collection<VirtualFile> values() {
-        HashSet<VirtualFile> result = new HashSet<>();
+        Set<VirtualFile> result = new HashSet<>();
         result.addAll(myIdeIgnoredFilesHolder.values());
         result.addAll(myVcsIgnoredHolderMap.values()
             .stream()

@@ -314,7 +314,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
         @Override
         public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
-            LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
+            Set<LookupElement> result = new LinkedHashSet<>();
             List<LookupElement> items = getMatchingItems();
             for (LookupElement item : items) {
                 if (item.getLookupString().startsWith(lookup.itemPattern(item))) {

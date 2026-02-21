@@ -22,6 +22,7 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ChangeCollectingVisitor extends ChangeVisitor {
@@ -31,7 +32,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   private ChangeSet myCurrentChangeSet;
   private boolean myExists = true;
   private boolean myDoNotAddAnythingElseFromCurrentChangeSet = false;
-  private final LinkedHashSet<ChangeSet> myResult = new LinkedHashSet<ChangeSet>();
+  private final Set<ChangeSet> myResult = new LinkedHashSet<>();
 
   public ChangeCollectingVisitor(String path, String projectId, @Nullable String pattern) {
     myPath = path;
@@ -40,7 +41,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   }
 
   public List<ChangeSet> getChanges() {
-    return new ArrayList<ChangeSet>(myResult);
+    return new ArrayList<>(myResult);
   }
 
   public String getPath() {

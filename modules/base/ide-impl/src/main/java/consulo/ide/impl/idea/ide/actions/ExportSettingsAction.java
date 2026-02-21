@@ -122,7 +122,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
             }
             try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
                 File configPath = new File(ContainerPathManager.get().getConfigPath());
-                HashSet<String> writtenItemRelativePaths = new HashSet<>();
+                Set<String> writtenItemRelativePaths = new HashSet<>();
                 for (File file : exportFiles) {
                     String rPath = FileUtil.getRelativePath(configPath, file);
                     assert rPath != null;
@@ -158,7 +158,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     private static void exportInstalledPlugins(
         File saveFile,
         ZipOutputStream output,
-        HashSet<String> writtenItemRelativePaths
+        Set<String> writtenItemRelativePaths
     ) throws IOException {
         Set<String> oldPlugins = new LinkedHashSet<>();
         for (PluginDescriptor descriptor : consulo.container.plugin.PluginManager.getPlugins()) {

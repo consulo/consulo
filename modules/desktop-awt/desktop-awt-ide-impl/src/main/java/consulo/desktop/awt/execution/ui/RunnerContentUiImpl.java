@@ -1284,7 +1284,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     @Override
     public void restoreLayout() {
         RunnerContentUi[] children = myChildren.toArray(new RunnerContentUi[0]);
-        LinkedHashSet<Content> contents = new LinkedHashSet<>();
+        Set<Content> contents = new LinkedHashSet<>();
         Collections.addAll(contents, myManager.getContents());
         for (RunnerContentUi child : children) {
             Collections.addAll(contents, child.getContentManager().getContents());

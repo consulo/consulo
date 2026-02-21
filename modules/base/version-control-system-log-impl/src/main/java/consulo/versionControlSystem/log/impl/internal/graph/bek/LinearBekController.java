@@ -176,7 +176,7 @@ public class LinearBekController extends CascadeController {
 
     int mergesCount = 0;
 
-    LinkedHashSet<Integer> toProcess = new LinkedHashSet<>();
+    Set<Integer> toProcess = new LinkedHashSet<>();
     toProcess.add(node.getNodeIndex());
     while (!toProcess.isEmpty()) {
       Integer i = ContainerUtil.getFirstItem(toProcess);

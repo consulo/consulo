@@ -14,10 +14,10 @@
  */
 package consulo.language.dataFlow;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Semilattice<E> {
-  E join(ArrayList<E> ins);
+  E join(List<E> ins);
 
   boolean eq(E e1, E e2);
 }

@@ -64,7 +64,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
 
     private final Map<String, String> myIconCustomizations = new HashMap<>();
 
-    private ArrayList<ActionUrl> myActions = new ArrayList<>();
+    private List<ActionUrl> myActions = new ArrayList<>();
 
     private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
@@ -106,11 +106,11 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         resortActions();
     }
 
-    public ArrayList<ActionUrl> getActions() {
+    public List<ActionUrl> getActions() {
         return myActions;
     }
 
-    public void setActions(ArrayList<ActionUrl> actions) {
+    public void setActions(List<ActionUrl> actions) {
         myActions = actions;
         resortActions();
     }
@@ -140,7 +140,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     public boolean isModified(CustomActionsSchemaImpl schema) {
-        ArrayList<ActionUrl> storedActions = schema.getActions();
+        List<ActionUrl> storedActions = schema.getActions();
         if (storedActions.size() != getActions().size()) {
             return true;
         }
@@ -264,8 +264,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     public List<ActionUrl> getChildActions(ActionUrl url) {
-        ArrayList<ActionUrl> result = new ArrayList<>();
-        ArrayList<String> groupPath = url.getGroupPath();
+        List<ActionUrl> result = new ArrayList<>();
+        List<String> groupPath = url.getGroupPath();
         for (ActionUrl actionUrl : myActions) {
             int index = 0;
             if (groupPath.size() <= actionUrl.getGroupPath().size()) {

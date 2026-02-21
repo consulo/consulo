@@ -255,7 +255,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     public boolean addRoots(String name, Collection<AbstractTreeNode> nodes) {
         Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
 
-        HashSet<AbstractUrl> set = new HashSet<>(ContainerUtil.map(list, item -> item.getData().getFirst()));
+        Set<AbstractUrl> set = new HashSet<>(ContainerUtil.map(list, item -> item.getData().getFirst()));
         for (AbstractTreeNode node : nodes) {
             Pair<AbstractUrl, String> pair = createPairForNode(node);
             if (pair != null) {

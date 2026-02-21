@@ -223,7 +223,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             if (insertedValue != null) {
                 String text = insertedValue.getText();
                 if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
-                    LinkedHashSet<String> names = new LinkedHashSet<>();
+                    Set<String> names = new LinkedHashSet<>();
                     names.add(text);
                     for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
                         SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);

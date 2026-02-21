@@ -39,10 +39,7 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.io.File;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
@@ -226,8 +223,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
             return;
         }
 
-        HashSet<VirtualFile> files = new HashSet<>();
-        HashSet<VirtualFile> parents = new HashSet<>();
+        Set<VirtualFile> files = new HashSet<>();
+        Set<VirtualFile> parents = new HashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFilePropertyChangeEvent) {
                 if (hasEntry(event.getFile())) {

@@ -74,7 +74,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     private KeymapImpl myParent;
     private boolean myCanModify = true;
 
-    private final Map<String, LinkedHashSet<Shortcut>> myActionId2ListOfShortcuts = new HashMap<>();
+    private final Map<String, Set<Shortcut>> myActionId2ListOfShortcuts = new HashMap<>();
 
     /**
      * Don't use this field directly! Use it only through <code>getKeystroke2ListOfIds</code>.
@@ -133,8 +133,8 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         newKeymap.myKeystroke2ListOfIds = null;
         newKeymap.myMouseShortcut2ListOfIds = null;
 
-        for (Map.Entry<String, LinkedHashSet<Shortcut>> entry : myActionId2ListOfShortcuts.entrySet()) {
-            LinkedHashSet<Shortcut> list = entry.getValue();
+        for (Map.Entry<String, Set<Shortcut>> entry : myActionId2ListOfShortcuts.entrySet()) {
+            Set<Shortcut> list = entry.getValue();
             String key = entry.getKey();
             newKeymap.myActionId2ListOfShortcuts.put(key, new LinkedHashSet<>(list));
         }
@@ -192,14 +192,14 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
 
     private void addShortcutSilently(String actionId, Shortcut shortcut, boolean checkParentShortcut) {
-        LinkedHashSet<Shortcut> list = myActionId2ListOfShortcuts.get(actionId);
+        Set<Shortcut> list = myActionId2ListOfShortcuts.get(actionId);
         if (list == null) {
             list = new LinkedHashSet<>();
             myActionId2ListOfShortcuts.put(actionId, list);
             if (myParent != null) {
                 // copy parent shortcuts for this actionId
                 Shortcut[] shortcuts = getParentShortcuts(actionId);
-                // shortcuts are immutables
+                // shortcuts are immutable
                 ContainerUtil.addAll(list, shortcuts);
             }
         }
@@ -222,7 +222,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
     @Override
     public void removeShortcut(String actionId, Shortcut shortcut) {
-        LinkedHashSet<Shortcut> list = myActionId2ListOfShortcuts.get(actionId);
+        Set<Shortcut> list = myActionId2ListOfShortcuts.get(actionId);
         if (list != null) {
             Iterator<Shortcut> it = list.iterator();
             while (it.hasNext()) {
@@ -239,7 +239,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         else if (myParent != null) {
             // put to the map the parent's bindings except for the removed binding
             Shortcut[] parentShortcuts = getParentShortcuts(actionId);
-            LinkedHashSet<Shortcut> listOfShortcuts = new LinkedHashSet<>();
+            Set<Shortcut> listOfShortcuts = new LinkedHashSet<>();
             for (Shortcut parentShortcut : parentShortcuts) {
                 if (!shortcut.equals(parentShortcut)) {
                     listOfShortcuts.add(parentShortcut);
@@ -294,7 +294,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
 
     private <T extends Shortcut> void addAction2ShortcutsMap(String actionId, Map<T, List<String>> strokesMap, Class<T> shortcutClass) {
-        LinkedHashSet<Shortcut> listOfShortcuts = _getShortcuts(actionId);
+        Set<Shortcut> listOfShortcuts = _getShortcuts(actionId);
         for (Shortcut shortcut : listOfShortcuts) {
             if (!shortcutClass.isAssignableFrom(shortcut.getClass())) {
                 continue;
@@ -316,7 +316,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
 
     private void addKeystrokesMap(String actionId, Map<KeyStroke, List<String>> strokesMap) {
-        LinkedHashSet<Shortcut> listOfShortcuts = _getShortcuts(actionId);
+        Set<Shortcut> listOfShortcuts = _getShortcuts(actionId);
         for (Shortcut shortcut : listOfShortcuts) {
             if (!(shortcut instanceof KeyboardShortcut)) {
                 continue;
@@ -335,9 +335,9 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         }
     }
 
-    private LinkedHashSet<Shortcut> _getShortcuts(String actionId) {
+    private Set<Shortcut> _getShortcuts(String actionId) {
         KeymapManagerEx keymapManager = getKeymapManager();
-        LinkedHashSet<Shortcut> listOfShortcuts = myActionId2ListOfShortcuts.get(actionId);
+        Set<Shortcut> listOfShortcuts = myActionId2ListOfShortcuts.get(actionId);
         if (listOfShortcuts != null) {
             return listOfShortcuts;
         }
@@ -502,7 +502,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
     @Override
     public Shortcut[] getShortcuts(String actionId) {
-        LinkedHashSet<Shortcut> shortcuts = myActionId2ListOfShortcuts.get(actionId);
+        Set<Shortcut> shortcuts = myActionId2ListOfShortcuts.get(actionId);
 
         // Shortcuts of bounded action has more priority than keystrokes of given action,
         // and likely this behaviour can't be changed completely because of IDEA-58896.

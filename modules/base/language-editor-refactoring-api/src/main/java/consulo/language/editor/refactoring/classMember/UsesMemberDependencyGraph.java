@@ -22,10 +22,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author dsl
@@ -33,10 +30,10 @@ import java.util.Set;
  */
 public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> implements MemberDependencyGraph<T, M> {
   private static final Logger LOG = Logger.getInstance(UsesMemberDependencyGraph.class);
-  protected HashSet<T> mySelectedNormal;
-  protected HashSet<T> mySelectedAbstract;
-  protected HashSet<T> myDependencies = null;
-  protected HashMap<T, HashSet<T>> myDependenciesToDependentMap = null;
+  protected Set<T> mySelectedNormal;
+  protected Set<T> mySelectedAbstract;
+  protected Set<T> myDependencies = null;
+  protected Map<T, Set<T>> myDependenciesToDependentMap = null;
   private final boolean myRecursive;
   private final MemberDependenciesStorage<T, C> myMemberDependenciesStorage;
 
@@ -114,7 +111,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     }
     myDependencies.add(member);
     if (sourceElement != null) {
-      HashSet<T> relations = myDependenciesToDependentMap.get(member);
+      Set<T> relations = myDependenciesToDependentMap.get(member);
       if (relations == null) {
         relations = new HashSet<>();
         myDependenciesToDependentMap.put(member, relations);

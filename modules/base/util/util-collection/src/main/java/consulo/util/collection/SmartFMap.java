@@ -200,7 +200,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
 
   @Override
   public Set<K> keySet() {
-    LinkedHashSet<K> result = new LinkedHashSet<K>();
+    Set<K> result = new LinkedHashSet<K>();
     for (Entry<K, V> entry : entrySet()) {
       result.add(entry.getKey());
     }
