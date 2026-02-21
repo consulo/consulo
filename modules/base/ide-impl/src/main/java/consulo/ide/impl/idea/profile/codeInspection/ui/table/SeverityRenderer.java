@@ -20,7 +20,6 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ide.impl.idea.profile.codeInspection.ui.LevelChooserAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -29,8 +28,10 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
@@ -40,48 +41,57 @@ import java.util.SortedSet;
  * @author Dmitry Batkovich
  */
 public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
-  private final Runnable myOnClose;
-  private final Image myDisabledIcon;
+    private final Runnable myOnClose;
+    private final Image myDisabledIcon;
 
-  public SeverityRenderer(SeverityState[] values, @Nullable Runnable onClose) {
-    super(values);
-    myOnClose = onClose;
-    myDisabledIcon = HighlightDisplayLevel.createIconByMask(TargetAWT.from(UIUtil.getLabelDisabledForeground()));
-  }
-
-  public static SeverityRenderer create(InspectionProfileImpl inspectionProfile, @Nullable Runnable onClose) {
-    SortedSet<HighlightSeverity> severities = LevelChooserAction.getSeverities((SeverityRegistrarImpl)((SeverityProvider)inspectionProfile.getProfileManager()).getOwnSeverityRegistrar());
-    return new SeverityRenderer(ContainerUtil.map2Array(severities, new SeverityState[severities.size()], severity -> new SeverityState(severity, true, false)), onClose);
-  }
-
-  @Override
-  protected void customizeComponent(SeverityState value, JTable table, boolean isSelected) {
-    super.customizeComponent(value, table, isSelected);
-    setPaintArrow(value.isEnabledForEditing());
-    setEnabled(!value.isDisabled());
-    setDisabledIcon(TargetAWT.to(myDisabledIcon));
-  }
-
-  @Override
-  protected String getTextFor(@Nonnull SeverityState value) {
-    return SingleInspectionProfilePanel.renderSeverity(value.getSeverity());
-  }
-
-  @Override
-  protected Image getIconFor(@Nonnull SeverityState value) {
-    return HighlightDisplayLevel.find(value.getSeverity()).getIcon();
-  }
-
-  @Override
-  public boolean isCellEditable(EventObject event) {
-    return !(event instanceof MouseEvent) || ((MouseEvent)event).getClickCount() >= 1;
-  }
-
-  @Override
-  public void onClosed(LightweightWindowEvent event) {
-    super.onClosed(event);
-    if (myOnClose != null) {
-      myOnClose.run();
+    public SeverityRenderer(SeverityState[] values, @Nullable Runnable onClose) {
+        super(values);
+        myOnClose = onClose;
+        myDisabledIcon = HighlightDisplayLevel.createIconByMask(TargetAWT.from(UIUtil.getLabelDisabledForeground()));
     }
-  }
+
+    public static SeverityRenderer create(InspectionProfileImpl inspectionProfile, @Nullable Runnable onClose) {
+        SortedSet<HighlightSeverity> severities = LevelChooserAction.getSeverities(
+            (SeverityRegistrarImpl) ((SeverityProvider) inspectionProfile.getProfileManager()).getOwnSeverityRegistrar()
+        );
+        return new SeverityRenderer(
+            ContainerUtil.map2Array(
+                severities,
+                new SeverityState[severities.size()],
+                severity -> new SeverityState(severity, true, false)
+            ),
+            onClose
+        );
+    }
+
+    @Override
+    protected void customizeComponent(SeverityState value, JTable table, boolean isSelected) {
+        super.customizeComponent(value, table, isSelected);
+        setPaintArrow(value.isEnabledForEditing());
+        setEnabled(!value.isDisabled());
+        setDisabledIcon(TargetAWT.to(myDisabledIcon));
+    }
+
+    @Override
+    protected String getTextFor(@Nonnull SeverityState value) {
+        return SingleInspectionProfilePanel.renderSeverity(value.getSeverity());
+    }
+
+    @Override
+    protected Image getIconFor(@Nonnull SeverityState value) {
+        return HighlightDisplayLevel.find(value.getSeverity()).getIcon();
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject event) {
+        return !(event instanceof MouseEvent) || ((MouseEvent) event).getClickCount() >= 1;
+    }
+
+    @Override
+    public void onClosed(LightweightWindowEvent event) {
+        super.onClosed(event);
+        if (myOnClose != null) {
+            myOnClose.run();
+        }
+    }
 }
