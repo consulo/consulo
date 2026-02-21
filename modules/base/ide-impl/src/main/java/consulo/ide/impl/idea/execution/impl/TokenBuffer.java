@@ -36,11 +36,14 @@ class TokenBuffer {
     // special token which means that the deferred text starts with "\r" so it shouldn't be appended to the document end.
     // Instead, the last line of the document should be removed
     static final TokenInfo CR_TOKEN = new TokenInfo(ConsoleViewContentType.SYSTEM_OUTPUT, "\r", null);
-    private final int maxCapacity;  // if size becomes > maxCapacity we should trim tokens from the beginning
-    private final Queue<TokenInfo> tokens = new Queue<>(10); // each call to print() is stored here
-    private int size; // total lengths of all tokens
-    private int startIndex;
+    // if size becomes > maxCapacity we should trim tokens from the beginning
+    private final int maxCapacity;
+    // each call to print() is stored here
+    private final Queue<TokenInfo> tokens = new Queue<>(10);
+    // total lengths of all tokens
+    private int size;
     // index of text start in the first TokeInfo. This TokenInfo can become sliced after total size overflows maxCapacity
+    private int startIndex;
 
     TokenBuffer(int maxCapacity) {
         this.maxCapacity = maxCapacity;
