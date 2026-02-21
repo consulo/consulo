@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;

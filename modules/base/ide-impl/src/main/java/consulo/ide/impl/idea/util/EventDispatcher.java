@@ -3,13 +3,11 @@ package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,6 +16,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -41,14 +40,18 @@ public class EventDispatcher<T extends EventListener> {
     }
 
     @Nonnull
-    public static <T extends EventListener> EventDispatcher<T> create(@Nonnull Class<T> listenerClass,
-                                                                      @Nonnull Map<String, Object> methodReturnValues) {
+    public static <T extends EventListener> EventDispatcher<T> create(
+        @Nonnull Class<T> listenerClass,
+        @Nonnull Map<String, Object> methodReturnValues
+    ) {
         assertNonVoidMethodReturnValuesAreDeclared(methodReturnValues, listenerClass);
         return new EventDispatcher<>(listenerClass, methodReturnValues);
     }
 
-    private static void assertNonVoidMethodReturnValuesAreDeclared(@Nonnull Map<String, Object> methodReturnValues,
-                                                                   @Nonnull Class<?> listenerClass) {
+    private static void assertNonVoidMethodReturnValuesAreDeclared(
+        @Nonnull Map<String, Object> methodReturnValues,
+        @Nonnull Class<?> listenerClass
+    ) {
         List<Method> declared = new ArrayList<>(ReflectionUtil.getClassPublicMethods(listenerClass));
         for (Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
             String methodName = entry.getKey();
@@ -79,25 +82,23 @@ public class EventDispatcher<T extends EventListener> {
     }
 
     @Nonnull
-    static <T> T createMulticaster(@Nonnull Class<T> listenerClass,
-                                   @Nullable final Map<String, Object> methodReturnValues,
-                                   final Getter<? extends Iterable<T>> listeners) {
+    static <T> T createMulticaster(
+        @Nonnull Class<T> listenerClass,
+        @Nullable Map<String, Object> methodReturnValues,
+        Supplier<? extends Iterable<T>> listeners
+    ) {
         LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
-        InvocationHandler handler = new InvocationHandler() {
-            @Override
-            @NonNls
-            public Object invoke(Object proxy, Method method, Object[] args) {
-                @NonNls String methodName = method.getName();
-                if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
-                    return handleObjectMethod(proxy, args, methodName);
-                }
-                else if (methodReturnValues != null && methodReturnValues.containsKey(methodName)) {
-                    return methodReturnValues.get(methodName);
-                }
-                else {
-                    dispatchVoidMethod(listeners.get(), method, args);
-                    return null;
-                }
+        InvocationHandler handler = (proxy, method, args) -> {
+            String methodName = method.getName();
+            if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
+                return handleObjectMethod(proxy, args, methodName);
+            }
+            else if (methodReturnValues != null && methodReturnValues.containsKey(methodName)) {
+                return methodReturnValues.get(methodName);
+            }
+            else {
+                dispatchVoidMethod(listeners.get(), method, args);
+                return null;
             }
         };
 
@@ -150,7 +151,8 @@ public class EventDispatcher<T extends EventListener> {
             catch (Exception e) {
                 Throwable cause = e.getCause();
                 ExceptionUtil.rethrowUnchecked(cause);
-                if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
+                if (!(cause instanceof AbstractMethodError)) {
+                    // AbstractMethodError means this listener doesn't implement some new method in interface
                     LOG.error(cause);
                 }
             }

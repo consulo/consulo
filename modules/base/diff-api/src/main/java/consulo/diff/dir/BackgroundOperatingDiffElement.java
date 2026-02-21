@@ -15,20 +15,21 @@
  */
 package consulo.diff.dir;
 
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author lene
  * @since 2011-10-18
  */
 public interface BackgroundOperatingDiffElement {
+    void copyTo(
+        DiffElement container,
+        SimpleReference<String> errorMessage,
+        SimpleReference<DiffElement> diffElement,
+        Runnable onFinish,
+        DiffElement target,
+        String relativePath
+    );
 
-  void copyTo(DiffElement container,
-              Ref<String> errorMessage,
-              Ref<DiffElement> diffElement,
-              Runnable onFinish,
-              DiffElement target,
-              String relativePath);
-
-  void delete(Ref<String> errorMessage, Runnable onFinish);
+    void delete(SimpleReference<String> errorMessage, Runnable onFinish);
 }
