@@ -47,10 +47,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author anna
@@ -178,7 +175,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
             if (substituted != null) {
                 appendAdditionalElement(stringUsages, variable, substituted);
                 RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(substituted);
-                HashMap<PsiElement, String> allRenames = new HashMap<>();
+                Map<PsiElement, String> allRenames = new HashMap<>();
                 PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
                 processor.prepareRenaming(substituted, "", allRenames, new LocalSearchScope(currentFile));
                 for (PsiElement element : allRenames.keySet()) {

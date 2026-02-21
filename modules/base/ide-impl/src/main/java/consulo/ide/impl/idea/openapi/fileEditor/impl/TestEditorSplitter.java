@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TestEditorSplitter {
-  private final HashMap<String, TestEditorTabGroup> myTabGroups = new HashMap<>();
+  private final Map<String, TestEditorTabGroup> myTabGroups = new HashMap<>();
   private static final String Default = "Default";
   private String myActiveTabGroupName = Default;
 

@@ -49,7 +49,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   private static final String MODULE = "module";
   private static final String DEFAULT = "default";
 
-  private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<>();
+  private final Map<String, String> myModule2Copyrights = new LinkedHashMap<>();
   private final Map<String, CopyrightProfile> myCopyrights = new HashMap<>();
   private final CopyrightFileConfigManager myCopyrightFileConfigManager = new CopyrightFileConfigManager();
   @Nullable

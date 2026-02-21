@@ -20,8 +20,8 @@ import java.util.List;
 
 @Deprecated
 class List2D {
-  private final ArrayList<List> myRows = new ArrayList<List>();
-  private ArrayList myCurrentRow = null;
+  private final List<List> myRows = new ArrayList<>();
+  private List myCurrentRow = null;
 
   public void add(DiffFragmentOld element) {
     ensureRowExists();

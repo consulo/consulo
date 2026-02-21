@@ -16,6 +16,7 @@ package ch.qos.logback.classic.spi;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.HashMap;
+import java.util.Map;
 
 //import sun.reflect.Reflection;
 
@@ -30,7 +31,7 @@ public class PackagingDataCalculator {
 
     final static StackTraceElementProxy[] STEP_ARRAY_TEMPLATE = new StackTraceElementProxy[0];
 
-    HashMap<String, ClassPackagingData> cache = new HashMap<String, ClassPackagingData>();
+    Map<String, ClassPackagingData> cache = new HashMap<>();
 
     private static boolean GET_CALLER_CLASS_METHOD_AVAILABLE = false; // private static boolean
                                                                       // HAS_GET_CLASS_LOADER_PERMISSION = false;

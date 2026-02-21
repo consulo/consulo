@@ -42,7 +42,7 @@ public class IdTableBuilding {
     void run(CharSequence chars, @Nullable char[] charsArray, int start, int end);
   }
 
-  private static final HashMap<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
+  private static final Map<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
 
   @Deprecated
   public static void registerIdIndexer(FileType fileType, IdIndexer indexer) {

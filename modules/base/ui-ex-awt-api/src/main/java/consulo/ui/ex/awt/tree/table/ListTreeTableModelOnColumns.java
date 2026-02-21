@@ -108,7 +108,7 @@ public class ListTreeTableModelOnColumns extends DefaultTreeModel
   }
 
   public List getItems() {
-    ArrayList result = new ArrayList();
+    List result = new ArrayList();
     TreeNode root = (TreeNode) getRoot();
     for (int i = 0; i < root.getChildCount(); i++) {
       addElementsToCollection(root.getChildAt(i), result);

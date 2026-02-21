@@ -299,7 +299,7 @@ public class InjectorUtils {
             return Collections.emptyMap();
         }
         Matcher matcher = MAP_ENTRY_PATTERN.matcher(charSequence);
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        Map<String, String> map = new LinkedHashMap<>();
         while (matcher.find()) {
             map.put(StringUtil.unescapeStringCharacters(matcher.group(1)), StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2))));
         }

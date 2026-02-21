@@ -19,21 +19,18 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 04.05.2024
  */
-public record StatusBarWidgetsCache(LinkedHashMap<String, StatusBarWidgetFactory> keyMap, List<String> order) {
+public record StatusBarWidgetsCache(Map<String, StatusBarWidgetFactory> keyMap, List<String> order) {
   private static final Logger LOG = Logger.getInstance(StatusBarWidgetsCache.class);
 
   static final ExtensionPointCacheKey<StatusBarWidgetFactory, StatusBarWidgetsCache> CACHE_KEY =
     ExtensionPointCacheKey.create("StatusBarWidgetsCache", walker -> {
-      LinkedHashMap<String, StatusBarWidgetFactory> map = new LinkedHashMap<>();
+      Map<String, StatusBarWidgetFactory> map = new LinkedHashMap<>();
       List<String> order = new ArrayList<>();
 
       walker.walk(factory -> {

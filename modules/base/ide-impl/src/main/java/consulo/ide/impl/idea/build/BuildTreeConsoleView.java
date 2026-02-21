@@ -316,7 +316,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private void onEventInternal(@Nonnull Object buildId, @Nonnull BuildEvent event) {
-        SmartHashSet<ExecutionNodeImpl> structureChanged = new SmartHashSet<>();
+        Set<ExecutionNodeImpl> structureChanged = new SmartHashSet<>();
         ExecutionNodeImpl parentNode = getOrMaybeCreateParentNode(event);
         Object eventId = event.getId();
         ExecutionNodeImpl currentNode = nodesMap.get(eventId);
@@ -499,7 +499,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     @Nonnull
     private ExecutionNodeImpl addAsPresentableEventNode(
         @Nonnull PresentableBuildEvent event,
-        @Nonnull SmartHashSet<ExecutionNodeImpl> structureChanged,
+        @Nonnull Set<ExecutionNodeImpl> structureChanged,
         @Nullable ExecutionNodeImpl parentNode,
         @Nonnull Object eventId,
         @Nonnull ExecutionNodeImpl buildProgressRootNode
@@ -679,7 +679,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private static void finishChildren(
-        @Nonnull SmartHashSet<ExecutionNodeImpl> structureChanged,
+        @Nonnull Set<ExecutionNodeImpl> structureChanged,
         @Nonnull ExecutionNodeImpl node,
         @Nonnull EventResult result
     ) {

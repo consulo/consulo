@@ -202,7 +202,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
 
   protected void synchronizeChildren() {
     if (myOldChildren != null && myChildren != null) {
-      HashMap<Object, CachingChildrenTreeNode> oldValuesToChildrenMap = new HashMap<Object, CachingChildrenTreeNode>();
+      Map<Object, CachingChildrenTreeNode> oldValuesToChildrenMap = new HashMap<>();
       for (CachingChildrenTreeNode oldChild : myOldChildren) {
         Object oldValue = oldChild instanceof TreeElementWrapper ? oldChild.getValue() : oldChild;
         if (oldValue != null) {

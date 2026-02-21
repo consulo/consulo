@@ -48,7 +48,7 @@ import java.util.*;
 public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext<VirtualFile[]> {
     private final FileChooserDescriptor myFileChooserDescriptor;
 
-    private final HashMap<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
+    private final Map<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
     private final DefaultLibraryRootsComponentDescriptor myDefaultDescriptor;
 
     public FileOrDirectoryDependencyContext(

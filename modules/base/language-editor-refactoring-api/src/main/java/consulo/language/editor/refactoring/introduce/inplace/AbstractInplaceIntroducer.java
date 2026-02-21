@@ -208,7 +208,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
                     myEditor.getCaretModel().moveToOffset(caretOffset);
                     myEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
-                    LinkedHashSet<String> nameSuggestions = new LinkedHashSet<>();
+                    Set<String> nameSuggestions = new LinkedHashSet<>();
                     nameSuggestions.add(variable.getName());
                     nameSuggestions.addAll(Arrays.asList(names));
                     initOccurrencesMarkers();

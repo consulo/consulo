@@ -81,7 +81,7 @@ public class TemplateContext {
     }
 
     public void setDefaultContext(@Nonnull TemplateContext defContext) {
-        HashMap<String, Boolean> copy = new HashMap<>(myContextStates);
+        Map<String, Boolean> copy = new HashMap<>(myContextStates);
         myContextStates.clear();
         myContextStates.putAll(defContext.myContextStates);
         myContextStates.putAll(copy);

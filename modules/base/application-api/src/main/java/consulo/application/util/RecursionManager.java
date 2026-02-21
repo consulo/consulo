@@ -135,8 +135,8 @@ public class RecursionManager {
             @Nonnull
             @Override
             public List<Key> currentStack() {
-                ArrayList<Key> result = new ArrayList<>();
-                LinkedHashMap<MyKey, Integer> map = ourStack.get().progressMap;
+                List<Key> result = new ArrayList<>();
+                Map<MyKey, Integer> map = ourStack.get().progressMap;
                 for (MyKey pair : map.keySet()) {
                     if (pair.guardId.equals(id)) {
                         //noinspection unchecked
@@ -213,7 +213,7 @@ public class RecursionManager {
     private static class CalculationStack {
         private int reentrancyCount;
         private int depth;
-        private final LinkedHashMap<MyKey, Integer> progressMap = new LinkedHashMap<>();
+        private final Map<MyKey, Integer> progressMap = new LinkedHashMap<>();
         private final Set<MyKey> preventions = ContainerUtil.newIdentityTroveSet();
         private final Map<MyKey, List<SoftReference<MemoizedValue>>> intermediateCache = ContainerUtil.createSoftMap();
         private int enters;

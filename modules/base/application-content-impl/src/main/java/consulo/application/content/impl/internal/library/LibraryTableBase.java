@@ -276,7 +276,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     public void readExternal(Element element) {
-      HashMap<String, Library> libraries = new HashMap<>();
+      Map<String, Library> libraries = new HashMap<>();
       for (Library library : myLibraries) {
         libraries.put(library.getName(), library);
       }

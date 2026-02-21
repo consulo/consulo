@@ -66,7 +66,7 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     private boolean myInitDone;
     private final String myFileName;
 
-    protected abstract MethodNodeBase<M> createTreeNode(M method, HashSet<M> called, Runnable cancelCallback);
+    protected abstract MethodNodeBase<M> createTreeNode(M method, Set<M> called, Runnable cancelCallback);
 
     protected abstract M[] findDeepestSuperMethods(M method);
 

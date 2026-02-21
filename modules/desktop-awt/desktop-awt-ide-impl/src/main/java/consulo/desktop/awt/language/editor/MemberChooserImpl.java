@@ -77,11 +77,11 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     protected T[] myElements;
     protected Comparator<ElementNode> myComparator = new OrderComparator();
 
-    protected final HashMap<MemberNode, ParentNode> myNodeToParentMap = new HashMap<>();
-    protected final HashMap<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
-    protected final ArrayList<ContainerNode> myContainerNodes = new ArrayList<>();
+    protected final Map<MemberNode, ParentNode> myNodeToParentMap = new HashMap<>();
+    protected final Map<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
+    protected final List<ContainerNode> myContainerNodes = new ArrayList<>();
 
-    protected LinkedHashSet<T> mySelectedElements;
+    protected Set<T> mySelectedElements;
 
     private static final String PROP_SORTED = "MemberChooserImpl.sorted";
     private static final String PROP_SHOWCLASSES = "MemberChooserImpl.showClasses";
@@ -468,19 +468,19 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Nullable
-    private LinkedHashSet<T> getSelectedElementsList() {
+    private Set<T> getSelectedElementsList() {
         return getExitCode() == OK_EXIT_CODE ? mySelectedElements : null;
     }
 
     @Nullable
     public List<T> getSelectedElements() {
-        LinkedHashSet<T> list = getSelectedElementsList();
+        Set<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
     @Nullable
     public T[] getSelectedElements(T[] a) {
-        LinkedHashSet<T> list = getSelectedElementsList();
+        Set<T> list = getSelectedElementsList();
         if (list == null) {
             return null;
         }

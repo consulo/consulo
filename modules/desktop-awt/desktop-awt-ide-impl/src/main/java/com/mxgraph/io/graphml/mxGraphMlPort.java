@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Port element in the GML Structure.
@@ -16,7 +17,7 @@ import java.util.List;
 public class mxGraphMlPort {
   private String name;
 
-  private HashMap<String, mxGraphMlData> portDataMap = new HashMap<String, mxGraphMlData>();
+  private Map<String, mxGraphMlData> portDataMap = new HashMap<>();
 
   /**
    * Construct a Port with name.
@@ -53,11 +54,11 @@ public class mxGraphMlPort {
     this.name = name;
   }
 
-  public HashMap<String, mxGraphMlData> getPortDataMap() {
+  public Map<String, mxGraphMlData> getPortDataMap() {
     return portDataMap;
   }
 
-  public void setPortDataMap(HashMap<String, mxGraphMlData> nodeDataMap) {
+  public void setPortDataMap(Map<String, mxGraphMlData> nodeDataMap) {
     this.portDataMap = nodeDataMap;
   }
 

@@ -23,6 +23,7 @@ import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author max
@@ -44,9 +45,8 @@ public class LayeredLexer extends DelegateLexer {
     private int myLayerLeftPart = -1;
     private int myBaseTokenEnd = -1;
 
-    private final HashSet<Lexer> mySelfStoppingLexers = new HashSet<>(1);
-    private final HashMap<Lexer, IElementType[]> myStopTokens = new HashMap<>(1);
-
+    private final Set<Lexer> mySelfStoppingLexers = new HashSet<>(1);
+    private final Map<Lexer, IElementType[]> myStopTokens = new HashMap<>(1);
 
     public LayeredLexer(Lexer baseLexer) {
         super(baseLexer);

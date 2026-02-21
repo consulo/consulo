@@ -1703,7 +1703,7 @@ public class AbstractTreeUi {
 
         Object[] passTwo = getTreeStructure().getChildElements(element);
 
-        HashSet<Object> two = new HashSet<>(Arrays.asList(passTwo));
+        Set<Object> two = new HashSet<>(Arrays.asList(passTwo));
 
         if (passOne.get().length != passTwo.length) {
             LOG.error(

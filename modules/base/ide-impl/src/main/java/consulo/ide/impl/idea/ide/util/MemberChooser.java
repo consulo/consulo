@@ -80,9 +80,9 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     protected T[] myElements;
     protected Comparator<ElementNode> myComparator = new OrderComparator();
 
-    protected final HashMap<MemberNode, ParentNode> myNodeToParentMap = new HashMap<>();
-    protected final HashMap<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
-    protected final ArrayList<ContainerNode> myContainerNodes = new ArrayList<>();
+    protected final Map<MemberNode, ParentNode> myNodeToParentMap = new HashMap<>();
+    protected final Map<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
+    protected final List<ContainerNode> myContainerNodes = new ArrayList<>();
 
     protected LinkedHashSet<T> mySelectedElements;
 

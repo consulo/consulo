@@ -31,7 +31,7 @@ import java.util.*;
  */
 public abstract class AutomaticRenamer {
   private static final Logger LOG = Logger.getInstance(AutomaticRenamer.class);
-  private final LinkedHashMap<PsiNamedElement, String> myRenames = new LinkedHashMap<PsiNamedElement, String>();
+  private final Map<PsiNamedElement, String> myRenames = new LinkedHashMap<>();
   protected final List<PsiNamedElement> myElements;
 
   protected AutomaticRenamer() {
@@ -85,7 +85,7 @@ public abstract class AutomaticRenamer {
     String newName = getNewName(element);
     if (newName != null) {
 
-      LinkedHashMap<PsiNamedElement, String> renames = new LinkedHashMap<PsiNamedElement, String>();
+      Map<PsiNamedElement, String> renames = new LinkedHashMap<>();
       renames.putAll(myRenames);
       if (allRenames != null) {
         for (PsiElement psiElement : allRenames.keySet()) {

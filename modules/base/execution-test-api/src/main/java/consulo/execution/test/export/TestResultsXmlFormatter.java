@@ -135,7 +135,7 @@ public class TestResultsXmlFormatter {
     if (myTestRoot instanceof TestProxyRoot) {
       String presentation = ((TestProxyRoot)myTestRoot).getPresentation();
       if (presentation != null) {
-        LinkedHashMap<String, String> rootAttrs = new LinkedHashMap<>();
+        Map<String, String> rootAttrs = new LinkedHashMap<>();
         rootAttrs.put("name", presentation);
         String comment = ((TestProxyRoot)myTestRoot).getComment();
         if (comment != null) {
@@ -165,7 +165,7 @@ public class TestResultsXmlFormatter {
 
   private void processJDomElement(Element config) throws SAXException {
     String name = config.getName();
-    LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+    Map<String, String> attributes = new LinkedHashMap<>();
     for (Attribute attribute : config.getAttributes()) {
       attributes.put(attribute.getName(), attribute.getValue());
     }

@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Parses a GraphML .graphml file and imports it in the given graph.<br/>
@@ -82,7 +83,7 @@ public class mxGraphMlCodec {
     graphml.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation",
                            "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd");
 
-    HashMap<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
+    Map<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
 
     for (mxGraphMlKey key : keyMap.values()) {
       Element keyElement = key.generateElement(doc);
@@ -122,7 +123,7 @@ public class mxGraphMlCodec {
    * Creates the key elements for the encode.
    */
   private static void createKeyElements() {
-    HashMap<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
+    Map<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
     mxGraphMlKey keyNode =
       new mxGraphMlKey(mxGraphMlConstants.KEY_NODE_ID, mxGraphMlKey.keyForValues.NODE, mxGraphMlConstants.KEY_NODE_NAME,
                        mxGraphMlKey.keyTypeValues.STRING);
@@ -312,7 +313,7 @@ public class mxGraphMlCodec {
 
       }
 
-      HashMap<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style, "=");
+      Map<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style, "=");
       String endArrow = (String)styleMap.get(mxConstants.STYLE_ENDARROW);
       if ((endArrow != null && !endArrow.equals(mxConstants.NONE)) || endArrow == null) {
         Gmledge.setEdgeDirected("true");

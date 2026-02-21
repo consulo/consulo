@@ -136,7 +136,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     private BlockTreeBuilder myBlockTreeBuilder;
     private RangeHighlighter myHighlighter;
     private RangeHighlighter myIntersectHighlighter;
-    private HashMap<PsiElement, BlockTreeNode> myPsiToBlockMap;
+    private Map<PsiElement, BlockTreeNode> myPsiToBlockMap;
 
     private final Set<SourceWrapper> mySourceWrappers = new TreeSet<>();
     private final EditorEx myEditor;

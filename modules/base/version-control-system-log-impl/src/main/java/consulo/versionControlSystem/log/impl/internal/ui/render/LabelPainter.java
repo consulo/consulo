@@ -216,7 +216,7 @@ public class LabelPainter {
 
     @Nonnull
     private static Color[] getColors(@Nonnull Collection<RefGroup> groups) {
-        LinkedHashMap<Color, Integer> usedColors = new LinkedHashMap<>();
+        Map<Color, Integer> usedColors = new LinkedHashMap<>();
 
         for (RefGroup group : groups) {
             List<Color> colors = group.getColors();

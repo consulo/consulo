@@ -76,7 +76,7 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
     private final Function<Integer, Hash> myHashGetter;
 
     @Nonnull
-    private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
+    private final Map<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
         return size() > 100;

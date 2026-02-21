@@ -41,7 +41,7 @@ public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
   }
 
   private static @Nonnull Map<Integer, TraceElement> resolveTrace(@Nonnull ArrayReference keysArray, @Nonnull ArrayReference valuesArray) {
-    LinkedHashMap<Integer, TraceElement> result = new LinkedHashMap<>();
+    Map<Integer, TraceElement> result = new LinkedHashMap<>();
     if (keysArray.length() == valuesArray.length()) {
       for (int i = 0, size = keysArray.length(); i < size; i++) {
         TraceElement element = resolveTraceElement(keysArray.getValue(i), valuesArray.getValue(i));

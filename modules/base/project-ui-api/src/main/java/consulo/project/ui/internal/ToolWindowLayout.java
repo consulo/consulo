@@ -337,7 +337,7 @@ public final class ToolWindowLayout {
   }
 
   private final class MyStripeButtonComparator implements Comparator<ToolWindowStripeButton> {
-    private final HashMap<String, WindowInfoImpl> myId2Info = new HashMap<>();
+    private final Map<String, WindowInfoImpl> myId2Info = new HashMap<>();
 
     public MyStripeButtonComparator(@Nonnull ToolWindowAnchor anchor) {
       WindowInfoImpl[] infos = getInfos();

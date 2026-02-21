@@ -44,10 +44,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ven
@@ -198,7 +195,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @RequiredReadAction
-    protected void performOnInvalidIdentifier(String newName, LinkedHashSet<String> nameSuggestions) {
+    protected void performOnInvalidIdentifier(String newName, Set<String> nameSuggestions) {
         PsiNamedElement variable = getVariable();
         if (variable != null) {
             int offset = variable.getTextOffset();
