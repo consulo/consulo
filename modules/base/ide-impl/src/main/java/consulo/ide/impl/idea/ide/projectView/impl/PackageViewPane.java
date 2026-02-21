@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.impl.PackagesPaneSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageViewProjectNode;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -33,6 +32,7 @@ import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.SelectInTarget;
@@ -40,6 +40,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.PackageElement;
 import consulo.project.ui.view.tree.PackageNodeUtil;
 import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -48,6 +49,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -95,6 +97,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public List<PsiElement> getElementsFromNode(@Nullable Object node) {
         Object o = getValueFromNode(node);
         if (o instanceof PackageElement packageElement) {
@@ -105,6 +108,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
+    @RequiredReadAction
     protected Module getNodeModule(@Nullable Object element) {
         return element instanceof PackageElement packageElement ? packageElement.getModule() : super.getNodeModule(element);
     }
@@ -150,7 +154,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         if (packageElement != null) {
             Module module = packageElement.getModule();
             PsiPackage aPackage = packageElement.getPackage();
-            if (module != null && aPackage != null) {
+            if (module != null) {
                 return aPackage.getDirectories(GlobalSearchScope.moduleScope(module));
             }
         }
@@ -162,7 +166,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
             super(
                 IdeLocalize.actionShowLibrariesContents(),
                 IdeLocalize.actionShowHideLibraryContents(),
-                AllIcons.ObjectBrowser.ShowLibraryContents
+                PlatformIconGroup.objectbrowserShowlibrarycontents()
             );
         }
 
@@ -172,12 +176,14 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(myProject);
             projectView.setShowLibraryContents(flag, getId());
         }
 
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
@@ -243,10 +249,10 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         }
 
         @Override
+        @RequiredReadAction
         public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
             // should convert PsiDirectories into PackageElements
-            if (element instanceof PsiDirectory) {
-                PsiDirectory dir = (PsiDirectory) element;
+            if (element instanceof PsiDirectory dir) {
                 PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findAnyPackage(dir);
                 if (ProjectView.getInstance(myProject).isShowModules(getId())) {
                     Module[] modules = getModulesFor(dir);
@@ -264,17 +270,14 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
             return super.addSubtreeToUpdateByElement(element);
         }
 
+        @RequiredReadAction
         private boolean addPackageElementToUpdate(PsiPackage aPackage, Module module) {
             ProjectTreeStructure packageTreeStructure = (ProjectTreeStructure) myTreeStructure;
             PsiPackage packageToUpdateFrom = aPackage;
             if (!packageTreeStructure.isFlattenPackages() && packageTreeStructure.isHideEmptyMiddlePackages()) {
                 // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
-                while (packageToUpdateFrom != null && packageToUpdateFrom.isValid() && PackageNodeUtil.isPackageEmpty(
-                    packageToUpdateFrom,
-                    module,
-                    true,
-                    false
-                )) {
+                while (packageToUpdateFrom != null && packageToUpdateFrom.isValid()
+                    && PackageNodeUtil.isPackageEmpty(packageToUpdateFrom, module, true, false)) {
                     packageToUpdateFrom = packageToUpdateFrom.getParentPackage();
                 }
             }
@@ -288,6 +291,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
             return addedOk;
         }
 
+        @RequiredReadAction
         private Object getTreeElementToUpdateFrom(PsiPackage packageToUpdateFrom, Module module) {
             if (packageToUpdateFrom == null || !packageToUpdateFrom.isValid() || "".equals(packageToUpdateFrom.getQualifiedName())) {
                 return module == null ? myTreeStructure.getRootElement() : module;
@@ -330,6 +334,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         }
 
         @Override
+        @RequiredUIAccess
         public void deleteElement(@Nonnull DataContext dataContext) {
             List<PsiDirectory> allElements = Arrays.asList(getSelectedDirectories());
             List<PsiElement> validElements = new ArrayList<>();

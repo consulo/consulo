@@ -22,46 +22,61 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.usage.UsageInfoToUsageConverter;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapter {
-  private final UsageInfoToUsageConverter.TargetElementsDescriptor myDescriptor;
-  public PsiElement2UsageTargetComposite(@Nonnull PsiElement[] primaryElements,
-                                         @Nonnull PsiElement[] secondaryElements,
-                                         @Nonnull FindUsagesOptions options) {
-    super(primaryElements[0], options);
-    myDescriptor = new UsageInfoToUsageConverter.TargetElementsDescriptor(primaryElements, secondaryElements);
-  }
+    private final UsageInfoToUsageConverter.TargetElementsDescriptor myDescriptor;
 
-  @Override
-  public void findUsages() {
-    PsiElement element = getElement();
-    if (element == null) return;
-    FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(element.getProject())).getFindUsagesManager();
-    FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
-    boolean skipResultsWithOneUsage = FindSettings.getInstance().isSkipResultsWithOneUsage();
-    findUsagesManager.findUsages(myDescriptor.getPrimaryElements(), myDescriptor.getAdditionalElements(), handler, myOptions, skipResultsWithOneUsage);
-  }
+    public PsiElement2UsageTargetComposite(
+        @Nonnull PsiElement[] primaryElements,
+        @Nonnull PsiElement[] secondaryElements,
+        @Nonnull FindUsagesOptions options
+    ) {
+        super(primaryElements[0], options);
+        myDescriptor = new UsageInfoToUsageConverter.TargetElementsDescriptor(primaryElements, secondaryElements);
+    }
 
-  @Override
-  public VirtualFile[] getFiles() {
-    Set<VirtualFile> files = ContainerUtil.map2Set(myDescriptor.getAllElements(), element -> PsiUtilCore.getVirtualFile(element));
-    return VfsUtilCore.toVirtualFileArray(files);
-  }
+    @Override
+    @RequiredUIAccess
+    public void findUsages() {
+        PsiElement element = getElement();
+        if (element == null) {
+            return;
+        }
+        FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(element.getProject())).getFindUsagesManager();
+        FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
+        boolean skipResultsWithOneUsage = FindSettings.getInstance().isSkipResultsWithOneUsage();
+        findUsagesManager.findUsages(
+            myDescriptor.getPrimaryElements(),
+            myDescriptor.getAdditionalElements(),
+            handler,
+            myOptions,
+            skipResultsWithOneUsage
+        );
+    }
 
-  @Nonnull
-  public PsiElement[] getPrimaryElements() {
-    return myDescriptor.getPrimaryElements();
-  }
-  @Nonnull
-  public PsiElement[] getSecondaryElements() {
-    return myDescriptor.getAdditionalElements();
-  }
+    @Override
+    @RequiredUIAccess
+    public VirtualFile[] getFiles() {
+        Set<VirtualFile> files = ContainerUtil.map2Set(myDescriptor.getAllElements(), PsiUtilCore::getVirtualFile);
+        return VfsUtilCore.toVirtualFileArray(files);
+    }
+
+    @Nonnull
+    public PsiElement[] getPrimaryElements() {
+        return myDescriptor.getPrimaryElements();
+    }
+
+    @Nonnull
+    public PsiElement[] getSecondaryElements() {
+        return myDescriptor.getAdditionalElements();
+    }
 }
