@@ -25,13 +25,14 @@ import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author peter
  */
 public class FileContentUtil extends FileContentUtilCore {
   public static void reparseFiles(@Nonnull Project project, @Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
-    LinkedHashSet<VirtualFile> fileSet = new LinkedHashSet<VirtualFile>(files);
+    Set<VirtualFile> fileSet = new LinkedHashSet<>(files);
     if (includeOpenFiles) {
       for (VirtualFile open : FileEditorManager.getInstance(project).getOpenFiles()) {
         if (!fileSet.contains(open)) {

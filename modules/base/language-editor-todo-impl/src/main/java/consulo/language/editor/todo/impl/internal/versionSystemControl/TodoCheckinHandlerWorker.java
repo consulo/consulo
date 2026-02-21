@@ -172,7 +172,7 @@ public class TodoCheckinHandlerWorker {
         private String myAfterContent;
         private List<TodoItem> myOldItems;
         private LineFragment myCurrentLineFragment;
-        private HashSet<String> myOldTodoTexts;
+        private Set<String> myOldTodoTexts;
         private PsiFile myBeforeFile;
         private final PsiFileFactory myPsiFileFactory;
         private FilePath myAfterFile;

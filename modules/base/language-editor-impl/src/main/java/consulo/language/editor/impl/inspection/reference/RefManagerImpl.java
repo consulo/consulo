@@ -75,7 +75,7 @@ public class RefManagerImpl implements RefManagerInternal {
     private volatile boolean myIsInProcess;
     private volatile boolean myOfflineView;
 
-    private final LinkedHashSet<RefGraphAnnotator> myGraphAnnotators = new LinkedHashSet<>();
+    private final Set<RefGraphAnnotator> myGraphAnnotators = new LinkedHashSet<>();
     private GlobalInspectionContext myContext;
 
     private final Map<Key, RefManagerExtension> myExtensions = new HashMap<>();

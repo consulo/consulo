@@ -58,7 +58,7 @@ public abstract class PrefixMatcher {
    * Within both groups names are sorted lexicographically in a case-insensitive way.
    */
   @Nonnull
-  public LinkedHashSet<String> sortMatching(@Nonnull Collection<String> _names) {
+  public Set<String> sortMatching(@Nonnull Collection<String> _names) {
     ProgressManager.checkCanceled();
     if (getPrefix().isEmpty()) {
       return new LinkedHashSet<>(_names);
@@ -75,7 +75,7 @@ public abstract class PrefixMatcher {
     Collections.sort(sorted, String.CASE_INSENSITIVE_ORDER);
     ProgressManager.checkCanceled();
 
-    LinkedHashSet<String> result = new LinkedHashSet<>();
+    Set<String> result = new LinkedHashSet<>();
     for (String name : sorted) {
       if (isStartMatch(name)) {
         result.add(name);

@@ -26,6 +26,7 @@ import jakarta.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author peter
@@ -56,7 +57,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
     @Override
     @RequiredUIAccess
     public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
-        LinkedHashSet<AnAction> heaviest = null;
+        Set<AnAction> heaviest = null;
         double maxWeight = DEFAULT_WEIGHT;
 
         for (AnAction action : visibleActions) {

@@ -49,7 +49,7 @@ public class DFAMap<V> {
     return (DFAMap<V>) ourEmptyMap;
   }
 
-  public void addKeys(HashSet<String> allNames) {
+  public void addKeys(Set<String> allNames) {
     if (myAll != null) {
       allNames.addAll(myAll.keySet());
     }
@@ -113,7 +113,7 @@ public class DFAMap<V> {
     }
     if (myK != null && (names2Include == null || names2Include.contains(myK))) {
       if (names2Include != null && names2Include.size() == 1) return names2Include;
-      HashSet<String> result = new HashSet<String>();
+      Set<String> result = new HashSet<>();
       result.add(myK);
       return result;
     }

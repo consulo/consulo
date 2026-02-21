@@ -23,6 +23,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
@@ -186,7 +187,7 @@ public class LineFragment extends LineBlock implements Fragment {
     }
 
 
-    public void addAllDescendantsTo(ArrayList<LineFragment> descendants) {
+    public void addAllDescendantsTo(List<LineFragment> descendants) {
         if (myChildren == null) {
             return;
         }
@@ -200,10 +201,9 @@ public class LineFragment extends LineBlock implements Fragment {
         }
     }
 
-    public void setChildren(ArrayList<Fragment> fragments) {
+    public void setChildren(List<Fragment> fragments) {
         LOG.assertTrue(myChildren == FragmentList.EMPTY);
-        ArrayList<Fragment> shifted =
-            FragmentListImpl.shift(fragments, myRange1, myRange2, getStartingLine1(), getStartingLine2());
+        List<Fragment> shifted = FragmentListImpl.shift(fragments, myRange1, myRange2, getStartingLine1(), getStartingLine2());
         if (shifted.isEmpty()) {
             return;
         }

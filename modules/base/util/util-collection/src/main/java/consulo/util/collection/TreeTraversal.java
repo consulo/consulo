@@ -111,7 +111,7 @@ public abstract class TreeTraversal {
                 @Nonnull Function<T, ? extends Iterable<? extends T>> tree
             ) {
                 class WrappedTree implements Predicate<T>, Function<T, Iterable<? extends T>> {
-                    HashSet<Object> visited;
+                    Set<Object> visited;
 
                     @Override
                     public boolean test(T e) {

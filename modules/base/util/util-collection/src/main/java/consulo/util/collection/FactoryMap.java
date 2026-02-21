@@ -115,7 +115,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     Set<K> ts = getMap().keySet();
     K nullKey = FAKE_NULL();
     if (ts.contains(nullKey)) {
-      java.util.HashSet<K> hashSet = new HashSet<>(ts);
+      Set<K> hashSet = new HashSet<>(ts);
       hashSet.remove(nullKey);
       hashSet.add(null);
       return hashSet;

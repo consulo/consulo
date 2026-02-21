@@ -214,10 +214,10 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         Map<OrderRootType, Set<String>> toAdd = new HashMap<>();
         for (LibraryPathType pathType : LibraryPathType.values()) {
             OrderRootType ideType = myLibraryPathTypeMapper.map(pathType);
-            HashSet<String> toAddPerType = new HashSet<>(externalLibrary.getPaths(pathType));
+            Set<String> toAddPerType = new HashSet<>(externalLibrary.getPaths(pathType));
             toAdd.put(ideType, toAddPerType);
 
-            HashSet<String> toRemovePerType = new HashSet<>();
+            Set<String> toRemovePerType = new HashSet<>();
             toRemove.put(ideType, toRemovePerType);
 
             for (VirtualFile ideFile : ideLibrary.getFiles(ideType)) {

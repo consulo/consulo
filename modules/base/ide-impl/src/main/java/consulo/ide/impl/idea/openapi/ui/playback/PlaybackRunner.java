@@ -34,6 +34,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class PlaybackRunner {
 
@@ -44,7 +45,7 @@ public class PlaybackRunner {
   private final String myScript;
   private final StatusCallback myCallback;
 
-  private final ArrayList<PlaybackCommand> myCommands = new ArrayList<PlaybackCommand>();
+  private final List<PlaybackCommand> myCommands = new ArrayList<>();
   private ActionCallback myActionCallback;
   private boolean myStopRequested;
 
@@ -55,9 +56,9 @@ public class PlaybackRunner {
   private boolean myStopOnAppDeactivation;
   private final ApplicationActivationListener myAppListener;
 
-  private HashSet<Class> myFacadeClasses = new HashSet<Class>();
-  private ArrayList<StageInfo> myCurrentStageDepth = new ArrayList<StageInfo>();
-  private ArrayList<StageInfo> myPassedStages = new ArrayList<StageInfo>();
+  private Set<Class> myFacadeClasses = new HashSet<>();
+  private List<StageInfo> myCurrentStageDepth = new ArrayList<>();
+  private List<StageInfo> myPassedStages = new ArrayList<>();
 
   private long myContextTimestamp;
 
@@ -147,7 +148,7 @@ public class PlaybackRunner {
         return;
       }
       final PlaybackContext context =
-        new PlaybackContext(this, myCallback, cmdIndex, myRobot, myUseDirectActionCall, myUseTypingTargets, cmd, baseDir, (Set<Class>)myFacadeClasses.clone()) {
+        new PlaybackContext(this, myCallback, cmdIndex, myRobot, myUseDirectActionCall, myUseTypingTargets, cmd, baseDir, new HashSet<>(myFacadeClasses)) {
 
           private long myTimeStamp = myContextTimestamp;
 
@@ -212,7 +213,7 @@ public class PlaybackRunner {
     includeScript(myScript, getScriptDir(), myCommands, 0);
   }
 
-  private void includeScript(String scriptText, File scriptDir, ArrayList<PlaybackCommand> commandList, int line) {
+  private void includeScript(String scriptText, File scriptDir, List<PlaybackCommand> commandList, int line) {
     StringTokenizer tokens = new StringTokenizer(scriptText, "\n");
     while (tokens.hasMoreTokens()) {
       String eachLine = tokens.nextToken();

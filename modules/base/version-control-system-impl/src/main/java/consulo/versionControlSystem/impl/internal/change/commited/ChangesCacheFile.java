@@ -721,7 +721,7 @@ public class ChangesCacheFile {
   }
 
   private void readPartial(IncomingChangeListData data) {
-    HashSet<Change> result = new HashSet<>();
+    Set<Change> result = new HashSet<>();
     try {
       File partialFile = getPartialPath(data.indexEntry.offset);
       if (partialFile.exists()) {

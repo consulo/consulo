@@ -14,10 +14,7 @@ import consulo.util.lang.MathUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -184,7 +181,7 @@ public final class JBAnimator implements Disposable {
       @Nullable
       FrameCounter frameCounter;
       @Nonnull
-      LinkedHashSet<Animation> scheduledAnimations = new LinkedHashSet<>();
+      Set<Animation> scheduledAnimations = new LinkedHashSet<>();
       //private final long animationStarted = System.nanoTime();
       private long nextScheduleTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(delay); // ns
 

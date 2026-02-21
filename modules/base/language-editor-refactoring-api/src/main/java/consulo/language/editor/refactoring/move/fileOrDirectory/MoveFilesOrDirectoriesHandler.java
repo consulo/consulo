@@ -33,6 +33,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 @ExtensionImpl(id = "moveFileOrDir")
 public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
@@ -40,7 +41,7 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
 
   @Override
   public boolean canMove(PsiElement[] elements, PsiElement targetContainer) {
-    HashSet<String> names = new HashSet<>();
+    Set<String> names = new HashSet<>();
     for (PsiElement element : elements) {
       if (element instanceof PsiFile) {
         PsiFile file = (PsiFile)element;

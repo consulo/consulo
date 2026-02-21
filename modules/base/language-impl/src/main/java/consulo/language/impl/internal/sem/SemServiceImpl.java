@@ -149,7 +149,7 @@ public class SemServiceImpl extends SemService {
 
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("semService").markStack();
 
-    LinkedHashSet<T> result = new LinkedHashSet<>();
+    Set<T> result = new LinkedHashSet<>();
     Map<SemKey, List<SemElement>> map = new HashMap<>();
     for (SemKey each : key.getInheritors()) {
       List<SemElement> list = createSemElements(each, psi);
@@ -207,7 +207,7 @@ public class SemServiceImpl extends SemService {
     if (chunk == null) return null;
 
     List<T> singleList = null;
-    LinkedHashSet<T> result = null;
+    Set<T> result = null;
     List<SemKey> inheritors = key.getInheritors();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < inheritors.size(); i++) {

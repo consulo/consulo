@@ -244,7 +244,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     private final Consumer<List<CommittedChangeList>> myConsumer;
     private final Consumer<List<VcsException>> myErrorConsumer;
 
-    private final LinkedHashSet<CommittedChangeList> myResult = new LinkedHashSet<>();
+    private final Set<CommittedChangeList> myResult = new LinkedHashSet<>();
     private final List<VcsException> myExceptions = new ArrayList<>();
     private boolean myDisposed = false;
 

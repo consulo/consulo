@@ -45,7 +45,7 @@ public class CycleFinder<Node> {
       }
 
       public Iterator<Node> getIn(Node n) {
-        HashSet<Node> nodes = new HashSet<Node>();
+        Set<Node> nodes = new HashSet<>();
         Iterator<Node> in = myGraph.getIn(n);
         while (in.hasNext()) {
           nodes.add(in.next());
@@ -55,7 +55,7 @@ public class CycleFinder<Node> {
       }
 
       public Iterator<Node> getOut(Node n) {
-        HashSet<Node> nodes = new HashSet<Node>();
+        Set<Node> nodes = new HashSet<>();
         Iterator<Node> out = myGraph.getOut(n);
         while (out.hasNext()) {
           nodes.add(out.next());
@@ -63,24 +63,23 @@ public class CycleFinder<Node> {
         nodes.remove(node);
         return nodes.iterator();
       }
-
     };
 
-    HashSet<Node> inNodes = new HashSet<Node>();
+    Set<Node> inNodes = new HashSet<>();
     Iterator<Node> in = myGraph.getIn(node);
     while (in.hasNext()) {
       inNodes.add(in.next());
     }
-    HashSet<Node> outNodes = new HashSet<Node>();
+    Set<Node> outNodes = new HashSet<>();
     Iterator<Node> out = myGraph.getOut(node);
     while (out.hasNext()) {
       outNodes.add(out.next());
     }
 
-    HashSet<Node> retainNodes = new HashSet<Node>(inNodes);
+    Set<Node> retainNodes = new HashSet<>(inNodes);
     retainNodes.retainAll(outNodes);
     for (Node node1 : retainNodes) {
-      ArrayList<Node> oneNodeCycle = new ArrayList<Node>();
+      List<Node> oneNodeCycle = new ArrayList<>();
       oneNodeCycle.add(node1);
       oneNodeCycle.add(node);
       result.add(oneNodeCycle);

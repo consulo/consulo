@@ -118,7 +118,7 @@ public class HTMLExporter {
   }
 
   private Set<RefEntity> getReferencesWithoutPages() {
-    HashSet<RefEntity> result = new HashSet<>();
+    Set<RefEntity> result = new HashSet<>();
     for (RefEntity refElement : myGeneratedReferences) {
       if (!myGeneratedPages.contains(refElement)) {
         result.add(refElement);

@@ -45,7 +45,7 @@ public class DifferenceReverter extends Reverter {
 
   @Override
   protected List<VirtualFile> getFilesToClearROStatus() throws IOException {
-    LinkedHashSet<VirtualFile> files = new LinkedHashSet<VirtualFile>();
+    Set<VirtualFile> files = new LinkedHashSet<>();
     for (Difference each : myDiffs) {
       Entry l = each.getLeft();
       Entry r = each.getRight();

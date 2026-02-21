@@ -54,7 +54,7 @@ import java.util.*;
  * @since 2001-11-04
  */
 public class InspectionTree extends Tree {
-    private final HashSet<Object> myExpandedUserObjects;
+    private final Set<Object> myExpandedUserObjects;
     @Nonnull
     private final GlobalInspectionContextImpl myContext;
     private SelectionPath mySelectionPath;

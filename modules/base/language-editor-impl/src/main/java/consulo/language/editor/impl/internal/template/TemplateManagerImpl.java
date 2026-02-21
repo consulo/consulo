@@ -528,7 +528,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     private static Set<TemplateContextType> getDirectlyApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext) {
-        LinkedHashSet<TemplateContextType> set = new LinkedHashSet<>();
+        Set<TemplateContextType> set = new LinkedHashSet<>();
         for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
             if (contextType.isInContext(templateActionContext)) {
                 set.add(contextType);

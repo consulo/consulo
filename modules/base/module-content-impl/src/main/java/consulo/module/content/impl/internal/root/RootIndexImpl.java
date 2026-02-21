@@ -460,7 +460,7 @@ public class RootIndexImpl implements RootIndex {
     private static class RootInfo {
         // getDirectoriesByPackageName used to be in this order, some clients might rely on that
         @Nonnull
-        final LinkedHashSet<VirtualFile> classAndSourceRoots = new LinkedHashSet<>();
+        final Set<VirtualFile> classAndSourceRoots = new LinkedHashSet<>();
 
         @Nonnull
         final Set<VirtualFile> libraryOrSdkSources = new HashSet<>();
@@ -487,7 +487,7 @@ public class RootIndexImpl implements RootIndex {
 
         @Nonnull
         Set<VirtualFile> getAllRoots() {
-            LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
+            Set<VirtualFile> result = new LinkedHashSet<>();
             result.addAll(classAndSourceRoots);
             result.addAll(contentRootOf.keySet());
             result.addAll(excludedFromLibraries.keySet());
@@ -592,14 +592,14 @@ public class RootIndexImpl implements RootIndex {
         }
 
         @Nonnull
-        private LinkedHashSet<OrderEntry> getLibraryOrderEntries(
+        private Set<OrderEntry> getLibraryOrderEntries(
             @Nonnull List<VirtualFile> hierarchy,
             @Nullable VirtualFile libraryClassRoot,
             @Nullable VirtualFile librarySourceRoot,
             @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
             @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries
         ) {
-            LinkedHashSet<OrderEntry> orderEntries = new LinkedHashSet<>();
+            Set<OrderEntry> orderEntries = new LinkedHashSet<>();
             for (VirtualFile root : hierarchy) {
                 if (root == libraryClassRoot && !sourceRootOf.containsKey(root)) {
                     orderEntries.addAll(libClassRootEntries.get(root));

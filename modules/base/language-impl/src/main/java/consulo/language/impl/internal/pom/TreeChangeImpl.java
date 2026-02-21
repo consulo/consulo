@@ -95,7 +95,7 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
   }
 
   private class ChildrenDiff {
-    LinkedHashSet<TreeElement> currentChildren = getCurrentChildren().addAllTo(new LinkedHashSet<>());
+    Set<TreeElement> currentChildren = getCurrentChildren().addAllTo(new LinkedHashSet<>());
     Iterator<TreeElement> itOld = myInitialLengths.keySet().iterator();
     Iterator<TreeElement> itNew = currentChildren.iterator();
     TreeElement oldChild, newChild;

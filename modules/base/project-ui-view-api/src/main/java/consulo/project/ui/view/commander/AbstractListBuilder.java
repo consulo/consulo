@@ -381,11 +381,11 @@ public abstract class AbstractListBuilder {
   }
 
   private static final class SelectionInfo {
-    public final ArrayList<Object> mySelectedObjects;
+    public final List<Object> mySelectedObjects;
     public final Object myLeadSelection;
     public final int myLeadSelectionIndex;
 
-    public SelectionInfo(ArrayList<Object> selectedObjects, int leadSelectionIndex, Object leadSelection) {
+    public SelectionInfo(List<Object> selectedObjects, int leadSelectionIndex, Object leadSelection) {
       myLeadSelection = leadSelection;
       myLeadSelectionIndex = leadSelectionIndex;
       mySelectedObjects = selectedObjects;
@@ -394,7 +394,7 @@ public abstract class AbstractListBuilder {
 
   private SelectionInfo storeSelection() {
     ListSelectionModel selectionModel = myList.getSelectionModel();
-    ArrayList<Object> selectedObjects = new ArrayList<Object>();
+    List<Object> selectedObjects = new ArrayList<>();
     int[] selectedIndices = myList.getSelectedIndices();
     int leadSelectionIndex = selectionModel.getLeadSelectionIndex();
     Object leadSelection = null;
@@ -411,7 +411,7 @@ public abstract class AbstractListBuilder {
   }
 
   private void restoreSelection(SelectionInfo selection) {
-    ArrayList<Object> selectedObjects = selection.mySelectedObjects;
+    List<Object> selectedObjects = selection.mySelectedObjects;
 
     ListSelectionModel selectionModel = myList.getSelectionModel();
 

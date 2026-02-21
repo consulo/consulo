@@ -46,6 +46,7 @@ import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author anna
@@ -119,7 +120,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   ) {
     InspectionProfileImpl rootProfile =
       (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
-    LinkedHashSet<InspectionToolWrapper> allWrappers = new LinkedHashSet<>();
+    Set<InspectionToolWrapper> allWrappers = new LinkedHashSet<>();
     allWrappers.add(toolWrapper);
     rootProfile.collectDependentInspections(toolWrapper, allWrappers, managerEx.getProject());
     InspectionToolWrapper[] toolWrappers = allWrappers.toArray(new InspectionToolWrapper[allWrappers.size()]);

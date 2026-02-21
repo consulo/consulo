@@ -286,7 +286,7 @@ public class CodeFormatterFacade {
 
         // We use a set here because we encountered a situation when more than one PSI leaf points to the same injected fragment
         // (at least for sql injected into sql).
-        LinkedHashSet<TextRange> injectedFileRangesSet = new LinkedHashSet<>();
+        Set<TextRange> injectedFileRangesSet = new LinkedHashSet<>();
 
         if (!psi.getProject().isDefault()) {
             List<DocumentWindow> injectedDocuments =

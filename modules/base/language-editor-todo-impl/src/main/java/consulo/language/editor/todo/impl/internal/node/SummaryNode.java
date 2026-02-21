@@ -32,10 +32,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 
 public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   public SummaryNode(Project project, @Nonnull ToDoSummary value, TodoTreeBuilder builder) {
@@ -89,7 +86,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
 
   }
 
-  protected void createModuleTodoNodeForFile(ArrayList<? super AbstractTreeNode> children, ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
+  protected void createModuleTodoNodeForFile(List<? super AbstractTreeNode> children, ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
     Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module != null) {
       ModuleToDoNode moduleToDoNode = new ModuleToDoNode(getProject(), module, myBuilder);

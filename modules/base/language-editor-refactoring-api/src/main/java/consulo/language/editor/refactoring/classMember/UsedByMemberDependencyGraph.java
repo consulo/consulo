@@ -22,17 +22,14 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.lang.StringUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> implements MemberDependencyGraph<T, M> {
-  protected HashSet<T> mySelectedNormal;
-  protected HashSet<T> mySelectedAbstract;
-  protected HashSet<T> myMembers;
-  protected HashSet<T> myDependencies = null;
-  protected HashMap<T, HashSet<T>> myDependenciesToDependent = null;
+  protected Set<T> mySelectedNormal;
+  protected Set<T> mySelectedAbstract;
+  protected Set<T> myMembers;
+  protected Set<T> myDependencies = null;
+  protected Map<T, Set<T>> myDependenciesToDependent = null;
   private final MemberDependenciesStorage<T, C> myMemberDependenciesStorage;
 
   public UsedByMemberDependencyGraph(C aClass) {
@@ -78,7 +75,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
           for (T aDependent : dependent) {
             if (mySelectedNormal.contains(aDependent) && !mySelectedAbstract.contains(aDependent)) {
               myDependencies.add(member);
-              HashSet<T> deps = myDependenciesToDependent.get(member);
+              Set<T> deps = myDependenciesToDependent.get(member);
               if (deps == null) {
                 deps = new HashSet<>();
                 myDependenciesToDependent.put(member, deps);

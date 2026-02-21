@@ -40,7 +40,7 @@ import java.util.*;
  * @since 2005-05-27
  */
 public class TodoTreeHelper {
-  public static void addPackagesToChildren(ArrayList<AbstractTreeNode> children, Project project, @Nullable Module module, TodoTreeBuilder builder) {
+  public static void addPackagesToChildren(List<AbstractTreeNode> children, Project project, @Nullable Module module, TodoTreeBuilder builder) {
     PsiManager psiManager = PsiManager.getInstance(project);
     List<VirtualFile> sourceRoots = new ArrayList<VirtualFile>();
     if (module == null) {
@@ -124,7 +124,7 @@ public class TodoTreeHelper {
     addPackagesToChildren0(project, children, module, builder);
   }
 
-  private static void addPackagesToChildren0(Project project, ArrayList<AbstractTreeNode> children, Module module, TodoTreeBuilder builder) {
+  private static void addPackagesToChildren0(Project project, List<AbstractTreeNode> children, Module module, TodoTreeBuilder builder) {
     List<VirtualFile> roots = new ArrayList<VirtualFile>();
     List<VirtualFile> sourceRoots = new ArrayList<VirtualFile>();
     PsiManager psiManager = PsiManager.getInstance(project);
