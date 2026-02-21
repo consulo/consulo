@@ -29,8 +29,6 @@ import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.WindowResizeListener;
-import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -74,6 +72,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -2217,16 +2216,19 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Nonnull
     public static List<JBPopup> getChildPopups(@Nonnull Component component) {
-        return ContainerUtil.filter(all.toStrongList(), popup -> {
-            Component owner = popup.getOwner();
-            while (owner != null) {
-                if (owner.equals(component)) {
-                    return true;
+        return ContainerUtil.filter(
+            all.toStrongList(),
+            popup -> {
+                Component owner = popup.getOwner();
+                while (owner != null) {
+                    if (owner.equals(component)) {
+                        return true;
+                    }
+                    owner = owner.getParent();
                 }
-                owner = owner.getParent();
+                return false;
             }
-            return false;
-        });
+        );
     }
 
     @Override

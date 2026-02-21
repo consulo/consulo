@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -25,6 +24,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -36,124 +36,123 @@ import consulo.usage.Usage;
 import consulo.usage.internal.UsageDataUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @ExtensionImpl
 public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
-  @Nonnull
-  @Override
-  public Key<VirtualFile[]> getKey() {
-    return VirtualFile.KEY_OF_ARRAY;
-  }
-
-  @Override
-  public VirtualFile[] getData(@Nonnull DataProvider dataProvider) {
-    // Try to detect multiselection.
-
-    Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);
-    if (project != null && !project.isDisposed()) {
-      return ProjectRootManager.getInstance(project).getContentRoots();
+    @Nonnull
+    @Override
+    public Key<VirtualFile[]> getKey() {
+        return VirtualFile.KEY_OF_ARRAY;
     }
 
-    Module[] selectedModules = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    if (selectedModules != null && selectedModules.length > 0) {
-      return getFilesFromModules(selectedModules);
-    }
+    @Override
+    public VirtualFile[] getData(@Nonnull DataProvider dataProvider) {
+        // Try to detect multi-selection.
 
-    Module selectedModule = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
-    if (selectedModule != null && !selectedModule.isDisposed()) {
-      return ModuleRootManager.getInstance(selectedModule).getContentRoots();
-    }
-
-    PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
-    if (psiElements != null && psiElements.length != 0) {
-      return getFilesFromPsiElements(psiElements);
-    }
-
-    // VirtualFile -> VirtualFile[]
-    VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
-    if (vFile != null) {
-      return new VirtualFile[]{vFile};
-    }
-
-    //
-
-    PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
-    if (psiFile != null && psiFile.getVirtualFile() != null) {
-      return new VirtualFile[]{psiFile.getVirtualFile()};
-    }
-
-    PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
-    if (elem != null) {
-      return getFilesFromPsiElement(elem);
-    }
-
-    Usage[] usages = dataProvider.getDataUnchecked(UsageView.USAGES_KEY);
-    UsageTarget[] usageTargets = dataProvider.getDataUnchecked(UsageView.USAGE_TARGETS_KEY);
-    if (usages != null || usageTargets != null) {
-      return UsageDataUtil.provideVirtualFileArray(usages, usageTargets);
-    }
-
-    return null;
-  }
-
-
-  private static VirtualFile[] getFilesFromPsiElement(PsiElement elem) {
-    if (elem instanceof PsiFile) {
-      VirtualFile virtualFile = ((PsiFile)elem).getVirtualFile();
-      return virtualFile != null ? new VirtualFile[]{virtualFile} : null;
-    }
-    else if (elem instanceof PsiDirectory) {
-      return new VirtualFile[]{((PsiDirectory)elem).getVirtualFile()};
-    }
-    else {
-      PsiFile file = elem.getContainingFile();
-      return file != null && file.getVirtualFile() != null ? new VirtualFile[]{file.getVirtualFile()} : null;
-    }
-  }
-
-  private static VirtualFile[] getFilesFromPsiElements(PsiElement[] psiElements) {
-    HashSet<VirtualFile> files = new HashSet<>();
-    for (PsiElement elem : psiElements) {
-      if (elem instanceof PsiDirectory) {
-        files.add(((PsiDirectory)elem).getVirtualFile());
-      }
-      else if (elem instanceof PsiFile) {
-        VirtualFile virtualFile = ((PsiFile)elem).getVirtualFile();
-        if (virtualFile != null) {
-          files.add(virtualFile);
+        Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);
+        if (project != null && !project.isDisposed()) {
+            return ProjectRootManager.getInstance(project).getContentRoots();
         }
-      }
-      else if (elem instanceof PsiDirectoryContainer) {
-        PsiDirectory[] dirs = ((PsiDirectoryContainer)elem).getDirectories();
-        for (PsiDirectory dir : dirs) {
-          files.add(dir.getVirtualFile());
-        }
-      }
-      else {
-        PsiFile file = elem.getContainingFile();
-        if (file != null) {
-          VirtualFile virtualFile = file.getVirtualFile();
-          if (virtualFile != null) {
-            files.add(virtualFile);
-          }
-        }
-      }
-    }
-    VirtualFile[] result = VfsUtil.toVirtualFileArray(files);
-    files.clear();
-    return result;
-  }
 
-  private static VirtualFile[] getFilesFromModules(Module[] selectedModules) {
-    ArrayList<VirtualFile> result = new ArrayList<>();
-    for (Module selectedModule : selectedModules) {
-      ContainerUtil.addAll(result, ModuleRootManager.getInstance(selectedModule).getContentRoots());
+        Module[] selectedModules = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        if (selectedModules != null && selectedModules.length > 0) {
+            return getFilesFromModules(selectedModules);
+        }
+
+        Module selectedModule = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
+        if (selectedModule != null && !selectedModule.isDisposed()) {
+            return ModuleRootManager.getInstance(selectedModule).getContentRoots();
+        }
+
+        PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
+        if (psiElements != null && psiElements.length != 0) {
+            return getFilesFromPsiElements(psiElements);
+        }
+
+        // VirtualFile -> VirtualFile[]
+        VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+        if (vFile != null) {
+            return new VirtualFile[]{vFile};
+        }
+
+        //
+
+        PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
+        if (psiFile != null && psiFile.getVirtualFile() != null) {
+            return new VirtualFile[]{psiFile.getVirtualFile()};
+        }
+
+        PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
+        if (elem != null) {
+            return getFilesFromPsiElement(elem);
+        }
+
+        Usage[] usages = dataProvider.getDataUnchecked(UsageView.USAGES_KEY);
+        UsageTarget[] usageTargets = dataProvider.getDataUnchecked(UsageView.USAGE_TARGETS_KEY);
+        if (usages != null || usageTargets != null) {
+            return UsageDataUtil.provideVirtualFileArray(usages, usageTargets);
+        }
+
+        return null;
     }
-    return VfsUtil.toVirtualFileArray(result);
-  }
+
+    private static VirtualFile[] getFilesFromPsiElement(PsiElement elem) {
+        if (elem instanceof PsiFile file) {
+            VirtualFile virtualFile = file.getVirtualFile();
+            return virtualFile != null ? new VirtualFile[]{virtualFile} : null;
+        }
+        else if (elem instanceof PsiDirectory directory) {
+            return new VirtualFile[]{directory.getVirtualFile()};
+        }
+        else {
+            PsiFile file = elem.getContainingFile();
+            return file != null && file.getVirtualFile() != null ? new VirtualFile[]{file.getVirtualFile()} : null;
+        }
+    }
+
+    private static VirtualFile[] getFilesFromPsiElements(PsiElement[] psiElements) {
+        HashSet<VirtualFile> files = new HashSet<>();
+        for (PsiElement elem : psiElements) {
+            if (elem instanceof PsiDirectory directory) {
+                files.add(directory.getVirtualFile());
+            }
+            else if (elem instanceof PsiFile file) {
+                VirtualFile virtualFile = file.getVirtualFile();
+                if (virtualFile != null) {
+                    files.add(virtualFile);
+                }
+            }
+            else if (elem instanceof PsiDirectoryContainer directoryContainer) {
+                PsiDirectory[] dirs = directoryContainer.getDirectories();
+                for (PsiDirectory dir : dirs) {
+                    files.add(dir.getVirtualFile());
+                }
+            }
+            else {
+                PsiFile file = elem.getContainingFile();
+                if (file != null) {
+                    VirtualFile virtualFile = file.getVirtualFile();
+                    if (virtualFile != null) {
+                        files.add(virtualFile);
+                    }
+                }
+            }
+        }
+        VirtualFile[] result = VfsUtil.toVirtualFileArray(files);
+        files.clear();
+        return result;
+    }
+
+    private static VirtualFile[] getFilesFromModules(Module[] selectedModules) {
+        List<VirtualFile> result = new ArrayList<>();
+        for (Module selectedModule : selectedModules) {
+            ContainerUtil.addAll(result, ModuleRootManager.getInstance(selectedModule).getContentRoots());
+        }
+        return VfsUtil.toVirtualFileArray(result);
+    }
 }

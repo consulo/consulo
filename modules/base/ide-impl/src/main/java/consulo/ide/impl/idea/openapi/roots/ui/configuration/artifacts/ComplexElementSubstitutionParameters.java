@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Comp
 import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -29,70 +29,70 @@ import java.util.*;
  * @author nik
  */
 public class ComplexElementSubstitutionParameters {
-  private final Set<ComplexPackagingElementType<?>> myTypesToSubstitute = new HashSet<ComplexPackagingElementType<?>>();
-  private final Set<ComplexPackagingElement<?>> mySubstituted = new HashSet<ComplexPackagingElement<?>>();
-  private final Project myProject;
+    private final Set<ComplexPackagingElementType<?>> myTypesToSubstitute = new HashSet<>();
+    private final Set<ComplexPackagingElement<?>> mySubstituted = new HashSet<>();
+    private final Project myProject;
 
-  public ComplexElementSubstitutionParameters(Project project) {
-    myProject = project;
-  }
-
-  public void setSubstituteAll() {
-    ContainerUtil.addAll(myTypesToSubstitute, PackagingElementFactory.getInstance(myProject).getComplexElementTypes());
-    mySubstituted.clear();
-  }
-
-  public void setSubstituteNone() {
-    myTypesToSubstitute.clear();
-    mySubstituted.clear();
-  }
-
-  public boolean shouldSubstitute(@Nonnull ComplexPackagingElement<?> element) {
-    ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>)element.getType();
-    return myTypesToSubstitute.contains(type) || mySubstituted.contains(element);
-  }
-
-  public void setShowContent(ComplexPackagingElementType<?> type, boolean showContent) {
-    if (showContent) {
-      myTypesToSubstitute.add(type);
+    public ComplexElementSubstitutionParameters(Project project) {
+        myProject = project;
     }
-    else {
-      myTypesToSubstitute.remove(type);
+
+    public void setSubstituteAll() {
+        ContainerUtil.addAll(myTypesToSubstitute, PackagingElementFactory.getInstance(myProject).getComplexElementTypes());
+        mySubstituted.clear();
     }
-    Iterator<ComplexPackagingElement<?>> iterator = mySubstituted.iterator();
-    while (iterator.hasNext()) {
-      if (iterator.next().getType().equals(type)) {
-        iterator.remove();
-      }
+
+    public void setSubstituteNone() {
+        myTypesToSubstitute.clear();
+        mySubstituted.clear();
     }
-  }
 
-  public Set<ComplexPackagingElementType<?>> getTypesToSubstitute() {
-    return Collections.unmodifiableSet(myTypesToSubstitute);
-  }
+    public boolean shouldSubstitute(@Nonnull ComplexPackagingElement<?> element) {
+        ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>) element.getType();
+        return myTypesToSubstitute.contains(type) || mySubstituted.contains(element);
+    }
 
-  public void setShowContent(ComplexPackagingElementNode complexNode) {
-    mySubstituted.addAll(complexNode.getPackagingElements());
-  }
+    public void setShowContent(ComplexPackagingElementType<?> type, boolean showContent) {
+        if (showContent) {
+            myTypesToSubstitute.add(type);
+        }
+        else {
+            myTypesToSubstitute.remove(type);
+        }
+        Iterator<ComplexPackagingElement<?>> iterator = mySubstituted.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getType().equals(type)) {
+                iterator.remove();
+            }
+        }
+    }
 
-  public void doNotSubstitute(ComplexPackagingElement<?> element) {
-    mySubstituted.remove(element);
-  }
+    public Set<ComplexPackagingElementType<?>> getTypesToSubstitute() {
+        return Collections.unmodifiableSet(myTypesToSubstitute);
+    }
 
-  public boolean isShowContentForType(@Nonnull ComplexPackagingElementType type) {
-    return myTypesToSubstitute.contains(type);
-  }
+    public void setShowContent(ComplexPackagingElementNode complexNode) {
+        mySubstituted.addAll(complexNode.getPackagingElements());
+    }
 
-  public boolean isAllSubstituted() {
-    return myTypesToSubstitute.containsAll(Arrays.asList(PackagingElementFactory.getInstance(myProject).getComplexElementTypes()));
-  }
+    public void doNotSubstitute(ComplexPackagingElement<?> element) {
+        mySubstituted.remove(element);
+    }
 
-  public boolean isNoneSubstituted() {
-    return myTypesToSubstitute.isEmpty() && mySubstituted.isEmpty();
-  }
+    public boolean isShowContentForType(@Nonnull ComplexPackagingElementType type) {
+        return myTypesToSubstitute.contains(type);
+    }
 
-  public void setTypesToShowContent(Collection<ComplexPackagingElementType<?>> types) {
-    myTypesToSubstitute.clear();
-    myTypesToSubstitute.addAll(types);
-  }
+    public boolean isAllSubstituted() {
+        return myTypesToSubstitute.containsAll(Arrays.asList(PackagingElementFactory.getInstance(myProject).getComplexElementTypes()));
+    }
+
+    public boolean isNoneSubstituted() {
+        return myTypesToSubstitute.isEmpty() && mySubstituted.isEmpty();
+    }
+
+    public void setTypesToShowContent(Collection<ComplexPackagingElementType<?>> types) {
+        myTypesToSubstitute.clear();
+        myTypesToSubstitute.addAll(types);
+    }
 }
