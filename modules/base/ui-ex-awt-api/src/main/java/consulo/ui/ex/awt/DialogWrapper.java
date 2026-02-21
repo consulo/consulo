@@ -601,7 +601,7 @@ public abstract class DialogWrapper {
 
     @Nonnull
     private Action[] filter(@Nonnull Action[] actions) {
-        ArrayList<Action> answer = new ArrayList<>();
+        List<Action> answer = new ArrayList<>();
         for (Action action : actions) {
             if (action != null && (action != getHelpAction())) {
                 answer.add(action);

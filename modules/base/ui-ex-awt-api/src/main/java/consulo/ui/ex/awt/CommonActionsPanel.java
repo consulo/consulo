@@ -30,6 +30,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -127,7 +128,7 @@ public class CommonActionsPanel extends JPanel {
             myButtons.put(button, b);
         }
         if (additionalActions != null && additionalActions.length > 0) {
-            ArrayList<AnAction> allActions = new ArrayList<>(Arrays.asList(actions));
+            List<AnAction> allActions = new ArrayList<>(Arrays.asList(actions));
             allActions.addAll(Arrays.asList(additionalActions));
             actions = allActions.toArray(new AnAction[allActions.size()]);
         }
@@ -140,7 +141,7 @@ public class CommonActionsPanel extends JPanel {
         if (buttonComparator != null) {
             Arrays.sort(myActions, buttonComparator);
         }
-        ArrayList<AnAction> toolbarActions = new ArrayList<>(Arrays.asList(myActions));
+        List<AnAction> toolbarActions = new ArrayList<>(Arrays.asList(myActions));
         for (int i = 0; i < toolbarActions.size(); i++) {
             if (toolbarActions.get(i) instanceof AnActionButton.CheckedAnActionButton actionButton) {
                 toolbarActions.set(i, actionButton.getDelegate());

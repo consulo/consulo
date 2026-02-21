@@ -93,7 +93,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         }
 
         myToolWindow = toolWindow;
-        ArrayList<Content> contents = new ArrayList<>(myAddedContents);
+        List<Content> contents = new ArrayList<>(myAddedContents);
         myAddedContents.clear();
         myContentManager = contentManager;
 

@@ -54,7 +54,7 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
     QuotedStringParser quotedStringParser2 =
             new QuotedStringParser("\'", forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
 
-    ArrayList<TokenParser> tokenParsers = new ArrayList<TokenParser>();
+    List<TokenParser> tokenParsers = new ArrayList<>();
     tokenParsers.add(new WhitespaceParser());
     if (lineCommentParser != null) {
       tokenParsers.add(lineCommentParser);

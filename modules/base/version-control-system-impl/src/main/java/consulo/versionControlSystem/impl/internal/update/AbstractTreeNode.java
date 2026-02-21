@@ -35,12 +35,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author lesya
  */
 public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
-  protected static final ArrayList<File> EMPTY_FILE_ARRAY = new ArrayList<File>();
+  protected static final List<File> EMPTY_FILE_ARRAY = new ArrayList<>();
   DefaultTreeModel myTreeModel;
   private JTree myTree;
   private String myErrorText;

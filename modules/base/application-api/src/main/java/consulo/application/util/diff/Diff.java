@@ -13,6 +13,7 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.List;
 
 public final class Diff {
 
@@ -263,8 +264,8 @@ public final class Diff {
             return "change[" + "inserted=" + inserted + ", deleted=" + deleted + ", line0=" + line0 + ", line1=" + line1 + "]";
         }
 
-        public ArrayList<Change> toList() {
-            ArrayList<Change> result = new ArrayList<>();
+        public List<Change> toList() {
+            List<Change> result = new ArrayList<>();
             Change current = this;
             while (current != null) {
                 result.add(current);

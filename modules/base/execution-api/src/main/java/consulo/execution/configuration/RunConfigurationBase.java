@@ -46,8 +46,8 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   private final Project myProject;
   private String myName = "";
 
-  private ArrayList<LogFileOptions> myLogFiles = new ArrayList<>();
-  private ArrayList<PredefinedLogFile> myPredefinedLogFiles = new ArrayList<>();
+  private List<LogFileOptions> myLogFiles = new ArrayList<>();
+  private List<PredefinedLogFile> myPredefinedLogFiles = new ArrayList<>();
 
   private static final String LOG_FILE = "log_file";
   private static final String PREDEFINED_LOG_FILE_ELEMENT = "predefined_log_file";
@@ -152,12 +152,12 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     myPredefinedLogFiles.add(predefinedLogFile);
   }
 
-  public ArrayList<PredefinedLogFile> getPredefinedLogFiles() {
+  public List<PredefinedLogFile> getPredefinedLogFiles() {
     return myPredefinedLogFiles;
   }
 
-  public ArrayList<LogFileOptions> getAllLogFiles() {
-    ArrayList<LogFileOptions> list = new ArrayList<>(myLogFiles);
+  public List<LogFileOptions> getAllLogFiles() {
+    List<LogFileOptions> list = new ArrayList<>(myLogFiles);
     for (PredefinedLogFile predefinedLogFile : myPredefinedLogFiles) {
       LogFileOptions options = getOptionsForPredefinedLogFile(predefinedLogFile);
       if (options != null) {
@@ -167,7 +167,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return list;
   }
 
-  public ArrayList<LogFileOptions> getLogFiles() {
+  public List<LogFileOptions> getLogFiles() {
     return myLogFiles;
   }
 

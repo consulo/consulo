@@ -249,7 +249,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
   }
 
   private void rebuildListContent() {
-    ArrayList<Item> items = new ArrayList<Item>();
+    List<Item> items = new ArrayList<>();
     int i = 0;
     List<Data> contents = new ArrayList<Data>(getContents());
     for (Data content : contents) {

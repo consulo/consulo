@@ -343,7 +343,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         if (paths == null) {
             return Collections.emptyList();
         }
-        ArrayList<T> result = new ArrayList<>();
+        List<T> result = new ArrayList<>();
         for (TreePath path : paths) {
             T userObject = TreeUtil.getLastUserObject(nodeClass, path);
             if (userObject != null) {
@@ -370,7 +370,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             if (paths == null) {
                 return null;
             }
-            ArrayList<Navigatable> navigatables = new ArrayList<>();
+            List<Navigatable> navigatables = new ArrayList<>();
             for (TreePath path : paths) {
                 Object node = path.getLastPathComponent();
                 Object userObject = TreeUtil.getUserObject(node);
@@ -484,7 +484,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         if (paths == null) {
             return PsiElement.EMPTY_ARRAY;
         }
-        ArrayList<Object> list = new ArrayList<>(paths.length);
+        List<Object> list = new ArrayList<>(paths.length);
         for (TreePath path : paths) {
             Object lastPathComponent = path.getLastPathComponent();
             Object element = getValueFromNode(lastPathComponent);

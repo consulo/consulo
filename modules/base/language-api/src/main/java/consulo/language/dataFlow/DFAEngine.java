@@ -43,7 +43,7 @@ public class DFAEngine<E> {
     }
 
     public List<E> performDFA() throws DFALimitExceededException {
-        ArrayList<E> info = new ArrayList<>(myFlow.length);
+        List<E> info = new ArrayList<>(myFlow.length);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Performing DFA\n" + "Instance: " + myDfa + " Semilattice: " + mySemilattice + "\nCon");
         }
@@ -153,7 +153,7 @@ public class DFAEngine<E> {
 
     private E join(Instruction instruction, List<? extends E> info) {
         Iterable<? extends Instruction> prev = instruction.allPred();
-        ArrayList<E> prevInfos = new ArrayList<>();
+        List<E> prevInfos = new ArrayList<>();
         for (Instruction i : prev) {
             prevInfos.add(info.get(i.num()));
         }

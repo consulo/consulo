@@ -42,10 +42,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author anna
@@ -155,7 +152,7 @@ public class AddToFavoritesAction extends AnAction {
         if (project == null) {
             return Collections.emptyList();
         }
-        ArrayList<AbstractTreeNode> result = new ArrayList<>();
+        List<AbstractTreeNode> result = new ArrayList<>();
         for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
             AbstractTreeNode treeNode = provider.createNode(project, object, favoritesConfig);
             if (treeNode != null) {
@@ -252,7 +249,7 @@ public class AddToFavoritesAction extends AnAction {
     private static void addPsiElementNode(
         PsiElement psiElement,
         Project project,
-        ArrayList<AbstractTreeNode> result,
+        List<AbstractTreeNode> result,
         ViewSettings favoritesConfig
     ) {
         Class<? extends AbstractTreeNode> klass = getPsiElementNodeClass(psiElement);

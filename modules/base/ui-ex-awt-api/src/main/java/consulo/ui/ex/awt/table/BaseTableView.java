@@ -24,6 +24,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -72,7 +73,7 @@ public class BaseTableView extends JBTable {
   public static void restore(Storage storage, JTable table) {
     TableColumnModel columnModel = table.getTableHeader().getColumnModel();
     int index = 0;
-    ArrayList<String> columnIndices = new ArrayList<String>();
+    List<String> columnIndices = new ArrayList<String>();
     while (true) {
       String order = storage.get(orderPropertyName(index));
       if (order == null) break;

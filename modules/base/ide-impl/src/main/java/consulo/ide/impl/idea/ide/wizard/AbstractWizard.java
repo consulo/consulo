@@ -23,13 +23,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(AbstractWizard.class);
 
   protected int myCurrentStep;
-  protected final ArrayList<T> mySteps;
+  protected final List<T> mySteps;
   private Button myPreviousButton;
   private Button myNextButton;
   private Button myCancelButton;

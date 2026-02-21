@@ -136,7 +136,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         if (myProject == null || filter == null) {
             return Collections.emptyList();
         }
-        ArrayList<AnAction> result = new ArrayList<>();
+        List<AnAction> result = new ArrayList<>();
         result.add(new ScopeChooserAction() {
             boolean canToggleEverywhere = !myEverywhereScope.equals(myProjectScope);
 

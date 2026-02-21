@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * This is parent of {@link CheckboxTreeBase} but did not support policy, for support it override {@link #adjustParentsAndChildren}
@@ -143,7 +144,7 @@ public class CheckboxTreeNoPolicy extends Tree {
    */
   @SuppressWarnings("unchecked")
   public <T> T[] getCheckedNodes(final Class<T> nodeType, @Nullable final NodeFilter<T> filter) {
-    final ArrayList<T> nodes = new ArrayList<T>();
+    final List<T> nodes = new ArrayList<>();
     Object root = getModel().getRoot();
     if (!(root instanceof CheckedTreeNode)) {
       throw new IllegalStateException(

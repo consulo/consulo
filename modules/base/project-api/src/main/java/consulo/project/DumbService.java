@@ -243,7 +243,7 @@ public abstract class DumbService {
     @SuppressWarnings("unchecked")
     public <T> List<T> filterByDumbAwareness(@Nonnull Collection<? extends T> collection) {
         if (isDumb()) {
-            ArrayList<T> result = new ArrayList<>(collection.size());
+            List<T> result = new ArrayList<>(collection.size());
             for (T element : collection) {
                 if (isDumbAware(element)) {
                     result.add(element);

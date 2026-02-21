@@ -107,7 +107,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         ConcurrentFactoryMap.createMap(it -> Lists.newLockFreeCopyOnWriteList());
 
     public Collection<BaseInjection> getAllInjections() {
-        ArrayList<BaseInjection> injections = new ArrayList<>();
+        List<BaseInjection> injections = new ArrayList<>();
         for (List<BaseInjection> list : myInjections.values()) {
             injections.addAll(list);
         }
@@ -175,7 +175,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     public static List<BaseInjection> loadDefaultInjections() {
-        ArrayList<Configuration> cfgList = new ArrayList<>();
+        List<Configuration> cfgList = new ArrayList<>();
         Application application = Application.get();
 
         application.getExtensionPoint(InjectionConfigProvider.class).forEachExtensionSafe(provider -> {
@@ -191,7 +191,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             }
         });
 
-        ArrayList<BaseInjection> defaultInjections = new ArrayList<>();
+        List<BaseInjection> defaultInjections = new ArrayList<>();
         for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
             for (Configuration cfg : cfgList) {
                 List<BaseInjection> imported = cfg.getInjections(supportId);
@@ -233,7 +233,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     public static Configuration load(InputStream is) throws IOException, JDOMException {
         try {
             Document document = JDOMUtil.loadDocument(is);
-            ArrayList<Element> elements = new ArrayList<>();
+            List<Element> elements = new ArrayList<>();
             Element rootElement = document.getRootElement();
             Element state;
             if (rootElement.getName().equals(COMPONENT_NAME)) {
@@ -263,8 +263,8 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
     private int importPlaces(List<BaseInjection> injections) {
         Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), BaseInjection::getSupportId);
-        ArrayList<BaseInjection> originalInjections = new ArrayList<>();
-        ArrayList<BaseInjection> newInjections = new ArrayList<>();
+        List<BaseInjection> originalInjections = new ArrayList<>();
+        List<BaseInjection> newInjections = new ArrayList<>();
         for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
             Set<BaseInjection> importingInjections = map.get(supportId);
             if (importingInjections == null) {
@@ -348,15 +348,15 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
     @RequiredUIAccess
     public boolean setHostInjectionEnabled(PsiLanguageInjectionHost host, Collection<String> languages, boolean enabled) {
-        ArrayList<BaseInjection> originalInjections = new ArrayList<>();
-        ArrayList<BaseInjection> newInjections = new ArrayList<>();
+        List<BaseInjection> originalInjections = new ArrayList<>();
+        List<BaseInjection> newInjections = new ArrayList<>();
         for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
             for (BaseInjection injection : getInjections(support.getId())) {
                 if (!languages.contains(injection.getInjectedLanguageId())) {
                     continue;
                 }
                 boolean replace = false;
-                ArrayList<InjectionPlace> newPlaces = new ArrayList<>();
+                List<InjectionPlace> newPlaces = new ArrayList<>();
                 for (InjectionPlace place : injection.getInjectionPlaces()) {
                     if (place.isEnabled() != enabled && place.getElementPattern() != null
                         && (place.getElementPattern().accepts(host) || place.getElementPattern().accepts(host.getParent()))) {

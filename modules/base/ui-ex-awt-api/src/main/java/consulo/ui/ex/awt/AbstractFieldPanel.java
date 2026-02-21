@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Alexey Kudravtsev
@@ -40,7 +41,7 @@ public abstract class AbstractFieldPanel extends JPanel {
     private static final Logger LOG = Logger.getInstance(AbstractFieldPanel.class);
     private final JComponent myComponent;
     private Runnable myChangeListener;
-    protected ArrayList<JButton> myButtons = new ArrayList<JButton>(1);
+    protected List<JButton> myButtons = new ArrayList<>(1);
     protected JLabel myLabel;
     private ActionListener myBrowseButtonActionListener;
     private String myViewerDialogTitle;

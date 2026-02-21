@@ -47,7 +47,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
     private Map<String, AbstractVariableData> myVariablesMap;
 
     private final List<String> myArguments;
-    private final ArrayList<String> myOutputVariables;
+    private final List<String> myOutputVariables;
     private final FileType myFileType;
 
     public AbstractExtractMethodDialog(Project project,

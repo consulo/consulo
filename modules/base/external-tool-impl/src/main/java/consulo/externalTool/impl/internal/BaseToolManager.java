@@ -51,7 +51,7 @@ public abstract class BaseToolManager<T extends Tool> {
     }
 
     public List<T> getTools() {
-        ArrayList<T> result = new ArrayList<>();
+        List<T> result = new ArrayList<>();
         for (ToolsGroup<T> group : mySchemeManager.getAllSchemes()) {
             result.addAll(group.getElements());
         }
@@ -59,7 +59,7 @@ public abstract class BaseToolManager<T extends Tool> {
     }
 
     public List<T> getTools(String group) {
-        ArrayList<T> list = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         ToolsGroup<T> groupByName = mySchemeManager.findSchemeByName(group);
         if (groupByName != null) {
             list.addAll(groupByName.getElements());

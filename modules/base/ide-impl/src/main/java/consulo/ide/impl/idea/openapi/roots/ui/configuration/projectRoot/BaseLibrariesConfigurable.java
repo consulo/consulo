@@ -198,7 +198,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     @Override
     @Nonnull
     protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-        ArrayList<AnAction> actions = new ArrayList<>();
+        List<AnAction> actions = new ArrayList<>();
         actions.add(new CopyLibraryAction());
         if (fromPopup) {
             // actions.add(new ChangeLibraryLevelAction(myProject, myTree, this, targetGroup));

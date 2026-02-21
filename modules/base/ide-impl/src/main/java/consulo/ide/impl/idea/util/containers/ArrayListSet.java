@@ -18,9 +18,10 @@ package consulo.ide.impl.idea.util.containers;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ArrayListSet<E> extends AbstractSet<E> {
-  private final ArrayList<E> myList = new ArrayList<E>();
+  private final List<E> myList = new ArrayList<>();
 
   @Override
   public Iterator<E> iterator() {

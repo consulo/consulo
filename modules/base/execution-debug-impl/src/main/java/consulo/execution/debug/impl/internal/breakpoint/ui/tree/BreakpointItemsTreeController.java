@@ -177,7 +177,7 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
     TreePath[] selectionPaths = myTreeView.getSelectionPaths();
     if (selectionPaths == null || selectionPaths.length == 0) return Collections.emptyList();
 
-    ArrayList<BreakpointItem> list = new ArrayList<>();
+    List<BreakpointItem> list = new ArrayList<>();
     for (TreePath selectionPath : selectionPaths) {
       TreeNode startNode = (TreeNode)selectionPath.getLastPathComponent();
       if (traverse) {

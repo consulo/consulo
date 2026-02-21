@@ -56,7 +56,7 @@ public class CheckinHandlerUtil {
 
     @RequiredReadAction
     public static PsiFile[] getPsiFiles(Project project, Collection<VirtualFile> selectedFiles) {
-        ArrayList<PsiFile> result = new ArrayList<>();
+        List<PsiFile> result = new ArrayList<>();
         PsiManager psiManager = PsiManager.getInstance(project);
 
         VirtualFile projectFileDir = null;

@@ -422,7 +422,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
 
     @Nonnull
     private Bookmark[] getBookmarksForDocument(@Nonnull Document document) {
-        ArrayList<Bookmark> answer = new ArrayList<>();
+        List<Bookmark> answer = new ArrayList<>();
         for (Bookmark bookmark : getValidBookmarks()) {
             if (document.equals(bookmark.getDocument())) {
                 answer.add(bookmark);

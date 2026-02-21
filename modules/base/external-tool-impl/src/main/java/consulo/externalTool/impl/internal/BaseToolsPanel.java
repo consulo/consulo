@@ -272,7 +272,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
     }
 
     private ToolsGroup[] getGroupList() {
-        ArrayList<ToolsGroup> result = new ArrayList<ToolsGroup>();
+        List<ToolsGroup> result = new ArrayList<>();
         MutableTreeNode root = (MutableTreeNode) myTree.getModel().getRoot();
         for (int i = 0; i < root.getChildCount(); i++) {
             CheckedTreeNode node = (CheckedTreeNode) root.getChildAt(i);
@@ -513,7 +513,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
     }
 
     private String[] getGroups() {
-        ArrayList<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         ToolsGroup[] groups = getGroupList();
         for (ToolsGroup group : groups) {
             result.add(group.getName());

@@ -29,6 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author anna
@@ -55,8 +56,8 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     }
 
     @RequiredReadAction
-    static ArrayList<PsiFile> getFilesToAdd(Project project) {
-        ArrayList<PsiFile> result = new ArrayList<>();
+    static List<PsiFile> getFilesToAdd(Project project) {
+        List<PsiFile> result = new ArrayList<>();
         FileEditorManager editorManager = FileEditorManager.getInstance(project);
         PsiManager psiManager = PsiManager.getInstance(project);
         VirtualFile[] openFiles = editorManager.getOpenFiles();

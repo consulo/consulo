@@ -21,6 +21,7 @@ import consulo.language.codeStyle.internal.*;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class WrapProcessor {
     private LeafBlockWrapper myFirstWrappedBlockOnLine = null;
@@ -80,7 +81,7 @@ public class WrapProcessor {
     }
 
     @Nullable
-    private WrapImpl getWrapToBeUsed(ArrayList<WrapImpl> wraps, LeafBlockWrapper currentBlock) {
+    private WrapImpl getWrapToBeUsed(List<WrapImpl> wraps, LeafBlockWrapper currentBlock) {
         if (wraps.isEmpty()) {
             return null;
         }
@@ -150,7 +151,7 @@ public class WrapProcessor {
 
         boolean wrapIsPresent = whiteSpace.containsLineFeeds();
 
-        ArrayList<WrapImpl> wraps = currentBlock.getWraps();
+        List<WrapImpl> wraps = currentBlock.getWraps();
         for (WrapImpl wrap : wraps) {
             wrap.setWrapOffset(currentBlock.getStartOffset());
         }

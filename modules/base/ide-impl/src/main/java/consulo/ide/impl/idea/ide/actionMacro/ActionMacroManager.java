@@ -55,6 +55,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -143,7 +144,7 @@ public class ActionMacroManager implements Disposable {
     }
 
     private void addRecordedMacroWithName(@Nullable String macroName) {
-        ArrayList<ActionMacro> macros = myActionMacroManagerState.get().getMacros();
+        List<ActionMacro> macros = myActionMacroManagerState.get().getMacros();
 
         if (macroName != null) {
             myRecordingMacro.setName(macroName);

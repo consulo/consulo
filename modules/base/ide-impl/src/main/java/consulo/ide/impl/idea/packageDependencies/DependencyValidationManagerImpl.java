@@ -116,7 +116,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     @Override
     @Nonnull
     public DependencyRule[] getViolatorDependencyRules(@Nonnull PsiFile from, @Nonnull PsiFile to) {
-        ArrayList<DependencyRule> result = new ArrayList<>();
+        List<DependencyRule> result = new ArrayList<>();
         for (DependencyRule dependencyRule : myRules) {
             if (dependencyRule.isForbiddenToUse(from, to)) {
                 result.add(dependencyRule);
@@ -128,7 +128,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     @Nonnull
     @Override
     public DependencyRule[] getApplicableRules(@Nonnull PsiFile file) {
-        ArrayList<DependencyRule> result = new ArrayList<>();
+        List<DependencyRule> result = new ArrayList<>();
         for (DependencyRule dependencyRule : myRules) {
             if (dependencyRule.isApplicable(file)) {
                 result.add(dependencyRule);

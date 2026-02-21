@@ -1662,7 +1662,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     private static VirtualFile[] collectFiles(List<FilePath> paths) {
-        ArrayList<VirtualFile> result = new ArrayList<>();
+        List<VirtualFile> result = new ArrayList<>();
         for (FilePath path : paths) {
             if (path.getVirtualFile() != null) {
                 result.add(path.getVirtualFile());

@@ -38,6 +38,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     private AnimatedScrollingRunnable myCurrentAnimationRequest = null;
@@ -475,7 +476,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         private final int myEndVOffset;
         private final int myAnimationDuration;
 
-        private final ArrayList<Runnable> myPostRunnables = new ArrayList<>();
+        private final List<Runnable> myPostRunnables = new ArrayList<>();
 
         private final int myHDist;
         private final int myVDist;

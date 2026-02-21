@@ -19,11 +19,12 @@ import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Deprecated
 public class DummyDiffFragmentsProcessorOld {
-  public ArrayList<LineFragment> process(String text1, String text2) {
-    ArrayList<LineFragment> lineFragments = new ArrayList<LineFragment>();
+  public List<LineFragment> process(String text1, String text2) {
+    List<LineFragment> lineFragments = new ArrayList<>();
 
     if (text1.isEmpty() && text2.isEmpty()) {
       return lineFragments;

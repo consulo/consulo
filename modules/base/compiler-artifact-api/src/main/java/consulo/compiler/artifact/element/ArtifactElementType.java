@@ -87,7 +87,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
         iterator.remove();
       }
     }
-    ArrayList<Artifact> list = new ArrayList<>(result);
+    List<Artifact> list = new ArrayList<>(result);
     Collections.sort(list, ArtifactManager.ARTIFACT_COMPARATOR);
     return list;
   }

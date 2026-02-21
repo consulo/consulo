@@ -203,7 +203,7 @@ public class TodoCheckinHandlerWorker {
                     myAcceptor.skipped(Pair.create(myAfterFile, ourCannotLoadPreviousRevision));
                     return;
                 }
-                ArrayList<LineFragment> lineFragments = getLineFragments(myAfterFile.getPath(), myBeforeContent, myAfterContent);
+                List<LineFragment> lineFragments = getLineFragments(myAfterFile.getPath(), myBeforeContent, myAfterContent);
                 for (Iterator<LineFragment> iterator = lineFragments.iterator(); iterator.hasNext(); ) {
                     ProgressManager.checkCanceled();
                     LineFragment next = iterator.next();
@@ -311,7 +311,7 @@ public class TodoCheckinHandlerWorker {
         return StringUtil.join(fragment.split("\\s"), " ");
     }
 
-    private static ArrayList<LineFragment> getLineFragments(String fileName, String beforeContent, String afterContent) throws VcsException {
+    private static List<LineFragment> getLineFragments(String fileName, String beforeContent, String afterContent) throws VcsException {
         try {
             DiffFragmentOld[] woFormattingBlocks =
                 DiffPolicyOld.LINES_WO_FORMATTING.buildFragments(DiffString.create(beforeContent), DiffString.create(afterContent));

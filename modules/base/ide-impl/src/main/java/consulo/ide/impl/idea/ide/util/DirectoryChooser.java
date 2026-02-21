@@ -262,7 +262,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     }
 
     private static PathFragment[] createFragments(String head, String special, String tail) {
-        ArrayList<PathFragment> list = new ArrayList<>(3);
+        List<PathFragment> list = new ArrayList<>(3);
         if (head != null) {
             if (special != null || tail != null) {
                 list.add(new PathFragment(head + File.separatorChar, true));
