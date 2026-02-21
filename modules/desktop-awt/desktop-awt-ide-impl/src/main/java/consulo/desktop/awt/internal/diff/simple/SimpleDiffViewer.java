@@ -16,7 +16,7 @@
 package consulo.desktop.awt.internal.diff.simple;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
@@ -47,7 +47,6 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.diff.DiffDrawUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,6 +56,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
@@ -223,15 +223,15 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
             ThrowableComputable<CharSequence[], RuntimeException> action =
                 () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            CharSequence[] texts = AccessRule.read(action);
+            CharSequence[] texts = ReadAction.compute(action);
 
             List<LineFragment> lineFragments = null;
             if (getHighlightPolicy().isShouldCompare()) {
                 lineFragments = DiffImplUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
             }
 
-            boolean isContentsEqual = (lineFragments == null || lineFragments.isEmpty()) &&
-                StringUtil.equals(texts[0], texts[1]);
+            boolean isContentsEqual = (lineFragments == null || lineFragments.isEmpty())
+                && StringUtil.equals(texts[0], texts[1]);
 
             return apply(new CompareData(lineFragments, isContentsEqual));
         }
@@ -956,6 +956,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             super(editors.toArray(new EditorEx[2]), disposable);
         }
 
+        @RequiredUIAccess
         public void install(
             @Nullable List<LineFragment> fragments,
             @Nonnull UserDataHolder context,

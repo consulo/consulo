@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.diff.action;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
@@ -26,9 +25,11 @@ import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.util.HighlightingLevel;
 import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,7 +51,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         @Nonnull TextDiffSettingsHolder.TextDiffSettings settings,
         @Nonnull List<? extends Editor> editors
     ) {
-        super(DiffLocalize.editorSettings(), LocalizeValue.empty(), AllIcons.General.GearPlain);
+        super(DiffLocalize.editorSettings(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
         setPopup(true);
         myTextSettings = settings;
         myEditors = editors;
@@ -181,7 +182,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         ContainerUtil.addAll(result, myActions);
         result.add(AnSeparator.getInstance());
         result.add(ActionManager.getInstance().getAction(IdeActions.GROUP_DIFF_EDITOR_GUTTER_POPUP));
-        return ContainerUtil.toArray(result, new AnAction[result.size()]);
+        return ContainerUtil.toArray(result, AnAction[]::new);
     }
 
     private abstract class EditorSettingToggleAction extends ToggleAction implements DumbAware, EditorSettingAction {
@@ -195,6 +196,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             setSelected(state);
             for (Editor editor : myEditors) {
@@ -256,6 +258,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
             }
 
             @Override
+            @RequiredUIAccess
             public void setSelected(@Nonnull AnActionEvent e, boolean state) {
                 myTextSettings.setHighlightingLevel(myLayer);
                 apply(myLayer);

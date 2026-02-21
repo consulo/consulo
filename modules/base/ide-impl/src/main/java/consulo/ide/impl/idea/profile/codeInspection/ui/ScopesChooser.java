@@ -20,7 +20,6 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.project.Project;
@@ -58,7 +57,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
         myDefaultDescriptors = defaultDescriptors;
         myInspectionProfile = inspectionProfile;
         myProject = project;
-        myExcludedScopeNames = excludedScopeNames == null ? Collections.<String>emptySet() : ContainerUtil.newHashSet(excludedScopeNames);
+        myExcludedScopeNames = excludedScopeNames == null ? Set.of() : Set.of(excludedScopeNames);
         setPopupTitle(TITLE);
         getTemplatePresentation().setText("In All Scopes");
     }
@@ -88,8 +87,8 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
 
         group.addSeparator();
         group.add(new DumbAwareAction("Edit Scopes Order...") {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
                 if (dlg.showAndGet()) {
