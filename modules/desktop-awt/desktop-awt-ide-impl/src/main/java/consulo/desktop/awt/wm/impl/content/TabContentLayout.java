@@ -2,7 +2,6 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.MoreTabsIcon;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -19,6 +18,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -328,17 +328,20 @@ class TabContentLayout extends ContentLayout {
     public void contentAdded(ContentManagerEvent event) {
         Content content = event.getContent();
         ContentTabLabel tab;
-        if (content instanceof TabbedContent) {
-            tab = new TabbedContentTabLabel((TabbedContent) content, this);
+        if (content instanceof TabbedContent tabbedContent) {
+            tab = new TabbedContentTabLabel(tabbedContent, this);
         }
         else {
             tab = new ContentTabLabel(content, this);
         }
         myTabs.add(event.getIndex(), tab);
         myContent2Tabs.put(content, tab);
-        if (content instanceof DnDTarget) {
-            DnDTarget target = (DnDTarget) content;
-            DnDSupport.createBuilder(tab).setDropHandler(target).setTargetChecker(target).setCleanUpOnLeaveCallback(target::cleanUpOnLeave).install();
+        if (content instanceof DnDTarget target) {
+            DnDSupport.createBuilder(tab)
+                .setDropHandler(target)
+                .setTargetChecker(target)
+                .setCleanUpOnLeaveCallback(target::cleanUpOnLeave)
+                .install();
         }
     }
 

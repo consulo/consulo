@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.content.ContentIterator;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.DistinctRootsCollection;
 import consulo.platform.Platform;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
