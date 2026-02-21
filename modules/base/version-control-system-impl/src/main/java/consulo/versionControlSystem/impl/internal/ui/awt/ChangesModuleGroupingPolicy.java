@@ -32,6 +32,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author yole
@@ -39,7 +40,7 @@ import java.util.HashMap;
 public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
   private final Project myProject;
   private final DefaultTreeModel myModel;
-  private final HashMap<Module, ChangesBrowserNode> myModuleCache = new HashMap<>();
+  private final Map<Module, ChangesBrowserNode> myModuleCache = new HashMap<>();
 
   public static final String PROJECT_ROOT_TAG = "<Project Root>";
 

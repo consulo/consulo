@@ -165,7 +165,7 @@ public class ConcurrencyUtil {
   //  Set workers;
   //  mainLock.lock();
   //  try {
-  //    HashSet workersField = ReflectionUtil.getField(executor.getClass(), executor, HashSet.class, "workers");
+  //    Set workersField = ReflectionUtil.getField(executor.getClass(), executor, HashSet.class, "workers");
   //    workers = new HashSet(workersField); // to be able to iterate thread-safely outside the lock
   //  }
   //  finally {

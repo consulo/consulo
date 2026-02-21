@@ -18,19 +18,17 @@ package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import java.util.HashMap;
+
+import java.util.*;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 class PageSizes {
   private static final Logger LOG = Logger.getInstance(PageSizes.class);
-  private static ArrayList myPageSizes = null;
-  private static HashMap myNamesToPageSizes = null;
+  private static List myPageSizes = null;
+  private static Map myNamesToPageSizes = null;
   private static final double MM_TO_INCH = 1/25.4;
   @NonNls private static final String PAGE_SIZES_RESOURCE = "/PageSizes.xml";
   @NonNls private static final String ELEMENT_SIZE = "size";

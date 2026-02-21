@@ -66,9 +66,9 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
   }
 
   @Nullable
-  private HashMap<Value, Object> asMapping() {
+  private Map<Value, Object> asMapping() {
     //noinspection unchecked
-    return myInputIdMapping instanceof HashMap ? (HashMap<Value, Object>)myInputIdMapping : null;
+    return myInputIdMapping instanceof Map ? (Map<Value, Object>)myInputIdMapping : null;
   }
 
   private Value asValue() {
@@ -324,9 +324,9 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     try {
       //noinspection unchecked
       ValueContainerImpl<Value> clone = (ValueContainerImpl<Value>)super.clone();
-      HashMap<Value, Object> mapping = asMapping();
+      Map<Value, Object> mapping = asMapping();
       if (mapping != null) {
-        HashMap<Value, Object> cloned = (HashMap<Value, Object>)mapping.clone();
+        Map<Value, Object> cloned = new HashMap<>(mapping);
         for (Map.Entry<Value, Object> entry : mapping.entrySet()) {
           Value key = entry.getKey();
           Object value = entry.getValue();

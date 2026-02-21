@@ -27,6 +27,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -49,7 +50,7 @@ public class ProjectViewSharedSettingsImpl implements PersistentStateComponent<P
     private boolean myAutoscrollToSource = false;
     private boolean myFoldersAlwaysOnTop = true;
 
-    private LinkedHashMap<String, Object> myProperties = new LinkedHashMap<>();
+    private Map<String, Object> myProperties = new LinkedHashMap<>();
 
     @Override
     @Nonnull

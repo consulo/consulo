@@ -116,7 +116,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
     }
 
     public static Map<String, AbstractVariableData> createVariableMap(AbstractVariableData[] data) {
-        HashMap<String, AbstractVariableData> map = new HashMap<>();
+        Map<String, AbstractVariableData> map = new HashMap<>();
         for (AbstractVariableData variableData : data) {
             map.put(variableData.getOriginalName(), variableData);
         }

@@ -346,15 +346,15 @@ public class mxTraversal {
    * Implements the Floyd-Roy-Warshall (aka WFI) shortest path algorithm between all vertices.
    *
    * @param aGraph
-   * @return an ArrayList where ArrayList(0) is the distance map and List(1) is the path map. See the example in GraphConfigDialog.java
+   * @return an List where List(0) is the distance map and List(1) is the path map. See the example in GraphConfigDialog.java
    * @throws StructuralException - The Floyd-Roy-Warshall algorithm only works for graphs without negative cycles
    */
-  public static ArrayList<Object[][]> floydRoyWarshall(mxAnalysisGraph aGraph) throws StructuralException {
+  public static List<Object[][]> floydRoyWarshall(mxAnalysisGraph aGraph) throws StructuralException {
 
     Object[] vertices = aGraph.getChildVertices(aGraph.getGraph().getDefaultParent());
     Double[][] dist = new Double[vertices.length][vertices.length];
     Object[][] paths = new Object[vertices.length][vertices.length];
-    Map<Object, Integer> indexMap = new HashMap<Object, Integer>();
+    Map<Object, Integer> indexMap = new HashMap<>();
 
     for (int i = 0; i < vertices.length; i++) {
       indexMap.put(vertices[i], i);
@@ -380,7 +380,7 @@ public class mxTraversal {
       }
     }
 
-    ArrayList<Object[][]> result = new ArrayList<Object[][]>();
+    List<Object[][]> result = new ArrayList<>();
     result.add(dist);
     result.add(paths);
     return result;

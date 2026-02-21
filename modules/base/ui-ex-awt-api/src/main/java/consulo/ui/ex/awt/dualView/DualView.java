@@ -51,8 +51,10 @@ import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.*;
 
 public class DualView extends JPanel {
     private final CardLayout myCardLayout;
@@ -217,8 +219,8 @@ public class DualView extends JPanel {
 
         Collection selection = from.getSelection();
 
-        for (Iterator each = selection.iterator(); each.hasNext(); ) {
-            to.addSelection(each.next());
+        for (Object aSelection : selection) {
+            to.addSelection(aSelection);
         }
     }
 
@@ -245,11 +247,9 @@ public class DualView extends JPanel {
     }
 
     private Component createFlatComponent(DualViewColumnInfo[] columns) {
+        List<ColumnInfo> shownColumns = new ArrayList<>();
 
-        ArrayList<ColumnInfo> shownColumns = new ArrayList<ColumnInfo>();
-
-        for (int i = 0; i < columns.length; i++) {
-            DualViewColumnInfo column = columns[i];
+        for (DualViewColumnInfo column : columns) {
             if (column.shouldBeShownIsTheTable()) {
                 shownColumns.add(column);
             }
@@ -326,11 +326,11 @@ public class DualView extends JPanel {
     }
 
     public List getSelection() {
-        ArrayList result = new ArrayList();
+        List result = new ArrayList();
         SelectionProvider visibleTable = (SelectionProvider) getVisibleTable();
         Collection selection = visibleTable.getSelection();
-        for (Iterator each = selection.iterator(); each.hasNext(); ) {
-            result.add(each.next());
+        for (Object aSelection : selection) {
+            result.add(aSelection);
         }
         return result;
     }
@@ -471,12 +471,12 @@ public class DualView extends JPanel {
 
     public void setRoot(TreeNode node, List<Object> selection) {
         List<Object> currentlySelected = myFlatView.getSelectedObjects();
-        List<Object> targetSelection = (currentlySelected != null && (!currentlySelected.isEmpty())) ? currentlySelected : selection;
+        List<Object> targetSelection = !currentlySelected.isEmpty() ? currentlySelected : selection;
         //final Object obj = myFlatView.getSelectedObject() != null ? myFlatView.getSelectedObject() : selection;
 
         myTreeView.getTreeViewModel().setRoot(node);
 
-        if ((targetSelection != null) && (!targetSelection.isEmpty())) {
+        if (targetSelection != null && !targetSelection.isEmpty()) {
             List items = myFlatView.getItems();
             for (Object selElement : targetSelection) {
                 if (items.contains(selElement)) {
@@ -538,8 +538,8 @@ public class DualView extends JPanel {
         if (!myZipByHeight) {
             return was;
         }
-        int tableHeight = myFlatView.getTableHeader().getHeight() + myFlatView.getTableViewModel().getRowCount() *
-            myFlatView.getRowHeight();
+        int tableHeight = myFlatView.getTableHeader().getHeight() +
+            myFlatView.getTableViewModel().getRowCount() * myFlatView.getRowHeight();
         return new Dimension(was.width, tableHeight);
     }
 

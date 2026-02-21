@@ -45,9 +45,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.ref.Reference;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -62,11 +60,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
     private final DesktopIdeFrameImpl myIdeFrame;
 
-    private final HashMap<String, DesktopStripeButton> myId2Button = new HashMap<>();
-    private final HashMap<String, DesktopInternalDecorator> myId2Decorator = new HashMap<>();
-    private final HashMap<DesktopStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
-    private final HashMap<DesktopInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
-    private final HashMap<String, Float> myId2SplitProportion = new HashMap<>();
+    private final Map<String, DesktopStripeButton> myId2Button = new HashMap<>();
+    private final Map<String, DesktopInternalDecorator> myId2Decorator = new HashMap<>();
+    private final Map<DesktopStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
+    private final Map<DesktopInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
+    private final Map<String, Float> myId2SplitProportion = new HashMap<>();
     private Pair<ToolWindow, Integer> myMaximizedProportion;
     /**
      * This panel is the layered pane where all sliding tool windows are located. The DEFAULT

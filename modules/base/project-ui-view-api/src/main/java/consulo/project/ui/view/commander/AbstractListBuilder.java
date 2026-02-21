@@ -326,7 +326,7 @@ public abstract class AbstractListBuilder {
     }
 
     Object[] children = getChildren(parentDescriptor);
-    HashMap<Object, Integer> elementToIndexMap = new HashMap<Object, Integer>();
+    Map<Object, Integer> elementToIndexMap = new HashMap<>();
     for (int i = 0; i < children.length; i++) {
       elementToIndexMap.put(children[i], Integer.valueOf(i));
     }

@@ -37,10 +37,7 @@ import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.*;
 
 class ExportToHTMLManager {
   private static final Logger LOG = Logger.getInstance(ExportToHTMLManager.class);
@@ -137,7 +134,7 @@ class ExportToHTMLManager {
     PsiFile psiFile,
     String outputDirectoryName,
     Project project,
-    HashMap<PsiFile, PsiFile> filesMap
+    Map<PsiFile, PsiFile> filesMap
   ) {
     try {
       return project.getApplication().runReadAction((ThrowableComputable<Boolean, FileNotFoundException>)() -> {
@@ -262,7 +259,7 @@ class ExportToHTMLManager {
         myLastException = e;
         return;
       }
-      HashMap<PsiFile, PsiFile> filesMap = new HashMap<>();
+      Map<PsiFile, PsiFile> filesMap = new HashMap<>();
       for (PsiFile psiFile : filesList) {
         filesMap.put(psiFile, psiFile);
       }

@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nls;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CloudLoggingHandlerImpl implements CloudAgentLoggingHandler {
-
-    private final HashMap<String, LogListenerImpl> myPipeName2LogListener;
+    private final Map<String, LogListenerImpl> myPipeName2LogListener;
 
     private final LoggingHandler myMainLoggingHandler;
 

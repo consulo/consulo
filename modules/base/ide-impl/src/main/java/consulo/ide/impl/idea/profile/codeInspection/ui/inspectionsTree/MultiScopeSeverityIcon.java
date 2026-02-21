@@ -37,7 +37,7 @@ public class MultiScopeSeverityIcon {
         InspectionProfileImpl inspectionProfile
     ) {
         List<String> sortedScopeNames = new ArrayList<>(scopeToAverageSeverityMap.keySet());
-        LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
+        Map<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
         Collections.sort(sortedScopeNames, new ScopeOrderComparator(inspectionProfile));
         sortedScopeNames.remove(defaultScopeName);
         sortedScopeNames.add(defaultScopeName);

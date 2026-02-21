@@ -24,9 +24,10 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Place implements ComparableObject {
-  private LinkedHashMap<String, Object> myPath = new LinkedHashMap<>();
+  private Map<String, Object> myPath = new LinkedHashMap<>();
 
   @Override
   @Nonnull
@@ -58,13 +59,13 @@ public class Place implements ComparableObject {
 
   public Place cloneForElement(String name, Object value) {
     Place clone = new Place();
-    clone.myPath = (LinkedHashMap<String, Object>)myPath.clone();
+    clone.myPath = new LinkedHashMap<>(myPath);
     clone.myPath.put(name, value);
     return clone;
   }
 
   public void copyFrom(Place from) {
-    myPath = (LinkedHashMap<String, Object>)from.myPath.clone();
+    myPath = new LinkedHashMap<>(from.myPath);
   }
 
   public boolean isMoreGeneralFor(Place place) {

@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MultilineTreeCellRenderer extends JComponent implements TreeCellRenderer {
 
@@ -37,7 +38,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     private int myHeightCalculated = -1;
     private int myWrapsCalculatedForWidth = -1;
 
-    private ArrayList myWraps = new ArrayList();
+    private List myWraps = new ArrayList();
 
     private int myMinHeight = 1;
     private Insets myTextInsets;

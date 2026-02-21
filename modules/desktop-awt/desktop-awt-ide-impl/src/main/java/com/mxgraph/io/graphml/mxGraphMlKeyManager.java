@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is a singleton class that contains a map with the key elements of the
@@ -20,7 +21,7 @@ public class mxGraphMlKeyManager {
    * Map with the key elements of the document.<br/>
    * The key is the key's ID.
    */
-  private HashMap<String, mxGraphMlKey> keyMap = new HashMap<String, mxGraphMlKey>();
+  private Map<String, mxGraphMlKey> keyMap = new HashMap<>();
 
   private static mxGraphMlKeyManager keyManager = null;
 
@@ -64,11 +65,11 @@ public class mxGraphMlKeyManager {
     }
   }
 
-  public HashMap<String, mxGraphMlKey> getKeyMap() {
+  public Map<String, mxGraphMlKey> getKeyMap() {
     return keyMap;
   }
 
-  public void setKeyMap(HashMap<String, mxGraphMlKey> keyMap) {
+  public void setKeyMap(Map<String, mxGraphMlKey> keyMap) {
     this.keyMap = keyMap;
   }
 }

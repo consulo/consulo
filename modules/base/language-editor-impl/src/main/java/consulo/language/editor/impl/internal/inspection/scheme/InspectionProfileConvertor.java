@@ -37,13 +37,14 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author anna
  * @since 2004-12-20
  */
 public class InspectionProfileConvertor {
-  private final HashMap<String, HighlightDisplayLevel> myDisplayLevelMap = new HashMap<String, HighlightDisplayLevel>();
+  private final Map<String, HighlightDisplayLevel> myDisplayLevelMap = new HashMap<>();
   @NonNls public static final String OLD_HIGHTLIGHTING_SETTINGS_PROFILE = "EditorHighlightingSettings";
   @NonNls public static final String OLD_DEFAUL_PROFILE = "OldDefaultProfile";
 

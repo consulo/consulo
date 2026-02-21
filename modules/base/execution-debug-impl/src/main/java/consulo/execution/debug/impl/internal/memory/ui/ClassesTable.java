@@ -324,7 +324,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     @SuppressWarnings("WeakerAccess")
     public void updateClassesOnly(@Nonnull List<? extends TypeInfo> classes) {
         myIsShowCounts = false;
-        LinkedHashMap<TypeInfo, Long> class2Count = new LinkedHashMap<>();
+        Map<TypeInfo, Long> class2Count = new LinkedHashMap<>();
         classes.forEach(x -> class2Count.put(x, 0L));
         updateCountsInternal(class2Count);
     }

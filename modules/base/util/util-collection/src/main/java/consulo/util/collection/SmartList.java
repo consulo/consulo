@@ -344,7 +344,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
 
         if (o instanceof ArrayList) {
-            return equalsWithArrayList((ArrayList) o);
+            return equalsWithList((ArrayList) o);
         }
 
         return super.equals(o);
@@ -362,7 +362,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         return compareOneByOne(that);
     }
 
-    private boolean equalsWithArrayList(ArrayList that) {
+    private boolean equalsWithList(List that) {
         if (mySize != that.size()) {
             return false;
         }

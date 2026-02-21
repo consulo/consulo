@@ -393,7 +393,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
         LOG.error(sb.toString(), exception);
       }
     }
-    HashMap<Object, Node> map = new HashMap<>();
+    Map<Object, Node> map = new HashMap<>();
     node.getChildren().forEach(child -> {
       Object element = child.getElement();
       if (element != null) map.put(element, child);

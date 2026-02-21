@@ -91,7 +91,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   public boolean updateStep() {
     mySomethingChanged = false;
     // copy under lock
-    HashMap<VcsRoot, LazyRefreshingSelfQueue> copyMap;
+    Map<VcsRoot, LazyRefreshingSelfQueue> copyMap;
     synchronized (myLock) {
       copyMap = new HashMap<>(myRefreshingQueues);
     }

@@ -6,6 +6,7 @@ package com.mxgraph.util;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Contains various helper methods for use with mxGraph.
@@ -15,7 +16,7 @@ public class mxHtmlColor {
   /**
    * HTML color lookup table. Supports the 147 CSS color names.
    */
-  protected static HashMap<String, Color> htmlColors = new HashMap<String, Color>();
+  protected static Map<String, Color> htmlColors = new HashMap<String, Color>();
 
   /**
    *

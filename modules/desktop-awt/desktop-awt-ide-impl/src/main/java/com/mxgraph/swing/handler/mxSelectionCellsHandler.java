@@ -25,6 +25,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class mxSelectionCellsHandler implements MouseListener, MouseMotionListener {
 
@@ -67,7 +68,7 @@ public class mxSelectionCellsHandler implements MouseListener, MouseMotionListen
   /**
    * Maps from cells to handlers in the order of the selection cells.
    */
-  protected transient LinkedHashMap<Object, mxCellHandler> handlers = new LinkedHashMap<Object, mxCellHandler>();
+  protected transient Map<Object, mxCellHandler> handlers = new LinkedHashMap<Object, mxCellHandler>();
 
   /**
    *
@@ -313,8 +314,8 @@ public class mxSelectionCellsHandler implements MouseListener, MouseMotionListen
 
     // Creates a new map for the handlers and tries to
     // to reuse existing handlers from the old map
-    LinkedHashMap<Object, mxCellHandler> oldHandlers = handlers;
-    handlers = new LinkedHashMap<Object, mxCellHandler>();
+    Map<Object, mxCellHandler> oldHandlers = handlers;
+    handlers = new LinkedHashMap<>();
 
     // Creates handles for all selection cells
     Object[] tmp = graph.getSelectionCells();

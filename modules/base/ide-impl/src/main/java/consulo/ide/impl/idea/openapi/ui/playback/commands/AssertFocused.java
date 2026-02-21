@@ -75,7 +75,7 @@ public class AssertFocused extends AbstractCommand {
     }
 
     Component eachParent = owner;
-    LinkedHashMap<String, String> actual = new LinkedHashMap<String, String>();
+    Map<String, String> actual = new LinkedHashMap<>();
     while (eachParent != null) {
       if (eachParent instanceof Queryable) {
         ((Queryable)eachParent).putInfo(actual);

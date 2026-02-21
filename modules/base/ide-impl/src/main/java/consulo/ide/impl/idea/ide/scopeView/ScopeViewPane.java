@@ -56,6 +56,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -65,7 +66,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @ExtensionImpl
 public class ScopeViewPane extends AbstractProjectViewPane {
     private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
-    private LinkedHashMap<String, NamedScopeFilter> myFilters;
+    private Map<String, NamedScopeFilter> myFilters;
 
     public static final String ID = "Scope";
     private final ProjectView myProjectView;
@@ -166,7 +167,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     @Override
     @Nonnull
     public String[] getSubIds() {
-        LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+        Map<String, NamedScopeFilter> map = myFilters;
         if (map == null || map.isEmpty()) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
@@ -315,13 +316,13 @@ public class ScopeViewPane extends AbstractProjectViewPane {
 
     @Nullable
     NamedScopeFilter getFilter(@Nullable String subId) {
-        LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+        Map<String, NamedScopeFilter> map = myFilters;
         return map == null || subId == null ? null : map.get(subId);
     }
 
     @Nonnull
-    private static LinkedHashMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
-        LinkedHashMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
+    private static Map<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
+        Map<String, NamedScopeFilter> map = new LinkedHashMap<>();
         for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {
             NamedScopeFilter old = map.put(filter.toString(), filter);
             if (old != null) {

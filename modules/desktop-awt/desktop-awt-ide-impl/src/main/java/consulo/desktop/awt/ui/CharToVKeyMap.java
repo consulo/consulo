@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Denis Fokin
@@ -25,8 +26,7 @@ class CharToVKeyMap {
 
   private CharToVKeyMap() {}
 
-  private static HashMap<Character, Integer> charToVKeyMap =
-          new HashMap<Character, Integer>();
+  private static Map<Character, Integer> charToVKeyMap = new HashMap<>();
 
   public static Integer get (Character ch) {
     return charToVKeyMap.get(ch);

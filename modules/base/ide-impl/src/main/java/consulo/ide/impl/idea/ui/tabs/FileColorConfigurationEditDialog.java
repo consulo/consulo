@@ -50,7 +50,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     private FileColorConfiguration myConfiguration;
     private JComboBox<NamedScope> myScopeComboBox;
     private final FileColorManager myManager;
-    private HashMap<String, AbstractButton> myColorToButtonMap;
+    private Map<String, AbstractButton> myColorToButtonMap;
     private static final String CUSTOM_COLOR_NAME = "Custom";
     private final Map<String, NamedScope> myScopeById = new HashMap<>();
 

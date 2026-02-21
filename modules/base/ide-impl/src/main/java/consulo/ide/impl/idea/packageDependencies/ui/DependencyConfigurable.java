@@ -39,9 +39,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 public class DependencyConfigurable implements Configurable {
@@ -105,7 +103,7 @@ public class DependencyConfigurable implements Configurable {
     stopTableEditing();
     DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     validationManager.removeAllRules();
-    HashMap<String, PackageSet> unUsed = new HashMap<String, PackageSet>(validationManager.getUnnamedScopes());
+    Map<String, PackageSet> unUsed = new HashMap<>(validationManager.getUnnamedScopes());
     List<DependencyRule> modelItems = new ArrayList<DependencyRule>();
     modelItems.addAll(myDenyRulesModel.getItems());
     modelItems.addAll(myAllowRulesModel.getItems());

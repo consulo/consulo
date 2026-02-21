@@ -178,8 +178,8 @@ public class mxGraphMlUtils {
    * @param asig  Asignation simbol used in 'style'.
    * @return Map with the style properties.
    */
-  public static HashMap<String, Object> getStyleMap(String style, String asig) {
-    HashMap<String, Object> styleMap = new HashMap<String, Object>();
+  public static Map<String, Object> getStyleMap(String style, String asig) {
+    Map<String, Object> styleMap = new HashMap<>();
     String key = "";
     String value = "";
     int index = 0;

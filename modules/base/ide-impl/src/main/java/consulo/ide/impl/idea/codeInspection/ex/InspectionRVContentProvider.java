@@ -130,7 +130,7 @@ public abstract class InspectionRVContentProvider {
       }
     }
     if (supportStructure) {
-      HashMap<String, InspectionModuleNode> moduleNodes = new HashMap<String, InspectionModuleNode>();
+      Map<String, InspectionModuleNode> moduleNodes = new HashMap<>();
       for (String moduleName : module2PackageMap.keySet()) {
         Map<String, InspectionPackageNode> packageNodes = module2PackageMap.get(moduleName);
         for (InspectionPackageNode packageNode : packageNodes.values()) {

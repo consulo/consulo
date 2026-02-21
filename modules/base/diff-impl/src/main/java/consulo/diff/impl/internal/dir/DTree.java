@@ -43,7 +43,7 @@ public class DTree {
   private boolean myExpanded = true;
   @Nullable
   private final DTree myParent;
-  private HashMap<String, DTree> myChildren;
+  private Map<String, DTree> myChildren;
   private String myName;
   private final boolean isContainer;
   private List<DTree> myChildrenList;

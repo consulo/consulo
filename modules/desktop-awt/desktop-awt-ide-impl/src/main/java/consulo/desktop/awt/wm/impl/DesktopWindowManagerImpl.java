@@ -18,6 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import com.sun.jna.platform.WindowUtils;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -26,7 +27,6 @@ import consulo.component.persist.Storage;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
@@ -59,10 +59,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Anton Katilin
@@ -84,9 +81,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
      */
     private final ToolWindowLayout myLayout;
 
-    private final HashMap<Project, DesktopIdeFrameImpl> myProject2Frame;
+    private final Map<Project, DesktopIdeFrameImpl> myProject2Frame;
 
-    private final HashMap<Project, Set<JDialog>> myDialogsToDispose;
+    private final Map<Project, Set<JDialog>> myDialogsToDispose;
 
     private final WindowAdapter myActivationListener;
     private final Application myApplication;
