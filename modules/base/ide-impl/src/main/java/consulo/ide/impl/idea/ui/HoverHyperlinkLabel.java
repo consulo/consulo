@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -34,68 +34,71 @@ import java.util.List;
  * @author Eugene Belyaev
  */
 public class HoverHyperlinkLabel extends JLabel {
-  private String myOriginalText;
-  private final List<HyperlinkListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    private String myOriginalText;
+    private final List<HyperlinkListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public HoverHyperlinkLabel(String text) {
-    this(text, JBColor.BLUE);
-  }
+    public HoverHyperlinkLabel(String text) {
+        this(text, JBColor.BLUE);
+    }
 
-  public HoverHyperlinkLabel(String text, Color color) {
-    super(text);
-    myOriginalText = text;
-    setForeground(color);
-    setupListener();
-  }
+    public HoverHyperlinkLabel(String text, Color color) {
+        super(text);
+        myOriginalText = text;
+        setForeground(color);
+        setupListener();
+    }
 
-  private void setupListener() {
-    addMouseListener(new MouseAdapter() {
-      public void mouseEntered(MouseEvent e) {
-        HoverHyperlinkLabel.super.setText(underlineTextInHtml(myOriginalText));
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      }
+    private void setupListener() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                HoverHyperlinkLabel.super.setText(underlineTextInHtml(myOriginalText));
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
 
-      public void mouseExited(MouseEvent e) {
-        HoverHyperlinkLabel.super.setText(myOriginalText);
-        setCursor(Cursor.getDefaultCursor());
-      }
-    });
+            @Override
+            public void mouseExited(MouseEvent e) {
+                HoverHyperlinkLabel.super.setText(myOriginalText);
+                setCursor(Cursor.getDefaultCursor());
+            }
+        });
 
-    new ClickListener() {
-      @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
-        HyperlinkEvent event = new HyperlinkEvent(HoverHyperlinkLabel.this, HyperlinkEvent.EventType.ACTIVATED, null);
-        for (HyperlinkListener listener : myListeners) {
-          listener.hyperlinkUpdate(event);
+        new ClickListener() {
+            @Override
+            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+                HyperlinkEvent event = new HyperlinkEvent(HoverHyperlinkLabel.this, HyperlinkEvent.EventType.ACTIVATED, null);
+                for (HyperlinkListener listener : myListeners) {
+                    listener.hyperlinkUpdate(event);
+                }
+                return true;
+            }
+        }.installOn(this);
+    }
+
+    @Override
+    public void setText(String text) {
+        if (BasicHTML.isHTMLString(getText())) { // if is currently showing string as html
+            super.setText(underlineTextInHtml(text));
         }
-        return true;
-      }
-    }.installOn(this);
-  }
-
-  public void setText(String text) {
-    if (BasicHTML.isHTMLString(getText())) { // if is currently showing string as html
-      super.setText(underlineTextInHtml(text));
+        else {
+            super.setText(text);
+        }
+        myOriginalText = text;
     }
-    else {
-      super.setText(text);
+
+    private static String underlineTextInHtml(String text) {
+        return "<html><u>" + StringUtil.escapeXml(text) + "</u></html>";
     }
-    myOriginalText = text;
-  }
 
-  @NonNls private static String underlineTextInHtml(String text) {
-    return "<html><u>" + StringUtil.escapeXml(text) + "</u></html>";
-  }
+    public String getOriginalText() {
+        return myOriginalText;
+    }
 
-  public String getOriginalText() {
-    return myOriginalText;
-  }
+    public void addHyperlinkListener(HyperlinkListener listener) {
+        myListeners.add(listener);
+    }
 
-  public void addHyperlinkListener(HyperlinkListener listener) {
-    myListeners.add(listener);
-  }
-
-  public void removeHyperlinkListener(HyperlinkListener listener) {
-    myListeners.remove(listener);
-  }
+    public void removeHyperlinkListener(HyperlinkListener listener) {
+        myListeners.remove(listener);
+    }
 }

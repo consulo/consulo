@@ -30,7 +30,6 @@ import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -66,10 +65,7 @@ import jakarta.inject.Inject;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 @ActionImpl(id = "GotoDeclaration")
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
@@ -147,7 +143,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     @RequiredReadAction
     public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, int offset) {
         PsiElement elementAt =
-            TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED), offset);
+            TargetElementUtil.findTargetElement(editor, Set.of(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED), offset);
         return elementAt instanceof PsiNameIdentifierOwner nameIdentifierOwner ? nameIdentifierOwner : null;
     }
 
@@ -320,7 +316,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             }
         }
 
-        Set<String> flags = ContainerUtil.newHashSet(TargetElementUtil.getAllAccepted());
+        Set<String> flags = new HashSet<>(TargetElementUtil.getAllAccepted());
         flags.remove(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED);
         if (!lookupAccepted) {
             flags.remove(TargetElementUtilExtender.LOOKUP_ITEM_ACCEPTED);

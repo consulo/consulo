@@ -411,10 +411,13 @@ public class DiffDrawUtil {
         int offset2,
         @Nonnull BooleanSupplier condition
     ) {
-        RangeHighlighter marker =
-            editor.getMarkupModel().addRangeHighlighter(offset1, offset2,
-                LINE_MARKER_LAYER, null, HighlighterTargetArea.LINES_IN_RANGE
-            );
+        RangeHighlighter marker = editor.getMarkupModel().addRangeHighlighter(
+            offset1,
+            offset2,
+            LINE_MARKER_LAYER,
+            null,
+            HighlighterTargetArea.LINES_IN_RANGE
+        );
 
         DiffLineSeparatorRenderer renderer = new DiffLineSeparatorRenderer(editor, condition);
         marker.setLineSeparatorPlacement(SeparatorPlacement.TOP);
@@ -474,10 +477,13 @@ public class DiffDrawUtil {
             TextAttributes attributes = isEmptyRange || resolved ? null : getTextAttributes(type, editor, ignored);
             TextAttributes stripeAttributes = isEmptyRange || resolved ? null : getStripeTextAttributes(type, editor);
 
-            RangeHighlighter highlighter =
-                editor.getMarkupModel().addRangeHighlighter(start, end,
-                    DEFAULT_LAYER, attributes, HighlighterTargetArea.LINES_IN_RANGE
-                );
+            RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(
+                start,
+                end,
+                DEFAULT_LAYER,
+                attributes,
+                HighlighterTargetArea.LINES_IN_RANGE
+            );
             highlighters.add(highlighter);
 
             highlighter.setLineMarkerRenderer(new DiffLineMarkerRenderer(
@@ -504,10 +510,13 @@ public class DiffDrawUtil {
             }
 
             if (stripeAttributes != null) {
-                RangeHighlighter stripeHighlighter =
-                    editor.getMarkupModel().addRangeHighlighter(start, end,
-                        STRIPE_LAYER, stripeAttributes, HighlighterTargetArea.LINES_IN_RANGE
-                    );
+                RangeHighlighter stripeHighlighter = editor.getMarkupModel().addRangeHighlighter(
+                    start,
+                    end,
+                    STRIPE_LAYER,
+                    stripeAttributes,
+                    HighlighterTargetArea.LINES_IN_RANGE
+                );
                 highlighters.add(stripeHighlighter);
             }
 
@@ -588,10 +597,13 @@ public class DiffDrawUtil {
             }
 
             TextAttributes stripeAttributes = getStripeTextAttributes(type, editor);
-            RangeHighlighter stripeHighlighter =
-                editor.getMarkupModel().addRangeHighlighter(offset, offset,
-                    STRIPE_LAYER, stripeAttributes, HighlighterTargetArea.LINES_IN_RANGE
-                );
+            RangeHighlighter stripeHighlighter = editor.getMarkupModel().addRangeHighlighter(
+                offset,
+                offset,
+                STRIPE_LAYER,
+                stripeAttributes,
+                HighlighterTargetArea.LINES_IN_RANGE
+            );
 
             return ContainerUtil.list(highlighter, stripeHighlighter);
         }

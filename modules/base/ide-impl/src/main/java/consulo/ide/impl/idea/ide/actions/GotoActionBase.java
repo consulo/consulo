@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.impl.internal.IdeaModalityState;
@@ -29,8 +28,8 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;

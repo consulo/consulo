@@ -2,8 +2,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -21,7 +20,6 @@ import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.PsiSearchHelperEx;
 import consulo.language.psi.PsiElement;
@@ -45,6 +43,7 @@ import consulo.project.ProjectCoreUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.FindUsagesProcessPresentation;
 import consulo.usage.UsageInfo;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.RawFileLoader;
@@ -75,6 +74,7 @@ class FindInProjectTask {
     private static final Logger LOG = Logger.getInstance(FindInProjectTask.class);
     private static final int FILES_SIZE_LIMIT = 70 * 1024 * 1024; // megabytes.
     private final FindModel myFindModel;
+    @Nonnull
     private final Project myProject;
     private final PsiManager myPsiManager;
     @Nullable
@@ -104,7 +104,7 @@ class FindInProjectTask {
         myPsiManager = PsiManager.getInstance(project);
 
         String moduleName = findModel.getModuleName();
-        myModule = moduleName == null ? null : AccessRule.read(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
+        myModule = moduleName == null ? null : ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
         myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         myFileIndex = myModule == null ? myProjectFileIndex : ModuleRootManager.getInstance(myModule).getFileIndex();
 
@@ -126,7 +126,7 @@ class FindInProjectTask {
         try {
             myProgress.setIndeterminate(true);
             myProgress.setTextValue(FindLocalize.progressTextScanningIndexedFiles());
-            Set<VirtualFile> filesForFastWordSearch = AccessRule.read(this::getFilesForFastWordSearch);
+            Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
             myProgress.setIndeterminate(false);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Searching for " + myFindModel.getStringToFind() + " in " + filesForFastWordSearch.size() + " indexed files");
@@ -224,7 +224,7 @@ class FindInProjectTask {
             ));
             myProgress.setText2Value(FindLocalize.findSearchingForStringInFileOccurrencesProgress(occurrenceCount));
 
-            Pair.NonNull<PsiFile, VirtualFile> pair = AccessRule.read(() -> findFile(virtualFile));
+            Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
             if (pair == null) {
                 return true;
             }
@@ -273,7 +273,7 @@ class FindInProjectTask {
                     UIUtil.invokeLaterIfNeeded(() -> {
                         LocalizeValue message = FindLocalize.findExcessiveTotalSizePrompt(
                             UsageViewManagerImpl.presentableSize(myTotalFilesSize.longValue()),
-                            Application.get().getName()
+                            myProject.getApplication().getName()
                         );
                         UsageLimitUtil.Result ret =
                             UsageLimitUtil.showTooManyUsagesWarning(
@@ -314,7 +314,7 @@ class FindInProjectTask {
 
             @Override
             public boolean processFile(@Nonnull VirtualFile virtualFile) {
-                Application.get().runReadAction(() -> {
+                ReadAction.run(() -> {
                     ProgressManager.checkCanceled();
                     if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.test(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
                         virtualFile)) {
@@ -375,7 +375,7 @@ class FindInProjectTask {
         else {
             boolean success = myFileIndex.iterateContent(iterator);
             if (success && globalCustomScope != null && globalCustomScope.isSearchInLibraries()) {
-                VirtualFile[] librarySources = AccessRule.read(() -> {
+                VirtualFile[] librarySources = ReadAction.compute(() -> {
                     OrderEnumerator enumerator =
                         myModule == null ? OrderEnumerator.orderEntries(myProject) : OrderEnumerator.orderEntries(myModule);
                     return enumerator.withoutModuleSourceEntries().withoutDepModules().getSourceRoots();

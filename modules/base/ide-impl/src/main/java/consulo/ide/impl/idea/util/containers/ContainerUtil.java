@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util.containers;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
@@ -28,7 +27,6 @@ import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.PairProcessor;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 import jakarta.annotation.Nonnull;
@@ -611,7 +609,7 @@ public class ContainerUtil extends ContainerUtilRt {
         @Nonnull T[] list2,
         @Nonnull Comparator<? super T> comparator,
         boolean mergeEqualItems,
-        @Nullable Processor<? super T> filter
+        @Nullable Predicate<? super T> filter
     ) {
         int index1 = 0;
         int index2 = 0;
@@ -620,26 +618,26 @@ public class ContainerUtil extends ContainerUtilRt {
         while (index1 < list1.length || index2 < list2.length) {
             if (index1 >= list1.length) {
                 T t = list2[index2++];
-                if (filter != null && !filter.process(t)) {
+                if (filter != null && !filter.test(t)) {
                     continue;
                 }
                 result.add(t);
             }
             else if (index2 >= list2.length) {
                 T t = list1[index1++];
-                if (filter != null && !filter.process(t)) {
+                if (filter != null && !filter.test(t)) {
                     continue;
                 }
                 result.add(t);
             }
             else {
                 T element1 = list1[index1];
-                if (filter != null && !filter.process(element1)) {
+                if (filter != null && !filter.test(element1)) {
                     index1++;
                     continue;
                 }
                 T element2 = list2[index2];
-                if (filter != null && !filter.process(element2)) {
+                if (filter != null && !filter.test(element2)) {
                     index2++;
                     continue;
                 }
@@ -1547,7 +1545,7 @@ public class ContainerUtil extends ContainerUtilRt {
         for (T element : elements) {
             addIfNotNull(list, element);
         }
-        return list.isEmpty() ? ContainerUtil.<T>emptyList() : list;
+        return list.isEmpty() ? List.of() : list;
     }
 
     /**
@@ -1591,13 +1589,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> createMaybeSingletonList(@Nullable T element) {
-        return element == null ? ContainerUtil.<T>emptyList() : Collections.singletonList(element);
+        return element == null ? Collections.emptyList() : Collections.singletonList(element);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> Set<T> createMaybeSingletonSet(@Nullable T element) {
-        return element == null ? Collections.<T>emptySet() : Collections.singleton(element);
+        return element == null ? Collections.emptySet() : Collections.singleton(element);
     }
 
     @Nonnull
@@ -1844,7 +1842,7 @@ public class ContainerUtil extends ContainerUtilRt {
                 result.add(e);
             }
         }
-        return result.isEmpty() ? ContainerUtil.<E>emptyList() : result;
+        return result.isEmpty() ? Collections.emptyList() : result;
     }
 
     @Nonnull
@@ -1945,12 +1943,12 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     @Contract(pure = true)
-    public static <T> boolean processRecursively(T root, @Nonnull PairProcessor<T, List<T>> processor) {
+    public static <T> boolean processRecursively(T root, @Nonnull BiPredicate<T, List<T>> processor) {
         LinkedList<T> list = new LinkedList<>();
         list.add(root);
         while (!list.isEmpty()) {
             T o = list.removeFirst();
-            if (!processor.process(o, list)) {
+            if (!processor.test(o, list)) {
                 return false;
             }
         }

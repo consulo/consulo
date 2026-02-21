@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.findUsages;
 
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -62,7 +61,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -440,7 +438,7 @@ public class FindUsagesManager {
                     PsiElement2UsageTargetAdapter[] secondaryTargets = PsiElement2UsageTargetAdapter.convert(secondaryElements);
                     return createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
                 };
-                UsageSearcher usageSearcher = AccessRule.read(action);
+                UsageSearcher usageSearcher = ReadAction.compute(action);
                 usageSearcher.generate(processor);
             }
         };
@@ -484,7 +482,7 @@ public class FindUsagesManager {
         @Nonnull FindUsagesOptions options,
         PsiFile scopeFile
     ) throws PsiInvalidElementAccessException {
-        AccessRule.read(() -> {
+        ReadAction.run(() -> {
             PsiElement[] primaryElements = PsiElement2UsageTargetAdapter.convertToPsiElements(primaryTargets);
             PsiElement[] secondaryElements = PsiElement2UsageTargetAdapter.convertToPsiElements(secondaryTargets);
 
@@ -499,14 +497,14 @@ public class FindUsagesManager {
         return processor -> {
             ThrowableComputable<PsiElement[], RuntimeException> action3 =
                 () -> PsiElement2UsageTargetAdapter.convertToPsiElements(primaryTargets);
-            PsiElement[] primaryElements = AccessRule.read(action3);
+            PsiElement[] primaryElements = ReadAction.compute(action3);
             ThrowableComputable<PsiElement[], RuntimeException> action2 =
                 () -> PsiElement2UsageTargetAdapter.convertToPsiElements(secondaryTargets);
-            PsiElement[] secondaryElements = AccessRule.read(action2);
+            PsiElement[] secondaryElements = ReadAction.compute(action2);
 
             ThrowableComputable<Project, RuntimeException> action1 =
                 () -> scopeFile != null ? scopeFile.getProject() : primaryElements[0].getProject();
-            Project project = AccessRule.read(action1);
+            Project project = ReadAction.compute(action1);
 
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             LOG.assertTrue(indicator != null, "Must run under progress. see ProgressManager.run*");
@@ -518,7 +516,7 @@ public class FindUsagesManager {
             }
             Predicate<UsageInfo> usageInfoProcessor = new CommonProcessors.UniqueProcessor<>(usageInfo -> {
                 ThrowableComputable<Usage, RuntimeException> action = () -> UsageInfoToUsageConverter.convert(primaryElements, usageInfo);
-                Usage usage = AccessRule.read(action);
+                Usage usage = ReadAction.compute(action);
                 return processor.test(usage);
             });
             Iterable<PsiElement> elements = ContainerUtil.concat(primaryElements, secondaryElements);
@@ -553,7 +551,7 @@ public class FindUsagesManager {
                     ref -> {
                         ThrowableComputable<UsageInfo, RuntimeException> action =
                             () -> !ref.getElement().isValid() ? null : new UsageInfo(ref);
-                        UsageInfo info = AccessRule.read(action);
+                        UsageInfo info = ReadAction.compute(action);
                         return info == null || usageInfoProcessor.test(info);
                     }
                 );

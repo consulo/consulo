@@ -25,14 +25,15 @@ import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.codeEditor.CustomFileDropHandler;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
@@ -42,73 +43,77 @@ import java.util.List;
  * @author yole
  */
 public class FileDropHandler implements EditorDropHandler {
-  private final Editor myEditor;
+    private final Editor myEditor;
 
-  public FileDropHandler(Editor editor) {
-    myEditor = editor;
-  }
-
-  @Override
-  public boolean canHandleDrop(DataFlavor[] transferFlavors) {
-    return transferFlavors != null && FileCopyPasteUtil.isFileListFlavorAvailable(transferFlavors);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void handleDrop(@Nonnull Transferable t, @Nullable Project project, Object editorWindow) {
-    if (project != null) {
-      List<File> fileList = FileCopyPasteUtil.getFileList(t);
-      if (fileList != null) {
-        boolean dropResult = ContainerUtil.process(CustomFileDropHandler.CUSTOM_DROP_HANDLER_EP.getExtensionList(project),
-                                                   handler -> !(handler.canHandle(t, myEditor) && handler.handleDrop(t, myEditor, project)));
-        if (!dropResult) return;
-
-        openFiles(project, fileList, editorWindow);
-      }
+    public FileDropHandler(Editor editor) {
+        myEditor = editor;
     }
-  }
 
-  @RequiredUIAccess
-  private void openFiles(Project project, List<File> fileList, Object editorWindow) {
-    if (editorWindow == null && myEditor != null) {
-      editorWindow = findEditorWindow(project);
+    @Override
+    public boolean canHandleDrop(DataFlavor[] transferFlavors) {
+        return transferFlavors != null && FileCopyPasteUtil.isFileListFlavorAvailable(transferFlavors);
     }
-    LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-    for (File file : fileList) {
-      VirtualFile vFile = fileSystem.refreshAndFindFileByIoFile(file);
-      FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
-      if (vFile != null) {
-        NonProjectFileWritingAccessProvider.allowWriting(vFile);
 
-        if (editorWindow != null) {
-          fileEditorManager.openFileWithProviders(vFile, true, (FileEditorWindow)editorWindow);
-        }
-        else {
-          new OpenFileDescriptorImpl(project, vFile).navigate(true);
-        }
-      }
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void handleDrop(@Nonnull Transferable t, @Nullable Project project, Object editorWindow) {
+        if (project != null) {
+            List<File> fileList = FileCopyPasteUtil.getFileList(t);
+            if (fileList != null) {
+                boolean dropResult = ContainerUtil.process(
+                    CustomFileDropHandler.CUSTOM_DROP_HANDLER_EP.getExtensionList(project),
+                    handler -> !(handler.canHandle(t, myEditor) && handler.handleDrop(t, myEditor, project))
+                );
+                if (!dropResult) {
+                    return;
+                }
 
-  @Nullable
-  private FileEditorWindow findEditorWindow(Project project) {
-    Document document = myEditor.getDocument();
-    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-    if (file != null) {
-      FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
-      FileEditorWindow[] windows = fileEditorManager.getWindows();
-      for (FileEditorWindow window : windows) {
-        FileEditorWithProviderComposite composite = window.findFileComposite(file);
-        if (composite == null) {
-          continue;
+                openFiles(project, fileList, editorWindow);
+            }
         }
-        for (FileEditor editor : composite.getEditors()) {
-          if (editor instanceof TextEditor && ((TextEditor)editor).getEditor() == myEditor) {
-            return window;
-          }
-        }
-      }
     }
-    return null;
-  }
+
+    @RequiredUIAccess
+    private void openFiles(Project project, List<File> fileList, Object editorWindow) {
+        if (editorWindow == null && myEditor != null) {
+            editorWindow = findEditorWindow(project);
+        }
+        LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+        for (File file : fileList) {
+            VirtualFile vFile = fileSystem.refreshAndFindFileByIoFile(file);
+            FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
+            if (vFile != null) {
+                NonProjectFileWritingAccessProvider.allowWriting(vFile);
+
+                if (editorWindow != null) {
+                    fileEditorManager.openFileWithProviders(vFile, true, (FileEditorWindow) editorWindow);
+                }
+                else {
+                    new OpenFileDescriptorImpl(project, vFile).navigate(true);
+                }
+            }
+        }
+    }
+
+    @Nullable
+    private FileEditorWindow findEditorWindow(Project project) {
+        Document document = myEditor.getDocument();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        if (file != null) {
+            FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
+            FileEditorWindow[] windows = fileEditorManager.getWindows();
+            for (FileEditorWindow window : windows) {
+                FileEditorWithProviderComposite composite = window.findFileComposite(file);
+                if (composite == null) {
+                    continue;
+                }
+                for (FileEditor editor : composite.getEditors()) {
+                    if (editor instanceof TextEditor textEditor && textEditor.getEditor() == myEditor) {
+                        return window;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
