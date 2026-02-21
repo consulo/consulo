@@ -25,6 +25,11 @@ import java.io.File;
 import java.io.IOException;
 
 public interface HttpRequestBuilder {
+    /**
+     * By default connection will throw exception if code is not 200
+     */
+    HttpRequestBuilder allowErrorCodes(boolean allowErrorCodes);
+
     HttpRequestBuilder connectTimeout(int value);
 
     HttpRequestBuilder readTimeout(int value);

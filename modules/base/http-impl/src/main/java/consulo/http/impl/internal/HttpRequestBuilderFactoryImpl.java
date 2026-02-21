@@ -143,18 +143,28 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
             if (connection instanceof HttpURLConnection httpURLConnection) {
                 int responseCode = httpURLConnection.getResponseCode();
 
-                if (responseCode < 200 || responseCode >= 300 && responseCode != HttpURLConnection.HTTP_NOT_MODIFIED) {
+                if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
                     httpURLConnection.disconnect();
 
-                    if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-                        url = connection.getHeaderField("Location");
-                        if (url != null) {
-                            continue;
-                        }
+                    url = connection.getHeaderField("Location");
+                    if (url != null) {
+                        continue;
                     }
+                }
 
-                    String message = HttpLocalize.errorConnectionFailedWithHttpCodeN(responseCode).get();
-                    throw new HttpStatusException(message, responseCode, StringUtil.notNullize(url, "Empty URL"));
+                if (responseCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
+                    httpURLConnection.disconnect();
+                    return connection;
+                }
+
+                if (!builder.myAllowErrorCodes) {
+                    if (responseCode < 200 || responseCode >= 300) {
+                        httpURLConnection.disconnect();
+
+                        String message = HttpLocalize.errorConnectionFailedWithHttpCodeN(responseCode).get();
+
+                        throw new HttpStatusException(message, responseCode, StringUtil.notNullize(url, "Empty URL"));
+                    }
                 }
             }
 

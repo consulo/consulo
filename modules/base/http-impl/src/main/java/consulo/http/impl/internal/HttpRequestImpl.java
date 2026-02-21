@@ -161,12 +161,6 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     }
 
     @Override
-    public boolean isSuccessful() throws IOException {
-        URLConnection connection = getConnection();
-        return !(connection instanceof HttpURLConnection) || ((HttpURLConnection) connection).getResponseCode() == 200;
-    }
-
-    @Override
     @Nonnull
     public byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
         int contentLength = getConnection().getContentLength();
