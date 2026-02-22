@@ -790,20 +790,21 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     public final void closeOk(@Nullable InputEvent e) {
         setOk(true);
         if (myOkHandler != null) {
+            Runnable prevFinalRunnable = myFinalRunnable;
             myFinalRunnable = () -> {
                 try {
                     myOkHandler.run();
                 }
                 catch (RuntimeException | Error ex) {
                     try {
-                        myFinalRunnable.run();
+                        prevFinalRunnable.run();
                     }
                     catch (RuntimeException | Error ex2) {
                         ex.addSuppressed(ex2);
                     }
                     throw ex;
                 }
-                myFinalRunnable.run();
+                prevFinalRunnable.run();
             };
         }
         cancel(e);
