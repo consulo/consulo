@@ -19,12 +19,13 @@ package consulo.language.editor.refactoring.classMember;
 import consulo.language.psi.PsiElement;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author dsl
  */
 public class MemberInfoTooltipManager<T extends PsiElement, M extends MemberInfoBase<T>> {
-  private final HashMap<M, String> myTooltips = new HashMap<M, String>();
+  private final Map<M, String> myTooltips = new HashMap<>();
   private final TooltipProvider<T, M> myProvider;
 
   public interface TooltipProvider<T extends PsiElement, M extends MemberInfoBase<T>> {

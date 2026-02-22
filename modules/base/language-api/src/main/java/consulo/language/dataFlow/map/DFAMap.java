@@ -16,7 +16,7 @@ public class DFAMap<V> {
   // if myAll == null && myK == null, the map is empty
   private String myK;
   private V myV;
-  private HashMap<String, V> myAll;
+  private Map<String, V> myAll;
 
   private static final DFAMap ourEmptyMap = new DFAMap() {
     @Override

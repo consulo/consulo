@@ -63,9 +63,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -409,7 +407,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Nonnull
     private DataContext getDataContext() {
-        HashMap<Key, Object> dataMap = new HashMap<>();
+        Map<Key, Object> dataMap = new HashMap<>();
         dataMap.put(Project.KEY, getProject());
         dataMap.put(Module.KEY, getModule());
         dataMap.put(VirtualFile.KEY, getWorkDirectory());

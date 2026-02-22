@@ -45,10 +45,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author anna
@@ -191,7 +188,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
 
         public MyIntroduceLookupExpression(
             String initialName,
-            LinkedHashSet<String> names,
+            Set<String> names,
             PsiNamedElement elementToRename,
             boolean shouldSelectAll,
             String advertisementText

@@ -47,7 +47,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     protected final ContentEntryImpl myContentEntry;
     private final ContentFolderTypeProvider myContentFolderType;
     // LinkedHashMap for saving order
-    private LinkedHashMap<String, Object> myProperties;
+    private Map<String, Object> myProperties;
 
     private Map<Key, Object> myPropertiesByKeyCache;
 

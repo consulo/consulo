@@ -55,10 +55,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -166,7 +163,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
             return;
         }
 
-        LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
+        Map<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
         for (Executor ex : new Executor[]{DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
             ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
             if (runner != null) {

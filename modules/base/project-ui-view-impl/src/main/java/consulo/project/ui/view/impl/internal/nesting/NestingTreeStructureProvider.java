@@ -68,7 +68,7 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
             return children;
         }
 
-        // initial ArrayList size may be not exact, not a big problem
+        // initial list size may be not exact, not a big problem
         Collection<AbstractTreeNode> newChildren = new ArrayList<>(children.size() - parentToChildren.size());
 
         Set<PsiFileNode> childrenToMoveDown = new HashSet<>(parentToChildren.values());

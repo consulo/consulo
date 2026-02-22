@@ -418,7 +418,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     }
 
     protected Map<VirtualFile, T> getNewMappings() {
-        HashMap<VirtualFile, T> map = new HashMap<>();
+        Map<VirtualFile, T> map = new HashMap<>();
         for (Pair<Object, T> p : myModel.data) {
             if (p.second != null) {
                 map.put((VirtualFile) p.first, p.second);

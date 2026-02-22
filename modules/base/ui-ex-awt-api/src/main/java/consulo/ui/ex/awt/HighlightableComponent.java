@@ -370,7 +370,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
   @Nonnull
   public Map<String, Rectangle> getHighlightedRegionsBoundsMap() {
 
-    HashMap<String, Rectangle> map = new HashMap<>();
+    Map<String, Rectangle> map = new HashMap<>();
     FontMetrics defFontMetrics = getFontMetrics(getFont());
 
     int pivot = getTextOffset();

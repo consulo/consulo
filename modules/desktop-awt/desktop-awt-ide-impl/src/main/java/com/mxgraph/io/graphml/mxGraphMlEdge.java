@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Data element in the GML Structure.
@@ -33,7 +34,7 @@ public class mxGraphMlEdge {
   /**
    * Map with the data. The key is the key attribute
    */
-  private HashMap<String, mxGraphMlData> edgeDataMap = new HashMap<String, mxGraphMlData>();
+  private Map<String, mxGraphMlData> edgeDataMap = new HashMap<>();
 
   /**
    * Construct an edge with source and target.
@@ -120,11 +121,11 @@ public class mxGraphMlEdge {
     this.edgeTargetPort = edgeTargetPort;
   }
 
-  public HashMap<String, mxGraphMlData> getEdgeDataMap() {
+  public Map<String, mxGraphMlData> getEdgeDataMap() {
     return edgeDataMap;
   }
 
-  public void setEdgeDataMap(HashMap<String, mxGraphMlData> nodeEdgeMap) {
+  public void setEdgeDataMap(Map<String, mxGraphMlData> nodeEdgeMap) {
     this.edgeDataMap = nodeEdgeMap;
   }
 

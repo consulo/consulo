@@ -56,7 +56,7 @@ public final class HistoryEntry {
   @Nullable
   private FileEditorProvider mySelectedProvider;
   @Nonnull
-  private final HashMap<FileEditorProvider, FileEditorState> myProvider2State;
+  private final Map<FileEditorProvider, FileEditorState> myProvider2State;
 
   @Nullable
   private final Disposable myDisposable;

@@ -158,7 +158,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
 
   private void insertNode(DefaultMutableTreeNode nodeToInsert, DefaultMutableTreeNode rootNode) {
     Enumeration enumeration = rootNode.children();
-    ArrayList children = Collections.list(enumeration);
+    List children = Collections.list(enumeration);
     int index = Collections.binarySearch(children, nodeToInsert, new Comparator<DefaultMutableTreeNode>() {
       @Override
       public int compare(DefaultMutableTreeNode node1, DefaultMutableTreeNode node2) {

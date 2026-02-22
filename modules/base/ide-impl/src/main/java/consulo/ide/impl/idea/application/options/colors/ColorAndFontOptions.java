@@ -178,7 +178,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     public static final String ID = "reference.settingsdialog.IDE.editor.colors";
 
-    private HashMap<String, MyColorScheme> mySchemes;
+    private Map<String, MyColorScheme> mySchemes;
     private MyColorScheme mySelectedScheme;
 
     private boolean mySomeSchemesDeleted = false;

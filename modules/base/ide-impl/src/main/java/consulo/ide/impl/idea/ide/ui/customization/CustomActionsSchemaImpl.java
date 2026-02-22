@@ -66,7 +66,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
 
     private ArrayList<ActionUrl> myActions = new ArrayList<>();
 
-    private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
+    private final Map<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
     private final Map<String, LocalizeValue> myIdToNameList = new HashMap<>();
 

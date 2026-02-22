@@ -118,7 +118,7 @@ public abstract class InplaceRefactoring {
     protected String myOldName;
     protected RangeMarker myBeforeRevert = null;
     protected String myInsertedName;
-    protected LinkedHashSet<String> myNameSuggestions;
+    protected Set<String> myNameSuggestions;
 
     protected StartMarkAction myMarkAction;
     protected PsiElement myScope;
@@ -189,7 +189,7 @@ public abstract class InplaceRefactoring {
 
 
     @RequiredUIAccess
-    public boolean performInplaceRefactoring(LinkedHashSet<String> nameSuggestions) {
+    public boolean performInplaceRefactoring(Set<String> nameSuggestions) {
         myNameSuggestions = nameSuggestions;
         if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(myElementToRename)) {
             return false;

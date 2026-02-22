@@ -92,7 +92,7 @@ public class RootDetectionUtil {
                         }
                         else {
                             for (DetectedLibraryRoot root : roots) {
-                                HashMap<LibraryRootType, String> names = new HashMap<>();
+                                Map<LibraryRootType, String> names = new HashMap<>();
                                 for (LibraryRootType type : root.getTypes()) {
                                     String typeName = detector.getRootTypeName(type);
                                     LOG.assertTrue(
