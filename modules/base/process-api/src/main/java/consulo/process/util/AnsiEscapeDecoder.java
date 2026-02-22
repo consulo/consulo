@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.process.internal;
+package consulo.process.util;
 
 import consulo.platform.LineSeparator;
 import consulo.process.ProcessOutputTypes;
-import consulo.util.collection.ContainerUtil;
+import consulo.process.internal.ProcessInternal;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -172,7 +173,7 @@ public class AnsiEscapeDecoder {
         Key attributes = getCurrentOutputAttributes(outputType);
         if (textAcceptor instanceof ColoredChunksAcceptor) {
             if (buffer == null) {
-                buffer = ContainerUtil.newArrayListWithCapacity(1);
+                buffer = new ArrayList<>(1);
             }
             buffer.add(Pair.create(text, attributes));
         }

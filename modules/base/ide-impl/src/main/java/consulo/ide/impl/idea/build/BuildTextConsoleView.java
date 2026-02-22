@@ -7,7 +7,7 @@ import consulo.build.ui.event.*;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.LazyFileHyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.project.Project;

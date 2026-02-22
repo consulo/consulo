@@ -12,7 +12,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.project.Project;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.SimpleTextAttributes;

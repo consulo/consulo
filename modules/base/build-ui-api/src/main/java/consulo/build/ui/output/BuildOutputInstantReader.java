@@ -8,14 +8,13 @@ import jakarta.annotation.Nullable;
  * @author Vladislav.Soroka
  */
 public interface BuildOutputInstantReader {
-  @Nonnull
-  Object getParentEventId();
+    @Nonnull
+    Object getParentEventId();
 
-  @Nullable
-  //@NlsSafe
-  String readLine();
+    @Nullable
+    String readLine();
 
-  void pushBack();
+    void pushBack();
 
-  void pushBack(int numberOfLines);
+    void pushBack(int numberOfLines);
 }
