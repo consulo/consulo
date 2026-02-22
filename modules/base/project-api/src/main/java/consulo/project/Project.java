@@ -20,6 +20,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
+import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -30,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Project interface class.
  */
-public interface Project extends ComponentManager, WindowOwner {
+public interface Project extends ComponentManager, WindowOwner, CoroutineContextOwner {
   String DIRECTORY_STORE_FOLDER = ".consulo";
 
   Key<Project> KEY = Key.create(Project.class);

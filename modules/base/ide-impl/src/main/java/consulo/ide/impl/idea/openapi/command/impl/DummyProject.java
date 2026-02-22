@@ -15,126 +15,129 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 
 /**
  * @author max
  */
 public class DummyProject extends UserDataHolderBase implements Project {
+    private static class DummyProjectHolder {
+        private static final DummyProject ourInstance = new DummyProject();
+    }
 
-  private static class DummyProjectHolder {
-    private static final DummyProject ourInstance = new DummyProject();
-  }
+    @Nonnull
+    public static Project getInstance() {
+        return DummyProjectHolder.ourInstance;
+    }
 
-  @Nonnull
-  public static Project getInstance() {
-    return DummyProjectHolder.ourInstance;
-  }
+    private DummyProject() {
+    }
 
-  private DummyProject() {
-  }
+    @Override
+    public VirtualFile getProjectFile() {
+        return null;
+    }
 
-  @Override
-  public VirtualFile getProjectFile() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public Application getApplication() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  @Override
-  public Application getApplication() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    @Nonnull
+    public String getName() {
+        return "";
+    }
 
-  @Override
-  @Nonnull
-  public String getName() {
-    return "";
-  }
+    @Override
+    @Nullable
+    @NonNls
+    public String getPresentableUrl() {
+        return null;
+    }
 
-  @Override
-  @Nullable
-  @NonNls
-  public String getPresentableUrl() {
-    return null;
-  }
+    @Override
+    @Nonnull
+    @NonNls
+    public String getLocationHash() {
+        return "dummy";
+    }
 
-  @Override
-  @Nonnull
-  @NonNls
-  public String getLocationHash() {
-    return "dummy";
-  }
+    @Override
+    @Nonnull
+    public String getProjectFilePath() {
+        return "";
+    }
 
-  @Override
-  @Nonnull
-  public String getProjectFilePath() {
-    return "";
-  }
+    @Override
+    public VirtualFile getWorkspaceFile() {
+        return null;
+    }
 
-  @Override
-  public VirtualFile getWorkspaceFile() {
-    return null;
-  }
+    @Override
+    @Nullable
+    public VirtualFile getBaseDir() {
+        return null;
+    }
 
-  @Override
-  @Nullable
-  public VirtualFile getBaseDir() {
-    return null;
-  }
+    @Override
+    public String getBasePath() {
+        return null;
+    }
 
-  @Override
-  public String getBasePath() {
-    return null;
-  }
+    @Override
+    public void save() {
+    }
 
-  @Override
-  public void save() {
-  }
+    @Override
+    public boolean isDisposed() {
+        return false;
+    }
 
-  @Override
-  public boolean isDisposed() {
-    return false;
-  }
+    @Override
+    @Nonnull
+    public BooleanSupplier getDisposed() {
+        return this::isDisposed;
+    }
 
-  @Override
-  @Nonnull
-  public BooleanSupplier getDisposed() {
-    return this::isDisposed;
-  }
+    @Override
+    public boolean isOpen() {
+        return false;
+    }
 
-  @Override
-  public boolean isOpen() {
-    return false;
-  }
+    @Override
+    public boolean isInitialized() {
+        return false;
+    }
 
-  @Override
-  public boolean isInitialized() {
-    return false;
-  }
+    @Override
+    public boolean isDefault() {
+        return false;
+    }
 
-  @Override
-  public boolean isDefault() {
-    return false;
-  }
+    @Override
+    public MessageBus getMessageBus() {
+        return null;
+    }
 
-  @Override
-  public MessageBus getMessageBus() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public CoroutineContext coroutineContext() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public void dispose() {
-  }
+    @Override
+    public void dispose() {
+    }
 }

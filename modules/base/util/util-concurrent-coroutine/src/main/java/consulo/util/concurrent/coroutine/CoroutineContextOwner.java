@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.progress;
+package consulo.util.concurrent.coroutine;
 
-import consulo.ui.UIAccess;
-import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 2025-05-06
+ * @since 2026-02-02
  */
-public interface ProgressBuilder {
+public interface CoroutineContextOwner {
     @Nonnull
-    ProgressBuilder cancelable();
-
-    @Nonnull
-    ProgressBuilder modal();
-
-    @Nonnull
-    <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
-                                     @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
-
+    CoroutineContext coroutineContext();
 }

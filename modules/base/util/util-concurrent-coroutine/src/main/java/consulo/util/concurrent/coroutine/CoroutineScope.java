@@ -29,6 +29,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static consulo.util.concurrent.coroutine.internal.Coroutines.EXCEPTION_HANDLER;
 import static consulo.util.concurrent.coroutine.internal.Coroutines.closeManagedResources;
@@ -84,7 +85,7 @@ public class CoroutineScope extends CoroutineEnvironment {
      *
      * @param context The context to run the scope's coroutines in
      */
-    CoroutineScope(@Nonnull CoroutineContext context) {
+    public CoroutineScope(@Nonnull CoroutineContext context) {
         this.context = Objects.requireNonNull(context, () -> "CoroutineContext required");
         this.context.scopeLaunched(this);
     }
@@ -124,6 +125,14 @@ public class CoroutineScope extends CoroutineEnvironment {
             throw new CoroutineScopeException(e, aScope.failedContinuations);
         }
         aScope.checkThrowErrors();
+    }
+
+    public static void launchAsync(CoroutineContext context, Supplier<Coroutine<?, ?>> supplier) {
+        CoroutineScope aScope = new CoroutineScope(context);
+
+        Coroutine<?, ?> coroutine = supplier.get();
+
+        coroutine.runAsync(aScope, null);
     }
 
     /**

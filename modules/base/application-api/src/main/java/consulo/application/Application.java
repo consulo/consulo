@@ -30,6 +30,8 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -53,7 +55,7 @@ import java.util.function.Supplier;
  * Write actions can be called only from the Swing thread using {@link #runWriteAction} method.
  * If there are read actions running at this moment <code>runWriteAction</code> is blocked until they are completed.
  */
-public interface Application extends ComponentManager {
+public interface Application extends ComponentManager, CoroutineContextOwner {
     Key<Application> KEY = Key.of(Application.class);
 
     @Nonnull
@@ -538,6 +540,12 @@ public interface Application extends ComponentManager {
         return false;
     }
 
+    @Nonnull
+    @Override
+    default CoroutineContext coroutineContext() {
+        throw new UnsupportedOperationException();
+    }
+
     // region Deprecated stuff
 
     /**
@@ -560,12 +568,6 @@ public interface Application extends ComponentManager {
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
     default boolean isInternal() {
-        return false;
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
-    default boolean isEAP() {
         return false;
     }
 
