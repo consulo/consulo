@@ -303,8 +303,10 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             };
 
             try {
-                starter.executeAsync(state, environment).doWhenDone(descriptor -> AppUIUtil.invokeOnEdt(() -> {
-                    if (descriptor != null) {
+                starter.executeAsync(state, environment).whenComplete((descriptor, throwable) -> AppUIUtil.invokeOnEdt(() -> {
+                    if (throwable != null) {
+                        errorHandler.accept(throwable);
+                    } else if (descriptor != null) {
                         RunInfo info = new RunInfo(descriptor, environment.getRunnerAndConfigurationSettings(), environment.getRunner(), executor);
                         myRunningConfigurations.add(info);
                         Disposer.register(descriptor, () -> myRunningConfigurations.remove(info));
@@ -356,7 +358,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                     else {
                         project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
                     }
-                }, project::isDisposed)).doWhenRejectedWithThrowable(errorHandler);
+                }, project::isDisposed));
             }
             catch (ExecutionException e) {
                 errorHandler.accept(e);

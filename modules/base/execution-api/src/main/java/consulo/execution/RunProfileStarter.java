@@ -16,32 +16,27 @@
 package consulo.execution;
 
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.runner.AsyncProgramRunner;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Internal use only. Please use {@link consulo.ide.impl.idea.execution.runners.GenericProgramRunner} or {@link consulo.ide.impl.idea.execution.runners.AsyncProgramRunner}.
- *
+ * Please use {@link GenericProgramRunner} or {@link AsyncProgramRunner}.
+ * <p>
  * The callback used to execute a process from the {@link ExecutionManager#startRunProfile(RunProfileStarter, RunProfileState, ExecutionEnvironment)}*
+ *
  * @author nik
  */
-public abstract class RunProfileStarter {
-  @Nullable
-  @Deprecated
-  public RunContentDescriptor execute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
-    throw new AbstractMethodError();
-  }
-
-  /**
-   * You should NOT throw exceptions in this method.
-   * Instead return {@link AsyncResult#done(Object)} (Throwable)} or call {@link AsyncResult#rejectWithThrowable(Throwable)} 
-   */
-  public AsyncResult<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
-    return AsyncResult.done(execute(state, environment));
-  }
+public interface RunProfileStarter {
+    /**
+     * You should NOT throw exceptions in this method.
+     * Instead return {@link CompletableFuture#complete(Object)}} (Throwable)} or call {@link CompletableFuture#failedFuture(Throwable)}
+     */
+    CompletableFuture<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state,
+                                                         @Nonnull ExecutionEnvironment environment) throws ExecutionException;
 }
