@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
+import consulo.build.ui.issue.BuildIssue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
@@ -158,6 +159,13 @@ public interface BuildEventFactory {
                                 @Nullable Object parentId,
                                 long eventTime,
                                 @Nonnull @BuildEventsNls.Message String message);
+
+    @Nonnull
+    BuildIssueEvent createBuildIssueEvent(
+        @Nonnull Object parentId,
+        @Nonnull BuildIssue buildIssue,
+        @Nonnull MessageEvent.Kind kind
+    );
 
     @Nonnull
     StartBuildEvent createStartBuildEvent(@Nonnull BuildDescriptor descriptor, @Nonnull @BuildEventsNls.Message String message);

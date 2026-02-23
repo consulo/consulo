@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.*;
+import consulo.build.ui.issue.BuildIssue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
@@ -104,6 +105,12 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     @Override
     public StartEvent createStartEvent(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull String message) {
         return new StartEventImpl(eventId, parentId, eventTime, message);
+    }
+
+    @Nonnull
+    @Override
+    public BuildIssueEvent createBuildIssueEvent(@Nonnull Object parentId, @Nonnull BuildIssue buildIssue, @Nonnull MessageEvent.Kind kind) {
+        return new BuildIssueEventImpl(parentId, buildIssue, kind);
     }
 
     @Nonnull
