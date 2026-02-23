@@ -33,7 +33,7 @@ import java.util.List;
 @Singleton
 public class BuildOutputServiceImpl implements BuildOutputService {
     @Override
-    public BuildOutputInstantReader createBuildOutputInstantReader(@Nonnull Object buildId, @Nonnull Object parentEventId, @Nonnull BuildProgressListener buildProgressListener, @Nonnull List<BuildOutputParser> parsers, int pushBackBufferSize, int channelBufferCapacity) {
+    public BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId, @Nonnull Object parentEventId, @Nonnull BuildProgressListener buildProgressListener, @Nonnull List<BuildOutputParser> parsers, int pushBackBufferSize, int channelBufferCapacity) {
         return new BuildOutputInstantReaderImpl(buildId, parentEventId, buildProgressListener, parsers, pushBackBufferSize, channelBufferCapacity);
     }
 }
