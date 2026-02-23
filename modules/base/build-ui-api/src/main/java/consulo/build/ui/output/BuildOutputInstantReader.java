@@ -4,10 +4,15 @@ package consulo.build.ui.output;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.io.Closeable;
+
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildOutputInstantReader {
+    interface Primary extends BuildOutputInstantReader, Closeable, Appendable {
+    }
+
     @Nonnull
     Object getParentEventId();
 

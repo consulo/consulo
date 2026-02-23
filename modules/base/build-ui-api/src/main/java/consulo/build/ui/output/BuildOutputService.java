@@ -28,17 +28,17 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildOutputService {
-    default BuildOutputInstantReader createBuildOutputInstantReader(@Nonnull Object buildId,
-                                                                    @Nonnull Object parentEventId,
-                                                                    @Nonnull BuildProgressListener buildProgressListener,
-                                                                    @Nonnull List<BuildOutputParser> parsers) {
+    default BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId,
+                                                                            @Nonnull Object parentEventId,
+                                                                            @Nonnull BuildProgressListener buildProgressListener,
+                                                                            @Nonnull List<BuildOutputParser> parsers) {
         return createBuildOutputInstantReader(buildId, parentEventId, buildProgressListener, parsers, 50, 64);
     }
 
-    BuildOutputInstantReader createBuildOutputInstantReader(@Nonnull Object buildId,
-                                                            @Nonnull Object parentEventId,
-                                                            @Nonnull BuildProgressListener buildProgressListener,
-                                                            @Nonnull List<BuildOutputParser> parsers,
-                                                            int pushBackBufferSize,
-                                                            int channelBufferCapacity);
+    BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId,
+                                                                    @Nonnull Object parentEventId,
+                                                                    @Nonnull BuildProgressListener buildProgressListener,
+                                                                    @Nonnull List<BuildOutputParser> parsers,
+                                                                    int pushBackBufferSize,
+                                                                    int channelBufferCapacity);
 }

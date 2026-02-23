@@ -12,7 +12,6 @@ import consulo.util.concurrent.ConcurrencyUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader, Closeable, Appendable {
+public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader.Primary {
     private static final Logger LOG = Logger.getInstance(BuildOutputInstantReader.class);
 
     private final Object buildId;
