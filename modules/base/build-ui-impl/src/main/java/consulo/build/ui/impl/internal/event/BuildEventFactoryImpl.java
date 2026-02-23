@@ -27,6 +27,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -45,6 +46,12 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     @Override
     public SuccessResult createSuccessResult(boolean isUpToDate) {
         return new SuccessResultImpl(isUpToDate);
+    }
+
+    @Nonnull
+    @Override
+    public DerivedResult createDerivedResult(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail) {
+        return new DerivedResultImpl(onDefault, onFail);
     }
 
     @Nonnull
@@ -84,8 +91,13 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
 
     @Nonnull
     @Override
-    public MessageEvent createMessageEvent(@Nonnull Object parentId, @Nonnull MessageEvent.Kind kind, @Nonnull NotificationGroup group, @Nonnull String message, @Nullable String detailedMessage) {
-        return new MessageEventImpl(parentId, kind, group, message, detailedMessage);
+    public MessageEvent createMessageEvent(@Nonnull Object parentId,
+                                           @Nonnull MessageEvent.Kind kind,
+                                           @Nonnull NotificationGroup group,
+                                           @Nonnull String message,
+                                           @Nullable String detailedMessage,
+                                           @Nullable Navigatable navigatable) {
+        return new MessageEventImpl(parentId, kind, group, message, detailedMessage, navigatable);
     }
 
     @Nonnull

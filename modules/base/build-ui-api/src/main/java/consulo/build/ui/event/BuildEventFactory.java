@@ -27,6 +27,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -68,6 +69,14 @@ public interface BuildEventFactory {
         }
         return createFailureResult(failures);
     }
+
+    @Nonnull
+    default DerivedResult createDerivedResult() {
+        return createDerivedResult(null, null);
+    }
+
+    @Nonnull
+    DerivedResult createDerivedResult(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail);
 
     @Nonnull
     default Failure createFailure(@BuildEventsNls.Message String message, Throwable error) {
@@ -128,11 +137,21 @@ public interface BuildEventFactory {
                                             @Nonnull EventResult result);
 
     @Nonnull
+    default MessageEvent createMessageEvent(@Nonnull Object parentId,
+                                            @Nonnull MessageEvent.Kind kind,
+                                            @Nonnull NotificationGroup group,
+                                            @Nonnull String message,
+                                            @Nullable String detailedMessage) {
+        return createMessageEvent(parentId, kind, group, message, detailedMessage, null);
+    }
+
+    @Nonnull
     MessageEvent createMessageEvent(@Nonnull Object parentId,
                                     @Nonnull MessageEvent.Kind kind,
                                     @Nonnull NotificationGroup group,
-                                    @Nonnull @BuildEventsNls.Message String message,
-                                    @Nullable @BuildEventsNls.Description String detailedMessage);
+                                    @Nonnull String message,
+                                    @Nullable String detailedMessage,
+                                    @Nullable Navigatable navigatable);
 
     @Nonnull
     StartEvent createStartEvent(@Nonnull Object eventId,

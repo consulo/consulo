@@ -7,9 +7,9 @@ import consulo.build.ui.event.MessageEventResult;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -17,70 +17,86 @@ import java.util.Objects;
  */
 public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent {
 
-  @Nonnull
-  private final Kind myKind;
-  @Nonnull
-  private final NotificationGroup myGroup;
+    @Nonnull
+    private final Kind myKind;
+    @Nonnull
+    private final NotificationGroup myGroup;
+    @Nullable
+    private final Navigatable myNavigatable;
 
-  public MessageEventImpl(@Nonnull Object parentId,
-                          @Nonnull Kind kind,
-                          @Nonnull NotificationGroup group,
-                          @Nonnull @BuildEventsNls.Message String message,
-                          @Nullable @BuildEventsNls.Description String detailedMessage) {
-    super(new Object(), parentId, System.currentTimeMillis(), message);
-    myKind = kind;
-    myGroup = group;
-    setDescription(detailedMessage);
-  }
+    public MessageEventImpl(@Nonnull Object parentId,
+                            @Nonnull Kind kind,
+                            @Nonnull NotificationGroup group,
+                            @Nonnull String message,
+                            @Nullable String detailedMessage) {
+        this(parentId, kind, group, message, detailedMessage, null);
+    }
 
-  @Override
-  public final void setDescription(@Nullable @BuildEventsNls.Description String description) {
-    super.setDescription(description);
-  }
+    public MessageEventImpl(@Nonnull Object parentId,
+                            @Nonnull Kind kind,
+                            @Nonnull NotificationGroup group,
+                            @Nonnull String message,
+                            @Nullable String detailedMessage,
+                            @Nullable Navigatable navigatable) {
+        super(new Object(), parentId, System.currentTimeMillis(), message);
+        myKind = kind;
+        myGroup = group;
+        myNavigatable = navigatable;
+        setDescription(detailedMessage);
+    }
 
-  @Nonnull
-  @Override
-  public Kind getKind() {
-    return myKind;
-  }
+    @Override
+    public final void setDescription(@Nullable @BuildEventsNls.Description String description) {
+        super.setDescription(description);
+    }
 
-  @Nonnull
-  @Override
-  public NotificationGroup getGroup() {
-    return myGroup;
-  }
-
-  @Nullable
-  @Override
-  public Navigatable getNavigatable(@Nonnull Project project) {
-    return null;
-  }
-
-  @Override
-  public MessageEventResult getResult() {
-    return new MessageEventResult() {
-      @Override
-      public Kind getKind() {
+    @Nonnull
+    @Override
+    public Kind getKind() {
         return myKind;
-      }
+    }
 
-      @Override
-      public String getDetails() {
-        return getDescription();
-      }
-    };
-  }
+    @Nonnull
+    @Override
+    public NotificationGroup getGroup() {
+        return myGroup;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MessageEventImpl event = (MessageEventImpl)o;
-    return Objects.equals(getMessage(), event.getMessage()) && Objects.equals(getDescription(), event.getDescription()) && Objects.equals(myGroup, event.myGroup);
-  }
+    @Nullable
+    @Override
+    public Navigatable getNavigatable(@Nonnull Project project) {
+        return myNavigatable;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myGroup, getMessage());
-  }
+    @Override
+    public MessageEventResult getResult() {
+        return new MessageEventResult() {
+            @Override
+            public Kind getKind() {
+                return myKind;
+            }
+
+            @Override
+            public String getDetails() {
+                return getDescription();
+            }
+        };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MessageEventImpl event = (MessageEventImpl) o;
+        return Objects.equals(getMessage(), event.getMessage()) && Objects.equals(getDescription(), event.getDescription()) && Objects.equals(myGroup, event.myGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myGroup, getMessage());
+    }
 }
