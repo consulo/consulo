@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  - Copyright 2013-2017 consulo.io
+  - Copyright 2013-2026 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -26,16 +26,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>consulo-module-content-impl</artifactId>
+    <artifactId>consulo-language-editor-problem-view-impl</artifactId>
     <version>3-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-module-content-api</artifactId>
+            <artifactId>consulo-build-ui-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-problem-view-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

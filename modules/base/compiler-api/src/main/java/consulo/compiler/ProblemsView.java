@@ -15,6 +15,7 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.navigation.Navigatable;
@@ -39,6 +40,8 @@ import java.util.StringTokenizer;
  * @since 2012-09-18
  */
 @ServiceAPI(ComponentScope.PROJECT)
+@Deprecated
+@DeprecationInfo("Prefer Build UI")
 public abstract class ProblemsView {
     @Nonnull
     public static ProblemsView getInstance(@Nonnull Project project) {
