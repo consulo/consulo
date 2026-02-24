@@ -822,7 +822,7 @@ public class CompileDriverImpl implements CompileDriver {
             boolean didSomething = false;
 
             try {
-                DataContext dataContext = createDataContextOverCompileContext(context);
+                DataContext dataContext = createDataContextOverCompileScope(context.getCompileScope());
 
                 for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
                     if (compilerRunner.checkAvailable(dataContext) instanceof CompilerRunner.YesResult) {
@@ -977,12 +977,12 @@ public class CompileDriverImpl implements CompileDriver {
         CompilerUtil.runInContext(context, CompilerLocalize.progressSavingCaches(), () -> context.getDependencyCache().resetState());
     }
 
-    private DataContext createDataContextOverCompileContext(CompileContextEx context) {
+    private DataContext createDataContextOverCompileScope(CompileScope compileScope) {
         return new DataContext() {
             @Nullable
             @Override
             public <T> T getData(@Nonnull Key<T> key) {
-                return context.getUserData(key);
+                return compileScope.getUserData(key);
             }
         };
     }
@@ -997,7 +997,7 @@ public class CompileDriverImpl implements CompileDriver {
                 }
                 else { // refresh is still required
                     try {
-                        DataContext dataContext = createDataContextOverCompileContext(context);
+                        DataContext dataContext = createDataContextOverCompileScope(context.getCompileScope());
 
                         for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
                             if (compilerRunner.checkAvailable(dataContext) instanceof CompilerRunner.YesResult) {
