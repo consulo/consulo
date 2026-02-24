@@ -582,39 +582,33 @@ public class RunConfigurable extends BaseConfigurable {
 
     private JPanel createLeftPanel() {
         initTree();
+
         MyRemoveAction removeAction = new MyRemoveAction();
         MyMoveAction moveUpAction = new MyMoveAction(ExecutionLocalize.moveUpActionName(), PlatformIconGroup.actionsMoveup(), -1);
         MyMoveAction moveDownAction = new MyMoveAction(ExecutionLocalize.moveDownActionName(), PlatformIconGroup.actionsMovedown(), 1);
-        myToolbarDecorator = ToolbarDecorator.createDecorator(myTree)
-            .setAddAction(myAddAction)
-            .setAddActionName(ExecutionLocalize.addNewRunConfigurationAction2Name().get())
-            .setRemoveAction(removeAction)
-            .setRemoveActionUpdater(removeAction)
-            .setRemoveActionName(ExecutionLocalize.removeRunConfigurationActionName().get())
-            .setPanelBorder(JBUI.Borders.empty())
-            .setToolbarBackgroundColor((MorphColor.of(UIUtil::getPanelBackground)))
-            .setMoveUpAction(moveUpAction)
-            .setMoveUpActionName(ExecutionLocalize.moveUpActionName().get())
-            .setMoveUpActionUpdater(moveUpAction)
-            .setMoveDownAction(moveDownAction)
-            .setMoveDownActionName(ExecutionLocalize.moveDownActionName().get())
-            .setMoveDownActionUpdater(moveDownAction)
-            .addExtraAction(new MyCopyAction())
-            .addExtraAction(new MySaveAction())
-            .addExtraAction(new MyEditDefaultsAction())
-            .addExtraAction(new MyCreateFolderAction())
-            .setButtonComparator(
-                ExecutionLocalize.addNewRunConfigurationAction2Name().get(),
-                ExecutionLocalize.removeRunConfigurationActionName().get(),
-                ExecutionLocalize.copyConfigurationActionName().get(),
-                ExecutionLocalize.actionNameSaveConfiguration().get(),
-                ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText().get(),
-                ExecutionLocalize.moveUpActionName().get(),
-                ExecutionLocalize.moveDownActionName().get(),
-                ExecutionLocalize.runConfigurationCreateFolderText().get()
-            )
-            .setForcedDnD();
-        return myToolbarDecorator.createPanel();
+
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+        builder.add(myAddAction);
+        builder.add(removeAction);
+        builder.add(new MyCopyAction());
+        builder.add(new MySaveAction());
+        builder.add(new MyEditDefaultsAction());
+        builder.add(moveUpAction);
+        builder.add(moveDownAction);
+        builder.add(new MyCreateFolderAction());
+
+        ActionToolbar toolbar =
+            ActionToolbarFactory.getInstance().createActionToolbar("RunConfigurableToolbar", builder.build(), ActionToolbar.Style.HORIZONTAL);
+
+        toolbar.setTargetComponent(myTree);
+
+        BorderLayoutPanel panel = new BorderLayoutPanel();
+        panel.addToTop(toolbar.getComponent());
+
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
+        panel.addToCenter(scrollPane);
+
+        return panel;
     }
 
     private JPanel createSettingsPanel() {
@@ -1191,7 +1185,7 @@ public class RunConfigurable extends BaseConfigurable {
         createNewConfiguration(settings, node);
     }
 
-    private class MyToolbarAddAction extends AnAction implements AnActionButtonRunnable {
+    private class MyToolbarAddAction extends DumbAwareAction {
         public MyToolbarAddAction() {
             super(
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
@@ -1204,12 +1198,6 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            showAddPopup(true);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void run(AnActionButton button) {
             showAddPopup(true);
         }
 
@@ -1307,7 +1295,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyRemoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater {
+    private class MyRemoveAction extends DumbAwareAction {
         public MyRemoveAction() {
             super(
                 ExecutionLocalize.removeRunConfigurationActionName(),
@@ -1320,12 +1308,6 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            doRemove();
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void run(AnActionButton button) {
             doRemove();
         }
 
@@ -1432,8 +1414,7 @@ public class RunConfigurable extends BaseConfigurable {
             e.getPresentation().setEnabled(enabled);
         }
 
-        @Override
-        public boolean isEnabled(AnActionEvent e) {
+        private boolean isEnabled(AnActionEvent e) {
             boolean enabled = false;
             TreePath[] selections = myTree.getSelectionPaths();
             if (selections != null) {
@@ -1490,7 +1471,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MySaveAction extends AnAction {
+    private class MySaveAction extends DumbAwareAction {
         public MySaveAction() {
             super(
                 ExecutionLocalize.actionNameSaveConfiguration(),
@@ -1529,7 +1510,7 @@ public class RunConfigurable extends BaseConfigurable {
                 RunnerAndConfigurationSettings settings = configuration.getSettings();
                 enabled = settings != null && settings.isTemporary();
             }
-            e.getPresentation().setEnabledAndVisible(enabled);
+            e.getPresentation().setEnabled(enabled);
         }
     }
 
@@ -1568,7 +1549,7 @@ public class RunConfigurable extends BaseConfigurable {
         return initialPosition - position;
     }
 
-    private class MyMoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater {
+    private class MyMoveAction extends DumbAwareAction {
         private final int myDirection;
 
         protected MyMoveAction(@Nonnull LocalizeValue text, Image icon, int direction) {
@@ -1590,23 +1571,16 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        @RequiredUIAccess
-        public void run(AnActionButton button) {
-            doMove();
-        }
-
-        @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(isEnabled(e));
         }
 
-        @Override
-        public boolean isEnabled(AnActionEvent e) {
+        private boolean isEnabled(AnActionEvent e) {
             return getAvailableDropPosition(myDirection) != null;
         }
     }
 
-    private class MyEditDefaultsAction extends AnAction {
+    private class MyEditDefaultsAction extends DumbAwareAction {
         public MyEditDefaultsAction() {
             super(
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText(),
@@ -1653,7 +1627,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyCreateFolderAction extends AnAction {
+    private class MyCreateFolderAction extends DumbAwareAction {
         private MyCreateFolderAction() {
             super(
                 ExecutionLocalize.runConfigurationCreateFolderText(),
