@@ -25,7 +25,6 @@ import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -33,10 +32,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.Navigatable;
-import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
-import consulo.ui.ex.MessageCategory;
 import consulo.util.collection.OrderedSet;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
@@ -62,11 +59,11 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @Nonnull
     private final Project myProject;
     private final CompilerTask myTask;
-    private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages = new EnumMap<>(CompilerMessageCategory.class);
     private CompileScope myCompileScope;
     private final CompositeDependencyCache myDependencyCache;
     private final boolean myMake;
     private final boolean myIsRebuild;
+    private final CompileCounters myCounters;
 
     private boolean myRebuildRequested = false;
     private String myRebuildReason;
@@ -84,22 +81,26 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @RequiredReadAction
     public CompileContextImpl(
         @Nonnull Project project,
-        CompilerTask compilerSession,
+        CompilerTask task,
         CompileScope compileScope,
         CompositeDependencyCache dependencyCache,
         boolean isMake,
-        boolean isRebuild
+        boolean isRebuild,
+        CompileCounters counters
     ) {
         myProject = project;
-        myTask = compilerSession;
+        myTask = task;
         myCompileScope = compileScope;
         myDependencyCache = dependencyCache;
         myMake = isMake;
         myIsRebuild = isRebuild;
+        myCounters = counters;
         myStartCompilationStamp = System.currentTimeMillis();
         myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
 
         recalculateOutputDirs();
+
+        putUserData(CompileCounters.KEY, counters);
     }
 
     @Override
@@ -167,39 +168,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         }) != null;
     }
 
-    /*
-    private JBZipFile lookupZip(String outputDir) {
-        synchronized (myOpenZipFiles) {
-            JBZipFile zip = myOpenZipFiles.get(outputDir);
-            if (zip == null) {
-                File zipFile = CompilerPathsEx.getZippedOutputPath(myProject, outputDir);
-                try {
-                    try {
-                        zip = new JBZipFile(zipFile);
-                    }
-                    catch (FileNotFoundException e) {
-                        try {
-                            zipFile.createNewFile();
-                            zip = new JBZipFile(zipFile);
-                        }
-                        catch (IOException e1) {
-                            zipFile.getParentFile().mkdirs();
-                            zipFile.createNewFile();
-                            zip = new JBZipFile(zipFile);
-                        }
-                    }
-                    myOpenZipFiles.put(outputDir, zip);
-                }
-                catch (IOException e) {
-                    LOG.info(e);
-                    addMessage(CompilerMessageCategory.ERROR, "Cannot create zip file " + zipFile.getPath() + ": " + e.getMessage(), null, -1, -1);
-                }
-            }
-            return zip;
-        }
-    }
-    */
-
     @Nonnull
     @Override
     public Project getProject() {
@@ -209,15 +177,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @Override
     public CompositeDependencyCache getDependencyCache() {
         return myDependencyCache;
-    }
-
-    @Override
-    public CompilerMessage[] getMessages(CompilerMessageCategory category) {
-        Collection<CompilerMessage> collection = myMessages.get(category);
-        if (collection == null) {
-            return CompilerMessage.EMPTY_ARRAY;
-        }
-        return collection.toArray(new CompilerMessage[collection.size()]);
     }
 
     @Override
@@ -279,59 +238,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public void addMessage(CompilerMessage msg) {
-        if (myProject.getApplication().isUnitTestMode()) {
-            LOG.info("addMessage: " + msg + " this=" + this);
-        }
-
-        Collection<CompilerMessage> messages = myMessages.get(msg.getCategory());
-        if (messages == null) {
-            messages = new LinkedHashSet<>();
-            myMessages.put(msg.getCategory(), messages);
-        }
-        if (messages.add(msg)) {
-            myTask.addMessage(msg);
-        }
-
-        addMessageToProblemsView(msg);
-    }
-
-    private void addMessageToProblemsView(CompilerMessage message) {
-        VirtualFile file = message.getVirtualFile();
-        Navigatable navigatable = message.getNavigatable();
-        if (navigatable == null && file != null) {
-            OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
-            navigatable = factory.newBuilder(file).build();
-        }
-        CompilerMessageCategory category = message.getCategory();
-        int type = translateCategory(category);
-        String[] text = ProblemsView.convertMessage(message.getMessage());
-        LocalizeValue groupName = file != null ? LocalizeValue.of(file.getPresentableUrl()) : category.getPresentableText();
-        ProblemsView.getInstance(myProject)
-            .addMessage(type, text, groupName.get(), navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
-    }
-
-    private static int translateCategory(CompilerMessageCategory category) {
-        return switch (category) {
-            case ERROR -> MessageCategory.ERROR;
-            case WARNING -> MessageCategory.WARNING;
-            case STATISTICS -> MessageCategory.STATISTICS;
-            case INFORMATION -> MessageCategory.INFORMATION;
-        };
+        myTask.addMessage(msg);
     }
 
     @Override
     public int getMessageCount(CompilerMessageCategory category) {
-        if (category != null) {
-            Collection<CompilerMessage> collection = myMessages.get(category);
-            return collection != null ? collection.size() : 0;
-        }
-        int count = 0;
-        for (Collection<CompilerMessage> collection : myMessages.values()) {
-            if (collection != null) {
-                count += collection.size();
-            }
-        }
-        return count;
+        return myCounters.get(category);
     }
 
     @Override

@@ -79,8 +79,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
 
-    private boolean ourDebugMode = false;
-
     private static final YesResult ALWAYS_YES = new YesResult(PlatformIconGroup.actionsCompile());
 
     @Nonnull
@@ -405,7 +403,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
                         boolean hasUnprocessedTraverseRoots = context.getDependencyCache().hasUnprocessedTraverseRoots();
                         if (!isRebuild && (compiledSomethingForThisChunk || hasUnprocessedTraverseRoots)) {
-                            Set<VirtualFile> compiledWithErrors = CacheUtils.getFilesCompiledWithErrors(context);
+                            CompileCounters counters = context.getUserData(CompileCounters.KEY);
+                            Set<VirtualFile> compiledWithErrors = counters == null ? Set.of() : counters.getErrorFiles();
                             filesToRecompile.removeAll(sink.getCompiledSources());
                             filesToRecompile.addAll(compiledWithErrors);
 
@@ -417,17 +416,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                     if (module != null && processedModules.contains(module)) {
                                         it.remove();
                                     }
-                                }
-                            }
-
-                            if (ourDebugMode) {
-                                if (!dependentFiles.isEmpty()) {
-                                    for (VirtualFile dependentFile : dependentFiles) {
-                                        System.out.println("FOUND TO RECOMPILE: " + dependentFile.getPresentableUrl());
-                                    }
-                                }
-                                else {
-                                    System.out.println("NO FILES TO RECOMPILE");
                                 }
                             }
 
@@ -595,7 +583,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 if (toDelete.isEmpty() && toCompile.isEmpty()) {
                     return false;
                 }
-                if (LOG.isDebugEnabled() || ourDebugMode) {
+
+                if (LOG.isDebugEnabled()) {
                     if (!toDelete.isEmpty()) {
                         StringBuilder message = new StringBuilder();
                         message.append("Found items to delete, compiler ").append(compiler.getDescription());
@@ -603,16 +592,10 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             message.append("\n").append(trinity.getFirst());
                         }
                         LOG.debug(message.toString());
-                        if (ourDebugMode) {
-                            System.out.println(message);
-                        }
                     }
                     if (!toCompile.isEmpty()) {
                         String message = "Found items to compile, compiler " + compiler.getDescription();
                         LOG.debug(message);
-                        if (ourDebugMode) {
-                            System.out.println(message);
-                        }
                     }
                 }
                 throw new ExitException(ExitStatus.CANCELLED);

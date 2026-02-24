@@ -192,14 +192,16 @@ public class CompileDriverImpl implements CompileDriver {
         }
         scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
+        CompileCounters counters = new CompileCounters();
         CompilerTask task = new CompilerTask(
             myProject,
             LocalizeValue.localizeTODO("Classes up-to-date check"),
             false,
-            isCompilationStartedAutomatically(scope)
+            isCompilationStartedAutomatically(scope),
+            counters
         );
         CompositeDependencyCache cache = createDependencyCache();
-        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false, counters);
 
         checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
         if (compileContext.isRebuildRequested()) {
@@ -444,18 +446,19 @@ public class CompileDriverImpl implements CompileDriver {
 
         ProblemsView.getInstance(myProject).clearOldMessages();
 
-        LocalizeValue contentName =
-            forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
+        CompileCounters counters = new CompileCounters();
+        LocalizeValue contentName = forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
         Application application = myProject.getApplication();
         boolean isUnitTestMode = application.isUnitTestMode();
-        CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
+
+        CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope), counters);
 
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         FileDocumentManager.getInstance().saveAllDocuments();
 
         CompositeDependencyCache dependencyCache = createDependencyCache();
         CompileContextImpl compileContext =
-            new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild);
+            new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild, counters);
 
         for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
@@ -711,10 +714,8 @@ public class CompileDriverImpl implements CompileDriver {
                     clearAffectedOutputPathsIfPossible(context);
                 }
             }
+
             if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
-                if (LOG.isDebugEnabled()) {
-                    logErrorMessages(context);
-                }
                 return ExitStatus.ERRORS;
             }
 
@@ -922,13 +923,7 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     private static void logErrorMessages(CompileContext context) {
-        CompilerMessage[] errors = context.getMessages(CompilerMessageCategory.ERROR);
-        if (errors.length > 0) {
-            LOG.debug("Errors reported: ");
-            for (CompilerMessage error : errors) {
-                LOG.debug("\t" + error.getMessage());
-            }
-        }
+
     }
 
     private static void walkChildren(VirtualFile from, CompileContext context) {
@@ -1169,16 +1164,19 @@ public class CompileDriverImpl implements CompileDriver {
     public void executeCompileTask(
         CompileTask compileTask,
         CompileScope scope,
-        String contentName,
+        @Nonnull LocalizeValue contentName,
         Runnable onTaskFinished
     ) {
+        CompileCounters counters = new CompileCounters();
+
         CompilerTask task = new CompilerTask(
             myProject,
-            LocalizeValue.localizeTODO(contentName),
+            contentName,
             true,
-            isCompilationStartedAutomatically(scope)
+            isCompilationStartedAutomatically(scope),
+            counters
         );
-        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false, counters);
 
         FileDocumentManager.getInstance().saveAllDocuments();
 

@@ -21,6 +21,7 @@ import consulo.compiler.action.ExcludeFromCompileAction;
 import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
 import consulo.execution.ui.console.RegexpFilter;
 import consulo.execution.ui.console.UrlFilter;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
@@ -94,12 +95,40 @@ public class BuildViewServiceImpl {
     private final BuildProgress<BuildProgressDescriptor> myBuildProgress;
     private final ConsolePrinter myConsolePrinter;
 
-    public BuildViewServiceImpl(Project project, UUID sessionId, String contentName) {
+    public BuildViewServiceImpl(Project project, UUID sessionId, String contentName, CompileCounters counters) {
         myProject = project;
         mySessionId = sessionId;
         myContentName = contentName;
         myBuildProgress = BuildViewManager.getInstance(project).createBuildProgress();
         myConsolePrinter = new ConsolePrinter(myBuildProgress);
+
+        myBuildProgress.addListener((buildId, event) -> {
+            if (event instanceof MessageEvent messageEvent) {
+                CompilerMessageCategory category = toCompilerMessageCategory(messageEvent.getKind());
+
+                counters.inc(category);
+
+                Navigatable navigatable = messageEvent.getNavigatable(project);
+                if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+                    VirtualFile file = openFileDescriptor.getFile();
+
+                    counters.addErrorFile(file);
+
+                    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project) myProject);
+
+                    wolf.queue(file);
+                }
+            }
+        });
+    }
+
+    private CompilerMessageCategory toCompilerMessageCategory(MessageEvent.Kind kind) {
+        return switch (kind) {
+            case ERROR -> CompilerMessageCategory.ERROR;
+            case WARNING -> CompilerMessageCategory.WARNING;
+            case INFO, SIMPLE -> CompilerMessageCategory.INFORMATION;
+            case STATISTICS -> CompilerMessageCategory.STATISTICS;
+        };
     }
 
     public BuildProgress<BuildProgressDescriptor> getBuildProgress() {

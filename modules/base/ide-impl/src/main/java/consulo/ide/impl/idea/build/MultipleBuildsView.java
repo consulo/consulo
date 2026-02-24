@@ -161,7 +161,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
                 }
 
                 BuildView view = myViewMap.computeIfAbsent(buildInfo, info -> {
-                    String selectionStateKey = "build.toolwindow." + myViewManager.getViewName() + ".selection.state";
+                    String selectionStateKey = "build.toolwindow." + myViewManager.getViewId() + ".selection.state";
                     BuildView buildView = new BuildView(myProject, buildInfo, selectionStateKey, myViewManager);
                     Disposer.register(this, buildView);
                     if (contentDescriptor != null) {
@@ -280,7 +280,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
                         ));
                     consoleComponent.add(tb.getComponent(), BorderLayout.WEST);
 
-                    myContent = ContentFactory.getInstance().createContent(consoleComponent, myViewManager.getViewName(), true);
+                    myContent = ContentFactory.getInstance().createContent(consoleComponent, myViewManager.getViewName().get(), true);
                     Disposer.register(myContent, () -> Disposer.dispose(MultipleBuildsView.this));
                     Disposer.register(myContent, () -> myViewManager.onBuildsViewRemove(MultipleBuildsView.this));
                     Image contentIcon = myViewManager.getContentIcon();

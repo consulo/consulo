@@ -75,6 +75,12 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         BuildProgressObservableListener.listen(myProject, this);
     }
 
+    @Nonnull
+    public abstract String getViewId();
+
+    @Nonnull
+    protected abstract LocalizeValue getViewName();
+
     @Override
     public boolean isConsoleEnabledByDefault() {
         return false;
@@ -89,9 +95,6 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     public void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable) {
         myListeners.add(listener, disposable);
     }
-
-    @Nonnull
-    protected abstract String getViewName();
 
     protected Map<BuildDescriptor, BuildView> getBuildsMap() {
         return myBuildsViewValue.getValue().getBuildsMap();
@@ -246,15 +249,15 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
 
         BuildDescriptor buildInfo = buildsMap.keySet().stream().reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2).orElse(null);
         if (buildInfo != null) {
-            @BuildEventsNls.Title String title = buildInfo.getTitle();
-            String viewName = getViewName().split(" ")[0];
+            String title = buildInfo.getTitle();
+            String viewName = getViewName().get().split(" ")[0];
             String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
             if (buildsMap.size() > 1) {
                 return LanguageLocalize.tabTitleMore(tabName, buildsMap.size() - 1).get();
             }
             return tabName;
         }
-        return getViewName();
+        return getViewName().get();
     }
 
     private static class PinBuildViewAction extends DumbAwareAction implements Toggleable {
