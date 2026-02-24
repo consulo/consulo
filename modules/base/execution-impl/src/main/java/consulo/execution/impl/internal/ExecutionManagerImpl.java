@@ -57,7 +57,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -85,8 +84,6 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
     private record InProgressEntry(String executorId, String runnerId) {
     }
-
-    public static final Key<Object> EXECUTION_SESSION_ID_KEY = Key.create("EXECUTION_SESSION_ID_KEY");
 
     private static final Logger LOG = Logger.getInstance(ExecutionManagerImpl.class);
     private static final ProcessHandler[] EMPTY_PROCESS_HANDLERS = new ProcessHandler[0];
@@ -161,7 +158,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                                @Nullable Runnable onCancelRunnable) {
         long id = environment.getExecutionId();
         if (id == 0) {
-            id = environment.assignNewExecutionId();
+            environment.assignNewExecutionId();
         }
 
         RunProfile profile = environment.getRunProfile();
@@ -181,7 +178,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
             AsyncResult<Void> result = AsyncResult.undefined();
 
-            runBeforeTask(beforeRunTasks, 0, id, environment, uiAccess, projectContext, runConfiguration, result);
+            runBeforeTask(beforeRunTasks, 0, environment, uiAccess, projectContext, runConfiguration, result);
 
             if (onCancelRunnable != null) {
                 result.doWhenRejected(() -> uiAccess.give(onCancelRunnable));
@@ -214,7 +211,6 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     @SuppressWarnings("unchecked")
     private void runBeforeTask(@Nonnull List<BeforeRunTask> beforeRunTasks,
                                int index,
-                               long executionSessionId,
                                @Nonnull ExecutionEnvironment environment,
                                @Nonnull UIAccess uiAccess,
                                @Nonnull DataContext dataContext,
@@ -234,24 +230,20 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
         if (provider == null) {
             LOG.warn("Cannot find BeforeRunTaskProvider for id='" + task.getProviderId() + "'");
-            runBeforeTask(beforeRunTasks, index + 1, executionSessionId, environment, uiAccess, dataContext, runConfiguration, finishResult);
+            runBeforeTask(beforeRunTasks, index + 1, environment, uiAccess, dataContext, runConfiguration, finishResult);
             return;
         }
 
         myApplication.executeOnPooledThread(() -> {
-            ExecutionEnvironment taskEnvironment = new ExecutionEnvironmentBuilder(environment).contentToReuse(null).build();
-            taskEnvironment.setExecutionId(executionSessionId);
-            taskEnvironment.putUserData(EXECUTION_SESSION_ID_KEY, executionSessionId);
-
-            AsyncResult<Void> result = provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, taskEnvironment, task);
+            AsyncResult<Void> result = provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, environment, task);
             result.doWhenDone(() -> runBeforeTask(beforeRunTasks,
                 index + 1,
-                executionSessionId,
                 environment,
                 uiAccess,
                 dataContext,
                 runConfiguration,
-                finishResult));
+                finishResult)
+            );
             result.doWhenRejected((Runnable) finishResult::setRejected);
         });
     }
