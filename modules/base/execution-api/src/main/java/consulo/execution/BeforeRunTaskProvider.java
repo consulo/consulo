@@ -44,7 +44,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     public abstract LocalizeValue getName();
 
     @Nullable
-    public abstract Image getIcon();
+    public abstract Image getIcon(@Nonnull RunConfiguration runConfiguration);
 
     @Nonnull
     public LocalizeValue getDescription(T task) {
@@ -52,8 +52,8 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     }
 
     @Nullable
-    public Image getTaskIcon(T task) {
-        return getIcon();
+    public Image getTaskIcon(@Nonnull RunConfiguration runConfiguration, @Nonnull T task) {
+        return getIcon(runConfiguration);
     }
 
     public boolean isConfigurable() {

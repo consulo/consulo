@@ -30,8 +30,8 @@ import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CompileDirty")
-public class CompileDirtyAction extends CompileActionBase {
-    public CompileDirtyAction() {
+public class BuildProjectAction extends CompileActionBase {
+    public BuildProjectAction() {
         super(CompilerLocalize.actionCompileDirtyText(), CompilerLocalize.actionCompileDirtyDescription(), PlatformIconGroup.actionsCompile());
     }
 
@@ -54,8 +54,12 @@ public class CompileDirtyAction extends CompileActionBase {
 
         if (project != null) {
             ExtensionPoint<CompilerRunner> point = project.getExtensionPoint(CompilerRunner.class);
-            CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
-            presentation.setIcon(runner != null ? runner.getBuildIcon() : PlatformIconGroup.actionsCompile());
+            CompilerRunner.Result runner = point.computeSafeIfAny(r -> r.checkAvailable(event.getDataContext()));
+            if (runner instanceof CompilerRunner.YesResult yesResult) {
+                presentation.setIcon(yesResult.buildIcon());
+            } else {
+                presentation.setIcon(PlatformIconGroup.actionsCompile());
+            }
         }
         else {
             presentation.setIcon(PlatformIconGroup.actionsCompile());

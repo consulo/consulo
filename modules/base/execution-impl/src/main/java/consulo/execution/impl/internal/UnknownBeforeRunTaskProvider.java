@@ -63,7 +63,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
 
     @Nullable
     @Override
-    public Image getIcon() {
+    public Image getIcon(RunConfiguration runConfiguration) {
         return PlatformIconGroup.actionsHelp();
     }
 

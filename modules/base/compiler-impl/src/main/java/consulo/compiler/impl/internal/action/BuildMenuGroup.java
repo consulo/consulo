@@ -32,7 +32,7 @@ import consulo.ui.ex.action.IdeActions;
 @ActionImpl(
     id = "BuildMenu",
     children = {
-        @ActionRef(type = CompileDirtyAction.class),
+        @ActionRef(type = BuildProjectAction.class),
         @ActionRef(type = MakeModuleAction.class),
         @ActionRef(type = CompileAction.class),
         @ActionRef(type = AnSeparator.class),

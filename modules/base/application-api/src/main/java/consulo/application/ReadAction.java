@@ -37,7 +37,12 @@ public final class ReadAction<T> {
         });
     }
 
-    public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
+    @Nonnull
+    public static <T, E extends Throwable> T computeNotNull(@Nonnull @RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+        return Application.get().runReadAction(action);
+    }
+
+    public static <T, E extends Throwable> T compute(@Nonnull @RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }
 

@@ -235,7 +235,7 @@ class BeforeRunStepsPanel {
             if (activeProviderKeys.contains(provider.getId()) && provider.isSingleton()) {
                 return;
             }
-            AnAction providerAction = new AnAction(provider.getName(), provider.getName(), provider.getIcon()) {
+            AnAction providerAction = new AnAction(provider.getName(), provider.getName(), provider.getIcon(myRunConfiguration)) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -340,7 +340,7 @@ class BeforeRunStepsPanel {
             BeforeRunTaskProvider<BeforeRunTask> provider =
                 BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), value.getProviderId());
             if (provider != null) {
-                setIcon(provider.getTaskIcon(value));
+                setIcon(provider.getTaskIcon(myRunConfiguration, value));
                 append(provider.getDescription(value));
             }
         }

@@ -21,6 +21,7 @@ import consulo.application.util.AsyncFileService;
 import consulo.compiler.CompileContext;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -157,10 +158,10 @@ public class CompilerUtil {
         }
     }
 
-    public static <T extends Throwable> void runInContext(CompileContext context, String title, ThrowableRunnable<T> action) throws T {
+    public static <T extends Throwable> void runInContext(CompileContext context, LocalizeValue title, ThrowableRunnable<T> action) throws T {
         if (title != null) {
             context.getProgressIndicator().pushState();
-            context.getProgressIndicator().setText(title);
+            context.getProgressIndicator().setText2Value(title);
         }
         try {
             action.run();

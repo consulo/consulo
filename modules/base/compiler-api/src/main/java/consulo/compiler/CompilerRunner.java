@@ -17,6 +17,9 @@ package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
+import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -27,13 +30,26 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface CompilerRunner {
+    sealed interface Result permits YesResult, NoResult {
+    }
+
+    record YesResult(Image buildIcon) implements Result {
+    }
+
+    final class NoResult implements Result {
+        private static final NoResult INSTANCE = new NoResult();
+
+        private NoResult() {
+        }
+    }
+
+    Result NO = NoResult.INSTANCE;
+
+    @Nonnull
+    Result checkAvailable(@Nonnull DataContext dataContext);
+
     @Nonnull
     LocalizeValue getName();
-
-    @Nonnull
-    Image getBuildIcon();
-
-    boolean isAvailable();
 
     default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
     }
@@ -41,6 +57,7 @@ public interface CompilerRunner {
     boolean build(
         CompileDriver compileDriver,
         CompileContextEx context,
+        BuildProgress<BuildProgressDescriptor> buildProgress,
         boolean isRebuild,
         boolean forceCompile,
         boolean onlyCheckStatus

@@ -17,8 +17,8 @@ import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ExitStatus;
-import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
 import consulo.compiler.action.ExcludeFromCompileAction;
+import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
 import consulo.execution.ui.console.RegexpFilter;
 import consulo.execution.ui.console.UrlFilter;
 import consulo.localize.LocalizeValue;
@@ -44,7 +44,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2021-11-28
  */
-public class BuildViewServiceImpl implements BuildViewService {
+public class BuildViewServiceImpl {
     private static class ConsolePrinter {
         @Nonnull
         private final BuildProgress<BuildProgressDescriptor> progress;
@@ -102,7 +102,10 @@ public class BuildViewServiceImpl implements BuildViewService {
         myConsolePrinter = new ConsolePrinter(myBuildProgress);
     }
 
-    @Override
+    public BuildProgress<BuildProgressDescriptor> getBuildProgress() {
+        return myBuildProgress;
+    }
+
     public void onStart(Object sessionId, long startCompilationStamp, Runnable restartWork, ProgressIndicator indicator) {
         List<AnAction> contextActions = getContextActions();
 
@@ -216,7 +219,6 @@ public class BuildViewServiceImpl implements BuildViewService {
         });
     }
 
-    @Override
     public void onEnd(Object sessionId, ExitStatus exitStatus, long endBuildStamp) {
         LocalizeValue message;
         if (exitStatus == ExitStatus.ERRORS) {
@@ -234,7 +236,6 @@ public class BuildViewServiceImpl implements BuildViewService {
         }
     }
 
-    @Override
     public void addMessage(Object sessionId, CompilerMessage compilerMessage) {
         MessageEvent.Kind kind = convertCategory(compilerMessage.getCategory());
         VirtualFile virtualFile = compilerMessage.getVirtualFile();
@@ -332,12 +333,10 @@ public class BuildViewServiceImpl implements BuildViewService {
         };
     }
 
-    @Override
     public void onProgressChange(Object sessionId, ProgressIndicator indicator) {
 
     }
 
-    @Override
     public void registerCloseAction(Runnable onClose) {
     }
 }

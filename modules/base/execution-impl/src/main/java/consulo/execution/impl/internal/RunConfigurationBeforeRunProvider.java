@@ -80,12 +80,12 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     }
 
     @Override
-    public Image getIcon() {
+    public Image getIcon(RunConfiguration runConfiguration) {
         return AllIcons.Actions.Execute;
     }
 
     @Override
-    public Image getTaskIcon(RunConfigurableBeforeRunTask task) {
+    public Image getTaskIcon(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
         if (task.getSettings() == null) {
             return null;
         }

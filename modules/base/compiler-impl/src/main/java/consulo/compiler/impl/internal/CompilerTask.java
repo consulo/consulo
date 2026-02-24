@@ -20,6 +20,8 @@ import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
@@ -41,6 +43,7 @@ import jakarta.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author Eugene Zhuravlev
@@ -54,11 +57,11 @@ public class CompilerTask extends Task.Backgroundable {
     private int myWarningCount = 0;
 
     private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
-    private Runnable myCompileWork;
+    private Consumer<BuildProgress<BuildProgressDescriptor>> myCompileWork;
     private final boolean myCompilationStartedAutomatically;
     private final UUID mySessionId;
 
-    private final BuildViewService myBuildViewService;
+    private final BuildViewServiceImpl myBuildViewService;
     private long myEndCompilationStamp;
     private ExitStatus myExitStatus;
 
@@ -72,8 +75,7 @@ public class CompilerTask extends Task.Backgroundable {
         myWaitForPreviousSession = waitForPreviousSession;
         myCompilationStartedAutomatically = compilationStartedAutomatically;
         mySessionId = UUID.randomUUID();
-        myBuildViewService = project.getApplication().getInstance(BuildViewServiceFactory.class)
-            .createBuildViewService(project, mySessionId, contentName.get());
+        myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName.get());
     }
 
     @Nonnull
@@ -129,7 +131,7 @@ public class CompilerTask extends Task.Backgroundable {
             if (!isHeadless()) {
                 addIndicatorDelegate();
             }
-            myCompileWork.run();
+            myCompileWork.accept(myBuildViewService.getBuildProgress());
         }
         catch (ProcessCanceledException ignored) {
         }
@@ -216,7 +218,7 @@ public class CompilerTask extends Task.Backgroundable {
         wolf.queue(file);
     }
 
-    public void start(Runnable compileWork) {
+    public void start(Consumer<BuildProgress<BuildProgressDescriptor>> compileWork) {
         myCompileWork = compileWork;
         queue();
     }
