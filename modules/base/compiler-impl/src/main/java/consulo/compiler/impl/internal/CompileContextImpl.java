@@ -242,7 +242,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public int getMessageCount(CompilerMessageCategory category) {
+    public int getMessageCount(@Nullable CompilerMessageCategory category) {
         return myCounters.get(category);
     }
 

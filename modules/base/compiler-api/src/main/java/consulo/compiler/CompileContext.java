@@ -65,7 +65,7 @@ public interface CompileContext extends UserDataHolder {
      * @param category the category for which messages are requested.
      * @return the number of messages of the specified category
      */
-    int getMessageCount(CompilerMessageCategory category);
+    int getMessageCount(@Nullable CompilerMessageCategory category);
 
     /**
      * Returns the progress indicator of the compilation process.

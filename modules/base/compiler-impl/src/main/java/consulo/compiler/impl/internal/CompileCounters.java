@@ -18,6 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +40,15 @@ public class CompileCounters {
         myCounters.computeIfAbsent(category, category1 -> new AtomicInteger()).incrementAndGet();
     }
 
-    public int get(CompilerMessageCategory category) {
+    public int get(@Nullable CompilerMessageCategory category) {
+        if (category == null) {
+            int count = 0;
+            for (AtomicInteger value : myCounters.values()) {
+                count += value.get();
+            }
+            return count;
+        }
+
         AtomicInteger val = myCounters.get(category);
         return val == null ? 0 : val.get();
     }
