@@ -15,21 +15,18 @@
  */
 package consulo.localize.internal;
 
+import consulo.localization.internal.JoinedLocalizedValue;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2021-09-24
  */
-public final class JoinedLocalizeValue extends BaseJoinedLocalizeValue {
-    public JoinedLocalizeValue(LocalizeValue[] values) {
-        super(values);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o == this
-            || super.equals(o)
-            && o instanceof JoinedLocalizeValue that;
+@SuppressWarnings("deprecation")
+public final class JoinedLocalizeValue extends JoinedLocalizedValue implements LocalizeValue {
+    public JoinedLocalizeValue(@Nonnull LocalizeManager manager, @Nonnull LocalizeValue[] values) {
+        super(manager, values);
     }
 }

@@ -16,6 +16,7 @@
 package consulo.localize.internal;
 
 import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
@@ -23,20 +24,26 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-20
  */
-public final class DefaultLocalizeKey implements LocalizeKey {
+@SuppressWarnings("deprecation")
+public class DefaultLocalizeKey implements LocalizeKey {
+    @Nonnull
+    private final LocalizeManager myLocalizeManager;
+    @Nonnull
     private final String myLocalizeId;
+    @Nonnull
     private final String myKey;
 
     private LocalizeValue myDefaultValue;
 
-    public DefaultLocalizeKey(String localizeId, String key) {
+    public DefaultLocalizeKey(@Nonnull LocalizeManager manager, @Nonnull String localizeId, @Nonnull String key) {
+        myLocalizeManager = manager;
         myLocalizeId = localizeId;
         myKey = key;
     }
 
     @Nonnull
     @Override
-    public String getLocalizeId() {
+    public String getLocalizationId() {
         return myLocalizeId;
     }
 
@@ -54,15 +61,14 @@ public final class DefaultLocalizeKey implements LocalizeKey {
             return defaultValue;
         }
 
-        defaultValue = new DefaultLocalizeValue(this);
-        myDefaultValue = defaultValue;
+        myDefaultValue = defaultValue = new DefaultLocalizeValue(myLocalizeManager, this);
         return defaultValue;
     }
 
     @Nonnull
     @Override
-    public LocalizeValue getValue(Object[] args) {
-        return new DefaultLocalizeValue(this, args);
+    public LocalizeValue getValue(@Nonnull Object... args) {
+        return new DefaultLocalizeValue(myLocalizeManager, this, args);
     }
 
     @Override
