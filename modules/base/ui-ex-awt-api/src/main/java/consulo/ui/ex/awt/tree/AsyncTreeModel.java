@@ -367,8 +367,8 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
   }
 
   @Nonnull
-  private static Map<Object, Integer> getIndices(@Nonnull List<Node> children, @Nullable ToIntFunction<? super Node> function) {
-    Map<Object, Integer> map = new LinkedHashMap<>();
+  private static SequencedMap<Object, Integer> getIndices(@Nonnull List<Node> children, @Nullable ToIntFunction<? super Node> function) {
+    SequencedMap<Object, Integer> map = new LinkedHashMap<>();
     for (int i = 0; i < children.size(); i++) {
       Node child = children.get(i);
       if (map.containsKey(child.object)) {
@@ -613,7 +613,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
         return;
       }
 
-      Map<Object, Integer> removed = getIndices(oldChildren, null);
+      SequencedMap<Object, Integer> removed = getIndices(oldChildren, null);
       if (newChildren.isEmpty()) {
         oldChildren.forEach(child -> child.removeMapping(node, tree));
         node.setLeaf(loaded.leaf);
@@ -626,7 +626,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
       // remove duplicated nodes during indices calculation
       List<Node> list = new ArrayList<>(newChildren.size());
       Set<Object> reload = new SmartHashSet<>();
-      Map<Object, Integer> inserted = getIndices(newChildren, child -> {
+      SequencedMap<Object, Integer> inserted = getIndices(newChildren, child -> {
         Node found = tree.map.get(child.object);
         if (found == null) {
           tree.map.put(child.object, child);
@@ -658,7 +658,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
         return;
       }
 
-      Map<Object, Integer> contained = new LinkedHashMap<>();
+      SequencedMap<Object, Integer> contained = new LinkedHashMap<>();
       for (Object object : getIntersection(removed, inserted)) {
         Integer oldIndex = removed.remove(object);
         if (oldIndex == null) {

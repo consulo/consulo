@@ -10,6 +10,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SequencedMap;
 
 /**
  * @author Vitaliy.Bibaev
@@ -41,7 +42,7 @@ public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
   }
 
   private static @Nonnull Map<Integer, TraceElement> resolveTrace(@Nonnull ArrayReference keysArray, @Nonnull ArrayReference valuesArray) {
-    Map<Integer, TraceElement> result = new LinkedHashMap<>();
+    SequencedMap<Integer, TraceElement> result = new LinkedHashMap<>();
     if (keysArray.length() == valuesArray.length()) {
       for (int i = 0, size = keysArray.length(); i < size; i++) {
         TraceElement element = resolveTraceElement(keysArray.getValue(i), valuesArray.getValue(i));

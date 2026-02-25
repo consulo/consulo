@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
@@ -24,13 +23,13 @@ import java.util.*;
  * @author Dennis.Ushakov
  */
 public abstract class AbstractMemberInfoStorage<T extends PsiElement, C extends PsiElement, M extends MemberInfoBase<T>> {
-  protected final Map<C, Set<C>> myClassToSubclassesMap = new HashMap<>();
-  private final HashMap<C, Set<C>> myTargetClassToExtendingMap = new HashMap<>();
-  private final HashMap<C, List<M>> myClassToMemberInfoMap = new HashMap<>();
+  protected final Map<C, SequencedSet<C>> myClassToSubclassesMap = new HashMap<>();
+  private final Map<C, Set<C>> myTargetClassToExtendingMap = new HashMap<>();
+  private final Map<C, List<M>> myClassToMemberInfoMap = new HashMap<>();
   protected final C myClass;
   protected final MemberInfoBase.Filter<T> myFilter;
   private final Map<C, List<M>> myTargetClassToIntermediateMemberInfosMap = new HashMap<>();
-  private final Map<C, Set<M>> myTargetClassToMemberInfosListMap = new HashMap<>();
+  private final Map<C, SequencedSet<M>> myTargetClassToMemberInfosListMap = new HashMap<>();
   private final Map<C, Set<M>> myTargetClassToDuplicatedMemberInfosMap = new HashMap<>();
 
   public AbstractMemberInfoStorage(C aClass, MemberInfoBase.Filter<T> memberInfoFilter) {
@@ -90,10 +89,10 @@ public abstract class AbstractMemberInfoStorage<T extends PsiElement, C extends 
   }
 
   private Set<M> getIntermediateClassesMemberInfosList(C targetClass) {
-    Set<M> result = myTargetClassToMemberInfosListMap.get(targetClass);
+    SequencedSet<M> result = myTargetClassToMemberInfosListMap.get(targetClass);
     if(result == null) {
       result = new LinkedHashSet<>();
-      Set<C> subclasses = getSubclasses(targetClass);
+      SequencedSet<C> subclasses = getSubclasses(targetClass);
       for (C subclass : subclasses) {
         List<M> memberInfos = getClassMemberInfos(subclass);
         result.addAll(memberInfos);
@@ -106,8 +105,8 @@ public abstract class AbstractMemberInfoStorage<T extends PsiElement, C extends 
     return result;
   }
 
-  protected Set<C> getSubclasses(C aClass) {
-    Set<C> result = myClassToSubclassesMap.get(aClass);
+  protected SequencedSet<C> getSubclasses(C aClass) {
+    SequencedSet<C> result = myClassToSubclassesMap.get(aClass);
     if(result == null) {
       result = new LinkedHashSet<>();
       myClassToSubclassesMap.put(aClass, result);

@@ -53,10 +53,7 @@ import jakarta.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -66,7 +63,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @ExtensionImpl
 public class ScopeViewPane extends AbstractProjectViewPane {
     private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
-    private Map<String, NamedScopeFilter> myFilters;
+    private SequencedMap<String, NamedScopeFilter> myFilters;
 
     public static final String ID = "Scope";
     private final ProjectView myProjectView;
@@ -167,7 +164,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     @Override
     @Nonnull
     public String[] getSubIds() {
-        Map<String, NamedScopeFilter> map = myFilters;
+        SequencedMap<String, NamedScopeFilter> map = myFilters;
         if (map == null || map.isEmpty()) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
@@ -321,8 +318,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Nonnull
-    private static Map<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
-        Map<String, NamedScopeFilter> map = new LinkedHashMap<>();
+    private static SequencedMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
+        SequencedMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
         for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {
             NamedScopeFilter old = map.put(filter.toString(), filter);
             if (old != null) {

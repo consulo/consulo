@@ -195,7 +195,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @RequiredReadAction
-    protected void performOnInvalidIdentifier(String newName, Set<String> nameSuggestions) {
+    protected void performOnInvalidIdentifier(String newName, SequencedSet<String> nameSuggestions) {
         PsiNamedElement variable = getVariable();
         if (variable != null) {
             int offset = variable.getTextOffset();

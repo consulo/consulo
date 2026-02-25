@@ -163,7 +163,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
             return;
         }
 
-        Map<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
+        SequencedMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
         for (Executor ex : new Executor[]{DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
             ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
             if (runner != null) {
