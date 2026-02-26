@@ -19,11 +19,12 @@ import consulo.util.lang.internal.NaturalComparator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -678,7 +679,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
+    public static boolean startsWithIgnoreCase(@Nonnull String str, @Nonnull String prefix) {
         int stringLength = str.length();
         int prefixLength = prefix.length();
         return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
@@ -688,14 +689,19 @@ public final class StringUtil {
     public static StringBuilder escapeToRegexp(@Nonnull CharSequence text, @Nonnull StringBuilder builder) {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
-            if (c == ' ' || Character.isLetter(c) || Character.isDigit(c) || c == '_') {
-                builder.append(c);
-            }
-            else if (c == '\n') {
+            if (c == '\n') {
                 builder.append("\\n");
             }
-            else {
+            else if (c == '\r') {
+                builder.append("\\r");
+            }
+            else if (".$|()[]{}^?*+\\".indexOf(c) >= 0) {
+                // escaping ']' and '}' is not required for most regex dialects,
+                // but we do it for maximum compatibility
                 builder.append('\\').append(c);
+            }
+            else {
+                builder.append(c);
             }
         }
 
@@ -727,39 +733,6 @@ public final class StringUtil {
     @Contract(pure = true)
     public static String convertLineSeparators(@Nonnull String text) {
         return convertLineSeparators(text, false);
-    }
-
-    @Nonnull
-    @Contract(pure = true)
-    public static String join(@Nullable String... strings) {
-        if (strings == null || strings.length == 0) {
-            return "";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            builder.append(string);
-        }
-        return builder.toString();
-    }
-
-    @Nonnull
-    @Contract(pure = true)
-    public static String join(@Nonnull String[] strings, @Nonnull String separator) {
-        return join(strings, 0, strings.length, separator);
-    }
-
-    @Nonnull
-    @Contract(pure = true)
-    public static String join(@Nonnull String[] strings, int startIndex, int endIndex, @Nonnull String separator) {
-        StringBuilder result = new StringBuilder();
-        for (int i = startIndex; i < endIndex; i++) {
-            if (i > startIndex) {
-                result.append(separator);
-            }
-            result.append(strings[i]);
-        }
-        return result.toString();
     }
 
     @Nonnull
@@ -946,12 +919,18 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static List<String> splitHonorQuotes(@Nonnull String s, char separator) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         StringBuilder builder = new StringBuilder(s.length());
-        boolean inQuotes = false;
+        char quote = 0;
+        boolean isEscaped = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (c == separator && !inQuotes) {
+            boolean isSeparator = c == separator;
+            boolean isQuote = c == '"' || c == '\'';
+            boolean isQuoted = quote != 0;
+            boolean isEscape = c == '\\';
+
+            if (!isQuoted && isSeparator) {
                 if (builder.length() > 0) {
                     result.add(builder.toString());
                     builder.setLength(0);
@@ -959,12 +938,14 @@ public final class StringUtil {
                 continue;
             }
 
-            if ((c == '"' || c == '\'') && !(i > 0 && s.charAt(i - 1) == '\\')) {
-                inQuotes = !inQuotes;
+            if (!isEscaped && isQuote && (quote == 0 || quote == c)) {
+                quote = isQuoted ? 0 : c;
             }
+
+            isEscaped = isEscape && !isEscaped;
+
             builder.append(c);
         }
-
         if (builder.length() > 0) {
             result.add(builder.toString());
         }
@@ -1032,7 +1013,12 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int indexOfAny(@Nonnull CharSequence s, @Nonnull String chars, int start, int end) {
-        for (int i = start; i < end; i++) {
+        if (chars.isEmpty()) {
+            return -1;
+        }
+
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (containsChar(chars, s.charAt(i))) {
                 return i;
             }
@@ -1285,7 +1271,7 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix) {
+    public static String trimEnd(@Nonnull String s, @Nonnull String suffix) {
         return trimEnd(s, suffix, false);
     }
 
@@ -1300,7 +1286,7 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix, boolean ignoreCase) {
+    public static String trimEnd(@Nonnull String s, @Nonnull String suffix, boolean ignoreCase) {
         boolean endsWith = ignoreCase ? endsWithIgnoreCase(s, suffix) : s.endsWith(suffix);
         if (endsWith) {
             return s.substring(0, s.length() - suffix.length());
@@ -1309,7 +1295,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static boolean endsWithIgnoreCase(@NonNls @Nonnull CharSequence text, @NonNls @Nonnull CharSequence suffix) {
+    public static boolean endsWithIgnoreCase(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
         int l1 = text.length();
         int l2 = suffix.length();
         if (l1 < l2) {
@@ -1378,6 +1364,72 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
+    public static String join(@Nullable String... strings) {
+        if (strings == null || strings.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            builder.append(string);
+        }
+        return builder.toString();
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static String join(@Nonnull String[] strings, @Nonnull String separator) {
+        return join(strings, 0, strings.length, separator);
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static String join(@Nonnull String[] strings, int startIndex, int endIndex, @Nonnull String separator) {
+        StringBuilder result = new StringBuilder();
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i > startIndex) {
+                result.append(separator);
+            }
+            result.append(strings[i]);
+        }
+        return result.toString();
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> String join(
+        @Nonnull T[] items,
+        @Nonnull Function<T, String> f,
+        @Nonnull String separator
+    ) {
+        return join(Arrays.asList(items), f, separator);
+    }
+
+    public static String join(@Nonnull Collection<String> strings, @Nonnull String separator) {
+        StringBuilder result = new StringBuilder();
+        join(strings, separator, result);
+        return result.toString();
+    }
+
+    public static void join(@Nonnull Collection<String> strings, @Nonnull String separator, @Nonnull StringBuilder result) {
+        boolean isFirst = true;
+        for (String string : strings) {
+            if (string == null) {
+                continue;
+            }
+
+            if (isFirst) {
+                isFirst = false;
+            }
+            else {
+                result.append(separator);
+            }
+            result.append(string);
+        }
+    }
+
+    @Nonnull
+    @Contract(pure = true)
     public static <T> String join(
         @Nonnull Collection<? extends T> items,
         @Nonnull Function<? super T, String> f,
@@ -1389,31 +1441,57 @@ public final class StringUtil {
         return join((Iterable<? extends T>) items, f, separator);
     }
 
-    public static void join(@Nonnull Collection<String> strings, @Nonnull String separator, @Nonnull StringBuilder result) {
-        boolean isFirst = true;
-        for (String string : strings) {
-            if (string != null) {
-                if (isFirst) {
-                    isFirst = false;
-                }
-                else {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-    }
-
     @Contract(pure = true)
     public static String join(@Nonnull Iterable<?> items, @Nonnull String separator) {
         StringBuilder result = new StringBuilder();
+        join(items, separator, result);
+        return result.toString();
+    }
+
+    @Contract(mutates = "param3")
+    public static void join(@Nonnull Iterable<?> items, @Nonnull String separator, @Nonnull StringBuilder result) {
         for (Object item : items) {
             result.append(item).append(separator);
         }
         if (result.length() > 0) {
             result.setLength(result.length() - separator.length());
         }
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> String join(
+        @Nonnull Iterable<? extends T> items,
+        @Nonnull Function<? super T, String> f,
+        @Nonnull String separator
+    ) {
+        StringBuilder result = new StringBuilder();
+        join(items, f, separator, result);
         return result.toString();
+    }
+
+    @Contract(mutates = "param4")
+    public static <T> void join(
+        @Nonnull Iterable<? extends T> items,
+        @Nonnull Function<? super T, String> f,
+        @Nonnull String separator,
+        @Nonnull StringBuilder result
+    ) {
+        boolean isFirst = true;
+        for (T item : items) {
+            String string = f.apply(item);
+            if (isEmpty(string)) {
+                continue;
+            }
+
+            if (isFirst) {
+                isFirst = false;
+            }
+            else {
+                result.append(separator);
+            }
+            result.append(string);
+        }
     }
 
     /**
@@ -1444,7 +1522,7 @@ public final class StringUtil {
             return s;
         }
         if (s.length() == 1) {
-            return toUpperCase(s).toString();
+            return toUpperCase(s);
         }
 
         // Optimization
@@ -1590,53 +1668,6 @@ public final class StringUtil {
         return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
     }
 
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> String join(
-        @Nonnull T[] items,
-        @Nonnull java.util.function.Function<T, String> f,
-        @Nonnull @NonNls String separator
-    ) {
-        return join(Arrays.asList(items), f, separator);
-    }
-
-    public static <T> void join(
-        @Nonnull Iterable<? extends T> items,
-        @Nonnull java.util.function.Function<? super T, String> f,
-        @Nonnull String separator,
-        @Nonnull StringBuilder result
-    ) {
-        boolean isFirst = true;
-        for (T item : items) {
-            String string = f.apply(item);
-            if (!isEmpty(string)) {
-                if (isFirst) {
-                    isFirst = false;
-                }
-                else {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-    }
-
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> String join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
-        StringBuilder result = new StringBuilder();
-        for (T item : items) {
-            String string = f.apply(item);
-            if (string != null && !string.isEmpty()) {
-                if (result.length() != 0) {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-        return result.toString();
-    }
-
     @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
     public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
         if (s1 == s2) {
@@ -1753,12 +1784,22 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean isJavaIdentifierStart(char c) {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || Character.isJavaIdentifierStart(c);
+        return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || Character.isJavaIdentifierStart(c);
     }
 
     @Contract(pure = true)
     public static boolean isJavaIdentifierPart(char c) {
-        return c >= '0' && c <= '9' || isJavaIdentifierStart(c);
+        return '0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || Character.isJavaIdentifierPart(c);
+    }
+
+    @Contract(pure = true)
+    private static boolean isJavaIdentifierStart(int cp) {
+        return 'a' <= cp && cp <= 'z' || 'A' <= cp && cp <= 'Z' || Character.isJavaIdentifierStart(cp);
+    }
+
+    @Contract(pure = true)
+    private static boolean isJavaIdentifierPart(int cp) {
+        return cp >= '0' && cp <= '9' || cp >= 'a' && cp <= 'z' || cp >= 'A' && cp <= 'Z' || Character.isJavaIdentifierPart(cp);
     }
 
     @Contract(pure = true)
@@ -1767,17 +1808,19 @@ public final class StringUtil {
         if (len == 0) {
             return false;
         }
-
-        if (!isJavaIdentifierStart(text.charAt(0))) {
+        int point = text.codePointAt(0);
+        if (!isJavaIdentifierStart(point)) {
             return false;
         }
+        int i = Character.charCount(point);
 
-        for (int i = 1; i < len; i++) {
-            if (!isJavaIdentifierPart(text.charAt(i))) {
+        while (i < len) {
+            point = text.codePointAt(i);
+            if (!isJavaIdentifierPart(point)) {
                 return false;
             }
+            i += Character.charCount(point);
         }
-
         return true;
     }
 
@@ -1924,7 +1967,8 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull CharSequence s, char c, int start, int end, boolean caseSensitive) {
-        for (int i = start; i < end; i++) {
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (charsMatch(s.charAt(i), c, !caseSensitive)) {
                 return i;
             }
@@ -1934,8 +1978,10 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull char[] s, char c, int start, int end, boolean caseSensitive) {
-        for (int i = start; i < end; i++) {
-            if (charsMatch(s[i], c, !caseSensitive)) {
+        end = Math.min(end, s.length);
+        for (int i = Math.max(start, 0); i < end; i++) {
+            boolean ignoreCase = !caseSensitive;
+            if (charsMatch(s[i], c, ignoreCase)) {
                 return i;
             }
         }
@@ -1954,7 +2000,8 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull CharSequence s, char c, int start, int end) {
-        for (int i = start; i < end; i++) {
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (s.charAt(i) == c) {
                 return i;
             }
@@ -2294,7 +2341,8 @@ public final class StringUtil {
      */
     @Contract(pure = true)
     public static int lastIndexOf(@Nonnull CharSequence s, char c, int start, int end) {
-        for (int i = end - 1; i >= start; i--) {
+        start = Math.max(start, 0);
+        for (int i = Math.min(end, s.length()) - 1; i >= start; i--) {
             if (s.charAt(i) == c) {
                 return i;
             }
@@ -2370,7 +2418,11 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean startsWith(@Nonnull CharSequence text, int startIndex, @Nonnull CharSequence prefix) {
-        int l1 = text.length() - startIndex;
+        int tl = text.length();
+        if (startIndex < 0 || startIndex > tl) {
+            throw new IllegalArgumentException("Index is out of bounds: " + startIndex + ", length: " + tl);
+        }
+        int l1 = tl - startIndex;
         int l2 = prefix.length();
         if (l1 < l2) {
             return false;
@@ -2381,7 +2433,6 @@ public final class StringUtil {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -2411,12 +2462,7 @@ public final class StringUtil {
         }
 
         // hope long words are rare
-        words.sort(new Comparator<String>() {
-            @Override
-            public int compare(@Nonnull String o1, @Nonnull String o2) {
-                return o2.length() - o1.length();
-            }
-        });
+        words.sort((o1, o2) -> o2.length() - o1.length());
         return words;
     }
 
@@ -2577,7 +2623,7 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String formatDuration(long duration) {
-        return formatDuration(duration, null);
+        return formatDuration(duration, " ");
     }
 
     @Nonnull
@@ -2586,14 +2632,15 @@ public final class StringUtil {
         return formatValue(
             duration,
             " ",
-            new String[]{"ms", "s", "m", "h", "d", "w", "mo", "yr", "c", "ml", "ep"},
-            new long[]{1000, 60, 60, 24, 7, 4, 12, 100, 10, 10000},
+            new String[]{"ms", "s", "m", "h", "d"},
+            new long[]{1000, 60, 60, 24},
             spaceBeforeUnits
         );
     }
 
     @Nonnull
     private static String formatValue(long value, String partSeparator, String[] units, long[] multipliers, String spaceBeforeUnits) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.US));
         StringBuilder sb = new StringBuilder();
         long count = value;
         long remainder = 0;
@@ -2621,7 +2668,7 @@ public final class StringUtil {
             sb.insert(0, count);
         }
         else if (remainder > 0) {
-            sb.append(String.format(Locale.US, "%.2f", count + (double) remainder / multipliers[i - 1]));
+            sb.append(decimalFormat.format(count + (double) remainder / multipliers[i - 1]));
             if (spaceBeforeUnits != null) {
                 sb.append(spaceBeforeUnits);
             }
@@ -2774,27 +2821,73 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String formatFileSize(long fileSize) {
-        return formatFileSize(fileSize, null);
+        return formatFileSize(fileSize, " ", -1);
     }
 
     /**
      * Formats the specified file size as a string.
      *
-     * @param fileSize         the size to format.
-     * @param spaceBeforeUnits space to be used between counts and measurement units
+     * @param fileSize      the size to format.
+     * @param unitSeparator space to be used between counts and measurement units
      * @return the size formatted as a string.
      * @since 5.0.1
      */
     @Nonnull
     @Contract(pure = true)
-    public static String formatFileSize(long fileSize, String spaceBeforeUnits) {
-        return formatValue(
-            fileSize,
-            null,
-            new String[]{"B", "K", "M", "G", "T", "P", "E"},
-            new long[]{1000, 1000, 1000, 1000, 1000, 1000},
-            spaceBeforeUnits
-        );
+    public static String formatFileSize(long fileSize, @Nonnull String unitSeparator) {
+        return formatFileSize(fileSize, unitSeparator, -1);
+    }
+
+    /**
+     * Formats the specified file size as a string.
+     *
+     * @param fileSize      the size to format.
+     * @param unitSeparator space to be used between counts and measurement units
+     * @param rank          preferred rank. 0 - bytes, 1 - kilobytes, ..., 6 - exabytes. If less than 0 then picked automatically
+     * @return the size formatted as a string.
+     * @since 5.0.1
+     */
+    @Nonnull
+    @Contract(pure = true)
+    public static String formatFileSize(long fileSize, @Nonnull String unitSeparator, int rank) {
+        return formatFileSize(fileSize, unitSeparator, rank, false);
+    }
+
+    /**
+     * @param fileSize               - size of the file in bytes
+     * @param unitSeparator          - separator inserted between value and unit
+     * @param rank                   - preferred rank. 0 - bytes, 1 - kilobytes, ..., 6 - exabytes. If less than 0 then picked automatically
+     * @param fixedFractionPrecision - keep the fraction precision. if true, a number like 5.50 will be kept as it is, otherwise it will be
+     *                               rounded to 5.5
+     * @return string with formatted file size
+     */
+    @Nonnull
+    @Contract(pure = true)
+    public static String formatFileSize(long fileSize, @Nonnull String unitSeparator, int rank, boolean fixedFractionPrecision) {
+        if (fileSize < 0) {
+            throw new IllegalArgumentException("Invalid value: " + fileSize);
+        }
+        if (fileSize == 0) {
+            return '0' + unitSeparator + 'B';
+        }
+        if (rank < 0) {
+            rank = rankForFileSize(fileSize);
+        }
+        double value = fileSize / Math.pow(1000, rank);
+        String[] units = {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+        DecimalFormat decimalFormat = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.US));
+        if (fixedFractionPrecision) {
+            decimalFormat.setMinimumFractionDigits(2);
+        }
+        return decimalFormat.format(value) + unitSeparator + units[rank];
+    }
+
+    @Contract(pure = true)
+    public static int rankForFileSize(long fileSize) {
+        if (fileSize < 0) {
+            throw new IllegalArgumentException("Invalid value: " + fileSize);
+        }
+        return (int) ((Math.log10(fileSize) + 0.0000021714778384307465) / 3);  // (3 - Math.log10(999.995))
     }
 
     /**
@@ -2815,14 +2908,16 @@ public final class StringUtil {
         return -1;
     }
 
-    @NonNls
-    private static final String[] ourPrepositions =
-        {"a", "an", "and", "as", "at", "but", "by", "down", "for", "from", "if", "in", "into", "not", "of", "on", "onto", "or", "out", "over", "per", "nor", "the", "to", "up", "upon", "via",
-            "with"};
+    private static final String[] PREPOSITIONS = {
+        "a", "an", "and", "as", "at", "but", "by", "down",
+        "for", "from", "if", "in", "into", "not", "of", "on",
+        "onto", "or", "out", "over", "per", "nor", "the", "to",
+        "up", "upon", "via", "with"
+    };
 
     @Contract(pure = true)
     public static boolean isPreposition(@Nonnull String s, int firstChar, int lastChar) {
-        return isPreposition(s, firstChar, lastChar, ourPrepositions);
+        return isPreposition(s, firstChar, lastChar, PREPOSITIONS);
     }
 
     @Contract(pure = true)
@@ -2857,13 +2952,13 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String wordsToBeginFromUpperCase(@Nonnull String s) {
-        return fixCapitalization(s, ourPrepositions, true);
+        return fixCapitalization(s, PREPOSITIONS, true);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static String wordsToBeginFromLowerCase(@Nonnull String s) {
-        return fixCapitalization(s, ourPrepositions, false);
+        return fixCapitalization(s, PREPOSITIONS, false);
     }
 
     @Nonnull
@@ -2926,7 +3021,7 @@ public final class StringUtil {
     }
 
     /**
-     * @return list containing all words in {@code text}, or {@link ContainerUtil#emptyList()} if there are none.
+     * @return list containing all words in {@code text}, or {@link List#of()} if there are none.
      * The <b>word</b> here means the maximum sub-string consisting entirely of characters which are <code>Character.isJavaIdentifierPart(c)</code>.
      */
     @Nonnull
@@ -3175,22 +3270,45 @@ public final class StringUtil {
         if (text == null) {
             return null;
         }
-
-        Matcher matcher = UNICODE_CHAR.matcher(text);
-        if (!matcher.find()) {
-            return text; // fast path
-        }
-
-        matcher.reset();
-        int lastEnd = 0;
+        int length = text.length();
         StringBuilder sb = new StringBuilder(text.length());
-        while (matcher.find()) {
-            sb.append(text.substring(lastEnd, matcher.start()));
-            char c = (char) Integer.parseInt(matcher.group().substring(2), 16);
-            sb.append(c);
-            lastEnd = matcher.end();
+        outer:
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+            if (c == '\\') {
+                int j = i + 1;
+                boolean escape = true;
+                while (j < length && (c = text.charAt(j)) == '\\') {
+                    escape = !escape;
+                    j++;
+                }
+                if (!escape || c != 'u') {
+                    sb.append(text, i, j);
+                    i = j - 1;
+                    continue;
+                }
+                while (j < length && text.charAt(j) == 'u') j++;
+                if (j > length - 4) {
+                    sb.append(text, i, j);
+                    i = j - 1;
+                    continue;
+                }
+                for (int k = 0; k < 4; k++) {
+                    if (!isHexDigit(text.charAt(j + k))) {
+                        sb.append(text, i, j + k);
+                        i = j + k - 1;
+                        continue outer;
+                    }
+                }
+                char d = (char) Integer.parseInt(text.substring(j, j + 4), 16);
+                sb.append(d);
+                i = j + 3;
+            }
+            else {
+                sb.append(c);
+            }
         }
-        sb.append(text.substring(lastEnd, text.length()));
+
         return sb.toString();
     }
 
@@ -3494,13 +3612,18 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
+        if (start < 0 || end > text.length()) {
+            throw new IllegalArgumentException("Invalid offsets: start=" + start + "; end=" + end + "; text.length()=" + text.length());
+        }
+
         int suffixLen = suffix.length();
-        if (end < suffixLen) {
+        int delta = end - suffixLen;
+        if (delta < start) {
             return false;
         }
 
-        for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
-            if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) {
+        for (int i = 0; i < suffixLen; i++) {
+            if (text.charAt(delta + i) != suffix.charAt(i)) {
                 return false;
             }
         }
