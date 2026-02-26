@@ -24,6 +24,77 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class StringUtilTest {
     @Test
+    public void testContainsIgnoreCase() {
+        assertThat(StringUtil.containsIgnoreCase("Foobar", "foo")).isTrue();
+        assertThat(StringUtil.containsIgnoreCase("Foobar", "bar")).isTrue();
+        assertThat(StringUtil.containsIgnoreCase("Foobar", "qux")).isFalse();
+    }
+
+    @Test
+    public void testEscapePattern() {
+        assertThat(StringUtil.escapePattern("{ '")).isEqualTo("'{' ''");
+        assertThat(StringUtil.escapePattern("'{")).isEqualTo("'''{'");
+    }
+
+    @Test
+    public void testGetWordsIn() {
+        assertThat(StringUtil.getWordsIn("")).isEmpty();
+        assertThat(StringUtil.getWordsIn("f")).containsExactly("f");
+        assertThat(StringUtil.getWordsIn("fooBar baz")).containsExactly("fooBar", "baz");
+        assertThat(StringUtil.getWordsIn("fooBar#baz")).containsExactly("fooBar", "baz");
+    }
+
+    @Test
+    public void testGetWordsInStringLongestFirst() {
+        assertThat(StringUtil.getWordsInStringLongestFirst("")).isEmpty();
+        assertThat(StringUtil.getWordsInStringLongestFirst("baz fooBar")).containsExactly("fooBar", "baz");
+    }
+
+    @Test
+    public void testIndexOfIgnoreCaseString() {
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", Integer.MIN_VALUE)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", -1)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", 0)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", 1)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", 100)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "", -1)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "", 0)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", "", 100)).isEqualTo(6);
+    }
+
+    @Test
+    public void testIndexOfIgnoreCaseChar() {
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', Integer.MIN_VALUE)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', -1)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', 0)).isEqualTo(0);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', 1)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', Integer.MAX_VALUE)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'z', -1)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'z', 0)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'z', Integer.MAX_VALUE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void testLastIndexOfIgnoreCaseChar() {
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', Integer.MAX_VALUE)).isEqualTo(3);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', 6)).isEqualTo(3);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', 3)).isEqualTo(3);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', 2)).isEqualTo(-1);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', Integer.MIN_VALUE)).isEqualTo(-1);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'z', Integer.MAX_VALUE)).isEqualTo(-1);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'z', 6)).isEqualTo(-1);
+        assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'z', Integer.MIN_VALUE)).isEqualTo(-1);
+    }
+
+    @Test
+    public void testStripHtml() {
+        assertThat(StringUtil.stripHtml("<html>foo<br/>bar</html>", false)).isEqualTo("foobar");
+        assertThat(StringUtil.stripHtml("<>foobar<>", false)).isEqualTo("foobar");
+        assertThat(StringUtil.stripHtml("<div\nstyle=\"foo\">foobar</div>", true)).isEqualTo("foobar");
+        assertThat(StringUtil.stripHtml("<html>foo<br/>bar<br></html>", true)).isEqualTo("foo\n\nbar\n\n");
+    }
+
+    @Test
     public void testTrimLeadingChar() {
         doTestTrimLeading("", "");
         doTestTrimLeading("", " ");
@@ -436,27 +507,49 @@ public class StringUtilTest {
 //    }
 
     @Test
-    @SuppressWarnings("StringToUpperCaseOrToLowerCaseWithoutLocale")
-    public void testReplaceReturnReplacementIfTextEqualsToReplacedText() {
-        String str = "/tmp";
-        assertThat(StringUtil.replace(
-            "$PROJECT_FILE$",
-            "$PROJECT_FILE$".toLowerCase().toUpperCase() /* ensure new String instance */,
-            str
-        )).isSameAs(str);
-    }
-
-    @Test
     public void testReplace() {
-        assertThat(StringUtil.replace("$PROJECT_FILE$/filename", "$PROJECT_FILE$", "/tmp")).isEqualTo("/tmp/filename");
+        String pattern = "$PROJECT_FILE$".toLowerCase().toUpperCase();
+        String replacement = "/tmp";
+        assertThat(StringUtil.replace("$PROJECT_FILE$/filename", pattern, replacement)).isEqualTo("/tmp/filename");
+        String tooShortFrom = "/filename";
+        assertThat(StringUtil.replace(tooShortFrom, pattern, replacement)).isSameAs(tooShortFrom);
+        String noPatternFrom = "/path/filename";
+        assertThat(StringUtil.replace(noPatternFrom, pattern, replacement)).isSameAs(noPatternFrom);
+        String onlyPatternFrom = "$PROJECT_FILE$";
+        assertThat(StringUtil.replace(onlyPatternFrom, pattern, replacement)).isSameAs(replacement);
     }
 
     @Test
-    public void testReplaceListOfChars() {
-        assertThat(StringUtil.replace("$PROJECT_FILE$/filename", List.of("$PROJECT_FILE$"), List.of("/tmp")))
-            .isEqualTo("/tmp/filename");
-        assertThat(StringUtil.replace("/someTextBefore/$PROJECT_FILE$/filename", List.of("$PROJECT_FILE$"), List.of("tmp")))
-            .isEqualTo("/someTextBefore/tmp/filename");
+    public void testReplaceIgnoreCase() {
+        String pattern = "$PROJECT_FILE$".toLowerCase().toUpperCase();
+        String replacement = "/tmp";
+        assertThat(StringUtil.replaceIgnoreCase("$project_file$/filename", pattern, replacement)).isEqualTo("/tmp/filename");
+        String tooShortFrom = "/filename";
+        assertThat(StringUtil.replaceIgnoreCase(tooShortFrom, pattern, replacement)).isSameAs(tooShortFrom);
+        String noPatternFrom = "/path/filename";
+        assertThat(StringUtil.replaceIgnoreCase(noPatternFrom, pattern, replacement)).isSameAs(noPatternFrom);
+        String onlyPatternFrom = "$project_file$";
+        assertThat(StringUtil.replaceIgnoreCase(onlyPatternFrom, pattern, replacement)).isSameAs(replacement);
+    }
+
+    @Test
+    public void testReplaceArray() {
+        assertThat(StringUtil.replace("&\"", new String[]{"&", "\""}, new String[]{"&amp;", "&quot;"}))
+            .isEqualTo("&amp;&quot;");
+        assertThat(StringUtil.replace("foobar", new String[]{"foobar", "foo", "bar"}, new String[]{"1", "2", "3"}))
+            .isEqualTo("1");
+        assertThat(StringUtil.replace("foobar", new String[]{"foo", "bar", "foobar"}, new String[]{"2", "3", "1"}))
+            .isEqualTo("23");
+    }
+
+    @Test
+    public void testReplaceList() {
+        assertThat(StringUtil.replace("&\"", List.of("&", "\""), List.of("&amp;", "&quot;")))
+            .isEqualTo("&amp;&quot;");
+        assertThat(StringUtil.replace("foobar", List.of("foobar", "foo", "bar"), List.of("1", "2", "3")))
+            .isEqualTo("1");
+        assertThat(StringUtil.replace("foobar", List.of("foo", "bar", "foobar"), List.of("2", "3", "1")))
+            .isEqualTo("23");
     }
 
     @Test
