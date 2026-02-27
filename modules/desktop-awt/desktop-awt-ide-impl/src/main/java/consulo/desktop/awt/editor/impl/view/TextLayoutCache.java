@@ -50,7 +50,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
   private int myDocumentChangeOldEndLine;
 
   @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private Map<LineLayout.Chunk, Object> myLaidOutChunks =
+  private SequencedMap<LineLayout.Chunk, Object> myLaidOutChunks =
           new LinkedHashMap<>(MAX_CHUNKS_IN_ACTIVE_EDITOR, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<LineLayout.Chunk, Object> eldest) {

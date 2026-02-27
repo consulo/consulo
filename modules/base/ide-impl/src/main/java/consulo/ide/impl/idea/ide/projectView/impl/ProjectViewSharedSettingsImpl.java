@@ -29,11 +29,12 @@ import jakarta.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.SequencedMap;
 
 /**
+ * from kotlin
+ * @author Konstantin Bulenkov
  * @author VISTALL
- * <p>
- * from kotlin by @author Konstantin Bulenkov
  */
 @Singleton
 @ServiceImpl
@@ -50,7 +51,7 @@ public class ProjectViewSharedSettingsImpl implements PersistentStateComponent<P
     private boolean myAutoscrollToSource = false;
     private boolean myFoldersAlwaysOnTop = true;
 
-    private Map<String, Object> myProperties = new LinkedHashMap<>();
+    private LinkedHashMap<String, Object> myProperties = new LinkedHashMap<>();
 
     @Override
     @Nonnull

@@ -188,7 +188,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
 
         public MyIntroduceLookupExpression(
             String initialName,
-            Set<String> names,
+            SequencedSet<String> names,
             PsiNamedElement elementToRename,
             boolean shouldSelectAll,
             String advertisementText

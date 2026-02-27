@@ -31,7 +31,7 @@ import java.util.*;
 public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
   private final CompositeElement myParent;
   private final List<CompositeElement> mySuperParents;
-  private final Map<TreeElement, Integer> myInitialLengths = new LinkedHashMap<>();
+  private final SequencedMap<TreeElement, Integer> myInitialLengths = new LinkedHashMap<>();
   private final Set<TreeElement> myContentChangeChildren = new HashSet<>();
   private Map<TreeElement, ChangeInfoImpl> myChanges;
 

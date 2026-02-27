@@ -155,7 +155,7 @@ class BeforeRunStepsPanel {
 
         List<BeforeRunTask> tasks = myModel.getItems();
         if (!tasks.isEmpty()) {
-            Map<BeforeRunTaskProvider, Integer> counter = new LinkedHashMap<>();
+            SequencedMap<BeforeRunTaskProvider, Integer> counter = new LinkedHashMap<>();
             for (BeforeRunTask task : tasks) {
                 BeforeRunTaskProvider<BeforeRunTask> provider =
                     BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), task.getProviderId());

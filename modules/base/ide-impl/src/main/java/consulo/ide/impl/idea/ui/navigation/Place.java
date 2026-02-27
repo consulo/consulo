@@ -25,9 +25,10 @@ import jakarta.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SequencedMap;
 
 public class Place implements ComparableObject {
-  private Map<String, Object> myPath = new LinkedHashMap<>();
+  private SequencedMap<String, Object> myPath = new LinkedHashMap<>();
 
   @Override
   @Nonnull

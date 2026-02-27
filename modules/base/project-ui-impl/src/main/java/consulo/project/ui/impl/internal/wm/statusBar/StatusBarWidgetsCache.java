@@ -23,14 +23,14 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 04.05.2024
+ * @since 2024-05-04
  */
-public record StatusBarWidgetsCache(Map<String, StatusBarWidgetFactory> keyMap, List<String> order) {
+public record StatusBarWidgetsCache(SequencedMap<String, StatusBarWidgetFactory> keyMap, List<String> order) {
   private static final Logger LOG = Logger.getInstance(StatusBarWidgetsCache.class);
 
   static final ExtensionPointCacheKey<StatusBarWidgetFactory, StatusBarWidgetsCache> CACHE_KEY =
     ExtensionPointCacheKey.create("StatusBarWidgetsCache", walker -> {
-      Map<String, StatusBarWidgetFactory> map = new LinkedHashMap<>();
+      SequencedMap<String, StatusBarWidgetFactory> map = new LinkedHashMap<>();
       List<String> order = new ArrayList<>();
 
       walker.walk(factory -> {

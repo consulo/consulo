@@ -81,7 +81,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     protected final Map<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
     protected final List<ContainerNode> myContainerNodes = new ArrayList<>();
 
-    protected Set<T> mySelectedElements;
+    protected SequencedSet<T> mySelectedElements;
 
     private static final String PROP_SORTED = "MemberChooserImpl.sorted";
     private static final String PROP_SHOWCLASSES = "MemberChooserImpl.showClasses";
@@ -468,19 +468,19 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Nullable
-    private Set<T> getSelectedElementsList() {
+    private SequencedSet<T> getSelectedElementsList() {
         return getExitCode() == OK_EXIT_CODE ? mySelectedElements : null;
     }
 
     @Nullable
     public List<T> getSelectedElements() {
-        Set<T> list = getSelectedElementsList();
+        SequencedSet<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
     @Nullable
     public T[] getSelectedElements(T[] a) {
-        Set<T> list = getSelectedElementsList();
+        SequencedSet<T> list = getSelectedElementsList();
         if (list == null) {
             return null;
         }

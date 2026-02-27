@@ -330,7 +330,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         XAttachHost host = item.getHost();
 
-        Set<RecentItem> hostRecentItems = recentItems.get(host);
+        SequencedSet<RecentItem> hostRecentItems = recentItems.get(host);
 
         if (hostRecentItems == null) {
             recentItems.put(host, new LinkedHashSet<>());
