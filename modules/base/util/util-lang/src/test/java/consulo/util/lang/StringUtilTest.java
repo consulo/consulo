@@ -3,8 +3,6 @@ package consulo.util.lang;
 
 import consulo.util.lang.function.TripleFunction;
 import consulo.util.lang.internal.NaturalComparator;
-import consulo.util.lang.internal.Verifier;
-import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
@@ -24,20 +22,162 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class StringUtilTest {
     @Test
-    public void testContainsIgnoreCase() {
+    void testAreSameInstance() {
+        assertThat(StringUtil.areSameInstance(null, null)).isTrue();
+        String foo = "foo";
+        assertThat(StringUtil.areSameInstance(foo, foo)).isTrue();
+        assertThat(StringUtil.areSameInstance(foo, foo.toUpperCase().toLowerCase())).isFalse();
+    }
+
+    @Test
+    void testCompareStrings() {
+        assertThat(StringUtil.compare(null, null, false)).isEqualTo(0);
+        assertThat(StringUtil.compare("foobar", null, false)).isGreaterThan(0);
+        assertThat(StringUtil.compare(null, "foobar", false)).isLessThan(0);
+        assertThat(StringUtil.compare("foobar", "foobar", false)).isEqualTo(0);
+        assertThat(StringUtil.compare("foobar", "Foobar", false)).isGreaterThan(0);
+        assertThat(StringUtil.compare("foobar", "Foobar", true)).isEqualTo(0);
+        assertThat(StringUtil.compare("foobar", "f00bar", false)).isGreaterThan(0);
+        assertThat(StringUtil.compare("foobar", "foo", false)).isGreaterThan(0);
+    }
+
+    @Test
+    void testCompareCharSequences() {
+        assertThat(StringUtil.compare((CharSequence) null, null, false)).isEqualTo(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", null, false)).isGreaterThan(0);
+        assertThat(StringUtil.compare((CharSequence) null, "foobar", false)).isLessThan(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", "foobar", false)).isEqualTo(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", "Foobar", false)).isGreaterThan(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", "Foobar", true)).isEqualTo(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", "f00bar", false)).isGreaterThan(0);
+        assertThat(StringUtil.compare((CharSequence) "foobar", "foo", false)).isGreaterThan(0);
+    }
+
+    @Test
+    void testContainsIgnoreCase() {
         assertThat(StringUtil.containsIgnoreCase("Foobar", "foo")).isTrue();
         assertThat(StringUtil.containsIgnoreCase("Foobar", "bar")).isTrue();
         assertThat(StringUtil.containsIgnoreCase("Foobar", "qux")).isFalse();
     }
 
     @Test
-    public void testEscapePattern() {
+    void testEqual() {
+        assertThat(StringUtil.equal(null, null, true)).isTrue();
+        assertThat(StringUtil.equal("foobar", null, true)).isFalse();
+        assertThat(StringUtil.equal(null, "foobar", true)).isFalse();
+        assertThat(StringUtil.equal("foobar", "foobar", true)).isTrue();
+        assertThat(StringUtil.equal("foobar", "Foobar", true)).isFalse();
+        assertThat(StringUtil.equal("foobar", "Foobar", false)).isTrue();
+        assertThat(StringUtil.equal("foobar", "f00bar", true)).isFalse();
+        assertThat(StringUtil.equal("foobar", "f00bar", false)).isFalse();
+        assertThat(StringUtil.equal("foobar", "foo", true)).isFalse();
+    }
+
+    @Test
+    void testEquals() {
+        assertThat(StringUtil.equals(null, null)).isTrue();
+        assertThat(StringUtil.equals("foobar", null)).isFalse();
+        assertThat(StringUtil.equals(null, "foobar")).isFalse();
+        assertThat(StringUtil.equals("foobar", "foobar")).isTrue();
+        assertThat(StringUtil.equals("foobar", "f00bar")).isFalse();
+        assertThat(StringUtil.equals("foobar", "foo")).isFalse();
+    }
+
+    @Test
+    void testEqualsIgnoreCase() {
+        assertThat(StringUtil.equalsIgnoreCase(null, null)).isTrue();
+        assertThat(StringUtil.equalsIgnoreCase("foobar", null)).isFalse();
+        assertThat(StringUtil.equalsIgnoreCase(null, "foobar")).isFalse();
+        assertThat(StringUtil.equalsIgnoreCase("foobar", "foobar")).isTrue();
+        assertThat(StringUtil.equalsIgnoreCase("foobar", "Foobar")).isTrue();
+        assertThat(StringUtil.equalsIgnoreCase("foobar", "f00bar")).isFalse();
+        assertThat(StringUtil.equalsIgnoreCase("foobar", "foo")).isFalse();
+    }
+
+    @Test
+    void testEqualsIgnoreWhitespaces() {
+        assertTrue(StringUtil.equalsIgnoreWhitespaces(null, null));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("", null));
+
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("", ""));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("\n\t ", ""));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("", "\t\n \n\t"));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("\t", "\n"));
+
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("x", " x"));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("x", "x "));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("x\n", "x"));
+
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("abc", "a\nb\nc\n"));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("x y x", "x y x"));
+        assertTrue(StringUtil.equalsIgnoreWhitespaces("xyx", "x y x"));
+
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("x", "\t\n "));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("", " x "));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("", "x "));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("", " x"));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("xyx", "xxx"));
+        assertFalse(StringUtil.equalsIgnoreWhitespaces("xyx", "xYx"));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testEscapeMnemonics() {
+        assertThat(StringUtil.escapeMnemonics(null)).isNull();
+        assertThat(StringUtil.escapeMnemonics("& _")).isEqualTo("&& __");
+    }
+
+    @Test
+    void testEscapePattern() {
         assertThat(StringUtil.escapePattern("{ '")).isEqualTo("'{' ''");
         assertThat(StringUtil.escapePattern("'{")).isEqualTo("'''{'");
     }
 
     @Test
-    public void testGetWordsIn() {
+    void testEscapeProperty() {
+        assertThat(StringUtil.escapeProperty(" foo \t\r\n\f\u0420#!:=\\", true)).isEqualTo("\\ foo \\t\\r\\n\\f\\u0420\\#\\!\\:\\=\\\\");
+        assertThat(StringUtil.escapeProperty(" foo \t\r\n\f\u0420#!:=\\", false)).isEqualTo(" foo \\t\\r\\n\\f\\u0420\\#\\!\\:\\=\\\\");
+    }
+
+    @Test
+    void testEscapeQuotes() {
+        assertThat(StringUtil.escapeQuotes("\"")).isEqualTo("\\\"");
+        assertThat(StringUtil.escapeQuotes("foo\"bar'\"")).isEqualTo("foo\\\"bar'\\\"");
+    }
+
+    @Test
+    void testEscapeXmlEntities() {
+        assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+    }
+
+    @Test
+    void testFirstString() {
+        String foo = "foo";
+        assertThat(StringUtil.first(foo, 3, false)).isSameAs(foo);
+        assertThat(StringUtil.first(foo, 3, true)).isSameAs(foo);
+        assertThat(StringUtil.first("foobar", 3, false)).isEqualTo("foo");
+        assertThat(StringUtil.first("foobar", 3, true)).isEqualTo("foo...");
+    }
+
+    @Test
+    void testFirstCharSequence() {
+        StringBuilder foo = sb("foo");
+        assertThat(StringUtil.first(foo, 3, false)).isSameAs(foo);
+        assertThat(StringUtil.first(foo, 3, true)).isSameAs(foo);
+        assertThat(StringUtil.first(sb("foobar"), 3, false)).hasToString("foo");
+        assertThat(StringUtil.first(sb("foobar"), 3, true)).hasToString("foo...");
+    }
+
+    @Test
+    void testGetPropertyName() {
+        assertThat(StringUtil.getPropertyName("getFooBar")).isEqualTo("fooBar");
+        assertThat(StringUtil.getPropertyName("isFooBar")).isEqualTo("fooBar");
+        assertThat(StringUtil.getPropertyName("setFooBar")).isEqualTo("fooBar");
+        assertThat(StringUtil.getPropertyName("fooBar")).isNull();
+    }
+
+    @Test
+    void testGetWordsIn() {
         assertThat(StringUtil.getWordsIn("")).isEmpty();
         assertThat(StringUtil.getWordsIn("f")).containsExactly("f");
         assertThat(StringUtil.getWordsIn("fooBar baz")).containsExactly("fooBar", "baz");
@@ -45,13 +185,47 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testGetWordsInStringLongestFirst() {
+    void testGetWordsInStringLongestFirst() {
         assertThat(StringUtil.getWordsInStringLongestFirst("")).isEmpty();
         assertThat(StringUtil.getWordsInStringLongestFirst("baz fooBar")).containsExactly("fooBar", "baz");
     }
 
     @Test
-    public void testIndexOfIgnoreCaseString() {
+    void testIndexOf_1() {
+        char[] chars = new char[]{'a', 'b', 'c', 'd', 'a', 'b', 'c', 'd', 'A', 'B', 'C', 'D'};
+        assertThat(StringUtil.indexOf(chars, 'c', 0, 12, false)).isEqualTo(2);
+        assertThat(StringUtil.indexOf(chars, 'C', 0, 12, false)).isEqualTo(2);
+        assertThat(StringUtil.indexOf(chars, 'C', 0, 12, true)).isEqualTo(10);
+        assertThat(StringUtil.indexOf(chars, 'c', -42, 99, false)).isEqualTo(2);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testIndexOf_2() {
+        assertThat(StringUtil.indexOf("axaxa", 'x', 0, 5)).isEqualTo(1);
+        assertThat(StringUtil.indexOf("abcd", 'c', -42, 99)).isEqualTo(2);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testIndexOf_3() {
+        assertThat(StringUtil.indexOf("axaXa", 'x', 0, 5, false)).isEqualTo(1);
+        assertThat(StringUtil.indexOf("axaXa", 'X', 0, 5, true)).isEqualTo(3);
+        assertThat(StringUtil.indexOf("abcd", 'c', -42, 99, false)).isEqualTo(2);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testIndexOfAny() {
+        assertThat(StringUtil.indexOfAny("axa", "", 0, 5)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny("axa", "x", 0, 5)).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny("axa", "zx", 0, 5)).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny("axa", "z", 0, 5)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny("abcd", "c", -42, 99)).isEqualTo(2);
+    }
+
+    @Test
+    void testIndexOfIgnoreCaseString() {
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", Integer.MIN_VALUE)).isEqualTo(0);
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", -1)).isEqualTo(0);
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", "foo", 0)).isEqualTo(0);
@@ -63,7 +237,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testIndexOfIgnoreCaseChar() {
+    void testIndexOfIgnoreCaseChar() {
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', Integer.MIN_VALUE)).isEqualTo(0);
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', -1)).isEqualTo(0);
         assertThat(StringUtil.indexOfIgnoreCase("Foobar", 'f', 0)).isEqualTo(0);
@@ -75,7 +249,162 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testLastIndexOfIgnoreCaseChar() {
+    @SuppressWarnings("ConstantConditions")
+    void testIsEmptyOrSpaces() {
+        assertTrue(StringUtil.isEmptyOrSpaces(null));
+        assertTrue(StringUtil.isEmptyOrSpaces(""));
+        assertTrue(StringUtil.isEmptyOrSpaces("                   "));
+
+        assertFalse(StringUtil.isEmptyOrSpaces("1"));
+        assertFalse(StringUtil.isEmptyOrSpaces("         12345          "));
+        assertFalse(StringUtil.isEmptyOrSpaces("test"));
+    }
+
+    @Test
+    void testIsJavaIdentifierPart() {
+        assertThat(StringUtil.isJavaIdentifierPart('a')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierPart('A')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierPart('\u0430')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierPart('0')).isTrue();
+    }
+
+    @Test
+    void testIsJavaIdentifierStart() {
+        assertThat(StringUtil.isJavaIdentifierStart('a')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierStart('A')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierStart('\u0430')).isTrue();
+        assertThat(StringUtil.isJavaIdentifierStart('0')).isFalse();
+    }
+
+    @Test
+    void testIsJavaIdentifier() {
+        assertFalse(StringUtil.isJavaIdentifier(""));
+        assertTrue(StringUtil.isJavaIdentifier("x"));
+        assertFalse(StringUtil.isJavaIdentifier("0"));
+        assertFalse(StringUtil.isJavaIdentifier("0x"));
+        assertTrue(StringUtil.isJavaIdentifier("x0"));
+        assertTrue(StringUtil.isJavaIdentifier("\uD835\uDEFCA"));
+        assertTrue(StringUtil.isJavaIdentifier("A\uD835\uDEFC"));
+        //noinspection UnnecessaryUnicodeEscape
+        assertTrue(StringUtil.isJavaIdentifier("\u03B1A"));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIsNotEmpty() {
+        assertThat(StringUtil.isNotEmpty(null)).isFalse();
+        assertThat(StringUtil.isNotEmpty("")).isFalse();
+        assertThat(StringUtil.isNotEmpty("foo")).isTrue();
+    }
+
+    @Test
+    void testIsNotNegativeNumber() {
+        assertThat(StringUtil.isNotNegativeNumber(null)).isFalse();
+        assertThat(StringUtil.isNotNegativeNumber("")).isTrue(); //TODO: incorrect
+        assertThat(StringUtil.isNotNegativeNumber("123")).isTrue();
+        assertThat(StringUtil.isNotNegativeNumber("+123")).isFalse();
+        assertThat(StringUtil.isNotNegativeNumber("-123")).isFalse();
+        assertThat(StringUtil.isNotNegativeNumber("foo")).isFalse();
+    }
+
+    @Test
+    void testIsQuotedString() {
+        assertFalse(StringUtil.isQuotedString(""));
+        assertFalse(StringUtil.isQuotedString("'"));
+        assertFalse(StringUtil.isQuotedString("\""));
+        assertTrue(StringUtil.isQuotedString("\"\""));
+        assertTrue(StringUtil.isQuotedString("''"));
+        assertTrue(StringUtil.isQuotedString("'ab'"));
+        assertTrue(StringUtil.isQuotedString("\"foo\""));
+    }
+
+    @SuppressWarnings("NullArgumentToVariableArgMethod")
+    @Test
+    void testJoinArray1() {
+        assertThat(StringUtil.join(null)).isEmpty();
+        assertThat(StringUtil.join(new String[0])).isEmpty();
+        assertThat(StringUtil.join("foo", "bar")).isEqualTo("foobar");
+    }
+
+    @Test
+    void testJoinArray2() {
+        assertThat(StringUtil.join(new String[]{"foo", "", "bar"}, ",")).isEqualTo("foo,,bar");
+    }
+
+    @Test
+    void testJoinArrayFunction() {
+        assertThat(StringUtil.join(new StringBuilder[]{}, StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(new StringBuilder[]{sb("qqq")}, StringBuilder::toString, ",")).isEqualTo("qqq");
+        assertThat(StringUtil.join(new StringBuilder[]{sb()}, StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(new StringBuilder[]{sb()}, sb -> null, ",")).isEmpty();
+        assertThat(StringUtil.join(new StringBuilder[]{sb("a"), sb("b")}, StringBuilder::toString, ","))
+            .isEqualTo("a,b");
+        assertThat(StringUtil.join(new StringBuilder[]{sb("foo"), sb(), sb("bar")}, StringBuilder::toString, ","))
+            .isEqualTo("foo,bar");
+    }
+
+    @Test
+    void testJoinCollection() {
+        assertThat(StringUtil.join(List.of(), ",")).isEmpty();
+        assertThat(StringUtil.join(List.of("qqq"), ",")).isEqualTo("qqq");
+        assertThat(StringUtil.join(Collections.singletonList(null), ",")).isEmpty();
+        assertThat(StringUtil.join(List.of("a", "b"), ",")).isEqualTo("a,b");
+        assertThat(StringUtil.join(List.of("foo", "", "bar"), ",")).isEqualTo("foo,,bar");
+    }
+
+    @Test
+    void testJoinCollectionFunction() {
+        assertThat(StringUtil.join(List.<StringBuilder>of(), StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(List.of(sb("qqq")), StringBuilder::toString, ",")).isEqualTo("qqq");
+        assertThat(StringUtil.join(List.of(sb()), StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(List.of(sb()), sb -> null, ",")).isEmpty();
+        assertThat(StringUtil.join(List.of(sb("a"), sb("b")), StringBuilder::toString, ","))
+            .isEqualTo("a,b");
+        assertThat(StringUtil.join(List.of(sb("foo"), sb(), sb("bar")), StringBuilder::toString, ","))
+            .isEqualTo("foo,bar");
+    }
+
+    @Test
+    void testJoinIterable() {
+        assertThat(StringUtil.join((Iterable) List.of(), ",")).isEmpty();
+        assertThat(StringUtil.join((Iterable) List.of("foo"), ",")).isEqualTo("foo");
+        assertThat(StringUtil.join((Iterable) Collections.singletonList(null), ",")).isEqualTo("null");
+        assertThat(StringUtil.join((Iterable) List.of("foo", "bar"), ",")).isEqualTo("foo,bar");
+        assertThat(StringUtil.join((Iterable) List.of("foo", "", "bar"), ",")).isEqualTo("foo,,bar");
+    }
+
+    @Test
+    void testJoinIterableFunction() {
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.<StringBuilder>of(), StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("qqq")), StringBuilder::toString, ",")).isEqualTo("qqq");
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb()), StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb()), sb -> null, ",")).isEmpty();
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("a"), sb("b")), StringBuilder::toString, ","))
+            .isEqualTo("a,b");
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("foo"), sb(), sb("bar")), StringBuilder::toString, ","))
+            .isEqualTo("foo,bar");
+    }
+
+    @Test
+    void testLastCharSequence() {
+        StringBuilder foo = sb("foo");
+        assertThat(StringUtil.last(foo, 3, false)).isSameAs(foo);
+        assertThat(StringUtil.last(foo, 3, true)).isSameAs(foo);
+        assertThat(StringUtil.last(sb("foobar"), 3, false)).hasToString("bar");
+        assertThat(StringUtil.last(sb("foobar"), 3, true)).hasToString("...bar");
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testLastIndexOf() {
+        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 2)).isEqualTo(1);
+        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 3)).isEqualTo(1);
+        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 5)).isEqualTo(3);
+        assertThat(StringUtil.lastIndexOf("abcd", 'c', -42, 99)).isEqualTo(2);  // #IDEA-144968
+    }
+
+    @Test
+    void testLastIndexOfIgnoreCaseChar() {
         assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', Integer.MAX_VALUE)).isEqualTo(3);
         assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', 6)).isEqualTo(3);
         assertThat(StringUtil.lastIndexOfIgnoreCase("FooBar", 'b', 3)).isEqualTo(3);
@@ -87,15 +416,301 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testStripHtml() {
+    void testLength() {
+        assertThat(StringUtil.length(null)).isEqualTo(0);
+        assertThat(StringUtil.length("foo")).isEqualTo(3);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testRepeat() {
+        assertThatThrownBy(() -> StringUtil.repeat("foo", -1)).isInstanceOf(NegativeArraySizeException.class);
+        assertThat(StringUtil.repeat("foo", 0)).isEqualTo("");
+        assertThat(StringUtil.repeat("foo", 1)).isEqualTo("foo");
+        assertThat(StringUtil.repeat("foo", 5)).isEqualTo("foofoofoofoofoo");
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testRepeatSymbol() {
+        assertThatThrownBy(() -> StringUtil.repeatSymbol('a', -1)).isInstanceOf(NegativeArraySizeException.class);
+        assertThat(StringUtil.repeatSymbol('a', 0)).isEqualTo("");
+        assertThat(StringUtil.repeatSymbol('a', 1)).isEqualTo("a");
+        assertThat(StringUtil.repeatSymbol('a', 5)).isEqualTo("aaaaa");
+
+        StringBuilder sb = sb();
+        StringUtil.repeatSymbol(sb, 'a', -1);
+        assertThat(sb).hasToString("");
+
+        sb = sb();
+        StringUtil.repeatSymbol(sb, 'a', 0);
+        assertThat(sb).hasToString("");
+
+        sb = sb();
+        StringUtil.repeatSymbol(sb, 'a', 1);
+        assertThat(sb).hasToString("a");
+
+        sb = sb();
+        StringUtil.repeatSymbol(sb, 'a', 5);
+        assertThat(sb).hasToString("aaaaa");
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSkipWhitespaceBackward() {
+        assertThat(StringUtil.skipWhitespaceBackward("x \t^", 3)).isEqualTo(1);
+        assertThat(StringUtil.skipWhitespaceBackward("\n \t^", 3)).isEqualTo(1);
+        assertThat(StringUtil.skipWhitespaceBackward("\r \t^", 3)).isEqualTo(1);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSkipWhitespaceForward() {
+        assertThat(StringUtil.skipWhitespaceForward("^ \tx", 1)).isEqualTo(3);
+        assertThat(StringUtil.skipWhitespaceForward("^ \t\n", 1)).isEqualTo(3);
+        assertThat(StringUtil.skipWhitespaceForward("^ \t\r", 1)).isEqualTo(3);
+    }
+
+    @Test
+    void testSplit() {
+        String spaceSeparator = " ";
+        assertThat(StringUtil.split("test", spaceSeparator, false, false)).containsExactly("test");
+        CharSequenceSubSequence seq = new CharSequenceSubSequence("test");
+        assertThat(StringUtil.split(seq, spaceSeparator, false, false)).containsExactly(seq);
+
+        assertThat(StringUtil.split("", spaceSeparator, false, false)).isEqualTo(Arrays.asList(""));
+        assertThat(StringUtil.split("", spaceSeparator, true, true)).isEqualTo(Arrays.asList());
+
+        assertThat(StringUtil.split(" ", spaceSeparator, false, false)).isEqualTo(Arrays.asList(" ", ""));
+        assertThat(StringUtil.split(" ", spaceSeparator, true, false)).isEqualTo(Arrays.asList("", ""));
+        assertThat(StringUtil.split(" ", spaceSeparator, true, true)).isEqualTo(Arrays.asList());
+
+        assertThat(StringUtil.split("a  b ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "b"));
+        assertThat(StringUtil.split("a  b ", spaceSeparator, false, true)).isEqualTo(Arrays.asList("a ", " ", "b "));
+        assertThat(StringUtil.split("a  b ", spaceSeparator, false, false)).isEqualTo(Arrays.asList("a ", " ", "b ", ""));
+
+        assertThat(StringUtil.split("a  b", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "b"));
+        assertThat(StringUtil.split("a  b", spaceSeparator, false, true)).isEqualTo(Arrays.asList("a ", " ", "b"));
+        assertThat(StringUtil.split("a  b", spaceSeparator, false, false)).isEqualTo(Arrays.asList("a ", " ", "b"));
+
+        assertThat(StringUtil.split("test", spaceSeparator, true, true)).isEqualTo(Arrays.asList("test"));
+        assertThat(StringUtil.split("test", spaceSeparator, false, true)).isEqualTo(Arrays.asList("test"));
+        assertThat(StringUtil.split("test", spaceSeparator, true, false)).isEqualTo(Arrays.asList("test"));
+        assertThat(StringUtil.split("test", spaceSeparator, false, false)).isEqualTo(Arrays.asList("test"));
+
+        assertThat(StringUtil.split("a  b ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", " b"));
+        assertThat(StringUtil.split("a \n\tb ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "\n\tb"));
+
+        assertThat(StringUtil.split("a\u00A0b", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a\u00A0b"));
+
+        assertThat(StringUtil.split("a  \n\ta ", "a", true, true)).isEqualTo(Arrays.asList("  \n\t", " "));
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testStartsWith() {
+        assertTrue(StringUtil.startsWith("abcdefgh", 5, "fgh"));
+        assertTrue(StringUtil.startsWith("abcdefgh", 2, "cde"));
+        assertTrue(StringUtil.startsWith("abcdefgh", 0, "abc"));
+        assertTrue(StringUtil.startsWith("abcdefgh", 0, "abcdefgh"));
+        assertFalse(StringUtil.startsWith("abcdefgh", 5, "cde"));
+
+        assertTrue(StringUtil.startsWith("abcdefgh", 0, ""));
+        assertTrue(StringUtil.startsWith("abcdefgh", 4, ""));
+        assertTrue(StringUtil.startsWith("abcdefgh", 7, ""));
+        assertTrue(StringUtil.startsWith("abcdefgh", 8, ""));
+
+        assertTrue(StringUtil.startsWith("", 0, ""));
+
+        assertFalse(StringUtil.startsWith("ab", 0, "abcdefgh"));
+        assertFalse(StringUtil.startsWith("ab", 1, "abcdefgh"));
+        assertFalse(StringUtil.startsWith("ab", 2, "abcdefgh"));
+
+        assertThatThrownBy(() -> StringUtil.startsWith("whatever", -1, ""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: -1, length: 8");
+        assertThatThrownBy(() -> StringUtil.startsWith("whatever", 9, ""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: 9, length: 8");
+        assertThatThrownBy(() -> StringUtil.startsWith("", -1, ""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: -1, length: 0");
+        assertThatThrownBy(() -> StringUtil.startsWith("", 1, ""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: 1, length: 0");
+        assertThatThrownBy(() -> StringUtil.startsWith("wh", -1, "whatever"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: -1, length: 2");
+        assertThatThrownBy(() -> StringUtil.startsWith("wh", 3, "whatever"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Index is out of bounds: 3, length: 2");
+    }
+
+    @Test
+    void testStartsWithChar() {
+        assertThat(StringUtil.startsWithChar(null, 'f')).isFalse();
+        assertThat(StringUtil.startsWithChar("", 'f')).isFalse();
+        assertThat(StringUtil.startsWithChar("foo", 'f')).isTrue();
+    }
+
+    @Test
+    void testStartsWithWhitespace() {
+        assertThat(StringUtil.startsWithWhitespace("")).isFalse();
+        assertThat(StringUtil.startsWithWhitespace("foo")).isFalse();
+        assertThat(StringUtil.startsWithWhitespace(" ")).isTrue();
+        assertThat(StringUtil.startsWithWhitespace("\t")).isTrue();
+        assertThat(StringUtil.startsWithWhitespace("\n")).isTrue();
+        assertThat(StringUtil.startsWithWhitespace("\r")).isTrue();
+    }
+
+    @Test
+    void testStripCharFilter() {
+        assertThat(StringUtil.strip("\n   foo -bar ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo-bar");
+        assertThat(StringUtil.strip("foo- bar", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo-bar");
+        assertThat(StringUtil.strip("foo-bar", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo-bar");
+        assertThat(StringUtil.strip("\n   foo bar ", CharFilter.WHITESPACE_FILTER)).isEqualTo("\n     ");
+        assertThat(StringUtil.strip("", CharFilter.WHITESPACE_FILTER)).isEqualTo("");
+        assertThat(StringUtil.strip("\n   foo bar ", ch -> false)).isEqualTo("");
+        assertThat(StringUtil.strip("\n   foo bar ", ch -> true)).isEqualTo("\n   foo bar ");
+    }
+
+    @Test
+    void testStripHtml() {
         assertThat(StringUtil.stripHtml("<html>foo<br/>bar</html>", false)).isEqualTo("foobar");
         assertThat(StringUtil.stripHtml("<>foobar<>", false)).isEqualTo("foobar");
         assertThat(StringUtil.stripHtml("<div\nstyle=\"foo\">foobar</div>", true)).isEqualTo("foobar");
         assertThat(StringUtil.stripHtml("<html>foo<br/>bar<br></html>", true)).isEqualTo("foo\n\nbar\n\n");
     }
 
+    @SuppressWarnings("SSBasedInspection")
     @Test
-    public void testTrimLeadingChar() {
+    void testStripQuotesAroundValue() {
+        assertThat(StringUtil.stripQuotesAroundValue("")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("'")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("\"")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("''")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("\"\"")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("'\"")).isEqualTo("");
+        assertThat(StringUtil.stripQuotesAroundValue("'foo'")).isEqualTo("foo");
+        assertThat(StringUtil.stripQuotesAroundValue("'foo")).isEqualTo("foo");
+        assertThat(StringUtil.stripQuotesAroundValue("foo'")).isEqualTo("foo");
+        assertThat(StringUtil.stripQuotesAroundValue("'f'o'o'")).isEqualTo("f'o'o");
+        assertThat(StringUtil.stripQuotesAroundValue("\"f\"o'o'")).isEqualTo("f\"o'o");
+        assertThat(StringUtil.stripQuotesAroundValue("f\"o'o")).isEqualTo("f\"o'o");
+        assertThat(StringUtil.stripQuotesAroundValue("\"\"'f\"o'o\"\"")).isEqualTo("\"'f\"o'o\"");
+        assertThat(StringUtil.stripQuotesAroundValue("'''f\"o'o'''")).isEqualTo("''f\"o'o''");
+        assertThat(StringUtil.stripQuotesAroundValue("foo' 'bar")).isEqualTo("foo' 'bar");
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSubstringAfter() {
+        assertThat(StringUtil.substringAfter("abc", "b")).isEqualTo("c");
+        assertThat(StringUtil.substringAfter("ababbccc", "b")).isEqualTo("abbccc");
+        assertThat(StringUtil.substringAfter("abc", "")).isEqualTo("abc");
+        assertThat(StringUtil.substringAfter("abc", "1")).isNull();
+        assertThat(StringUtil.substringAfter("", "1")).isNull();
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSubstringAfterLast() {
+        assertThat(StringUtil.substringAfterLast("abc", "b")).isEqualTo("c");
+        assertThat(StringUtil.substringAfterLast("ababbccc", "b")).isEqualTo("ccc");
+        assertThat(StringUtil.substringAfterLast("abc", "")).isEqualTo("");
+        assertThat(StringUtil.substringAfterLast("abc", "1")).isNull();
+        assertThat(StringUtil.substringAfterLast("", "1")).isNull();
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSubstringBefore() {
+        assertThat(StringUtil.substringBefore("abc", "b")).isEqualTo("a");
+        assertThat(StringUtil.substringBefore("ababbccc", "b")).isEqualTo("a");
+        assertThat(StringUtil.substringBefore("abc", "")).isEqualTo("");
+        assertThat(StringUtil.substringBefore("abc", "1")).isNull();
+        assertThat(StringUtil.substringBefore("", "1")).isNull();
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testSubstringBeforeLast() {
+        assertThat(StringUtil.substringBeforeLast("abc", "b")).isEqualTo("a");
+        assertThat(StringUtil.substringBeforeLast("ababbccc", "b")).isEqualTo("abab");
+        assertThat(StringUtil.substringBeforeLast("abc", "")).isEqualTo("abc");
+        assertThat(StringUtil.substringBeforeLast("abc", "1")).isEqualTo("abc");
+        assertThat(StringUtil.substringBeforeLast("", "1")).isEqualTo("");
+    }
+
+    @Test
+    void testSurround() {
+        assertThat(StringUtil.surround(new String[0], "foo", "bar")).isEmpty();
+        assertThat(StringUtil.surround(new String[]{"-", "+"}, "foo", "bar")).containsExactly("foo-bar", "foo+bar");
+    }
+
+    @Test
+    void testToLowerCaseChar() {
+        assertThat(StringUtil.toLowerCase('/')).isEqualTo('/');
+        assertThat(StringUtil.toLowerCase(':')).isEqualTo(':');
+        assertThat(StringUtil.toLowerCase('a')).isEqualTo('a');
+        assertThat(StringUtil.toLowerCase('A')).isEqualTo('a');
+        assertThat(StringUtil.toLowerCase('k')).isEqualTo('k');
+        assertThat(StringUtil.toLowerCase('K')).isEqualTo('k');
+
+        for (char ch = 0; ch < 256; ch++) {
+            assertThat(StringUtil.toLowerCase(ch)).isEqualTo(Character.toLowerCase(ch));
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testToLowerCaseString() {
+        assertThat(StringUtil.toLowerCase(null)).isEqualTo(null);
+        assertThat(StringUtil.toLowerCase("FOO")).isEqualTo("foo");
+    }
+
+    @Test
+    void testToUpperCaseChar() {
+        assertThat(StringUtil.toUpperCase('/')).isEqualTo('/');
+        assertThat(StringUtil.toUpperCase(':')).isEqualTo(':');
+        assertThat(StringUtil.toUpperCase('a')).isEqualTo('A');
+        assertThat(StringUtil.toUpperCase('A')).isEqualTo('A');
+        assertThat(StringUtil.toUpperCase('k')).isEqualTo('K');
+        assertThat(StringUtil.toUpperCase('K')).isEqualTo('K');
+
+        assertThat(StringUtil.toUpperCase(Character.toLowerCase('\u2567'))).isEqualTo('\u2567');
+
+        for (char ch = 0; ch < 256; ch++) {
+            assertThat(StringUtil.toUpperCase(ch)).isEqualTo(Character.toUpperCase(ch));
+        }
+    }
+
+    @Test
+    void testToUpperCaseString() {
+        assertThat(StringUtil.toUpperCase(null)).isEqualTo(null);
+        assertThat(StringUtil.toUpperCase("foo")).isEqualTo("FOO");
+    }
+
+    @Test
+    void testToUpperCaseCharSequence() {
+        assertThat(StringUtil.toUpperCase((CharSequence) "foo")).hasToString("FOO");
+        String uppercased = "FOO123";
+        assertThat(StringUtil.toUpperCase((CharSequence) uppercased)).isSameAs(uppercased);
+    }
+
+    @Test
+    void testTrimEnd() {
+        StringBuilder foobar = new StringBuilder("foobar");
+        assertThat(StringUtil.trimEnd(foobar, "bar")).isTrue();
+        assertThat(foobar).hasToString("foo");
+
+        StringBuilder qux = new StringBuilder("qux");
+        assertThat(StringUtil.trimEnd(qux, "bar")).isFalse();
+        assertThat(qux).hasToString("qux");
+    }
+
+    @Test
+    void testTrimLeadingChar() {
         doTestTrimLeading("", "");
         doTestTrimLeading("", " ");
         doTestTrimLeading("", "    ");
@@ -103,19 +718,19 @@ public class StringUtilTest {
         doTestTrimLeading("a  ", "  a  ");
     }
 
+    private static void doTestTrimLeading(@Nonnull String expected, @Nonnull String string) {
+        assertThat(StringUtil.trimLeading(string)).isEqualTo(expected);
+        assertThat(StringUtil.trimLeading(string, ' ')).isEqualTo(expected);
+        //assertThat(StringUtil.trimLeading(new StringBuilder(string), ' ').toString()).isEqualTo(expected);
+    }
+
     @Test
-    public void testTrimTrailingChar() {
+    void testTrimTrailingChar() {
         doTestTrimTrailing("", "");
         doTestTrimTrailing("", " ");
         doTestTrimTrailing("", "    ");
         doTestTrimTrailing("  a", "  a");
         doTestTrimTrailing("  a", "  a  ");
-    }
-
-    private static void doTestTrimLeading(@Nonnull String expected, @Nonnull String string) {
-        assertThat(StringUtil.trimLeading(string)).isEqualTo(expected);
-        assertThat(StringUtil.trimLeading(string, ' ')).isEqualTo(expected);
-//        assertThat(StringUtil.trimLeading(new StringBuilder(string), ' ').toString()).isEqualTo(expected);
     }
 
     private static void doTestTrimTrailing(@Nonnull String expected, @Nonnull String string) {
@@ -125,7 +740,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void doTestTrimCharSequence() {
+//    void doTestTrimCharSequence() {
 //        assertThat(StringUtil.trim((CharSequence) "").toString()).isEqualTo("");
 //        assertThat(StringUtil.trim((CharSequence) " ").toString()).isEqualTo("");
 //        assertThat(StringUtil.trim((CharSequence) " \n\t\r").toString()).isEqualTo("");
@@ -136,63 +751,7 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testToUpperCase() {
-        assertThat(StringUtil.toUpperCase('/')).isEqualTo('/');
-        assertThat(StringUtil.toUpperCase(':')).isEqualTo(':');
-        assertThat(StringUtil.toUpperCase('a')).isEqualTo('A');
-        assertThat(StringUtil.toUpperCase('A')).isEqualTo('A');
-        assertThat(StringUtil.toUpperCase('k')).isEqualTo('K');
-        assertThat(StringUtil.toUpperCase('K')).isEqualTo('K');
-
-        assertThat(StringUtil.toUpperCase(Character.toLowerCase('\u2567'))).isEqualTo('\u2567');
-    }
-
-    @Test
-    public void testToUpperCaseGeneric() {
-        for (char ch = 0; ch < Character.MAX_VALUE; ch++) {
-            char upperCaseCh = Character.toUpperCase(ch);
-            assertThat(StringUtil.toUpperCase(ch))
-                .withFailMessage("Optimized StringUtil.toUpperCase(" + ch + ") must be == Character.toUpperCase(ch)[=" + upperCaseCh + "]")
-                .isEqualTo(upperCaseCh);
-        }
-    }
-
-    @Test
-    public void testToLowerCase() {
-        assertThat(StringUtil.toLowerCase('/')).isEqualTo('/');
-        assertThat(StringUtil.toLowerCase(':')).isEqualTo(':');
-        assertThat(StringUtil.toLowerCase('a')).isEqualTo('a');
-        assertThat(StringUtil.toLowerCase('A')).isEqualTo('a');
-        assertThat(StringUtil.toLowerCase('k')).isEqualTo('k');
-        assertThat(StringUtil.toLowerCase('K')).isEqualTo('k');
-
-        assertThat(StringUtil.toUpperCase(Character.toLowerCase('\u2567'))).isEqualTo('\u2567');
-    }
-
-    @Test
-    public void testToLowerCaseGeneric() {
-        for (char ch = 0; ch < Character.MAX_VALUE; ch++) {
-            char lowerCaseCh = Character.toLowerCase(ch);
-            assertThat(StringUtil.toLowerCase(ch))
-                .withFailMessage("Optimized StringUtil.toLowerCase(" + ch + ") must be == Character.toLowerCase(ch)[=" + lowerCaseCh + "]")
-                .isEqualTo(lowerCaseCh);
-        }
-    }
-
-    @Test
-    @SuppressWarnings("ConstantConditions")
-    public void testIsEmptyOrSpaces() {
-        assertTrue(StringUtil.isEmptyOrSpaces(null));
-        assertTrue(StringUtil.isEmptyOrSpaces(""));
-        assertTrue(StringUtil.isEmptyOrSpaces("                   "));
-
-        assertFalse(StringUtil.isEmptyOrSpaces("1"));
-        assertFalse(StringUtil.isEmptyOrSpaces("         12345          "));
-        assertFalse(StringUtil.isEmptyOrSpaces("test"));
-    }
-
-    @Test
-    public void testSplitWithQuotes() {
+    void testSplitWithQuotes() {
         // Merge separators
         assertThat(StringUtil.splitHonorQuotes("aaa bbb   ccc ", ' '))
             .containsExactly("aaa", "bbb", "ccc");
@@ -218,7 +777,7 @@ public class StringUtilTest {
 
 //    @Test
 //    @SuppressWarnings("SpellCheckingInspection")
-//    public void testUnPluralize() {
+//    void testUnPluralize() {
 //        // synthetic
 //        assertThat(StringUtil.unpluralize("pluralses")).isEqualTo("plurals");
 //        assertThat(StringUtil.unpluralize("Inheritses")).isEqualTo("Inherits");
@@ -242,7 +801,7 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testPluralize() {
+//    void testPluralize() {
 //        assertThat(StringUtil.pluralize("value")).isEqualTo("values");
 //        assertThat(StringUtil.pluralize("values")).isEqualTo("values");
 //        assertThat(StringUtil.pluralize("index")).isEqualTo("indices");
@@ -267,7 +826,7 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testStartsWithConcatenation() {
+    void testStartsWithConcatenation() {
         assertTrue(StringUtil.startsWithConcatenation("something.with.dot", "something", "."));
         assertTrue(StringUtil.startsWithConcatenation("something.with.dot", "", "something."));
         assertTrue(StringUtil.startsWithConcatenation("something.", "something", "."));
@@ -277,7 +836,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testNaturalCompareTransitivity() {
+    void testNaturalCompareTransitivity() {
         String s1 = "#";
         String s2 = "0b";
         String s3 = " 0b";
@@ -289,7 +848,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testNaturalCompareTransitivityProperty() {
+//    void testNaturalCompareTransitivityProperty() {
 //        PropertyChecker.forAll(Surrogate.Generator.listsOf(Surrogate.Generator.stringsOf("ab01()_# ")), l -> {
 //            List<String> sorted = ContainerUtil.sorted(l, StringUtil::naturalCompare);
 //            for (int i = 0; i < sorted.size(); i++) {
@@ -303,14 +862,14 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testNaturalCompareStability() {
+    void testNaturalCompareStability() {
         assertThat(StringUtil.naturalCompare("01a1", "1a01")).isNotSameAs(StringUtil.naturalCompare("1a01", "01a1"));
         assertThat(StringUtil.naturalCompare("#01A", "# 1A")).isNotSameAs(StringUtil.naturalCompare("# 1A", "#01A"));
         assertThat(StringUtil.naturalCompare("aA", "aa")).isNotSameAs(StringUtil.naturalCompare("aa", "aA"));
     }
 
     @Test
-    public void testNaturalCompare() {
+    void testNaturalCompare() {
         var numbers = Arrays.asList("1a000001", "000001a1", "001a0001", "0001A001", "00001a01", "01a00001");
         numbers.sort(NaturalComparator.INSTANCE);
         assertThat(numbers).containsExactly("1a000001", "01a00001", "001a0001", "0001A001", "00001a01", "000001a1");
@@ -352,12 +911,12 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testFormatLinks() {
+//    void testFormatLinks() {
 //        assertEquals("<a href=\"http://a-b+c\">http://a-b+c</a>", StringUtil.formatLinks("http://a-b+c"));
 //    }
 
     @Test
-    public void testCopyHeapCharBuffer() {
+    void testCopyHeapCharBuffer() {
         String s = "abc.d";
         CharBuffer buffer = CharBuffer.allocate(s.length());
         buffer.append(s);
@@ -370,7 +929,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testTitleCase() {
+//    void testTitleCase() {
 //        assertThat(StringUtil.wordsToBeginFromUpperCase("Couldn't connect to debugger")).isEqualTo("Couldn't Connect to Debugger");
 //        assertThat(StringUtil.wordsToBeginFromUpperCase("Let's make abbreviations like I18n, SQL and CSS"))
 //            .isEqualTo("Let's Make Abbreviations Like I18n, SQL and CSS");
@@ -386,26 +945,26 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testSentenceCapitalization() {
+//    void testSentenceCapitalization() {
 //        assertThat(StringUtil.wordsToBeginFromLowerCase("Couldn't Connect To Debugger")).isEqualTo("couldn't connect to debugger");
 //        assertThat(StringUtil.wordsToBeginFromLowerCase("Let's Make Abbreviations Like I18n, SQL and CSS S SQ Sq"))
 //            .isEqualTo("let's make abbreviations like I18n, SQL and CSS s SQ sq");
 //    }
 
 //    @Test
-//    public void testCapitalizeWords() {
+//    void testCapitalizeWords() {
 //        assertThat(StringUtil.capitalizeWords("AspectJ (syntax highlighting only)", true)).isEqualTo("AspectJ (Syntax Highlighting Only)");
 //    }
 
     @Test
-    public void testEscapeStringCharacters() {
+    void testEscapeStringCharacters() {
         assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
         assertThat(StringUtil.escapeStringCharacters(2, "\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
         assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", true, new StringBuilder()).toString()).isEqualTo("\\\\\\\"\\n");
     }
 
     @Test
-    public void testEscapeSlashes() {
+    void testEscapeSlashes() {
         assertThat(StringUtil.escapeSlashes("/")).isEqualTo("\\/");
         assertThat(StringUtil.escapeSlashes("foo/bar\\foo/")).isEqualTo("foo\\/bar\\foo\\/");
 
@@ -413,13 +972,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testEscapeQuotes() {
-        assertThat(StringUtil.escapeQuotes("\"")).isEqualTo("\\\"");
-        assertThat(StringUtil.escapeQuotes("foo\"bar'\"")).isEqualTo("foo\\\"bar'\\\"");
-    }
-
-    @Test
-    public void testUnquote() {
+    void testUnquote() {
         assertThat(StringUtil.unquoteString("")).isEqualTo("");
         assertThat(StringUtil.unquoteString("\"")).isEqualTo("\"");
         assertThat(StringUtil.unquoteString("\"\"")).isEqualTo("");
@@ -440,28 +993,8 @@ public class StringUtilTest {
         assertThat(StringUtil.unquoteString("\"foo'")).isEqualTo("\"foo'");
     }
 
-    @SuppressWarnings("SSBasedInspection")
     @Test
-    public void testStripQuotesAroundValue() {
-        assertThat(StringUtil.stripQuotesAroundValue("")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("'")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("\"")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("''")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("\"\"")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("'\"")).isEqualTo("");
-        assertThat(StringUtil.stripQuotesAroundValue("'foo'")).isEqualTo("foo");
-        assertThat(StringUtil.stripQuotesAroundValue("'foo")).isEqualTo("foo");
-        assertThat(StringUtil.stripQuotesAroundValue("foo'")).isEqualTo("foo");
-        assertThat(StringUtil.stripQuotesAroundValue("'f'o'o'")).isEqualTo("f'o'o");
-        assertThat(StringUtil.stripQuotesAroundValue("\"f\"o'o'")).isEqualTo("f\"o'o");
-        assertThat(StringUtil.stripQuotesAroundValue("f\"o'o")).isEqualTo("f\"o'o");
-        assertThat(StringUtil.stripQuotesAroundValue("\"\"'f\"o'o\"\"")).isEqualTo("\"'f\"o'o\"");
-        assertThat(StringUtil.stripQuotesAroundValue("'''f\"o'o'''")).isEqualTo("''f\"o'o''");
-        assertThat(StringUtil.stripQuotesAroundValue("foo' 'bar")).isEqualTo("foo' 'bar");
-    }
-
-    @Test
-    public void testUnquoteWithQuotationChar() {
+    void testUnquoteWithQuotationChar() {
         assertThat(StringUtil.unquoteString("", '|')).isEqualTo("");
         assertThat(StringUtil.unquoteString("|", '|')).isEqualTo("|");
         assertThat(StringUtil.unquoteString("||", '|')).isEqualTo("");
@@ -471,29 +1004,8 @@ public class StringUtilTest {
         assertThat(StringUtil.unquoteString("foo|", '|')).isEqualTo("foo|");
     }
 
-    @Test
-    public void testIsQuotedString() {
-        assertFalse(StringUtil.isQuotedString(""));
-        assertFalse(StringUtil.isQuotedString("'"));
-        assertFalse(StringUtil.isQuotedString("\""));
-        assertTrue(StringUtil.isQuotedString("\"\""));
-        assertTrue(StringUtil.isQuotedString("''"));
-        assertTrue(StringUtil.isQuotedString("'ab'"));
-        assertTrue(StringUtil.isQuotedString("\"foo\""));
-    }
-
-    @Test
-    public void testJoin() {
-        assertThat(StringUtil.join(List.of(), ",")).isEqualTo("");
-        assertThat(StringUtil.join(List.of("qqq"), ",")).isEqualTo("qqq");
-        assertThat(StringUtil.join(Collections.singletonList(null), ",")).isEqualTo("");
-        assertThat(StringUtil.join(List.of("a", "b"), ",")).isEqualTo("a,b");
-        assertThat(StringUtil.join(List.of("foo", "", "bar"), ",")).isEqualTo("foo,,bar");
-        assertThat(StringUtil.join(new String[]{"foo", "", "bar"}, ",")).isEqualTo("foo,,bar");
-    }
-
 //    @Test
-//    public void testSplitByLineKeepingSeparators() {
+//    void testSplitByLineKeepingSeparators() {
 //        assertThat(StringUtil.splitByLinesKeepSeparators("")).containsExactly("");
 //        assertThat(StringUtil.splitByLinesKeepSeparators("aa")).containsExactly("aa");
 //        assertThat(StringUtil.splitByLinesKeepSeparators("\n\naa\n\nbb\ncc\n\n"))
@@ -507,7 +1019,7 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testReplace() {
+    void testReplace() {
         String pattern = "$PROJECT_FILE$".toLowerCase().toUpperCase();
         String replacement = "/tmp";
         assertThat(StringUtil.replace("$PROJECT_FILE$/filename", pattern, replacement)).isEqualTo("/tmp/filename");
@@ -520,7 +1032,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testReplaceIgnoreCase() {
+    void testReplaceIgnoreCase() {
         String pattern = "$PROJECT_FILE$".toLowerCase().toUpperCase();
         String replacement = "/tmp";
         assertThat(StringUtil.replaceIgnoreCase("$project_file$/filename", pattern, replacement)).isEqualTo("/tmp/filename");
@@ -533,7 +1045,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testReplaceArray() {
+    void testReplaceArray() {
         assertThat(StringUtil.replace("&\"", new String[]{"&", "\""}, new String[]{"&amp;", "&quot;"}))
             .isEqualTo("&amp;&quot;");
         assertThat(StringUtil.replace("foobar", new String[]{"foobar", "foo", "bar"}, new String[]{"1", "2", "3"}))
@@ -543,7 +1055,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testReplaceList() {
+    void testReplaceList() {
         assertThat(StringUtil.replace("&\"", List.of("&", "\""), List.of("&amp;", "&quot;")))
             .isEqualTo("&amp;&quot;");
         assertThat(StringUtil.replace("foobar", List.of("foobar", "foo", "bar"), List.of("1", "2", "3")))
@@ -553,39 +1065,13 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testReplaceReturnTheSameStringIfNothingToReplace() {
+    void testReplaceReturnTheSameStringIfNothingToReplace() {
         String str = "/tmp/filename";
         assertThat(StringUtil.replace(str, "$PROJECT_FILE$/filename", "$PROJECT_FILE$")).isSameAs(str);
     }
 
     @Test
-    public void testEqualsIgnoreWhitespaces() {
-        assertTrue(StringUtil.equalsIgnoreWhitespaces(null, null));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("", null));
-
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("", ""));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("\n\t ", ""));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("", "\t\n \n\t"));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("\t", "\n"));
-
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("x", " x"));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("x", "x "));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("x\n", "x"));
-
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("abc", "a\nb\nc\n"));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("x y x", "x y x"));
-        assertTrue(StringUtil.equalsIgnoreWhitespaces("xyx", "x y x"));
-
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("x", "\t\n "));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("", " x "));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("", "x "));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("", " x"));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("xyx", "xxx"));
-        assertFalse(StringUtil.equalsIgnoreWhitespaces("xyx", "xYx"));
-    }
-
-    @Test
-    public void testStringHashCodeIgnoreWhitespaces() {
+    void testStringHashCodeIgnoreWhitespaces() {
         assertTrue(Comparing.equal(StringUtil.stringHashCodeIgnoreWhitespaces(""), StringUtil.stringHashCodeIgnoreWhitespaces("")));
         assertTrue(Comparing.equal(StringUtil.stringHashCodeIgnoreWhitespaces("\n\t "), StringUtil.stringHashCodeIgnoreWhitespaces("")));
         assertTrue(Comparing.equal(
@@ -617,7 +1103,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testContains() {
+    void testContains() {
         assertTrue(StringUtil.contains("1", "1"));
         assertFalse(StringUtil.contains("1", "12"));
         assertTrue(StringUtil.contains("12", "1"));
@@ -625,7 +1111,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testCompareCharSequence() {
+    void testCompareCharSequence() {
         TripleFunction<CharSequence, CharSequence, Boolean, Boolean> assertPrecedence =
             (lesser, greater, ignoreCase) -> {
                 assertThat(StringUtil.compare(lesser, greater, ignoreCase)).isLessThan(0);
@@ -655,7 +1141,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testDetectSeparators() {
+//    void testDetectSeparators() {
 //        assertThat(StringUtil.detectSeparators("")).isNull();
 //        assertThat(StringUtil.detectSeparators("asd")).isNull();
 //        assertThat(StringUtil.detectSeparators("asd\t")).isNull();
@@ -674,7 +1160,7 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testFindStartingLineSeparator() {
+//    void testFindStartingLineSeparator() {
 //        assertNull(StringUtil.getLineSeparatorAt("", -1));
 //        assertNull(StringUtil.getLineSeparatorAt("", 0));
 //        assertNull(StringUtil.getLineSeparatorAt("", 1));
@@ -696,7 +1182,7 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testFormatFileSize() {
+    void testFormatFileSize() {
         assertFileSizeFormat(0, "0 B");
         assertFileSizeFormat(1, "1 B");
         assertFileSizeFormat(Integer.MAX_VALUE, "2.15 GB");
@@ -723,7 +1209,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testFormatFileSizeFixedPrecision() {
+//    void testFormatFileSizeFixedPrecision() {
 //        assertThat(StringUtil.formatFileSize(10, " ", -1, true)).isEqualTo("10.00 B");
 //        assertThat(StringUtil.formatFileSize(100, " ", -1, true)).isEqualTo("100.00 B");
 //        assertThat(StringUtil.formatFileSize(1_000, " ", -1, true)).isEqualTo("1.00 kB");
@@ -740,7 +1226,7 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testFormatDuration() {
+    void testFormatDuration() {
         assertThat(StringUtil.formatDuration(0)).isEqualTo("0 ms");
         assertThat(StringUtil.formatDuration(1)).isEqualTo("1 ms");
         assertThat(StringUtil.formatDuration(1000)).isEqualTo("1 s");
@@ -761,75 +1247,16 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testXmlWrapInCDATA() {
-        assertThat(XmlStringUtil.wrapInCDATA("abc")).isEqualTo("<![CDATA[abc]]>");
-        assertThat(XmlStringUtil.wrapInCDATA("abc]]>")).isEqualTo("<![CDATA[abc]]]><![CDATA[]>]]>");
-        assertThat(XmlStringUtil.wrapInCDATA("abc]]>def")).isEqualTo("<![CDATA[abc]]]><![CDATA[]>def]]>");
-        assertThat(XmlStringUtil.wrapInCDATA("123<![CDATA[wow<&>]]>]]><![CDATA[123"))
-            .isEqualTo("<![CDATA[123<![CDATA[wow<&>]]]><![CDATA[]>]]]><![CDATA[]><![CDATA[123]]>");
-    }
-
-    @Test
-    public void testGetPackageName() {
+    void testGetPackageName() {
         assertThat(StringUtil.getPackageName("java.lang.String")).isEqualTo("java.lang");
         assertThat(StringUtil.getPackageName("java.util.Map.Entry")).isEqualTo("java.util.Map");
         assertThat(StringUtil.getPackageName("Map.Entry")).isEqualTo("Map");
         assertThat(StringUtil.getPackageName("Number")).isEqualTo("");
     }
 
-    @Test
-    public void testIndexOf_1() {
-        char[] chars = new char[]{'a', 'b', 'c', 'd', 'a', 'b', 'c', 'd', 'A', 'B', 'C', 'D'};
-        assertThat(StringUtil.indexOf(chars, 'c', 0, 12, false)).isEqualTo(2);
-        assertThat(StringUtil.indexOf(chars, 'C', 0, 12, false)).isEqualTo(2);
-        assertThat(StringUtil.indexOf(chars, 'C', 0, 12, true)).isEqualTo(10);
-        assertThat(StringUtil.indexOf(chars, 'c', -42, 99, false)).isEqualTo(2);
-    }
-
     @SuppressWarnings("SpellCheckingInspection")
     @Test
-    public void testIndexOf_2() {
-        assertThat(StringUtil.indexOf("axaxa", 'x', 0, 5)).isEqualTo(1);
-        assertThat(StringUtil.indexOf("abcd", 'c', -42, 99)).isEqualTo(2);
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testIndexOf_3() {
-        assertThat(StringUtil.indexOf("axaXa", 'x', 0, 5, false)).isEqualTo(1);
-        assertThat(StringUtil.indexOf("axaXa", 'X', 0, 5, true)).isEqualTo(3);
-        assertThat(StringUtil.indexOf("abcd", 'c', -42, 99, false)).isEqualTo(2);
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testIndexOfAny() {
-        assertThat(StringUtil.indexOfAny("axa", "x", 0, 5)).isEqualTo(1);
-        assertThat(StringUtil.indexOfAny("axa", "zx", 0, 5)).isEqualTo(1);
-        assertThat(StringUtil.indexOfAny("abcd", "c", -42, 99)).isEqualTo(2);
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testLastIndexOf() {
-        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 2)).isEqualTo(1);
-        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 3)).isEqualTo(1);
-        assertThat(StringUtil.lastIndexOf("axaxa", 'x', 0, 5)).isEqualTo(3);
-        assertThat(StringUtil.lastIndexOf("abcd", 'c', -42, 99)).isEqualTo(2);  // #IDEA-144968
-    }
-
-    @Test
-    public void testEscapingIllegalXmlChars() {
-        for (String s : new String[]{"ab\n\0\r\tde", "\\abc\1\2\3\uFFFFdef"}) {
-            String escapedText = XmlStringUtil.escapeIllegalXmlChars(s);
-            assertThat(Verifier.checkCharacterData(escapedText)).isNull();
-            assertThat(XmlStringUtil.unescapeIllegalXmlChars(escapedText)).isEqualTo(s);
-        }
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testCountChars() {
+    void testCountChars() {
         assertThat(StringUtil.countChars("abcdefgh", 'x')).isEqualTo(0);
         assertThat(StringUtil.countChars("abcdefgh", 'd')).isEqualTo(1);
         assertThat(StringUtil.countChars("abcddddefghd", 'd')).isEqualTo(5);
@@ -840,38 +1267,8 @@ public class StringUtilTest {
         assertThat(StringUtil.countChars("aaabcddddefghdaaaa", 'a', 20, -20, true)).isEqualTo(4);
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testSubstringBeforeLast() {
-        assertThat(StringUtil.substringBeforeLast("abc", "b")).isEqualTo("a");
-        assertThat(StringUtil.substringBeforeLast("ababbccc", "b")).isEqualTo("abab");
-        assertThat(StringUtil.substringBeforeLast("abc", "")).isEqualTo("abc");
-        assertThat(StringUtil.substringBeforeLast("abc", "1")).isEqualTo("abc");
-        assertThat(StringUtil.substringBeforeLast("", "1")).isEqualTo("");
-//        assertThat(StringUtil.substringBeforeLast("abc", "b", false)).isEqualTo("a");
-//        assertThat(StringUtil.substringBeforeLast("ababbccc", "b", false)).isEqualTo("abab");
-//        assertThat(StringUtil.substringBeforeLast("abc", "", false)).isEqualTo("abc");
-//        assertThat(StringUtil.substringBeforeLast("abc", "1", false)).isEqualTo("abc");
-//        assertThat(StringUtil.substringBeforeLast("", "1", false)).isEqualTo("");
-//        assertThat(StringUtil.substringBeforeLast("abc", "b", true)).isEqualTo("ab");
-//        assertThat(StringUtil.substringBeforeLast("ababbccc", "b", true)).isEqualTo("ababb");
-//        assertThat(StringUtil.substringBeforeLast("abc", "", true)).isEqualTo("abc");
-//        assertThat(StringUtil.substringBeforeLast("abc", "1", true)).isEqualTo("abc");
-//        assertThat(StringUtil.substringBeforeLast("", "1", true)).isEqualTo("");
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void testSubstringAfterLast() {
-        assertThat(StringUtil.substringAfterLast("abc", "b")).isEqualTo("c");
-        assertThat(StringUtil.substringAfterLast("ababbccc", "b")).isEqualTo("ccc");
-        assertThat(StringUtil.substringAfterLast("abc", "")).isEqualTo("");
-        assertThat(StringUtil.substringAfterLast("abc", "1")).isNull();
-        assertThat(StringUtil.substringAfterLast("", "1")).isNull();
-    }
-
 //    @Test
-//    public void testGetWordIndicesIn() {
+//    void testGetWordIndicesIn() {
 //        assertThat(StringUtil.getWordIndicesIn("first second")).containsExactly(new TextRange(0, 5), new TextRange(6, 12));
 //        assertThat(StringUtil.getWordIndicesIn(" first second")).containsExactly(new TextRange(1, 6), new TextRange(7, 13));
 //        assertThat(StringUtil.getWordIndicesIn(" first second    ")).containsExactly(new TextRange(1, 6), new TextRange(7, 13));
@@ -883,7 +1280,7 @@ public class StringUtilTest {
 
 //    @Test
 //    @SuppressWarnings({"SpellCheckingInspection", "NonAsciiCharacters"})
-//    public void testIsLatinAlphanumeric() {
+//    void testIsLatinAlphanumeric() {
 //        assertTrue(StringUtil.isLatinAlphanumeric("1234567890"));
 //        assertTrue(StringUtil.isLatinAlphanumeric("123abc593"));
 //        assertTrue(StringUtil.isLatinAlphanumeric("gwengioewn"));
@@ -905,7 +1302,7 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testIsShortNameOf() {
+//    void testIsShortNameOf() {
 //        assertTrue(StringUtil.isShortNameOf("a.b.c", "c"));
 //        assertTrue(StringUtil.isShortNameOf("foo", "foo"));
 //        assertFalse(StringUtil.isShortNameOf("foo", ""));
@@ -915,71 +1312,8 @@ public class StringUtilTest {
 //        assertFalse(StringUtil.isShortNameOf("x", "a.b.x"));
 //    }
 
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void startsWith() {
-        assertTrue(StringUtil.startsWith("abcdefgh", 5, "fgh"));
-        assertTrue(StringUtil.startsWith("abcdefgh", 2, "cde"));
-        assertTrue(StringUtil.startsWith("abcdefgh", 0, "abc"));
-        assertTrue(StringUtil.startsWith("abcdefgh", 0, "abcdefgh"));
-        assertFalse(StringUtil.startsWith("abcdefgh", 5, "cde"));
-
-        assertTrue(StringUtil.startsWith("abcdefgh", 0, ""));
-        assertTrue(StringUtil.startsWith("abcdefgh", 4, ""));
-        assertTrue(StringUtil.startsWith("abcdefgh", 7, ""));
-        assertTrue(StringUtil.startsWith("abcdefgh", 8, ""));
-
-        assertTrue(StringUtil.startsWith("", 0, ""));
-
-        assertFalse(StringUtil.startsWith("ab", 0, "abcdefgh"));
-        assertFalse(StringUtil.startsWith("ab", 1, "abcdefgh"));
-        assertFalse(StringUtil.startsWith("ab", 2, "abcdefgh"));
-    }
-
-    @Test
-    public void startsWithNegativeIndex() {
-        assertThatThrownBy(() -> StringUtil.startsWith("whatever", -1, ""))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: -1, length: 8");
-    }
-
-    @Test
-    public void startsWithIndexGreaterThanLength() {
-        assertThatThrownBy(() -> StringUtil.startsWith("whatever", 9, ""))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: 9, length: 8");
-    }
-
-    @Test
-    public void startsWithEmptyStringNegativeIndex() {
-        assertThatThrownBy(() -> StringUtil.startsWith("", -1, ""))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: -1, length: 0");
-    }
-
-    @Test
-    public void startsWithEmptyStringIndexGreaterThanLength() {
-        assertThatThrownBy(() -> StringUtil.startsWith("", 1, ""))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: 1, length: 0");
-    }
-
-    @Test
-    public void startsWithLongerSuffixNegativeIndex() {
-        assertThatThrownBy(() -> StringUtil.startsWith("wh", -1, "whatever"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: -1, length: 2");
-    }
-
-    @Test
-    public void startsWithLongerSuffixIndexGreaterThanLength() {
-        assertThatThrownBy(() -> StringUtil.startsWith("wh", 3, "whatever"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Index is out of bounds: 3, length: 2");
-    }
-
 //    @Test
-//    public void offsetToLineNumberCol() {
+//    void offsetToLineNumberCol() {
 //        assertEquals(LineColumn.of(0, 0), StringUtil.offsetToLineColumn("abc\nabc", 0));
 //        assertEquals(LineColumn.of(0, 1), StringUtil.offsetToLineColumn("abc\nabc", 1));
 //        assertEquals(LineColumn.of(0, 2), StringUtil.offsetToLineColumn("abc\nabc", 2));
@@ -995,7 +1329,7 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testEnglishOrdinals() {
+//    void testEnglishOrdinals() {
 //        assertEquals("100th", OrdinalFormat.formatEnglish(100));
 //        assertEquals("101st", OrdinalFormat.formatEnglish(101));
 //        assertEquals("111th", OrdinalFormat.formatEnglish(111));
@@ -1006,13 +1340,13 @@ public class StringUtilTest {
 //    }
 
 //    @Test
-//    public void testCollapseWhiteSpace() {
+//    void testCollapseWhiteSpace() {
 //        assertEquals("one two three four five", StringUtil.collapseWhiteSpace("\t one\ttwo     three\nfour five   "));
 //        assertEquals("one two three four five", StringUtil.collapseWhiteSpace(" one \ttwo  \t  three\n\tfour five "));
 //    }
 
     @Test
-    public void testReplaceUnicodeEscapeSequences() {
+    void testReplaceUnicodeEscapeSequences() {
         assertThat(StringUtil.replaceUnicodeEscapeSequences("\\uuu005a")).isEqualTo("Z");
         assertThat(StringUtil.replaceUnicodeEscapeSequences("\\uuu005aZ")).isEqualTo("ZZ");
         assertThat(StringUtil.replaceUnicodeEscapeSequences("Z\\uuu005aZ")).isEqualTo("ZZZ");
@@ -1026,34 +1360,30 @@ public class StringUtilTest {
         assertThat(StringUtil.replaceUnicodeEscapeSequences("\\uu1")).isEqualTo("\\uu1");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
-    public void testStripCharFilter() {
-        assertThat(StringUtil.strip("\n   my -string ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my-string");
-        assertThat(StringUtil.strip("my- string", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my-string");
-        assertThat(StringUtil.strip("my-string", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my-string");
-        assertThat(StringUtil.strip("\n   my string ", CharFilter.WHITESPACE_FILTER)).isEqualTo("\n     ");
-        assertThat(StringUtil.strip("", CharFilter.WHITESPACE_FILTER)).isEqualTo("");
-        assertThat(StringUtil.strip("\n   my string ", ch -> false)).isEqualTo("");
-        assertThat(StringUtil.strip("\n   my string ", ch -> true)).isEqualTo("\n   my string ");
+    void testTrim() {
+        assertThat(StringUtil.trim(null)).isNull();
+        assertThat(StringUtil.trim("\n foo ")).isEqualTo("foo");
     }
 
     @Test
-    public void testTrimCharFilter() {
-        assertThat(StringUtil.trim("\n   my string ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my string");
-        assertThat(StringUtil.trim("my string", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my string");
-        assertThat(StringUtil.trim("my string\t", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my string");
-        assertThat(StringUtil.trim("\nmy string", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my string");
-        assertThat(StringUtil.trim("my-string", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my-string");
-        assertThat(StringUtil.trim("my-string ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("my-string");
-        assertThat(StringUtil.trim("\n   my string ", CharFilter.WHITESPACE_FILTER)).isEqualTo("\n   my string ");
+    void testTrimCharFilter() {
+        assertThat(StringUtil.trim("\n   foo bar ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo bar");
+        assertThat(StringUtil.trim("foo bar", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo bar");
+        assertThat(StringUtil.trim("foo bar\t", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo bar");
+        assertThat(StringUtil.trim("\nfoo bar", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo bar");
+        assertThat(StringUtil.trim("foo-bar", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo-bar");
+        assertThat(StringUtil.trim("foo-bar ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("foo-bar");
+        assertThat(StringUtil.trim("\n   foo bar ", CharFilter.WHITESPACE_FILTER)).isEqualTo("\n   foo bar ");
         assertThat(StringUtil.trim("", CharFilter.WHITESPACE_FILTER)).isEqualTo("");
-        assertThat(StringUtil.trim("\n   my string ", ch -> false)).isEqualTo("");
-        assertThat(StringUtil.trim("\n   my string ", ch -> true)).isEqualTo("\n   my string ");
-        assertThat(StringUtil.trim("\u00A0   my string ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("\u00A0   my string");
+        assertThat(StringUtil.trim("\n   foo bar ", ch -> false)).isEqualTo("");
+        assertThat(StringUtil.trim("\n   foo bar ", ch -> true)).isEqualTo("\n   foo bar ");
+        assertThat(StringUtil.trim("\u00A0   foo bar ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("\u00A0   foo bar");
     }
 
     @Test
-    public void testEscapeToRegexp() {
+    void testEscapeToRegexp() {
         assertThat(StringUtil.escapeToRegexp("a\nb")).isEqualTo("a\\nb");
         assertThat(StringUtil.escapeToRegexp("a&%$b")).isEqualTo("a&%\\$b");
         assertThat(StringUtil.escapeToRegexp("\uD83D\uDE80")).isEqualTo("\uD83D\uDE80");
@@ -1061,7 +1391,7 @@ public class StringUtilTest {
     }
 
 //    @Test
-//    public void testRemoveEllipsisSuffix() {
+//    void testRemoveEllipsisSuffix() {
 //        assertEquals("a", removeEllipsisSuffix("a..."));
 //        assertEquals("a", removeEllipsisSuffix("a"));
 //        assertEquals("a", removeEllipsisSuffix("a" + ELLIPSIS));
@@ -1069,7 +1399,7 @@ public class StringUtilTest {
 //    }
 
     @Test
-    public void testEndsWith() {
+    void testEndsWith() {
         assertTrue(StringUtil.endsWith("text", 0, 4, "text"));
         assertFalse(StringUtil.endsWith("text", 4, 4, "-->"));
         assertThatThrownBy(() -> StringUtil.endsWith("text", -1, 4, "t"))
@@ -1078,22 +1408,9 @@ public class StringUtilTest {
         assertFalse(StringUtil.endsWith("text", "-->"));
     }
 
-    @Test
-    public void testIsJavaIdentifier() {
-        assertFalse(StringUtil.isJavaIdentifier(""));
-        assertTrue(StringUtil.isJavaIdentifier("x"));
-        assertFalse(StringUtil.isJavaIdentifier("0"));
-        assertFalse(StringUtil.isJavaIdentifier("0x"));
-        assertTrue(StringUtil.isJavaIdentifier("x0"));
-        assertTrue(StringUtil.isJavaIdentifier("\uD835\uDEFCA"));
-        assertTrue(StringUtil.isJavaIdentifier("A\uD835\uDEFC"));
-        //noinspection UnnecessaryUnicodeEscape
-        assertTrue(StringUtil.isJavaIdentifier("\u03B1A"));
-    }
-
 //    @SuppressWarnings("UnnecessaryUnicodeEscape")
 //    @Test
-//    public void testCharSequenceSliceIsJavaIdentifier() {
+//    void testCharSequenceSliceIsJavaIdentifier() {
 //        assertFalse(StringUtil.isJavaIdentifier("", 0, 0));
 //        assertTrue(StringUtil.isJavaIdentifier("x", 0, 1));
 //        assertFalse(StringUtil.isJavaIdentifier("0", 0, 1));
@@ -1108,43 +1425,8 @@ public class StringUtilTest {
 //        assertTrue(StringUtil.isJavaIdentifier("###\u03B1A###", 3, 5));
 //    }
 
-    @Test
-    public void testSplit() {
-        String spaceSeparator = " ";
-        assertThat(StringUtil.split("test", spaceSeparator, false, false)).containsExactly("test");
-        CharSequenceSubSequence seq = new CharSequenceSubSequence("test");
-        assertThat(StringUtil.split(seq, spaceSeparator, false, false)).containsExactly(seq);
-
-        assertThat(StringUtil.split("", spaceSeparator, false, false)).isEqualTo(Arrays.asList(""));
-        assertThat(StringUtil.split("", spaceSeparator, true, true)).isEqualTo(Arrays.asList());
-
-        assertThat(StringUtil.split(" ", spaceSeparator, false, false)).isEqualTo(Arrays.asList(" ", ""));
-        assertThat(StringUtil.split(" ", spaceSeparator, true, false)).isEqualTo(Arrays.asList("", ""));
-        assertThat(StringUtil.split(" ", spaceSeparator, true, true)).isEqualTo(Arrays.asList());
-
-        assertThat(StringUtil.split("a  b ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "b"));
-        assertThat(StringUtil.split("a  b ", spaceSeparator, false, true)).isEqualTo(Arrays.asList("a ", " ", "b "));
-        assertThat(StringUtil.split("a  b ", spaceSeparator, false, false)).isEqualTo(Arrays.asList("a ", " ", "b ", ""));
-
-        assertThat(StringUtil.split("a  b", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "b"));
-        assertThat(StringUtil.split("a  b", spaceSeparator, false, true)).isEqualTo(Arrays.asList("a ", " ", "b"));
-        assertThat(StringUtil.split("a  b", spaceSeparator, false, false)).isEqualTo(Arrays.asList("a ", " ", "b"));
-
-        assertThat(StringUtil.split("test", spaceSeparator, true, true)).isEqualTo(Arrays.asList("test"));
-        assertThat(StringUtil.split("test", spaceSeparator, false, true)).isEqualTo(Arrays.asList("test"));
-        assertThat(StringUtil.split("test", spaceSeparator, true, false)).isEqualTo(Arrays.asList("test"));
-        assertThat(StringUtil.split("test", spaceSeparator, false, false)).isEqualTo(Arrays.asList("test"));
-
-        assertThat(StringUtil.split("a  b ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", " b"));
-        assertThat(StringUtil.split("a \n\tb ", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a", "\n\tb"));
-
-        assertThat(StringUtil.split("a\u00A0b", spaceSeparator, true, true)).isEqualTo(Arrays.asList("a\u00A0b"));
-
-        assertThat(StringUtil.split("a  \n\ta ", "a", true, true)).isEqualTo(Arrays.asList("  \n\t", " "));
-    }
-
 //    @Test
-//    public void testSplitCharFilter() {
+//    void testSplitCharFilter() {
 //        CharFilter spaceSeparator = CharFilter.WHITESPACE_FILTER;
 //        //noinspection rawtypes
 //        List split1 = StringUtil.split("test", spaceSeparator, false, false);
@@ -1182,7 +1464,7 @@ public class StringUtilTest {
 
 //    @Test
 //    @SuppressWarnings({"OctalInteger", "UnnecessaryUnicodeEscape"}) // need to test octal numbers and escapes
-//    public void testUnescapeAnsiStringCharacters() {
+//    void testUnescapeAnsiStringCharacters() {
 //        assertEquals("'", StringUtil.unescapeAnsiStringCharacters("\\'"));
 //        assertEquals("\"", StringUtil.unescapeAnsiStringCharacters("\\\""));
 //        assertEquals("?", StringUtil.unescapeAnsiStringCharacters("\\?"));
@@ -1217,4 +1499,14 @@ public class StringUtilTest {
 //        assertEquals("\u0061", StringUtil.unescapeAnsiStringCharacters("\\U00000061"));
 //        assertEquals("\\U00110000", StringUtil.unescapeAnsiStringCharacters("\\U00110000")); // invalid unicode codepoint
 //    }
+
+    @Nonnull
+    private static StringBuilder sb() {
+        return new StringBuilder();
+    }
+
+    @Nonnull
+    private static StringBuilder sb(@Nonnull String text) {
+        return new StringBuilder(text);
+    }
 }
