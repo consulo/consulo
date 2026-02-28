@@ -132,7 +132,6 @@ public class RunConfigurable extends BaseConfigurable {
     private final JCheckBox myConfirmation = new JCheckBox(ExecutionLocalize.rerunConfirmationCheckbox().get(), true);
     private final List<Pair<UnnamedConfigurable, JComponent>> myAdditionalSettings = new ArrayList<>();
     private Map<ConfigurationFactory, Configurable> myStoredComponents = new HashMap<>();
-    private ToolbarDecorator myToolbarDecorator;
     private boolean isFolderCreating;
     private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
     private RunManagerImpl myRunManager;
@@ -545,7 +544,9 @@ public class RunConfigurable extends BaseConfigurable {
         panel.setBorder(new EmptyBorder(7, 10, 0, 0));
         panel.add(new JLabel("Press the"));
 
-        Hyperlink hyperlink = Hyperlink.create(LocalizeValue.empty(), event -> myAddAction.showAddPopup(true));
+        Hyperlink hyperlink = Hyperlink.create(LocalizeValue.empty(), event -> {
+            myAddAction.showAddPopup(true, false,TargetAWT.to(event.getComponent()));
+        });
         hyperlink.setIcon(PlatformIconGroup.generalAdd());
         hyperlink.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 5);
         hyperlink.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
@@ -607,6 +608,8 @@ public class RunConfigurable extends BaseConfigurable {
 
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
         panel.addToCenter(scrollPane);
+
+        myAddAction.registerCustomShortcutSet(CommonShortcuts.getInsert(), myTree);
 
         return panel;
     }
@@ -1192,16 +1195,17 @@ public class RunConfigurable extends BaseConfigurable {
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
                 PlatformIconGroup.generalAdd()
             );
-            registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
         }
 
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            showAddPopup(true);
+            Component targetComponent = e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            boolean center = targetComponent instanceof JTree; // shortcut
+            showAddPopup(true, center, targetComponent);
         }
 
-        private void showAddPopup(boolean showApplicableTypesOnly) {
+        private void showAddPopup(boolean showApplicableTypesOnly, boolean center, @Nonnull Component targetComponent) {
             List<ConfigurationType> allTypes = myRunManager.getConfigurationFactories(false);
             final List<ConfigurationType> configurationTypes =
                 ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
@@ -1243,7 +1247,7 @@ public class RunConfigurable extends BaseConfigurable {
                             return getSupStep(type);
                         }
                         if (type == HIDDEN_ITEMS_STUB) {
-                            return doFinalStep(() -> showAddPopup(false));
+                            return doFinalStep(() -> showAddPopup(false, center, targetComponent));
                         }
 
                         ConfigurationFactory[] factories = type.getConfigurationFactories();
@@ -1290,8 +1294,12 @@ public class RunConfigurable extends BaseConfigurable {
                         return type.getConfigurationFactories().length > 1;
                     }
                 });
-            //new TreeSpeedSearch(myTree);
-            popup.showUnderneathOf(myToolbarDecorator.getActionsPanel());
+
+            if (center) {
+                popup.showInCenterOf(myWholePanel);
+            } else {
+                popup.showUnderneathOf(targetComponent);
+            }
         }
     }
 
@@ -1460,7 +1468,7 @@ public class RunConfigurable extends BaseConfigurable {
                 configurable.getNameTextField().setSelectionEnd(copyName.length());
             }
             catch (ConfigurationException e1) {
-                Messages.showErrorDialog(myToolbarDecorator.getActionsPanel(), e1.getMessage(), e1.getTitle());
+                Messages.showErrorDialog(myTree, e1.getMessage(), e1.getTitle());
             }
         }
 
