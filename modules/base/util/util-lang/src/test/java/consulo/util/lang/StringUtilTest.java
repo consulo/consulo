@@ -424,7 +424,9 @@ public class StringUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testRepeat() {
-        assertThatThrownBy(() -> StringUtil.repeat("foo", -1)).isInstanceOf(NegativeArraySizeException.class);
+        assertThatThrownBy(() -> StringUtil.repeat("foo", -1))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Negative count: -1");
         assertThat(StringUtil.repeat("foo", 0)).isEqualTo("");
         assertThat(StringUtil.repeat("foo", 1)).isEqualTo("foo");
         assertThat(StringUtil.repeat("foo", 5)).isEqualTo("foofoofoofoofoo");
@@ -438,11 +440,11 @@ public class StringUtilTest {
         assertThat(StringUtil.repeatSymbol('a', 1)).isEqualTo("a");
         assertThat(StringUtil.repeatSymbol('a', 5)).isEqualTo("aaaaa");
 
-        StringBuilder sb = sb();
-        StringUtil.repeatSymbol(sb, 'a', -1);
-        assertThat(sb).hasToString("");
+        assertThatThrownBy(() -> StringUtil.repeatSymbol(sb(), 'a', -1))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Negative count: -1");
 
-        sb = sb();
+        StringBuilder sb = sb();
         StringUtil.repeatSymbol(sb, 'a', 0);
         assertThat(sb).hasToString("");
 
