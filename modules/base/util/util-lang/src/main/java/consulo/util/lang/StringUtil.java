@@ -933,14 +933,13 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static List<Pair<String, Integer>> getWordsWithOffset(@Nonnull String s) {
-        List<Pair<String, Integer>> res = new ArrayList<>();
-        s += " ";
+        List<Pair<String, Integer>> result = new ArrayList<>();
         StringBuilder name = new StringBuilder();
         int startInd = -1;
         for (int i = 0; i < s.length(); i++) {
             if (Character.isWhitespace(s.charAt(i))) {
-                if (name.length() > 0) {
-                    res.add(Pair.create(name.toString(), startInd));
+                if (!name.isEmpty()) {
+                    result.add(Pair.create(name.toString(), startInd));
                     name.setLength(0);
                     startInd = -1;
                 }
@@ -952,21 +951,22 @@ public final class StringUtil {
                 name.append(s.charAt(i));
             }
         }
-        return res;
+        if (!name.isEmpty()) {
+            result.add(Pair.create(name.toString(), startInd));
+        }
+        return result;
     }
 
     @Contract(pure = true)
     public static int parseInt(@Nullable String string, int defaultValue) {
-        if (string == null) {
-            return defaultValue;
+        if (string != null) {
+            try {
+                return Integer.parseInt(string);
+            }
+            catch (NumberFormatException ignored) {
+            }
         }
-
-        try {
-            return Integer.parseInt(string);
-        }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return defaultValue;
     }
 
     @Contract(pure = true)
@@ -982,23 +982,21 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static double parseDouble(String string, double defaultValue) {
-        try {
-            return Double.parseDouble(string);
+    public static double parseDouble(@Nullable String string, double defaultValue) {
+        if (string != null) {
+            try {
+                return Double.parseDouble(string);
+            }
+            catch (NumberFormatException ignored) {
+            }
         }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return defaultValue;
     }
 
+    @Deprecated
     @Contract(pure = true)
     public static boolean parseBoolean(String string, boolean defaultValue) {
-        try {
-            return Boolean.parseBoolean(string);
-        }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return Boolean.parseBoolean(string);
     }
 
     @Contract(pure = true)
@@ -2715,14 +2713,10 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int commonSuffixLength(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
-        int s1Length = s1.length();
-        int s2Length = s2.length();
-        if (s1Length == 0 || s2Length == 0) {
-            return 0;
-        }
-        int i;
-        for (i = 0; i < s1Length && i < s2Length; i++) {
-            if (s1.charAt(s1Length - i - 1) != s2.charAt(s2Length - i - 1)) {
+        int i, l1 = s1.length(), l2 = s2.length();
+        int minLength = Math.min(l1, l2);
+        for (i = 0; i < minLength; i++) {
+            if (s1.charAt(l1 - i - 1) != s2.charAt(l2 - i - 1)) {
                 break;
             }
         }
@@ -2874,18 +2868,14 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String escapeLineBreak(@Nonnull String text) {
-        StringBuilder buffer = new StringBuilder(text.length());
-        for (int i = 0; i < text.length(); i++) {
+        int n = text.length();
+        StringBuilder buffer = new StringBuilder(n);
+        for (int i = 0; i < n; i++) {
             char c = text.charAt(i);
             switch (c) {
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-                default:
-                    buffer.append(c);
+                case '\n' -> buffer.append("\\n");
+                case '\r' -> buffer.append("\\r");
+                default -> buffer.append(c);
             }
         }
         return buffer.toString();
@@ -3222,9 +3212,8 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean containsLineBreak(@Nonnull CharSequence text) {
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (isLineBreak(c)) {
+        for (int i = 0, n = text.length(); i < n; i++) {
+            if (isLineBreak(text.charAt(i))) {
                 return true;
             }
         }
@@ -3272,8 +3261,8 @@ public final class StringUtil {
      */
     @Contract(pure = true)
     public static boolean hasUpperCaseChar(@Nonnull String s) {
-        for (char c : s.toCharArray()) {
-            if (Character.isUpperCase(c)) {
+        for (int i = 0, n = s.length(); i < n; i++) {
+            if (Character.isUpperCase(s.charAt(i))) {
                 return true;
             }
         }
@@ -3288,8 +3277,8 @@ public final class StringUtil {
      */
     @Contract(pure = true)
     public static boolean hasLowerCaseChar(@Nonnull String s) {
-        for (char c : s.toCharArray()) {
-            if (Character.isLowerCase(c)) {
+        for (int i = 0, n = s.length(); i < n; i++) {
+            if (Character.isLowerCase(s.charAt(i))) {
                 return true;
             }
         }
@@ -3302,7 +3291,7 @@ public final class StringUtil {
             return false;
         }
 
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (Character.isWhitespace(s.charAt(i))) {
                 return true;
             }
