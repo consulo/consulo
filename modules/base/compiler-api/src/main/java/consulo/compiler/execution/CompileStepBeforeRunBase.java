@@ -60,7 +60,10 @@ public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> exten
             .add(RunConfiguration.KEY, runConfiguration)
             .build();
 
-        CompilerRunner.Result result = point.computeSafeIfAny(r -> r.checkAvailable(context));
+        CompilerRunner.Result result = point.computeSafeIfAny(r ->
+            r.checkAvailable(context) instanceof CompilerRunner.YesResult yes ? yes : null
+        );
+
         if (result instanceof CompilerRunner.YesResult yesResult) {
             return yesResult.buildIcon();
         }

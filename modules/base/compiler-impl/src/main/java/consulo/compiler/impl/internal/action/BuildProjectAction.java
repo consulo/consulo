@@ -54,8 +54,12 @@ public class BuildProjectAction extends CompileActionBase {
 
         if (project != null) {
             ExtensionPoint<CompilerRunner> point = project.getExtensionPoint(CompilerRunner.class);
-            CompilerRunner.Result runner = point.computeSafeIfAny(r -> r.checkAvailable(event.getDataContext()));
-            if (runner instanceof CompilerRunner.YesResult yesResult) {
+
+            CompilerRunner.Result result = point.computeSafeIfAny(r ->
+                r.checkAvailable(event.getDataContext()) instanceof CompilerRunner.YesResult yes ? yes : null
+            );
+
+            if (result instanceof CompilerRunner.YesResult yesResult) {
                 presentation.setIcon(yesResult.buildIcon());
             } else {
                 presentation.setIcon(PlatformIconGroup.actionsCompile());
