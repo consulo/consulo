@@ -36,7 +36,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
   protected final Runnable myCancelCallback;
   private boolean myOldChecked;
 
-  protected abstract MethodNodeBase<M> createNode(M caller, HashSet<M> called);
+  protected abstract MethodNodeBase<M> createNode(M caller, Set<M> called);
 
   protected abstract List<M> computeCallers();
 
@@ -57,7 +57,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
       List<M> callers = findCallers();
       children = new Vector(callers.size());
       for (M caller : callers) {
-        HashSet<M> called = new HashSet<>(myCalled);
+        Set<M> called = new HashSet<>(myCalled);
         called.add(myMethod);
         MethodNodeBase<M> child = createNode(caller, called);
         children.add(child);

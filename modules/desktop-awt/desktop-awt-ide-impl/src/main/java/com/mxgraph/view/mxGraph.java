@@ -3359,7 +3359,7 @@ public class mxGraph extends mxEventSource {
   public void resetEdges(Object[] cells) {
     if (cells != null) {
       // Prepares a hashtable for faster cell lookups
-      HashSet<Object> set = new HashSet<Object>(Arrays.asList(cells));
+      Set<Object> set = new HashSet<>(Arrays.asList(cells));
 
       model.beginUpdate();
       try {

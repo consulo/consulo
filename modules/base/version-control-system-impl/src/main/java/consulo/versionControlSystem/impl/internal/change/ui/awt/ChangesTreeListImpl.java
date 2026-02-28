@@ -397,7 +397,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
             return Collections.emptyList();
         }
         else {
-            LinkedHashSet<T> changes = new LinkedHashSet<>();
+            SequencedSet<T> changes = new LinkedHashSet<>();
             for (TreePath path : paths) {
                 //noinspection unchecked
                 changes.addAll(getSelectedObjects((ChangesBrowserNode) path.getLastPathComponent()));

@@ -95,7 +95,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private HyperlinkLabel myAttachmentWarningLabel;
 
     private int myIndex = 0;
-    private final List<ArrayList<AbstractMessage>> myMergedMessages = new ArrayList<>();
+    private final List<List<AbstractMessage>> myMergedMessages = new ArrayList<>();
     private List<AbstractMessage> myRawMessages;
     private final MessagePool myMessagePool;
     private HeaderlessTabbedPane myTabs;
@@ -694,7 +694,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         try {
             if (myInternalMode) {
                 boolean hasAttachment = false;
-                for (ArrayList<AbstractMessage> merged : myMergedMessages) {
+                for (List<AbstractMessage> merged : myMergedMessages) {
                     if (merged.get(0) instanceof LogMessageEx logMessageEx && !logMessageEx.getAttachments().isEmpty()) {
                         hasAttachment = true;
                         break;
@@ -770,9 +770,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myMergedMessages.clear();
         myRawMessages = myMessagePool.getFatalErrors(true, true);
 
-        Map<String, ArrayList<AbstractMessage>> hash2Messages = mergeMessages(myRawMessages);
+        Map<String, List<AbstractMessage>> hash2Messages = mergeMessages(myRawMessages);
 
-        for (ArrayList<AbstractMessage> abstractMessages : hash2Messages.values()) {
+        for (List<AbstractMessage> abstractMessages : hash2Messages.values()) {
             myMergedMessages.add(abstractMessages);
         }
     }
@@ -800,11 +800,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         return result != null ? result : super.getPreferredFocusedComponent();
     }
 
-    private static Map<String, ArrayList<AbstractMessage>> mergeMessages(List<AbstractMessage> aErrors) {
-        Map<String, ArrayList<AbstractMessage>> hash2Messages = new LinkedHashMap<>();
+    private static Map<String, List<AbstractMessage>> mergeMessages(List<AbstractMessage> aErrors) {
+        Map<String, List<AbstractMessage>> hash2Messages = new LinkedHashMap<>();
         for (AbstractMessage each : aErrors) {
             String hashCode = getThrowableHashCode(each.getThrowable());
-            ArrayList<AbstractMessage> list;
+            List<AbstractMessage> list;
             if (hash2Messages.containsKey(hashCode)) {
                 list = hash2Messages.get(hashCode);
             }

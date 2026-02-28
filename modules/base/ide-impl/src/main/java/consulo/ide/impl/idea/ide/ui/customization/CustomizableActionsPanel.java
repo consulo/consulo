@@ -321,7 +321,7 @@ public class CustomizableActionsPanel implements Disposable {
                 if (component instanceof KeymapGroupImpl keymapGroup) {
                     selectedGroupPath.add(keymapGroup.getName());
                     for (ActionUrl action : mySelectedSchema.getActions()) {
-                        ArrayList<String> groupPath = action.getGroupPath();
+                        List<String> groupPath = action.getGroupPath();
                         int idx = Collections.indexOfSubList(groupPath, selectedGroupPath);
                         if (idx > -1) {
                             actions.add(action);

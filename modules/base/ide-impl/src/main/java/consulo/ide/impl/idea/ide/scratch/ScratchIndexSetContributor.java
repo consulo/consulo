@@ -50,7 +50,7 @@ public class ScratchIndexSetContributor extends IndexableSetContributor {
   @Override
   public Set<VirtualFile> getAdditionalRootsToIndex() {
     ScratchFileService scratchFileService = myScratchFileServiceProvider.get();
-    HashSet<VirtualFile> result = new HashSet<>();
+    Set<VirtualFile> result = new HashSet<>();
     myApplication.getExtensionPoint(RootType.class).forEachExtensionSafe(rootType -> {
       if (rootType.isHidden()) return;
       ContainerUtil.addIfNotNull(result, myLocalFileSystem.findFileByPath(scratchFileService.getRootPath(rootType)));

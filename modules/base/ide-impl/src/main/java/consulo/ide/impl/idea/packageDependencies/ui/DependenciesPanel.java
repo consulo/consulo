@@ -88,7 +88,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     private final MyTree myRightTree = new MyTree();
     private final DependenciesUsagesPanel myUsagesPanel;
 
-    private static final HashSet<PsiFile> EMPTY_FILE_SET = new HashSet<>(0);
+    private static final Set<PsiFile> EMPTY_FILE_SET = new HashSet<>(0);
     private final TreeExpansionMonitor myRightTreeExpansionMonitor;
     private final TreeExpansionMonitor myLeftTreeExpansionMonitor;
 

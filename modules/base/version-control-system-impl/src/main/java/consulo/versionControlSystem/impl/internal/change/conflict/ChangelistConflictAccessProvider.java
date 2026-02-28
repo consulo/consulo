@@ -27,10 +27,7 @@ import consulo.virtualFileSystem.WritingAccessProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * @author Dmitry Avdeev
@@ -62,7 +59,7 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
     }
 
     if (!denied.isEmpty()) {
-      HashSet<ChangeList> changeLists = new HashSet<>();
+      Set<ChangeList> changeLists = new HashSet<>();
       ArrayList<Change> changes = new ArrayList<>();
       for (VirtualFile file : denied) {
         changeLists.add(myManager.getChangeList(file));

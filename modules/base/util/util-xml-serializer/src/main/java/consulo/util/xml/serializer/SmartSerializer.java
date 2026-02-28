@@ -23,14 +23,16 @@ import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.SequencedSet;
+import java.util.Set;
 
 public final class SmartSerializer {
-  private LinkedHashSet<String> mySerializedAccessorNameTracker;
+  private SequencedSet<String> mySerializedAccessorNameTracker;
   private Map<String, Float> myOrderedBindings;
   private final SerializationFilter mySerializationFilter;
 
   public SmartSerializer(boolean trackSerializedNames, boolean useSkipEmptySerializationFilter) {
-    mySerializedAccessorNameTracker = trackSerializedNames ? new LinkedHashSet<String>() : null;
+    mySerializedAccessorNameTracker = trackSerializedNames ? new LinkedHashSet<>() : null;
 
     mySerializationFilter = useSkipEmptySerializationFilter ?
                             new SkipEmptySerializationFilter() {
@@ -87,7 +89,7 @@ public final class SmartSerializer {
       binding.serializeInto(bean, element, mySerializationFilter);
     }
     else {
-      LinkedHashSet<String> oldTracker = mySerializedAccessorNameTracker;
+      SequencedSet<String> oldTracker = mySerializedAccessorNameTracker;
       try {
         mySerializedAccessorNameTracker = null;
         binding.serializeInto(bean, element, mySerializationFilter);

@@ -175,7 +175,7 @@ public abstract class LookupArranger implements WeighingContext {
   public static class DefaultArranger extends LookupArranger {
     @Override
     public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
-      LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
+      SequencedSet<LookupElement> result = new LinkedHashSet<>();
       result.addAll(getPrefixItems(true));
       result.addAll(getPrefixItems(false));
 
@@ -186,7 +186,7 @@ public abstract class LookupArranger implements WeighingContext {
         }
       }
       result.addAll(items);
-      ArrayList<LookupElement> list = new ArrayList<>(result);
+      List<LookupElement> list = new ArrayList<>(result);
       int selected = !lookup.isSelectionTouched() && onExplicitAction ? 0 : list.indexOf(lookup.getCurrentItem());
       return new Pair<>(list, selected >= 0 ? selected : 0);
     }

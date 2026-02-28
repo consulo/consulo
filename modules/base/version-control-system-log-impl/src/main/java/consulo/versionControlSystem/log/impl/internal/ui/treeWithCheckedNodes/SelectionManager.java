@@ -53,7 +53,7 @@ public class SelectionManager {
     if (TreeNodeState.HAVE_SELECTED_ABOVE.equals(state)) return;
     if (TreeNodeState.CLEAR.equals(state) && (! myState.canAddSelection())) return;
 
-    HashSet<VirtualFile> old = new HashSet<>(myState.getSelected());
+    Set<VirtualFile> old = new HashSet<>(myState.getSelected());
 
     TreeNodeState futureState =
             myState.putAndPass(vf, TreeNodeState.SELECTED.equals(state) ? TreeNodeState.CLEAR : TreeNodeState.SELECTED);

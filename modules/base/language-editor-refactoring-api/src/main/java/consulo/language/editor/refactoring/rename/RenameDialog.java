@@ -52,6 +52,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 public class RenameDialog extends RefactoringDialog {
@@ -182,7 +183,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     public String[] getSuggestedNames() {
-        LinkedHashSet<String> result = new LinkedHashSet<>();
+        Set<String> result = new LinkedHashSet<>();
         String initialName = VariableInplaceRenameHandler.getInitialName();
         if (initialName != null) {
             result.add(initialName);

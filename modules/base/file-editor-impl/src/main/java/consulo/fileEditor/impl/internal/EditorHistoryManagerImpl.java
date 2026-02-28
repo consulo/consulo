@@ -51,10 +51,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -239,8 +236,8 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   /**
    * @return a set of valid files that are in the history, oldest first.
    */
-  public LinkedHashSet<VirtualFile> getFileSet() {
-    LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
+  public Set<VirtualFile> getFileSet() {
+    Set<VirtualFile> result = new LinkedHashSet<>();
     for (VirtualFile file : getFiles()) {
       // if the file occurs several times in the history, only its last occurrence counts
       result.remove(file);

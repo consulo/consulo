@@ -122,7 +122,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
     }
 
     @RequiredReadAction
-    private void findElementUsages(ArrayList<UsageInfo> result, PsiElement element) {
+    private void findElementUsages(List<UsageInfo> result, PsiElement element) {
         if (!mySearchForReferences) {
             return;
         }

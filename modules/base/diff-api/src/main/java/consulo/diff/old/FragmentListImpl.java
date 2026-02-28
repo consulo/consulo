@@ -19,28 +19,24 @@ import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public class FragmentListImpl implements FragmentList {
     private static final Logger LOG = Logger.getInstance(FragmentListImpl.class);
-    private final ArrayList<Fragment> myFragments;
+    private final List<Fragment> myFragments;
 
-    private <T extends Fragment> FragmentListImpl(ArrayList<T> sortedFragments) {
-        myFragments = (ArrayList<Fragment>)sortedFragments;
+    private <T extends Fragment> FragmentListImpl(List<T> sortedFragments) {
+        myFragments = (List<Fragment>)sortedFragments;
     }
 
     private void init() {
         Collections.sort(myFragments, FRAGMENT_COMPARATOR);
-        myFragments.trimToSize();
     }
 
-    public static <T extends Fragment> FragmentList fromList(ArrayList<T> fragments) {
+    public static <T extends Fragment> FragmentList fromList(List<T> fragments) {
         FragmentListImpl fragmentList = new FragmentListImpl(fragments);
         fragmentList.init();
         return fragmentList;
@@ -80,14 +76,14 @@ public class FragmentListImpl implements FragmentList {
         return null;
     }
 
-    public static ArrayList<Fragment> shift(
-        ArrayList<Fragment> fragments,
+    public static List<Fragment> shift(
+        List<Fragment> fragments,
         TextRange rangeShift1,
         TextRange rangeShift2,
         int startLine1,
         int startLine2
     ) {
-        ArrayList<Fragment> newFragments = new ArrayList<>(fragments.size());
+        List<Fragment> newFragments = new ArrayList<>(fragments.size());
         for (Fragment fragment : fragments) {
             newFragments.add(fragment.shift(rangeShift1, rangeShift2, startLine1, startLine2));
         }

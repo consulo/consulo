@@ -37,10 +37,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import static com.formdev.flatlaf.FlatClientProperties.*;
 
@@ -497,9 +495,9 @@ public class FlatTreeUIWidePatch
         if (visiblePaths != null) {
             Insets insets = tree.getInsets();
 
-            HashSet<TreePath> verticalLinePaths = paintLines ? new HashSet<>() : null;
-            ArrayList<Runnable> paintLinesLater = paintLines ? new ArrayList<>() : null;
-            ArrayList<Runnable> paintExpandControlsLater = paintLines ? new ArrayList<>() : null;
+            Set<TreePath> verticalLinePaths = paintLines ? new HashSet<>() : null;
+            List<Runnable> paintLinesLater = paintLines ? new ArrayList<>() : null;
+            List<Runnable> paintExpandControlsLater = paintLines ? new ArrayList<>() : null;
 
             // add parents for later painting of vertical lines
             if (paintLines) {

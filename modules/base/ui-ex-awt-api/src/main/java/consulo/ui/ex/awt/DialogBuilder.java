@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The DialogBuilder is a simpler alternative to {@link DialogWrapper}.
@@ -260,7 +261,7 @@ public class DialogBuilder implements Disposable {
         return get(getActionDescriptors(), OkActionDescriptor.class);
     }
 
-    private static CustomizableAction get(ArrayList<ActionDescriptor> actionDescriptors, Class aClass) {
+    private static CustomizableAction get(List<ActionDescriptor> actionDescriptors, Class aClass) {
         for (ActionDescriptor actionDescriptor : actionDescriptors) {
             if (actionDescriptor.getClass().isAssignableFrom(aClass)) {
                 return (CustomizableAction)actionDescriptor;
