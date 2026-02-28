@@ -20,6 +20,4 @@ import jakarta.annotation.Nonnull;
 public interface BackgroundEditorHighlighter {
   @Nonnull
   HighlightingPass[] createPassesForEditor();
-  @Nonnull
-  HighlightingPass[] createPassesForVisibleArea();
 }
