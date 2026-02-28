@@ -248,10 +248,8 @@ public class StringUtilTest {
 
     @Test
     void testEscapeToRegexp() {
-        assertThat(StringUtil.escapeToRegexp("a\nb")).isEqualTo("a\\nb");
-        assertThat(StringUtil.escapeToRegexp("a&%$b")).isEqualTo("a&%\\$b");
-        assertThat(StringUtil.escapeToRegexp("\uD83D\uDE80")).isEqualTo("\uD83D\uDE80");
-        assertThat(StringUtil.escapeToRegexp(",'%=")).isEqualTo(",'%=");
+        assertThat(StringUtil.escapeToRegexp("foo.$|()[]{}^?*+\\\r\n"))
+            .isEqualTo("foo\\.\\$\\|\\(\\)\\[\\]\\{\\}\\^\\?\\*\\+\\\\\\r\\n");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -618,6 +616,17 @@ public class StringUtilTest {
         assertThat(StringUtil.parseLong("-1234567890123456789", 0)).isEqualTo(-1234567890123456789L);
     }
 
+    @Test
+    void testQuote() {
+        StringBuilder sb = sb("foo");
+        StringUtil.quote(sb);
+        assertThat(sb).hasToString("\"foo\"");
+
+        sb = sb("foo");
+        StringUtil.quote(sb, '\'');
+        assertThat(sb).hasToString("'foo'");
+    }
+
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testRepeat() {
@@ -652,6 +661,35 @@ public class StringUtilTest {
         sb = sb();
         StringUtil.repeatSymbol(sb, 'a', 5);
         assertThat(sb).hasToString("aaaaa");
+    }
+
+    @Test
+    void testShortenPathWithEllipsis() {
+        assertThatThrownBy(() -> StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 10))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("prefixLength = 0 for given textLength = 15, maxLength = 10 and suffixLength = 7");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14)).isEqualTo("fo...r/baz/qux");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14, false)).isEqualTo("fo...r/baz/qux");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14, true)).isEqualTo("foo/…r/baz/qux");
+    }
+
+    @Test
+    void testShortenTextWithEllipsis() {
+        assertThatThrownBy(() -> StringUtil.shortenTextWithEllipsis("foobar", 5, 2))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("prefixLength = 0 for given textLength = 6, maxLength = 5 and suffixLength = 2");
+        assertThat(StringUtil.shortenTextWithEllipsis("foo", 5, 1)).isEqualTo("foo");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 1)).isEqualTo("f...r");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 1, false)).isEqualTo("f...r");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 2, true)).isEqualTo("fo…ar");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 2, "*")).isEqualTo("fo*ar");
+    }
+
+    @Test
+    void testTrimMiddle() {
+        assertThat(StringUtil.trimMiddle("foobar", 5)).isEqualTo("fo…ar");
+        assertThat(StringUtil.trimMiddle("foobar", 5, true)).isEqualTo("fo…ar");
+        assertThat(StringUtil.trimMiddle("foobar", 5, false)).isEqualTo("f...r");
     }
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -757,6 +795,12 @@ public class StringUtilTest {
         assertThat(StringUtil.startsWithChar(null, 'f')).isFalse();
         assertThat(StringUtil.startsWithChar("", 'f')).isFalse();
         assertThat(StringUtil.startsWithChar("foo", 'f')).isTrue();
+    }
+
+    @Test
+    void testStartsWithIgnoreCase() {
+        assertThat(StringUtil.startsWithIgnoreCase("Foobar", "foo")).isTrue();
+        assertThat(StringUtil.startsWithIgnoreCase("Foobar", "bar")).isFalse();
     }
 
     @Test
@@ -928,6 +972,13 @@ public class StringUtilTest {
         assertThat(StringUtil.trimLeading(string)).isEqualTo(expected);
         assertThat(StringUtil.trimLeading(string, ' ')).isEqualTo(expected);
         //assertThat(StringUtil.trimLeading(new StringBuilder(string), ' ').toString()).isEqualTo(expected);
+    }
+
+    @Test
+    void testTrimLog() {
+        assertThat(StringUtil.trimLog("Foo bar", 5)).isEqualTo("Foo bar");
+        assertThat(StringUtil.trimLog("Foo bar", 6)).isEqualTo("F ...\n");
+        assertThat(StringUtil.trimLog("Foo bar", 7)).isEqualTo("Foo bar");
     }
 
     @Test
