@@ -50,7 +50,7 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
       ModuleRootManager.getInstance(module).orderEntries().librariesOnly().forEachLibrary(processor);
     }
 
-    HashSet<UsageDescriptor> usageDescriptors = new HashSet<UsageDescriptor>();
+    Set<UsageDescriptor> usageDescriptors = new HashSet<>();
     for (LibraryKind kind : usedKinds) {
       usageDescriptors.add(new UsageDescriptor(kind.getKindId(), 1));
     }

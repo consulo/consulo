@@ -376,9 +376,9 @@ public class mxOrganicLayout extends mxGraphLayout {
     mxIGraphModel model = graph.getModel();
     mxGraphView view = graph.getView();
     Object[] vertices = graph.getChildVertices(parent);
-    HashSet<Object> vertexSet = new HashSet<Object>(Arrays.asList(vertices));
+    Set<Object> vertexSet = new HashSet<>(Arrays.asList(vertices));
 
-    HashSet<Object> validEdges = new HashSet<Object>();
+    Set<Object> validEdges = new HashSet<>();
 
     // Remove edges that do not have both source and target terminals visible
     for (int i = 0; i < vertices.length; i++) {

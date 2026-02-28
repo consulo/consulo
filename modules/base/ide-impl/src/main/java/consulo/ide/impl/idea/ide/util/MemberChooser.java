@@ -84,7 +84,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     protected final Map<ClassMember, MemberNode> myElementToNodeMap = new HashMap<>();
     protected final List<ContainerNode> myContainerNodes = new ArrayList<>();
 
-    protected LinkedHashSet<T> mySelectedElements;
+    protected SequencedSet<T> mySelectedElements;
 
     private static final String PROP_SORTED = "MemberChooser.sorted";
     private static final String PROP_SHOWCLASSES = "MemberChooser.showClasses";
@@ -532,19 +532,19 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     @Nullable
-    private LinkedHashSet<T> getSelectedElementsList() {
+    private SequencedSet<T> getSelectedElementsList() {
         return getExitCode() == OK_EXIT_CODE ? mySelectedElements : null;
     }
 
     @Nullable
     public List<T> getSelectedElements() {
-        LinkedHashSet<T> list = getSelectedElementsList();
+        SequencedSet<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
     @Nullable
     public T[] getSelectedElements(T[] a) {
-        LinkedHashSet<T> list = getSelectedElementsList();
+        SequencedSet<T> list = getSelectedElementsList();
         if (list == null) {
             return null;
         }

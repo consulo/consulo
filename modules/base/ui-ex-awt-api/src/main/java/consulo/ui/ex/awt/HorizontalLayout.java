@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is intended to lay out added components horizontally.
@@ -188,7 +189,7 @@ public final class HorizontalLayout implements LayoutManager2 {
     }
   }
 
-  private int layout(ArrayList<Component> list, int x, int height, Insets insets) {
+  private int layout(List<Component> list, int x, int height, Insets insets) {
     for (Component component : list) {
       if (component.isVisible()) {
         Dimension size = component.getPreferredSize();
@@ -223,7 +224,7 @@ public final class HorizontalLayout implements LayoutManager2 {
     return result;
   }
 
-  private Dimension getPreferredSize(ArrayList<Component> list) {
+  private Dimension getPreferredSize(List<Component> list) {
     Dimension result = null;
     for (Component component : list) {
       if (component.isVisible()) {

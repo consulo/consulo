@@ -812,7 +812,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
 
     private void doTrimSize(int limit, @Nullable VirtualFile fileToIgnore, boolean closeNonModifiedFilesFirst, boolean transferFocus) {
-        LinkedHashSet<VirtualFile> closingOrder = getTabClosingOrder(closeNonModifiedFilesFirst);
+        SequencedSet<VirtualFile> closingOrder = getTabClosingOrder(closeNonModifiedFilesFirst);
         VirtualFile selectedFile = getSelectedFile();
         if (shouldCloseSelected()) {
             defaultCloseFile(selectedFile, transferFocus);
@@ -830,11 +830,11 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
     }
 
-    private LinkedHashSet<VirtualFile> getTabClosingOrder(boolean closeNonModifiedFilesFirst) {
+    private SequencedSet<VirtualFile> getTabClosingOrder(boolean closeNonModifiedFilesFirst) {
         VirtualFile[] allFiles = getFiles();
         Set<VirtualFile> histFiles = EditorHistoryManagerImpl.getInstance(getManager().getProject()).getFileSet();
 
-        LinkedHashSet<VirtualFile> closingOrder = new LinkedHashSet<>();
+        SequencedSet<VirtualFile> closingOrder = new LinkedHashSet<>();
 
         // first, we search for files not in history
         for (VirtualFile file : allFiles) {

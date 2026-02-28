@@ -97,7 +97,7 @@ public class VcsUtil {
         markFileAsDirty(project, filePath);
     }
 
-    public static void refreshFiles(Project project, HashSet<FilePath> paths) {
+    public static void refreshFiles(Project project, Set<FilePath> paths) {
         for (FilePath path : paths) {
             VirtualFile vFile = path.getVirtualFile();
             if (vFile != null) {

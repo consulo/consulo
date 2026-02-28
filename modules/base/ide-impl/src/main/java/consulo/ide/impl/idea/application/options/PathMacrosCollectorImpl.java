@@ -43,7 +43,7 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
     PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
-    HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
+    Set<String> result = new HashSet<>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
     result.removeAll(pathMacros.getLegacyMacroNames());
     for (Macro macro : MacroManager.getInstance().getMacros()) {

@@ -36,6 +36,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static consulo.ui.ex.action.AnActionEvent.injectedId;
 import static consulo.util.collection.ContainerUtil.addIfNotNull;
@@ -224,7 +225,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
 
     @RequiredReadAction
     private Language[] computeLanguages(@Nonnull Editor editor, @Nonnull Caret caret) {
-        LinkedHashSet<Language> set = new LinkedHashSet<>(4);
+        Set<Language> set = new LinkedHashSet<>(4);
         Language injectedLanguage = (Language) getData(injectedId(Language.KEY), editor, caret);
         addIfNotNull(set, injectedLanguage);
         Language language = (Language) getData(Language.KEY, editor, caret);

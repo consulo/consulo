@@ -19,9 +19,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.localHistory.impl.internal.change.*;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class ChangeCollectingVisitor extends ChangeVisitor {
@@ -31,7 +29,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   private ChangeSet myCurrentChangeSet;
   private boolean myExists = true;
   private boolean myDoNotAddAnythingElseFromCurrentChangeSet = false;
-  private final LinkedHashSet<ChangeSet> myResult = new LinkedHashSet<ChangeSet>();
+  private final SequencedSet<ChangeSet> myResult = new LinkedHashSet<>();
 
   public ChangeCollectingVisitor(String path, String projectId, @Nullable String pattern) {
     myPath = path;
@@ -40,7 +38,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   }
 
   public List<ChangeSet> getChanges() {
-    return new ArrayList<ChangeSet>(myResult);
+    return new ArrayList<>(myResult);
   }
 
   public String getPath() {

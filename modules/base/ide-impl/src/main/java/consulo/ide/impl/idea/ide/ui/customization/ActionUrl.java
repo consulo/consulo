@@ -35,6 +35,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author anna
@@ -47,7 +48,7 @@ public class ActionUrl implements JDOMExternalizable {
     //temp action only
     public static final int MOVE = 2;
 
-    private ArrayList<String> myGroupPath;
+    private List<String> myGroupPath;
     private Object myComponent;
     private int myActionType;
     private int myAbsolutePosition;
@@ -66,14 +67,14 @@ public class ActionUrl implements JDOMExternalizable {
         myGroupPath = new ArrayList<>();
     }
 
-    public ActionUrl(ArrayList<String> groupPath, Object component, int actionType, int position) {
+    public ActionUrl(List<String> groupPath, Object component, int actionType, int position) {
         myGroupPath = groupPath;
         myComponent = component;
         myActionType = actionType;
         myAbsolutePosition = position;
     }
 
-    public ArrayList<String> getGroupPath() {
+    public List<String> getGroupPath() {
         return myGroupPath;
     }
 
@@ -284,7 +285,7 @@ public class ActionUrl implements JDOMExternalizable {
         myComponent = object;
     }
 
-    public void setGroupPath(ArrayList<String> groupPath) {
+    public void setGroupPath(List<String> groupPath) {
         myGroupPath = groupPath;
     }
 }

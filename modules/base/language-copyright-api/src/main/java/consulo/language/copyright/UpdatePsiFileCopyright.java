@@ -150,7 +150,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   protected void checkComments(PsiElement last, boolean commentHere, List<PsiComment> comments) {
     try {
       String keyword = myCopyrightProfile.getKeyword();
-      LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
+      Set<CommentRange> found = new LinkedHashSet<>();
       Document doc = null;
       if (!StringUtil.isEmpty(keyword)) {
         Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);

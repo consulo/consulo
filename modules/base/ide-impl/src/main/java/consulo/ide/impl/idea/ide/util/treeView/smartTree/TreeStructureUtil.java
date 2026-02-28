@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Maxim.Mossienko
@@ -33,7 +34,7 @@ public class TreeStructureUtil {
 
   public static Object[] getChildElementsFromTreeStructure(AbstractTreeStructure treeStructure, Object element) {
     Object[] items = treeStructure.getChildElements(element);
-    HashSet<Object> viewedItems = new HashSet<Object>();
+    Set<Object> viewedItems = new HashSet<>();
 
     for (Object item : items) {
       if (viewedItems.contains(item)) continue;

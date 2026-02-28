@@ -80,7 +80,7 @@ public abstract class TodoTreeBuilder implements Disposable {
      * to perform some (perhaps, CPU expensive) operation. These "dirty" files are
      * validated in {@code validateCache()} method.
      */
-    protected final HashSet<VirtualFile> myDirtyFileSet;
+    protected final Set<VirtualFile> myDirtyFileSet;
 
     protected final Map<VirtualFile, EditorHighlighter> myFile2Highlighter;
 

@@ -280,7 +280,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             isDuplicatesCacheUpdating = true; //assuming that this check happens only on EDT. So, no synchronised block or double-checked locking needed
             Application.get().executeOnPooledThread((Runnable) () -> {
                 Set<String> names = new HashSet<>();
-                HashSet<String> duplicates = new HashSet<>();
+                Set<String> duplicates = new HashSet<>();
                 for (String path : List.copyOf(recentPaths)) {
                     if (!names.add(RecentProjectsManagerImpl.this.getProjectName(path))) {
                         duplicates.add(path);

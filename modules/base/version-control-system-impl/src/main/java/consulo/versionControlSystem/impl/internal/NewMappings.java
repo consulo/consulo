@@ -146,7 +146,7 @@ public class NewMappings implements VcsMapping, Disposable {
         runnable.run();
         return;
       }
-      HashSet<String> old = new HashSet<>();
+      Set<String> old = new HashSet<>();
       for (AbstractVcs activeVcs : myActiveVcses) {
         old.add(activeVcs.getName());
       }

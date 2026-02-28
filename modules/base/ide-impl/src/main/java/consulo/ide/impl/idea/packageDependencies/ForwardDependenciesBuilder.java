@@ -113,7 +113,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
 
     boolean isInLibrary =  virtualFile == null || fileIndex.isInLibrarySource(virtualFile) || fileIndex.isInLibraryClasses(virtualFile);
     Set<PsiFile> collectedDeps = new HashSet<PsiFile>();
-    HashSet<PsiFile> processed = new HashSet<PsiFile>();
+    Set<PsiFile> processed = new HashSet<>();
     collectedDeps.add(file);
     do {
       if (depth++ > getTransitiveBorder()) return;

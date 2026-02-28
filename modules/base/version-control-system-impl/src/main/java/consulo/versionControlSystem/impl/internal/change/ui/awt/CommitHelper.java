@@ -49,10 +49,7 @@ import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -78,7 +75,7 @@ public class CommitHelper {
     private final List<Document> myCommittingDocuments = new ArrayList<>();
     private final VcsConfiguration myConfiguration;
     private final VcsDirtyScopeManager myDirtyScopeManager;
-    private final HashSet<String> myFeedback;
+    private final Set<String> myFeedback;
 
     public CommitHelper(
         @Nonnull Project project,

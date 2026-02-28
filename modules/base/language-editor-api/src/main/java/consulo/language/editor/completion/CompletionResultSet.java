@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
+import java.util.SequencedSet;
 import java.util.function.Consumer;
 
 /**
@@ -131,8 +132,8 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
     myStopped = true;
   }
 
-  public LinkedHashSet<CompletionResult> runRemainingContributors(CompletionParameters parameters, boolean passResult) {
-    LinkedHashSet<CompletionResult> elements = new LinkedHashSet<>();
+  public SequencedSet<CompletionResult> runRemainingContributors(CompletionParameters parameters, boolean passResult) {
+    SequencedSet<CompletionResult> elements = new LinkedHashSet<>();
     runRemainingContributors(parameters, result -> {
       if (passResult) {
         passResult(result);

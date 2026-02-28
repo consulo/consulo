@@ -41,6 +41,7 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ExtensionImpl
 public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
@@ -116,7 +117,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
     }
 
     private static VirtualFile[] getFilesFromPsiElements(PsiElement[] psiElements) {
-        HashSet<VirtualFile> files = new HashSet<>();
+        Set<VirtualFile> files = new HashSet<>();
         for (PsiElement elem : psiElements) {
             if (elem instanceof PsiDirectory directory) {
                 files.add(directory.getVirtualFile());

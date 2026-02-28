@@ -277,7 +277,7 @@ public class StartupActionScriptManager {
       ObjectInputStream stream = null;
       try {
         stream = new ObjectInputStream(new FileInputStream(file));
-        return (ArrayList<ActionCommand>)stream.readObject();
+        return (List<ActionCommand>)stream.readObject();
       }
       catch (Exception e) {
         return Collections.emptyList();

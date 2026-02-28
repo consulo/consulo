@@ -86,7 +86,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
         }
 
         myApplication.getLastUIAccess().giveIfNeed(() -> {
-            LinkedHashSet<String> macros = new LinkedHashSet<>(unknownMacros);
+            Set<String> macros = new LinkedHashSet<>(unknownMacros);
             macros.removeAll(getMacrosFromExistingNotifications((Project) project));
 
             if (!macros.isEmpty()) {

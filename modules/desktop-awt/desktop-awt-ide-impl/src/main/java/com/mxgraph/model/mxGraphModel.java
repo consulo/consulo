@@ -1357,7 +1357,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel, Serial
    *
    */
   public static Object[] getParents(mxIGraphModel model, Object[] cells) {
-    HashSet<Object> parents = new HashSet<Object>();
+    Set<Object> parents = new HashSet<>();
 
     if (cells != null) {
       for (int i = 0; i < cells.length; i++) {

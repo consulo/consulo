@@ -25,6 +25,7 @@ import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Vladimir Kondratyev
@@ -34,7 +35,7 @@ public class TodoFilter implements Cloneable{
 
   private String myName;
   // TODO[vova] use array for storing TodoPatterns. Perhaps it's better...
-  private HashSet<TodoPattern> myTodoPatterns;
+  private Set<TodoPattern> myTodoPatterns;
   private static final String ATTRIBUTE_NAME = "name";
   private static final String ELEMENT_PATTERN = "pattern";
   private static final String ATTRIBUTE_INDEX = "index";

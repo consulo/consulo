@@ -34,7 +34,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     private final ElementFilter<Object> myFilter;
     private final AbstractTreeStructure myBaseStructure;
     protected final FilteringNode myRoot;
-    protected final HashSet<FilteringNode> myLeaves = new HashSet<>();
+    protected final Set<FilteringNode> myLeaves = new HashSet<>();
     private final Map<FilteringNode, List<FilteringNode>> myNodesCache = new HashMap<>();
 
     protected enum State {

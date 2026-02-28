@@ -159,7 +159,7 @@ public class ModuleDependenciesAnalyzer {
     /**
      * Visited modules (in order to detect cyclic dependencies)
      */
-    private final HashSet<Module> myVisited = new HashSet<Module>();
+    private final Set<Module> myVisited = new HashSet<>();
 
     /**
      * The constructor

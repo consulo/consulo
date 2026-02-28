@@ -40,7 +40,7 @@ public final class ConfigurableHit {
     }
 
     public Set<Configurable> getAll() {
-        LinkedHashSet<Configurable> all = new LinkedHashSet<>(myNameHits.size() + myContentHits.size());
+        Set<Configurable> all = new LinkedHashSet<>(myNameHits.size() + myContentHits.size());
         all.addAll(myNameHits);
         all.addAll(myContentHits);
         return all;

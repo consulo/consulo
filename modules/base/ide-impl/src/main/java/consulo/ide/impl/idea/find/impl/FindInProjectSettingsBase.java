@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FindInProjectSettingsBase implements PersistentStateComponent<FindInProjectSettingsBase> {
     private static final int MAX_RECENT_SIZE = 30;
@@ -49,7 +50,7 @@ public class FindInProjectSettingsBase implements PersistentStateComponent<FindI
     public void loadState(FindInProjectSettingsBase state) {
         XmlSerializerUtil.copyBean(state, this);
         //Avoid duplicates
-        LinkedHashSet<String> tmp = new LinkedHashSet<>(findStrings);
+        Set<String> tmp = new LinkedHashSet<>(findStrings);
         findStrings.clear();
         findStrings.addAll(tmp);
 

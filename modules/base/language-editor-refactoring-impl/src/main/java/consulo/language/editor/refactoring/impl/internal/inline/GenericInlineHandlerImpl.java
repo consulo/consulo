@@ -39,10 +39,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -94,7 +91,7 @@ public class GenericInlineHandlerImpl {
             }
         }
 
-        HashSet<PsiElement> elements = new HashSet<>();
+        Set<PsiElement> elements = new HashSet<>();
         for (PsiReference reference : allReferences) {
             PsiElement refElement = reference.getElement();
             if (refElement != null) {

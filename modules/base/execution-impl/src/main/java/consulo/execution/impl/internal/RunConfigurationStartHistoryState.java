@@ -16,31 +16,32 @@
 package consulo.execution.impl.internal;
 
 import java.util.LinkedHashSet;
+import java.util.SequencedSet;
 
 /**
  * @author VISTALL
  * @since 2025-10-20
  */
 public class RunConfigurationStartHistoryState {
-    public LinkedHashSet<String> myHistory = new LinkedHashSet<>();
+    public SequencedSet<String> myHistory = new LinkedHashSet<>();
 
-    public LinkedHashSet<String> myPinned = new LinkedHashSet<>();
+    public SequencedSet<String> myPinned = new LinkedHashSet<>();
 
     public boolean myAllConfigurationsExpanded;
 
-    public LinkedHashSet<String> getHistory() {
+    public SequencedSet<String> getHistory() {
         return myHistory;
     }
 
-    public void setHistory(LinkedHashSet<String> history) {
+    public void setHistory(SequencedSet<String> history) {
         myHistory = history;
     }
 
-    public LinkedHashSet<String> getPinned() {
+    public SequencedSet<String> getPinned() {
         return myPinned;
     }
 
-    public void setPinned(LinkedHashSet<String> pinned) {
+    public void setPinned(SequencedSet<String> pinned) {
         myPinned = pinned;
     }
 

@@ -64,7 +64,7 @@ public class IntentionSettingsPanel {
       protected List<IntentionActionMetaData> filterModel(String filter, boolean force) {
         List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
         if (filter == null || filter.length() == 0) return list;
-        HashSet<String> quoted = new HashSet<String>();
+        Set<String> quoted = new HashSet<>();
         List<Set<String>> keySetList = SearchUtil.findKeys(filter, quoted);
         List<IntentionActionMetaData> result = new ArrayList<IntentionActionMetaData>();
         for (IntentionActionMetaData metaData : list) {
@@ -130,7 +130,7 @@ public class IntentionSettingsPanel {
     myIntentionSettingsTree.selectIntention(familyName);
   }
 
-  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, String filter, boolean forceInclude, List<Set<String>> keySetList, HashSet<String> quoted) {
+  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, String filter, boolean forceInclude, List<Set<String>> keySetList, Set<String> quoted) {
     if (StringUtil.containsIgnoreCase(metaData.getActionText().get(), filter)) {
       return true;
     }

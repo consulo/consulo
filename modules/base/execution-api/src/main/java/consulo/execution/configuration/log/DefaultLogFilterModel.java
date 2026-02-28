@@ -87,7 +87,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
     return filters;
   }
 
-  private void addStandartFilters(ArrayList<LogFilter> filters, final LogConsolePreferences prefs) {
+  private void addStandartFilters(List<LogFilter> filters, final LogConsolePreferences prefs) {
     filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowAll().get(), prefs) {
       @Override
       public void selectFilter() {
