@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.localize.internal;
+
+import consulo.localize.LocalizeManager;
+import jakarta.annotation.Nonnull;
+
+import java.util.ServiceLoader;
 
 /**
- * @author UNV
- * @since 2026-01-12
+ * @author VISTALL
+ * @since 2026-02-28
  */
-module consulo.localization.api {
-    requires transitive consulo.annotation;
-    requires transitive consulo.disposer.api;
+public class LocalizeManagerHolder {
+    private static LocalizeManager ourInstance = ServiceLoader.load(LocalizeManager.class, LocalizeManager.class.getClassLoader())
+        .findFirst()
+        .get();
 
-    exports consulo.localization;
-
-    uses consulo.localization.LocalizationManager;
-
-    exports consulo.localization.internal to
-        consulo.application.impl,
-        consulo.localization.impl,
-        consulo.localize.api;
+    @Nonnull
+    public static LocalizeManager get() {
+        return ourInstance;
+    }
 }

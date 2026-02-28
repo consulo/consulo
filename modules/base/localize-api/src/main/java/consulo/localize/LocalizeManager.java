@@ -15,15 +15,13 @@
  */
 package consulo.localize;
 
-import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.disposer.Disposable;
-
+import consulo.localize.internal.LocalizeManagerHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 /**
@@ -31,11 +29,9 @@ import java.util.Set;
  * @since 2019-04-11
  */
 public abstract class LocalizeManager {
-    private static LocalizeManager ourInstance = PlatformServiceLoader.findImplementation(LocalizeManager.class, ServiceLoader::load);
-
     @Nonnull
     public static LocalizeManager get() {
-        return ourInstance;
+        return LocalizeManagerHolder.get();
     }
 
     /**
