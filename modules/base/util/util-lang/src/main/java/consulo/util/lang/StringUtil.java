@@ -582,45 +582,37 @@ public final class StringUtil {
         for (int idx = 0; idx < length; idx++) {
             char ch = str.charAt(idx);
             switch (ch) {
-                case '\b':
-                    buffer.append("\\b");
-                    break;
+                case '\b' -> buffer.append("\\b");
+                case '\f' -> buffer.append("\\f");
+                case '\n' -> buffer.append("\\n");
+                case '\r' -> buffer.append("\\r");
+                case '\t' -> buffer.append("\\t");
 
-                case '\t':
-                    buffer.append("\\t");
-                    break;
-
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-
-                case '\f':
-                    buffer.append("\\f");
-                    break;
-
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-
-                default:
-                    if (escapeSlash && ch == '\\') {
+                case '\\' -> {
+                    if (escapeSlash) {
                         buffer.append("\\\\");
                     }
-                    else if (additionalChars != null && additionalChars.indexOf(ch) > -1 && (escapeSlash || prev != '\\')) {
+                    else {
+                        buffer.append(ch);
+                    }
+                }
+
+                default -> {
+                    if (additionalChars != null && additionalChars.indexOf(ch) > -1 && (escapeSlash || prev != '\\')) {
                         buffer.append("\\").append(ch);
                     }
                     else if (escapeUnicode && !isPrintableUnicode(ch)) {
-                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
                         buffer.append("\\u");
-                        int paddingCount = 4 - hexCode.length();
-                        while (paddingCount-- > 0) {
-                            buffer.append(0);
+                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
+                        for (int paddingCount = 4 - hexCode.length(); --paddingCount >= 0; ) {
+                            buffer.append('0');
                         }
                         buffer.append(hexCode);
                     }
                     else {
                         buffer.append(ch);
                     }
+                }
             }
             prev = ch;
         }
@@ -1657,7 +1649,7 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static Iterable<String> tokenize(@Nonnull final StringTokenizer tokenizer) {
+    public static Iterable<String> tokenize(@Nonnull StringTokenizer tokenizer) {
         return new Iterable<>() {
             @Nonnull
             @Override
@@ -1852,20 +1844,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int stringHashCode(@Nonnull CharSequence chars, int from, int to) {
-        int h = 0;
-        for (int off = from; off < to; off++) {
-            h = 31 * h + chars.charAt(off);
-        }
-        return h;
-    }
-
-    @Contract(pure = true)
-    public static int stringHashCode(char[] chars, int from, int to) {
-        int h = 0;
-        for (int off = from; off < to; off++) {
-            h = 31 * h + chars[off];
-        }
-        return h;
+        return stringHashCode(chars, from, to, 0);
     }
 
     @Contract(pure = true)
@@ -1878,12 +1857,27 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static int stringHashCodeInsensitive(@Nonnull char[] chars, int from, int to) {
+    public static int stringHashCode(char[] chars) {
+        return stringHashCode(chars, 0, chars.length);
+    }
+
+    @Contract(pure = true)
+    public static int stringHashCode(char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            h = 31 * h + toLowerCase(chars[off]);
+            h = 31 * h + chars[off];
         }
         return h;
+    }
+
+    @Contract(pure = true)
+    public static int stringHashCodeInsensitive(@Nonnull CharSequence chars) {
+        return stringHashCodeInsensitive(chars, 0, chars.length());
+    }
+
+    @Contract(pure = true)
+    public static int stringHashCodeInsensitive(@Nonnull CharSequence chars, int from, int to) {
+        return stringHashCodeInsensitive(chars, from, to, 0);
     }
 
     @Contract(pure = true)
@@ -1896,24 +1890,29 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static int stringHashCodeInsensitive(@Nonnull CharSequence chars, int from, int to) {
+    public static int stringHashCodeInsensitive(@Nonnull char[] chars) {
+        return stringHashCodeInsensitive(chars, 0, chars.length);
+    }
+
+    @Contract(pure = true)
+    public static int stringHashCodeInsensitive(@Nonnull char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            h = 31 * h + toLowerCase(chars.charAt(off));
+            h = 31 * h + toLowerCase(chars[off]);
         }
         return h;
     }
 
     @Contract(pure = true)
-    public static int stringHashCodeInsensitive(@Nonnull CharSequence chars) {
-        return stringHashCodeInsensitive(chars, 0, chars.length());
+    public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars) {
+        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
     }
 
     @Contract(pure = true)
-    public static int stringHashCodeIgnoreWhitespaces(char[] chars, int from, int to) {
+    public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            char c = chars[off];
+            char c = chars.charAt(off);
             if (!isWhiteSpace(c)) {
                 h = 31 * h + c;
             }
@@ -1922,10 +1921,15 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars, int from, int to) {
+    public static int stringHashCodeIgnoreWhitespaces(@Nonnull char[] chars) {
+        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length);
+    }
+
+    @Contract(pure = true)
+    public static int stringHashCodeIgnoreWhitespaces(char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            char c = chars.charAt(off);
+            char c = chars[off];
             if (!isWhiteSpace(c)) {
                 h = 31 * h + c;
             }
@@ -1941,12 +1945,7 @@ public final class StringUtil {
      */
     @Contract(pure = true)
     public static boolean isWhiteSpace(char c) {
-        return c == '\n' || c == '\t' || c == ' ';
-    }
-
-    @Contract(pure = true)
-    public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars) {
-        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
+        return c == '\t' || c == '\r' || c == '\n' || c == ' ';
     }
 
     @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
@@ -2007,7 +2006,7 @@ public final class StringUtil {
         return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
-    @Contract(pure = true)
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static String toUpperCase(@Nullable String s) {
         return s == null ? null : s.toUpperCase(Locale.US);
     }
@@ -2174,16 +2173,11 @@ public final class StringUtil {
     @Contract(pure = true)
     public static String nullize(@Nullable String s, boolean nullizeSpaces) {
         if (nullizeSpaces) {
-            if (isEmptyOrSpaces(s)) {
-                return null;
-            }
+            return isEmptyOrSpaces(s) ? null : s;
         }
         else {
-            if (isEmpty(s)) {
-                return null;
-            }
+            return isEmpty(s) ? null : s;
         }
-        return s;
     }
 
     @Contract(value = "null -> true", pure = true)
@@ -2197,7 +2191,7 @@ public final class StringUtil {
         if (isEmpty(s)) {
             return true;
         }
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (s.charAt(i) > ' ') {
                 return false;
             }
@@ -2280,14 +2274,9 @@ public final class StringUtil {
     @Contract(pure = true)
     public static int getOccurrenceCount(@Nonnull String text, @Nonnull String s) {
         int res = 0;
-        int i = 0;
-        while (i < text.length()) {
+        for (int i = 0, n = text.length(); i < n; i++, res++) {
             i = text.indexOf(s, i);
-            if (i >= 0) {
-                res++;
-                i++;
-            }
-            else {
+            if (i < 0) {
                 break;
             }
         }
@@ -2310,12 +2299,13 @@ public final class StringUtil {
     @Contract(pure = true)
     @Nonnull
     public static String sanitizeJavaIdentifier(@Nonnull String name) {
-        StringBuilder result = new StringBuilder(name.length());
+        int n = name.length();
+        StringBuilder result = new StringBuilder(n);
 
-        for (int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < n; i++) {
             char ch = name.charAt(i);
             if (Character.isJavaIdentifierPart(ch)) {
-                if (result.length() == 0 && !Character.isJavaIdentifierStart(ch)) {
+                if (result.isEmpty() && !Character.isJavaIdentifierStart(ch)) {
                     result.append("_");
                 }
                 result.append(ch);
@@ -2633,6 +2623,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isEscapedBackslash(@Nonnull CharSequence text, int startOffset, int backslashOffset) {
         if (text.charAt(backslashOffset) != '\\') {
             return true;
@@ -2650,6 +2641,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isEscapedBackslash(@Nonnull char[] chars, int startOffset, int backslashOffset) {
         if (chars[backslashOffset] != '\\') {
             return true;
@@ -2693,19 +2685,15 @@ public final class StringUtil {
     @Contract(pure = true)
     public static int getLineBreakCount(@Nonnull CharSequence text) {
         int count = 0;
-        for (int i = 0; i < text.length(); i++) {
+        for (int i = 0, n = text.length(); i < n; i++) {
             char c = text.charAt(i);
             if (c == '\n') {
                 count++;
             }
             else if (c == '\r') {
-                if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
-                    //noinspection AssignmentToForLoopParameter
+                count++;
+                if (i + 1 < n && text.charAt(i + 1) == '\n') {
                     i++;
-                    count++;
-                }
-                else {
-                    count++;
                 }
             }
         }
@@ -2896,10 +2884,9 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int lineColToOffset(@Nonnull CharSequence text, int line, int col) {
-        int curLine = 0;
-        int offset = 0;
+        int curLine = 0, offset = 0, length = text.length();
         while (line != curLine) {
-            if (offset == text.length()) {
+            if (offset == length) {
                 return -1;
             }
             char c = text.charAt(offset);
@@ -2908,7 +2895,7 @@ public final class StringUtil {
             }
             else if (c == '\r') {
                 curLine++;
-                if (offset < text.length() - 1 && text.charAt(offset + 1) == '\n') {
+                if (offset + 1 < length && text.charAt(offset + 1) == '\n') {
                     offset++;
                 }
             }
@@ -2919,10 +2906,9 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static int offsetToLineNumber(@Nonnull CharSequence text, int offset) {
-        int curLine = 0;
-        int curOffset = 0;
+        int curLine = 0, curOffset = 0, length = text.length();
         while (curOffset < offset) {
-            if (curOffset == text.length()) {
+            if (curOffset == length) {
                 return -1;
             }
             char c = text.charAt(curOffset);
@@ -2931,7 +2917,7 @@ public final class StringUtil {
             }
             else if (c == '\r') {
                 curLine++;
-                if (curOffset < text.length() - 1 && text.charAt(curOffset + 1) == '\n') {
+                if (curOffset + 1 < length && text.charAt(curOffset + 1) == '\n') {
                     curOffset++;
                 }
             }
