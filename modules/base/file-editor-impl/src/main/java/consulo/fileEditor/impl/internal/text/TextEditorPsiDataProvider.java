@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.*;
 import consulo.fileEditor.EditorDataProvider;
-import consulo.ide.IdeView;
 import consulo.language.Language;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.util.EditorHelper;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.pom;
+package consulo.language.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;

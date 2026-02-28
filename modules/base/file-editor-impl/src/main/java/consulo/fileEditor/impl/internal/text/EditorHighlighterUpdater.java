@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -9,8 +9,7 @@ import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.project.Project;
@@ -89,11 +88,6 @@ public class EditorHighlighterUpdater {
     }
   }
 
-  @TestOnly
-  public static void completeAsyncTasks(Application application) {
-    NonBlockingReadActionImpl.waitForAsyncTaskCompletion(application);
-  }
-
   /**
    * Listen changes of file types. When type of the file changes we need
    * to also change highlighter.
@@ -106,7 +100,7 @@ public class EditorHighlighterUpdater {
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
       FileType type = event.getRemovedFileType();
-      if (type != null && !(type instanceof AbstractFileType)) {
+      if (type != null && !(type instanceof CustomSyntaxTableFileType)) {
         // Plugin is being unloaded, so we need to release plugin classes immediately
         updateHighlightersSynchronously();
       }

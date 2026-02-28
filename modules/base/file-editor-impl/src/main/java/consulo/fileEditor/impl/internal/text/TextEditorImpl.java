@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
@@ -31,10 +31,10 @@ import consulo.fileEditor.TextEditorLocation;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.RealTextEditor;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
@@ -63,7 +63,7 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     @Nonnull
     public final VirtualFile myFile;
 
-    private final AsyncEditorLoader myAsyncLoader;
+    private final AsyncEditorLoaderImpl myAsyncLoader;
 
     protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
@@ -76,7 +76,7 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         myComponent = createEditorComponent(project, file);
         Disposer.register(this, myComponent);
 
-        myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
+        myAsyncLoader = new AsyncEditorLoaderImpl(this, myComponent, provider);
         myAsyncLoader.start();
     }
 

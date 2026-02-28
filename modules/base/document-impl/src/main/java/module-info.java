@@ -15,6 +15,7 @@ module consulo.document.impl {
         consulo.language.impl,
         consulo.test.impl,
         consulo.code.editor.impl,
+        consulo.file.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.language.editor.impl;
 

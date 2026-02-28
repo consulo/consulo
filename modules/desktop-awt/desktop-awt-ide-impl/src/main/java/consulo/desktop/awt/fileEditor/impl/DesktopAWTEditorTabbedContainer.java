@@ -36,7 +36,7 @@ import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
+import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;

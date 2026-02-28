@@ -20,6 +20,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.internal.TextEditorComponentContainer;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import jakarta.inject.Singleton;
 
 /**

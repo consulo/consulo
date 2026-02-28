@@ -7,7 +7,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.file.LanguageFileType;

@@ -13,7 +13,7 @@ import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;

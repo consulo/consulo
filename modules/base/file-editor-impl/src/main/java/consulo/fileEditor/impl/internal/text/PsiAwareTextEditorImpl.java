@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.internal.AsyncEditorLoader;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.CodeFoldingState;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.completion.lookup.LookupEx;

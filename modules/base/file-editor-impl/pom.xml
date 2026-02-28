@@ -64,6 +64,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-project-ui-view-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -76,6 +81,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>forms_rt</artifactId>
         </dependency>
     </dependencies>
 </project>

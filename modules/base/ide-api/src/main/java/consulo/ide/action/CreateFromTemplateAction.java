@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;

@@ -17,7 +17,7 @@ package consulo.ide.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.ide.localize.IdeLocalize;

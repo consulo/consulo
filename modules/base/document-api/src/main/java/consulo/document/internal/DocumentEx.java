@@ -20,6 +20,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.util.TextRange;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -111,6 +112,10 @@ public interface DocumentEx extends Document {
      */
     default boolean stripTrailingSpaces(@Nullable ComponentManager project, boolean inChangedLinesOnly, @Nullable int[] caretOffsets) {
         return false;
+    }
+
+    default void documentCreatedFrom(@Nonnull VirtualFile f, int tabSize) {
+        throw new UnsupportedOperationException();
     }
 }
 

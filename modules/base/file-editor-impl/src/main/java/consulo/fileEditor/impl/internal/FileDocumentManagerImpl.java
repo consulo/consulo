@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
@@ -15,7 +15,6 @@ import consulo.document.FileDocumentManager;
 import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.document.impl.DocumentImpl;
 import consulo.document.impl.FrozenDocument;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.FileDocumentManagerEx;
@@ -23,14 +22,12 @@ import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.RealTextEditor;
-import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.pom.PomAspectGuard;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.internal.FileViewProviderInternal;
+import consulo.language.internal.PomAspectGuard;
+import consulo.language.internal.PsiFileInternal;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.ExternalChangeAction;
@@ -115,7 +112,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             }
             Project project = CommandProcessor.getInstance().getCurrentCommandProject();
             if (project == null) {
-                project = ProjectUtil.guessProjectForFile(getFile(document));
+                project = ProjectLocator.getInstance().guessProjectForFile(getFile(document));
             }
             String lineSeparator = CodeStyle.getProjectOrDefaultSettings(project).getLineSeparator();
             document.putUserData(LINE_SEPARATOR_KEY, lineSeparator);
@@ -255,9 +252,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     @Nonnull
     private static Document createDocument(@Nonnull CharSequence text, @Nonnull VirtualFile file) {
         boolean acceptSlashR = file instanceof LightVirtualFile && StringUtil.indexOf(text, '\r') >= 0;
-        boolean freeThreaded = Boolean.TRUE.equals(file.getUserData(AbstractFileViewProvider.FREE_THREADED));
-        DocumentImpl document = (DocumentImpl) ((EditorFactoryImpl) EditorFactory.getInstance()).createDocument(text, acceptSlashR, freeThreaded);
-        Project project = ProjectUtil.guessProjectForFile(file);
+        boolean freeThreaded = Boolean.TRUE.equals(file.getUserData(FileViewProviderInternal.FREE_THREADED));
+        DocumentEx document = (DocumentEx) ((EditorFactoryImpl) EditorFactory.getInstance()).createDocument(text, acceptSlashR, freeThreaded);
+        Project project = ProjectLocator.getInstance().guessProjectForFile(file);
         int tabSize;
         if (project == null) {
             tabSize = CodeStyle.getDefaultSettings().getTabSize(file.getFileType());
@@ -323,7 +320,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                 if (file == null) {
                     continue;
                 }
-                Project project = ProjectUtil.guessProjectForFile(file);
+                Project project = ProjectLocator.getInstance().guessProjectForFile(file);
                 if (project != null && !PsiDocumentManager.getInstance(project).isDocumentBlockedByPsi(document)) {
                     saveDocument(document);
                 }
@@ -736,7 +733,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static boolean isReloadable(@Nonnull VirtualFile file, @Nonnull Document document, @Nullable Project project) {
         PsiFile cachedPsiFile = project == null ? null : PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
         return !(RawFileLoader.getInstance().isTooLarge(file.getLength()) && file.getFileType().isBinary())
-            && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file))
+            && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileInternal || isBinaryWithDecompiler(file))
             && document.getUserData(NOT_RELOADABLE_DOCUMENT_KEY) == null;
     }
 

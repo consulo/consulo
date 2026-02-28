@@ -19,8 +19,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.fileEditor.internal.TextEditorComponentContainer;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import jakarta.inject.Singleton;
 
 /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -33,8 +33,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.fileEditor.internal.TextEditorComponentContainer;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.logging.Logger;
 import consulo.project.Project;

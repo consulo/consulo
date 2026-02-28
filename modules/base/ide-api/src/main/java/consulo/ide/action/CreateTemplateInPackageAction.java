@@ -18,7 +18,7 @@ package consulo.ide.action;
 
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPackageSupportProvider;

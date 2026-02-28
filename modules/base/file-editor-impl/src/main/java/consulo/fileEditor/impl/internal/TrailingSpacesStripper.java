@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -30,13 +30,13 @@ import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.internal.DocumentEx;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.project.Project;
+import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -214,7 +214,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         }
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file != null) {
-            return ProjectUtil.guessProjectForFile(file);
+            return ProjectLocator.getInstance().guessProjectForFile(file);
         }
         return null;
     }

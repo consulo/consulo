@@ -344,7 +344,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.application.ex;
     exports consulo.ide.impl.idea.openapi.application.impl;
     exports consulo.ide.impl.idea.openapi.command.impl;
-    exports consulo.ide.impl.idea.openapi.deployment;
     exports consulo.ide.impl.idea.openapi.diff.impl.settings;
     exports consulo.ide.impl.idea.openapi.editor;
     exports consulo.ide.impl.idea.openapi.editor.actionSystem;
@@ -365,7 +364,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.fileEditor.impl;
     exports consulo.ide.impl.idea.openapi.fileEditor.impl.http;
     exports consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
-    exports consulo.ide.impl.idea.openapi.fileEditor.impl.text;
     exports consulo.ide.impl.idea.openapi.fileTypes;
     exports consulo.ide.impl.idea.openapi.fileTypes.ex;
     exports consulo.ide.impl.idea.openapi.fileTypes.impl;

@@ -10,7 +10,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.fileEditor.impl.internal.FileDocumentManagerImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.localize.LocalizeValue;

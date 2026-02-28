@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
+import consulo.codeEditor.CustomFileDropHandler;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorDropHandler;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
-import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
-import consulo.codeEditor.CustomFileDropHandler;
+import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

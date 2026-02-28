@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide;
+package consulo.language.editor.util;
 
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

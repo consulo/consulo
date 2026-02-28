@@ -16,7 +16,7 @@
 package consulo.ide.action;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;

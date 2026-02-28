@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
@@ -23,6 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.impl.internal.ui.NonProjectFileWritingAccessDialog;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,14 +38,16 @@ import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileCopyEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;

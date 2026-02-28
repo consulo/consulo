@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.PowerSaveModeListener;
@@ -25,8 +25,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
+import consulo.fileEditor.impl.internal.text.TextEditorPsiDataProvider;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;

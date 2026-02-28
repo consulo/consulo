@@ -20,7 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.action.CreateFromTemplateActionBase;
 import consulo.ide.impl.idea.ide.actions.EditFileTemplatesAction;
 import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;

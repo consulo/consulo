@@ -33,6 +33,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.internal.AsyncEditorLoader;
 import consulo.find.FindManager;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesHandler;
@@ -44,7 +45,6 @@ import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
@@ -1328,6 +1328,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                 HintManager.getInstance().showInformationHint(editor, label);
             }
         };
+
         if (editor == null) {
             runnable.run();
         }

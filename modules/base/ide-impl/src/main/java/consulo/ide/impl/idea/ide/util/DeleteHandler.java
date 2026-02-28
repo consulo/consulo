@@ -21,7 +21,7 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;

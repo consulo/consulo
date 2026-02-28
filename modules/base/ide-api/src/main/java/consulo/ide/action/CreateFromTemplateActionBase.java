@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.fileTemplate.AttributesDefaults;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.action.ui.CreateFromTemplateDialog;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.template.EditorFileTemplateUtil;

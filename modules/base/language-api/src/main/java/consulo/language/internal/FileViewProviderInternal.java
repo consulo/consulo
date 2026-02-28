@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.ex;
+package consulo.language.internal;
 
-import consulo.codeEditor.internal.ErrorStripeEvent;
-import consulo.codeEditor.internal.ErrorStripeListener;
-
-import jakarta.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 2026-02-28
  */
-public abstract class ErrorStripeAdapter implements ErrorStripeListener {
-
-  @Override
-  public void errorMarkerClicked(@Nonnull ErrorStripeEvent e) {
-  }
+public interface FileViewProviderInternal  {
+    // make field inside FileViewProvider ?
+    public static final Key<Object> FREE_THREADED = Key.create("FREE_THREADED");
 }

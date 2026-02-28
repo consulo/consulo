@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.internal.AsyncEditorLoader;
+import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.fileEditor.text.TextEditorState;
+import consulo.language.editor.folding.CodeFoldingManager;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max

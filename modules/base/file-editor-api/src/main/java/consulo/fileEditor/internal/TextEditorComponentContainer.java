@@ -1,4 +1,4 @@
-package consulo.ide.impl.fileEditor.text;
+package consulo.fileEditor.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.ui.Component;
