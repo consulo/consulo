@@ -1316,7 +1316,9 @@ public final class StringUtil {
 
     @Contract(mutates = "param1")
     public static void repeatSymbol(@Nonnull Appendable buffer, char symbol, int times) {
-        assert times >= 0 : times;
+        if (times < 0) {
+            throw new IllegalArgumentException("Negative count: " + times);
+        }
         try {
             for (int i = 0; i < times; i++) {
                 buffer.append(symbol);
@@ -1373,7 +1375,9 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String repeat(@Nonnull String s, int count) {
-        assert count >= 0 : count;
+        if (count < 0) {
+            throw new IllegalArgumentException("Negative count: " + count);
+        }
         StringBuilder sb = new StringBuilder(s.length() * count);
         for (int i = 0; i < count; i++) {
             sb.append(s);
