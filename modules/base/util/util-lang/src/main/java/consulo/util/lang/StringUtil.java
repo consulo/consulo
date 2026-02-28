@@ -469,18 +469,18 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean equalsIgnoreCase(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
         }
-
-        if (s1.length() != s2.length()) {
+        if (s1 == null || s2 == null) {
             return false;
         }
-        for (int i = 0; i < s1.length(); i++) {
+
+        int n = s1.length();
+        if (n != s2.length()) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
             if (!charsMatch(s1.charAt(i), s2.charAt(i), true)) {
                 return false;
             }
@@ -1038,7 +1038,7 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String trimMiddle(@Nonnull String text, int maxLength, boolean useEllipsisSymbol) {
-        return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, useEllipsisSymbol);
+        return shortenTextWithEllipsis(text, maxLength, useEllipsisSymbol ? maxLength >> 1 : (maxLength >> 1) - 1, useEllipsisSymbol);
     }
 
     @Nonnull
@@ -1129,7 +1129,14 @@ public final class StringUtil {
         int textLength = text.length();
         if (textLength > maxLength) {
             int prefixLength = maxLength - suffixLength - symbol.length();
-            assert prefixLength > 0;
+            if (prefixLength <= 0) {
+                throw new IllegalArgumentException(
+                    "prefixLength = " + prefixLength +
+                        " for given textLength = " + textLength +
+                        ", maxLength = " + maxLength +
+                        " and suffixLength = " + suffixLength
+                );
+            }
             return text.substring(0, prefixLength) + symbol + text.substring(textLength - suffixLength);
         }
         else {
@@ -1976,18 +1983,18 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean equals(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
         }
-
-        if (s1.length() != s2.length()) {
+        if (s1 == null || s2 == null) {
             return false;
         }
-        for (int i = 0; i < s1.length(); i++) {
+
+        int n = s1.length();
+        if (n != s2.length()) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
             if (s1.charAt(i) != s2.charAt(i)) {
                 return false;
             }
@@ -3478,12 +3485,11 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean equalsIgnoreWhitespaces(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
+        }
+        if (s1 == null || s2 == null) {
+            return false;
         }
 
         int len1 = s1.length();
