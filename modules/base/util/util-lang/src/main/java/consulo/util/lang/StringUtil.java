@@ -91,12 +91,12 @@ public final class StringUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
-    private static final String[] ourEmptyStringArray = new String[0];
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private static final String[] MN_QUOTED = {"&&", "__"};
     private static final String[] MN_CHARS = {"&", "_"};
 
-    private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
+    private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&apos;", "&quot;"};
     private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
     private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
@@ -1383,7 +1383,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static boolean isDecimalDigit(char c) {
-        return c >= '0' && c <= '9';
+        return '0' <= c && c <= '9';
     }
 
     @Contract("null -> false")
@@ -1391,7 +1391,7 @@ public final class StringUtil {
         if (s == null) {
             return false;
         }
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (!isDecimalDigit(s.charAt(i))) {
                 return false;
             }
@@ -1501,19 +1501,32 @@ public final class StringUtil {
     @Contract(pure = true)
     @Nonnull
     public static String first(@Nonnull String text, int maxLength, boolean appendEllipsis) {
-        return text.length() > maxLength ? text.substring(0, maxLength) + (appendEllipsis ? "..." : "") : text;
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        String cropped = text.substring(0, maxLength);
+        return appendEllipsis ? cropped + "..." : cropped;
     }
 
     @Nonnull
     @Contract(pure = true)
-    public static CharSequence first(@Nonnull CharSequence text, int length, boolean appendEllipsis) {
-        return text.length() > length ? text.subSequence(0, length) + (appendEllipsis ? "..." : "") : text;
+    public static CharSequence first(@Nonnull CharSequence text, int maxLength, boolean appendEllipsis) {
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        CharSequence cropped = text.subSequence(0, maxLength);
+        return appendEllipsis ? cropped + "..." : cropped;
     }
 
     @Nonnull
     @Contract(pure = true)
-    public static CharSequence last(@Nonnull CharSequence text, int length, boolean prependEllipsis) {
-        return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+    public static CharSequence last(@Nonnull CharSequence text, int maxLength, boolean prependEllipsis) {
+        int length = text.length();
+        if (length <= maxLength) {
+            return text;
+        }
+        CharSequence cropped = text.subSequence(length - maxLength, length);
+        return prependEllipsis ? "..." + cropped : cropped;
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
@@ -1695,11 +1708,7 @@ public final class StringUtil {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> String join(
-        @Nonnull T[] items,
-        @Nonnull Function<T, String> f,
-        @Nonnull String separator
-    ) {
+    public static <T> String join(@Nonnull T[] items, @Nonnull Function<T, String> f, @Nonnull String separator) {
         return join(Arrays.asList(items), f, separator);
     }
 
@@ -1940,19 +1949,20 @@ public final class StringUtil {
             return false;
         }
 
-        if (s1.length() != s2.length()) {
+        int n = s1.length();
+        if (s2.length() != n) {
             return false;
         }
 
         if (caseSensitive) {
-            for (int i = 0; i < s1.length(); i++) {
+            for (int i = 0; i < n; i++) {
                 if (s1.charAt(i) != s2.charAt(i)) {
                     return false;
                 }
             }
         }
         else {
-            for (int i = 0; i < s1.length(); i++) {
+            for (int i = 0; i < n; i++) {
                 if (!charsEqualIgnoreCase(s1.charAt(i), s2.charAt(i))) {
                     return false;
                 }
@@ -1988,10 +1998,9 @@ public final class StringUtil {
         return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static String toUpperCase(@Nonnull String s) {
-        return toUpperCase((CharSequence) s).toString();
+    public static String toUpperCase(@Nullable String s) {
+        return s == null ? null : s.toUpperCase(Locale.US);
     }
 
     @Nonnull
@@ -2004,7 +2013,7 @@ public final class StringUtil {
             char upcased = toUpperCase(c);
             if (answer == null && upcased != c) {
                 answer = new StringBuilder(s.length());
-                answer.append(s.subSequence(0, i));
+                answer.append(s, 0, i);
             }
 
             if (answer != null) {
@@ -2028,7 +2037,6 @@ public final class StringUtil {
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static String toLowerCase(@Nullable String str) {
-        //noinspection ConstantConditions
         return str == null ? null : str.toLowerCase(Locale.US);
     }
 
@@ -3388,14 +3396,13 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String[] surround(@Nonnull String[] strings1, String prefix, String suffix) {
-        String[] result = strings1.length == 0 ? ourEmptyStringArray : new String[strings1.length];
+        String[] result = strings1.length == 0 ? EMPTY_STRING_ARRAY : new String[strings1.length];
         for (int i = 0; i < result.length; i++) {
             result[i] = prefix + strings1[i] + suffix;
         }
 
         return result;
     }
-
 
     /**
      * Escape property name or key in property file. Unicode characters are escaped as well.
