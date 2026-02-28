@@ -10,6 +10,7 @@ import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,6 +28,30 @@ public class StringUtilTest {
         String foo = "foo";
         assertThat(StringUtil.areSameInstance(foo, foo)).isTrue();
         assertThat(StringUtil.areSameInstance(foo, foo.toUpperCase().toLowerCase())).isFalse();
+    }
+
+    @Test
+    void testCommonPrefix() {
+        assertThat(StringUtil.commonPrefix("foo", "bar")).isEqualTo("");
+        assertThat(StringUtil.commonPrefix("foo", "foobar")).isEqualTo("foo");
+    }
+
+    @Test
+    void testCommonPrefixLength() {
+        assertThat(StringUtil.commonPrefixLength("foo", "bar")).isEqualTo(0);
+        assertThat(StringUtil.commonPrefixLength("foo", "foobar")).isEqualTo(3);
+    }
+
+    @Test
+    void testCommonSuffix() {
+        assertThat(StringUtil.commonSuffix("foo", "bar")).isEqualTo("");
+        assertThat(StringUtil.commonSuffix("bar", "foobar")).isEqualTo("bar");
+    }
+
+    @Test
+    void testCommonSuffixLength() {
+        assertThat(StringUtil.commonSuffixLength("foo", "bar")).isEqualTo(0);
+        assertThat(StringUtil.commonSuffixLength("bar", "foobar")).isEqualTo(3);
     }
 
     @Test
@@ -58,6 +83,37 @@ public class StringUtilTest {
         assertThat(StringUtil.containsIgnoreCase("Foobar", "foo")).isTrue();
         assertThat(StringUtil.containsIgnoreCase("Foobar", "bar")).isTrue();
         assertThat(StringUtil.containsIgnoreCase("Foobar", "qux")).isFalse();
+    }
+
+    @Test
+    void testContainsLineBreak() {
+        assertThat(StringUtil.containsLineBreak("foobar")).isFalse();
+        assertThat(StringUtil.containsLineBreak("foo\nbar")).isTrue();
+    }
+
+    @Test
+    void testContainsWhitespaces() {
+        assertThat(StringUtil.containsWhitespaces(null)).isFalse();
+        assertThat(StringUtil.containsWhitespaces("foobar")).isFalse();
+        assertThat(StringUtil.containsWhitespaces("foo bar")).isTrue();
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testCountChars() {
+        assertThat(StringUtil.countChars("abcdefgh", 'x')).isEqualTo(0);
+        assertThat(StringUtil.countChars("abcdefgh", 'd')).isEqualTo(1);
+        assertThat(StringUtil.countChars("abcddddefghd", 'd')).isEqualTo(5);
+        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, false)).isEqualTo(4);
+        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, true)).isEqualTo(3);
+        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, 6, false)).isEqualTo(2);
+        assertThat(StringUtil.countChars("aaabcddddefghdaaaa", 'a', -20, 20, true)).isEqualTo(3);
+        assertThat(StringUtil.countChars("aaabcddddefghdaaaa", 'a', 20, -20, true)).isEqualTo(4);
+    }
+
+    @Test
+    void testCountNewLines() {
+        assertThat(StringUtil.countNewLines("\n foo \n bar \n")).isEqualTo(3);
     }
 
     @Test
@@ -120,6 +176,16 @@ public class StringUtilTest {
         assertFalse(StringUtil.equalsIgnoreWhitespaces("xyx", "xYx"));
     }
 
+    @Test
+    void testEscapeBackSlashes() {
+        assertThat(StringUtil.escapeBackSlashes("\\\\server\\share\\extension.crx")).isEqualTo("\\\\\\\\server\\\\share\\\\extension.crx");
+    }
+
+    @Test
+    void testEscapeLineBreak() {
+        assertThat(StringUtil.escapeLineBreak("foo\r\n")).isEqualTo("foo\\r\\n");
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEscapeMnemonics() {
@@ -140,14 +206,75 @@ public class StringUtilTest {
     }
 
     @Test
-    void testEscapeQuotes() {
+    void testEscapeQuotesString() {
         assertThat(StringUtil.escapeQuotes("\"")).isEqualTo("\\\"");
         assertThat(StringUtil.escapeQuotes("foo\"bar'\"")).isEqualTo("foo\\\"bar'\\\"");
     }
 
     @Test
+    void testEscapeQuotesStringBuilder() {
+        StringBuilder sb = sb("\"");
+        StringUtil.escapeQuotes(sb);
+        assertThat(sb).hasToString("\\\"");
+
+        sb = sb("foo\"bar'\"");
+        StringUtil.escapeQuotes(sb);
+        assertThat(sb).hasToString("foo\\\"bar'\\\"");
+    }
+
+    @Test
+    void testEscapeSlashesString() {
+        assertThat(StringUtil.escapeSlashes("/")).isEqualTo("\\/");
+        assertThat(StringUtil.escapeSlashes("foo/bar\\foo/")).isEqualTo("foo\\/bar\\foo\\/");
+    }
+
+    @Test
+    void testEscapeSlashesStringBuilder() {
+        StringBuilder sb = sb("/");
+        StringUtil.escapeSlashes(sb);
+        assertThat(sb).hasToString("\\/");
+
+        sb = sb("foo/bar\\foo/");
+        StringUtil.escapeSlashes(sb);
+        assertThat(sb).hasToString("foo\\/bar\\foo\\/");
+    }
+
+    @Test
+    void testEscapeStringCharacters() {
+        assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
+        assertThat(StringUtil.escapeStringCharacters(2, "\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
+        assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", true, new StringBuilder()).toString()).isEqualTo("\\\\\\\"\\n");
+    }
+
+    @Test
+    void testEscapeToRegexp() {
+        assertThat(StringUtil.escapeToRegexp("foo.$|()[]{}^?*+\\\r\n"))
+            .isEqualTo("foo\\.\\$\\|\\(\\)\\[\\]\\{\\}\\^\\?\\*\\+\\\\\\r\\n");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testEscapeXml() {
+        assertThat(StringUtil.escapeXml(null)).isNull();
+        assertThat(StringUtil.escapeXml("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+    }
+
+    @Test
     void testEscapeXmlEntities() {
         assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+    }
+
+    @Test
+    void testFilterEmptyStrings() {
+        String[] nonEmpty = {"foo", "bar"};
+        assertThat(StringUtil.filterEmptyStrings(nonEmpty)).isSameAs(nonEmpty);
+        assertThat(StringUtil.filterEmptyStrings(new String[]{"foo", null, "", "bar"})).containsExactly("foo", "bar");
+    }
+
+    @Test
+    void testFindMatches() {
+        assertThat(StringUtil.findMatches("foobar bar", Pattern.compile("(\\w*)(bar)"))).containsExactly("foo", "");
+        assertThat(StringUtil.findMatches("foobar bar", Pattern.compile("(\\w*)(bar)"), 2)).containsExactly("bar", "bar");
     }
 
     @Test
@@ -177,6 +304,13 @@ public class StringUtilTest {
     }
 
     @Test
+    void testGetQualifiedName() {
+        assertThat(StringUtil.getQualifiedName(null, "Bar")).isEqualTo("Bar");
+        assertThat(StringUtil.getQualifiedName("", "Bar")).isEqualTo("Bar");
+        assertThat(StringUtil.getQualifiedName("foo", "Bar")).isEqualTo("foo.Bar");
+    }
+
+    @Test
     void testGetWordsIn() {
         assertThat(StringUtil.getWordsIn("")).isEmpty();
         assertThat(StringUtil.getWordsIn("f")).containsExactly("f");
@@ -188,6 +322,24 @@ public class StringUtilTest {
     void testGetWordsInStringLongestFirst() {
         assertThat(StringUtil.getWordsInStringLongestFirst("")).isEmpty();
         assertThat(StringUtil.getWordsInStringLongestFirst("baz fooBar")).containsExactly("fooBar", "baz");
+    }
+
+    @Test
+    void testGetWordsWithOffset() {
+        assertThat(StringUtil.getWordsWithOffset("foo bar")).containsExactly(Pair.create("foo", 0), Pair.create("bar", 4));
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testHasLowerCaseChar() {
+        assertThat(StringUtil.hasLowerCaseChar("FOOBAR")).isFalse();
+        assertThat(StringUtil.hasLowerCaseChar("fOOBAR")).isTrue();
+    }
+
+    @Test
+    void testHasUpperCaseChar() {
+        assertThat(StringUtil.hasUpperCaseChar("foobar")).isFalse();
+        assertThat(StringUtil.hasUpperCaseChar("Foobar")).isTrue();
     }
 
     @Test
@@ -217,11 +369,21 @@ public class StringUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testIndexOfAny() {
-        assertThat(StringUtil.indexOfAny("axa", "", 0, 5)).isEqualTo(-1);
-        assertThat(StringUtil.indexOfAny("axa", "x", 0, 5)).isEqualTo(1);
-        assertThat(StringUtil.indexOfAny("axa", "zx", 0, 5)).isEqualTo(1);
-        assertThat(StringUtil.indexOfAny("axa", "z", 0, 5)).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny("axa", "")).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny("axa", "x")).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny("axa", "zx")).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny("axa", "z")).isEqualTo(-1);
         assertThat(StringUtil.indexOfAny("abcd", "c", -42, 99)).isEqualTo(2);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testIndexOfAnyCharSequence() {
+        assertThat(StringUtil.indexOfAny((CharSequence) "axa", "")).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny((CharSequence) "axa", "x")).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny((CharSequence) "axa", "zx")).isEqualTo(1);
+        assertThat(StringUtil.indexOfAny((CharSequence) "axa", "z")).isEqualTo(-1);
+        assertThat(StringUtil.indexOfAny((CharSequence) "abcd", "c", -42, 99)).isEqualTo(2);
     }
 
     @Test
@@ -421,6 +583,50 @@ public class StringUtilTest {
         assertThat(StringUtil.length("foo")).isEqualTo(3);
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
+    void testParseBoolean() {
+        assertThat(StringUtil.parseBoolean(null, true)).isFalse();
+        assertThat(StringUtil.parseBoolean("", true)).isFalse();
+        assertThat(StringUtil.parseBoolean("false", true)).isFalse();
+        assertThat(StringUtil.parseBoolean("true", false)).isTrue();
+    }
+
+    @Test
+    void testParseDouble() {
+        assertThat(StringUtil.parseDouble(null, -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseDouble("foo", -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseDouble("3.14", 0)).isEqualTo(3.14);
+        assertThat(StringUtil.parseDouble("-1.23E45", 0)).isEqualTo(-1.23E45);
+    }
+
+    @Test
+    void testParseInt() {
+        assertThat(StringUtil.parseInt(null, -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseInt("foo", -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseInt("5", 0)).isEqualTo(5);
+        assertThat(StringUtil.parseInt("-123456789", 0)).isEqualTo(-123456789);
+    }
+
+    @Test
+    void testParseLong() {
+        assertThat(StringUtil.parseLong(null, -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseLong("foo", -1)).isEqualTo(-1);
+        assertThat(StringUtil.parseLong("5", 0)).isEqualTo(5);
+        assertThat(StringUtil.parseLong("-1234567890123456789", 0)).isEqualTo(-1234567890123456789L);
+    }
+
+    @Test
+    void testQuote() {
+        StringBuilder sb = sb("foo");
+        StringUtil.quote(sb);
+        assertThat(sb).hasToString("\"foo\"");
+
+        sb = sb("foo");
+        StringUtil.quote(sb, '\'');
+        assertThat(sb).hasToString("'foo'");
+    }
+
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testRepeat() {
@@ -455,6 +661,35 @@ public class StringUtilTest {
         sb = sb();
         StringUtil.repeatSymbol(sb, 'a', 5);
         assertThat(sb).hasToString("aaaaa");
+    }
+
+    @Test
+    void testShortenPathWithEllipsis() {
+        assertThatThrownBy(() -> StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 10))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("prefixLength = 0 for given textLength = 15, maxLength = 10 and suffixLength = 7");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14)).isEqualTo("fo...r/baz/qux");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14, false)).isEqualTo("fo...r/baz/qux");
+        assertThat(StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 14, true)).isEqualTo("foo/…r/baz/qux");
+    }
+
+    @Test
+    void testShortenTextWithEllipsis() {
+        assertThatThrownBy(() -> StringUtil.shortenTextWithEllipsis("foobar", 5, 2))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("prefixLength = 0 for given textLength = 6, maxLength = 5 and suffixLength = 2");
+        assertThat(StringUtil.shortenTextWithEllipsis("foo", 5, 1)).isEqualTo("foo");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 1)).isEqualTo("f...r");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 1, false)).isEqualTo("f...r");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 2, true)).isEqualTo("fo…ar");
+        assertThat(StringUtil.shortenTextWithEllipsis("foobar", 5, 2, "*")).isEqualTo("fo*ar");
+    }
+
+    @Test
+    void testTrimMiddle() {
+        assertThat(StringUtil.trimMiddle("foobar", 5)).isEqualTo("fo…ar");
+        assertThat(StringUtil.trimMiddle("foobar", 5, true)).isEqualTo("fo…ar");
+        assertThat(StringUtil.trimMiddle("foobar", 5, false)).isEqualTo("f...r");
     }
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -508,9 +743,16 @@ public class StringUtilTest {
         assertThat(StringUtil.split("a  \n\ta ", "a", true, true)).isEqualTo(Arrays.asList("  \n\t", " "));
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testStartsWith() {
+        assertThat(StringUtil.startsWith("foo", "foobar")).isFalse();
+        assertThat(StringUtil.startsWith("foobar", "foo")).isTrue();
+        assertThat(StringUtil.startsWith("foobar", "baz")).isFalse();
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testStartsWith2() {
         assertTrue(StringUtil.startsWith("abcdefgh", 5, "fgh"));
         assertTrue(StringUtil.startsWith("abcdefgh", 2, "cde"));
         assertTrue(StringUtil.startsWith("abcdefgh", 0, "abc"));
@@ -553,6 +795,12 @@ public class StringUtilTest {
         assertThat(StringUtil.startsWithChar(null, 'f')).isFalse();
         assertThat(StringUtil.startsWithChar("", 'f')).isFalse();
         assertThat(StringUtil.startsWithChar("foo", 'f')).isTrue();
+    }
+
+    @Test
+    void testStartsWithIgnoreCase() {
+        assertThat(StringUtil.startsWithIgnoreCase("Foobar", "foo")).isTrue();
+        assertThat(StringUtil.startsWithIgnoreCase("Foobar", "bar")).isFalse();
     }
 
     @Test
@@ -727,6 +975,13 @@ public class StringUtilTest {
     }
 
     @Test
+    void testTrimLog() {
+        assertThat(StringUtil.trimLog("Foo bar", 5)).isEqualTo("Foo bar");
+        assertThat(StringUtil.trimLog("Foo bar", 6)).isEqualTo("F ...\n");
+        assertThat(StringUtil.trimLog("Foo bar", 7)).isEqualTo("Foo bar");
+    }
+
+    @Test
     void testTrimTrailingChar() {
         doTestTrimTrailing("", "");
         doTestTrimTrailing("", " ");
@@ -741,7 +996,27 @@ public class StringUtilTest {
         assertThat(StringUtil.trimTrailing(new StringBuilder(string), ' ').toString()).isEqualTo(expected);
     }
 
-//    @Test
+    @Test
+    void testUnescapeBackSlashes() {
+        assertThat(StringUtil.unescapeBackSlashes("\\\\\\\\server\\\\share\\\\extension.crx")).isEqualTo("\\\\server\\share\\extension.crx");
+        assertThat(StringUtil.unescapeBackSlashes("\\")).isEqualTo("\\");
+    }
+
+    @Test
+    void testUnescapeSlashes() {
+        assertThat(StringUtil.unescapeSlashes("\\/")).isEqualTo("/");
+        assertThat(StringUtil.unescapeSlashes("foo\\/bar\\foo\\/")).isEqualTo("foo/bar\\foo/");
+        assertThat(StringUtil.unescapeSlashes("\\")).isEqualTo("\\");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testUnescapeXml() {
+        assertThat(StringUtil.unescapeXml(null)).isNull();
+        assertThat(StringUtil.unescapeXml("&lt;&amp;&apos;&quot;&gt;")).isEqualTo("<&'\">");
+    }
+
+    //    @Test
 //    void doTestTrimCharSequence() {
 //        assertThat(StringUtil.trim((CharSequence) "").toString()).isEqualTo("");
 //        assertThat(StringUtil.trim((CharSequence) " ").toString()).isEqualTo("");
@@ -957,21 +1232,6 @@ public class StringUtilTest {
 //    void testCapitalizeWords() {
 //        assertThat(StringUtil.capitalizeWords("AspectJ (syntax highlighting only)", true)).isEqualTo("AspectJ (Syntax Highlighting Only)");
 //    }
-
-    @Test
-    void testEscapeStringCharacters() {
-        assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
-        assertThat(StringUtil.escapeStringCharacters(2, "\"\n", "\"", false, new StringBuilder()).toString()).isEqualTo("\\\"\\n");
-        assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", true, new StringBuilder()).toString()).isEqualTo("\\\\\\\"\\n");
-    }
-
-    @Test
-    void testEscapeSlashes() {
-        assertThat(StringUtil.escapeSlashes("/")).isEqualTo("\\/");
-        assertThat(StringUtil.escapeSlashes("foo/bar\\foo/")).isEqualTo("foo\\/bar\\foo\\/");
-
-        assertThat(StringUtil.escapeBackSlashes("\\\\server\\share\\extension.crx")).isEqualTo("\\\\\\\\server\\\\share\\\\extension.crx");
-    }
 
     @Test
     void testUnquote() {
@@ -1256,19 +1516,6 @@ public class StringUtilTest {
         assertThat(StringUtil.getPackageName("Number")).isEqualTo("");
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    void testCountChars() {
-        assertThat(StringUtil.countChars("abcdefgh", 'x')).isEqualTo(0);
-        assertThat(StringUtil.countChars("abcdefgh", 'd')).isEqualTo(1);
-        assertThat(StringUtil.countChars("abcddddefghd", 'd')).isEqualTo(5);
-        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, false)).isEqualTo(4);
-        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, true)).isEqualTo(3);
-        assertThat(StringUtil.countChars("abcddddefghd", 'd', 4, 6, false)).isEqualTo(2);
-        assertThat(StringUtil.countChars("aaabcddddefghdaaaa", 'a', -20, 20, true)).isEqualTo(3);
-        assertThat(StringUtil.countChars("aaabcddddefghdaaaa", 'a', 20, -20, true)).isEqualTo(4);
-    }
-
 //    @Test
 //    void testGetWordIndicesIn() {
 //        assertThat(StringUtil.getWordIndicesIn("first second")).containsExactly(new TextRange(0, 5), new TextRange(6, 12));
@@ -1382,14 +1629,6 @@ public class StringUtilTest {
         assertThat(StringUtil.trim("\n   foo bar ", ch -> false)).isEqualTo("");
         assertThat(StringUtil.trim("\n   foo bar ", ch -> true)).isEqualTo("\n   foo bar ");
         assertThat(StringUtil.trim("\u00A0   foo bar ", CharFilter.NOT_WHITESPACE_FILTER)).isEqualTo("\u00A0   foo bar");
-    }
-
-    @Test
-    void testEscapeToRegexp() {
-        assertThat(StringUtil.escapeToRegexp("a\nb")).isEqualTo("a\\nb");
-        assertThat(StringUtil.escapeToRegexp("a&%$b")).isEqualTo("a&%\\$b");
-        assertThat(StringUtil.escapeToRegexp("\uD83D\uDE80")).isEqualTo("\uD83D\uDE80");
-        assertThat(StringUtil.escapeToRegexp(",'%=")).isEqualTo(",'%=");
     }
 
 //    @Test
