@@ -212,9 +212,10 @@ public class StringUtilTest {
         assertThat(StringUtil.escapeBackSlashes("\\\\server\\share\\extension.crx")).isEqualTo("\\\\\\\\server\\\\share\\\\extension.crx");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testEscapeCharCharacters() {
-        assertThat(StringUtil.escapeCharCharacters("\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
+        assertThat(StringUtil.escapeCharCharacters("\0\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\0\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
     }
 
     @Test
@@ -1459,13 +1460,13 @@ public class StringUtilTest {
         assertThat(StringUtil.unescapeSlashes("\\")).isEqualTo("\\");
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
     @Test
     void testUnescapeStringCharacters() {
-        assertThat(StringUtil.unescapeStringCharacters("\\b\\f\\n\\r\\t\\u007F\\\"\\'\\\\foo")).isEqualTo("\b\f\n\r\t\u007F\"'\\foo");
+        assertThat(StringUtil.unescapeStringCharacters("\\0\\b\\f\\n\\r\\t\\u007F\\\"\\'\\\\foo")).isEqualTo("\0\b\f\n\r\t\u007F\"'\\foo");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXXX")).isEqualTo("\\uXXXX");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXX")).isEqualTo("\\uXXX");
-        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("z\\"); // TODO: why not keeping backslash?
+        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("\\z\\");
 
         StringBuilder sb = sb();
         StringUtil.unescapeStringCharacters(6, "\\\\\\\"\\n", sb);
@@ -1479,6 +1480,7 @@ public class StringUtilTest {
         assertThat(StringUtil.unescapeXml("&lt;&amp;&apos;&quot;&gt;")).isEqualTo("<&'\">");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testUnquote() {
         assertThat(StringUtil.unquoteString("")).isEqualTo("");
@@ -1501,6 +1503,7 @@ public class StringUtilTest {
         assertThat(StringUtil.unquoteString("\"foo'")).isEqualTo("\"foo'");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testUnquoteWithQuotationChar() {
         assertThat(StringUtil.unquoteString("", '|')).isEqualTo("");
