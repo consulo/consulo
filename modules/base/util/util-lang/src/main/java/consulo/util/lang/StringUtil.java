@@ -544,7 +544,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static String escapeStringCharacters(@Nonnull CharSequence s) {
         return StringEscapeUtil.escape(s, '"');
@@ -552,7 +552,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param2")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static StringBuilder escapeStringCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
         return StringEscapeUtil.escape(s, '"', buffer);
@@ -560,7 +560,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param3")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @SuppressWarnings("deprecation")
     public static void escapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
         StringEscapeUtil.escape(s, 0, length, '"', buffer);
@@ -568,7 +568,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param4")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
@@ -582,7 +582,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param5")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
@@ -597,7 +597,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param6")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     public static @Nonnull StringBuilder escapeStringCharacters(
         int length,
         @Nonnull String str,
@@ -664,7 +664,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#escape")
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static String escapeCharCharacters(@Nonnull CharSequence s) {
         return StringEscapeUtil.escape(s, '\'');
@@ -682,7 +682,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#unquote (it unescapes as well)")
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
     @Nonnull
     public static String unquoteString(@Nonnull String s) {
         if (isQuotedString(s)) {
@@ -693,7 +693,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#unquote (it unescapes as well)")
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
     @Nonnull
     public static String unquoteString(@Nonnull String s, char quotationChar) {
         if (s.length() > 1 && quotationChar == s.charAt(0) && quotationChar == s.charAt(s.length() - 1)) {
@@ -704,7 +704,7 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#unescape")
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
     @Nonnull
     public static String unescapeStringCharacters(@Nonnull CharSequence s) {
         return StringEscapeUtil.unescape(s);
@@ -712,7 +712,7 @@ public final class StringUtil {
 
     @Contract(mutates = "param3")
     @Deprecated
-    @DeprecationInfo("Use StringLiteralUtil#unescape")
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
     public static void unescapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
         StringEscapeUtil.unescape(s, 0, length, buffer);
     }
