@@ -292,7 +292,7 @@ public class InjectorUtils {
         });
     }
 
-    private static final Pattern MAP_ENTRY_PATTERN = Pattern.compile("([\\S&&[^=]]+)=(\"(?:[^\"]|\\\\\")*\"|\\S*)");
+    private static final Pattern MAP_ENTRY_PATTERN = Pattern.compile("([^\\s=]++)=(\"(?:[^\"\\\\]|\\\\.)*+\"|\\S*)");
 
     public static Map<String, String> decodeMap(CharSequence charSequence) {
         if (StringUtil.isEmpty(charSequence)) {
@@ -301,7 +301,10 @@ public class InjectorUtils {
         Matcher matcher = MAP_ENTRY_PATTERN.matcher(charSequence);
         Map<String, String> map = new LinkedHashMap<>();
         while (matcher.find()) {
-            map.put(StringUtil.unescapeStringCharacters(matcher.group(1)), StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2))));
+            map.put(
+                StringUtil.unescapeStringCharacters(charSequence, matcher.start(1), matcher.end(1)),
+                StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2)))
+            );
         }
         return map;
     }

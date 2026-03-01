@@ -267,7 +267,7 @@ public class PatchReader {
                     if (sb.length() > 0) {
                         sb.append("\n");
                     }
-                    sb.append(StringUtil.unescapeStringCharacters(line.substring(UnifiedDiffWriter.ADD_INFO_LINE_START.length())));
+                    StringUtil.unescapeStringCharacters(line, UnifiedDiffWriter.ADD_INFO_LINE_START.length(), line.length(), sb);
                 }
             }
         }

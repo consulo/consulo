@@ -193,8 +193,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                     }
                     line = line.replaceAll("[\\\\]{1}", "\\\\\\\\");
                     parsed.add(new EnvironmentVariable(
-                        StringUtil.unescapeStringCharacters(line.substring(0, pos)),
-                        StringUtil.unescapeStringCharacters(line.substring(pos + 1)),
+                        StringUtil.unescapeStringCharacters(line, 0, pos),
+                        StringUtil.unescapeStringCharacters(line, pos + 1, line.length()),
                         false
                     ));
                 }
@@ -250,8 +250,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                 }
                 pair = pair.replaceAll("[\\\\]", "\\\\\\\\");
                 result.put(
-                    StringUtil.unescapeStringCharacters(pair.substring(0, pos)).trim(),
-                    StringUtil.unescapeStringCharacters(pair.substring(pos + 1))
+                    StringUtil.unescapeStringCharacters(pair, 0, pos).trim(),
+                    StringUtil.unescapeStringCharacters(pair, pos + 1, pair.length())
                 );
             }
         }

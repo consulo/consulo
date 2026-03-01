@@ -13,54 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
 
 public class CharSequenceSubSequence implements CharSequence {
-  private final CharSequence myChars;
-  private final int myStart;
-  private final int myEnd;
+    private final CharSequence myChars;
+    private final int myStart;
+    private final int myEnd;
 
-  public CharSequenceSubSequence(@Nonnull CharSequence chars) {
-    this(chars, 0, chars.length());
-  }
-
-  public CharSequenceSubSequence(@Nonnull CharSequence chars, int start, int end) {
-    if (start < 0 || end > chars.length() || start > end) {
-      throw new IndexOutOfBoundsException("chars sequence.length:" + chars.length() +
-                                          ", start:" + start +
-                                          ", end:" + end);
+    public CharSequenceSubSequence(@Nonnull CharSequence chars) {
+        this(chars, 0, chars.length());
     }
-    myChars = chars;
-    myStart = start;
-    myEnd = end;
-  }
 
-  @Override
-  public final int length() {
-    return myEnd - myStart;
-  }
+    public CharSequenceSubSequence(@Nonnull CharSequence chars, int start, int end) {
+        if (start < 0 || end > chars.length() || start > end) {
+            throw new IndexOutOfBoundsException(
+                "CharSequence." +
+                    "length:" + chars.length() +
+                    ", start:" + start +
+                    ", end:" + end
+            );
+        }
+        myChars = chars;
+        myStart = start;
+        myEnd = end;
+    }
 
-  @Override
-  public final char charAt(int index) {
-    return myChars.charAt(index + myStart);
-  }
+    @Override
+    public final int length() {
+        return myEnd - myStart;
+    }
 
-  @Override
-  public CharSequence subSequence(int start, int end) {
-    if (start == myStart && end == myEnd) return this;
-    return new CharSequenceSubSequence(myChars, myStart + start, myStart + end);
-  }
+    @Override
+    public final char charAt(int index) {
+        return myChars.charAt(index + myStart);
+    }
 
-  @Nonnull
-  public String toString() {
-    if (myChars instanceof String) return ((String)myChars).substring(myStart, myEnd);
-    return new String(CharArrayUtil.fromSequence(myChars, myStart, myEnd));
-  }
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        if (start == myStart && end == myEnd) {
+            return this;
+        }
+        return new CharSequenceSubSequence(myChars, myStart + start, myStart + end);
+    }
 
-  public CharSequence getBaseSequence() {
-    return myChars;
-  }
+    @Nonnull
+    @Override
+    public String toString() {
+        if (myChars instanceof String str) {
+            return str.substring(myStart, myEnd);
+        }
+        return new String(CharArrayUtil.fromSequence(myChars, myStart, myEnd));
+    }
+
+    public CharSequence getBaseSequence() {
+        return myChars;
+    }
 }
