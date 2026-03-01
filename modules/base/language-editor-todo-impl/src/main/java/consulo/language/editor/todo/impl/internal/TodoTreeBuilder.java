@@ -16,6 +16,7 @@
 package consulo.language.editor.todo.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.disposer.Disposable;
@@ -44,11 +45,14 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.usage.UsageTreeColorsScheme;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -347,14 +351,23 @@ public abstract class TodoTreeBuilder implements Disposable {
 
     @RequiredUIAccess
     void rebuildCache() {
-        Set<VirtualFile> files = new HashSet<>();
-        collectFiles(virtualFile -> {
-            files.add(virtualFile);
-            return true;
+        CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine.first(ReadLock.apply(i -> {
+                Set<VirtualFile> files = new HashSet<>();
+                collectFiles(virtualFile -> {
+                    files.add(virtualFile);
+                    return true;
+                });
+                return files;
+            })).then(UIAction.apply((files, continuation) -> {
+                rebuildCache(files);
+                return null;
+            }));
         });
-        rebuildCache(files);
+
     }
 
+    @RequiredReadAction
     void collectFiles(Predicate<? super VirtualFile> collector) {
         TodoTreeStructure treeStructure = getTodoTreeStructure();
         PsiFile[] psiFiles = mySearchHelper.findFilesWithTodoItems();

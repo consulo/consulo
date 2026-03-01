@@ -67,12 +67,6 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         return null; // TODO
     }
 
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
-
     @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean selected) {

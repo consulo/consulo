@@ -18,7 +18,6 @@ package consulo.sandboxPlugin.ide.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -27,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -51,9 +51,9 @@ public class TestModalWriteAction extends DumbAwareAction {
         myProgressBuilderFactory.newProgressBuilder(e.getData(Project.KEY), LocalizeValue.localizeTODO("Test Write"))
             .modal()
             .execute(UIAccess.current(), coroutine -> {
-                return coroutine.then(WriteLock.apply((o, continuation) -> {
-                    TimeoutUtil.sleep(10_000);
-                    return null;
+                return coroutine.then(CodeExecution.apply((o, continuation) -> {
+                    TimeoutUtil.sleep(15_000);
+                    return o;
                 }));
             });
     }

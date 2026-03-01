@@ -15,7 +15,6 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
@@ -30,12 +29,6 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
     public ToggleInlineHintsAction(Application application) {
         super(CodeInsightLocalize.actionToggleinlinehintsactionText(), CodeInsightLocalize.actionToggleinlinehintsactionDescription());
         myApplication = application;
-    }
-
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

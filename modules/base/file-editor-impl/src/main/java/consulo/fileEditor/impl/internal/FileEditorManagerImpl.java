@@ -1330,7 +1330,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Nonnull
     @RequiredUIAccess
     public FileEditor[] getEditors(@Nonnull VirtualFile file) {
-        assertReadAccess();
         if (file instanceof VirtualFileWindow virtualFileWindow) {
             file = virtualFileWindow.getDelegate();
         }

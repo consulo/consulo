@@ -45,12 +45,6 @@ public final class LargeFilePrevNextOccurrenceAction extends DumbAwareAction imp
         e.getPresentation().setEnabled(isEnabled());
     }
 
-    @Override
-    @Nonnull
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
-
     private boolean isEnabled() {
         CloseSearchTask task = (CloseSearchTask) mySearchManager.getLastExecutedCloseSearchTask();
         return task == null || task.isFinished();

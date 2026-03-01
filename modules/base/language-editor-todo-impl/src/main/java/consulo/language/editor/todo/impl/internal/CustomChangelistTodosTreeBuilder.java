@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.TodoFilter;
 import consulo.language.editor.todo.impl.internal.versionSystemControl.TodoCheckinHandlerWorker;
@@ -70,6 +71,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
 
   private void initHelper() {
     myPsiTodoSearchHelper = new PsiTodoSearchHelper() {
+      @RequiredReadAction
       @Nonnull
       @Override
       public PsiFile[] findFilesWithTodoItems() {
@@ -185,6 +187,6 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
       }
     }
 
-    super.rebuildCache(files);
+    rebuildCache(files);
   }
 }

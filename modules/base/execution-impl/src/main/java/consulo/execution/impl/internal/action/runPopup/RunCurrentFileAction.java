@@ -7,7 +7,6 @@ import consulo.execution.impl.internal.action.RunConfigurationsComboBoxAction;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
@@ -21,12 +20,6 @@ public class RunCurrentFileAction extends AnAction implements DumbAware {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
-    }
-
-    @Override
-    @Nonnull
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

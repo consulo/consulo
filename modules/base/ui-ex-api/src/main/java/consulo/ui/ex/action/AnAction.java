@@ -23,9 +23,12 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -280,6 +283,18 @@ public abstract class AnAction implements PossiblyDumbAware {
     public void update(@Nonnull AnActionEvent e) {
     }
 
+    @Nonnull
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return Coroutine.first(CodeExecution.run(() -> {
+            try {
+                update(e);
+            }
+            catch (Throwable t) {
+                Logger.getInstance(AnAction.class).error(t);
+            }
+        }));
+    }
+
     /**
      * Same as {@link #update(AnActionEvent)} but is calls immediately before actionPerformed() as final check guard.
      * Default implementation delegates to {@link #update(AnActionEvent)}.
@@ -371,20 +386,6 @@ public abstract class AnAction implements PossiblyDumbAware {
         return this instanceof DumbAware;
     }
 
-    /**
-     * Specifies the thread and the way {@link AnAction#update(AnActionEvent)},
-     * {@link ActionGroup#getChildren(AnActionEvent)} or other update-like methods shall be called.
-     * <p>
-     * The preferred value is {@link ActionUpdateThread#BGT}.
-     * <p>
-     * The default value is {@link ActionUpdateThread#EDT}.
-     *
-     * @see ActionUpdateThread
-     */
-    @Nonnull
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
 
     /**
      * Return weight of action while execution on mouse/keyboard press handling

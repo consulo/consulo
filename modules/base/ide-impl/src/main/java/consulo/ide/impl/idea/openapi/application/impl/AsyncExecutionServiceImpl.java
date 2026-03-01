@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author peter
@@ -17,48 +18,40 @@ import java.util.concurrent.Callable;
 @Singleton
 @ServiceImpl
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
-  private static long ourWriteActionCounter = 0;
+    private static AtomicLong ourWriteActionCounter = new AtomicLong();
 
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public AsyncExecutionServiceImpl(Application app) {
-    myApplication = app;
-    app.addApplicationListener(new ApplicationListener() {
-      @Override
-      public void writeActionStarted(@Nonnull Object action) {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourWriteActionCounter++;
-      }
-    }, app);
-  }
+    @Inject
+    public AsyncExecutionServiceImpl(Application app) {
+        myApplication = app;
+        app.addApplicationListener(new ApplicationListener() {
+            @Override
+            public void writeActionStarted(@Nonnull Object action) {
+                ourWriteActionCounter.incrementAndGet();
+            }
+        }, app);
+    }
 
-  //@NotNull
-  //@Override
-  //protected ExpirableExecutor createExecutor(@NotNull Executor executor) {
-  //  return new ExpirableExecutorImpl(executor);
-  //}
-  //
-  @Nonnull
-  @Override
-  protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
-  }
+    @Nonnull
+    @Override
+    protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
+        return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+    }
 
-  @Nonnull
-  @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
-  }
+    @Nonnull
+    @Override
+    protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
+        return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
+    }
 
-  @Nonnull
-  @Override
-  public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation) {
-    return new NonBlockingReadActionImpl<>(myApplication, computation);
-  }
+    @Nonnull
+    @Override
+    public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation) {
+        return new NonBlockingReadActionImpl<>(myApplication, computation);
+    }
 
-  static long getWriteActionCounter() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-    return ourWriteActionCounter;
-  }
+    static long getWriteActionCounter() {
+        return ourWriteActionCounter.get();
+    }
 }

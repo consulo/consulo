@@ -72,12 +72,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
         RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {

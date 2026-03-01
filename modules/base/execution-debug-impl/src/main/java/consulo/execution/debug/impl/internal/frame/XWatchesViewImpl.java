@@ -219,11 +219,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                             e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
                         }
 
-                        @Override
-                        @Nonnull
-                        public ActionUpdateThread getActionUpdateThread() {
-                            return ActionUpdateThread.BGT;
-                        }
                     };
 
                 super.addActions(builder, showMultiline);

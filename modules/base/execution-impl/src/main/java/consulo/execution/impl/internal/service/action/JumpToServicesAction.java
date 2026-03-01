@@ -28,11 +28,6 @@ public final class JumpToServicesAction extends DumbAwareAction {
     selectedView.jumpToServices();
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();

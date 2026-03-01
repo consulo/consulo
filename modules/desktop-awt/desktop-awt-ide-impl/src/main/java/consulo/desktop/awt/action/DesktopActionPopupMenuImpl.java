@@ -18,17 +18,21 @@ package consulo.desktop.awt.action;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.PresentationFactory;
+import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
@@ -49,6 +53,7 @@ import java.util.function.Supplier;
  * @author Vladimir Kondratyev
  */
 public final class DesktopActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
+    private static final Logger LOG = Logger.getInstance(DesktopActionPopupMenuImpl.class);
 
     private final MyMenu myMenu;
     private final ActionManagerEx myManager;
@@ -127,6 +132,8 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
         private final ActionGroup myGroup;
         private DataContext myContext;
         private final PresentationFactory myPresentationFactory;
+        private ProgressIndicator myExpansionIndicator;
+        private boolean myAsyncShowFilled;
 
         public MyMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory factory) {
             myPlace = place;
@@ -144,29 +151,67 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
 
             removeAll();
 
-            // Fill menu. Only after filling menu has non zero size.
-
             int x2 = Math.max(0, Math.min(x, component.getWidth() - 1)); // fit x into [0, width-1]
             int y2 = Math.max(0, Math.min(y, component.getHeight() - 1)); // fit y into [0, height-1]
 
             myContext = myDataContextProvider != null ? myDataContextProvider.get() : DataManager.getInstance().getDataContext(component, x2, y2);
-            Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
-            if (getComponentCount() == 0) {
-                return;
+
+            // Cancel any previous expansion
+            if (myExpansionIndicator != null) {
+                myExpansionIndicator.cancel();
             }
-            if (myApp != null) {
-                if (myApp.isActive()) {
-                    Component frame = UIUtil.findUltimateParent(component);
-                    if (frame instanceof Window) {
-                        consulo.ui.Window uiWindow = TargetAWT.from((Window) frame);
-                        myFrame = uiWindow.getUserData(IdeFrame.KEY);
-                    }
-                    myConnection = myApp.getMessageBus().connect();
-                    myConnection.subscribe(ApplicationActivationListener.class, DesktopActionPopupMenuImpl.this);
-                }
+            myExpansionIndicator = new EmptyProgressIndicator();
+
+            // Show animated spinner on the glass pane while actions are expanding
+            JLabel spinner = new JLabel(AnimatedIcon.Default.INSTANCE);
+            Dimension iconSize = spinner.getPreferredSize();
+            spinner.setSize(iconSize);
+
+            JRootPane rootPane = UIUtil.getRootPane(component);
+            JComponent glassPane = rootPane != null ? (JComponent) rootPane.getGlassPane() : null;
+            if (glassPane != null) {
+                Point clickPoint = new Point(x, y);
+                SwingUtilities.convertPointToScreen(clickPoint, component);
+                SwingUtilities.convertPointFromScreen(clickPoint, glassPane);
+                spinner.setLocation(clickPoint.x - iconSize.width / 2, clickPoint.y - iconSize.height / 2);
+                glassPane.add(spinner);
+                glassPane.setVisible(true);
+                glassPane.repaint();
             }
 
-            super.show(component, x, y);
+            Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true, myExpansionIndicator)
+                .whenComplete((result, error) -> {
+                    // Remove spinner from glass pane
+                    if (glassPane != null) {
+                        glassPane.remove(spinner);
+                        glassPane.repaint();
+                    }
+
+                    if (error != null) {
+                        LOG.error("Failed to expand context menu actions", error);
+                        return;
+                    }
+
+                    if (getComponentCount() == 0) {
+                        return;
+                    }
+
+                    myAsyncShowFilled = true;
+                    super.show(component, x, y);
+
+                    // Subscribe AFTER show() to avoid race: showing the popup
+                    // may cause a transient frame deactivation (heavyweight window
+                    // steals focus), which would immediately hide the menu.
+                    if (myApp != null && myApp.isActive()) {
+                        Component frame = UIUtil.findUltimateParent(component);
+                        if (frame instanceof Window) {
+                            consulo.ui.Window uiWindow = TargetAWT.from((Window) frame);
+                            myFrame = uiWindow.getUserData(IdeFrame.KEY);
+                        }
+                        myConnection = myApp.getMessageBus().connect();
+                        myConnection.subscribe(ApplicationActivationListener.class, DesktopActionPopupMenuImpl.this);
+                    }
+                });
         }
 
         @Override
@@ -189,6 +234,9 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
             }
 
             private void disposeMenu() {
+                if (myExpansionIndicator != null) {
+                    myExpansionIndicator.cancel();
+                }
                 myManager.removeActionPopup(DesktopActionPopupMenuImpl.this);
                 removeAll();
                 if (myConnection != null) {
@@ -198,9 +246,16 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
 
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                if (myAsyncShowFilled) {
+                    // Menu was already populated by the async show() path — just register it.
+                    myAsyncShowFilled = false;
+                    myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
+                    return;
+                }
+
                 removeAll();
-                Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
-                myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
+                Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true)
+                    .thenRun(() -> myManager.addActionPopup(DesktopActionPopupMenuImpl.this));
             }
         }
     }

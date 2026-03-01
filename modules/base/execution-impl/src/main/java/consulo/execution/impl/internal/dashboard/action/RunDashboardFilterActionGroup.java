@@ -43,11 +43,6 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
     }
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Set<ServiceViewContributor> contributors = e.getData(ServiceViewActionUtils.CONTRIBUTORS_KEY);
@@ -86,11 +81,6 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
       RunDashboardStatusFilter statusFilter = ((RunDashboardManagerImpl)RunDashboardManager.getInstance(project)).getStatusFilter();
       return statusFilter.isVisible(myStatus);
     }
-
-//    @Override
-//    public @NotNull ActionUpdateThread getActionUpdateThread() {
-//      return ActionUpdateThread.EDT;
-//    }
 
     @Override
     @RequiredUIAccess

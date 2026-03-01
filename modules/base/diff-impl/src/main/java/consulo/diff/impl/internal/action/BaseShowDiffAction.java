@@ -25,7 +25,9 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import jakarta.annotation.Nonnull;
@@ -41,14 +43,23 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
+    @Nonnull
+    @Override
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return Coroutine.first(UIAction.apply((o, continuation) -> {
+            Presentation presentation = e.getPresentation();
+            boolean canShow = isAvailable(e);
+            presentation.setEnabled(canShow);
+            if (ActionPlaces.isPopupPlace(e.getPlace())) {
+                presentation.setVisible(canShow);
+            }
+            return null;
+        }));
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        boolean canShow = isAvailable(e);
-        presentation.setEnabled(canShow);
-        if (ActionPlaces.isPopupPlace(e.getPlace())) {
-            presentation.setVisible(canShow);
-        }
+
     }
 
     @Override

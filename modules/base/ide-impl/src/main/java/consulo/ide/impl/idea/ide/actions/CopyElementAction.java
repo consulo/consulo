@@ -32,7 +32,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -84,23 +86,27 @@ public class CopyElementAction extends AnAction {
         CopyHandler.doCopy(elements, defaultTargetDirectory);
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
-        presentation.setEnabled(false);
-        if (project == null) {
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = e.getPresentation();
+            Project project = e.getData(Project.KEY);
+            presentation.setEnabled(false);
+            if (project == null) {
+                return null;
+            }
 
-        Editor editor = e.getData(Editor.KEY);
-        if (editor != null) {
-            updateForEditor(e.getDataContext(), presentation);
-        }
-        else {
-            String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-            updateForToolWindow(id, e.getDataContext(), presentation);
-        }
+            Editor editor = e.getData(Editor.KEY);
+            if (editor != null) {
+                updateForEditor(e.getDataContext(), presentation);
+            }
+            else {
+                String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+                updateForToolWindow(id, e.getDataContext(), presentation);
+            }
+            return null;
+        }));
     }
 
     @RequiredUIAccess

@@ -24,11 +24,6 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
     myServiceView = serviceView;
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.EDT;
-//  }
-
   @Override
   @RequiredUIAccess
   public void deleteElement(@Nonnull DataContext dataContext) {

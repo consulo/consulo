@@ -6,7 +6,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.memory.MemoryViewManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -16,12 +15,6 @@ public class ShowClassesWithDiffAction extends ToggleAction implements DumbAware
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         return MemoryViewManager.getInstance().isNeedShowDiffOnly();
-    }
-
-    @Override
-    @Nonnull
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

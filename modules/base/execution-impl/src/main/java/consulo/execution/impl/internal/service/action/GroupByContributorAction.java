@@ -17,11 +17,6 @@ public final class GroupByContributorAction extends ToggleAction implements Dumb
     super(ActionLocalize.actionServiceviewGroupbycontributorText());
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

@@ -49,6 +49,7 @@ public class AsyncPopupImpl extends WizardPopup implements Runnable {
         Disposer.register(this, new Disposable() {
             @Override
             public void dispose() {
+                step.cancelBackgroundWork();
                 if (!myFuture.isCancelled() && !myFuture.isDone()) {
                     myFuture.cancel(false);
                 }

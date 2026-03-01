@@ -151,7 +151,7 @@ public abstract class JBPopupFactory {
      */
     @Deprecated
     @Nonnull
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         boolean showNumbers,
@@ -179,7 +179,7 @@ public abstract class JBPopupFactory {
      */
     @Deprecated
     @Nonnull
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         boolean showNumbers,
@@ -205,7 +205,7 @@ public abstract class JBPopupFactory {
     }
 
     @Nonnull
-    public abstract ListPopupStep createActionsStep(
+    public abstract PopupStep createActionsStep(
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         @Nullable String actionPlace,

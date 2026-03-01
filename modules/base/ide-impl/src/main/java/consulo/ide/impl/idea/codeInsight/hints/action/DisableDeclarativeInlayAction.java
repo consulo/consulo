@@ -11,7 +11,6 @@ import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -20,12 +19,6 @@ import jakarta.annotation.Nonnull;
 public class DisableDeclarativeInlayAction extends AnAction implements DumbAware {
     public DisableDeclarativeInlayAction() {
         super(CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText());
-    }
-
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

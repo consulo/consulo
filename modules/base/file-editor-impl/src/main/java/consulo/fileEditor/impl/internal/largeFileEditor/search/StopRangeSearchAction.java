@@ -4,7 +4,6 @@ package consulo.fileEditor.impl.internal.largeFileEditor.search;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -25,11 +24,6 @@ public final class StopRangeSearchAction extends AnAction implements DumbAware {
         e.getPresentation().setEnabled(
             task != null && !task.isFinished() && !task.isShouldStop()
         );
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
     }
 
     @Override

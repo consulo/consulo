@@ -6,7 +6,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
@@ -32,10 +31,5 @@ public class DeploymentConfigAction extends DumbAwareAction {
         if (node != null) {
             node.editConfiguration();
         }
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

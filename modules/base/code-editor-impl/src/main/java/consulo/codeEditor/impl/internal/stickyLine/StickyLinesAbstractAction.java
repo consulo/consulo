@@ -16,7 +16,6 @@
 package consulo.codeEditor.impl.internal.stickyLine;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
@@ -29,9 +28,4 @@ public abstract class StickyLinesAbstractAction extends DumbAwareAction {
         super(text, description);
     }
 
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
 }

@@ -7,7 +7,6 @@ import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.EmptyRunnable;
@@ -36,10 +35,5 @@ public class RemoteServerConnectAction extends DumbAwareAction {
         if (node != null) {
             ServerConnectionManager.getInstance().getOrCreateConnection(node.getValue()).connect(EmptyRunnable.INSTANCE);
         }
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

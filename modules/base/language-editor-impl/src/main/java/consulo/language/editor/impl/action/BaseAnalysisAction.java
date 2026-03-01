@@ -17,6 +17,7 @@ package consulo.language.editor.impl.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.LangDataKeys;
@@ -43,6 +44,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -71,13 +73,17 @@ public abstract class BaseAnalysisAction extends AnAction {
         myAnalysisNoon = analysisNoon;
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = event.getData(Project.KEY);
-        boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
-        presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+        return Coroutine.first(ReadLock.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            DataContext dataContext = event.getDataContext();
+            Project project = event.getData(Project.KEY);
+            boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
+            presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+            return null;
+        }));
     }
 
     @Override
