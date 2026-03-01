@@ -354,25 +354,16 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             }
         }
         else if (task.isModal()) {
-            runSynchronously(task.asModal());
+            runProcessWithProgressSynchronously(task);
         }
         else {
             Task.Backgroundable backgroundable = task.asBackgroundable();
             if (backgroundable.isConditionalModal() && !backgroundable.shouldStartInBackground()) {
-                runSynchronously(task);
+                runProcessWithProgressSynchronously(task);
             }
             else {
                 runAsynchronously(backgroundable);
             }
-        }
-    }
-
-    private void runSynchronously(@Nonnull Task task) {
-        if (myApplication.isDispatchThread()) {
-            runProcessWithProgressSynchronously(task);
-        }
-        else {
-            myApplication.invokeAndWait(() -> runProcessWithProgressSynchronously(task));
         }
     }
 

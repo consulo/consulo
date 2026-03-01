@@ -33,12 +33,11 @@ import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.internal.ComponentBinding;
@@ -80,19 +79,17 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock, StorableComponent {
+public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, StorableComponent {
     private class ReadAccessToken extends AccessToken {
         private final RWLock.ReadToken myReader;
 
@@ -456,8 +453,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         super.dispose();
 
-        invokeLater(this::releaseWriteIntentLock, ModalityState.nonModal());
-
         AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
         service.shutdownAppScheduledExecutorService();
 
@@ -576,37 +571,68 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
 
-    @RequiredUIAccess
     @Override
     public void executeSuspendingWriteAction(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
-        assertIsWriteThread();
-        if (!myLock.isWriteLocked()) {
-            runModalProgress(project, title, runnable);
-            return;
+        if (myLock.isWriteLocked()) {
+            int prevBase = myWriteStackBase;
+            myWriteStackBase = myWriteActionsStack.size();
+            try (AccessToken ignored = myLock.writeSuspend()) {
+                runnable.run();
+            }
+            finally {
+                myWriteStackBase = prevBase;
+            }
         }
-
-        int prevBase = myWriteStackBase;
-        myWriteStackBase = myWriteActionsStack.size();
-        try (AccessToken ignored = myLock.writeSuspend()) {
-            runModalProgress(project, title, runnable);
-        }
-        finally {
-            myWriteStackBase = prevBase;
+        else {
+            runnable.run();
         }
     }
 
-    private static void runModalProgress(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
-        new Task.Modal(project, title, false) {
-            @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
-                runnable.run();
+    @Override
+    public boolean runWriteActionWithCancellableProgress(@Nonnull LocalizeValue title, @Nullable ComponentManager project, @Nonnull Consumer<? super ProgressIndicator> action) {
+        return runWriteActionWithProgressOnPooledThread(title, action);
+    }
+
+    @Override
+    public boolean runWriteActionWithNonCancellableProgress(@Nonnull LocalizeValue title, @Nullable ComponentManager project, @Nonnull Consumer<? super ProgressIndicator> action) {
+        return runWriteActionWithProgressOnPooledThread(title, action);
+    }
+
+    private boolean runWriteActionWithProgressOnPooledThread(@Nonnull LocalizeValue title, @Nonnull Consumer<? super ProgressIndicator> action) {
+        ProgressIndicatorBase indicator = new ProgressIndicatorBase();
+        indicator.setText(title.get());
+
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            ProgressManager.getInstance().runProcess(() -> {
+                runWriteAction(() -> action.accept(indicator));
+            }, indicator);
+        }, AppExecutorUtil.getAppExecutorService());
+
+        try {
+            future.get();
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof ProcessCanceledException) {
+                // canceled — fall through
             }
-        }.queue();
+            else if (cause instanceof RuntimeException re) {
+                throw re;
+            }
+            else if (cause instanceof Error err) {
+                throw err;
+            }
+        }
+
+        return !indicator.isCanceled();
     }
 
     @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread();
     }
 
     @Override
@@ -641,12 +667,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
      */
     @Override
     public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
-        if (isDispatchThread()) {
-            runnable.run();
-        }
-        else {
-            myLock.executeByImpatientReader(runnable);
-        }
+        myLock.executeByImpatientReader(runnable);
     }
 
     @Override
@@ -654,7 +675,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return myLock.isWriteLocked();
     }
 
-    @RequiredUIAccess
     @Override
     public boolean runProcessWithProgressSynchronously(
         @Nonnull Runnable process,
@@ -665,19 +685,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         JComponent parentComponent,
         @Nonnull LocalizeValue cancelText
     ) {
-        if (isDispatchThread() && isWriteAccessAllowed()
-            // Disallow running process in separate thread from under write action.
-            // The thread will deadlock trying to get read action otherwise.
-        ) {
-            LOG.debug("Starting process with progress from within write action makes no sense");
-            try {
-                ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
-            }
-            catch (ProcessCanceledException e) {
-                // ok to ignore.
-                return false;
-            }
-            return true;
+        if (isWriteAccessAllowed()) {
+            LOG.error("Running progress synchronously under write action is not allowed", new Throwable());
         }
 
         CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(
@@ -753,7 +762,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     protected void startWrite(@Nonnull Class clazz) {
-        assertIsWriteThread();
         boolean writeActionPending = myWriteActionPending;
         myWriteActionPending = true;
         try {
@@ -808,7 +816,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
     public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
@@ -817,7 +824,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return new WriteAccessToken(clazz);
     }
 
-    @RequiredUIAccess
     @Override
     public void runWriteAction(@Nonnull Runnable action) {
         Class<? extends Runnable> clazz = action.getClass();
@@ -830,13 +836,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @RequiredUIAccess
     @Override
     public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
         return runWriteActionWithClass(computation.getClass(), computation::get);
     }
 
-    @RequiredUIAccess
     @Override
     public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
         return runWriteActionWithClass(computation.getClass(), computation);
@@ -856,6 +860,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean isWriteThread() {
         return myLock.isWriteThread();
@@ -874,71 +879,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Override
-    public void acquireWriteIntentLock(@Nonnull String invokedClassFqn) {
-        myLock.writeIntentLock();
-    }
-
-    @Override
-    public void releaseWriteIntentLock() {
-        myLock.writeIntentUnlock();
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-        invokeLaterOnWriteThread(action, modal, getDisposed());
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(
-        @Nonnull Runnable action,
-        @Nonnull ModalityState modal,
-        @Nonnull BooleanSupplier expired
-    ) {
-        Runnable r = wrapLaterInvocation(action, modal);
-        // EDT == Write Thread in legacy mode
-        LaterInvocator.invokeLaterWithCallback(
-            () -> runIntendedWriteActionOnCurrentThread(r),
-            modal,
-            expired,
-            null
-        );
-    }
-
     @Nonnull
     protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
         return action;
     }
 
     @Override
-    public <T, E extends Throwable> T runUnlockingIntendedWrite(@Nonnull ThrowableComputable<T, E> action) throws E {
-        return action.compute();
-    }
-
-    @Override
-    public void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
-        if (isWriteThread()) {
-            action.run();
-        }
-        else {
-            acquireWriteIntentLock(action.getClass().getName());
-            try {
-                action.run();
-            }
-            finally {
-                releaseWriteIntentLock();
-            }
-        }
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-        invokeLaterOnWriteThread(action, getDefaultModalityState());
-    }
-
-    @Override
     public boolean isWriteAccessAllowed() {
-        return isWriteThread() && myLock.isWriteLocked();
+        return myLock.isWriteLocked() && myLock.isWriteThread();
     }
 
     @Override

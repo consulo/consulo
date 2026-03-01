@@ -18,8 +18,6 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.reflect.ReflectionUtil;
@@ -44,26 +42,12 @@ public final class WriteAction {
         return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
     }
 
-    public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
-        Application application = Application.get();
-        if (application.isDispatchThread()) {
-            run(runnable::run);
-        }
-        else {
-            UIAccess uiAccess = application.getLastUIAccess();
-            uiAccess.giveAndWaitIfNeed(() -> run(runnable::run));
-        }
+    public static void runAndWait(@RequiredWriteAction Runnable runnable) {
+        run(runnable::run);
     }
 
-    public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
-        Application application = Application.get();
-        if (application.isDispatchThread()) {
-            return compute(supplier::get);
-        }
-        else {
-            UIAccess uiAccess = application.getLastUIAccess();
-            return uiAccess.giveAndWaitIfNeed(() -> compute(supplier::get));
-        }
+    public static <T> T computeAndWait(@RequiredWriteAction Supplier<T> supplier) {
+        return compute(supplier::get);
     }
 
     public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
@@ -78,7 +62,7 @@ public final class WriteAction {
         return application.runWriteAction(action);
     }
 
-    public static void runLater(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
+    public static void runLater(@RequiredWriteAction Runnable runnable) {
         Application application = Application.get();
         application.invokeLater(() -> application.runWriteAction(runnable));
     }

@@ -16,6 +16,7 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.codeEditor.EditorLinePainter;
 import consulo.codeEditor.LineExtensionInfo;
@@ -84,7 +85,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     }
 
     XVariablesView.InlineVariablesInfo data = project.getUserData(XVariablesView.DEBUG_VARIABLES);
-    Document doc = FileDocumentManager.getInstance().getDocument(file);
+    Document doc = ReadAction.compute(() -> FileDocumentManager.getInstance().getDocument(file));
 
     if (data == null || doc == null) {
       return null;

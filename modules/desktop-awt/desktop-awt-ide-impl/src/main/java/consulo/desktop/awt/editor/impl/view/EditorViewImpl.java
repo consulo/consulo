@@ -3,7 +3,6 @@
  */
 package consulo.desktop.awt.editor.impl.view;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -679,12 +678,14 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return myBidiFlags;
     }
 
+    @RequiredUIAccess
     private static void assertIsDispatchThread() {
         UIAccess.assertIsUIThread();
     }
 
+    @Deprecated
     private static void assertIsReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        assertIsDispatchThread();
     }
 
     @Override

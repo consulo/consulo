@@ -35,7 +35,8 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   }
 
   /**
-   * Creates a Write-thread-based executor working with the given modality state.
+   * Creates an executor that schedules on EDT and wraps execution inside a write action.
+   * Use this when the scheduled code requires write access.
    *
    * @see ModalityState
    */
@@ -45,7 +46,8 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   }
 
   /**
-   * Creates a Write-thread-based executor working with the default modality state.
+   * Creates an executor that schedules on EDT and wraps execution inside a write action.
+   * Use this when the scheduled code requires write access.
    *
    * @see Application#getDefaultModalityState()
    */

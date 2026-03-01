@@ -246,27 +246,18 @@ public final class ProgressRunner<R> {
         });
     }
 
-    // The case of sync exec from the EDT without the ability to poll events (no BlockingProgressIndicator#startBlocking or presence of Write Action)
-    // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
-    // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
     private boolean checkIfForceDirectExecNeeded() {
         Application application = ApplicationManager.getApplication();
-        if (isSync && UIAccess.isUIThread() && !application.isWriteThread() && !application.isUnifiedApplication()) {
-            throw new IllegalStateException("Running sync tasks on pure EDT (w/o IW lock) is dangerous for several reasons.");
+        if (application.isWriteAccessAllowed()) {
+            throw new IllegalStateException("Cannot run ProgressRunner under write action — would deadlock on read access");
         }
         if (!isSync && isModal && UIAccess.isUIThread()) {
             throw new IllegalStateException("Running async modal tasks from EDT is impossible: modal implies sync dialog show + polling events");
         }
 
-        boolean forceDirectExec = isSync && application.isDispatchThread() && (application.isWriteAccessAllowed() || !isModal);
+        boolean forceDirectExec = isSync && application.isDispatchThread() && !isModal;
         if (forceDirectExec) {
-            String reason = application.isWriteAccessAllowed() ? "inside Write Action" : "not modal execution";
-            String failedConstraints = "";
-            if (isModal) {
-                failedConstraints += "Use Modal execution; ";
-            }
-            failedConstraints += "Use pooled thread; ";
-            Logger.getInstance(ProgressRunner.class).warn("Forced to sync exec on EDT. Reason: " + reason + ". Failed constraints: " + failedConstraints, new Throwable());
+            Logger.getInstance(ProgressRunner.class).warn("Forced to sync exec on EDT. Reason: not modal execution. Failed constraints: Use pooled thread; ", new Throwable());
         }
         return forceDirectExec;
     }
@@ -323,13 +314,13 @@ public final class ProgressRunner<R> {
                 modalityEntered.up();
                 return progressIndicator;
             };
-            // If a progress indicator has not been calculated yet, grabbing IW lock might lead to deadlock, as progress might need it for init
+            // If a progress indicator has not been calculated yet, dispatch on EDT for modality setup
             progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
-                if (ApplicationManager.getApplication().isWriteThread()) {
+                if (ApplicationManager.getApplication().isDispatchThread()) {
                     r.run();
                 }
                 else {
-                    ApplicationManager.getApplication().invokeLaterOnWriteThread(r);
+                    ApplicationManager.getApplication().invokeLater(r);
                 }
             });
         }
@@ -339,11 +330,11 @@ public final class ProgressRunner<R> {
         if (isModal) {
             CompletableFuture<Void> modalityExitFuture = resultFuture.handle((r, throwable) -> r) // ignore result computation exception
                 .thenAcceptBoth(progressFuture, (r, progressIndicator) -> {
-                    if (ApplicationManager.getApplication().isWriteThread()) {
+                    if (ApplicationManager.getApplication().isDispatchThread()) {
                         LaterInvocator.leaveModal(progressIndicator);
                     }
                     else {
-                        ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
+                        ApplicationManager.getApplication().invokeLater(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
                     }
                 });
 

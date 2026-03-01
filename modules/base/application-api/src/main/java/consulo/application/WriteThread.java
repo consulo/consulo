@@ -14,7 +14,7 @@ public final class WriteThread {
   }
 
   /**
-   * Schedules {@code runnable} to execute from under IW lock on some thread later.
+   * Schedules {@code runnable} to execute on the EDT later.
    *
    * @param runnable the action to run
    * @return a future representing the result of the scheduled computation
@@ -28,7 +28,7 @@ public final class WriteThread {
   }
 
   /**
-   * Schedules {@code computable} to execute from under IW lock on some thread later.
+   * Schedules {@code computable} to execute on the EDT later.
    *
    * @param computable the action to run
    * @param <T>        return type of scheduled computation
@@ -37,7 +37,7 @@ public final class WriteThread {
   @Nonnull
   public static <T> Future<T> submit(@Nonnull ThrowableComputable<? extends T, ?> computable) {
     CompletableFuture<T> future = new CompletableFuture<>();
-    ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> {
+    ApplicationManager.getApplication().invokeLater(() -> {
       try {
         future.complete(computable.compute());
       }
@@ -49,7 +49,7 @@ public final class WriteThread {
   }
 
   /**
-   * Schedules {@code runnable} to execute from under IW lock on some thread later and blocks until
+   * Schedules {@code runnable} to execute on the EDT later and blocks until
    * the execution is finished.
    *
    * @param runnable the action to run

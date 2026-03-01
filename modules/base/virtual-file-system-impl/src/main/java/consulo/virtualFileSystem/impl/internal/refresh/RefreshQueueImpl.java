@@ -8,10 +8,6 @@ import consulo.application.HeavyProcessLatch;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.FrequentEventDetector;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.SensitiveProgressWrapper;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.registry.Registry;
@@ -35,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -83,7 +80,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       queueSession(session, session.getModality());
     }
     else {
-      if (myApplication.isWriteThread()) {
+      if (myApplication.isDispatchThread()) {
         doScan(session);
         session.fireEvents(session.getEvents(), null);
       }
@@ -114,7 +111,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
           scheduleAsynchronousPreprocessing(session, modality);
         }
         else {
-          AppUIExecutor.onWriteThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
+          AppUIExecutor.onUiThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
         }
       }
     });
@@ -149,34 +146,31 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   private void processAndFireEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
-    while (true) {
-      ProgressIndicator progress = new SensitiveProgressWrapper(new EmptyProgressIndicator());
-      boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, modality), progress);
-      if (success) {
-        break;
-      }
-
-      ProgressIndicatorUtils.yieldToPendingWriteActions();
-    }
-  }
-
-  protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
-    List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
-      VirtualFile file = e instanceof VFileCreateEvent vFileCreateEvent ? vFileCreateEvent.getParent() : e.getFile();
-      return file == null || file.isValid();
-    });
-
-    List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
-
+    // Record the write action counter before processing.
+    // While we hold the read lock, no write can happen, so the stamp is stable during processing.
+    // After releasing the read lock, we check if a write snuck in before firing events.
     long stamp = myWriteActionCounter.get();
-    AppUIExecutor.onWriteThread(modality).later().submit(() -> {
-      if (stamp == myWriteActionCounter.get()) {
-        session.fireEvents(events, appliers);
-      }
-      else {
-        scheduleAsynchronousPreprocessing(session, modality);
-      }
-    });
+
+    // Process events under a single read lock: filter and run async listeners
+    List<? extends VFileEvent> events = myApplication.runReadAction((Supplier<List<? extends VFileEvent>>)() ->
+      ContainerUtil.filter(session.getEvents(), e -> {
+        VirtualFile file = e instanceof VFileCreateEvent vfc ? vfc.getParent() : e.getFile();
+        return file == null || file.isValid();
+      })
+    );
+
+    List<AsyncFileListener.ChangeApplier> appliers = myApplication.runReadAction((Supplier<List<AsyncFileListener.ChangeApplier>>)() ->
+      AsyncEventSupport.runAsyncListeners(events)
+    );
+
+    // If no write action occurred since we started, fire events directly.
+    // Otherwise re-schedule — the appliers may be stale.
+    if (stamp == myWriteActionCounter.get()) {
+      session.fireEvents(events, appliers);
+    }
+    else {
+      scheduleAsynchronousPreprocessing(session, modality);
+    }
   }
 
   private void doScan(@Nonnull RefreshSessionImpl session) {

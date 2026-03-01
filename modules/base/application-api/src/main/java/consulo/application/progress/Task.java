@@ -82,7 +82,7 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     /**
-     * This callback will be invoked on AWT dispatch thread.
+     * This callback will be invoked on the UI thread.
      * <p>
      * Callback executed when run() throws {@link ProcessCanceledException} or if its {@link ProgressIndicator} was canceled.
      */
@@ -91,14 +91,14 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     /**
-     * This callback will be invoked on AWT dispatch thread.
+     * This callback will be invoked on the UI thread.
      */
     @RequiredUIAccess
     public void onSuccess() {
     }
 
     /**
-     * This callback will be invoked on AWT dispatch thread.
+     * This callback will be invoked on the UI thread.
      * <p>
      * Callback executed when run() throws an exception (except PCE).
      *
@@ -110,7 +110,7 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     /**
-     * This callback will be invoked on AWT dispatch thread.
+     * This callback will be invoked on the UI thread.
      * <p>
      * Callback executed when run() throws an exception (except PCE).
      */
@@ -124,7 +124,7 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     /**
-     * This callback will be invoked on AWT dispatch thread, after other specific handlers
+     * This callback will be invoked on the UI thread, after other specific handlers
      */
     @RequiredUIAccess
     public void onFinished() {

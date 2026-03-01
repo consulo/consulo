@@ -266,7 +266,12 @@ public class ProgressIndicatorUtils {
     /**
      * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
      * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
+     *
+     * @deprecated This method assumes write actions only happen on EDT, which is no longer true.
+     * With StampedLock-based locking, writes can occur on any thread, so yielding to EDT
+     * does not guarantee all pending writes have completed. Use proper lock-based synchronization instead.
      */
+    @Deprecated
     public static void yieldToPendingWriteActions() {
         Application application = ApplicationManager.getApplication();
         if (application.isReadAccessAllowed()) {

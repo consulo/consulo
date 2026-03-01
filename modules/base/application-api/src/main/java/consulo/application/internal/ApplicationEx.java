@@ -164,19 +164,17 @@ public interface ApplicationEx extends Application {
         throw new UnsupportedOperationException();
     }
 
-    default boolean runWriteActionWithCancellableProgressInDispatchThread(
+    default boolean runWriteActionWithCancellableProgress(
         @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();
     }
 
-    default boolean runWriteActionWithNonCancellableProgressInDispatchThread(
+    default boolean runWriteActionWithNonCancellableProgress(
         @Nonnull LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();

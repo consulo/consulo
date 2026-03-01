@@ -42,7 +42,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
-        myLock = new UnifiedRWLock();
+        myLock = new StampedRWLock();
 
         ApplicationManager.setApplication(this);
     }
@@ -57,10 +57,10 @@ public abstract class UnifiedApplication extends BaseApplication {
         super.bootstrapInjectingContainer(builder);
     }
 
+    @Deprecated
     @Override
     public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        UIAccess uiAccess = getLastUIAccess();
-        uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
+        invokeLater(action, modal, expired);
     }
 
     @Override
@@ -140,13 +140,8 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    public void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
-        action.run();
-    }
-
-    @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread();
     }
 
     @Nonnull

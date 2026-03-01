@@ -192,12 +192,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
 
         try {
             try {
-                ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> {
-                    // guarantee AWT event after the future is done will be pumped and loop exited
-                    stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
-                    myDialog.startBlocking(stopCondition, this::isCancellationEvent);
-                    return null;
-                });
+                // guarantee AWT event after the future is done will be pumped and loop exited
+                stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
+                myDialog.startBlocking(stopCondition, this::isCancellationEvent);
             }
             finally {
                 exitModality();

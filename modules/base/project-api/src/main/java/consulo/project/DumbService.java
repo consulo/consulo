@@ -292,14 +292,13 @@ public abstract class DumbService {
     public abstract void cancelTask(@Nonnull DumbModeTask task);
 
     /**
-     * Runs the "just submitted" tasks under a modal dialog. "Just submitted" means that tasks were queued for execution
-     * earlier within the same Swing event dispatch thread event processing, and there were no other tasks already running
-     * at that moment. Otherwise, this method does nothing.<p/>
+     * Runs the "just submitted" tasks synchronously. "Just submitted" means that tasks were queued for execution
+     * earlier and there were no other tasks already running at that moment. Otherwise, this method does nothing.<p/>
      * <p>
      * This functionality can be useful in refactorings (invoked in "smart mode"), when after VFS or root changes
      * (which could start "dumb mode") some reference resolve is required (which again requires "smart mode").<p/>
      * <p>
-     * Should be invoked on dispatch thread.
+     * May be called from any thread. Blocks until all submitted tasks complete.
      */
     public abstract void completeJustSubmittedTasks();
 

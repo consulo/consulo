@@ -71,37 +71,27 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * with {@link ModalityState#defaultModalityState()} modality state.
-     *
-     * @param action the runnable to execute.
+     * @deprecated Use {@link #invokeLater(Runnable)} instead. Write-intent lock has been removed.
      */
+    @Deprecated
     default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-        throw new AbstractMethodError();
+        invokeLater(action);
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open).
-     *
-     * @param action the runnable to execute.
-     * @param modal  the state in which action will be executed
+     * @deprecated Use {@link #invokeLater(Runnable, ModalityState)} instead. Write-intent lock has been removed.
      */
+    @Deprecated
     default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-        throw new AbstractMethodError();
+        invokeLater(action, modal);
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open)
-     * - unless the expiration condition is fulfilled.
-     *
-     * @param action  the runnable to execute.
-     * @param modal   the state in which action will be executed
-     * @param expired condition to check before execution.
+     * @deprecated Use {@link #invokeLater(Runnable, ModalityState, BooleanSupplier)} instead. Write-intent lock has been removed.
      */
+    @Deprecated
     default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        throw new AbstractMethodError();
+        invokeLater(action, modal, expired);
     }
 
     /**
@@ -141,27 +131,25 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
     /**
-     * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
+     * Runs the specified write action. Can be called from any thread. The action is executed
      * immediately if no read actions are currently running, or blocked until all read actions complete.
      *
      * @param action the action to run
      */
-    @RequiredUIAccess
     void runWriteAction(@RequiredWriteAction @Nonnull Runnable action);
 
     /**
-     * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+     * Runs the specified computation in a write action. Can be called from any thread.
      * The action is executed immediately if no read actions or write actions are currently running,
      * or blocked until all read actions and write actions complete.
      *
      * @param computation the computation to run
      * @return the result returned by the computation.
      */
-    @RequiredUIAccess
     <T> T runWriteAction(@RequiredWriteAction @Nonnull Supplier<T> computation);
 
     /**
-     * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+     * Runs the specified computation in a write action. Can be called from any thread.
      * The action is executed immediately if no read actions or write actions are currently running,
      * or blocked until all read actions and write actions complete.
      *
@@ -169,7 +157,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    @RequiredUIAccess
     <T, E extends Throwable> T runWriteAction(@RequiredWriteAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
     /**
@@ -199,10 +186,11 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void assertIsDispatchThread();
 
     /**
-     * Asserts whether the method is being called from the write thread.
+     * @deprecated Write actions are no longer tied to a specific thread. Use {@link #assertWriteAccessAllowed()} instead.
      */
+    @Deprecated
     default void assertIsWriteThread() {
-        assertIsDispatchThread();
+        assertWriteAccessAllowed();
     }
 
     /**
@@ -251,7 +239,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @see #runWriteAction(Runnable)
      */
     default boolean isWriteAccessAllowed() {
-        return isDispatchThread();
+        return false;
     }
 
     /**
@@ -562,7 +550,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     @Nonnull
     @Deprecated
     @DeprecationInfo("Use runWriteAction(Runnable)")
-    @RequiredUIAccess
     AccessToken acquireWriteActionLock(@Nonnull Class marker);
 
     @Deprecated

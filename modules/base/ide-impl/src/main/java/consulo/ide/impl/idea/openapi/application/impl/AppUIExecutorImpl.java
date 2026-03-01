@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.application.impl;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
@@ -53,6 +54,11 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
   }
 
+  /**
+   * Executor that schedules to EDT and wraps execution inside a write action.
+   * In the old model, EDT held a permanent write-intent lock.
+   * Now writes can happen from any thread, so we explicitly wrap in {@link WriteAction#run}.
+   */
   private static class MyWtExecutor implements Executor {
     private final ModalityState modality;
 
@@ -63,11 +69,11 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     @Override
     public void execute(@Nonnull Runnable command) {
       Application application = Application.get();
-      if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
+      if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
+        WriteAction.run(command::run);
       }
       else {
-        application.invokeLaterOnWriteThread(command, modality);
+        application.invokeLater(() -> WriteAction.run(command::run), modality);
       }
     }
   }
@@ -113,17 +119,10 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
       @Override
       public boolean isCorrectContext() {
-        switch (thread) {
-          case EDT:
-            if (edtEventCount == -1) {
-              return UIAccess.isUIThread();
-            }
-            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
-          case WT:
-            return usedOnce;
-          default:
-            throw new UnsupportedOperationException();
+        if (edtEventCount == -1) {
+          return UIAccess.isUIThread();
         }
+        return usedOnce || edtEventCount != UIAccess.current().getEventCount();
       }
 
       @Override
@@ -155,13 +154,6 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
   @Override
   public void dispatchLaterUnconstrained(Runnable runnable) {
-    switch (thread) {
-      case EDT:
-        ApplicationManager.getApplication().invokeLater(runnable, modality);
-        break;
-      case WT:
-        ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, modality);
-        break;
-    }
+    ApplicationManager.getApplication().invokeLater(runnable, modality);
   }
 }
