@@ -66,6 +66,7 @@ public class StringEscapeUtil {
         for (int i = fromIndex; i < toIndex; i++) {
             char ch = value.charAt(i);
             switch (ch) {
+                case 0 -> builder.append("\\0");
                 case '\\' -> builder.append("\\\\");
                 case '\b' -> builder.append("\\b");
                 case '\f' -> builder.append("\\f");
