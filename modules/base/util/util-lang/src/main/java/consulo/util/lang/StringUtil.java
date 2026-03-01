@@ -15,6 +15,7 @@
  */
 package consulo.util.lang;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.internal.NaturalComparator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -542,77 +543,32 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static String escapeStringCharacters(@Nonnull CharSequence s) {
-        return escapeStringCharacters(s, new StringBuilder(s.length())).toString();
+        return StringEscapeUtil.escape(s, '"');
     }
 
-    @Contract(pure = true)
-    @Nonnull
-    public static String escapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
-        return escapeStringCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
-    }
-
-    @Contract(pure = true)
+    @Contract(mutates = "param2")
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static StringBuilder escapeStringCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
-        return escapeStringCharacters(s, 0, s.length(), buffer);
+        return StringEscapeUtil.escape(s, '"', buffer);
     }
 
-    @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder escapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex, @Nonnull StringBuilder buffer) {
-        return escapeStringCharacters(s, fromIndex, toIndex, "\"", buffer);
-    }
-
-    @Contract(mutates = "param6")
-    public static @Nonnull StringBuilder escapeStringCharacters(
-        @Nonnull CharSequence str,
-        int fromIndex,
-        int toIndex,
-        @Nullable String additionalChars,
-        @Nonnull StringBuilder buffer
-    ) {
-        for (int i = fromIndex; i < toIndex; i++) {
-            char ch = str.charAt(i);
-            switch (ch) {
-                case '\\' -> buffer.append("\\\\");
-                case '\b' -> buffer.append("\\b");
-                case '\f' -> buffer.append("\\f");
-                case '\n' -> buffer.append("\\n");
-                case '\r' -> buffer.append("\\r");
-                case '\t' -> buffer.append("\\t");
-
-                default -> {
-                    if (additionalChars != null && additionalChars.indexOf(ch) > -1) {
-                        buffer.append("\\").append(ch);
-                    }
-                    else if (!isPrintableUnicode(ch)) {
-                        buffer.append("\\u");
-                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
-                        for (int paddingCount = 4 - hexCode.length(); --paddingCount >= 0; ) {
-                            buffer.append('0');
-                        }
-                        buffer.append(hexCode);
-                    }
-                    else {
-                        buffer.append(ch);
-                    }
-                }
-            }
-        }
-        return buffer;
-    }
-
-    @Deprecated
     @Contract(mutates = "param3")
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @SuppressWarnings("deprecation")
     public static void escapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
-        escapeStringCharacters(length, s, "\"", buffer);
+        StringEscapeUtil.escape(s, 0, length, '"', buffer);
     }
 
-    @Deprecated
     @Contract(mutates = "param4")
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
@@ -624,8 +580,9 @@ public final class StringUtil {
         return escapeStringCharacters(length, str, additionalChars, true, buffer);
     }
 
-    @Deprecated
     @Contract(mutates = "param5")
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
@@ -638,8 +595,9 @@ public final class StringUtil {
         return escapeStringCharacters(length, str, additionalChars, escapeSlash, true, buffer);
     }
 
-    @Deprecated
     @Contract(mutates = "param6")
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     public static @Nonnull StringBuilder escapeStringCharacters(
         int length,
         @Nonnull String str,
@@ -705,27 +663,11 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
     @Nonnull
     public static String escapeCharCharacters(@Nonnull CharSequence s) {
-        return escapeCharCharacters(s, new StringBuilder(s.length())).toString();
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static String escapeCharCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
-        return escapeCharCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder escapeCharCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
-        return escapeCharCharacters(s, 0, s.length(), buffer);
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder escapeCharCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex, @Nonnull StringBuilder buffer) {
-        return escapeStringCharacters(s, fromIndex, toIndex, "'", buffer);
+        return StringEscapeUtil.escape(s, '\'');
     }
 
     private static boolean isQuoteAt(@Nonnull String s, int ind) {
@@ -739,6 +681,8 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
     @Nonnull
     public static String unquoteString(@Nonnull String s) {
         if (isQuotedString(s)) {
@@ -748,6 +692,8 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
     @Nonnull
     public static String unquoteString(@Nonnull String s, char quotationChar) {
         if (s.length() > 1 && quotationChar == s.charAt(0) && quotationChar == s.charAt(s.length() - 1)) {
@@ -757,85 +703,18 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
     @Nonnull
     public static String unescapeStringCharacters(@Nonnull CharSequence s) {
-        return unescapeStringCharacters(s, new StringBuilder(s.length())).toString();
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static String unescapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
-        return unescapeStringCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder unescapeStringCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
-        return unescapeStringCharacters(s, 0, s.length(), buffer);
+        return StringEscapeUtil.unescape(s);
     }
 
     @Contract(mutates = "param3")
-    public static StringBuilder unescapeStringCharacters(
-        @Nonnull CharSequence s,
-        int fromIndex,
-        int toIndex,
-        @Nonnull StringBuilder buffer
-    ) {
-        boolean escaped = false;
-        for (int i = fromIndex; i < toIndex; i++) {
-            char ch = s.charAt(i);
-            if (!escaped) {
-                if (ch == '\\') {
-                    escaped = true;
-                }
-                else {
-                    buffer.append(ch);
-                }
-            }
-            else {
-                switch (ch) {
-                    case '\'' -> buffer.append('\'');
-                    case '\"' -> buffer.append('\"');
-                    case '\\' -> buffer.append('\\');
-                    case 'b' -> buffer.append('\b');
-                    case 'f' -> buffer.append('\f');
-                    case 'n' -> buffer.append('\n');
-                    case 'r' -> buffer.append('\r');
-                    case 't' -> buffer.append('\t');
-
-                    case 'u' -> {
-                        if (i + 4 < toIndex) {
-                            try {
-                                int code = Integer.parseInt(s.subSequence(i + 1, i + 5).toString(), 16);
-                                i += 4;
-                                buffer.append((char) code);
-                            }
-                            catch (NumberFormatException e) {
-                                buffer.append("\\u");
-                            }
-                        }
-                        else {
-                            buffer.append("\\u");
-                        }
-                    }
-
-                    default -> buffer.append(ch);
-                }
-                escaped = false;
-            }
-        }
-
-        if (escaped) {
-            buffer.append('\\');
-        }
-
-        return buffer;
-    }
-
     @Deprecated
-    @Contract(mutates = "param3")
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
     public static void unescapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
-        unescapeStringCharacters(s, 0, length, buffer);
+        StringEscapeUtil.unescape(s, 0, length, buffer);
     }
 
     @Contract(pure = true)
