@@ -20,6 +20,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -119,9 +120,9 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
 
   public <V extends U> void appendEditors(@Nonnull U configuration, @Nonnull SettingsEditorGroup<V> group) {
     for (T extension : getApplicableExtensions(configuration)) {
-      @SuppressWarnings("unchecked") SettingsEditor<V> editor = extension.createEditor((V)configuration);
-      if (editor != null) {
-        group.addEditor(extension.getEditorTitle(), editor);
+      @SuppressWarnings("unchecked") Map.Entry<LocalizeValue, SettingsEditor<V>> editorPair = extension.createEditor((V)configuration);
+      if (editorPair != null) {
+        group.addEditor(editorPair.getKey(), editorPair.getValue());
       }
     }
   }

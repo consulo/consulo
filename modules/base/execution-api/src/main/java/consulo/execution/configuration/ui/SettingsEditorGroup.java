@@ -15,59 +15,68 @@
  */
 package consulo.execution.configuration.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsEditorGroup<T> extends SettingsEditor<T> {
-  private final List<Pair<String, SettingsEditor<T>>> myEditors = new ArrayList<Pair<String, SettingsEditor<T>>>();
+    private final List<Pair<LocalizeValue, SettingsEditor<T>>> myEditors = new ArrayList<>();
 
-  public void addEditor(String name, SettingsEditor<T> editor) {
-    Disposer.register(this, editor);
-    myEditors.add(new Pair<>(name, editor));
-  }
-
-  public void addGroup(SettingsEditorGroup<T> group) {
-    for (Pair<String, SettingsEditor<T>> pair : group.myEditors) {
-      Disposer.register(this, pair.second);
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue")
+    public void addEditor(String name, SettingsEditor<T> editor) {
+        addEditor(LocalizeValue.ofNullable(name), editor);
     }
-    myEditors.addAll(group.myEditors);
-  }
 
-  public List<Pair<String, SettingsEditor<T>>> getEditors() {
-    return myEditors;
-  }
+    public void addEditor(@Nonnull LocalizeValue name, @Nonnull SettingsEditor<T> editor) {
+        Disposer.register(this, editor);
+        myEditors.add(Pair.create(name, editor));
+    }
 
-  @Override
-  public void resetEditorFrom(T t) {
-  }
+    public void addGroup(SettingsEditorGroup<T> group) {
+        for (Pair<LocalizeValue, SettingsEditor<T>> pair : group.myEditors) {
+            Disposer.register(this, pair.second);
+        }
+        myEditors.addAll(group.myEditors);
+    }
 
-  @Override
-  public void applyEditorTo(T t) throws ConfigurationException {
-  }
+    @Nonnull
+    public List<Pair<LocalizeValue, SettingsEditor<T>>> getEditors() {
+        return myEditors;
+    }
 
-  @Override
-  @Nonnull
-  public JComponent createEditor() {
-    throw new UnsupportedOperationException("This method should never be called!");
-  }
+    @Override
+    public void resetEditorFrom(T t) {
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  protected Component createUIComponent() {
-    throw new UnsupportedOperationException("This method should never be called!");
-  }
+    @Override
+    public void applyEditorTo(T t) throws ConfigurationException {
+    }
 
-  @Override
-  public void disposeEditor() {
-  }
+    @Override
+    @Nonnull
+    public JComponent createEditor() {
+        throw new UnsupportedOperationException("This method should never be called!");
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    protected Component createUIComponent() {
+        throw new UnsupportedOperationException("This method should never be called!");
+    }
+
+    @Override
+    public void disposeEditor() {
+    }
 }

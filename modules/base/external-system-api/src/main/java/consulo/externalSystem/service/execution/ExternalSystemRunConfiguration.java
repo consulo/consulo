@@ -108,10 +108,10 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     SettingsEditorGroup<ExternalSystemRunConfiguration> group = new SettingsEditorGroup<>();
     group.addEditor(
-      ExecutionLocalize.runConfigurationConfigurationTabTitle().get(),
+      ExecutionLocalize.runConfigurationConfigurationTabTitle(),
       new ExternalSystemRunConfigurationEditor(getProject(), myExternalSystemId)
     );
-    group.addEditor(ExecutionLocalize.logsTabTitle().get(), new LogConfigurationPanel<>());
+    group.addEditor(ExecutionLocalize.logsTabTitle(), new LogConfigurationPanel<>());
     return group;
   }
 
