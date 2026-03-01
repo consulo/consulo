@@ -541,13 +541,80 @@ public final class StringUtil {
         return indexOf(sequence, infix, 0);
     }
 
-    @Contract(mutates = "param3")
-    public static void escapeStringCharacters(int length, @Nonnull String str, @Nonnull StringBuilder buffer) {
-        escapeStringCharacters(length, str, "\"", buffer);
+    @Contract(pure = true)
+    @Nonnull
+    public static String escapeStringCharacters(@Nonnull CharSequence s) {
+        return escapeStringCharacters(s, new StringBuilder(s.length())).toString();
     }
 
+    @Contract(pure = true)
+    @Nonnull
+    public static String escapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
+        return escapeStringCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static StringBuilder escapeStringCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
+        return escapeStringCharacters(s, 0, s.length(), buffer);
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static StringBuilder escapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex, @Nonnull StringBuilder buffer) {
+        return escapeStringCharacters(s, fromIndex, toIndex, "\"", buffer);
+    }
+
+    @Contract(mutates = "param6")
+    public static @Nonnull StringBuilder escapeStringCharacters(
+        @Nonnull CharSequence str,
+        int fromIndex,
+        int toIndex,
+        @Nullable String additionalChars,
+        @Nonnull StringBuilder buffer
+    ) {
+        for (int i = fromIndex; i < toIndex; i++) {
+            char ch = str.charAt(i);
+            switch (ch) {
+                case '\\' -> buffer.append("\\\\");
+                case '\b' -> buffer.append("\\b");
+                case '\f' -> buffer.append("\\f");
+                case '\n' -> buffer.append("\\n");
+                case '\r' -> buffer.append("\\r");
+                case '\t' -> buffer.append("\\t");
+
+                default -> {
+                    if (additionalChars != null && additionalChars.indexOf(ch) > -1) {
+                        buffer.append("\\").append(ch);
+                    }
+                    else if (!isPrintableUnicode(ch)) {
+                        buffer.append("\\u");
+                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
+                        for (int paddingCount = 4 - hexCode.length(); --paddingCount >= 0; ) {
+                            buffer.append('0');
+                        }
+                        buffer.append(hexCode);
+                    }
+                    else {
+                        buffer.append(ch);
+                    }
+                }
+            }
+        }
+        return buffer;
+    }
+
+    @Deprecated
+    @Contract(mutates = "param3")
+    @SuppressWarnings("deprecation")
+    public static void escapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
+        escapeStringCharacters(length, s, "\"", buffer);
+    }
+
+    @Deprecated
     @Contract(mutates = "param4")
     @Nonnull
+    @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
         int length,
         @Nonnull String str,
@@ -557,8 +624,10 @@ public final class StringUtil {
         return escapeStringCharacters(length, str, additionalChars, true, buffer);
     }
 
+    @Deprecated
     @Contract(mutates = "param5")
     @Nonnull
+    @SuppressWarnings("deprecation")
     public static StringBuilder escapeStringCharacters(
         int length,
         @Nonnull String str,
@@ -569,6 +638,7 @@ public final class StringUtil {
         return escapeStringCharacters(length, str, additionalChars, escapeSlash, true, buffer);
     }
 
+    @Deprecated
     @Contract(mutates = "param6")
     public static @Nonnull StringBuilder escapeStringCharacters(
         int length,
@@ -636,18 +706,26 @@ public final class StringUtil {
 
     @Contract(pure = true)
     @Nonnull
-    public static String escapeCharCharacters(@Nonnull String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        escapeStringCharacters(s.length(), s, "'", buffer);
-        return buffer.toString();
+    public static String escapeCharCharacters(@Nonnull CharSequence s) {
+        return escapeCharCharacters(s, new StringBuilder(s.length())).toString();
     }
 
     @Contract(pure = true)
     @Nonnull
-    public static String unescapeStringCharacters(@Nonnull String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        unescapeStringCharacters(s.length(), s, buffer);
-        return buffer.toString();
+    public static String escapeCharCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
+        return escapeCharCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static StringBuilder escapeCharCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
+        return escapeCharCharacters(s, 0, s.length(), buffer);
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static StringBuilder escapeCharCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex, @Nonnull StringBuilder buffer) {
+        return escapeStringCharacters(s, fromIndex, toIndex, "'", buffer);
     }
 
     private static boolean isQuoteAt(@Nonnull String s, int ind) {
@@ -678,11 +756,34 @@ public final class StringUtil {
         return s;
     }
 
+    @Contract(pure = true)
+    @Nonnull
+    public static String unescapeStringCharacters(@Nonnull CharSequence s) {
+        return unescapeStringCharacters(s, new StringBuilder(s.length())).toString();
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static String unescapeStringCharacters(@Nonnull CharSequence s, int fromIndex, int toIndex) {
+        return unescapeStringCharacters(s, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static StringBuilder unescapeStringCharacters(@Nonnull CharSequence s, @Nonnull StringBuilder buffer) {
+        return unescapeStringCharacters(s, 0, s.length(), buffer);
+    }
+
     @Contract(mutates = "param3")
-    public static void unescapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
+    public static StringBuilder unescapeStringCharacters(
+        @Nonnull CharSequence s,
+        int fromIndex,
+        int toIndex,
+        @Nonnull StringBuilder buffer
+    ) {
         boolean escaped = false;
-        for (int idx = 0; idx < length; idx++) {
-            char ch = s.charAt(idx);
+        for (int i = fromIndex; i < toIndex; i++) {
+            char ch = s.charAt(i);
             if (!escaped) {
                 if (ch == '\\') {
                     escaped = true;
@@ -693,43 +794,20 @@ public final class StringUtil {
             }
             else {
                 switch (ch) {
-                    case 'n':
-                        buffer.append('\n');
-                        break;
+                    case '\'' -> buffer.append('\'');
+                    case '\"' -> buffer.append('\"');
+                    case '\\' -> buffer.append('\\');
+                    case 'b' -> buffer.append('\b');
+                    case 'f' -> buffer.append('\f');
+                    case 'n' -> buffer.append('\n');
+                    case 'r' -> buffer.append('\r');
+                    case 't' -> buffer.append('\t');
 
-                    case 'r':
-                        buffer.append('\r');
-                        break;
-
-                    case 'b':
-                        buffer.append('\b');
-                        break;
-
-                    case 't':
-                        buffer.append('\t');
-                        break;
-
-                    case 'f':
-                        buffer.append('\f');
-                        break;
-
-                    case '\'':
-                        buffer.append('\'');
-                        break;
-
-                    case '\"':
-                        buffer.append('\"');
-                        break;
-
-                    case '\\':
-                        buffer.append('\\');
-                        break;
-
-                    case 'u':
-                        if (idx + 4 < length) {
+                    case 'u' -> {
+                        if (i + 4 < toIndex) {
                             try {
-                                int code = Integer.parseInt(s.substring(idx + 1, idx + 5), 16);
-                                idx += 4;
+                                int code = Integer.parseInt(s.subSequence(i + 1, i + 5).toString(), 16);
+                                i += 4;
                                 buffer.append((char) code);
                             }
                             catch (NumberFormatException e) {
@@ -739,11 +817,9 @@ public final class StringUtil {
                         else {
                             buffer.append("\\u");
                         }
-                        break;
+                    }
 
-                    default:
-                        buffer.append(ch);
-                        break;
+                    default -> buffer.append(ch);
                 }
                 escaped = false;
             }
@@ -752,6 +828,14 @@ public final class StringUtil {
         if (escaped) {
             buffer.append('\\');
         }
+
+        return buffer;
+    }
+
+    @Deprecated
+    @Contract(mutates = "param3")
+    public static void unescapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
+        unescapeStringCharacters(s, 0, length, buffer);
     }
 
     @Contract(pure = true)
@@ -2656,14 +2740,6 @@ public final class StringUtil {
             }
         }
         return escaped;
-    }
-
-    @Contract(pure = true)
-    @Nonnull
-    public static String escapeStringCharacters(@Nonnull String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        escapeStringCharacters(s.length(), s, "\"", buffer);
-        return buffer.toString();
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)

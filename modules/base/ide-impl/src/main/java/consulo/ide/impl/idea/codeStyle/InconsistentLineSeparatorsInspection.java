@@ -83,12 +83,13 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
 
                 String curLineSeparator = LoadTextUtil.detectLineSeparator(virtualFile, true);
                 if (curLineSeparator != null && !curLineSeparator.equals(projectLineSeparator)) {
-                    holder.registerProblem(
-                        file,
-                        "Line separators in the current file (" + StringUtil.escapeStringCharacters(curLineSeparator) + ") " +
-                            "differ from the project defaults (" + StringUtil.escapeStringCharacters(projectLineSeparator) + ")",
-                        SET_PROJECT_LINE_SEPARATORS
-                    );
+                    holder.newProblem(LocalizeValue.of(
+                            "Line separators in the current file (" + StringUtil.escapeStringCharacters(curLineSeparator) + ") " +
+                                "differ from the project defaults (" + StringUtil.escapeStringCharacters(projectLineSeparator) + ")"
+                        ))
+                        .range(file)
+                        .withFixes(SET_PROJECT_LINE_SEPARATORS)
+                        .create();
                 }
             }
         };
@@ -114,7 +115,7 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
                 return;
             }
 
-            VirtualFile virtualFile = ((PsiFile)psiElement).getVirtualFile();
+            VirtualFile virtualFile = ((PsiFile) psiElement).getVirtualFile();
             if (virtualFile != null) {
                 AbstractConvertLineSeparatorsAction.changeLineSeparators(project, virtualFile, lineSeparator);
             }

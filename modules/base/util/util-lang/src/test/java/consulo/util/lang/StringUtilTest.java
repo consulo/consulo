@@ -1,7 +1,6 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.util.lang;
 
-import consulo.util.lang.function.TripleFunction;
 import consulo.util.lang.internal.NaturalComparator;
 import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
@@ -214,6 +213,11 @@ public class StringUtilTest {
     }
 
     @Test
+    void testEscapeCharCharacters() {
+        assertThat(StringUtil.escapeCharCharacters("\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
+    }
+
+    @Test
     void testEscapeLineBreak() {
         assertThat(StringUtil.escapeLineBreak("foo\r\n")).isEqualTo("foo\\r\\n");
     }
@@ -271,13 +275,14 @@ public class StringUtilTest {
         assertThat(sb).hasToString("foo\\/bar\\foo\\/");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testEscapeStringCharacters() {
-        assertThat(StringUtil.escapeStringCharacters("\b\f\n\r\t\u007F\"\\foo")).isEqualTo("\\b\\f\\n\\r\\t\\u007F\\\"\\\\foo");
+        assertThat(StringUtil.escapeStringCharacters("\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\b\\f\\n\\r\\t\\u007F\\\"'\\\\foo");
 
         StringBuilder sb = sb();
-        StringUtil.escapeStringCharacters(3, "\\\"\n", sb);
-        assertThat(sb).hasToString("\\\\\\\"\\n");
+        StringUtil.escapeStringCharacters(12, "\b\f\n\r\t\u007F\"'\\foo", sb);
+        assertThat(sb).hasToString("\\b\\f\\n\\r\\t\\u007F\\\"'\\\\foo");
 
         assertThat(StringUtil.escapeStringCharacters(3, "\\\"\n", "\"", false, sb())).hasToString("\\\"\\n");
         assertThat(StringUtil.escapeStringCharacters(2, "\"\n", "\"", false, sb())).hasToString("\\\"\\n");
@@ -1452,6 +1457,19 @@ public class StringUtilTest {
         assertThat(StringUtil.unescapeSlashes("\\/")).isEqualTo("/");
         assertThat(StringUtil.unescapeSlashes("foo\\/bar\\foo\\/")).isEqualTo("foo/bar\\foo/");
         assertThat(StringUtil.unescapeSlashes("\\")).isEqualTo("\\");
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Test
+    void testUnescapeStringCharacters() {
+        assertThat(StringUtil.unescapeStringCharacters("\\b\\f\\n\\r\\t\\u007F\\\"\\'\\\\foo")).isEqualTo("\b\f\n\r\t\u007F\"'\\foo");
+        assertThat(StringUtil.unescapeStringCharacters("\\uXXXX")).isEqualTo("\\uXXXX");
+        assertThat(StringUtil.unescapeStringCharacters("\\uXXX")).isEqualTo("\\uXXX");
+        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("z\\"); // TODO: why not keeping backslash?
+
+        StringBuilder sb = sb();
+        StringUtil.unescapeStringCharacters(6, "\\\\\\\"\\n", sb);
+        assertThat(sb).hasToString("\\\"\n");
     }
 
     @SuppressWarnings("ConstantConditions")
