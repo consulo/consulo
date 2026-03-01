@@ -400,7 +400,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
         SimpleReference<IndicatorDisposable> indicatorDisposable = SimpleReference.create();
 
-        CompletableFuture<ProgressIndicator> indicatorFuture = CompletableFuture.supplyAsync(() -> {
+        Supplier<ProgressIndicator> indicatorFactory = () -> {
             ProgressIndicator indicator;
             if (modal) {
                 indicator = application.createProgressWindow(titleText.get(),
@@ -423,7 +423,15 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 Disposer.register(myApplication, disposable);
             }
             return indicator;
-        }, uiAccess);
+        };
+
+        // Create indicator synchronously when already on EDT to avoid a race condition:
+        // If the indicator future is incomplete when NewProgressRunner sets up the CompletableFuture chain,
+        // postComplete() may fire thenAccept(startBlocking) before the join() Signaller,
+        // causing a deadlock where EDT blocks in the event pump and the task thread stays parked.
+        CompletableFuture<ProgressIndicator> indicatorFuture = application.isDispatchThread()
+            ? CompletableFuture.completedFuture(indicatorFactory.get())
+            : CompletableFuture.supplyAsync(indicatorFactory, uiAccess);
 
         CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
             Function<ProgressIndicator, V> task = progressIndicator -> {

@@ -17,6 +17,7 @@ package consulo.application.impl.internal;
 
 import consulo.application.AccessToken;
 import consulo.application.util.ApplicationUtil;
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.locks.StampedLock;
@@ -93,6 +94,12 @@ public final class StampedRWLock implements RWLock {
         }
 
         throwIfImpatient();
+
+        // UI thread must never block waiting for a write lock to be released — that would freeze the UI.
+        // Use tryRunReadAction() or move the read action to a background thread.
+        if (UIAccess.isUIThread() && myLock.isWriteLocked()) {
+            throw new IllegalStateException("Can't run ReadAction from UI thread while write lock is active — would freeze UI");
+        }
 
         long stamp = myLock.readLock();
         myReadStamp.set(stamp);
