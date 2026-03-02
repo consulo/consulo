@@ -40,6 +40,6 @@ public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFact
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
-    return new ShowIntentionsPass(file.getProject(), editor, true);
+    return new ShowIntentionsPass(file, editor, true);
   }
 }

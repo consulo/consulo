@@ -17,7 +17,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.ThreadDumper;
 import consulo.codeEditor.Editor;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -29,7 +28,6 @@ import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncPromise;
@@ -691,47 +689,6 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   @Nullable
   private ConstrainedExecution.ContextConstraint findUnsatisfiedConstraint() {
     return ContainerUtil.find(myConstraints, t -> !t.isCorrectContext());
-  }
-
-  /**
-   * Waits and pumps UI events until all submitted non-blocking read actions have completed. But only if they have chance to:
-   * in dumb mode, submissions with {@link #inSmartMode} are ignored, because dumbness works differently in tests,
-   * and a test might never switch to the smart mode at all.
-   */
-  @TestOnly
-  public static void waitForAsyncTaskCompletion(Application application) {
-    assert !application.isWriteAccessAllowed();
-    for (Submission<?> task : ourTasks) {
-      waitForTask(task);
-    }
-  }
-
-  @TestOnly
-  private static void waitForTask(@Nonnull Submission<?> task) {
-    for (ConstrainedExecution.ContextConstraint constraint : task.builder.myConstraints) {
-      if (constraint instanceof InSmartMode && !constraint.isCorrectContext()) {
-        return;
-      }
-    }
-
-    int iteration = 0;
-    while (!task.isDone() && iteration++ < 60_000) {
-      UIUtil.dispatchAllInvocationEvents();
-      try {
-        task.blockingGet(1, TimeUnit.MILLISECONDS);
-        return;
-      }
-      catch (TimeoutException ignore) {
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-    if (!task.isDone()) {
-      //noinspection UseOfSystemOutOrSystemErr
-      System.err.println(ThreadDumper.dumpThreadsToString());
-      throw new AssertionError("Too long async task " + task);
-    }
   }
 
   @TestOnly

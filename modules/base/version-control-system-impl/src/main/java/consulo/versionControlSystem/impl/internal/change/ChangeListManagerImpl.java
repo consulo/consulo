@@ -1706,13 +1706,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         });
     }
 
-    @TestOnly
-    public void waitUntilRefreshed() {
-        VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
-        myUpdater.waitUntilRefreshed();
-        waitUpdateAlarm();
-    }
-
     // this is for perforce tests to ensure that LastSuccessfulUpdateTracker receives the event it needs
     private void waitUpdateAlarm() {
         Semaphore semaphore = new Semaphore();
@@ -1732,7 +1725,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             updateImmediately();
             return true;
         }
-        VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
         myUpdater.waitUntilRefreshed();
         waitUpdateAlarm();
         return true;

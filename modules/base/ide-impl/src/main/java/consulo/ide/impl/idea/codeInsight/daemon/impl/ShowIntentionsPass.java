@@ -7,7 +7,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
@@ -25,7 +24,6 @@ import consulo.language.editor.intention.IntentionManager;
 import consulo.language.editor.internal.intention.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
@@ -56,19 +54,12 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      *                              and {@link IntentionAction#isAvailable(Project, Editor, PsiFile)} must be called on each
      *                              Usually, this expensive process should be executed only once per highlighting session
      */
-    @RequiredUIAccess
-    ShowIntentionsPass(@Nonnull Project project, @Nonnull Editor editor, boolean queryIntentionActions) {
-        super(project, editor.getDocument(), false);
+    ShowIntentionsPass(@Nonnull PsiFile psiFile, @Nonnull Editor editor, boolean queryIntentionActions) {
+        super(psiFile.getProject(), editor.getDocument(), false);
         myQueryIntentionActions = queryIntentionActions;
         myPassIdToShowIntentionsFor = -1;
-        UIAccess.assertIsUIThread();
-
         myEditor = editor;
-
-        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-
-        myFile = documentManager.getPsiFile(myEditor.getDocument());
-        assert myFile != null : FileDocumentManager.getInstance().getFile(myEditor.getDocument());
+        myFile = psiFile;
     }
 
     @Nonnull
