@@ -13,6 +13,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -573,8 +574,14 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
               return false;
             }
           }
-          success = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> insideReadAction(indicator, unsatisfiedConstraint),
-                                                                                  indicator);
+          success = ProgressManager.getInstance().runProcess(() -> {
+            try {
+              return builder.myApplication.tryRunReadAction(() -> insideReadAction(indicator, unsatisfiedConstraint));
+            }
+            catch (ProcessCanceledException ignore) {
+              return false;
+            }
+          }, indicator);
         }
         return success && unsatisfiedConstraint.isNull();
       }

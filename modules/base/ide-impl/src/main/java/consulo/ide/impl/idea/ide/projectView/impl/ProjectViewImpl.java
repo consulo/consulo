@@ -24,10 +24,7 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
+import consulo.component.persist.*;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -100,6 +97,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -108,6 +106,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Couple;
@@ -135,7 +134,7 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.AWT)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
+public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentAsync<Element>, Disposable, QuickActionProvider, BusyObject {
     private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
     private static final Key<String> ID_KEY = Key.create("pane-id");
     private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");
@@ -1471,9 +1470,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
     }
 
+    @Nonnull
     @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return UIAction.apply((i, continuation) -> getStateImpl()).toCoroutine();
+    }
+
     @RequiredUIAccess
-    public Element getState() {
+    private Element getStateImpl() {
         Element parentNode = new Element("projectView");
         Element navigatorElement = new Element(ELEMENT_NAVIGATOR);
         AbstractProjectViewPane currentPane = getCurrentProjectViewPane();

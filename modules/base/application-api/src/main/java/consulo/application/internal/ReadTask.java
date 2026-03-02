@@ -28,8 +28,6 @@ import java.util.function.Supplier;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.
- *
- * @see ProgressIndicatorUtils#scheduleWithWriteActionPriority(ReadTask)
  */
 public abstract class ReadTask {
     /**

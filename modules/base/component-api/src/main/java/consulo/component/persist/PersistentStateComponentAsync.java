@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,21 @@
  */
 package consulo.component.persist;
 
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.util.concurrent.coroutine.Coroutine;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2018-12-30
+ * @since 2026-03-02
  */
-public interface PersistentStateComponentWithUIState<S, UIState> extends PersistentStateComponent<S> {
-  @Nullable
-  @RequiredUIAccess
-  UIState getStateFromUI();
+public interface PersistentStateComponentAsync<T> extends PersistentStateComponent<T> {
+    @Nonnull
+    Coroutine<?, T> getStateAsync();
 
-  @RequiredWriteAction
-  @Nullable
-  @Override
-  default S getState() {
-    throw new IllegalStateException("We don't need call this method anymore");
-  }
-
-  @Nullable
-  @RequiredWriteAction
-  S getState(UIState uiState);
+    @Nullable
+    @Override
+    default T getState() {
+        throw new IllegalStateException("Use getStateAsync() instead");
+    }
 }

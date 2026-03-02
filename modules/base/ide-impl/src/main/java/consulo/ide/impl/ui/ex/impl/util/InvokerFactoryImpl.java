@@ -16,12 +16,14 @@
 package consulo.ide.impl.ui.ex.impl.util;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,27 +33,28 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class InvokerFactoryImpl implements InvokerFactory {
-  @Nonnull
-  @Override
-  public Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
-    return InvokerImpl.forEventDispatchThread(uiAccess, parent);
-  }
+    private final Application myApplication;
 
-  @Nonnull
-  @Override
-  public Invoker forBackgroundPoolWithReadAction(@Nonnull Disposable parent) {
-    return InvokerImpl.forBackgroundPoolWithReadAction(parent);
-  }
+    @Inject
+    public InvokerFactoryImpl(Application application) {
+        myApplication = application;
+    }
 
-  @Nonnull
-  @Override
-  public Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent) {
-    return InvokerImpl.forBackgroundThreadWithReadAction(parent);
-  }
+    @Nonnull
+    @Override
+    public Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+        return InvokerImpl.forEventDispatchThread(uiAccess, parent);
+    }
 
-  @Nonnull
-  @Override
-  public Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent) {
-    return InvokerImpl.forBackgroundThreadWithoutReadAction(parent);
-  }
+    @Nonnull
+    @Override
+    public Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent) {
+        return InvokerImpl.forBackgroundThreadWithReadAction(parent);
+    }
+
+    @Nonnull
+    @Override
+    public Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent) {
+        return InvokerImpl.forBackgroundThreadWithoutReadAction(parent);
+    }
 }

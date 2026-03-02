@@ -8,6 +8,7 @@ import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -47,7 +48,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsLocalize.patchApplyCannotApplyNow().get())) {
             return;
         }
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         String clipboardText = ClipboardUtil.getTextInClipboard();
         assert clipboardText != null;

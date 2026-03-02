@@ -77,7 +77,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   public Element getState() {
     assert myDefaultProject != null;
 
-    myDefaultProject.save();
+    myDefaultProject.save(Application.get().getLastUIAccess());
 
     Element stateElement = myDefaultProject.getStateElement();
 

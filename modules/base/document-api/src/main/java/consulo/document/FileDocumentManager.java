@@ -1,11 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -63,10 +65,11 @@ public interface FileDocumentManager extends SavingRequestor {
    * Saves all unsaved documents to disk. This operation can modify documents that will be saved
    * (due to 'Strip trailing spaces on Save' functionality). When saving, {@code \n} line separators are converted into
    * the ones used normally on the system, or the ones explicitly specified by the user. Encoding settings are honored.<p/>
-   * <p>
-   * Should be invoked on the event dispatch thread.
+   *
+   * @param uiAccess the UIAccess instance
    */
-  public abstract void saveAllDocuments();
+  @RequiredWriteAction
+  public abstract void saveAllDocuments(@Nonnull UIAccess uiAccess);
 
   /**
    * Saves the specified document to disk. This operation can modify the document (due to 'Strip

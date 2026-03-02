@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
@@ -75,6 +76,10 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
+    public void save(@Nonnull UIAccess uiAccess) {
+    }
+
+    @Override
     @Nonnull
     public String getProjectFilePath() {
         return "";
@@ -94,10 +99,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
     @Override
     public String getBasePath() {
         return null;
-    }
-
-    @Override
-    public void save() {
     }
 
     @Override

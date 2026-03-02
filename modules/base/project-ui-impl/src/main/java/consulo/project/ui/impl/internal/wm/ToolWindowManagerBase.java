@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
@@ -47,7 +47,9 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
@@ -62,7 +64,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2017-09-25
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
     public static final String ID = "ToolWindowManager";
 
     /**
@@ -1203,6 +1205,16 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Override
     public void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l) {
         myDispatcher.removeListener(l);
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    protected abstract Element readStateFromUI();
+
+    @Nonnull
+    @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return Coroutine.first(UIAction.<Void, Element>apply(ignored -> readStateFromUI()));
     }
 
     @Override

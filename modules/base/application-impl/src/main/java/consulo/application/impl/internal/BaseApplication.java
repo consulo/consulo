@@ -62,7 +62,12 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -317,14 +322,21 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         if (myDoNotSave) {
             return;
         }
-        _saveSettings();
+        _saveSettings(UIAccess.current());
+    }
+
+    public void saveSettings(@Nonnull UIAccess uiAccess) {
+        if (myDoNotSave) {
+            return;
+        }
+        _saveSettings(uiAccess);
     }
 
     // public for testing purposes
-    public void _saveSettings() {
+    public void _saveSettings(@Nonnull UIAccess uiAccess) {
         if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
             try {
-                StoreUtil.save(getStateStore(), false, null);
+                StoreUtil.save(getStateStore(), uiAccess, false, null);
             }
             finally {
                 mySaveSettingsIsInProgress.set(false);
@@ -334,28 +346,37 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @RequiredUIAccess
     @Override
-    public void saveAll() {
+    @Nullable
+    public Continuation<Void> saveAll() {
         if (myDoNotSave) {
-            return;
+            return null;
         }
 
-        FileDocumentManager.getInstance().saveAllDocuments();
+        UIAccess uiAccess = UIAccess.current();
 
-        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        for (Project openProject : openProjects) {
-            if (openProject.isDisposed()) {
-                // debug for https://github.com/consulo/consulo/issues/296
-                LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
-                continue;
+        CoroutineContext ctx = coroutineContext().copy();
+        ctx.putCopyableUserData(UIAccess.KEY, uiAccess);
+        CoroutineScope scope = new CoroutineScope(ctx);
+
+        return Coroutine.<Void, Void>first(WriteLock.apply(ignored -> {
+            FileDocumentManager.getInstance().saveAllDocuments(uiAccess);
+            return null;
+        })).then(CodeExecution.run(() -> {
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (Project openProject : openProjects) {
+                if (openProject.isDisposed()) {
+                    LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
+                    continue;
+                }
+
+                ProjectEx project = (ProjectEx) openProject;
+                if (project.isInitialized()) {
+                    project.save(uiAccess);
+                }
             }
 
-            ProjectEx project = (ProjectEx)openProject;
-            if (project.isInitialized()) {
-                project.save();
-            }
-        }
-
-        saveSettings();
+            saveSettings(uiAccess);
+        })).runAsync(scope, null);
     }
 
     @Override

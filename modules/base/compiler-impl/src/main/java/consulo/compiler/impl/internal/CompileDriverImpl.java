@@ -454,7 +454,7 @@ public class CompileDriverImpl implements CompileDriver {
         CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope), counters);
 
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         CompositeDependencyCache dependencyCache = createDependencyCache();
         CompileContextImpl compileContext =
@@ -1180,7 +1180,7 @@ public class CompileDriverImpl implements CompileDriver {
         );
         CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false, counters);
 
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         task.start((buildProgress) -> {
             try {

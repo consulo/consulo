@@ -18,6 +18,7 @@ package consulo.versionControlSystem.distributed.impl.internal.cherryPick;
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -49,7 +50,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         Project project = e.getRequiredData(Project.KEY);
         VcsLog log = e.getRequiredData(VcsLog.KEY);

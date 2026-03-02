@@ -312,7 +312,7 @@ public class ExternalStorageManager {
 
             myStorage.setInitialized(true);
 
-            StoreUtil.save(myApplicationStore, true, null);
+            StoreUtil.save(myApplicationStore, myApplication.getLastUIAccess(), true, null);
 
             // if there plugins change - require restart
             if (myPluginManager.updatePlugins(indicator)) {

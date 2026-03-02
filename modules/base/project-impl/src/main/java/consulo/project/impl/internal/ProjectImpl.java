@@ -56,7 +56,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -275,7 +274,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public void save() {
+    public void save(@Nonnull UIAccess uiAccess) {
         ApplicationEx application = (ApplicationEx) getApplication();
         if (application.isDoNotSave()) {
             // no need to save
@@ -311,55 +310,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
                 }
             }
 
-            StoreUtil.save(getStateStore(), false, this);
-        }
-        finally {
-            mySavingInProgress.set(false);
-            application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public CompletableFuture<Void> saveAsync(@Nonnull UIAccess uiAccess) {
-        return CompletableFuture.runAsync(() -> saveAsyncImpl(uiAccess));
-    }
-
-    private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
-        ApplicationEx application = (ApplicationEx) getApplication();
-
-        if (application.isDoNotSave()) {
-            // no need to save
-            return;
-        }
-
-        if (!mySavingInProgress.compareAndSet(false, true)) {
-            return;
-        }
-
-        //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
-        try {
-            if (!isDefault()) {
-                String projectBasePath = getStateStore().getProjectBasePath();
-                if (projectBasePath != null) {
-                    File projectDir = new File(projectBasePath);
-                    File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-                    if (!projectDir.getName().equals(getName())) {
-                        try {
-                            FileUtil.writeToFile(nameFile, getName());
-                        }
-                        catch (IOException e) {
-                            LOG.error("Unable to store project name", e);
-                        }
-                    }
-                    else {
-                        FileUtil.delete(nameFile);
-                    }
-                }
-            }
-
-            StoreUtil.saveAsync(getStateStore(), uiAccess, this);
+            StoreUtil.save(getStateStore(), uiAccess, false, this);
         }
         finally {
             mySavingInProgress.set(false);

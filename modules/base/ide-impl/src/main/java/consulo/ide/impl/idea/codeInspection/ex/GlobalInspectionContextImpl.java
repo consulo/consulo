@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.*;
 import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.concurrent.JobLauncher;
@@ -442,17 +440,11 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             return true;
         };
         while (true) {
-            Disposable disposable = Disposable.newDisposable();
-            ProgressIndicator wrapper = new SensitiveProgressWrapper(progressIndicator);
-            wrapper.start();
-            ProgressIndicatorUtils.forceWriteActionPriority(wrapper, disposable);
-
             try {
-                // use wrapper here to cancel early when write action start but do not affect the original indicator
                 ((JobLauncherImpl)JobLauncher.getInstance()).processQueue(
                     filesToInspect,
                     filesFailedToInspect,
-                    wrapper,
+                    progressIndicator,
                     TOMBSTONE,
                     processor
                 );
@@ -460,16 +452,13 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             }
             catch (ProcessCanceledException ignored) {
                 progressIndicator.checkCanceled();
-                // PCE may be thrown from inside wrapper when write action started
+                // PCE may be thrown from tryRunReadAction when write lock is held
                 // go on with the write and then resume processing the rest of the queue
                 assert !application.isReadAccessAllowed();
                 assert !application.isDispatchThread();
 
                 // wait for write action to complete
                 application.runReadAction(EmptyRunnable.getInstance());
-            }
-            finally {
-                Disposer.dispose(disposable);
             }
         }
         progressIndicator.checkCanceled();

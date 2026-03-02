@@ -30,12 +30,14 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -217,9 +219,12 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
 
     /**
      * Saves all open documents and projects.
+     *
+     * @return a {@link Continuation} that completes when the save operation finishes, or {@code null} if saving was skipped
      */
     @RequiredUIAccess
-    void saveAll();
+    @Nullable
+    Continuation<Void> saveAll();
 
     /**
      * Saves all application settings.

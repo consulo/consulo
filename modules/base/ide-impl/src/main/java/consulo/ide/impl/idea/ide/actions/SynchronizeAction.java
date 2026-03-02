@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.SaveAndSyncHandler;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -37,7 +38,7 @@ public class SynchronizeAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         SaveAndSyncHandler.getInstance().refreshOpenFiles();
         VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
     }

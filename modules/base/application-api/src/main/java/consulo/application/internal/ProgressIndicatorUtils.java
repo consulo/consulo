@@ -5,6 +5,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.event.ApplicationListener;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -17,13 +18,10 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -42,134 +40,60 @@ import java.util.function.Supplier;
 public class ProgressIndicatorUtils {
     private static final Logger LOG = Logger.getInstance(ProgressIndicatorUtils.class);
 
-    @Nonnull
-    public static ProgressIndicator forceWriteActionPriority(@Nonnull ProgressIndicator progress, @Nonnull Disposable parentDisposable) {
-        ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
-            @Override
-            public void beforeWriteActionStart(@Nonnull Object action) {
-                if (progress.isRunning()) {
-                    progress.cancel();
-                }
-            }
-        }, parentDisposable);
-        return progress;
-    }
-
+    @Deprecated
     public static void scheduleWithWriteActionPriority(@Nonnull ReadTask task) {
         scheduleWithWriteActionPriority(new ProgressIndicatorBase(false, false), task);
     }
 
     @Nonnull
+    @Deprecated
     public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask readTask) {
         return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.getInstance(), readTask);
     }
 
     /**
-     * Same as {@link #runInReadActionWithWriteActionPriority(Runnable)}, optionally allowing to pass a {@link ProgressIndicator}
-     * instance, which can be used to cancel action externally.
-     */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator progressIndicator) {
-        SimpleReference<Boolean> result = new SimpleReference<>(Boolean.FALSE);
-        runWithWriteActionPriority(() -> result.set(ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)),
-            progressIndicator == null ? new ProgressIndicatorBase(false, false) : progressIndicator);
-        return result.get();
-    }
-
-    /**
-     * This method attempts to run provided action synchronously in a read action, so that, if possible, it wouldn't impact any pending,
+     * Attempts to run provided action synchronously in a read action, so that, if possible, it wouldn't impact any pending,
      * executing or future write actions (for this to work effectively the action should invoke {@link ProgressManager#checkCanceled()} or
      * {@link ProgressIndicator#checkCanceled()} often enough).
+     * <p>
      * It returns {@code true} if action was executed successfully. It returns {@code false} if the action was not
      * executed successfully, i.e. if:
      * <ul>
      * <li>write action was in progress when the method was called</li>
-     * <li>write action was pending when the method was called</li>
      * <li>action started to execute, but was aborted using {@link ProcessCanceledException} when some other thread initiated
      * write action</li>
      * </ul>
      * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
      * 100% CPU usage. There is also alternative that implements the re-trying logic {@link NonBlockingReadAction}
+     *
+     * @param action            the action to run under read lock with write action priority
+     * @param progressIndicator optional progress indicator, which can be used to cancel action externally.
+     *                          If null, a temporary indicator is created internally.
+     * @return true if action was executed successfully, false otherwise
      */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action) {
-        return runInReadActionWithWriteActionPriority(action, null);
-    }
-
-    public static boolean runWithWriteActionPriority(@Nonnull Runnable action, @Nonnull ProgressIndicator progressIndicator) {
-        ApplicationEx application = (ApplicationEx) ApplicationManager.getApplication();
-        if (application.isDispatchThread()) {
-            throw new IllegalStateException("Must not call from EDT");
-        }
-        Runnable cancellation = indicatorCancellation(progressIndicator);
-        if (isWriting(application)) {
-            cancellation.run();
-            return false;
-        }
+    @Deprecated
+    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator progressIndicator) {
+        ProgressIndicator indicator = progressIndicator != null ? progressIndicator : new EmptyProgressIndicator();
         return ProgressManager.getInstance().runProcess(() -> {
             try {
-                // add listener inside runProcess to avoid cancelling indicator before even starting the progress
-                return runActionAndCancelBeforeWrite(application, cancellation, action);
+                return ApplicationManager.getApplication().tryRunReadAction(action);
             }
             catch (ProcessCanceledException ignore) {
                 return false;
             }
-        }, progressIndicator);
+        }, indicator);
     }
 
-    private static final List<Runnable> ourWACancellations = Lists.newLockFreeCopyOnWriteList();
-
-    static {
-        Application app = ApplicationManager.getApplication();
-        app.addApplicationListener(new ApplicationListener() {
-            @Override
-            public void beforeWriteActionStart(@Nonnull Object action) {
-                cancelActionsToBeCancelledBeforeWrite();
-            }
-        }, app);
-    }
-
-    public static void cancelActionsToBeCancelledBeforeWrite() {
-        for (Runnable cancellation : ourWACancellations) {
-            cancellation.run();
-        }
-    }
-
-    public static boolean runActionAndCancelBeforeWrite(@Nonnull ApplicationEx application, @Nonnull Runnable cancellation, @Nonnull Runnable action) {
-        if (isWriting(application)) {
-            cancellation.run();
-            return false;
-        }
-
-        ourWACancellations.add(cancellation);
-        try {
-            if (isWriting(application)) {
-                // the listener might not be notified if write action was requested concurrently with listener addition
-                cancellation.run();
-                return false;
-            }
-            else {
-                action.run();
-                return true;
-            }
-        }
-        finally {
-            ourWACancellations.remove(cancellation);
-        }
+    /**
+     * Same as {@link #runInReadActionWithWriteActionPriority(Runnable, ProgressIndicator)} with no external progress indicator.
+     */
+    @Deprecated
+    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action) {
+        return runInReadActionWithWriteActionPriority(action, null);
     }
 
     @Nonnull
-    private static Runnable indicatorCancellation(@Nonnull ProgressIndicator progressIndicator) {
-        return () -> {
-            if (!progressIndicator.isCanceled()) {
-                progressIndicator.cancel();
-            }
-        };
-    }
-
-    private static boolean isWriting(ApplicationEx application) {
-        return application.isWriteActionPending() || application.isWriteActionInProgress();
-    }
-
-    @Nonnull
+    @Deprecated
     public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator, @Nonnull Executor executor, @Nonnull final ReadTask readTask) {
         // invoke later even if on EDT
         // to avoid tasks eagerly restarting immediately, allocating many pooled threads

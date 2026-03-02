@@ -37,7 +37,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
-import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
@@ -183,8 +183,8 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
     @RequiredUIAccess
     @Override
-    public void saveAll() {
-
+    public Continuation<Void> saveAll() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

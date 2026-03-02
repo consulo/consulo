@@ -223,7 +223,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public void loadProjectFromTemplate(@Nonnull ProjectImpl defaultProject) {
-    defaultProject.save();
+    defaultProject.save(Application.get().getLastUIAccess());
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
     if (element != null) {

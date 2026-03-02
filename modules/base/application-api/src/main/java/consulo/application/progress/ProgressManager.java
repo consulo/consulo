@@ -340,7 +340,6 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * executed successfully, i.e. if:
      * <ul>
      * <li>write action was in progress when the method was called</li>
-     * <li>write action was pending when the method was called</li>
      * <li>action started to execute, but was aborted using {@link ProcessCanceledException} when some other thread initiated
      * write action</li>
      * </ul>
@@ -348,7 +347,9 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @param action    the code to execute under read action
      * @param indicator progress indicator that should be cancelled if a write action is about to start. Can be null.
      */
-    public abstract boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator);
+    public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
+        return consulo.application.internal.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, indicator);
+    }
 
     public abstract boolean isInNonCancelableSection();
 

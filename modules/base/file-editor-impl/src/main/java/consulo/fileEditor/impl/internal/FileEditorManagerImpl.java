@@ -16,7 +16,6 @@
 package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
@@ -32,7 +31,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -72,12 +71,14 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -119,7 +120,7 @@ import java.util.function.Consumer;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
     private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
     private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
@@ -1470,25 +1471,19 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         connection.subscribe(UISettingsListener.class, new MyUISettingsListener());
     }
 
-    @RequiredUIAccess
-    @Nullable
+    @Nonnull
     @Override
-    public Element getStateFromUI() {
-        if (mySplitters == null) {
-            // do not save if not initialized yet
-            return null;
-        }
+    public Coroutine<?, Element> getStateAsync() {
+        return Coroutine.first(UIAction.<Void, Element>apply(ignored -> {
+            if (mySplitters == null) {
+                // do not save if not initialized yet
+                return null;
+            }
 
-        Element state = new Element("state");
-        getMainSplitters().writeExternal(state);
-        return state;
-    }
-
-    @RequiredWriteAction
-    @Nullable
-    @Override
-    public Element getState(Element element) {
-        return element;
+            Element state = new Element("state");
+            getMainSplitters().writeExternal(state);
+            return state;
+        }));
     }
 
     @Override

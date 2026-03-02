@@ -706,12 +706,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    @Override
-    public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-        myApplication.runReadAction(action);
-        return true;
-    }
-
     private void registerIndicatorAndRun(@Nonnull ProgressIndicator indicator,
                                          @Nonnull Thread currentThread,
                                          ProgressIndicator oldIndicator,

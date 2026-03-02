@@ -147,7 +147,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             if (!manager.myUnsavedDocuments.isEmpty()) {
                 manager.myOnClose = true;
                 try {
-                    manager.saveAllDocuments();
+                    manager.saveAllDocuments(UIAccess.current());
                 }
                 finally {
                     manager.myOnClose = false;
@@ -328,13 +328,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         });
     }
 
-    /**
-     * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
-     */
     @Override
-    @RequiredUIAccess
-    public void saveAllDocuments(boolean isExplicit) {
-        UIAccess.assertIsUIThread();
+    @RequiredWriteAction
+    public void saveAllDocuments(@Nonnull UIAccess uiAccess, boolean isExplicit) {
+        Application.get().assertWriteAccessAllowed();
 
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
@@ -368,7 +365,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
 
         if (!failedToSave.isEmpty()) {
-            handleErrorsOnSave(failedToSave);
+            uiAccess.give(() -> handleErrorsOnSave(failedToSave));
         }
     }
 

@@ -38,6 +38,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -136,7 +137,7 @@ public abstract class BaseAnalysisAction extends AnAction {
             uiOptions.SCOPE_TYPE = oldScopeType;
         }
         uiOptions.ANALYZE_TEST_SOURCES = dlg.isInspectTestSources();
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         analyze(project, scope);
     }

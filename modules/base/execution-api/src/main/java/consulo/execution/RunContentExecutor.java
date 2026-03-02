@@ -21,6 +21,7 @@ import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
@@ -133,7 +134,7 @@ public class RunContentExecutor implements Disposable {
     }
 
     public void run() {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         // Use user-provided console if exist. Create new otherwise
         ConsoleView view = (myUserProvidedConsole != null ? myUserProvidedConsole : createConsole(myProject));

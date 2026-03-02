@@ -330,9 +330,11 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
         shutDownTracker.registerStopperThread(Thread.currentThread());
         try {
+            UIAccess uiAccess = UIAccess.current();
+
             if (save) {
-                FileDocumentManager.getInstance().saveAllDocuments();
-                project.save();
+                FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
+                project.save(uiAccess);
             }
 
             if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
@@ -342,8 +344,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             myApplication.getMessageBus()
                 .syncPublisher(ProjectManagerListener.class)
                 .projectClosing(project); // somebody can start progress here, do not wrap in write action
-
-            UIAccess uiAccess = UIAccess.current();
 
             myApplication.runWriteAction(() -> {
                 removeFromOpened(project);
@@ -527,8 +527,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             try {
                 if (save) {
                     uiAccess.giveAndWaitIfNeed(() -> {
-                        FileDocumentManager.getInstance().saveAllDocuments();
-                        project.save();
+                        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
+                        project.save(uiAccess);
                     });
                 }
 

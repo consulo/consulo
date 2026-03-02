@@ -30,6 +30,7 @@ import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -957,7 +958,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     private CheckinHandler.ReturnResult runBeforeCommitHandlers(Runnable okAction, CommitExecutor executor) {
         @RequiredUIAccess
         Supplier<CheckinHandler.ReturnResult> proceedRunnable = () -> {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
             for (CheckinHandler handler : myHandlers) {
                 if (!(handler.acceptExecutor(executor))) {

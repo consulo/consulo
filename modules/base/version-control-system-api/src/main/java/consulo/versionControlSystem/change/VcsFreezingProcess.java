@@ -18,6 +18,7 @@ package consulo.versionControlSystem.change;
 import consulo.application.ApplicationManager;
 import consulo.application.SaveAndSyncHandler;
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
@@ -80,7 +81,7 @@ public class VcsFreezingProcess {
   private void saveAndBlockInAwt() {
     ApplicationManager.getApplication().invokeAndWait(() -> {
       myStoreReloadManager.blockReloadingProjectOnExternalChanges();
-      FileDocumentManager.getInstance().saveAllDocuments();
+      FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
       mySaveAndSyncHandler.blockSaveOnFrameDeactivation();
       mySaveAndSyncHandler.blockSyncOnFrameActivation();
     });
