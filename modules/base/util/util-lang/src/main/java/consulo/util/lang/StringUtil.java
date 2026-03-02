@@ -503,7 +503,9 @@ public final class StringUtil {
             return beginning + replacement + ending;
         }
         catch (StringIndexOutOfBoundsException e) {
-            throw new StringIndexOutOfBoundsException("Can't replace " + startOffset + ":" + endOffset + " range from '" + original + "' with '" + replacement + "'");
+            throw new StringIndexOutOfBoundsException(
+                "Can't replace " + startOffset + ":" + endOffset + " range from '" + original + "' with '" + replacement + "'"
+            );
         }
     }
 
