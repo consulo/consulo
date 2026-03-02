@@ -32,6 +32,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.ui.ModalityState;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -47,7 +48,6 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 
-import static consulo.application.impl.internal.IdeaModalityState.stateForComponent;
 import static consulo.desktop.awt.fileChooser.impl.FileTextFieldUtil.createMatcher;
 import static consulo.ui.ex.action.IdeActions.ACTION_CODE_COMPLETION;
 
@@ -222,7 +222,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
                     return;
                 }
                 result.myFieldText = myPathTextField.getText();
-                EmptyProgressIndicator indicator = new EmptyProgressIndicator(stateForComponent(myPathTextField));
+                EmptyProgressIndicator indicator = new EmptyProgressIndicator(ModalityState.nonModal());
                 Application.get().executeOnPooledThread(() -> {
                     ProgressManager.getInstance().runProcess(() -> processCompletion(result), indicator);
                     SwingUtilities.invokeLater(() -> {

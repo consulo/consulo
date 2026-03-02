@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -99,8 +99,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
     TimerListener timerListener = new TimerListener() {
       @Override
-      public IdeaModalityState getModalityState() {
-        return IdeaModalityState.stateForComponent(myToolWindow.getComponent());
+      public ModalityState getModalityState() {
+        return ModalityState.nonModal();
       }
 
       @Override

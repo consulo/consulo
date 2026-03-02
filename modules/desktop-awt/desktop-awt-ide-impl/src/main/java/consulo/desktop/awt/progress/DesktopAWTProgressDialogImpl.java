@@ -2,7 +2,6 @@
 package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ProgressDialog;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -15,6 +14,7 @@ import consulo.ui.ex.awt.LabeledTitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.ui.ModalityState;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -271,7 +271,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
     @Override
     public void hide() {
-        ApplicationManager.getApplication().invokeLater(this::hideImmediately, IdeaModalityState.any());
+        ApplicationManager.getApplication().invokeLater(this::hideImmediately, ModalityState.any());
     }
 
     @Override

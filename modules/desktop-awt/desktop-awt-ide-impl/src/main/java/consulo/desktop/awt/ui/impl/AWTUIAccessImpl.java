@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.ProcessCanceledException;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -56,7 +55,7 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
 
   @Override
   public boolean isInModalContext() {
-    return LaterInvocator.isInModalContext();
+    return false;
   }
 
   @RequiredUIAccess

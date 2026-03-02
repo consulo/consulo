@@ -8,7 +8,7 @@ import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.*;
 import consulo.codeEditor.event.EditorMouseEvent;
@@ -661,7 +661,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
     }
 
-    protected IdeaModalityState getStateForUpdate() {
+    protected ModalityState getStateForUpdate() {
         return null;
     }
 

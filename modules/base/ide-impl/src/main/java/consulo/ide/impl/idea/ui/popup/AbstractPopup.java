@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -1656,12 +1656,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myMouseOutCanceller = null;
 
         if (myFinalRunnable != null) {
-            IdeaModalityState modalityState = IdeaModalityState.current();
+            ModalityState modalityState = ModalityState.nonModal();
             Runnable finalRunnable = myFinalRunnable;
 
             getFocusManager().doWhenFocusSettlesDown(() -> {
 
-                if (IdeaModalityState.current().equals(modalityState)) {
+                if (ModalityState.nonModal().equals(modalityState)) {
                     finalRunnable.run();
                 }
                 else {

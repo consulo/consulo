@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.execution.ui.console.Filter;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -65,7 +65,7 @@ class AsyncFilterRunner {
     else {
       promise.onSuccess(__ -> {
         if (hasResults()) {
-          ApplicationManager.getApplication().invokeLater(this::highlightAvailableResults, IdeaModalityState.any());
+          ApplicationManager.getApplication().invokeLater(this::highlightAvailableResults, ModalityState.any());
         }
       });
     }

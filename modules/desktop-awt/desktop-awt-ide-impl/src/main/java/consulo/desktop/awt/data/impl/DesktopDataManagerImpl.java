@@ -18,7 +18,6 @@ package consulo.desktop.awt.data.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
@@ -106,7 +105,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       }
 
       if (ModalityState.KEY == dataId) {
-        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
+        return (T)(component != null ? ModalityState.nonModal() : ModalityState.nonModal());
       }
 
       Object data = calcData(dataId, component);

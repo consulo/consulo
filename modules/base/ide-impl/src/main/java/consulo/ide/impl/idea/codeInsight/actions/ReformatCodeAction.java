@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
@@ -40,6 +41,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -291,71 +293,75 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        Editor editor = e.getData(Editor.KEY);
-
-        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-
-        if (editor != null) {
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-            if (file == null || file.getVirtualFile() == null) {
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return ReadLock.apply(o -> {
+            Presentation presentation = e.getPresentation();
+            Project project = e.getData(Project.KEY);
+            if (project == null) {
                 presentation.setEnabled(false);
-                return;
+                return null;
             }
 
-            if (FormattingModelBuilder.forContext(file) != null) {
-                presentation.setEnabled(true);
-                return;
-            }
-        }
-        else if (files != null && containsAtLeastOneFile(files)) {
-            boolean anyFormatters = false;
-            for (VirtualFile virtualFile : files) {
-                if (virtualFile.isDirectory()) {
+            Editor editor = e.getData(Editor.KEY);
+
+            VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+
+            if (editor != null) {
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                if (file == null || file.getVirtualFile() == null) {
                     presentation.setEnabled(false);
-                    return;
+                    return null;
                 }
-                PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                if (psiFile == null) {
+
+                if (FormattingModelBuilder.forContext(file) != null) {
+                    presentation.setEnabled(true);
+                    return null;
+                }
+            }
+            else if (files != null && containsAtLeastOneFile(files)) {
+                boolean anyFormatters = false;
+                for (VirtualFile virtualFile : files) {
+                    if (virtualFile.isDirectory()) {
+                        presentation.setEnabled(false);
+                        return null;
+                    }
+                    PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                    if (psiFile == null) {
+                        presentation.setEnabled(false);
+                        return null;
+                    }
+                    FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
+                    if (builder != null) {
+                        anyFormatters = true;
+                    }
+                }
+                if (!anyFormatters) {
                     presentation.setEnabled(false);
-                    return;
-                }
-                FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
-                if (builder != null) {
-                    anyFormatters = true;
+                    return null;
                 }
             }
-            if (!anyFormatters) {
-                presentation.setEnabled(false);
-                return;
+            else if (files != null && files.length == 1) {
+                // skip. Both directories and single files are supported.
             }
-        }
-        else if (files != null && files.length == 1) {
-            // skip. Both directories and single files are supported.
-        }
-        else if (!e.hasData(LangDataKeys.MODULE_CONTEXT) && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
-            PsiElement element = e.getData(PsiElement.KEY);
-            if (element == null) {
-                presentation.setEnabled(false);
-                return;
-            }
-            if (!(element instanceof PsiDirectory)) {
-                PsiFile file = element.getContainingFile();
-                if (file == null || FormattingModelBuilder.forContext(file) == null) {
+            else if (!e.hasData(LangDataKeys.MODULE_CONTEXT) && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
+                PsiElement element = e.getData(PsiElement.KEY);
+                if (element == null) {
                     presentation.setEnabled(false);
-                    return;
+                    return null;
+                }
+                if (!(element instanceof PsiDirectory)) {
+                    PsiFile file = element.getContainingFile();
+                    if (file == null || FormattingModelBuilder.forContext(file) == null) {
+                        presentation.setEnabled(false);
+                        return null;
+                    }
                 }
             }
-        }
-        presentation.setEnabled(true);
+            presentation.setEnabled(true);
+            return null;
+        }).toCoroutine();
     }
 
     @Nullable

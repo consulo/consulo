@@ -16,7 +16,6 @@
 package consulo.desktop.awt.os.mac.internal.fileChooser;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -128,7 +127,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
         if (appStarted) {
             commandProcessor.enterModal();
-            LaterInvocator.enterModal(myFileDialog);
         }
 
         Component parent = myParent.get();
@@ -138,7 +136,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         finally {
             if (appStarted) {
                 commandProcessor.leaveModal();
-                LaterInvocator.leaveModal(myFileDialog);
                 if (parent != null) {
                     IdeFocusManager globalInstance = IdeFocusManager.getGlobalInstance();
                     globalInstance.doWhenFocusSettlesDown(() -> globalInstance.requestFocus(parent, true));
@@ -230,7 +227,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
             if (appStarted) {
                 commandProcessor.enterModal();
-                LaterInvocator.enterModal(myFileDialog);
             }
 
             Component parent = myParent.get();
@@ -240,7 +236,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
             finally {
                 if (appStarted) {
                     commandProcessor.leaveModal();
-                    LaterInvocator.leaveModal(myFileDialog);
                     if (parent != null) {
                         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
                             () -> IdeFocusManager.getGlobalInstance().requestFocus(parent, true)

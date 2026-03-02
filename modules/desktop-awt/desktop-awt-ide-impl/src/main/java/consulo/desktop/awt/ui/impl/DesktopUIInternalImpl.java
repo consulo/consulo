@@ -18,8 +18,6 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
 import consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlViewImpl;
 import consulo.desktop.awt.ui.impl.image.*;
@@ -83,7 +81,6 @@ import java.util.function.Supplier;
 public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
-        LaterInvocator.addModalityStateListener(listener, parentDisposable);
     }
 
     @Override
@@ -519,18 +516,6 @@ public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
         return new DesktopAWTLoadingLayout<>(innerLayout, parent);
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState _ModalityState_any() {
-        return ModalityStateImpl.ANY;
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState _ModalityState_nonModal() {
-        return ModalityStateImpl.NON_MODAL;
     }
 
     @Nonnull

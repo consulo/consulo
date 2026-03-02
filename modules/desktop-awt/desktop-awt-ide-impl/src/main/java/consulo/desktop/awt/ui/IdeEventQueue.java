@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.internal.FrequentEventDetector;
@@ -1072,14 +1071,7 @@ public class IdeEventQueue extends EventQueue {
 
     @Override
     public AWTEvent peekEvent() {
-        AWTEvent event = super.peekEvent();
-        if (event != null) {
-            return event;
-        }
-        if (LaterInvocator.ensureFlushRequested()) {
-            return super.peekEvent();
-        }
-        return null;
+        return super.peekEvent();
     }
 
     /**

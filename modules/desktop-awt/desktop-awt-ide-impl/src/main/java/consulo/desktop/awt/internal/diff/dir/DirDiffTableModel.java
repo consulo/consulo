@@ -17,7 +17,6 @@ package consulo.desktop.awt.internal.diff.dir;
 
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion;
@@ -34,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -232,7 +232,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         JBLoadingPanel loadingPanel = getLoadingPanel();
         loadingPanel.startLoading();
 
-        IdeaModalityState modalityState = IdeaModalityState.current();
+        ModalityState modalityState = ModalityState.nonModal();
 
         myProject.getApplication().executeOnPooledThread(() -> {
             EmptyProgressIndicator indicator = new EmptyProgressIndicator(modalityState);
@@ -366,7 +366,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                 SwingUtilities.invokeLater(uiThread);
             }
             else {
-                app.invokeLater(uiThread, IdeaModalityState.any());
+                app.invokeLater(uiThread, ModalityState.any());
             }
         });
     }
@@ -936,7 +936,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                             myLoadingPanel.setLoadingText(s);
                         }
                     },
-                    IdeaModalityState.stateForComponent(myLoadingPanel)
+                    ModalityState.nonModal()
                 );
                 myUpdater = new Updater(myLoadingPanel, mySleep);
                 myUpdater.start();

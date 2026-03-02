@@ -18,7 +18,6 @@ package consulo.language.index.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
@@ -207,7 +206,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
         };
 
         Application app = ApplicationManager.getApplication();
-        if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread() && !LaterInvocator.isInModalContext()) {
+        if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread()) {
           startDumbMode.run();
         }
         else {

@@ -3,7 +3,6 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AccessRule;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
 import consulo.component.extension.ExtensionPoint;
@@ -95,7 +94,7 @@ public class NavBarModel {
     }
 
     protected void updateModel(DataContext dataContext) {
-        if (LaterInvocator.isInModalContext() || (updated && !isFixedComponent)) {
+        if (updated && !isFixedComponent) {
             return;
         }
 

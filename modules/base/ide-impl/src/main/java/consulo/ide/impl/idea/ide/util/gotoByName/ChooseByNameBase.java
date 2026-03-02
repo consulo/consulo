@@ -6,7 +6,6 @@ import com.google.common.primitives.Ints;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.ReadTask;
@@ -567,7 +566,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             protected void textChanged(@Nonnull DocumentEvent e) {
                 SelectionPolicy toSelect =
                     currentChosenInfo != null && currentChosenInfo.hasSamePattern(ChooseByNameBase.this) ? PreserveSelection.INSTANCE : SelectMostRelevant.INSTANCE;
-                rebuildList(toSelect, myRebuildDelay, IdeaModalityState.current(), null);
+                rebuildList(toSelect, myRebuildDelay, ModalityState.nonModal(), null);
             }
         });
 
@@ -616,7 +615,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     case KeyEvent.VK_ENTER:
                         if (myList.getSelectedValue() == EXTRA_ELEM) {
                             myMaximumListSizeLimit += myListSizeIncreasing;
-                            rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, IdeaModalityState.current(), null);
+                            rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, ModalityState.nonModal(), null);
                             e.consume();
                         }
                         break;
@@ -647,7 +646,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     if (selectedCellBounds != null && selectedCellBounds.contains(e.getPoint())) { // Otherwise it was reselected in the selection listener
                         if (myList.getSelectedValue() == EXTRA_ELEM) {
                             myMaximumListSizeLimit += myListSizeIncreasing;
-                            rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, IdeaModalityState.current(), null);
+                            rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, ModalityState.nonModal(), null);
                         }
                         else {
                             doClose(true);
@@ -746,7 +745,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         rebuildList(
             initial ? SelectionPolicyKt.fromIndex(myInitialIndex) : SelectMostRelevant.INSTANCE,
             myRebuildDelay,
-            IdeaModalityState.current(),
+            ModalityState.nonModal(),
             null
         );
     }
@@ -950,7 +949,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             myAlarm.addRequest(
                 () -> rebuildList(pos, 0, modalityState, postRunnable),
                 delay,
-                IdeaModalityState.stateForComponent(myTextField)
+                ModalityState.nonModal()
             );
             return;
         }
@@ -1212,7 +1211,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 int oldPos = myList.getSelectedIndex();
                 myHistory.add(Pair.create(pattern, oldPos));
                 Runnable postRunnable = () -> fillInCommonPrefix(pattern);
-                rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), postRunnable);
+                rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), postRunnable);
                 return;
             }
             if (keyStroke.equals(backStroke)) {
@@ -1223,7 +1222,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     Pair<String, Integer> last = myHistory.remove(myHistory.size() - 1);
                     myTextField.setText(last.first);
                     myFuture.add(Pair.create(oldText, oldPos));
-                    rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
+                    rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), null);
                 }
                 return;
             }
@@ -1235,7 +1234,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     Pair<String, Integer> next = myFuture.remove(myFuture.size() - 1);
                     myTextField.setText(next.first);
                     myHistory.add(Pair.create(oldText, oldPos));
-                    rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
+                    rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), null);
                 }
                 return;
             }
@@ -1663,7 +1662,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                         myCalcUsagesThread = new CalcElementsThread(
                             text,
                             everywhere,
-                            IdeaModalityState.nonModal(),
+                            ModalityState.nonModal(),
                             PreserveSelection.INSTANCE,
                             __ -> {
                             }

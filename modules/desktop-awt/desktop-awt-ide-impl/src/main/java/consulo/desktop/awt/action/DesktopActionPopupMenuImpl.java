@@ -17,7 +17,6 @@ package consulo.desktop.awt.action;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
@@ -179,7 +178,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
                 glassPane.repaint();
             }
 
-            Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true, myExpansionIndicator)
+            Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, false, true, myExpansionIndicator)
                 .whenComplete((result, error) -> {
                     // Remove spinner from glass pane
                     if (glassPane != null) {
@@ -254,7 +253,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
                 }
 
                 removeAll();
-                Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true)
+                Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, false, true)
                     .thenRun(() -> myManager.addActionPopup(DesktopActionPopupMenuImpl.this));
             }
         }

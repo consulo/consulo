@@ -21,11 +21,8 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.BaseApplication;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.StampedRWLock;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
-import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.internal.AppLifecycleListener;
@@ -60,7 +57,6 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
@@ -68,7 +64,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.EDT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ShutDownTracker;
@@ -82,13 +77,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 public class DesktopApplicationImpl extends BaseApplication {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
-
-    private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
 
     private final boolean myHeadlessMode;
     private final boolean myIsInternal;
@@ -216,79 +207,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         return myHeadlessMode;
     }
 
-    @Nonnull
-    public ModalityInvokator getInvokator() {
-        return myInvokator;
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable) {
-        invokeLater(runnable, getDisposed());
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
-        invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
-        invokeLater(runnable, state, getDisposed());
-    }
-
-    @Override
-    public void invokeLater(
-        @Nonnull Runnable runnable,
-        @Nonnull ModalityState state,
-        @Nonnull BooleanSupplier expired
-    ) {
-        LaterInvocator.invokeLaterWithCallback(runnable, state, expired, null);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-        if (isDispatchThread()) {
-            runnable.run();
-            return;
-        }
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-            return;
-        }
-
-        if (holdsReadLock()) {
-            throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
-        }
-
-        LaterInvocator.invokeAndWait(runnable, modalityState);
-    }
-
-    @Override
-    @Nonnull
-    public ModalityState getCurrentModalityState() {
-        return LaterInvocator.getCurrentModalityState();
-    }
-
-    @Override
-    @Nonnull
-    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-        if (!isDispatchThread()) {
-            LOG.debug("please, use application dispatch thread to get a modality state");
-        }
-        Window window = UIUtil.getWindow(c);
-        if (window == null) {
-            return getNoneModalityState();
-        }
-        return LaterInvocator.modalityStateForWindow(window);
-    }
-
-    @Override
-    @Nonnull
-    public ModalityState getDefaultModalityState() {
-        return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
-    }
-
     @RequiredUIAccess
     @Override
     public long getIdleTime() {
@@ -334,9 +252,8 @@ public class DesktopApplicationImpl extends BaseApplication {
 
         exiting = true;
         try {
-            if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.nonModal()) {
-                return;
-            }
+            // modality state is always nonModal now — this check is always false
+            // keeping the structure for potential future use
 
             Runnable runnable = new Runnable() {
                 @Override
@@ -449,8 +366,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     public void assertReadAccessAllowed() {
         if (!isReadAccessAllowed()) {
             LOG.error(
-                "Read access is allowed from event dispatch thread or inside read-action only" +
-                    " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
+                "Read access is allowed inside read-action only (see Application.runReadAction())",
                 "Current thread: " + describe(Thread.currentThread()),
                 "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
                 "SystemEventQueueThread: " + describe(getEventQueueThread())

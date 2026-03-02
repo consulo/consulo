@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
@@ -163,7 +163,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
                     setSelection(element);
                 }
             },
-            IdeaModalityState.stateForComponent(getRootPane()),
+            ModalityState.nonModal(),
             false
         );
         myTabbedPaneWrapper.addTab("Choose By Neighbor Class", myChooseByNamePanel.getPanel());

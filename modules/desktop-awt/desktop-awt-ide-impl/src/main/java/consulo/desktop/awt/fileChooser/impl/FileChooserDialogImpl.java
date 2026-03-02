@@ -18,7 +18,6 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ComponentManager;
@@ -38,6 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -370,7 +370,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                 new ApplicationActivationListener() {
                     @Override
                     public void applicationActivated(IdeFrame ideFrame) {
-                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.nonModal());
                     }
                 }
             );

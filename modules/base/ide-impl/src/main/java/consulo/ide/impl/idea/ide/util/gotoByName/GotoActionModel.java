@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.ui.UISettings;
@@ -97,17 +97,17 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return map;
     });
 
-    private final IdeaModalityState myModality;
+    private final ModalityState myModality;
 
     public GotoActionModel(@Nullable Project project, Component component, @Nullable Editor editor) {
-        this(project, component, editor, IdeaModalityState.defaultModalityState());
+        this(project, component, editor, ModalityState.nonModal());
     }
 
     public GotoActionModel(
         @Nullable Project project,
         Component component,
         @Nullable Editor editor,
-        @Nullable IdeaModalityState modalityState
+        @Nullable ModalityState modalityState
     ) {
         myProject = project;
         myContextComponent = component;

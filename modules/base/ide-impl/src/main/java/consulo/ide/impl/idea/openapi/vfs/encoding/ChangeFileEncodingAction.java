@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -229,13 +229,13 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             @Override
             public void undo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+                application.invokeLater(undo, ModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
 
             @Override
             public void redo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+                application.invokeLater(redo, ModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
         };
 

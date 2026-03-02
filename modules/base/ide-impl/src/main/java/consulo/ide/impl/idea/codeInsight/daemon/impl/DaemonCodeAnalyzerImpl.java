@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -1044,9 +1043,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         }
 
         Application app = myProject.getApplication();
-        if (app.getCurrentModalityState() != ModalityStateImpl.NON_MODAL) {
-            return activeTextEditors;
-        }
 
         Collection<FileEditor> result = new HashSet<>();
         Collection<VirtualFile> files = new HashSet<>(activeTextEditors.size());

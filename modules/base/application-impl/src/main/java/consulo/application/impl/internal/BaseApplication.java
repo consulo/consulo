@@ -76,6 +76,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -879,9 +880,83 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable) {
+        getLastUIAccess().give(runnable);
+    }
+
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+        getLastUIAccess().give(() -> {
+            if (expired.getAsBoolean()) {
+                return;
+            }
+
+            runnable.run();
+        });
+    }
+
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+        getLastUIAccess().give(runnable);
+    }
+
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired) {
+        getLastUIAccess().give(() -> {
+            if (expired.getAsBoolean()) {
+                return;
+            }
+
+            runnable.run();
+        });
+    }
+
+    @Deprecated
+    @Override
+    public void invokeLaterOnWriteThread(@Nonnull Runnable runnable, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
+        getLastUIAccess().give(() -> {
+            if (expired.getAsBoolean()) {
+                return;
+            }
+
+            runnable.run();
+        });
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+        if (isDispatchThread()) {
+            runnable.run();
+            return;
+        }
+        if (UIAccess.isUIThread()) {
+            runnable.run();
+            return;
+        }
+        if (holdsReadLock()) {
+            throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
+        }
+        getLastUIAccess().giveAndWait(runnable);
+    }
+
     @Nonnull
-    protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
-        return action;
+    @Override
+    public ModalityState getCurrentModalityState() {
+        return ModalityState.nonModal();
+    }
+
+    @Nonnull
+    @Override
+    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+        return ModalityState.nonModal();
+    }
+
+    @Nonnull
+    @Override
+    public ModalityState getDefaultModalityState() {
+        return ModalityState.nonModal();
     }
 
     @Override

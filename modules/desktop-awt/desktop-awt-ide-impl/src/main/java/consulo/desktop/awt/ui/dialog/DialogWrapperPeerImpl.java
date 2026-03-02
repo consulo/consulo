@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.dialog;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.ui.ApplicationWindowStateService;
@@ -43,6 +42,7 @@ import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
@@ -188,7 +188,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Override
     public Object[] getCurrentModalEntities() {
-        return LaterInvocator.getCurrentModalEntities();
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     /**
@@ -488,16 +488,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
-        Project project = myProject;
 
         if (changeModalityState) {
             commandProcessor.enterModal();
-            if (myPerProjectModality) {
-                LaterInvocator.enterModal(project, myDialog.getWindow());
-            }
-            else {
-                LaterInvocator.enterModal(myDialog);
-            }
         }
 
         if (appStarted) {
@@ -510,12 +503,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         finally {
             if (changeModalityState) {
                 commandProcessor.leaveModal();
-                if (myPerProjectModality) {
-                    LaterInvocator.leaveModal(project, myDialog.getWindow());
-                }
-                else {
-                    LaterInvocator.leaveModal(myDialog);
-                }
             }
 
             myDialog.getFocusManager().doWhenFocusSettlesDown(result.createSetDoneRunnable());
@@ -545,7 +532,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
-        Project project = myProject;
 
         UIAccess uiAccess = UIAccess.current();
 
@@ -559,13 +545,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         uiAccess.give(() -> {
             if (changeModalityState) {
                 commandProcessor.enterModal();
-
-                if (myPerProjectModality) {
-                    LaterInvocator.enterModal(project, myDialog.getWindow());
-                }
-                else {
-                    LaterInvocator.enterModal(myDialog);
-                }
             }
 
             if (appStarted) {
@@ -578,13 +557,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             finally {
                 if (changeModalityState) {
                     commandProcessor.leaveModal();
-
-                    if (myPerProjectModality) {
-                        LaterInvocator.leaveModal(project, myDialog.getWindow());
-                    }
-                    else {
-                        LaterInvocator.leaveModal(myDialog);
-                    }
                 }
             }
         }).notify(result);

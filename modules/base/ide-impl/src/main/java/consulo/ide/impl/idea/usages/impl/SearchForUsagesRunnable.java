@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.usages.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.internal.ProgressWrapper;
 import consulo.application.internal.TooManyUsagesStatus;
@@ -332,7 +332,7 @@ class SearchForUsagesRunnable implements Runnable {
                 findStartedBalloonShown.set(true);
             },
             300,
-            IdeaModalityState.nonModal()
+            ModalityState.nonModal()
         );
         UsageSearcher usageSearcher = mySearcherFactory.get();
 

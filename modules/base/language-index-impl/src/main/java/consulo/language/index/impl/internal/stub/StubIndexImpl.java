@@ -3,7 +3,7 @@ package consulo.language.index.impl.internal.stub;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.ui.ModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processors;
 import consulo.component.persist.PersistentStateComponent;
@@ -837,7 +837,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             if (updated.length() > 0) {
                 Throwable e = new Throwable(updated.toString());
                 // avoid direct forceRebuild as it produces dependency cycle (IDEA-105485)
-                Application.get().invokeLater(() -> forceRebuild(e), ModalityStateImpl.NON_MODAL);
+                Application.get().invokeLater(() -> forceRebuild(e), ModalityState.nonModal());
             }
 
             myInitialized = true;

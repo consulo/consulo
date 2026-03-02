@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.application.AllIcons;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
@@ -479,7 +479,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
                 }
             },
             50,
-            IdeaModalityState.nonModal()
+            ModalityState.nonModal()
         );
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.internal;
+package consulo.ui.internal;
 
-import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 
 /**
+ * Single stub implementation of {@link ModalityState}.
+ * All modality tracking has been removed — dominates() always returns false.
+ *
  * @author VISTALL
- * @since 2025-06-17
+ * @since 2026-03-02
  */
-public interface ModalityStateWithProgress extends ModalityState {
-    ModalityState appendProgress(@Nonnull ProgressIndicator progress);
+public final class StubModalityState implements ModalityState {
+    public static final StubModalityState INSTANCE = new StubModalityState();
+
+    private StubModalityState() {
+    }
+
+    @Override
+    public boolean dominates(@Nonnull ModalityState anotherState) {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "ModalityState.STUB";
+    }
 }

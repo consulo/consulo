@@ -18,7 +18,6 @@ package consulo.desktop.awt.application;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
@@ -116,7 +115,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
     }
 
     private boolean canSyncOrSave() {
-        return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
+        return !myProgressManager.hasModalProgressIndicator();
     }
 
     @Override

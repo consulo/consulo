@@ -267,15 +267,4 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_any() {
-    return LightModalityState.INSTANCE;
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return LightModalityState.INSTANCE;
-  }
 }

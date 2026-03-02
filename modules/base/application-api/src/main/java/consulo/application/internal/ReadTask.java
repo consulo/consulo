@@ -83,7 +83,7 @@ public abstract class ReadTask {
 
         /**
          * @param action code to be executed in Swing thread in default modality state
-         * @see IdeaModalityState#defaultModalityState()
+         * @see ModalityState#nonModal()
          */
         public Continuation(@Nonnull Runnable action) {
             this(action, Application.get().getDefaultModalityState());

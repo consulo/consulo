@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
@@ -310,7 +309,7 @@ public final class ActionMenu extends JMenu {
             DataContext context = getDataContext();
             boolean mayContextBeInvalid = myContext == null;
             Utils.fillMenu(myGroup.getAction(), this, isMnemonicEnabled(), myPresentationFactory,
-                    context, myPlace, mayContextBeInvalid, LaterInvocator.isInModalContext(), myEnableIcons, myFillIndicator)
+                    context, myPlace, mayContextBeInvalid, false, myEnableIcons, myFillIndicator)
                 .whenComplete((result, error) -> {
                     // Remove loading indicator — real items were already added by Utils.fillMenu
                     remove(loadingItem);
@@ -374,7 +373,7 @@ public final class ActionMenu extends JMenu {
     private void fillMenu(JMenu menu) {
         DataContext context = getDataContext();
         boolean mayContextBeInvalid = myContext == null;
-        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, LaterInvocator.isInModalContext(), myEnableIcons);
+        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, false, myEnableIcons);
     }
 
     private class MenuItemSynchronizer implements PropertyChangeListener {

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.webcore.packaging;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -238,7 +238,7 @@ public class InstalledPackagesPanel extends JPanel {
 
             application.invokeLater(
                 () -> {
-                    IdeaModalityState modalityState = IdeaModalityState.current();
+                    ModalityState modalityState = ModalityState.nonModal();
                     PackageManagementService.Listener listener = new PackageManagementService.Listener() {
                         @Override
                         public void operationStarted(String packageName) {
@@ -297,7 +297,7 @@ public class InstalledPackagesPanel extends JPanel {
                     }
                     myUpgradeButton.setEnabled(false);
                 },
-                IdeaModalityState.any()
+                ModalityState.any()
             );
         });
         result.doWhenRejectedWithThrowable(e -> application.invokeLater(
@@ -305,7 +305,7 @@ public class InstalledPackagesPanel extends JPanel {
                 IdeLocalize.errorOccurredPleaseCheckYourInternetConnection().get(),
                 IdeLocalize.upgradePackageFailedTitle().get()
             ),
-            IdeaModalityState.any()
+            ModalityState.any()
         ));
     }
 
@@ -372,7 +372,7 @@ public class InstalledPackagesPanel extends JPanel {
         List<InstalledPackage> packages = getSelectedPackages();
         final PackageManagementService selPackageManagementService = myPackageManagementService;
         if (selPackageManagementService != null) {
-            IdeaModalityState modalityState = IdeaModalityState.current();
+            ModalityState modalityState = ModalityState.nonModal();
             Application application = Application.get();
             PackageManagementService.Listener listener = new PackageManagementService.Listener() {
                 @Override
@@ -584,7 +584,7 @@ public class InstalledPackagesPanel extends JPanel {
                             }
                             myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
                         },
-                        IdeaModalityState.stateForComponent(myPackagesTable)
+                        ModalityState.nonModal()
                     );
                 }
                 catch (IOException ignored) {

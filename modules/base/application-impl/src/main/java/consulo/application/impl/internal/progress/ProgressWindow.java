@@ -17,8 +17,6 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.*;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
@@ -165,7 +163,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
 
     public final void enterModality() {
         if (isModalEntity() && !myModalityEntered) {
-            LaterInvocator.enterModal(this, (IdeaModalityStateEx) getModalityState());
             myModalityEntered = true;
         }
     }
@@ -173,7 +170,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     public final void exitModality() {
         if (isModalEntity() && myModalityEntered) {
             myModalityEntered = false;
-            LaterInvocator.leaveModal(this);
         }
     }
 

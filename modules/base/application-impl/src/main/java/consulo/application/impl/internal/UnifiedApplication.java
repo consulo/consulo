@@ -23,14 +23,10 @@ import consulo.component.ComponentManager;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
-
-import java.awt.*;
-import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -55,12 +51,6 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
-    }
-
-    @Deprecated
-    @Override
-    public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        invokeLater(action, modal, expired);
     }
 
     @Override
@@ -90,76 +80,6 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     public ComponentManager getApplication() {
         return this;
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
-    }
-
-    @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
-        if (isDispatchThread()) {
-            runnable.run();
-            return;
-        }
-        if (UIAccess.isUIThread()) {
-            runnable.run();
-            return;
-        }
-
-        if (holdsReadLock()) {
-            throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
-        }
-
-        getLastUIAccess().giveAndWait(runnable);
-    }
-
-    @Override
-    public boolean isReadAccessAllowed() {
-        return myLock.isWriteThread() || myLock.isReadLockedByThisThread();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getCurrentModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getDefaultModalityState() {
-        return ModalityState.nonModal();
     }
 
     @RequiredUIAccess

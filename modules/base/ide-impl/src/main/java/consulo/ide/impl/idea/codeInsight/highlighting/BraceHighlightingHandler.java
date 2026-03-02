@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -620,7 +620,7 @@ public class BraceHighlightingHandler {
                 });
             },
             300,
-            IdeaModalityState.stateForComponent(myEditor.getComponent())
+            ModalityState.nonModal()
         );
     }
 

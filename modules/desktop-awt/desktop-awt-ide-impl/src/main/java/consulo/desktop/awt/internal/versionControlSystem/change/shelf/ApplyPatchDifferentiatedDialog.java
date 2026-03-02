@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.versionControlSystem.change.shelf;
 
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffDialogHints;
@@ -39,6 +38,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -412,7 +412,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             FilePresentationModel filePresentationModel = myRecentPathFileChange.get();
             VirtualFile file = filePresentationModel != null ? filePresentationModel.getVf() : null;
             if (file == null) {
-                myProject.getApplication().invokeLater(myReset, IdeaModalityState.stateForComponent(myCenterPanel));
+                myProject.getApplication().invokeLater(myReset, ModalityState.nonModal());
                 return;
             }
 
@@ -437,7 +437,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
                     paintBusy(false);
                     updateOkActions();
                 },
-                IdeaModalityState.stateForComponent(myCenterPanel)
+                ModalityState.nonModal()
             );
         }
     }

@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal;
 
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -11,7 +10,6 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.doubles.DoubleList;
@@ -247,16 +245,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
   @RequiredUIAccess
   private void setModalityState(@Nullable ProgressIndicator modalityProgress) {
-    Application application = Application.get();
-
-    ModalityState modalityState = application.getDefaultModalityState();
-
-    if (modalityProgress != null) {
-      UIAccess.assertIsUIThread();
-      modalityState = ((ModalityStateWithProgress)modalityState).appendProgress(modalityProgress);
-    }
-
-    myModalityState = modalityState;
+    myModalityState = ModalityState.nonModal();
   }
 
   @Override

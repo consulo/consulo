@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.keymap;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.dataContext.DataContext;
@@ -671,16 +670,13 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     private static void showDumbModeWarningLaterIfNobodyConsumesEvent(InputEvent e, AnActionEvent... actionEvents) {
-        Application application = Application.get();
-        if (application.getCurrentModalityState() == ModalityStateImpl.NON_MODAL) {
-            application.invokeLater(() -> {
-                if (e.isConsumed()) {
-                    return;
-                }
+        Application.get().invokeLater(() -> {
+            if (e.isConsumed()) {
+                return;
+            }
 
-                ActionImplUtil.showDumbModeWarning(actionEvents);
-            });
-        }
+            ActionImplUtil.showDumbModeWarning(actionEvents);
+        });
     }
 
     /**

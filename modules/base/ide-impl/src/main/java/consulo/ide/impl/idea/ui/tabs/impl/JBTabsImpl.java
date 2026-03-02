@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.component.util.ActiveRunnable;
@@ -540,7 +539,7 @@ public abstract class JBTabsImpl extends JComponent
 
     @Override
     public ModalityState getModalityState() {
-        return IdeaModalityState.stateForComponent(this);
+        return ModalityState.nonModal();
     }
 
     @Override

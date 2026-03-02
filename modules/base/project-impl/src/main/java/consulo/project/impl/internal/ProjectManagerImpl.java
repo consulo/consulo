@@ -19,8 +19,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -52,6 +50,7 @@ import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.util.ProjectUtil;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -138,8 +137,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 for (ProjectManagerListener listener : getListeners(project)) {
                     listener.projectClosed(project, uiAccess);
                 }
-
-                LaterInvocator.purgeExpiredItems();
             }
 
             @Override
@@ -660,7 +657,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                         logStart(project);
                     }
                 },
-                IdeaModalityState.nonModal(),
+                ModalityState.nonModal(),
                 project::isDisposedOrDisposeInProgress
             );
         }

@@ -16,7 +16,6 @@
 
 package consulo.desktop.awt.codeInsight.lookup;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.NameUtil;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
@@ -27,6 +26,7 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupIconUtil;
 import consulo.language.editor.completion.lookup.*;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -131,7 +131,7 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     myAsyncRendering = new AsyncRendering(myLookup);
     SingleAlarm alarm = new SingleAlarm(this::updateLookupWidthFromVisibleItems, 50, Alarm.ThreadToUse.SWING_THREAD,
-                                        IdeaModalityState.stateForComponent(editorComponent), lookup);
+                                        ModalityState.nonModal(), lookup);
     myLookupWidthUpdater = () -> {
       synchronized (alarm) {
         if (!alarm.isDisposed()) {

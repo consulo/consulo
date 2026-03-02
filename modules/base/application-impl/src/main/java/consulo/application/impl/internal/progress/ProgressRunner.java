@@ -3,8 +3,6 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.BlockingProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -18,7 +16,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
@@ -309,13 +306,11 @@ public final class ProgressRunner<R> {
     private CompletableFuture<R> normalExec(@Nonnull CompletableFuture<? extends ProgressIndicator> progressFuture, @Nonnull Semaphore modalityEntered, @Nonnull Supplier<R> onThreadCallable) {
 
         if (isModal) {
-            Function<ProgressIndicator, ProgressIndicator> modalityRunnable = progressIndicator -> {
-                LaterInvocator.enterModal(progressIndicator, (IdeaModalityStateEx) progressIndicator.getModalityState());
+            // Modality enter is now a no-op, just signal that modality is "entered"
+            progressFuture = progressFuture.thenApplyAsync(progressIndicator -> {
                 modalityEntered.up();
                 return progressIndicator;
-            };
-            // If a progress indicator has not been calculated yet, dispatch on EDT for modality setup
-            progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
+            }, r -> {
                 if (ApplicationManager.getApplication().isDispatchThread()) {
                     r.run();
                 }
@@ -326,21 +321,6 @@ public final class ProgressRunner<R> {
         }
 
         CompletableFuture<R> resultFuture = launchTask(onThreadCallable);
-
-        if (isModal) {
-            CompletableFuture<Void> modalityExitFuture = resultFuture.handle((r, throwable) -> r) // ignore result computation exception
-                .thenAcceptBoth(progressFuture, (r, progressIndicator) -> {
-                    if (ApplicationManager.getApplication().isDispatchThread()) {
-                        LaterInvocator.leaveModal(progressIndicator);
-                    }
-                    else {
-                        ApplicationManager.getApplication().invokeLater(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
-                    }
-                });
-
-            // It's better to associate task future with modality exit so that future finish will lead to expected state (modality exit)
-            resultFuture = resultFuture.thenCombine(modalityExitFuture, (r, __) -> r);
-        }
 
         if (isSync) {
             waitForFutureUnlockingThread(resultFuture);

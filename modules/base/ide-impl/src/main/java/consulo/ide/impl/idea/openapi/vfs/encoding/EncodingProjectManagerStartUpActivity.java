@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
@@ -39,6 +39,6 @@ final class EncodingProjectManagerStartUpActivity implements PostStartupActivity
 
   @Override
   public void runActivity(@Nonnull Project project, UIAccess uiAccess) {
-    GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.nonModal(), project.getDisposed());
+    GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), ModalityState.nonModal(), project.getDisposed());
   }
 }
