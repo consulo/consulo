@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.localize.LocalizeValue;
@@ -11,6 +10,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.CommonXmlStrings;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;

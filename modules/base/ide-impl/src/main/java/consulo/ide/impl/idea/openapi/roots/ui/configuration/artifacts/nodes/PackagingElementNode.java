@@ -23,7 +23,6 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactProblemDescription;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.tree.PresentationData;
@@ -32,6 +31,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

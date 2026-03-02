@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.AbstractEmptyIntentionAction;
@@ -38,6 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,66 +49,76 @@ import java.util.List;
  */
 @ExtensionImpl(id = "defaultProvider", order = "last")
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
-  @Nullable
-  @Override
-  @RequiredReadAction
-  public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
-    IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl)info, editor, psiFile);
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+        IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl) info, editor, psiFile);
 
-    if(intention == null) return null;
-
-    return wrapIntentionToTooltipAction(intention, (HighlightInfoImpl)info);
-  }
-
-  private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfoImpl info) {
-    Pair<IntentionActionDescriptor, RangeMarker> pair =
-        ContainerUtil.find(info.myQuickFixActionMarkers, it -> it.getFirst().getAction() == intention);
-
-    int offset = pair != null && pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
-
-     return new DaemonTooltipAction(intention.getText(), offset);
-  }
-
-  @RequiredReadAction
-  private static IntentionAction extractMostPriorityFixFromHighlightInfo(HighlightInfoImpl highlightInfo, Editor editor, PsiFile psiFile) {
-    Application.get().assertReadAccessAllowed();
-
-    List<IntentionActionDescriptor> fixes = new ArrayList<>();
-    List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.myQuickFixActionRanges;
-    if (quickFixActionMarkers == null || quickFixActionMarkers.isEmpty()) return null;
-
-    fixes.addAll(ContainerUtil.map(quickFixActionMarkers, (it) -> it.getFirst()));
-
-    IntentionsInfo intentionsInfo = new IntentionsInfo();
-
-    ShowIntentionsPass.fillIntentionsInfoForHighlightInfo(highlightInfo, intentionsInfo, fixes);
-
-    intentionsInfo.filterActions(psiFile);
-
-    return getFirstAvailableAction(psiFile, editor, intentionsInfo);
-  }
-
-  private static IntentionAction getFirstAvailableAction(PsiFile psiFile, Editor editor, IntentionsInfo intentionsInfo) {
-    Project project = psiFile.getProject();
-
-    //sort the actions
-    CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, psiFile, editor, intentionsInfo);
-
-    List<IntentionActionWithTextCaching> allActions = cachedIntentions.getAllActions();
-
-    if (allActions.isEmpty()) return null;
-
-    for (IntentionActionWithTextCaching it : allActions) {
-      IntentionAction action = IntentionActionDelegate.unwrap(it.getAction());
-
-      if (!(action instanceof AbstractEmptyIntentionAction) && action.isAvailable(project, editor, psiFile)) {
-        LocalizeValue text = it.getText();
-        //we cannot properly render html inside the fix button fixes with html text
-        if (!XmlStringUtil.isWrappedInHtml(text.get())) {
-          return action;
+        if (intention == null) {
+            return null;
         }
-      }
+
+        return wrapIntentionToTooltipAction(intention, (HighlightInfoImpl) info);
     }
-    return null;
-  }
+
+    private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfoImpl info) {
+        Pair<IntentionActionDescriptor, RangeMarker> pair =
+            ContainerUtil.find(info.myQuickFixActionMarkers, it -> it.getFirst().getAction() == intention);
+
+        int offset = pair != null && pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
+
+        return new DaemonTooltipAction(intention.getText(), offset);
+    }
+
+    @RequiredReadAction
+    private static IntentionAction extractMostPriorityFixFromHighlightInfo(
+        HighlightInfoImpl highlightInfo,
+        Editor editor,
+        PsiFile psiFile
+    ) {
+        Application.get().assertReadAccessAllowed();
+
+        List<IntentionActionDescriptor> fixes = new ArrayList<>();
+        List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.myQuickFixActionRanges;
+        if (quickFixActionMarkers == null || quickFixActionMarkers.isEmpty()) {
+            return null;
+        }
+
+        fixes.addAll(ContainerUtil.map(quickFixActionMarkers, (it) -> it.getFirst()));
+
+        IntentionsInfo intentionsInfo = new IntentionsInfo();
+
+        ShowIntentionsPass.fillIntentionsInfoForHighlightInfo(highlightInfo, intentionsInfo, fixes);
+
+        intentionsInfo.filterActions(psiFile);
+
+        return getFirstAvailableAction(psiFile, editor, intentionsInfo);
+    }
+
+    private static IntentionAction getFirstAvailableAction(PsiFile psiFile, Editor editor, IntentionsInfo intentionsInfo) {
+        Project project = psiFile.getProject();
+
+        //sort the actions
+        CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, psiFile, editor, intentionsInfo);
+
+        List<IntentionActionWithTextCaching> allActions = cachedIntentions.getAllActions();
+
+        if (allActions.isEmpty()) {
+            return null;
+        }
+
+        for (IntentionActionWithTextCaching it : allActions) {
+            IntentionAction action = IntentionActionDelegate.unwrap(it.getAction());
+
+            if (!(action instanceof AbstractEmptyIntentionAction) && action.isAvailable(project, editor, psiFile)) {
+                LocalizeValue text = it.getText();
+                //we cannot properly render html inside the fix button fixes with html text
+                if (!XmlStringUtil.isWrappedInHtml(text.get())) {
+                    return action;
+                }
+            }
+        }
+        return null;
+    }
 }

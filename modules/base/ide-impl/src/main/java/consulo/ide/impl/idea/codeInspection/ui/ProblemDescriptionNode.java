@@ -24,7 +24,6 @@ import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
