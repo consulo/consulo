@@ -28,13 +28,13 @@ public class StringEscapeUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testEscape() {
-        assertThat(StringEscapeUtil.escape("\b\f\n\r\t\u007F\uFEFF\"'\\foo", '"'))
-            .isEqualTo(StringEscapeUtil.escape("\b\f\n\r\t\u007F\uFEFF\"'\\foo", '"', sb()).toString())
-            .isEqualTo("\\b\\f\\n\\r\\t\\u007F\\uFEFF\\\"'\\\\foo");
+        assertThat(StringEscapeUtil.escape("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo", '"'))
+            .isEqualTo(StringEscapeUtil.escape("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo", '"', sb()).toString())
+            .isEqualTo("\\u0000\\b\\f\\n\\r\\t\\u007F\\uFEFF\\\"'\\\\foo");
 
-        assertThat(StringEscapeUtil.escape("\b\f\n\r\t\u007F\uFEFF\"'\\foo", '\''))
-            .isEqualTo(StringEscapeUtil.escape("\b\f\n\r\t\u007F\uFEFF\"'\\foo", '\'', sb()).toString())
-            .isEqualTo("\\b\\f\\n\\r\\t\\u007F\\uFEFF\"\\'\\\\foo");
+        assertThat(StringEscapeUtil.escape("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo", '\''))
+            .isEqualTo(StringEscapeUtil.escape("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo", '\'', sb()).toString())
+            .isEqualTo("\\u0000\\b\\f\\n\\r\\t\\u007F\\uFEFF\"\\'\\\\foo");
     }
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -52,13 +52,13 @@ public class StringEscapeUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testUnescape() {
-        assertThat(StringEscapeUtil.unescape("\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo"))
-            .isEqualTo(StringEscapeUtil.unescape("\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo", sb()).toString())
-            .isEqualTo("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo");
+        assertThat(StringEscapeUtil.unescape("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\\\/foo"))
+            .isEqualTo(StringEscapeUtil.unescape("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\\\/foo", sb()).toString())
+            .isEqualTo("\0\12\345%6\b\f\n\r\t\u007F\uFEFF\"'\\/foo");
 
         assertThat(StringEscapeUtil.unescape("\\uXXXX")).isEqualTo("\\uXXXX");
         assertThat(StringEscapeUtil.unescape("\\uXXX")).isEqualTo("\\uXXX");
-        assertThat(StringEscapeUtil.unescape("\\z\\")).isEqualTo("\\z\\");
+        assertThat(StringEscapeUtil.unescape("\\z\\")).isEqualTo("z\\");
     }
 
     @SuppressWarnings("SpellCheckingInspection")

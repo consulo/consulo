@@ -215,7 +215,7 @@ public class StringUtilTest {
     @SuppressWarnings("deprecation")
     @Test
     void testEscapeCharCharacters() {
-        assertThat(StringUtil.escapeCharCharacters("\0\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\0\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
+        assertThat(StringUtil.escapeCharCharacters("\0\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\u0000\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
     }
 
     @Test
@@ -1463,10 +1463,11 @@ public class StringUtilTest {
     @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
     @Test
     void testUnescapeStringCharacters() {
-        assertThat(StringUtil.unescapeStringCharacters("\\0\\b\\f\\n\\r\\t\\u007F\\\"\\'\\\\foo")).isEqualTo("\0\b\f\n\r\t\u007F\"'\\foo");
+        assertThat(StringUtil.unescapeStringCharacters("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo"))
+            .isEqualTo("\0\12\345%6\b\f\n\r\t\u007F\uFEFF\"'\\foo");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXXX")).isEqualTo("\\uXXXX");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXX")).isEqualTo("\\uXXX");
-        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("\\z\\");
+        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("z\\");
 
         StringBuilder sb = sb();
         StringUtil.unescapeStringCharacters(6, "\\\\\\\"\\n", sb);

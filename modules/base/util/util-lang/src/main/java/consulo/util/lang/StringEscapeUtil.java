@@ -66,7 +66,6 @@ public class StringEscapeUtil {
         for (int i = fromIndex; i < toIndex; i++) {
             char ch = value.charAt(i);
             switch (ch) {
-                case 0 -> builder.append("\\0");
                 case '\\' -> builder.append("\\\\");
                 case '\b' -> builder.append("\\b");
                 case '\f' -> builder.append("\\f");
@@ -95,6 +94,16 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
+    public static boolean isQuoted(@Nonnull CharSequence value, char quote) {
+        return isQuoted(value, 0, value.length(), quote);
+    }
+
+    @Contract(pure = true)
+    public static boolean isQuoted(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+        return toIndex - fromIndex >= 2 && value.charAt(fromIndex) == quote && value.charAt(toIndex - 1) == quote;
+    }
+
+    @Contract(pure = true)
     @Nonnull
     public static String unquote(@Nonnull CharSequence value, char quote) {
         return unquote(value, 0, value.length(), quote);
@@ -103,7 +112,7 @@ public class StringEscapeUtil {
     @Contract(pure = true)
     @Nonnull
     public static String unquote(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
-        if (toIndex - fromIndex >= 2 && value.charAt(fromIndex) == quote && value.charAt(toIndex - 1) == quote) {
+        if (isQuoted(value, fromIndex, toIndex, quote)) {
             return unescape(value, fromIndex + 1, toIndex - 1);
         }
         return unescape(value, fromIndex, toIndex);
@@ -124,7 +133,7 @@ public class StringEscapeUtil {
         char quote,
         @Nonnull StringBuilder builder
     ) {
-        if (toIndex - fromIndex >= 2 && value.charAt(fromIndex) == quote && value.charAt(toIndex - 1) == quote) {
+        if (isQuoted(value, fromIndex, toIndex, quote)) {
             return unescape(value, fromIndex + 1, toIndex - 1, builder);
         }
         return unescape(value, fromIndex, toIndex, builder);
@@ -163,15 +172,30 @@ public class StringEscapeUtil {
             }
             else {
                 switch (ch) {
-                    case '\'' -> builder.append('\'');
-                    case '\"' -> builder.append('\"');
-                    case '\\' -> builder.append('\\');
-                    case '0' -> builder.append('\0');
                     case 'b' -> builder.append('\b');
                     case 'f' -> builder.append('\f');
                     case 'n' -> builder.append('\n');
                     case 'r' -> builder.append('\r');
                     case 't' -> builder.append('\t');
+
+                    case '0', '1', '2', '3', '4', '5', '6', '7' -> {
+                        int code = ch - '0', j = i + 1;
+                        if (j < toIndex) {
+                            char d = value.charAt(j);
+                            if ('0' <= d && d <= '7') {
+                                code = (code << 3) + d - '0';
+                                i++;
+                                if (ch <= '3' && ++j < toIndex) {
+                                    d = value.charAt(j);
+                                    if ('0' <= d && d <= '7') {
+                                        code = (code << 3) + d - '0';
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                        builder.append((char) code);
+                    }
 
                     case 'u' -> {
                         if (i + 4 < toIndex) {
@@ -192,7 +216,7 @@ public class StringEscapeUtil {
                         }
                     }
 
-                    default -> builder.append('\\').append(ch);
+                    default -> builder.append(ch);
                 }
                 escaped = false;
             }
