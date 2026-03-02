@@ -49,6 +49,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     private TextAttributesKey myAttributesKey;
 
     private ColorValue myForcedTextForeground;
+    private ColorValue myBackground;
 
     private Font myFont;
 
@@ -117,6 +118,15 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
 
     public void setForcedTextForeground(@Nullable ColorValue forcedTextForeground) {
         myForcedTextForeground = forcedTextForeground;
+    }
+
+    @Nullable
+    public ColorValue getBackground() {
+        return myBackground;
+    }
+
+    public void setBackground(@Nullable ColorValue background) {
+        myBackground = background;
     }
 
     @Override
@@ -255,6 +265,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myAttributesKey = null;
         myFont = null;
         myForcedTextForeground = null;
+        myBackground = null;
         myLocationString = null;
         myPresentableText = null;
         myTooltip = null;
@@ -267,7 +278,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     @Override
     @Nonnull
     public Object[] getEqualityObjects() {
-        return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
+        return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myBackground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
     }
 
     @Override
@@ -290,6 +301,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myColoredText.addAll(from.myColoredText);
         myFont = from.myFont;
         myForcedTextForeground = from.myForcedTextForeground;
+        myBackground = from.myBackground;
         myLocationString = from.myLocationString;
         myPresentableText = from.myPresentableText;
         myTooltip = from.myTooltip;
@@ -315,6 +327,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
 
         myFont = getValue(myFont, from.myFont);
         myForcedTextForeground = getValue(myForcedTextForeground, from.myForcedTextForeground);
+        myBackground = getValue(myBackground, from.myBackground);
         myLocationString = getValue(myLocationString, from.myLocationString);
         myPresentableText = getValue(myPresentableText, from.myPresentableText);
         myTooltip = getValue(myTooltip, from.myTooltip);

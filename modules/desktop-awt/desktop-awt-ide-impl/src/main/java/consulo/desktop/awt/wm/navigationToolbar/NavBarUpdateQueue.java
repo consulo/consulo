@@ -1,22 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.navigationToolbar;
 
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.util.concurrent.CancellablePromise;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -30,6 +35,10 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
 
   private final NavBarPanel myPanel;
 
+  // Async pipeline: background task tracking and pre-computed item data cache
+  private volatile CancellablePromise<?> myBackgroundTask;
+  private volatile List<NavBarItemData> myItemDataCache;
+
   public NavBarUpdateQueue(NavBarPanel panel) {
     super("NavBar", Registry.intValue("navBar.updateMergeTime"), true, panel, panel);
     myPanel = panel;
@@ -41,6 +50,13 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     if (myModelUpdating.getAndSet(true) && !requeue) return;
 
     cancelAllUpdates();
+
+    // Cancel in-flight background task from previous request
+    CancellablePromise<?> prev = myBackgroundTask;
+    if (prev != null) {
+      prev.cancel();
+      myBackgroundTask = null;
+    }
 
     queue(new AfterModelUpdate(ID.MODEL) {
       @Override
@@ -62,30 +78,71 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
   }
 
   private void requestModelUpdateFromContextOrObject(DataContext dataContext, Object object) {
-    try {
-      NavBarModel model = myPanel.getModel();
-      if (dataContext != null) {
-        if (dataContext.getData(Project.KEY) != myPanel.getProject() || myPanel.isNodePopupActive()) {
-          requestModelUpdate(null, myPanel.getContextObject(), true);
-          return;
-        }
-        Window window = SwingUtilities.getWindowAncestor(myPanel);
-        if (window != null && !window.isFocused()) {
-          model.updateModel(DataManager.getInstance().getDataContext(myPanel));
-        }
-        else {
-          model.updateModel(dataContext);
-        }
+    NavBarModel model = myPanel.getModel();
+
+    if (dataContext != null) {
+      if (dataContext.getData(Project.KEY) != myPanel.getProject() || myPanel.isNodePopupActive()) {
+        requestModelUpdate(null, myPanel.getContextObject(), true);
+        return;
+      }
+    }
+
+    // Phase A (EDT): extract context — lightweight, no ReadAction needed
+    NavBarModel.ContextResult ctx = null;
+    if (dataContext != null) {
+      Window window = SwingUtilities.getWindowAncestor(myPanel);
+      DataContext effectiveCtx;
+      if (window != null && !window.isFocused()) {
+        effectiveCtx = DataManager.getInstance().getDataContext(myPanel);
       }
       else {
-        model.updateModel(object);
+        effectiveCtx = dataContext;
       }
+      ctx = model.extractFromContext(effectiveCtx);
 
-      queueRebuildUi();
+      // extractFromContext returns all nulls when no update is needed
+      if (ctx.element() == null && ctx.root() == null) {
+        myModelUpdating.set(false);
+        return;
+      }
     }
-    finally {
+
+    if (ctx == null && object == null) {
       myModelUpdating.set(false);
+      return;
     }
+
+    // Phase B (Background): build model + compute presentation inside ReadAction.nonBlocking()
+    NavBarPresentation presentation = myPanel.getPresentation();
+    NavBarModel.ContextResult finalCtx = ctx;
+    Object finalObject = object;
+
+    CancellablePromise<List<NavBarItemData>> promise = ReadAction.nonBlocking(() -> {
+      if (finalCtx != null) {
+        return model.buildModelAndPresentation(
+            finalCtx.element(), finalCtx.ownerExtension(), finalCtx.root(), presentation
+        );
+      }
+      else {
+        return model.buildModelAndPresentation(null, null, finalObject, presentation);
+      }
+    })
+    .expireWith(myPanel)
+    .finishOnUiThread(Application::getDefaultModalityState, itemDataList -> {
+      // Phase C (EDT): apply results + rebuild UI — no ReadAction
+      model.applyModel(itemDataList.stream().map(NavBarItemData::element).toList());
+      myItemDataCache = itemDataList;
+      myModelUpdating.set(false);
+      queueRebuildUi();
+    })
+    .submit(AppExecutorUtil.getAppExecutorService());
+
+    myBackgroundTask = promise;
+
+    // If background task fails (not cancelled), clear the updating flag
+    promise.onError(e -> myModelUpdating.set(false));
+    // Note: myModelUpdating stays true until Phase C completes,
+    // so AfterModelUpdate for UI/REVALIDATE will re-queue themselves until then
   }
 
   void restartRebuild() {
@@ -162,16 +219,29 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
   }
 
   public void rebuildUi() {
-    if (!myPanel.isRebuildUiNeeded()) return;
+    List<NavBarItemData> data = myItemDataCache;
+    if (data != null) {
+      // New async path: use pre-computed data — no ReadAction needed
+      myItemDataCache = null;
 
-    myPanel.clearItems();
-    for (int index = 0; index < myPanel.getModel().size(); index++) {
-      Object object = myPanel.getModel().get(index);
-      NavBarItem label = new NavBarItem(myPanel, object, index, null);
+      myPanel.clearItems();
+      for (int i = 0; i < data.size(); i++) {
+        NavBarItem label = new NavBarItem(myPanel, data.get(i), i, null);
+        myPanel.installActions(i, label);
+        myPanel.addItem(label);
+      }
+    }
+    else {
+      // Legacy path (for popup hint, direct calls)
+      if (!myPanel.isRebuildUiNeeded()) return;
 
-      myPanel.installActions(index, label);
-      myPanel.addItem(label);
-
+      myPanel.clearItems();
+      for (int index = 0; index < myPanel.getModel().size(); index++) {
+        Object object = myPanel.getModel().get(index);
+        NavBarItem label = new NavBarItem(myPanel, object, index, null);
+        myPanel.installActions(index, label);
+        myPanel.addItem(label);
+      }
     }
 
     rebuildComponent();

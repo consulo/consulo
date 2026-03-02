@@ -405,7 +405,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
             return super.getPreferredSize();
         }
         else {
-            NavBarItem item = new NavBarItem(this, null, 0, null);
+            NavBarItem item = new NavBarItem(this, (Object)null, 0, null);
             Dimension size = item.getPreferredSize();
             ApplicationManager.getApplication().executeOnPooledThread(() -> Disposer.dispose(item));
             return size;

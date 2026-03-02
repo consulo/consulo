@@ -42,6 +42,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   private final TreeAnchorizerValue<?> myObject;
   private final boolean isPopupElement;
   private final NavBarUI myUI;
+  private final boolean myNeedPaintIcon;
 
   public NavBarItem(NavBarPanel panel, Object object, int idx, Disposable parent) {
     this(panel, object, idx, parent, false);
@@ -53,6 +54,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     myObject = object == null ? null : TreeAnchorizer.getService().createAnchorValue(object);
     myIndex = idx;
     isPopupElement = idx == -1;
+    myNeedPaintIcon = false;
 
     if (object != null) {
       NavBarPresentation presentation = myPanel.getPresentation();
@@ -88,6 +90,38 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     else {
       setIconOpaque(true);
       setFocusBorderAroundIcon(true);
+    }
+
+    update();
+  }
+
+  /**
+   * Constructor accepting pre-computed presentation data.
+   * No ReadAction needed — all presentation is pre-computed on background thread.
+   */
+  public NavBarItem(NavBarPanel panel, NavBarItemData data, int idx, Disposable parent) {
+    myPanel = panel;
+    myUI = panel.getNavBarUI();
+    myObject = data.element() == null ? null : TreeAnchorizer.getService().createAnchorValue(data.element());
+    myIndex = idx;
+    isPopupElement = false;
+    myText = data.text();
+    myIcon = data.icon();
+    myAttributes = data.attributes();
+    myNeedPaintIcon = data.needPaintIcon();
+
+    Disposer.register(parent == null ? panel : parent, this);
+
+    setOpaque(false);
+    setIpad(myUI.getElementIpad(false));
+    setBorder(null);
+    setPaintFocusBorder(false);
+    setIconOpaque(false);
+    if (myPanel.allowNavItemsFocus()) {
+      setFocusTraversalKeysEnabled(false);
+      setFocusable(true);
+      addKeyListener(new KeyHandler());
+      addFocusListener(new FocusHandler());
     }
 
     update();
@@ -184,6 +218,9 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
 
   public boolean needPaintIcon() {
     if (Registry.is("navBar.show.icons") || isPopupElement || isLastElement()) {
+      return true;
+    }
+    if (myNeedPaintIcon) {
       return true;
     }
     Object object = getObject();

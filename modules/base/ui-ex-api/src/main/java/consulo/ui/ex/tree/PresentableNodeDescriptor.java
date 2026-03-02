@@ -17,6 +17,7 @@ package consulo.ui.ex.tree;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import jakarta.annotation.Nonnull;
@@ -26,6 +27,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
   private PresentationData myTemplatePresentation;
   private PresentationData myUpdatedPresentation;
+  private ColorValue myBackground;
 
   protected PresentableNodeDescriptor(@Nullable NodeDescriptor parentDescriptor) {
     super(parentDescriptor);
@@ -61,6 +63,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     setIcon(presentation.getIcon());
     myName = presentation.getPresentableText();
     myColor = presentation.getForcedTextForeground();
+    myBackground = presentation.getBackground();
     boolean updated = before == null || !presentation.equals(before);
 
     if (myUpdatedPresentation == null) {
@@ -133,6 +136,11 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     }
 
     return myTemplatePresentation;
+  }
+
+  @Nullable
+  public ColorValue getBackground() {
+    return myBackground;
   }
 
   public boolean isContentHighlighted() {
