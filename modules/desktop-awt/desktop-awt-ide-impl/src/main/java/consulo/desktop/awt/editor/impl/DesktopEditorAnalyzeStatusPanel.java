@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -65,6 +64,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
@@ -412,11 +412,19 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             }
 
             //if (Experiments.getInstance().isFeatureEnabled("problems.view.enabled")) {
-            //  JLabel openProblemsViewLabel = new TrackableLinkLabel(EditorBundle.message("iw.open.problems.view"), () -> {
-            //    hidePopup();
-            //    controller.openProblemsView();
-            //  });
-            //  myContent.add(openProblemsViewLabel, gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1).insets(10, 10, 10, 0));
+            //    JLabel openProblemsViewLabel = new TrackableLinkLabel(EditorBundle.message("iw.open.problems.view"), () -> {
+            //        hidePopup();
+            //        controller.openProblemsView();
+            //    });
+            //    myContent.add(
+            //        openProblemsViewLabel,
+            //        gc.nextLine().next()
+            //            .anchor(GridBagConstraints.LINE_START)
+            //            .fillCellHorizontally()
+            //            .coverLine()
+            //            .weightx(1)
+            //            .insets(10, 10, 10, 0)
+            //    );
             //}
 
             myContent.add(createLowerPanel(controller), gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1));

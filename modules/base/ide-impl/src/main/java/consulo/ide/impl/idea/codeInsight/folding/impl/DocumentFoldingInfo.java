@@ -11,7 +11,6 @@ import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.text.CodeFoldingState;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
@@ -25,6 +24,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import org.jdom.Element;
@@ -256,9 +256,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
                         RangeMarker marker = document.createRangeMarker(start, end);
                         myRangeMarkers.add(marker);
                         String placeholderAttributeValue = e.getAttributeValue(PLACEHOLDER_ATT);
-                        String placeHolderText =
-                            placeholderAttributeValue == null ? DEFAULT_PLACEHOLDER : XmlStringUtil.unescapeIllegalXmlChars(
-                                placeholderAttributeValue);
+                        String placeHolderText = placeholderAttributeValue == null
+                            ? DEFAULT_PLACEHOLDER
+                            : XmlStringUtil.unescapeIllegalXmlChars(placeholderAttributeValue);
                         marker.putUserData(FOLDING_INFO_KEY, new FoldingInfo(placeHolderText, expanded));
                     }
                     catch (NoSuchElementException exc) {
