@@ -28,8 +28,6 @@ import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -159,9 +157,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
-  @RequiredUIAccess
   void waitForHighlightInfosApplied() {
-    UIAccess.assertIsUIThread();
     HighlightingSessionImpl session = (HighlightingSessionImpl)myHighlightingSession;
     if (session != null) {
       session.waitForHighlightInfosApplied();

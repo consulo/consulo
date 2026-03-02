@@ -50,7 +50,6 @@ public class TestModalWriteAction extends DumbAwareAction {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         myProgressBuilderFactory.newProgressBuilder(e.getData(Project.KEY), LocalizeValue.localizeTODO("Test Write"))
-            .modal()
             .cancelable()
             .execute(UIAccess.current(), coroutine -> {
                 return coroutine.then(WriteLock.apply((o, c) -> {

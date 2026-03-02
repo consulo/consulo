@@ -3,6 +3,8 @@ package consulo.language.editor.impl.internal.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.MarkupModel;
@@ -37,6 +39,7 @@ import java.util.List;
 
 public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
+    @RequiredReadAction
     public void highlightsInsideVisiblePartAreProduced(
         @Nonnull HighlightingSession session,
         @Nullable Editor editor,
@@ -52,27 +55,35 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
             return;
         }
         long modificationStamp = document.getModificationStamp();
+        if (modificationStamp != document.getModificationStamp()) {
+            return;
+        }
+
         TextRange priorityIntersection = priorityRange.intersection(restrictRange);
         List<? extends HighlightInfo> infoCopy = new ArrayList<>(infos);
-        ((HighlightingSessionImpl)session).applyInEDT(() -> {
-            if (modificationStamp != document.getModificationStamp()) {
-                return;
-            }
-            if (priorityIntersection != null) {
-                MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
 
-                EditorColorsScheme scheme = session.getColorsScheme();
-                UpdateHighlightersUtilImpl.setHighlightersInRange(
-                    project,
-                    document,
-                    priorityIntersection,
-                    scheme,
-                    infoCopy,
-                    (MarkupModelEx)markupModel,
-                    groupId
-                );
-            }
-            if (editor != null && !editor.isDisposed()) {
+        // Apply highlights directly from background thread under read lock
+        if (priorityIntersection != null) {
+            MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
+
+            EditorColorsScheme scheme = session.getColorsScheme();
+            UpdateHighlightersUtilImpl.setHighlightersInRange(
+                project,
+                document,
+                priorityIntersection,
+                scheme,
+                infoCopy,
+                (MarkupModelEx)markupModel,
+                groupId
+            );
+        }
+
+        // EDT-only: auto-import popup + repaint
+        if (editor != null) {
+            project.getUIAccess().give(() -> {
+                if (editor.isDisposed() || project.isDisposed()) {
+                    return;
+                }
                 // usability: show auto import popup as soon as possible
                 if (!DumbService.isDumb(project)) {
                     ShowAutoImportPassFactory siFactory =
@@ -83,20 +94,40 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                     }
                 }
 
-                repaintErrorStripeAndIcon(editor, project);
-            }
-        });
+                repaintErrorStripeAndIcon(editor, project, psiFile);
+            });
+        }
     }
 
-    @RequiredUIAccess
+    /**
+     * Schedule error stripe and traffic icon repaint.
+     * Reads PsiFile on background thread, then dispatches UI update to EDT.
+     * Can be called from any thread.
+     */
     public static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project) {
+        ReadAction.nonBlocking(() -> PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()))
+            .expireWith(project)
+            .expireWhen(() -> editor.isDisposed())
+            .finishOnUiThread(Application::getDefaultModalityState, psiFile -> {
+                repaintErrorStripeAndIcon(editor, project, psiFile);
+            })
+            .submit(AppExecutorUtil.getAppExecutorService());
+    }
+
+    /**
+     * Repaint error stripe and traffic icon with a pre-read PsiFile.
+     * Must be called on EDT.
+     */
+    @RequiredUIAccess
+    public static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project, @Nullable PsiFile psiFile) {
+        if (editor.isDisposed() || project.isDisposed()) return;
         EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
         markup.repaintTrafficLightIcon();
-        ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor);
+        ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor, psiFile);
     }
 
     @Override
-    @RequiredUIAccess
+    @RequiredReadAction
     public void highlightsOutsideVisiblePartAreProduced(
         @Nonnull HighlightingSession session,
         @Nullable Editor editor,
@@ -111,29 +142,33 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         if (document == null) {
             return;
         }
-        long modificationStamp = document.getModificationStamp();
-        ((HighlightingSessionImpl)session).applyInEDT(() -> {
-            if (project.isDisposed() || modificationStamp != document.getModificationStamp()) {
-                return;
-            }
+        if (project.isDisposed()) {
+            return;
+        }
 
-            EditorColorsScheme scheme = session.getColorsScheme();
+        EditorColorsScheme scheme = session.getColorsScheme();
 
-            UpdateHighlightersUtilImpl.setHighlightersOutsideRange(
-                project,
-                document,
-                psiFile,
-                infos,
-                scheme,
-                restrictedRange.getStartOffset(),
-                restrictedRange.getEndOffset(),
-                ProperTextRange.create(priorityRange),
-                groupId
-            );
-            if (editor != null) {
-                repaintErrorStripeAndIcon(editor, project);
-            }
-        });
+        // Apply highlights directly from background thread under read lock
+        UpdateHighlightersUtilImpl.setHighlightersOutsideRange(
+            project,
+            document,
+            psiFile,
+            infos,
+            scheme,
+            restrictedRange.getStartOffset(),
+            restrictedRange.getEndOffset(),
+            ProperTextRange.create(priorityRange),
+            groupId
+        );
+
+        // EDT-only: repaint
+        if (editor != null) {
+            project.getUIAccess().give(() -> {
+                if (!editor.isDisposed() && !project.isDisposed()) {
+                    repaintErrorStripeAndIcon(editor, project, psiFile);
+                }
+            });
+        }
     }
 
     @Override
@@ -180,7 +215,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                     }
                     // seems that highlight info "existing" is going to disappear
                     // remove it earlier
-                    ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighterFor(existing);
+                    ((HighlightingSessionImpl)highlightingSession).disposeHighlighterFor(existing);
                 }
                 return true;
             }
@@ -195,7 +230,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         @Nonnull TextRange restrictedRange,
         int groupId
     ) {
-        ((HighlightingSessionImpl)session).queueHighlightInfo(info, restrictedRange, groupId);
+        ((HighlightingSessionImpl)session).applyHighlightInfo(info, restrictedRange, groupId);
     }
 
     @Override
@@ -223,7 +258,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                         myeditor = PsiUtilBase.findEditor(file);
                     }
                     if (myeditor != null && !myeditor.isDisposed()) {
-                        repaintErrorStripeAndIcon(myeditor, myProject);
+                        repaintErrorStripeAndIcon(myeditor, myProject, file);
                     }
                 },
                 50,

@@ -295,7 +295,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         getFile().putUserData(HAS_ERROR_ELEMENT, myHasErrorElement);
 
         if (myUpdateAll) {
-            ((HighlightingSessionImpl) myHighlightingSession).applyInEDT(this::reportErrorsToWolf);
+            reportErrorsToWolf();
         }
     }
 

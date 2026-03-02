@@ -43,7 +43,6 @@ import consulo.language.editor.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.Divider;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
-import consulo.language.editor.impl.internal.highlight.TransferToEDTQueue;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
@@ -67,7 +66,6 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
-import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -492,69 +490,6 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     private final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>();
-    private final TransferToEDTQueue<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>> myTransferToEDTQueue =
-        new TransferToEDTQueue<>(
-            "Apply inspection results",
-            new Predicate<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>>() {
-                private final InspectionProfile inspectionProfile =
-                    InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
-                private final InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
-                private final List<HighlightInfo> infos = new ArrayList<>(2);
-                private final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
-
-                @Override
-                @RequiredReadAction
-                public boolean test(Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator> trinity) {
-                    ProgressIndicator indicator = trinity.getThird();
-                    if (indicator.isCanceled()) {
-                        return false;
-                    }
-
-                    ProblemDescriptor descriptor = trinity.first;
-                    LocalInspectionToolWrapper tool = trinity.second;
-                    PsiElement psiElement = descriptor.getPsiElement();
-                    if (psiElement == null) {
-                        return true;
-                    }
-                    PsiFile file = psiElement.getContainingFile();
-                    Document thisDocument = documentManager.getDocument(file);
-
-                    HighlightSeverity severity =
-                        inspectionProfile.getErrorLevel(tool.getHighlightDisplayKey(), file).getSeverity();
-
-                    infos.clear();
-                    createHighlightsForDescriptor(
-                        infos,
-                        emptyActionRegistered,
-                        ilManager,
-                        file,
-                        thisDocument,
-                        tool,
-                        severity,
-                        descriptor,
-                        psiElement
-                    );
-                    for (HighlightInfo info : infos) {
-                        EditorColorsScheme colorsScheme = getColorsScheme();
-                        UpdateHighlightersUtilImpl.addHighlighterToEditorIncrementally(
-                            myProject,
-                            myDocument,
-                            getFile(),
-                            myRestrictRange.getStartOffset(),
-                            myRestrictRange.getEndOffset(),
-                            (HighlightInfoImpl) info,
-                            colorsScheme,
-                            getId(),
-                            ranges2markersCache
-                        );
-                    }
-
-                    return true;
-                }
-            },
-            myProject.getDisposed(),
-            200
-        );
 
     private final Set<Pair<TextRange, String>> emptyActionRegistered = Collections.synchronizedSet(new HashSet<Pair<TextRange, String>>());
 
@@ -567,7 +502,34 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         if (myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(descriptor.getPsiElement(), tool.getTool())) {
             return;
         }
-        myTransferToEDTQueue.offer(Trinity.create(descriptor, tool, indicator));
+
+        PsiElement psiElement = descriptor.getPsiElement();
+        if (psiElement == null) return;
+        PsiFile file = psiElement.getContainingFile();
+
+        Document thisDocument = PsiDocumentManager.getInstance(myProject).getDocument(file);
+
+        InspectionProfile inspectionProfile =
+            InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
+        HighlightSeverity severity =
+            inspectionProfile.getErrorLevel(tool.getHighlightDisplayKey(), file).getSeverity();
+
+        InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
+
+        List<HighlightInfo> infos = new ArrayList<>(2);
+        createHighlightsForDescriptor(
+            infos, emptyActionRegistered, ilManager, file,
+            thisDocument, tool, severity, descriptor, psiElement
+        );
+
+        for (HighlightInfo info : infos) {
+            EditorColorsScheme colorsScheme = getColorsScheme();
+            UpdateHighlightersUtilImpl.addHighlighterToEditorIncrementally(
+                myProject, myDocument, getFile(),
+                myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(),
+                (HighlightInfoImpl) info, colorsScheme, getId(), ranges2markersCache
+            );
+        }
     }
 
     private void appendDescriptors(

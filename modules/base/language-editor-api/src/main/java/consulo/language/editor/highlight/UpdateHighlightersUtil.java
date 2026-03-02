@@ -5,8 +5,8 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -17,7 +17,7 @@ public class UpdateHighlightersUtil {
         return info.isFileLevelAnnotation() || info.getGutterIconRenderer() != null;
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void setHighlightersToEditor(@Nonnull Project project,
                                                @Nonnull Document document,
                                                int startOffset,
@@ -30,7 +30,7 @@ public class UpdateHighlightersUtil {
     }
 
     @Deprecated //for teamcity
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void setHighlightersToEditor(@Nonnull Project project, @Nonnull Document document, int startOffset, int endOffset, @Nonnull Collection<HighlightInfo> highlights, int group) {
         setHighlightersToEditor(project, document, startOffset, endOffset, highlights, null, group);
     }

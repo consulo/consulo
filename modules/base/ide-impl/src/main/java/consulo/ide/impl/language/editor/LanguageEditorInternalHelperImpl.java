@@ -46,8 +46,8 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -132,7 +132,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    @RequiredUIAccess
+    @RequiredReadAction
     public void setHighlightersToEditor(@Nonnull Project project,
                                         @Nonnull Document document,
                                         int startOffset,
@@ -142,7 +142,6 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                                         @Nullable EditorColorsScheme colorsScheme,
                                         int group) {
         TextRange range = new TextRange(startOffset, endOffset);
-        UIAccess.assertIsUIThread();
 
         PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);

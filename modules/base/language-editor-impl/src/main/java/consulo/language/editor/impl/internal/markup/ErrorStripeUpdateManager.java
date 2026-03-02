@@ -17,8 +17,17 @@ public abstract class ErrorStripeUpdateManager {
     return project.getInstance(ErrorStripeUpdateManager.class);
   }
 
-  @RequiredUIAccess
+  /**
+   * Repaint the error stripe panel. Reads PsiFile asynchronously on background thread
+   * and dispatches UI update to EDT. Can be called from any thread.
+   */
   public abstract void repaintErrorStripePanel(@Nonnull Editor editor);
+
+  /**
+   * Repaint the error stripe panel with a pre-read PsiFile. Must be called on EDT.
+   */
+  @RequiredUIAccess
+  public abstract void repaintErrorStripePanel(@Nonnull Editor editor, @Nullable PsiFile psiFile);
 
   @RequiredUIAccess
   public abstract void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file);
