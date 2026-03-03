@@ -20,7 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
@@ -44,7 +44,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.image.Image;
 import consulo.usage.*;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
@@ -56,7 +55,7 @@ import java.util.Collection;
 /**
  * @author max
  */
-public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, TypeSafeDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
+public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
     private final SmartPsiElementPointer myPointer;
     @Nonnull
     protected final FindUsagesOptions myOptions;
@@ -224,17 +223,12 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
-    @RequiredReadAction
-    public void calcData(Key<?> key, DataSink sink) {
-        if (key == UsageView.USAGE_INFO_KEY) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(UsageView.USAGE_INFO_KEY, () -> {
             PsiElement element = getElement();
-            if (element != null && element.getTextRange() != null) {
-                sink.put(UsageView.USAGE_INFO_KEY, new UsageInfo(element));
-            }
-        }
-        else if (key == UsageView.USAGE_SCOPE) {
-            sink.put(UsageView.USAGE_SCOPE, myOptions.searchScope);
-        }
+            return element != null && element.getTextRange() != null ? new UsageInfo(element) : null;
+        });
+        sink.set(UsageView.USAGE_SCOPE, myOptions.searchScope);
     }
 
     @Override

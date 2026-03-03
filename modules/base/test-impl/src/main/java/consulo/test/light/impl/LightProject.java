@@ -135,7 +135,7 @@ public class LightProject extends BaseComponentManager implements Project {
     }
 
     @Override
-    public void save() {
+    public void save(@Nonnull consulo.ui.UIAccess uiAccess) {
 
     }
 

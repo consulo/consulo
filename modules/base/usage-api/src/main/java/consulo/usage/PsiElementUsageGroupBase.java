@@ -17,6 +17,7 @@ package consulo.usage;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.util.NavigationItemFileStatus;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -25,7 +26,6 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 import consulo.usage.localize.UsageLocalize;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.status.FileStatus;
 
 import jakarta.annotation.Nonnull;
@@ -35,7 +35,7 @@ import java.util.Objects;
 /**
  * @author Maxim.Mossienko
  */
-public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> implements UsageGroup, NamedPresentably {
+public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> implements UsageGroup, NamedPresentably, UiDataProvider {
     private final SmartPsiElementPointer myElementPointer;
     private final String myName;
     private final Image myIcon;
@@ -137,20 +137,21 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
         return myName.hashCode();
     }
 
-    @RequiredReadAction
-    public void calcData(Key<?> key, DataSink sink) {
-        if (!isValid()) {
-            return;
-        }
-        if (PsiElement.KEY == key) {
-            sink.put(PsiElement.KEY, getElement());
-        }
-        if (UsageView.USAGE_INFO_KEY == key) {
-            T element = getElement();
-            if (element != null) {
-                sink.put(UsageView.USAGE_INFO_KEY, new UsageInfo(element));
+    @Override
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(PsiElement.KEY, () -> {
+            if (!isValid()) {
+                return null;
             }
-        }
+            return getElement();
+        });
+        sink.lazy(UsageView.USAGE_INFO_KEY, () -> {
+            if (!isValid()) {
+                return null;
+            }
+            T element = getElement();
+            return element != null ? new UsageInfo(element) : null;
+        });
     }
 
     @Override

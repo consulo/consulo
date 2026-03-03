@@ -19,9 +19,7 @@ import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.*;
 import consulo.dataContext.internal.DataManagerEx;
 import consulo.dataContext.internal.DataRuleHoler;
 import consulo.dataContext.internal.GetDataRuleCache;
@@ -47,9 +45,8 @@ import jakarta.inject.Provider;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -296,13 +293,33 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     @Nullable
     protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
-            DataProvider dataProvider = c::getUserData;
+            DataProvider dataProvider = getDataProviderForComponent(c);
             T data = getDataFromProvider(dataProvider, dataId, null);
             if (data != null) {
                 return data;
             }
         }
         return null;
+    }
+
+    @Nonnull
+    protected DataProvider getDataProviderForComponent(@Nonnull consulo.ui.Component component) {
+        if (component instanceof UiDataProvider uiProvider) {
+            return new UiDataProviderAdapter(uiProvider);
+        }
+        return component::getUserData;
+    }
+
+    @Nonnull
+    @Override
+    public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+        consulo.ui.Component component = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+        List<DataProvider> providers = new ArrayList<>();
+        for (consulo.ui.Component c = component; c != null; c = c.getParent()) {
+            DataProvider provider = getDataProviderForComponent(c);
+            providers.add(PreCachedDataContext.initProviderForAsync(provider));
+        }
+        return new PreCachedDataContext(this, providers);
     }
 
     @Nonnull

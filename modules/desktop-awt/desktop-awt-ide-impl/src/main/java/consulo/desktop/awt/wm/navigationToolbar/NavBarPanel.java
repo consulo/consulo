@@ -1,14 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.navigationToolbar;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Queryable;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.*;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.disposer.Disposable;
@@ -17,21 +14,15 @@ import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
-import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiUtilCore;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
@@ -85,7 +76,13 @@ import java.util.function.Supplier;
  * @author Konstantin Bulenkov
  * @author Anna Kozlova
  */
-public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Disposable, Queryable {
+public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, Disposable, Queryable {
+    /**
+     * Key for the navbar selection items. Set as immediate data by NavBarPanel/NavBarItem,
+     * then consumed by {@link NavBarBgtDataRule} to provide PSI data lazily.
+     */
+    public static final Key<List<?>> NAV_BAR_ITEMS = Key.create("nav.bar.items");
+
     private final NavBarModel myModel;
 
     private final NavBarPresentation myPresentation;
@@ -93,7 +90,6 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
 
     private final ArrayList<NavBarItem> myList = new ArrayList<>();
 
-    private final ModuleDeleteProvider myDeleteModuleProvider = new ModuleDeleteProvider();
     private final IdeView myIdeView;
     private FocusListener myNavBarItemFocusListener;
 
@@ -455,8 +451,9 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
                     if (e == null) {
                         return EMPTY_ARRAY;
                     }
+                    DataProvider provider = dataId -> Project.KEY == dataId ? myProject : null;
                     String popupGroupId = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
-                        .computeSafeIfAny(ext -> ext.getPopupMenuGroup(NavBarPanel.this), IdeActions.GROUP_NAVBAR_POPUP);
+                        .computeSafeIfAny(ext -> ext.getPopupMenuGroup(provider), IdeActions.GROUP_NAVBAR_POPUP);
                     ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(popupGroupId);
                     return group == null ? EMPTY_ARRAY : group.getChildren(e);
                 }
@@ -686,17 +683,22 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
 
     @Nullable
     @Override
-    @RequiredReadAction
-    public Object getData(@Nonnull Key<?> dataId) {
-        Object data = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
-            .computeSafeIfAny(extension -> extension.getData(dataId, this::getDataInner));
-        return data != null ? data : getDataInner(dataId);
-    }
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        if (myProject.isDisposed()) {
+            return;
+        }
+        // Immediate data — no read access needed
+        sink.set(Project.KEY, myProject);
 
-    @Nullable
-    @RequiredReadAction
-    private Object getDataInner(Key<?> dataId) {
-        return getDataImpl(dataId, this, this::getSelection);
+        // Capture selection on EDT — reading from NavBarModel is EDT-safe
+        List<?> selection = getSelection().toList();
+        sink.set(NAV_BAR_ITEMS, selection);
+
+        sink.set(UIExAWTDataKey.CONTEXT_COMPONENT, this);
+        sink.set(CutProvider.KEY, getCopyPasteDelegator(this).getCutProvider());
+        sink.set(CopyProvider.KEY, getCopyPasteDelegator(this).getCopyProvider());
+        sink.set(PasteProvider.KEY, getCopyPasteDelegator(this).getPasteProvider());
+        sink.set(IdeView.KEY, myIdeView);
     }
 
     @Nonnull
@@ -707,78 +709,6 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
         int size = myModel.size();
         return JBIterable.of(size > 0 ? myModel.getElement(size - 1) : null);
-    }
-
-    @RequiredReadAction
-    Object getDataImpl(Key<?> dataId, @Nonnull JComponent source, @Nonnull Supplier<? extends JBIterable<?>> selection) {
-        if (Project.KEY == dataId) {
-            return !myProject.isDisposed() ? myProject : null;
-        }
-        if (Module.KEY == dataId) {
-            Module module = selection.get().filter(Module.class).first();
-            if (module != null && !module.isDisposed()) {
-                return module;
-            }
-            PsiElement element = selection.get().filter(PsiElement.class).first();
-            if (element != null) {
-                return element.getModule();
-            }
-            return null;
-        }
-        if (LangDataKeys.MODULE_CONTEXT == dataId) {
-            PsiDirectory directory = selection.get().filter(PsiDirectory.class).first();
-            if (directory != null) {
-                VirtualFile dir = directory.getVirtualFile();
-                if (ProjectRootsUtil.isModuleContentRoot(dir, myProject)) {
-                    return directory.getModule();
-                }
-            }
-            return null;
-        }
-        if (PsiElement.KEY == dataId) {
-            PsiElement element = selection.get().filter(PsiElement.class).first();
-            return element != null && element.isValid() ? element : null;
-        }
-        if (PsiElement.KEY_OF_ARRAY == dataId) {
-            List<PsiElement> result = selection.get().filter(PsiElement.class).filter(e -> e != null && e.isValid()).toList();
-            return result.isEmpty() ? null : result.toArray(PsiElement.EMPTY_ARRAY);
-        }
-
-        if (VirtualFile.KEY_OF_ARRAY == dataId) {
-            Set<VirtualFile> files = selection.get()
-                .filter(PsiElement.class)
-                .filter(e -> e != null && e.isValid())
-                .filterMap(PsiUtilCore::getVirtualFile)
-                .toSet();
-            return !files.isEmpty() ? VfsUtilCore.toVirtualFileArray(files) : null;
-        }
-
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            List<Navigatable> elements = selection.get().filter(Navigatable.class).toList();
-            return elements.isEmpty() ? null : elements.toArray(new Navigatable[0]);
-        }
-
-        if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
-            return this;
-        }
-        if (CutProvider.KEY == dataId) {
-            return getCopyPasteDelegator(source).getCutProvider();
-        }
-        if (CopyProvider.KEY == dataId) {
-            return getCopyPasteDelegator(source).getCopyProvider();
-        }
-        if (PasteProvider.KEY == dataId) {
-            return getCopyPasteDelegator(source).getPasteProvider();
-        }
-        if (DeleteProvider.KEY == dataId) {
-            return selection.get().filter(Module.class).isNotEmpty() ? myDeleteModuleProvider : new DeleteHandler.DefaultDeleteProvider();
-        }
-
-        if (IdeView.KEY == dataId) {
-            return myIdeView;
-        }
-
-        return null;
     }
 
     @Nonnull

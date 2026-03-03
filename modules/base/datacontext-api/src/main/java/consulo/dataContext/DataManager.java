@@ -22,8 +22,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -90,9 +88,14 @@ public interface DataManager {
   }
 
   public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
+  public static final String CLIENT_PROPERTY_UI_DATA_PROVIDER = "UiDataProvider";
 
   public static void registerDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull DataProvider provider) {
     component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, provider);
+  }
+
+  public static void registerUiDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull UiDataProvider provider) {
+    component.putClientProperty(CLIENT_PROPERTY_UI_DATA_PROVIDER, provider);
   }
 
   /**

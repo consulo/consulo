@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.DataSink;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
@@ -86,11 +86,20 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
     }
 
     @Override
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(CommittedChangesBrowserUseCase.DATA_KEY, myUseCase);
+        List<Change> list = myViewer.getSelectedChanges();
+        sink.set(VcsDataKeys.SELECTED_CHANGES, list.toArray(new Change[list.size()]));
+        Change highestSelection = myViewer.getHighestLeadSelection();
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
+    }
+
+    @Override
     public Object getData(@Nonnull Key<?> dataId) {
         if (CommittedChangesBrowserUseCase.DATA_KEY == dataId) {
             return myUseCase;
         }
-
         else if (VcsDataKeys.SELECTED_CHANGES == dataId) {
             List<Change> list = myViewer.getSelectedChanges();
             return list.toArray(new Change[list.size()]);
@@ -99,10 +108,7 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
             Change highestSelection = myViewer.getHighestLeadSelection();
             return (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection};
         }
-        else {
-            TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter(this);
-            return adapter.getData(dataId);
-        }
+        return null;
     }
 
     @Override

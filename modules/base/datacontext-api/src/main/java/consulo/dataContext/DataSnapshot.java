@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * @author yole
- * @since 2006-10-23
+ * Read-only view of captured data. Used by {@link UiDataRule} to access
+ * already-collected data when computing derived values.
+ * <p>
+ * Only returns immediately available (non-lazy) data.
  */
-public interface TypeSafeDataProvider {
-  void calcData(Key<?> key, DataSink sink);
+public interface DataSnapshot {
+    @Nullable
+    <T> T get(@Nonnull Key<T> key);
 }

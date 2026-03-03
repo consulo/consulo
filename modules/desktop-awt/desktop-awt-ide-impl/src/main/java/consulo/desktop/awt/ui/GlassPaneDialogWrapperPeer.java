@@ -20,8 +20,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.UiDataProvider;
+import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
@@ -603,8 +603,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
             if (wrapper instanceof DataProvider) {
                 return ((DataProvider) wrapper).getData(dataId);
             }
-            else if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider) wrapper);
+            else if (wrapper instanceof UiDataProvider uiProvider) {
+                UiDataProviderAdapter adapter = new UiDataProviderAdapter(uiProvider);
                 return adapter.getData(dataId);
             }
             return null;

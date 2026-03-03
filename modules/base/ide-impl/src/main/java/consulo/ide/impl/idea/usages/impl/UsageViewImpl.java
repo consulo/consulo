@@ -16,9 +16,8 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.find.FindManager;
@@ -63,7 +62,6 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -1890,7 +1888,7 @@ public class UsageViewImpl implements UsageViewEx {
         return myModel.areTargetsValid();
     }
 
-    private class MyPanel extends JPanel implements TypeSafeDataProvider, OccurenceNavigator, Disposable {
+    private class MyPanel extends JPanel implements UiDataProvider, OccurenceNavigator, Disposable {
         @Nullable
         private OccurenceNavigatorSupport mySupport;
         private final CopyProvider myCopyProvider;
@@ -1986,72 +1984,49 @@ public class UsageViewImpl implements UsageViewEx {
         }
 
         @Override
-        @RequiredUIAccess
-        public void calcData(@Nonnull Key key, @Nonnull DataSink sink) {
-            if (key == Project.KEY) {
-                sink.put(Project.KEY, myProject);
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(Project.KEY, myProject);
+            sink.set(USAGE_VIEW_KEY, UsageViewImpl.this);
+            sink.set(ExclusionHandler.EXCLUSION_HANDLER, myExclusionHandler);
+
+            Node[] nodes = UIAccess.isUIThread() ? getSelectedNodes() : null;
+            sink.set(Navigatable.KEY_OF_ARRAY, getNavigatablesForNodes(nodes));
+
+            sink.set(PlatformDataKeys.EXPORTER_TO_TEXT_FILE, myTextFileExporter);
+
+            Set<Usage> selectedUsages = UIAccess.isUIThread() ? getSelectedUsages() : null;
+            sink.set(USAGES_KEY, selectedUsages == null ? null : selectedUsages.toArray(Usage.EMPTY_ARRAY));
+
+            UsageTarget[] targets = UIAccess.isUIThread() ? getSelectedUsageTargets() : null;
+            sink.set(USAGE_TARGETS_KEY, targets);
+
+            Set<Usage> usages = UIAccess.isUIThread() ? getSelectedUsages() : null;
+            Usage[] ua = usages == null ? null : usages.toArray(Usage.EMPTY_ARRAY);
+            UsageTarget[] usageTargets = UIAccess.isUIThread() ? getSelectedUsageTargets() : null;
+            VirtualFile[] data = UsageDataUtil.provideVirtualFileArray(ua, usageTargets);
+            sink.set(VirtualFile.KEY_OF_ARRAY, data);
+
+            sink.set(HelpManager.HELP_ID, HELP_ID);
+            sink.set(CopyProvider.KEY, myCopyProvider);
+
+            if (UIAccess.isUIThread()) {
+                sink.lazy(
+                    PsiElement.KEY_OF_ARRAY,
+                    () -> getSelectedUsages().stream()
+                        .filter(u -> u instanceof PsiElementUsage)
+                        .map(u -> ((PsiElementUsage) u).getElement())
+                        .filter(Objects::nonNull)
+                        .toArray(PsiElement.ARRAY_FACTORY::create)
+                );
             }
-            else if (key == USAGE_VIEW_KEY) {
-                sink.put(USAGE_VIEW_KEY, UsageViewImpl.this);
-            }
-            else if (key == ExclusionHandler.EXCLUSION_HANDLER) {
-                sink.put(ExclusionHandler.EXCLUSION_HANDLER, myExclusionHandler);
-            }
-            else if (key == Navigatable.KEY_OF_ARRAY) {
-                Node[] nodes = UIAccess.isUIThread() ? getSelectedNodes() : null;
-                sink.put(Navigatable.KEY_OF_ARRAY, getNavigatablesForNodes(nodes));
-            }
-            else if (key == PlatformDataKeys.EXPORTER_TO_TEXT_FILE) {
-                sink.put(PlatformDataKeys.EXPORTER_TO_TEXT_FILE, myTextFileExporter);
-            }
-            else if (key == USAGES_KEY) {
-                Set<Usage> selectedUsages = UIAccess.isUIThread() ? getSelectedUsages() : null;
-                sink.put(USAGES_KEY, selectedUsages == null ? null : selectedUsages.toArray(Usage.EMPTY_ARRAY));
-            }
-            else if (key == USAGE_TARGETS_KEY) {
-                UsageTarget[] targets = UIAccess.isUIThread() ? getSelectedUsageTargets() : null;
-                sink.put(USAGE_TARGETS_KEY, targets);
-            }
-            else if (key == VirtualFile.KEY_OF_ARRAY) {
-                Set<Usage> usages = UIAccess.isUIThread() ? getSelectedUsages() : null;
-                Usage[] ua = usages == null ? null : usages.toArray(Usage.EMPTY_ARRAY);
-                UsageTarget[] usageTargets = UIAccess.isUIThread() ? getSelectedUsageTargets() : null;
-                VirtualFile[] data = UsageDataUtil.provideVirtualFileArray(ua, usageTargets);
-                sink.put(VirtualFile.KEY_OF_ARRAY, data);
-            }
-            else if (key == HelpManager.HELP_ID) {
-                sink.put(HelpManager.HELP_ID, HELP_ID);
-            }
-            else if (key == CopyProvider.KEY) {
-                sink.put(CopyProvider.KEY, myCopyProvider);
-            }
-            else if (key == PsiElement.KEY_OF_ARRAY) {
-                if (UIAccess.isUIThread()) {
-                    sink.put(
-                        PsiElement.KEY_OF_ARRAY,
-                        getSelectedUsages().stream()
-                            .filter(u -> u instanceof PsiElementUsage)
-                            .map(u -> ((PsiElementUsage) u).getElement())
-                            .filter(Objects::nonNull)
-                            .toArray(PsiElement.ARRAY_FACTORY::create)
-                    );
-                }
-            }
-            else {
-                // can arrive here outside EDT from usage view preview.
-                // ignore all these fancy actions in this case.
-                Node node = UIAccess.isUIThread() ? getSelectedNode() : null;
-                if (node != null) {
-                    Object userObject = node.getUserObject();
-                    if (userObject instanceof TypeSafeDataProvider typeSafeDataProvider) {
-                        typeSafeDataProvider.calcData(key, sink);
-                    }
-                    else if (userObject instanceof DataProvider dataProvider) {
-                        Object data = dataProvider.getData(key);
-                        if (data != null) {
-                            sink.put(key, data);
-                        }
-                    }
+
+            // can arrive here outside EDT from usage view preview.
+            // ignore all these fancy actions in this case.
+            Node node = UIAccess.isUIThread() ? getSelectedNode() : null;
+            if (node != null) {
+                Object userObject = node.getUserObject();
+                if (userObject instanceof UiDataProvider uiDataProvider) {
+                    sink.uiDataSnapshot(uiDataProvider);
                 }
             }
         }

@@ -28,7 +28,7 @@ import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -36,7 +36,7 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
@@ -689,8 +689,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             if (wrapper instanceof DataProvider dataProvider) {
                 return dataProvider.getData(dataId);
             }
-            if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)wrapper);
+            if (wrapper instanceof UiDataProvider uiProvider) {
+                UiDataProviderAdapter adapter = new UiDataProviderAdapter(uiProvider);
                 return adapter.getData(dataId);
             }
             return null;
