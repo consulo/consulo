@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal.text;
 
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;

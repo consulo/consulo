@@ -113,22 +113,18 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
   @Nonnull
   @Override
   public AppUIExecutor later() {
-    int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
     return withConstraint(new ContextConstraint() {
-      private volatile boolean usedOnce;
+      private volatile boolean scheduled;
 
       @Override
       public boolean isCorrectContext() {
-        if (edtEventCount == -1) {
-          return UIAccess.isUIThread();
-        }
-        return usedOnce || edtEventCount != UIAccess.current().getEventCount();
+        return scheduled && UIAccess.isUIThread();
       }
 
       @Override
       public void schedule(Runnable runnable) {
         dispatchLaterUnconstrained(() -> {
-          usedOnce = true;
+          scheduled = true;
           runnable.run();
         });
       }

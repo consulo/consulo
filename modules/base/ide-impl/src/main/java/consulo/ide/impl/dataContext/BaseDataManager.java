@@ -53,10 +53,6 @@ import java.util.List;
  * @since 2019-02-16
  */
 public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
-    public static interface DataContextWithEventCount extends DataContext {
-        void setEventCount(int eventCount, Object caller);
-    }
-
     public static abstract class BaseDataContext<M extends BaseDataManager, C> implements DataContext, UserDataHolder {
         private final M myDataManager;
         private final Reference<C> myRef;

@@ -25,7 +25,6 @@ import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.*;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.ide.impl.dataContext.BaseDataManager;
@@ -53,31 +52,9 @@ import java.awt.*;
 public class DesktopDataManagerImpl extends BaseDataManager {
   private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 
-  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> implements DataContextWithEventCount {
-    private int myEventCount;
-
+  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> {
     public MyDataContext(DesktopDataManagerImpl dataManager, Component component) {
       super(dataManager, component);
-      myEventCount = -1;
-    }
-
-    @Override
-    public void setEventCount(int eventCount, Object caller) {
-      assert caller instanceof IdeKeyEventDispatcher : "This method might be accessible from " + IdeKeyEventDispatcher.class.getName() + " only";
-      clearCacheData();
-      myEventCount = eventCount;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getData(@Nonnull Key<T> dataId) {
-      int currentEventCount = IdeEventQueue.getInstance().getEventCount();
-      if (myEventCount != -1 && myEventCount != currentEventCount) {
-        LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
-        return doGetData(dataId);
-      }
-
-      return super.getData(dataId);
     }
 
     @Override

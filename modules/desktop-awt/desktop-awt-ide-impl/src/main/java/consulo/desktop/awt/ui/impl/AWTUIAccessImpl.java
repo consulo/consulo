@@ -19,11 +19,9 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.ProcessCanceledException;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
@@ -56,20 +54,6 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
   @Override
   public boolean isInModalContext() {
     return false;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public int getEventCount() {
-    UIAccess.assertIsUIThread();
-    return IdeEventQueue.getInstance().getEventCount();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public Runnable markEventCount() {
-    int eventCount = getEventCount();
-    return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
   }
 
   @Nonnull

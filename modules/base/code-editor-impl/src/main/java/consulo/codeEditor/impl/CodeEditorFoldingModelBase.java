@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.FoldingListener;
@@ -149,7 +148,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
     @Override
     public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
-        assertReadAccess();
+        assertIsDispatchThreadForEditor();
         return region instanceof FoldRegionImpl && ((FoldRegionImpl) region).hasDocumentRegionChanged();
     }
 
@@ -175,12 +174,12 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
     @Override
     public boolean isOffsetCollapsed(int offset) {
-        assertReadAccess();
+        assertIsDispatchThreadForEditor();
         return getCollapsedRegionAtOffset(offset) != null;
     }
 
     private boolean isOffsetInsideCollapsedRegion(int offset) {
-        assertReadAccess();
+        assertIsDispatchThreadForEditor();
         FoldRegion region = getCollapsedRegionAtOffset(offset);
         return region != null && region.getStartOffset() < offset;
     }
@@ -188,10 +187,6 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     @RequiredUIAccess
     private static void assertIsDispatchThreadForEditor() {
         UIAccess.assertIsUIThread();
-    }
-
-    private static void assertReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
     }
 
     private static void assertOurRegion(FoldRegion region) {
@@ -265,7 +260,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     @Override
     @Nonnull
     public FoldRegion[] getAllFoldRegions() {
-        assertReadAccess();
+        assertIsDispatchThreadForEditor();
         return myFoldTree.fetchAllRegions();
     }
 
@@ -278,7 +273,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     @Nullable
     @Override
     public FoldRegion getFoldRegion(int startOffset, int endOffset) {
-        assertReadAccess();
+        assertIsDispatchThreadForEditor();
         return myFoldTree.getRegionAt(startOffset, endOffset);
     }
 

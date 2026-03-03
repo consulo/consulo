@@ -90,12 +90,6 @@ public class IdeEventQueue extends EventQueue {
     private final IdeMouseEventDispatcher myMouseEventDispatcher = new IdeMouseEventDispatcher();
     private final IdePopupManager myPopupManager = new IdePopupManager();
 
-    /**
-     * Counter of processed events. It is used to assert that data context lives only inside single
-     * <p/>
-     * Swing event.
-     */
-    private int myEventCount;
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private AWTEvent myCurrentEvent = new InvocationEvent(this, EmptyRunnable.getInstance());
@@ -287,14 +281,6 @@ public class IdeEventQueue extends EventQueue {
         if (parent != null) {
             Disposer.register(parent, () -> set.remove(dispatcher));
         }
-    }
-
-    public int getEventCount() {
-        return myEventCount;
-    }
-
-    public void setEventCount(int evCount) {
-        myEventCount = evCount;
     }
 
     public AWTEvent getTrueCurrentEvent() {
@@ -586,8 +572,6 @@ public class IdeEventQueue extends EventQueue {
             DnDManagerImpl dndManager = (DnDManagerImpl) DnDManager.getInstance();
             dndManager.setLastDropHandler(null);
         }
-
-        myEventCount++;
 
         if (processAppActivationEvents(e)) {
             return;

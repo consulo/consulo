@@ -36,7 +36,6 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
@@ -99,7 +98,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         Editor editor = e.getData(Editor.KEY);
         PsiElement[] elements = getPsiElementArray(dataContext);
 
-        Runnable markEventCount = UIAccess.current().markEventCount();
         RefactoringActionHandler handler;
         try {
             handler = getHandler(dataContext);
@@ -137,8 +135,6 @@ public abstract class BaseRefactoringAction extends AnAction {
                     .run(() -> lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR));
             }
         }
-
-        markEventCount.run();
 
         if (editor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());

@@ -8,6 +8,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -39,6 +40,7 @@ public interface FileDocumentManager extends SavingRequestor {
    * @see Application#runReadAction(java.util.function.Supplier)
    */
   @Nullable
+  @RequiredUIAccess
   public abstract Document getDocument(@Nonnull VirtualFile file);
 
   /**

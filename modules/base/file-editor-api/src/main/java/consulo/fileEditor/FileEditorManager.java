@@ -149,6 +149,7 @@ public abstract class FileEditorManager {
    * @return all open editors
    */
   @Nonnull
+  @RequiredUIAccess
   public abstract FileEditor[] getAllEditors();
 
   /**

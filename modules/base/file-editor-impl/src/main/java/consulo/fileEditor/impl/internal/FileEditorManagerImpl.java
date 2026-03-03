@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.impl.internal;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
@@ -71,16 +70,16 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
@@ -330,7 +329,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
-        assertReadAccess();
+        UIAccess.assertIsUIThread();
         FileEditorWindow window = getSplitters().getCurrentWindow();
         if (window != null) {
             FileEditorWithProviderComposite editor = window.getSelectedEditor();
@@ -1313,7 +1312,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file) {
-        assertReadAccess();
+        UIAccess.assertIsUIThread();
 
         FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
         if (composite != null) {
@@ -1383,9 +1382,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @Nonnull
-    @RequiredReadAction
+    @RequiredUIAccess
     public FileEditor[] getAllEditors() {
-        assertReadAccess();
+        UIAccess.assertIsUIThread();
         List<FileEditor> result = new ArrayList<>();
         Set<FileEditorsSplitters> allSplitters = getAllSplitters();
         for (FileEditorsSplitters splitter : allSplitters) {
@@ -1515,11 +1514,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @RequiredUIAccess
     private static void assertDispatchThread() {
         UIAccess.assertIsUIThread();
-    }
-
-    @RequiredReadAction
-    private static void assertReadAccess() {
-        Application.get().assertReadAccessAllowed();
     }
 
     public void fireSelectionChanged(FileEditorComposite newSelectedComposite) {

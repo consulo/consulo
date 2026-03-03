@@ -58,11 +58,6 @@ public class ToolRunProfile implements ModuleRunProfile {
         myTool = tool;
         myContext = context;
         myCommandLine = myTool.createCommandLine(context);
-        //if (context instanceof DataManagerImpl.MyDataContext) {
-        //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the datacontext
-        //  // since we know exactly that context is valid, we need to update its event count
-        //  ((DataManagerImpl.MyDataContext)context).setEventCount(IdeEventQueue.getInstance().getEventCount());
-        //}
     }
 
     @Override

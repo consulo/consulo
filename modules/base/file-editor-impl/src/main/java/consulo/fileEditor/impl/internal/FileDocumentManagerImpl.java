@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -187,9 +188,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
     }
 
+    @RequiredReadAction
     @Nullable
     @Override
-    @RequiredUIAccess
     public Document getDocument(@Nonnull VirtualFile file) {
         Application.get().assertReadAccessAllowed();
         DocumentEx document = (DocumentEx) getCachedDocument(file);
