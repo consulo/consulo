@@ -15,36 +15,36 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.util.PairConvertor;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * @author Irina.Chernushina
  * @since 2012-12-14
  */
 public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JList> {
-  public MultipleTraitsListSpeedSearch(JList component, @Nonnull List<PairConvertor<Object, String, Boolean>> convertors) {
-    super(component, convertors);
-  }
+    public MultipleTraitsListSpeedSearch(JList component, @Nonnull List<BiFunction<Object, String, Boolean>> converters) {
+        super(component, converters);
+    }
 
-  @Override
-  protected int getSelectedIndex() {
-    return myComponent.getSelectedIndex();
-  }
+    @Override
+    protected int getSelectedIndex() {
+        return myComponent.getSelectedIndex();
+    }
 
-  @Override
-  protected Object[] getAllElements() {
-    return ListSpeedSearch.getAllListElements(myComponent);
-  }
+    @Nonnull
+    @Override
+    protected Object[] getAllElements() {
+        return ListSpeedSearch.getAllListElements(myComponent);
+    }
 
-  @Override
-  protected void selectElement(Object element, String selectedText) {
-    ScrollingUtil.selectItem(myComponent, element);
-  }
+    @Override
+    protected void selectElement(Object element, String selectedText) {
+        ScrollingUtil.selectItem(myComponent, element);
+    }
 }
