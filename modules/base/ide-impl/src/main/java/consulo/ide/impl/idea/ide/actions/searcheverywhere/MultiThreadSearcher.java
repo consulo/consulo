@@ -7,13 +7,13 @@ import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.logging.Logger;
 import consulo.searchEverywhere.SEResultsEqualityProvider;
 import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.ConcurrencyUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -150,7 +150,7 @@ class MultiThreadSearcher implements SESearcher {
     ) {
         //noinspection unchecked
         ContributorSearchTask<?> task =
-            new ContributorSearchTask<>((SearchEverywhereContributor<Object>)contributor, pattern, accumulator, indicator, finalCallback);
+            new ContributorSearchTask<>((SearchEverywhereContributor<Object>) contributor, pattern, accumulator, indicator, finalCallback);
         return ConcurrencyUtil.underThreadNameRunnable("SE-SearchTask", task);
     }
 
@@ -159,18 +159,21 @@ class MultiThreadSearcher implements SESearcher {
         FullSearchResultsAccumulator accumulator,
         ProgressIndicator indicator
     ) {
-        return ConcurrencyUtil.underThreadNameRunnable("SE-FinisherTask", () -> {
-            try {
-                latch.await();
-                if (!indicator.isCanceled()) {
-                    accumulator.searchFinished();
+        return ConcurrencyUtil.underThreadNameRunnable(
+            "SE-FinisherTask",
+            () -> {
+                try {
+                    latch.await();
+                    if (!indicator.isCanceled()) {
+                        accumulator.searchFinished();
+                    }
+                    indicator.stop();
                 }
-                indicator.stop();
+                catch (InterruptedException e) {
+                    LOG.debug("Finisher interrupted before search process is finished");
+                }
             }
-            catch (InterruptedException e) {
-                LOG.debug("Finisher interrupted before search process is finished");
-            }
-        });
+        );
     }
 
     private static class ContributorSearchTask<Item> implements Runnable {
@@ -205,19 +208,19 @@ class MultiThreadSearcher implements SESearcher {
                     ProgressIndicator wrapperIndicator = new SensitiveProgressWrapper(myIndicator);
                     try {
                         Runnable runnable = (myContributor instanceof WeightedSearchEverywhereContributor)
-                            ? () -> ((WeightedSearchEverywhereContributor<Item>)myContributor).fetchWeightedElements(
-                                myPattern,
-                                wrapperIndicator,
-                                descriptor -> processFoundItem(descriptor.getItem(), descriptor.getWeight(), wrapperIndicator)
-                            )
+                            ? () -> ((WeightedSearchEverywhereContributor<Item>) myContributor).fetchWeightedElements(
+                            myPattern,
+                            wrapperIndicator,
+                            descriptor -> processFoundItem(descriptor.getItem(), descriptor.getWeight(), wrapperIndicator)
+                        )
                             : () -> myContributor.fetchElements(
-                                myPattern,
-                                wrapperIndicator,
-                                element -> {
-                                    int priority = myContributor.getElementPriority(element, myPattern);
-                                    return processFoundItem(element, priority, wrapperIndicator);
-                                }
-                            );
+                            myPattern,
+                            wrapperIndicator,
+                            element -> {
+                                int priority = myContributor.getElementPriority(element, myPattern);
+                                return processFoundItem(element, priority, wrapperIndicator);
+                            }
+                        );
 
                         ProgressManager.getInstance().runProcess(runnable, wrapperIndicator);
                     }
