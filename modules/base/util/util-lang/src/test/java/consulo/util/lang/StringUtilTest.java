@@ -295,16 +295,17 @@ public class StringUtilTest {
             .isEqualTo("foo\\.\\$\\|\\(\\)\\[\\]\\{\\}\\^\\?\\*\\+\\\\\\r\\n");
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     @Test
     void testEscapeXml() {
         assertThat(StringUtil.escapeXml(null)).isNull();
-        assertThat(StringUtil.escapeXml("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+        assertThat(StringUtil.escapeXml("<&'\">")).isEqualTo("&lt;&amp;&#39;&quot;&gt;");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testEscapeXmlEntities() {
-        assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+        assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&#39;&quot;&gt;");
     }
 
     @Test
@@ -1478,7 +1479,7 @@ public class StringUtilTest {
     @Test
     void testUnescapeXml() {
         assertThat(StringUtil.unescapeXml(null)).isNull();
-        assertThat(StringUtil.unescapeXml("&lt;&amp;&apos;&quot;&gt;")).isEqualTo("<&'\">");
+        assertThat(StringUtil.unescapeXml("&lt;&amp;&#39;&quot;&gt;")).isEqualTo("<&'\">");
     }
 
     @SuppressWarnings("deprecation")
