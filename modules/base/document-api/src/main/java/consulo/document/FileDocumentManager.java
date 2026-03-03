@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -78,6 +79,10 @@ public interface FileDocumentManager extends SavingRequestor {
    * @param document the document to save.
    */
   public abstract void saveDocument(@Nonnull Document document);
+
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("'isExplicit' obsolete")
+  public abstract void saveDocument(@Nonnull Document document, boolean isExplicit);
 
   /**
    * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.<p/>
