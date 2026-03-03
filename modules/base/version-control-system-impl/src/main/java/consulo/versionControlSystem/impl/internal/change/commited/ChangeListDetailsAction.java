@@ -108,7 +108,9 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
                     if (value.length() == 0) {
                         value = "<none>";
                     }
-                    detailsBuilder.append(column.getTitle()).append(": ").append(XmlStringUtil.escapeString(value)).append("<br>");
+                    detailsBuilder.append(column.getTitle()).append(": ");
+                    XmlStringUtil.escapeText(value, detailsBuilder);
+                    detailsBuilder.append("<br>");
                 }
             }
         }
