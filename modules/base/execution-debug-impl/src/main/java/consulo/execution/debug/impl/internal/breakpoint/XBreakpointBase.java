@@ -380,7 +380,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             builder.append(BR_NBSP);
             builder.append(XDebuggerLocalize.xbreakpointTooltipCondition());
             builder.append(CommonXmlStrings.NBSP);
-            builder.append(XmlStringUtil.escapeString(condition));
+            XmlStringUtil.escapeText(condition, builder);
         }
 
         if (isLogMessage()) {
@@ -392,7 +392,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             builder.append(BR_NBSP);
             builder.append(XDebuggerLocalize.xbreakpointTooltipLogExpression());
             builder.append(CommonXmlStrings.NBSP);
-            builder.append(XmlStringUtil.escapeString(logExpression));
+            XmlStringUtil.escapeText(logExpression, builder);
         }
 
         XBreakpoint<?> masterBreakpoint = getBreakpointManager().getDependentBreakpointManager().getMasterBreakpoint(this);

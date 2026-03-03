@@ -331,7 +331,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
         public LocalizeValue getToolTipValue(int line, Editor editor) {
             LastRevision revision = myRevisions.get(line);
             if (revision != null) {
-                return LocalizeValue.of(XmlStringUtil.escapeString(
+                return LocalizeValue.of(XmlStringUtil.escapeText(
                     revision.getAuthor() + " " + DateFormatUtil.formatDateTime(revision.getDate()) + "\n" +
                         VcsUtil.trimCommitMessageToSaneSize(revision.getMessage())
                 ));
