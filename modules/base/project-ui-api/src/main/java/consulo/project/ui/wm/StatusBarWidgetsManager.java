@@ -21,6 +21,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -37,5 +38,9 @@ public interface StatusBarWidgetsManager extends ModificationTracker {
 
     void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess);
 
-    void updateAllWidgets(@Nonnull UIAccess uiAccess);
+    default void updateAllWidgets(@Nonnull UIAccess uiAccess) {
+        updateAllWidgets(null, uiAccess);
+    }
+
+    void updateAllWidgets(@Nullable IdeFrame frame, @Nonnull UIAccess uiAccess);
 }

@@ -15,11 +15,14 @@
  */
 package consulo.project;
 
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 
 /**
  * @author VISTALL
  * @since 2024-09-23
  */
-public class ProjectOpenContext extends UnprotectedUserDataHolder {
+public final class ProjectOpenContext extends UnprotectedUserDataHolder {
+    public static final Key<Boolean> FORCE_OPEN_IN_NEW_FRAME = Key.create("ProjectOpenContext#FORCE_OPEN_IN_NEW_FRAME");
+    public static final Key<Project> ACTIVE_PROJECT = Key.create("ProjectOpenContext#ACTIVE_PROJECT");
 }

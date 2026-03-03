@@ -22,37 +22,26 @@ import consulo.application.WriteAction;
 import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.progress.Task;
-import consulo.component.ProcessCanceledException;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.module.ModuleManager;
-import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.store.IProjectStore;
-import consulo.project.internal.*;
+import consulo.project.internal.ProjectManagerEx;
+import consulo.project.internal.ProjectOpenService;
+import consulo.project.internal.ProjectReloadState;
+import consulo.project.internal.SingleProjectHolder;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.startup.StartupManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.wm.WindowManager;
-import consulo.project.util.ProjectUtil;
 import consulo.proxy.EventDispatcher;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -67,14 +56,17 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @Singleton
@@ -94,6 +86,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     @Nonnull
     private final ComponentBinding myComponentBinding;
     @Nonnull
+    private final Provider<ProjectOpenService> myProjectOpenService;
+    @Nonnull
     private final ProgressIndicatorProvider myProgressManager;
 
     private final EventDispatcher<ProjectManagerListener> myDeprecatedListenerDispatcher =
@@ -111,9 +105,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private ExcludeRootsCache myExcludeRootsCache;
 
     @Inject
-    public ProjectManagerImpl(@Nonnull Application application, @Nonnull ComponentBinding componentBinding) {
+    public ProjectManagerImpl(@Nonnull Application application,
+                              @Nonnull ComponentBinding componentBinding,
+                              @Nonnull Provider<ProjectOpenService> projectOpenService) {
         myApplication = application;
         myComponentBinding = componentBinding;
+        myProjectOpenService = projectOpenService;
         myProgressManager = application.getProgressManager();
 
         MessageBus messageBus = application.getMessageBus();
@@ -148,6 +145,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 }
             }
         });
+    }
+
+    @Nonnull
+    @Override
+    public CompletableFuture<Project> openProjectAsync(@Nonnull Path filePath, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
+        return myProjectOpenService.get().openProjectAsync(filePath, uiAccess, context);
     }
 
     @Override
@@ -213,7 +216,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             project.initNotLazyServices();
 
             ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(project);
-            moduleManager.setReady(true);
 
             succeed = true;
         }
@@ -268,7 +270,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    private boolean addToOpened(@Nonnull Project project) {
+    public boolean addToOpened(@Nonnull Project project) {
         assert !project.isDisposed() : "Must not open already disposed project";
         synchronized (lock) {
             if (isProjectOpened(project)) {
@@ -456,16 +458,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         @Nonnull UIAccess uiAccess,
         @Nonnull ProjectOpenContext context
     ) {
-        for (Project project : getOpenProjects()) {
-            if (ProjectUtil.isSameProject(file.getPath(), project)) {
-                uiAccess.give(() -> ProjectWindowFocuser.getInstance().focusProjectWindow(project, false));
-                return AsyncResult.rejected("Already Opened Project");
-            }
-        }
+        throw new UnsupportedOperationException();
 
-        AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        initAndLoadProjectAsync(projectAsyncResult, file, uiAccess, context);
-        return projectAsyncResult;
     }
 
     @Nonnull
@@ -475,9 +469,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         @Nonnull UIAccess uiAccess,
         @Nonnull ProjectOpenContext context
     ) {
-        AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        loadProjectAsync((ProjectImpl) project, projectAsyncResult, false, uiAccess, context);
-        return projectAsyncResult;
+        throw new UnsupportedOperationException();
     }
 
     @Nonnull
@@ -557,137 +549,5 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             }
         });
         return mainResult;
-    }
-
-    private void initAndLoadProjectAsync(
-        AsyncResult<Project> projectAsyncResult,
-        VirtualFile path,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
-
-        loadProjectAsync(project, projectAsyncResult, true, uiAccess, context);
-    }
-
-    private void loadProjectAsync(
-        ProjectImpl project,
-        AsyncResult<Project> projectAsyncResult,
-        boolean init,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        Task.Modal.queue(
-            project,
-            ProjectLocalize.projectLoadProgress(),
-            canCancelProjectLoading(),
-            indicator -> {
-                indicator.setIndeterminate(true);
-
-                try {
-                    if (!addToOpened(project)) {
-                        closeAndDisposeAsync(project, uiAccess)
-                            .doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
-                        return;
-                    }
-
-                    ProjectFrameAllocator projectFrameAllocator = project.getInstance(ProjectFrameAllocator.class);
-
-                    uiAccess.giveAndWait(() -> projectFrameAllocator.allocateFrame(context));
-
-                    if (init) {
-                        initProjectAsync(project, null, indicator);
-                    }
-
-                    indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
-                    indicator.setText2Value(LocalizeValue.empty());
-
-                    ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
-
-                    moduleManager.loadModules(indicator).get();
-
-                    indicator.setTextValue(ProjectLocalize.progressTitlePreparingWorkspace());
-                    indicator.setText2Value(LocalizeValue.empty());
-
-                    openProjectRequireBackgroundTask(project, uiAccess);
-
-                    projectAsyncResult.setDone(project);
-                }
-                catch (ProcessCanceledException e) {
-                    throw e;
-                }
-                catch (Throwable e) {
-                    LOG.error(e);
-
-                    projectAsyncResult.rejectWithThrowable(e);
-                }
-            }
-        );
-    }
-
-    private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
-        myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess);
-
-        StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
-        startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
-
-        if (!project.isDisposed()) {
-            startupManager.runPostStartupActivities(uiAccess);
-
-            if (!myApplication.isHeadlessEnvironment() && !myApplication.isUnitTestMode()) {
-                TrackingPathMacroSubstitutor macroSubstitutor =
-                    project.getInstance(IProjectStore.class).getStateStorageManager().getMacroSubstitutor();
-                if (macroSubstitutor != null) {
-                    StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-                }
-            }
-
-            if (myApplication.isActive()) {
-                Window projectFrame = WindowManager.getInstance().getWindow(project);
-                if (projectFrame != null) {
-                    uiAccess.giveAndWaitIfNeed(() -> ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
-                }
-            }
-
-            myApplication.invokeLater(
-                () -> {
-                    if (!project.isDisposedOrDisposeInProgress()) {
-                        startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
-
-                        logStart(project);
-                    }
-                },
-                ModalityState.nonModal(),
-                project::isDisposedOrDisposeInProgress
-            );
-        }
-    }
-
-    private void initProjectAsync(
-        @Nonnull ProjectImpl project,
-        @Nullable ProjectImpl template,
-        ProgressIndicator progressIndicator
-    ) throws IOException {
-        progressIndicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
-
-        boolean succeed = false;
-        try {
-            if (template != null) {
-                project.getStateStore().loadProjectFromTemplate(template);
-            }
-            else {
-                project.getStateStore().load();
-            }
-            project.initNotLazyServices();
-            succeed = true;
-        }
-        catch (Throwable e) {
-            LOG.error(e);
-        }
-        finally {
-            if (!succeed && !project.isDefault()) {
-                project.getUIAccess().give(() -> WriteAction.run(() -> Disposer.dispose(project)));
-            }
-        }
     }
 }

@@ -73,10 +73,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 cleanCachedStuff();
             }
         });
-
-        if (project.isDefault()) {
-            myReady = true;
-        }
     }
 
     @Nonnull
@@ -85,7 +81,24 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
     }
 
+    public void loadModulesNew(@Nonnull ProgressIndicator indicator) {
+        StatCollector stat = new StatCollector();
+
+        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+
+        indicator.setIndeterminate(true);
+
+        stat.markWith("fire modules add", () -> {
+            for (Module module : myModuleModel.myModules) {
+                fireModuleAdded(module);
+            }
+        });
+
+        stat.dump("ModulesManager", LOG::info);
+    }
+
     @Nonnull
+    @Deprecated
     public CompletableFuture<?> loadModules(@Nonnull ProgressIndicator indicator) {
         StatCollector stat = new StatCollector();
 
@@ -100,7 +113,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 }
             });
 
-            myReady = true;
             stat.dump("ModulesManager", LOG::info);
         });
     }

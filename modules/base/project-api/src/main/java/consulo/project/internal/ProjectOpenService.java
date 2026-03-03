@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.ui.impl.internal;
+package consulo.project.internal;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import consulo.project.internal.ProjectFrameAllocator;
-import consulo.project.startup.PostStartupActivity;
+import consulo.project.ProjectOpenContext;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author VISTALL
- * @since 2024-08-10
+ * @since 2026-01-29
  */
-@ExtensionImpl(order = "after InitToolWindows")
-public class IdeFrameInitializeActitivy implements PostStartupActivity, DumbAware {
-    @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        ProjectFrameAllocator allocator = project.getInstance(ProjectFrameAllocator.class);
-
-        uiAccess.give(allocator::initializeFrame);
-    }
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProjectOpenService {
+    @Nonnull
+    CompletableFuture<Project> openProjectAsync(
+        @Nonnull Path filePath,
+        @Nonnull UIAccess uiAccess,
+        @Nonnull ProjectOpenContext context
+    );
 }
+

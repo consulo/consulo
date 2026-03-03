@@ -29,15 +29,12 @@ import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StorableComponent;
 import consulo.component.store.internal.StoreUtil;
 import consulo.logging.Logger;
-import consulo.module.ModuleManager;
-import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
 import consulo.project.internal.ProjectManagerEx;
-import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
@@ -76,7 +73,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
     private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
-    private Supplier<ModuleManager> myModuleManagerProvider = LazyValue.notNull(() -> getInstance(ModuleManager.class));
     private Supplier<CoroutineContext> myCoroutineContext = LazyValue.notNull(() -> {
         Application application = getApplication();
         CoroutineContext context = application.coroutineContext().copy();
@@ -84,6 +80,32 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return context;
     });
 
+    private boolean myFullyInitialized;
+
+    public ProjectImpl(@Nonnull Application application,
+                       @Nonnull ProjectManager manager,
+                       @Nonnull VirtualFile projectDir,
+                       String projectName,
+                       ComponentBinding componentBinding) {
+        super(application, "Project " + (projectName == null ? projectDir.getPath() : projectName), ComponentScope.PROJECT, componentBinding);
+        myDirPath = projectDir.getPath();
+
+        putUserData(CREATION_TIME, System.nanoTime());
+
+        if (application.isUnitTestMode()) {
+            putUserData(CREATION_TRACE, ExceptionUtil.currentStackTrace());
+        }
+
+        if (!isDefault()) {
+            getStateStore().setProjectDir(projectDir);
+        }
+
+        myManager = (ProjectManagerEx) manager;
+
+        myName = projectName;
+    }
+
+    @Deprecated
     public ProjectImpl(@Nonnull Application application,
                        @Nonnull ProjectManager manager,
                        @Nonnull String dirPath,
@@ -194,20 +216,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public boolean isOpen() {
-        return myManager.isProjectOpened(this);
+        return myManager.isProjectOpened(this) && myFullyInitialized;
     }
 
     @Override
     public boolean isInitialized() {
-        if (isDisposed()) {
-            return false;
-        }
-        return isOpen() && ((StartupManagerEx) myStartupManagerProvider.get()).startupActivityPassed();
-    }
-
-    @Override
-    public boolean isModulesReady() {
-        return ((ModuleManagerImpl) myModuleManagerProvider.get()).isReady();
+        return !isDisposed() && isOpen();
     }
 
     @Override
@@ -346,5 +360,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     @Override
     public String toString() {
         return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
+    }
+
+    public void setFullyInitialized(boolean fullyInitialized) {
+        myFullyInitialized = fullyInitialized;
     }
 }
