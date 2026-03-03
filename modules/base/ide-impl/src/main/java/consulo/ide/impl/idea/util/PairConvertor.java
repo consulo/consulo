@@ -15,12 +15,16 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.util.function.BiFunction;
 
 /**
  * @author Irina.Chernushina
  * @since 2012-08-22
  */
+@Deprecated
+@DeprecationInfo("Use BiFunction")
 @FunctionalInterface
 public interface PairConvertor<First, Second, Result> extends BiFunction<First, Second, Result> {
   Result convert(First first, Second second);
