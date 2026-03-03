@@ -411,8 +411,7 @@ public class SettingsImpl implements EditorSettings {
             return;
         }
 
-        PsiDocumentManager psiManager = PsiDocumentManager.getInstance(project);
-        PsiFile file = psiManager.getPsiFile(document);
+        PsiFile file = getPsiFile(project);
         if (file == null) {
             return;
         }
@@ -449,7 +448,11 @@ public class SettingsImpl implements EditorSettings {
     @Nullable
     protected PsiFile getPsiFile(@Nullable Project project) {
         if (project != null && myEditor != null) {
-            return PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument());
+            SimpleReference<PsiFile> result = SimpleReference.create();
+            Application.get().tryRunReadAction(() -> {
+                result.set(PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()));
+            });
+            return result.get();
         }
         return null;
     }

@@ -68,6 +68,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -537,6 +538,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public void runReadAction(@Nonnull Runnable action) {
+        ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             action.run();
@@ -550,6 +553,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T> T runReadAction(@Nonnull Supplier<T> computation) {
+        ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -563,6 +568,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+        ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -590,24 +597,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             }
         }
         return true;
-    }
-
-
-    @Override
-    public void executeSuspendingWriteAction(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
-        if (myLock.isWriteLocked()) {
-            int prevBase = myWriteStackBase;
-            myWriteStackBase = myWriteActionsStack.size();
-            try (AccessToken ignored = myLock.writeSuspend()) {
-                runnable.run();
-            }
-            finally {
-                myWriteStackBase = prevBase;
-            }
-        }
-        else {
-            runnable.run();
-        }
     }
 
     @Override

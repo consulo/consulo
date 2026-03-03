@@ -112,10 +112,6 @@ public interface ApplicationEx extends Application {
         return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.empty());
     }
 
-    default void executeSuspendingWriteAction(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
-        runnable.run();
-    }
-
     /**
      * Runs modal process. For internal use only, see {@link Task}
      */
