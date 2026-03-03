@@ -1066,7 +1066,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
         data.addAll(visibleNodes);
         if (data.isEmpty()) {
-            String progressText = StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(presentation));
+            String progressText = XmlStringUtil.escapeText(UsageViewManagerImpl.getProgressTitle(presentation));
             data.add(createStringNode(progressText));
         }
         Collections.sort(data, USAGE_NODE_COMPARATOR);

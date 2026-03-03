@@ -277,7 +277,7 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     @Nullable
     static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
-        return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
+        return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(unescapedTooltip));
     }
 
     public boolean needUpdateOnTyping() {

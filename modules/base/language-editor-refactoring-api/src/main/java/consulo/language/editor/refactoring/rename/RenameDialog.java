@@ -61,7 +61,7 @@ public class RenameDialog extends RefactoringDialog {
     private JLabel myNameLabel;
     private NameSuggestionsField myNameSuggestionsField;
     private CheckBox myCbSearchInComments;
-    private CheckBox myCbSearchTextOccurences;
+    private CheckBox myCbSearchTextOccurrences;
     private final JLabel myNewNamePrefix = new JLabel("");
     private final String myHelpID;
     @Nonnull
@@ -92,13 +92,13 @@ public class RenameDialog extends RefactoringDialog {
         createNewNameComponent();
         init();
 
-        myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(getLabelText(), false)));
+        myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(getLabelText())));
         boolean toSearchInComments = isToSearchInCommentsForRename();
         myCbSearchInComments.setValue(toSearchInComments);
 
-        if (myCbSearchTextOccurences.isEnabled()) {
-            boolean toSearchForTextOccurences = isToSearchForTextOccurencesForRename();
-            myCbSearchTextOccurences.setValue(toSearchForTextOccurences);
+        if (myCbSearchTextOccurrences.isEnabled()) {
+            boolean toSearchForTextOccurrences = isToSearchForTextOccurencesForRename();
+            myCbSearchTextOccurrences.setValue(toSearchForTextOccurrences);
         }
 
         if (!myProject.getApplication().isUnitTestMode()) {
@@ -210,7 +210,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     public boolean isSearchInNonJavaFiles() {
-        return myCbSearchTextOccurences.getValue();
+        return myCbSearchTextOccurrences.getValue();
     }
 
     @RequiredUIAccess
@@ -277,15 +277,15 @@ public class RenameDialog extends RefactoringDialog {
         gbConstraints.gridx = 1;
         gbConstraints.weightx = 1;
         gbConstraints.fill = GridBagConstraints.BOTH;
-        myCbSearchTextOccurences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences());
-        NonFocusableSetting.initFocusability(myCbSearchTextOccurences);
-        myCbSearchTextOccurences.setValue(true);
-        panel.add(TargetAWT.to(myCbSearchTextOccurences), gbConstraints);
+        myCbSearchTextOccurrences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences());
+        NonFocusableSetting.initFocusability(myCbSearchTextOccurrences);
+        myCbSearchTextOccurrences.setValue(true);
+        panel.add(TargetAWT.to(myCbSearchTextOccurrences), gbConstraints);
 
         if (!TextOccurrencesUtil.isSearchTextOccurencesEnabled(myPsiElement)) {
-            myCbSearchTextOccurences.setEnabled(false);
-            myCbSearchTextOccurences.setValue(false);
-            myCbSearchTextOccurences.setVisible(false);
+            myCbSearchTextOccurrences.setEnabled(false);
+            myCbSearchTextOccurrences.setValue(false);
+            myCbSearchTextOccurrences.setVisible(false);
         }
 
         AutomaticRenamerFactory.EP_NAME.forEachExtensionSafe(factory -> {
@@ -313,6 +313,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doAction() {
         LOG.assertTrue(myPsiElement.isValid());
 
@@ -320,10 +321,11 @@ public class RenameDialog extends RefactoringDialog {
         performRename(newName);
     }
 
+    @RequiredUIAccess
     public void performRename(String newName) {
         RenamePsiElementProcessor elementProcessor = RenamePsiElementProcessor.forElement(myPsiElement);
         elementProcessor.setToSearchInComments(myPsiElement, isSearchInComments());
-        if (myCbSearchTextOccurences.isEnabled()) {
+        if (myCbSearchTextOccurrences.isEnabled()) {
             elementProcessor.setToSearchForTextOccurrences(myPsiElement, isSearchInNonJavaFiles());
         }
         if (mySuggestedNameInfo != null) {
@@ -355,6 +357,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     @Override
+    @RequiredReadAction
     protected void canRun() throws ConfigurationException {
         if (Comparing.strEqual(getNewName(), myOldName)) {
             throw new ConfigurationException(LocalizeValue.empty());

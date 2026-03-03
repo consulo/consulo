@@ -21,6 +21,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import jakarta.annotation.Nonnull;
 
@@ -178,6 +179,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
         }
     }
 
+    @RequiredUIAccess
     protected void invokeRefactoring(BaseRefactoringProcessor processor) {
         Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
         processor.setPrepareSuccessfulSwingThreadCallback(prepareSuccessfulCallback);
