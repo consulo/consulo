@@ -15,14 +15,11 @@
  */
 package consulo.fileEditor.impl.internal.text;
 
-import consulo.application.Application;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -31,11 +28,10 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.FileContentUtilCore;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
-import consulo.fileEditor.text.TextEditorProvider;
 import consulo.fileEditor.internal.TextEditorComponentContainer;
 import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -44,7 +40,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -59,7 +54,7 @@ import jakarta.annotation.Nullable;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class TextEditorComponent implements DataProvider, Disposable {
+public class TextEditorComponent implements UiDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(TextEditorComponent.class);
 
   private final Project myProject;
@@ -88,14 +83,14 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
   private final TextEditorComponentContainer myTextEditorComponentContainer;
 
-  public TextEditorComponent(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
+  public TextEditorComponent(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document,
+                             @Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
 
     myProject = project;
     myFile = file;
     myTextEditor = textEditor;
 
-    myDocument = FileDocumentManager.getInstance().getDocument(myFile);
-    LOG.assertTrue(myDocument != null);
+    myDocument = document;  // Use pre-loaded document — no getDocument() call on EDT
     myDocument.addDocumentListener(new MyDocumentListener(), this);
 
     myEditor = createEditor();
@@ -216,10 +211,11 @@ public class TextEditorComponent implements DataProvider, Disposable {
   }
 
   /**
-   * Just calculates
+   * Uses getCachedDocument() to avoid read-lock assertion on EDT.
+   * The document is already loaded and held by myDocument reference.
    */
   private boolean isEditorValidImpl() {
-    return FileDocumentManager.getInstance().getDocument(myFile) != null;
+    return FileDocumentManager.getInstance().getCachedDocument(myFile) != null;
   }
 
   private void updateValidProperty() {
@@ -243,23 +239,15 @@ public class TextEditorComponent implements DataProvider, Disposable {
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
     Editor e = validateCurrentEditor();
-    if (e == null || e.isDisposed()) return null;
+    if (e == null || e.isDisposed()) return;
 
-    // There's no FileEditorManager for default project (which is used in diff command-line application)
-    if (!myProject.isDisposed() && !myProject.isDefault()) {
-      Object o = FileEditorManager.getInstance(myProject).getData(dataId, e, e.getCaretModel().getCurrentCaret());
-      if (o != null) return o;
+    sink.set(Editor.KEY, e);
+    sink.set(Caret.KEY, e.getCaretModel().getCurrentCaret());
+    if (myFile.isValid()) {
+      sink.set(VirtualFile.KEY, myFile);
     }
-
-    if (Editor.KEY == dataId) {
-      return e;
-    }
-    if (VirtualFile.KEY == dataId) {
-      return myFile.isValid() ? myFile : null;  // fix for SCR 40329
-    }
-    return null;
   }
 
   /**

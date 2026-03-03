@@ -68,12 +68,12 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
     @RequiredUIAccess
-    public TextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, TextEditorProviderImpl provider) {
+    public TextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document, TextEditorProviderImpl provider) {
         myProject = project;
         myFile = file;
         myChangeSupport = new PropertyChangeSupport(this);
         myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
-        myComponent = createEditorComponent(project, file);
+        myComponent = createEditorComponent(project, file, document);
         Disposer.register(this, myComponent);
 
         myAsyncLoader = new AsyncEditorLoaderImpl(this, myComponent, provider);
@@ -90,8 +90,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Nonnull
-    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-        return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, @Nonnull Document document) {
+        return new TextEditorComponent(project, file, document, this, myTextEditorComponentContainerFactory);
     }
 
     @Override
