@@ -148,6 +148,9 @@ public class StringEscapeUtil {
     @Contract(pure = true)
     @Nonnull
     public static String unescape(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+        if (!hasEscapes(value, fromIndex, toIndex)) {
+            return value.subSequence(fromIndex, toIndex).toString();
+        }
         return unescape(value, fromIndex, toIndex, new StringBuilder(toIndex - fromIndex)).toString();
     }
 
@@ -227,6 +230,19 @@ public class StringEscapeUtil {
         }
 
         return builder;
+    }
+
+    @Contract(pure = true)
+    private static boolean hasEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+        if (value instanceof String strValue) {
+            return strValue.indexOf('\\', fromIndex, toIndex) >= 0;
+        }
+        for (int i = fromIndex; i < toIndex; i++) {
+            if (value.charAt(i) == '\\') {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static char toHexDigit(int value) {

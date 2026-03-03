@@ -17,6 +17,7 @@ package consulo.util.lang;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.internal.NaturalComparator;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -97,7 +98,7 @@ public final class StringUtil {
     private static final String[] MN_QUOTED = {"&&", "__"};
     private static final String[] MN_CHARS = {"&", "_"};
 
-    private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&apos;", "&quot;"};
+    private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
     private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
     private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
@@ -322,7 +323,11 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String htmlEmphasize(@Nonnull String text) {
-        return "<b><code>" + escapeXml(text) + "</code></b>";
+        StringBuilder builder = new StringBuilder(text.length() + 20);
+        builder.append("<b><code>");
+        XmlStringUtil.escapeText(text, builder);
+        builder.append("</code></b>");
+        return builder.toString();
     }
 
     public static boolean isAscii(@Nonnull CharSequence str) {
@@ -1450,8 +1455,10 @@ public final class StringUtil {
     /**
      * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
      */
-    @Nonnull
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
+    @Nonnull
     public static String escapeXmlEntities(@Nonnull String text) {
         return replace(text, REPLACES_DISP, REPLACES_REFS);
     }
@@ -2623,6 +2630,7 @@ public final class StringUtil {
         return escaped;
     }
 
+    // TODO: process all escapes
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static String unescapeXml(@Nullable String text) {
         if (text == null) {
@@ -2632,6 +2640,8 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Deprecated
+    @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
     public static String escapeXml(@Nullable String text) {
         if (text == null) {
             return null;
