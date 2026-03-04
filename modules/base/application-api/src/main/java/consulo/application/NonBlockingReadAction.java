@@ -68,12 +68,21 @@ public interface NonBlockingReadAction<T> {
   NonBlockingReadAction<T> wrapProgress(@Nonnull ProgressIndicator progressIndicator);
 
   /**
-   * @return a copy of this builder that completes submitted read actions on UI thread with the given modality state.
+   * @return a copy of this builder that completes submitted read actions on UI thread.
    * The read actions are still executed on background thread, but the callbacks on their completion
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(@Nonnull Function<Application, ModalityState> modalityGetter, @Nonnull Consumer<? super T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(@Nonnull Consumer<? super T> uiThreadAction);
+
+  /**
+   * @deprecated Use {@link #finishOnUiThread(Consumer)} instead. Modality state is no longer used.
+   */
+  @Deprecated
+  @Contract(pure = true)
+  default NonBlockingReadAction<T> finishOnUiThread(@Nonnull Function<Application, ModalityState> modalityGetter, @Nonnull Consumer<? super T> uiThreadAction) {
+    return finishOnUiThread(uiThreadAction);
+  }
 
   /**
    * Merges together similar computations by cancelling the previous ones when a new one is submitted.

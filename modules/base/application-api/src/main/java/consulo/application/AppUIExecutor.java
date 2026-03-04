@@ -16,23 +16,20 @@ import org.jetbrains.annotations.Contract;
 public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
 
   /**
-   * Creates an executor working with the given modality state.
-   *
-   * @see ModalityState
-   */
-  @Nonnull
-  static AppUIExecutor onUiThread(@Nonnull ModalityState modality) {
-    return AsyncExecutionService.getService().createUIExecutor(modality);
-  }
-
-  /**
-   * Creates an executor working with the default modality state.
-   *
-   * @see Application#getDefaultModalityState()
+   * Creates an executor working on UI thread.
    */
   @Nonnull
   static AppUIExecutor onUiThread() {
-    return onUiThread(Application.get().getDefaultModalityState());
+    return AsyncExecutionService.getService().createUIExecutor();
+  }
+
+  /**
+   * @deprecated Modality state is no longer used. Use {@link #onUiThread()} instead.
+   */
+  @Deprecated
+  @Nonnull
+  static AppUIExecutor onUiThread(@Nonnull ModalityState modality) {
+    return onUiThread();
   }
 
   /**

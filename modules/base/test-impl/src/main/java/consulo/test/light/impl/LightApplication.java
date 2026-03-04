@@ -237,30 +237,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    @Override
-    public ModalityState getCurrentModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getDefaultModalityState() {
-        return getNoneModalityState();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getNoneModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getAnyModalityState() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public long getStartTime() {
         return 0;

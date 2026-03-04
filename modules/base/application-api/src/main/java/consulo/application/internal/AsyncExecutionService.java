@@ -17,7 +17,16 @@ import java.util.concurrent.Callable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class AsyncExecutionService {
     @Nonnull
-    public abstract AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState);
+    public abstract AppUIExecutor createUIExecutor();
+
+    /**
+     * @deprecated Modality state is no longer used. Use {@link #createUIExecutor()} instead.
+     */
+    @Deprecated
+    @Nonnull
+    public AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
+        return createUIExecutor();
+    }
 
     @Nonnull
     public abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);

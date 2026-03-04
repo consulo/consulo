@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -125,6 +126,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         }
       }
 
+      @RequiredReadAction
       boolean isEditable(@Nonnull VirtualFile file) {
         return FileDocumentManager.getInstance().getDocument(file) != null;
       }

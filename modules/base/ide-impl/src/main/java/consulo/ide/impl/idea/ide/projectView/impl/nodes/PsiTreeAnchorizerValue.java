@@ -42,28 +42,17 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
     @Nullable
     @Override
     public PsiElement extractValue() {
-        if (myApplication.isDispatchThread()) {
-            return myPointer.getElement();
-        }
         return myApplication.runReadAction((Supplier<PsiElement>) myPointer::getElement);
     }
 
     @Override
     public void dispose() {
-        if (myApplication.isDispatchThread()) {
+        myApplication.runReadAction(() -> {
             Project project = myPointer.getProject();
             if (!project.isDisposed()) {
                 SmartPointerManager.getInstance(project).removePointer(myPointer);
             }
-        }
-        else {
-            myApplication.runReadAction(() -> {
-                Project project = myPointer.getProject();
-                if (!project.isDisposed()) {
-                    SmartPointerManager.getInstance(project).removePointer(myPointer);
-                }
-            });
-        }
+        });
     }
 
     @Override

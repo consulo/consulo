@@ -73,30 +73,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     /**
-     * @deprecated Use {@link #invokeLater(Runnable)} instead. Write-intent lock has been removed.
-     */
-    @Deprecated
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-        invokeLater(action);
-    }
-
-    /**
-     * @deprecated Use {@link #invokeLater(Runnable, ModalityState)} instead. Write-intent lock has been removed.
-     */
-    @Deprecated
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-        invokeLater(action, modal);
-    }
-
-    /**
-     * @deprecated Use {@link #invokeLater(Runnable, ModalityState, BooleanSupplier)} instead. Write-intent lock has been removed.
-     */
-    @Deprecated
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        invokeLater(action, modal, expired);
-    }
-
-    /**
      * Runs the specified read action. Can be called from any thread. The action is executed immediately
      * if no write action is currently running, or blocked until the currently running write action completes.
      *
@@ -341,7 +317,9 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the current modality state.
      */
     @Nonnull
-    ModalityState getCurrentModalityState();
+    default ModalityState getCurrentModalityState() {
+        return ModalityState.any();
+    }
 
     /**
      * Returns the modality state for the dialog to which the specified component belongs.
@@ -350,8 +328,9 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the modality state.
      */
     @Nonnull
+    @Deprecated
     default ModalityState getModalityStateForComponent(@Nonnull Component c) {
-        throw new AbstractMethodError("AWT/Swing dependency");
+        return ModalityState.any();
     }
 
     /**
@@ -361,7 +340,10 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the modality state for the current thread.
      */
     @Nonnull
-    ModalityState getDefaultModalityState();
+    @Deprecated
+    default ModalityState getDefaultModalityState() {
+        return ModalityState.any();
+    }
 
     /**
      * Returns the modality state representing the state when no modal dialogs
@@ -371,7 +353,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      */
     @Nonnull
     default ModalityState getNoneModalityState() {
-        return ModalityState.nonModal();
+        return ModalityState.any();
     }
 
     /**

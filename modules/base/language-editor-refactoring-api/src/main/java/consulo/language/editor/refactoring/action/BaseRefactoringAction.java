@@ -17,6 +17,7 @@
 package consulo.language.editor.refactoring.action;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
@@ -40,6 +41,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -153,8 +155,16 @@ public abstract class BaseRefactoringAction extends AnAction {
         return false;
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return ReadLock.apply(i -> {
+            updateInRead(e);
+            return null;
+        }).toCoroutine();
+    }
+
+    protected void updateInRead(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);

@@ -21,7 +21,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
@@ -31,41 +30,28 @@ import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
 public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecutorImpl> implements AppUIExecutor {
-    private static class MyEdtExecutor implements Executor {
-        private final ModalityState modality;
-
-        private MyEdtExecutor(ModalityState modalityState) {
-            modality = modalityState;
+    private static final Executor EDT_EXECUTOR = command -> {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            command.run();
         }
-
-        @Override
-        public void execute(@Nonnull Runnable command) {
-            Application application = Application.get();
-            if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
-                command.run();
-            }
-            else {
-                application.invokeLater(command, modality);
-            }
+        else {
+            application.invokeLater(command);
         }
+    };
+
+    public AppUIExecutorImpl() {
+        super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), EDT_EXECUTOR);
     }
 
-    private final ModalityState modality;
-
-    public AppUIExecutorImpl(ModalityState modalityState) {
-        super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), new MyEdtExecutor(modalityState));
-        modality = modalityState;
-    }
-
-    public AppUIExecutorImpl(ModalityState modalityState, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
-        super(constraints, cancellationConditions, expirableHandles, new MyEdtExecutor(modalityState));
-        this.modality = modalityState;
+    private AppUIExecutorImpl(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
+        super(constraints, cancellationConditions, expirableHandles, EDT_EXECUTOR);
     }
 
     @Nonnull
     @Override
     protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
-        return new AppUIExecutorImpl(modality, constraints, cancellationConditions, expirationSet);
+        return new AppUIExecutorImpl(constraints, cancellationConditions, expirationSet);
     }
 
     @Nonnull
@@ -97,7 +83,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     @Nonnull
     @Override
     public AppUIExecutor withDocumentsCommitted(@Nonnull ComponentManager project) {
-        return withConstraint(new WithDocumentsCommitted((Project) project, modality), project);
+        return withConstraint(new WithDocumentsCommitted((Project) project), project);
     }
 
     @Nonnull
@@ -108,6 +94,6 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
     @Override
     public void dispatchLaterUnconstrained(Runnable runnable) {
-        ApplicationManager.getApplication().invokeLater(runnable, modality);
+        ApplicationManager.getApplication().invokeLater(runnable);
     }
 }

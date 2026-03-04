@@ -922,18 +922,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         });
     }
 
-    @Deprecated
-    @Override
-    public void invokeLaterOnWriteThread(@Nonnull Runnable runnable, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        getLastUIAccess().give(() -> {
-            if (expired.getAsBoolean()) {
-                return;
-            }
-
-            runnable.run();
-        });
-    }
-
     @RequiredUIAccess
     @Override
     public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
@@ -949,24 +937,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
         getLastUIAccess().giveAndWait(runnable);
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getCurrentModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-        return ModalityState.nonModal();
-    }
-
-    @Nonnull
-    @Override
-    public ModalityState getDefaultModalityState() {
-        return ModalityState.nonModal();
     }
 
     @Override

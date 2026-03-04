@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.AsyncExecutionService;
-import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -36,8 +35,8 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
 
     @Nonnull
     @Override
-    public AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-        return new AppUIExecutorImpl(modalityState);
+    public AppUIExecutor createUIExecutor() {
+        return new AppUIExecutorImpl();
     }
 
     @Nonnull
