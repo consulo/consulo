@@ -683,6 +683,8 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#isQuoted with specific quote sign")
     public static boolean isQuotedString(@Nonnull String s) {
         return s.length() > 1 && isQuoteAt(s, 0) && s.charAt(0) == s.charAt(s.length() - 1);
     }
