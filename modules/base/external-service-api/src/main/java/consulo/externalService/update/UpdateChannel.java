@@ -24,10 +24,12 @@ public enum UpdateChannel {
   beta,
   alpha,
   nightly,
-  // consulo 3 branch
+  // used for 3-SNAPSHOT - module system, refactoring
+  // used for 4-SNAPSHOT - rewrite lock system
   valhalla;
 
   public boolean isObsolete() {
-    return this == valhalla;
+    return false;
+    //return this == valhalla;
   }
 }
