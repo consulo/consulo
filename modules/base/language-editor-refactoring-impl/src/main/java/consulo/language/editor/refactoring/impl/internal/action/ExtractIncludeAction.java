@@ -57,6 +57,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
         return true;
     }
 
+    @RequiredReadAction
     @Override
     public void updateInRead(@Nonnull AnActionEvent e) {
         super.updateInRead(e);

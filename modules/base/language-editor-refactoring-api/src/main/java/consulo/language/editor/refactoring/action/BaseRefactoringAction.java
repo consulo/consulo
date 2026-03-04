@@ -164,6 +164,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         }).toCoroutine();
     }
 
+    @RequiredReadAction
     protected void updateInRead(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
