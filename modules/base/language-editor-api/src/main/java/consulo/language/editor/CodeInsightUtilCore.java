@@ -326,6 +326,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                 index++;
             }
             while (index < len && s.charAt(index) == 'u');
+
             if (index + 4 > len) {
                 return -1;
             }
@@ -336,7 +337,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                 }
                 int code = Integer.parseInt(s.substring(index, index + 4), 16);
                 // line separators are invalid here
-                if (code == 0x000a || code == 0x000d) {
+                if (code == 0x000A || code == 0x000D) {
                     return -1;
                 }
                 char escapedChar = (char) code;
@@ -450,13 +451,13 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
         private static int parseOctalEscape(@Nonnull String s, @Nonnull StringBuilder outChars, char c, int index) {
             char startC = c;
-            int v = (int) c - '0';
-            if (index < s.length()) {
+            int v = c - '0', len = s.length();
+            if (index < len) {
                 c = s.charAt(index++);
                 if ('0' <= c && c <= '7') {
                     v <<= 3;
                     v += c - '0';
-                    if (startC <= '3' && index < s.length()) {
+                    if (startC <= '3' && index < len) {
                         c = s.charAt(index++);
                         if ('0' <= c && c <= '7') {
                             v <<= 3;

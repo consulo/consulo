@@ -201,21 +201,27 @@ public class StringEscapeUtil {
                     }
 
                     case 'u' -> {
-                        if (i + 4 < toIndex) {
+                        int start = i - 1;
+                        do {
+                            i++;
+                        } while (i < toIndex && value.charAt(i) == 'u');
+                        if (i + 3 < toIndex) {
                             try {
-                                int code = (fromHexDigit(value.charAt(i + 1)) << 12) +
-                                    (fromHexDigit(value.charAt(i + 2)) << 8) +
-                                    (fromHexDigit(value.charAt(i + 3)) << 4) +
-                                    fromHexDigit(value.charAt(i + 4));
-                                i += 4;
+                                int code = (fromHexDigit(value.charAt(i)) << 12) +
+                                    (fromHexDigit(value.charAt(i + 1)) << 8) +
+                                    (fromHexDigit(value.charAt(i + 2)) << 4) +
+                                    fromHexDigit(value.charAt(i + 3));
+                                i += 3;
                                 builder.append((char) code);
                             }
                             catch (NumberFormatException e) {
-                                builder.append("\\u");
+                                builder.append(value, start, i);
+                                i--;
                             }
                         }
                         else {
-                            builder.append("\\u");
+                            builder.append(value, start, i);
+                            i--;
                         }
                     }
 
@@ -264,5 +270,8 @@ public class StringEscapeUtil {
             return digit - 'a' + 10;
         }
         throw new NumberFormatException("Invalid hex digit: " + digit);
+    }
+
+    private StringEscapeUtil() {
     }
 }

@@ -37,6 +37,14 @@ public class StringEscapeUtilTest {
             .isEqualTo("\\u0000\\b\\f\\n\\r\\t\\u007F\\uFEFF\"\\'\\\\foo");
     }
 
+    @Test
+    void testIsQuoted() {
+        assertThat(StringEscapeUtil.isQuoted("\"foo\"", '"')).isTrue();
+        assertThat(StringEscapeUtil.isQuoted("\"foo\"", '\'')).isFalse();
+        assertThat(StringEscapeUtil.isQuoted("'foo'", '"')).isFalse();
+        assertThat(StringEscapeUtil.isQuoted("'foo'", '\'')).isTrue();
+    }
+
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testQuote() {
@@ -52,28 +60,41 @@ public class StringEscapeUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testUnescape() {
-        assertThat(StringEscapeUtil.unescape("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\\\/foo"))
-            .isEqualTo(StringEscapeUtil.unescape("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\\\/foo", sb()).toString())
+        String noEscapes = "foobar";
+        assertThat(StringEscapeUtil.unescape(noEscapes)).isSameAs(noEscapes);
+        assertThat(StringEscapeUtil.unescape(sb(noEscapes))).isEqualTo(noEscapes);
+
+        String withEscapes = "\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\\\/foo";
+        assertThat(StringEscapeUtil.unescape(withEscapes))
+            .isEqualTo(StringEscapeUtil.unescape(sb(withEscapes)))
+            .isEqualTo(StringEscapeUtil.unescape(withEscapes, sb()).toString())
+            .isEqualTo(StringEscapeUtil.unescape(sb(withEscapes), sb()).toString())
             .isEqualTo("\0\12\345%6\b\f\n\r\t\u007F\uFEFF\"'\\/foo");
 
         assertThat(StringEscapeUtil.unescape("\\uXXXX")).isEqualTo("\\uXXXX");
         assertThat(StringEscapeUtil.unescape("\\uXXX")).isEqualTo("\\uXXX");
+        assertThat(StringEscapeUtil.unescape("\\uuuXXX")).isEqualTo("\\uuuXXX");
         assertThat(StringEscapeUtil.unescape("\\z\\")).isEqualTo("z\\");
     }
 
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     void testUnquote() {
-        assertThat(StringEscapeUtil.unquote("\"\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo\"", '"'))
-            .isEqualTo(StringEscapeUtil.unquote("\"\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo\"", '"', sb()).toString())
-            .isEqualTo(StringEscapeUtil.unquote("'\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo'", '\''))
-            .isEqualTo(StringEscapeUtil.unquote("\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo", '"'))
-            .isEqualTo(StringEscapeUtil.unquote("\\0\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo", '"', sb()).toString())
-            .isEqualTo("\0\b\f\n\r\t\u007F\uFEFF\"'\\foo");
+        assertThat(StringEscapeUtil.unquote("\"\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\foo\"", '"'))
+            .isEqualTo(StringEscapeUtil.unquote("\"\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\foo\"", '"', sb()).toString())
+            .isEqualTo(StringEscapeUtil.unquote("'\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\foo'", '\''))
+            .isEqualTo(StringEscapeUtil.unquote("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\foo", '"'))
+            .isEqualTo(StringEscapeUtil.unquote("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uuuFEff\\\"\\'\\\\foo", '"', sb()).toString())
+            .isEqualTo("\0\12\345%6\b\f\n\r\t\u007F\uFEFF\"'\\foo");
     }
 
     @Nonnull
     private static StringBuilder sb() {
         return new StringBuilder();
+    }
+
+    @Nonnull
+    private static StringBuilder sb(@Nonnull String text) {
+        return new StringBuilder(text);
     }
 }
