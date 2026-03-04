@@ -19,7 +19,6 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ui.PaintingParent;
@@ -204,7 +203,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
             long startTime = System.currentTimeMillis();
             if (myNeedReadAction) {
-                boolean result = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
+                boolean result = Application.get().tryRunReadAction(() -> {
                     DesktopIconDeferrerImpl.evaluateDeferred(() -> evaluated.set(evaluateImage()));
                     if (myAutoUpdatable) {
                         myLastCalcTime = System.currentTimeMillis();

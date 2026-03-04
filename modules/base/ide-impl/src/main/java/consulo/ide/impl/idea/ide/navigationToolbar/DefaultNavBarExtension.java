@@ -117,12 +117,10 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
       return true;
     }
 
-    return ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> {
-      for (Module module : ModuleManager.getInstance(object).getModules()) {
-        if (!processor.test(module)) return false;
-      }
-      return true;
-    });
+    for (Module module : ModuleManager.getInstance(object).getModules()) {
+      if (!processor.test(module)) return false;
+    }
+    return true;
   }
 
   private static boolean processChildren(Module module, Predicate<Object> processor) {

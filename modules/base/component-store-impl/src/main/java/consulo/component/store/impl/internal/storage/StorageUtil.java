@@ -135,30 +135,6 @@ public class StorageUtil {
     }
   }
 
-  @Nonnull
-  public static CompletableFuture<VirtualFile> writeFileAsync(@Nullable File file,
-                                                              @Nonnull Object requestor,
-                                                              @Nullable VirtualFile fileRef,
-                                                              @Nonnull byte[] content,
-                                                              @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
-    return AccessRule.writeAsync(() -> {
-      VirtualFile virtualFile = fileRef;
-
-      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-        virtualFile = getOrCreateVirtualFile(requestor, file);
-      }
-      assert virtualFile != null;
-      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-        if (lineSeparatorIfPrependXmlProlog != null) {
-          out.write(XML_PROLOG);
-          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-        }
-        out.write(content);
-      }
-      return virtualFile;
-    });
-  }
-
   public static void deleteFile(@Nonnull File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
     if (virtualFile == null) {
       LOG.warn("Cannot find virtual file " + file.getAbsolutePath());

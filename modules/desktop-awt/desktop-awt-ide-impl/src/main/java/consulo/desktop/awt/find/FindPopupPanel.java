@@ -6,16 +6,18 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
+import consulo.application.event.ApplicationListener;
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ReadTask;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -1340,121 +1342,152 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         final AtomicInteger resultsFilesCount = new AtomicInteger();
         FindInProjectUtil.setupViewPresentation(myUsageViewPresentation, findModel);
 
-        ProgressIndicatorUtils.scheduleWithWriteActionPriority(
-            myResultsPreviewSearchProgress,
-            new ReadTask() {
-                @Override
-                @RequiredReadAction
-                public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) {
-                    FindUsagesProcessPresentation processPresentation =
-                        FindInProjectUtil.setupProcessPresentation(myProject, myUsageViewPresentation);
-                    ThreadLocal<String> lastUsageFileRef = new ThreadLocal<>();
-                    ThreadLocal<Reference<Usage>> recentUsageRef = new ThreadLocal<>();
+        Disposable listenerDisposable = Disposable.newDisposable();
+        application.addApplicationListener(new ApplicationListener() {
+            @Override
+            public void beforeWriteActionStart(@Nonnull Object action) {
+                if (!progressIndicatorWhenSearchStarted.isCanceled()) {
+                    progressIndicatorWhenSearchStarted.cancel();
+                }
+            }
+        }, listenerDisposable);
 
-                    projectExecutor.findUsages(
-                        myProject,
-                        myResultsPreviewSearchProgress,
-                        processPresentation,
-                        findModel,
-                        filesToScanInitially,
-                        usage -> {
-                            if (isCancelled()) {
-                                onStop(hash);
-                                return false;
-                            }
+        PooledThreadExecutor.getInstance().execute(() -> {
+            Runnable uiContinuation;
+            try {
+                uiContinuation = ProgressManager.getInstance().runProcess(() -> {
+                    try {
+                        return application.runReadAction((Supplier<Runnable>) () -> {
+                            FindUsagesProcessPresentation processPresentation =
+                                FindInProjectUtil.setupProcessPresentation(myProject, myUsageViewPresentation);
+                            ThreadLocal<String> lastUsageFileRef = new ThreadLocal<>();
+                            ThreadLocal<Reference<Usage>> recentUsageRef = new ThreadLocal<>();
 
-                            String file = lastUsageFileRef.get();
-                            String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
-                            if (file == null || !file.equals(usageFile)) {
-                                resultsFilesCount.incrementAndGet();
-                                lastUsageFileRef.set(usageFile);
-                            }
-
-                            Usage recent = SoftReference.dereference(recentUsageRef.get());
-                            UsageInfoAdapter recentAdapter = recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
-                            boolean merged = !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
-                            if (!merged) {
-                                recentUsageRef.set(new WeakReference<>(usage));
-                            }
-
-                            application.invokeLater(
-                                () -> {
-                                    if (isCancelled()) {
+                            projectExecutor.findUsages(
+                                myProject,
+                                myResultsPreviewSearchProgress,
+                                processPresentation,
+                                findModel,
+                                filesToScanInitially,
+                                usage -> {
+                                    boolean isCancelled = progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                        || progressIndicatorWhenSearchStarted.isCanceled();
+                                    if (isCancelled) {
                                         onStop(hash);
-                                        return;
+                                        return false;
                                     }
-                                    DefaultTableModel model = (DefaultTableModel) myResultsPreviewTable.getModel();
-                                    if (!merged) {
-                                        model.addRow(new Object[]{usage});
-                                    }
-                                    else {
-                                        model.fireTableRowsUpdated(model.getRowCount() - 1, model.getRowCount() - 1);
-                                    }
-                                    myCodePreviewComponent.setVisible(true);
-                                    if (model.getRowCount() == 1) {
-                                        myResultsPreviewTable.setRowSelectionInterval(0, 0);
-                                    }
-                                    int occurrences = resultsCount.get();
-                                    int filesWithOccurrences = resultsFilesCount.get();
-                                    myCodePreviewComponent.setVisible(occurrences > 0);
-                                    myReplaceAllButton.setEnabled(occurrences > 0);
-                                    myReplaceSelectedButton.setEnabled(occurrences > 0);
 
-                                    StringBuilder stringBuilder = new StringBuilder();
-                                    if (occurrences > 0) {
-                                        stringBuilder.append(Math.min(ShowUsagesAction.getUsagesPageSize(), occurrences));
-                                        boolean foundAllUsages = occurrences < ShowUsagesAction.getUsagesPageSize();
-                                        myUsagesCount = String.valueOf(occurrences);
-                                        if (!foundAllUsages) {
-                                            stringBuilder.append("+");
-                                            myUsagesCount += "+";
-                                        }
-                                        stringBuilder.append(UILocalize.messageMatches(occurrences).get());
-                                        stringBuilder.append(" in ");
-                                        stringBuilder.append(filesWithOccurrences);
-                                        myFilesCount = String.valueOf(filesWithOccurrences);
-                                        if (!foundAllUsages) {
-                                            stringBuilder.append("+");
-                                            myFilesCount += "+";
-                                        }
-                                        stringBuilder.append(UILocalize.messageFiles(filesWithOccurrences));
+                                    String file = lastUsageFileRef.get();
+                                    String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
+                                    if (file == null || !file.equals(usageFile)) {
+                                        resultsFilesCount.incrementAndGet();
+                                        lastUsageFileRef.set(usageFile);
                                     }
-                                    myInfoLabel.setText(stringBuilder.toString());
-                                },
-                                state
+
+                                    Usage recent = SoftReference.dereference(recentUsageRef.get());
+                                    UsageInfoAdapter recentAdapter =
+                                        recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
+                                    boolean merged =
+                                        !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
+                                    if (!merged) {
+                                        recentUsageRef.set(new WeakReference<>(usage));
+                                    }
+
+                                    application.invokeLater(
+                                        () -> {
+                                            boolean cancelled =
+                                                progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                                    || progressIndicatorWhenSearchStarted.isCanceled();
+                                            if (cancelled) {
+                                                onStop(hash);
+                                                return;
+                                            }
+                                            DefaultTableModel model =
+                                                (DefaultTableModel) myResultsPreviewTable.getModel();
+                                            if (!merged) {
+                                                model.addRow(new Object[]{usage});
+                                            }
+                                            else {
+                                                model.fireTableRowsUpdated(
+                                                    model.getRowCount() - 1, model.getRowCount() - 1);
+                                            }
+                                            myCodePreviewComponent.setVisible(true);
+                                            if (model.getRowCount() == 1) {
+                                                myResultsPreviewTable.setRowSelectionInterval(0, 0);
+                                            }
+                                            int occurrences = resultsCount.get();
+                                            int filesWithOccurrences = resultsFilesCount.get();
+                                            myCodePreviewComponent.setVisible(occurrences > 0);
+                                            myReplaceAllButton.setEnabled(occurrences > 0);
+                                            myReplaceSelectedButton.setEnabled(occurrences > 0);
+
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            if (occurrences > 0) {
+                                                stringBuilder.append(
+                                                    Math.min(ShowUsagesAction.getUsagesPageSize(), occurrences));
+                                                boolean foundAllUsages =
+                                                    occurrences < ShowUsagesAction.getUsagesPageSize();
+                                                myUsagesCount = String.valueOf(occurrences);
+                                                if (!foundAllUsages) {
+                                                    stringBuilder.append("+");
+                                                    myUsagesCount += "+";
+                                                }
+                                                stringBuilder.append(
+                                                    UILocalize.messageMatches(occurrences).get());
+                                                stringBuilder.append(" in ");
+                                                stringBuilder.append(filesWithOccurrences);
+                                                myFilesCount = String.valueOf(filesWithOccurrences);
+                                                if (!foundAllUsages) {
+                                                    stringBuilder.append("+");
+                                                    myFilesCount += "+";
+                                                }
+                                                stringBuilder.append(
+                                                    UILocalize.messageFiles(filesWithOccurrences));
+                                            }
+                                            myInfoLabel.setText(stringBuilder.toString());
+                                        },
+                                        state
+                                    );
+
+                                    boolean continueSearch =
+                                        resultsCount.incrementAndGet() < ShowUsagesAction.getUsagesPageSize();
+                                    if (!continueSearch) {
+                                        onStop(hash);
+                                    }
+                                    return continueSearch;
+                                }
                             );
 
-                            boolean continueSearch = resultsCount.incrementAndGet() < ShowUsagesAction.getUsagesPageSize();
-                            if (!continueSearch) {
+                            boolean isCancelled = progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                || progressIndicatorWhenSearchStarted.isCanceled();
+                            return () -> {
+                                if (!isCancelled && resultsCount.get() == 0) {
+                                    showEmptyText(LocalizeValue.empty());
+                                }
                                 onStop(hash);
-                            }
-                            return continueSearch;
-                        }
-                    );
+                            };
+                        });
+                    }
+                    catch (ProcessCanceledException e) {
+                        return null;
+                    }
+                }, progressIndicatorWhenSearchStarted);
+            }
+            finally {
+                Disposer.dispose(listenerDisposable);
+            }
 
-                    return new Continuation(
-                        () -> {
-                            if (!isCancelled() && resultsCount.get() == 0) {
-                                showEmptyText(LocalizeValue.empty());
-                            }
-                            onStop(hash);
-                        },
-                        state
-                    );
-                }
-
-                boolean isCancelled() {
-                    return progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress || progressIndicatorWhenSearchStarted.isCanceled();
-                }
-
-                @Override
-                public void onCanceled(@Nonnull ProgressIndicator indicator) {
+            if (uiContinuation != null && !progressIndicatorWhenSearchStarted.isCanceled()) {
+                application.invokeLater(uiContinuation, state);
+            }
+            else if (progressIndicatorWhenSearchStarted.isCanceled()) {
+                application.invokeLater(() -> {
                     if (isShowing() && progressIndicatorWhenSearchStarted == myResultsPreviewSearchProgress) {
                         scheduleResultsUpdate();
                     }
-                }
+                });
             }
-        );
+        });
     }
 
     private void reset() {

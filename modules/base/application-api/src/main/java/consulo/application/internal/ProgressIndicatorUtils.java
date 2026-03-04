@@ -1,23 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.NonBlockingReadAction;
-import consulo.application.event.ApplicationListener;
-import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -25,189 +16,15 @@ import jakarta.annotation.Nullable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
- * Most methods in this class are used to equip long background processes which take read actions with a special listener
- * that fires when a write action is about to begin, and cancels corresponding progress indicators to avoid blocking the UI.
- * These processes should be ready to get {@link ProcessCanceledException} at any moment.
- * Processes may want to react on cancellation event by restarting the activity, see
- * {@link ReadTask#onCanceled(ProgressIndicator)} for that.
+ * Utility methods for progress indicator management and cancellation-aware waiting.
  *
  * @author gregsh
  */
 public class ProgressIndicatorUtils {
     private static final Logger LOG = Logger.getInstance(ProgressIndicatorUtils.class);
-
-    @Deprecated
-    public static void scheduleWithWriteActionPriority(@Nonnull ReadTask task) {
-        scheduleWithWriteActionPriority(new ProgressIndicatorBase(false, false), task);
-    }
-
-    @Nonnull
-    @Deprecated
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask readTask) {
-        return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.getInstance(), readTask);
-    }
-
-    /**
-     * Attempts to run provided action synchronously in a read action, so that, if possible, it wouldn't impact any pending,
-     * executing or future write actions (for this to work effectively the action should invoke {@link ProgressManager#checkCanceled()} or
-     * {@link ProgressIndicator#checkCanceled()} often enough).
-     * <p>
-     * It returns {@code true} if action was executed successfully. It returns {@code false} if the action was not
-     * executed successfully, i.e. if:
-     * <ul>
-     * <li>write action was in progress when the method was called</li>
-     * <li>action started to execute, but was aborted using {@link ProcessCanceledException} when some other thread initiated
-     * write action</li>
-     * </ul>
-     * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
-     * 100% CPU usage. There is also alternative that implements the re-trying logic {@link NonBlockingReadAction}
-     *
-     * @param action            the action to run under read lock with write action priority
-     * @param progressIndicator optional progress indicator, which can be used to cancel action externally.
-     *                          If null, a temporary indicator is created internally.
-     * @return true if action was executed successfully, false otherwise
-     */
-    @Deprecated
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator progressIndicator) {
-        ProgressIndicator indicator = progressIndicator != null ? progressIndicator : new EmptyProgressIndicator();
-        return ProgressManager.getInstance().runProcess(() -> {
-            try {
-                return ApplicationManager.getApplication().tryRunReadAction(action);
-            }
-            catch (ProcessCanceledException ignore) {
-                return false;
-            }
-        }, indicator);
-    }
-
-    /**
-     * Same as {@link #runInReadActionWithWriteActionPriority(Runnable, ProgressIndicator)} with no external progress indicator.
-     */
-    @Deprecated
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action) {
-        return runInReadActionWithWriteActionPriority(action, null);
-    }
-
-    @Nonnull
-    @Deprecated
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator, @Nonnull Executor executor, @Nonnull final ReadTask readTask) {
-        // invoke later even if on EDT
-        // to avoid tasks eagerly restarting immediately, allocating many pooled threads
-        // which get cancelled too soon when a next write action arrives in the same EDT batch
-        // (can happen when processing multiple VFS events or writing multiple files on save)
-
-        CompletableFuture<?> future = new CompletableFuture<>();
-        Application application = Application.get();
-        application.invokeLater(() -> {
-            if (application.isDisposed() || progressIndicator.isCanceled() || future.isCancelled()) {
-                future.complete(null);
-                return;
-            }
-            Disposable listenerDisposable = Disposable.newDisposable();
-            ApplicationListener listener = new ApplicationListener() {
-                @Override
-                public void beforeWriteActionStart(@Nonnull Object action) {
-                    if (!progressIndicator.isCanceled()) {
-                        progressIndicator.cancel();
-                        readTask.onCanceled(progressIndicator);
-                    }
-                }
-            };
-            application.addApplicationListener(listener, listenerDisposable);
-            future.whenComplete((BiConsumer<Object, Throwable>) (o, throwable) -> Disposer.dispose(listenerDisposable));
-            try {
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final ReadTask.Continuation continuation;
-                        try {
-                            continuation = runUnderProgress(progressIndicator, readTask);
-                        }
-                        catch (Throwable e) {
-                            future.completeExceptionally(e);
-                            throw e;
-                        }
-                        if (continuation == null) {
-                            future.complete(null);
-                        }
-                        else if (!future.isCancelled()) {
-                            application.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (future.isCancelled()) {
-                                        return;
-                                    }
-
-                                    Disposer.dispose(listenerDisposable); // remove listener early to prevent firing it during continuation execution
-                                    try {
-                                        if (!progressIndicator.isCanceled()) {
-                                            continuation.getAction().run();
-                                        }
-                                    }
-                                    finally {
-                                        future.complete(null);
-                                    }
-                                }
-
-                                @Override
-                                public String toString() {
-                                    return "continuation of " + readTask;
-                                }
-                            }, continuation.getModalityState());
-                        }
-
-                    }
-
-                    @Override
-                    public String toString() {
-                        return readTask.toString();
-                    }
-                });
-            }
-            catch (Throwable e) {
-                future.completeExceptionally(e);
-                throw e;
-            }
-        }, ModalityState.any()); // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
-        return future;
-    }
-
-    private static ReadTask.Continuation runUnderProgress(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask task) {
-        return ProgressManager.getInstance().runProcess(() -> {
-            try {
-                return task.runBackgroundProcess(progressIndicator);
-            }
-            catch (ProcessCanceledException ignore) {
-                return null;
-            }
-        }, progressIndicator);
-    }
-
-    /**
-     * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
-     * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
-     *
-     * @deprecated This method assumes write actions only happen on EDT, which is no longer true.
-     * With StampedLock-based locking, writes can occur on any thread, so yielding to EDT
-     * does not guarantee all pending writes have completed. Use proper lock-based synchronization instead.
-     */
-    @Deprecated
-    public static void yieldToPendingWriteActions() {
-        Application application = ApplicationManager.getApplication();
-        if (application.isReadAccessAllowed()) {
-            throw new IllegalStateException("Mustn't be called from within read action");
-        }
-        if (application.isDispatchThread()) {
-            throw new IllegalStateException("Mustn't be called from EDT");
-        }
-        Semaphore semaphore = new Semaphore(1);
-        application.invokeLater(semaphore::up, ModalityState.any());
-        awaitWithCheckCanceled(semaphore, ProgressIndicatorProvider.getGlobalProgressIndicator());
-    }
 
     /**
      * Run the given computation with its execution time restricted to the given amount of time in milliseconds.<p></p>

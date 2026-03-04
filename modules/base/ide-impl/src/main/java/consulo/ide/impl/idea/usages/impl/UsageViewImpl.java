@@ -7,8 +7,8 @@ import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
-import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.ProgressWrapper;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
@@ -1387,18 +1387,19 @@ public class UsageViewImpl implements UsageViewEx {
             return true;
         }
 
-        int MAX_RETRIES = 5;
-        for (int i = 0; i < MAX_RETRIES; i++) {
-            if (isDisposed()) {
-                return true;
-            }
-
-            if (ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(r)) {
-                return true;
-            }
-            ProgressIndicatorUtils.yieldToPendingWriteActions();
+        if (isDisposed()) {
+            return true;
         }
-        return false;
+
+        try {
+            ReadAction.nonBlocking(r)
+                      .expireWhen(this::isDisposed)
+                      .executeSynchronously();
+            return true;
+        }
+        catch (ProcessCanceledException e) {
+            return false;
+        }
     }
 
     @RequiredUIAccess

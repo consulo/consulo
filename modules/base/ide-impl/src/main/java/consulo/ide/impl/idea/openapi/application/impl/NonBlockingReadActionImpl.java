@@ -140,10 +140,6 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
                                            myProgressIndicator);
   }
 
-  private void invokeLater(@Nonnull Runnable runnable) {
-    myApplication.invokeLater(runnable, myApplication.getAnyModalityState(), myApplication.getDisposed());
-  }
-
   @Override
   @Nonnull
   public NonBlockingReadAction<T> inSmartMode(@Nonnull ComponentManager project) {
@@ -308,7 +304,12 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
         ourTasks.add(this);
       }
       if (!builder.myDisposables.isEmpty()) {
-        builder.myApplication.runReadAction(() -> expireWithDisposables(this.builder.myDisposables));
+        if (builder.myApplication.isDispatchThread() || builder.myApplication.isReadAccessAllowed()) {
+          expireWithDisposables(this.builder.myDisposables);
+        }
+        else {
+          builder.myApplication.runReadAction(() -> expireWithDisposables(this.builder.myDisposables));
+        }
       }
     }
 
@@ -516,16 +517,14 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
           ProgressIndicatorUtils.checkCancelledEvenWithPCEDisabled(myProgressIndicator);
           ConstrainedExecution.ContextConstraint[] constraints = builder.myConstraints;
-          if (shouldFinishOnEdt() || constraints.length != 0) {
+          if (constraints.length != 0) {
             Semaphore semaphore = new Semaphore(1);
-            builder.invokeLater(() -> {
-              if (checkObsolete()) {
-                semaphore.up();
-              }
-              else {
-                BaseConstrainedExecution.scheduleWithinConstraints(semaphore::up, null, constraints);
-              }
-            });
+            if (checkObsolete()) {
+              semaphore.up();
+            }
+            else {
+              BaseConstrainedExecution.scheduleWithinConstraints(semaphore::up, null, constraints);
+            }
             ProgressIndicatorUtils.awaitWithCheckCanceled(semaphore, myProgressIndicator);
             if (isCancelled()) {
               throw new ProcessCanceledException();
@@ -555,7 +554,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
       try {
         SimpleReference<ConstrainedExecution.ContextConstraint> unsatisfiedConstraint = SimpleReference.create();
         boolean success;
-        if (builder.myApplication.isReadAccessAllowed()) {
+        if (builder.myApplication.isDispatchThread() || builder.myApplication.isReadAccessAllowed()) {
           insideReadAction(indicator, unsatisfiedConstraint);
           success = true;
           if (!unsatisfiedConstraint.isNull()) {
@@ -590,7 +589,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
     private void rescheduleLater() {
       if (Promises.isPending(this)) {
-        builder.invokeLater(() -> reschedule());
+        AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> reschedule(), 10, TimeUnit.MILLISECONDS);
       }
     }
 

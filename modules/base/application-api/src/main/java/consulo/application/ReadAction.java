@@ -16,6 +16,7 @@
 package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.internal.AsyncExecutionService;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;

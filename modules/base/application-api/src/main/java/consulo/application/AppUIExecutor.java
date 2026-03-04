@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application;
 
+import consulo.application.internal.AsyncExecutionService;
 import consulo.component.ComponentManager;
 import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
@@ -32,28 +33,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   @Nonnull
   static AppUIExecutor onUiThread() {
     return onUiThread(Application.get().getDefaultModalityState());
-  }
-
-  /**
-   * Creates an executor that schedules on EDT and wraps execution inside a write action.
-   * Use this when the scheduled code requires write access.
-   *
-   * @see ModalityState
-   */
-  @Nonnull
-  static AppUIExecutor onWriteThread(@Nonnull ModalityState modality) {
-    return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
-  }
-
-  /**
-   * Creates an executor that schedules on EDT and wraps execution inside a write action.
-   * Use this when the scheduled code requires write access.
-   *
-   * @see Application#getDefaultModalityState()
-   */
-  @Nonnull
-  static AppUIExecutor onWriteThread() {
-    return onWriteThread(Application.get().getDefaultModalityState());
   }
 
   /**

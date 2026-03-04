@@ -598,7 +598,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
             ModalityState modality = myProject.getApplication().getDefaultModalityState();
             Semaphore semaphore = new Semaphore(1);
-            AppUIExecutor.onWriteThread(ModalityState.any()).submit(() -> {
+            AppUIExecutor.onUiThread(ModalityState.any()).submit(() -> {
                 if (myProject.isDisposed()) {
                     // committedness doesn't matter anymore; give clients a chance to do checkCanceled
                     semaphore.up();

@@ -18,11 +18,9 @@ package consulo.ide.impl.idea.ui;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.ReadAction;
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ReadTask;
 import consulo.application.progress.ProgressIndicator;
-import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
@@ -120,81 +118,64 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
                 return;
             }
 
-            indicator = new ProgressIndicatorBase();
-            ReadTask task = createTask(indicator, file);
-            if (task == null) {
+            ProgressIndicator newIndicator = new ProgressIndicatorBase();
+
+            List<FileEditor> editors = ContainerUtil.filter(
+                myFileEditorManager.getAllEditors(file),
+                editor -> !(editor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor()))
+            );
+
+            if (editors.isEmpty()) {
                 return;
             }
 
-            file.putUserData(CURRENT_UPDATES, new WeakReference<>(indicator));
+            file.putUserData(CURRENT_UPDATES, new WeakReference<>(newIndicator));
 
-            ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, myExecutor, task);
-        });
-    }
-
-    @Nullable
-    private ReadTask createTask(@Nonnull ProgressIndicator indicator, @Nonnull VirtualFile file) {
-        List<FileEditor> editors = ContainerUtil.filter(
-            myFileEditorManager.getAllEditors(file),
-            editor -> !(editor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor()))
-        );
-
-        if (editors.isEmpty()) {
-            return null;
-        }
-
-        return new ReadTask() {
-            private boolean isOutdated() {
-                if (myProject.isDisposed() || !file.isValid() || indicator != getCurrentProgress(file)) {
-                    return true;
-                }
-
-                for (FileEditor editor : editors) {
-                    if (!editor.isValid()) {
-                        return true;
+            ReadAction.<List<Runnable>>nonBlocking(() -> {
+                    if (isOutdated(file, newIndicator, editors)) {
+                        return null;
                     }
-                }
 
-                return false;
-            }
+                    List<EditorNotificationProvider> providers =
+                        DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
 
-            @RequiredReadAction
-            @Nullable
-            @Override
-            public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
-                if (isOutdated()) {
-                    return null;
-                }
-
-                List<EditorNotificationProvider> providers =
-                    DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
-
-                List<Runnable> updates = new ArrayList<>();
-                for (FileEditor editor : editors) {
-                    for (EditorNotificationProvider provider : providers) {
-                        EditorNotificationBuilder builder =
-                            provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
-                        updates.add(() -> updateNotification(editor, provider.getId(), (EditorNotificationBuilderEx)builder));
+                    List<Runnable> updates = new ArrayList<>();
+                    for (FileEditor editor : editors) {
+                        for (EditorNotificationProvider provider : providers) {
+                            EditorNotificationBuilder builder =
+                                provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
+                            updates.add(() -> updateNotification(editor, provider.getId(), (EditorNotificationBuilderEx)builder));
+                        }
                     }
-                }
 
-                return new Continuation(() -> {
-                    if (!isOutdated()) {
+                    return updates;
+                })
+                .wrapProgress(newIndicator)
+                .expireWhen(() -> isOutdated(file, newIndicator, editors))
+                .finishOnUiThread(app -> myProject.getApplication().getAnyModalityState(), updates -> {
+                    if (updates != null && !isOutdated(file, newIndicator, editors)) {
                         file.putUserData(CURRENT_UPDATES, null);
                         for (Runnable update : updates) {
                             update.run();
                         }
                     }
-                }, myProject.getApplication().getAnyModalityState());
-            }
+                })
+                .submit(myExecutor);
+        });
+    }
 
-            @Override
-            public void onCanceled(@Nonnull ProgressIndicator ignored) {
-                if (getCurrentProgress(file) == indicator) {
-                    updateNotifications(file);
-                }
+    private boolean isOutdated(@Nonnull VirtualFile file, @Nonnull ProgressIndicator indicator, @Nonnull List<FileEditor> editors) {
+        if (myProject.isDisposed() || !file.isValid() || indicator != getCurrentProgress(file)) {
+            return true;
+        }
+
+        for (FileEditor editor : editors) {
+            if (!editor.isValid()) {
+                return true;
             }
-        };
+        }
+
+        return false;
     }
 
     private static ProgressIndicator getCurrentProgress(VirtualFile file) {

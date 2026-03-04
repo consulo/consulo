@@ -6,10 +6,11 @@ import com.google.common.primitives.Ints;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.HelpManager;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.ReadAction;
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ReadTask;
 import consulo.application.internal.TooManyUsagesStatus;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -1373,7 +1374,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     public static final String EXTRA_ELEM = "...";
 
-    private class CalcElementsThread extends ReadTask {
+    private class CalcElementsThread {
         @Nonnull
         private final String myPattern;
         private final boolean myCheckboxState;
@@ -1407,45 +1408,46 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             UIAccess.assertIsUIThread();
             myCalcElementsThread = this;
             showCard(SEARCHING_CARD, 200);
-            ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, this);
-        }
 
-        @Override
-        public Continuation runBackgroundProcess(@Nonnull ProgressIndicator indicator) {
-            if (myProject == null || DumbService.isDumbAware(myModel)) {
-                return super.runBackgroundProcess(indicator);
+            NonBlockingReadAction<Runnable> readAction = ReadAction.<Runnable>nonBlocking(() -> {
+                    if (isProjectDisposed()) {
+                        return null;
+                    }
+
+                    Set<Object> elements = Collections.synchronizedSet(new LinkedHashSet<>());
+                    scheduleIncrementalListUpdate(elements, 0);
+
+                    boolean scopeExpanded = populateElements(elements);
+                    String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : scopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
+
+                    AnchoredSet resultSet = new AnchoredSet(filter(elements));
+                    return () -> {
+                        if (!checkDisposed() && !myProgress.isCanceled()) {
+                            CalcElementsThread currentBgProcess = myCalcElementsThread;
+                            LOG.assertTrue(currentBgProcess == this, currentBgProcess);
+
+                            showCard(cardToShow, 0);
+
+                            Set<Object> filtered = resultSet.getElements();
+                            backgroundCalculationFinished(filtered, mySelectionPolicy);
+                            myCallback.accept(filtered);
+                        }
+                    };
+                })
+                .wrapProgress(myProgress)
+                .expireWhen(() -> myCalcElementsThread != CalcElementsThread.this);
+
+            if (myProject != null && !DumbService.isDumbAware(myModel)) {
+                readAction = readAction.inSmartMode(myProject);
             }
 
-            return DumbService.getInstance(myProject).runReadActionInSmartMode(() -> performInReadAction(indicator));
-        }
-
-        @Nullable
-        @Override
-        @RequiredReadAction
-        public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
-            if (isProjectDisposed()) {
-                return null;
-            }
-
-            Set<Object> elements = Collections.synchronizedSet(new LinkedHashSet<>());
-            scheduleIncrementalListUpdate(elements, 0);
-
-            boolean scopeExpanded = populateElements(elements);
-            String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : scopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
-
-            AnchoredSet resultSet = new AnchoredSet(filter(elements));
-            return new Continuation(() -> {
-                if (!checkDisposed() && !myProgress.isCanceled()) {
-                    CalcElementsThread currentBgProcess = myCalcElementsThread;
-                    LOG.assertTrue(currentBgProcess == this, currentBgProcess);
-
-                    showCard(cardToShow, 0);
-
-                    Set<Object> filtered = resultSet.getElements();
-                    backgroundCalculationFinished(filtered, mySelectionPolicy);
-                    myCallback.accept(filtered);
-                }
-            }, myModalityState);
+            readAction
+                .finishOnUiThread(app -> myModalityState, continuation -> {
+                    if (continuation != null) {
+                        continuation.run();
+                    }
+                })
+                .submit(PooledThreadExecutor.getInstance());
         }
 
         private void scheduleIncrementalListUpdate(@Nonnull Set<Object> elements, int lastCount) {
@@ -1495,16 +1497,6 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 return true;
             }
             return false;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void onCanceled(@Nonnull ProgressIndicator indicator) {
-            LOG.assertTrue(myCalcElementsThread == this, myCalcElementsThread);
-
-            if (!isProjectDisposed() && !checkDisposed()) {
-                new CalcElementsThread(myPattern, myCheckboxState, myModalityState, mySelectionPolicy, myCallback).scheduleThread();
-            }
         }
 
         private void addElementsByPattern(

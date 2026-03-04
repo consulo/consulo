@@ -80,24 +80,22 @@ public class EditorUtil {
      */
     @Nonnull
     public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
-        return ReadAction.compute(() -> {
-            Editor e = editor;
-            LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
-            if (e instanceof InjectedEditor) {
-                logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
-                e = ((InjectedEditor) e).getDelegate();
-            }
+        Editor e = editor;
+        LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
+        if (e instanceof InjectedEditor) {
+            logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
+            e = ((InjectedEditor) e).getDelegate();
+        }
 
-            VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
-            Inlay inlay;
-            while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
-                if (inlay.isRelatedToPrecedingText()) {
-                    break;
-                }
-                pos = new VisualPosition(pos.line, pos.column + 1);
+        VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
+        Inlay inlay;
+        while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
+            if (inlay.isRelatedToPrecedingText()) {
+                break;
             }
-            return pos;
-        });
+            pos = new VisualPosition(pos.line, pos.column + 1);
+        }
+        return pos;
     }
 
     public static boolean attributesImpactFontStyle(@Nullable TextAttributes attributes) {
