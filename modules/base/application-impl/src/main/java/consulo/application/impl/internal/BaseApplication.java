@@ -22,6 +22,7 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
@@ -30,19 +31,24 @@ import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
 import consulo.application.impl.internal.progress.ProgressWindow;
-import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.progress.*;
+import consulo.application.internal.ProgressIndicatorBase;
+import consulo.application.internal.StartupProgress;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.store.internal.*;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.StateStorageException;
+import consulo.component.store.internal.StorableComponent;
+import consulo.component.store.internal.StoreUtil;
 import consulo.component.util.BuildNumber;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
@@ -62,7 +68,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
-import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
@@ -82,7 +87,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -534,6 +538,26 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
         return isWriteThread() || myLock.isReadLockedByThisThread() ? AccessToken.EMPTY_ACCESS_TOKEN : new ReadAccessToken();
+    }
+
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(@Nonnull SimpleReference<T> ref,
+                                                          @Nonnull ThrowableSupplier<T, E> computation) throws E {
+        //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
+        RWLock.ReadToken status = myLock.startTryRead();
+        if (status != null && !status.readRequested()) {
+            return false;
+        }
+        try {
+            T t = computation.get();
+            ref.set(t);
+        }
+        finally {
+            if (status != null) {
+                myLock.endRead(status);
+            }
+        }
+        return true;
     }
 
     @Override

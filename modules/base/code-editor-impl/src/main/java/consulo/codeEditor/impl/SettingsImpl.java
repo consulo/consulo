@@ -238,12 +238,10 @@ public class SettingsImpl implements EditorSettings {
     private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
         if (project != null) {
             SimpleReference<Language> result = SimpleReference.create();
-            Application.get().tryRunReadAction(() -> {
+            Application.get().tryRunReadAction(result, () -> {
                 PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
                 PsiFile file = documentManager.getPsiFile(document);
-                if (file != null) {
-                    result.set(file.getLanguage());
-                }
+                return file == null ? null : file.getLanguage();
             });
             return result.get();
         }
@@ -449,9 +447,7 @@ public class SettingsImpl implements EditorSettings {
     protected PsiFile getPsiFile(@Nullable Project project) {
         if (project != null && myEditor != null) {
             SimpleReference<PsiFile> result = SimpleReference.create();
-            Application.get().tryRunReadAction(() -> {
-                result.set(PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()));
-            });
+            Application.get().tryRunReadAction(result, () -> PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()));
             return result.get();
         }
         return null;

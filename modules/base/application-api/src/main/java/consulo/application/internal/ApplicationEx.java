@@ -146,14 +146,6 @@ public interface ApplicationEx extends Application {
 
     void assertTimeConsuming();
 
-    /**
-     * Grab the lock and run the action, in a non-blocking fashion
-     *
-     * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
-     */
-    @Override
-    boolean tryRunReadAction(@Nonnull Runnable action);
-
     boolean isInImpatientReader();
 
     default void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {

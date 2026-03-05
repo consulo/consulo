@@ -36,12 +36,14 @@ import java.util.function.Supplier;
 
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
+  @Deprecated
   public static <T> T tryRunReadAction(@Nonnull Supplier<T> computable) throws CannotRunReadActionException {
     SimpleReference<T> result = new SimpleReference<>();
     tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }
 
+  @Deprecated
   public static void tryRunReadAction(@Nonnull Runnable computable) throws CannotRunReadActionException {
     if (!ApplicationManager.getApplication().tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();

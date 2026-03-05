@@ -39,6 +39,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
@@ -133,6 +134,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     @Override
     public boolean tryRunReadAction(@Nonnull Runnable action) {
         action.run();
+        return true;
+    }
+
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(@Nonnull SimpleReference<T> ref, @Nonnull ThrowableSupplier<T, E> computation) throws E {
+        ref.set(computation.get());
         return true;
     }
 
