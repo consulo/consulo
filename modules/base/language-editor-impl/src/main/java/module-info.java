@@ -20,7 +20,7 @@ module consulo.language.editor.impl {
 
   exports consulo.language.editor.impl.action;
   exports consulo.language.editor.impl.intention;
-  exports consulo.language.editor.impl.highlight to consulo.ide.impl, consulo.file.editor.impl;
+  exports consulo.language.editor.impl.highlight;
   exports consulo.language.editor.impl.inspection;
   exports consulo.language.editor.impl.inspection.reference;
 
