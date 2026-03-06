@@ -22,6 +22,7 @@ public interface CommonXmlStrings {
   String CDATA_START = "<![CDATA[";
   String CDATA_END = "]]>";
 
+  String APOS = "&apos;";
   String QUOT = "&quot;";
   String LT = "&lt;";
   String GT = "&gt;";

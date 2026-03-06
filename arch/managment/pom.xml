@@ -1019,7 +1019,6 @@
                 <version>${maven.surefire.plugin}</version>
                 <configuration>
                     <enableAssertions>true</enableAssertions>
-                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
             <plugin>

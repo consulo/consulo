@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.lang.xml;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.internal.Verifier;
-import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -44,14 +44,237 @@ public class XmlStringUtil {
         return sb.toString();
     }
 
+    /**
+     * Escapes characters in XML tag contents. The following replacements are performed:
+     * <ul>
+     * <li>{@code <} → {@code &lt;}</li>
+     * <li>{@code >} → {@code &gt;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value a text to escape.
+     * @return      the text with escapes.
+     */
+    @Nonnull
+    public static String escapeText(@Nonnull CharSequence value) {
+        return escapeText(value, 0, value.length());
+    }
+
+    /**
+     * Escapes characters in XML tag contents. The following replacements are performed:
+     * <ul>
+     * <li>{@code <} → {@code &lt;}</li>
+     * <li>{@code >} → {@code &gt;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value     a text to escape (only a part between {@code fromIndex} and {@code toIndex} will be used).
+     * @param fromIndex an index where the text begins (included).
+     * @param toIndex   an index where the text ends (excluded).
+     * @return          the text with escapes.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static String escapeText(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+        if (!needsTextEscapes(value, fromIndex, toIndex)) {
+            return value.subSequence(fromIndex, toIndex).toString();
+        }
+        return escapeText(value, fromIndex, toIndex, new StringBuilder(value.length() + 10)).toString();
+    }
+
+    /**
+     * Escapes characters in XML tag contents. The following replacements are performed:
+     * <ul>
+     * <li>{@code <} → {@code &lt;}</li>
+     * <li>{@code >} → {@code &gt;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value   a text to escape.
+     * @param builder a {@code StringBuilder} to append escaped text to.
+     * @return        the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
+     */
+    @Contract(mutates = "param2")
+    @Nonnull
+    public static StringBuilder escapeText(@Nonnull CharSequence value, @Nonnull StringBuilder builder) {
+        return escapeText(value, 0, value.length(), builder);
+    }
+
+    /**
+     * Escapes characters in XML tag contents. The following replacements are performed:
+     * <ul>
+     * <li>{@code <} → {@code &lt;}</li>
+     * <li>{@code >} → {@code &gt;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value     a text to escape (only a part between {@code fromIndex} and {@code toIndex} will be used).
+     * @param fromIndex an index where text begins (included).
+     * @param toIndex   an index where text ends (excluded).
+     * @param builder   a {@code StringBuilder} to append escaped text to.
+     * @return          the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
+     */
+    @Contract(mutates = "param4")
+    @Nonnull
+    public static StringBuilder escapeText(@Nonnull CharSequence value, int fromIndex, int toIndex, @Nonnull StringBuilder builder) {
+        builder.ensureCapacity(builder.length() + toIndex - fromIndex);
+        for (int i = fromIndex; i < toIndex; i++) {
+            char ch = value.charAt(i);
+            switch (ch) {
+                case '<' -> builder.append(LT);
+                case '>' -> builder.append(GT);
+                case '&' -> builder.append(AMP);
+                default -> builder.append(ch);
+            }
+        }
+        return builder;
+    }
+
+    /**
+     * Escapes characters in XML tag attribute value. The following replacements are performed:
+     * <ul>
+     * <li>{@code "} → {@code &quot;} (if {@code quote} is {@code '"'})</li>
+     * <li>{@code '} → {@code &apos;} (if {@code quote} is {@code '\''})</li>
+     * <li>{@code \n} → {@code &#10;}</li>
+     * <li>{@code \r} → {@code &#13;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value an attribute value to escape.
+     * @return      the attribute value with escapes.
+     */
+    @Nonnull
+    public static String escapeAttr(@Nonnull CharSequence value, char quote) {
+        return escapeAttr(value, 0, value.length(), quote);
+    }
+
+    /**
+     * Escapes characters in XML tag attribute value. The following replacements are performed:
+     * <ul>
+     * <li>{@code "} → {@code &quot;} (if {@code quote} is {@code '"'})</li>
+     * <li>{@code '} → {@code &apos;} (if {@code quote} is {@code '\''})</li>
+     * <li>{@code \n} → {@code &#10;}</li>
+     * <li>{@code \r} → {@code &#13;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value     an attribute value to escape (only a part between {@code fromIndex} and {@code toIndex} will be used).
+     * @param fromIndex an index where the attribute value begins (included).
+     * @param toIndex   an index where the attribute value ends (excluded).
+     * @param quote     a character used to surround attribute value.
+     * @return          the attribute value with escapes.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static String escapeAttr(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+        if (!needsAttrEscapes(value, fromIndex, toIndex, quote)) {
+            return value.subSequence(fromIndex, toIndex).toString();
+        }
+        return escapeAttr(value, fromIndex, toIndex, quote, new StringBuilder(value.length() + 10)).toString();
+    }
+
+    /**
+     * Escapes characters in XML tag attribute value. The following replacements are performed:
+     * <ul>
+     * <li>{@code "} → {@code &quot;} (if {@code quote} is {@code '"'})</li>
+     * <li>{@code '} → {@code &apos;} (if {@code quote} is {@code '\''})</li>
+     * <li>{@code \n} → {@code &#10;}</li>
+     * <li>{@code \r} → {@code &#13;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value   an attribute value to escape.
+     * @param quote   a character used to surround attribute value.
+     * @param builder a {@code StringBuilder} to append escaped attribute value to.
+     * @return        the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
+     */
+    @Contract(mutates = "param3")
+    @Nonnull
+    public static StringBuilder escapeAttr(@Nonnull CharSequence value, char quote, @Nonnull StringBuilder builder) {
+        return escapeAttr(value, 0, value.length(), quote, builder);
+    }
+
+    /**
+     * Escapes characters in XML tag attribute value. The following replacements are performed:
+     * <ul>
+     * <li>{@code "} → {@code &quot;} (if {@code quote} is {@code '"'})</li>
+     * <li>{@code '} → {@code &apos;} (if {@code quote} is {@code '\''})</li>
+     * <li>{@code \n} → {@code &#10;}</li>
+     * <li>{@code \r} → {@code &#13;}</li>
+     * <li>{@code &} → {@code &amp;}</li>
+     * </ul>
+     *
+     * @param value     an attribute value to escape (only a part between {@code fromIndex} and {@code toIndex} will be used).
+     * @param fromIndex an index where the attribute value begins (included).
+     * @param toIndex   an index where the attribute value ends (excluded).
+     * @param quote     a character used to surround attribute value.
+     * @param builder   a {@code StringBuilder} to append escaped attribute value to.
+     * @return          the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
+     */
+    @Contract(mutates = "param5")
+    @Nonnull
+    public static StringBuilder escapeAttr(
+        @Nonnull CharSequence value,
+        int fromIndex,
+        int toIndex,
+        char quote,
+        @Nonnull StringBuilder builder
+    ) {
+        builder.ensureCapacity(builder.length() + toIndex - fromIndex);
+        if (quote == '\'') {
+            for (int i = fromIndex; i < toIndex; i++) {
+                char ch = value.charAt(i);
+                switch (ch) {
+                    case '\n' -> builder.append("&#10;");
+                    case '\r' -> builder.append("&#13;");
+                    case '\'' -> builder.append(APOS);
+                    case '&' -> builder.append(AMP);
+                    default -> builder.append(ch);
+                }
+            }
+        }
+        else {
+            for (int i = fromIndex; i < toIndex; i++) {
+                char ch = value.charAt(i);
+                switch (ch) {
+                    case '\n' -> builder.append("&#10;");
+                    case '\r' -> builder.append("&#13;");
+                    case '"' -> builder.append(QUOT);
+                    case '&' -> builder.append(AMP);
+                    default -> builder.append(ch);
+                }
+            }
+        }
+        return builder;
+    }
+
+    @Contract(pure = true)
+    private static boolean needsTextEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+        return StringUtil.indexOfAny(value, "<>&", fromIndex, toIndex) >= 0;
+    }
+
+    @Contract(pure = true)
+    private static boolean needsAttrEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+        return StringUtil.indexOfAny(value, quote == '"' ? "\"\n\r&" : "'\n\r&", fromIndex, toIndex) >= 0;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str) {
         return escapeString(str, false);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
         return escapeString(str, escapeWhiteSpace, true);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
         if (str == null) {
             return null;
@@ -120,7 +343,7 @@ public class XmlStringUtil {
      */
     @Nonnull
     public static String convertToHtmlContent(@Nonnull String text) {
-        return isWrappedInHtml(text) ? stripHtml(text) : escapeString(text);
+        return isWrappedInHtml(text) ? stripHtml(text) : escapeText(text);
     }
 
     /**

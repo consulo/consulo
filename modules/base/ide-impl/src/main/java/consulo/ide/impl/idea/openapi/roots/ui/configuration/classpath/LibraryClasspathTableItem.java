@@ -23,13 +23,13 @@ import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.module.*;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;

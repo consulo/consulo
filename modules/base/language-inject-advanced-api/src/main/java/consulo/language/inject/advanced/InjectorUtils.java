@@ -34,6 +34,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
@@ -302,8 +303,8 @@ public class InjectorUtils {
         Map<String, String> map = new LinkedHashMap<>();
         while (matcher.find()) {
             map.put(
-                StringUtil.unescapeStringCharacters(charSequence, matcher.start(1), matcher.end(1)),
-                StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2)))
+                StringEscapeUtil.unescape(charSequence, matcher.start(1), matcher.end(1)),
+                StringEscapeUtil.unquote(charSequence, matcher.start(2), matcher.end(2), '"')
             );
         }
         return map;

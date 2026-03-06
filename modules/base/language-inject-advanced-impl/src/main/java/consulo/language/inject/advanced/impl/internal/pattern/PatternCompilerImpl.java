@@ -28,6 +28,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.util.interner.Interner;
 import consulo.util.lang.StringHash;
+import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nullable;
@@ -295,7 +296,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
 
     private static Object makeParam(String s) {
         if (s.length() >= 2 && s.startsWith("\"") && s.endsWith("\"")) {
-            return StringUtil.unescapeStringCharacters(s, 1, s.length() - 1);
+            return StringEscapeUtil.unescape(s, 1, s.length() - 1);
         }
         try {
             return Integer.valueOf(s);

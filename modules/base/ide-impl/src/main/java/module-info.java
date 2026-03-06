@@ -488,8 +488,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.util.ui.tree;
     exports consulo.ide.impl.idea.util.ui.update;
     exports consulo.ide.impl.idea.webcore.packaging;
-    exports consulo.ide.impl.idea.xml;
-    exports consulo.ide.impl.idea.xml.util;
     exports consulo.ide.impl.language;
     exports consulo.ide.impl.language.codeStyle;
     exports consulo.ide.impl.language.editor;

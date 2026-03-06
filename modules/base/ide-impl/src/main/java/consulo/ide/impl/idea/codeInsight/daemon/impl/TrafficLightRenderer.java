@@ -19,7 +19,6 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileHighlightingSetting;
@@ -65,6 +64,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -111,9 +111,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
     public TrafficLightRenderer(@Nonnull Project project, @Nonnull Document document) {
         myProject = project;
-        myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
+        myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
         myDocument = document;
-        mySeverityRegistrar = (SeverityRegistrarImpl)SeverityRegistrar.getSeverityRegistrar(myProject);
+        mySeverityRegistrar = (SeverityRegistrarImpl) SeverityRegistrar.getSeverityRegistrar(myProject);
 
         refresh(null);
 
@@ -507,17 +507,17 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             if (status.errorAnalyzingFinished) {
                 return isDumb
                     ? new AnalyzerStatus(
-                        PlatformIconGroup.generalInspectionspause(),
-                        title,
-                        details,
-                        () -> createUIController(editor)
-                    ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
+                    PlatformIconGroup.generalInspectionspause(),
+                    title,
+                    details,
+                    () -> createUIController(editor)
+                ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
                     : new AnalyzerStatus(
-                        PlatformIconGroup.generalInspectionsok(),
-                        DaemonLocalize.noErrorsOrWarningsFound().get(),
-                        details,
-                        () -> createUIController(editor)
-                    );
+                    PlatformIconGroup.generalInspectionsok(),
+                    DaemonLocalize.noErrorsOrWarningsFound().get(),
+                    details,
+                    () -> createUIController(editor)
+                );
             }
 
             //noinspection ConstantConditions
