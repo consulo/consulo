@@ -93,6 +93,10 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
+  public void saveDocument(@Nonnull Document document, boolean isExplicit) {
+  }
+
+  @Override
   public void saveDocumentAsIs(@Nonnull Document document) {
   }
 

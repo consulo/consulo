@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -26,6 +25,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;

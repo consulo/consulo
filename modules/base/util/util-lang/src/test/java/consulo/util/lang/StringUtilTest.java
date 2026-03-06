@@ -212,9 +212,10 @@ public class StringUtilTest {
         assertThat(StringUtil.escapeBackSlashes("\\\\server\\share\\extension.crx")).isEqualTo("\\\\\\\\server\\\\share\\\\extension.crx");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testEscapeCharCharacters() {
-        assertThat(StringUtil.escapeCharCharacters("\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
+        assertThat(StringUtil.escapeCharCharacters("\0\b\f\n\r\t\u007F\"'\\foo")).isEqualTo("\\u0000\\b\\f\\n\\r\\t\\u007F\"\\'\\\\foo");
     }
 
     @Test
@@ -294,16 +295,17 @@ public class StringUtilTest {
             .isEqualTo("foo\\.\\$\\|\\(\\)\\[\\]\\{\\}\\^\\?\\*\\+\\\\\\r\\n");
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     @Test
     void testEscapeXml() {
         assertThat(StringUtil.escapeXml(null)).isNull();
-        assertThat(StringUtil.escapeXml("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+        assertThat(StringUtil.escapeXml("<&'\">")).isEqualTo("&lt;&amp;&#39;&quot;&gt;");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testEscapeXmlEntities() {
-        assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&apos;&quot;&gt;");
+        assertThat(StringUtil.escapeXmlEntities("<&'\">")).isEqualTo("&lt;&amp;&#39;&quot;&gt;");
     }
 
     @Test
@@ -1459,13 +1461,14 @@ public class StringUtilTest {
         assertThat(StringUtil.unescapeSlashes("\\")).isEqualTo("\\");
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
     @Test
     void testUnescapeStringCharacters() {
-        assertThat(StringUtil.unescapeStringCharacters("\\b\\f\\n\\r\\t\\u007F\\\"\\'\\\\foo")).isEqualTo("\b\f\n\r\t\u007F\"'\\foo");
+        assertThat(StringUtil.unescapeStringCharacters("\\0\\12\\345\\456\\b\\f\\n\\r\\t\\u007F\\uFEff\\\"\\'\\\\foo"))
+            .isEqualTo("\0\12\345%6\b\f\n\r\t\u007F\uFEFF\"'\\foo");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXXX")).isEqualTo("\\uXXXX");
         assertThat(StringUtil.unescapeStringCharacters("\\uXXX")).isEqualTo("\\uXXX");
-        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("z\\"); // TODO: why not keeping backslash?
+        assertThat(StringUtil.unescapeStringCharacters("\\z\\")).isEqualTo("z\\");
 
         StringBuilder sb = sb();
         StringUtil.unescapeStringCharacters(6, "\\\\\\\"\\n", sb);
@@ -1476,9 +1479,10 @@ public class StringUtilTest {
     @Test
     void testUnescapeXml() {
         assertThat(StringUtil.unescapeXml(null)).isNull();
-        assertThat(StringUtil.unescapeXml("&lt;&amp;&apos;&quot;&gt;")).isEqualTo("<&'\">");
+        assertThat(StringUtil.unescapeXml("&lt;&amp;&#39;&quot;&gt;")).isEqualTo("<&'\">");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testUnquote() {
         assertThat(StringUtil.unquoteString("")).isEqualTo("");
@@ -1501,6 +1505,7 @@ public class StringUtilTest {
         assertThat(StringUtil.unquoteString("\"foo'")).isEqualTo("\"foo'");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testUnquoteWithQuotationChar() {
         assertThat(StringUtil.unquoteString("", '|')).isEqualTo("");
