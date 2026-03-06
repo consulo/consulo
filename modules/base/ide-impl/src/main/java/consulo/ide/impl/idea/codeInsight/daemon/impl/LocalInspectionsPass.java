@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.codeInspection.ex.LocalDescriptorsUtil;
 import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -66,6 +65,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
