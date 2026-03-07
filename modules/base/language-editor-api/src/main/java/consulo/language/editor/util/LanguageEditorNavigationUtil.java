@@ -24,14 +24,22 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -92,6 +100,33 @@ public class LanguageEditorNavigationUtil {
         return false;
     }
 
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static CompletableFuture<?> openFileWithPsiElementAsync(
+        @Nonnull UIAccess uiAccess,
+        @Nonnull PsiElement element,
+        boolean searchForOpen,
+        boolean requestFocus
+    ) {
+        element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, searchForOpen ? null : Boolean.TRUE);
+
+        Navigatable navigatable = (Navigatable) element;
+        if (!navigatable.getNavigateOptions().canNavigate()) {
+            element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return CoroutineScope.launchAsync(element.getProject().coroutineContext(), () -> {
+            return Coroutine
+                .first(CompletableFutureStep.<Void, Object>await(v ->
+                    (CompletableFuture<Object>) navigatable.navigateAsync(uiAccess, requestFocus)))
+                .then(CodeExecution.<Object, Void>apply(result -> {
+                    element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);
+                    return null;
+                }));
+        }).toFuture();
+    }
+
     @RequiredReadAction
     private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
         if (!elt.isValid()) {
@@ -114,7 +149,7 @@ public class LanguageEditorNavigationUtil {
         }
 
         TextRange range = elt.getTextRange();
-        if (range == null) {
+        if (range == TextRange.EMPTY_RANGE) {
             return false;
         }
 

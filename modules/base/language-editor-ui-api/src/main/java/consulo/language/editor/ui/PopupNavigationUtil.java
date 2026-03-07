@@ -29,6 +29,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -38,6 +39,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author ven
@@ -132,6 +134,16 @@ public final class PopupNavigationUtil {
 
     public static boolean openFileWithPsiElement(PsiElement element, boolean searchForOpen, boolean requestFocus) {
         return LanguageEditorNavigationUtil.openFileWithPsiElement(element, searchForOpen, requestFocus);
+    }
+
+    @Nonnull
+    public static CompletableFuture<?> openFileWithPsiElementAsync(
+        @Nonnull UIAccess uiAccess,
+        @Nonnull PsiElement element,
+        boolean searchForOpen,
+        boolean requestFocus
+    ) {
+        return LanguageEditorNavigationUtil.openFileWithPsiElementAsync(uiAccess, element, searchForOpen, requestFocus);
     }
 
     @Nonnull

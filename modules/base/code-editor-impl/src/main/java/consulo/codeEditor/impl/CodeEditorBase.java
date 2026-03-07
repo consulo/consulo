@@ -1232,9 +1232,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Nonnull
     @Override
-    @RequiredUIAccess
     public EditorHighlighter getHighlighter() {
-        assertReadAccess();
         return myHighlighter;
     }
 

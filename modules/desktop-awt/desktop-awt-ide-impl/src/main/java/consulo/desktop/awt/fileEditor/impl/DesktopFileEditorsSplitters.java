@@ -26,6 +26,7 @@ import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.fileEditor.FileEditorOpenOptions;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.*;

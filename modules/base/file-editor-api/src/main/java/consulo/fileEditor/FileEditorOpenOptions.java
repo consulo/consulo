@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.fileEditor.impl.internal;
+package consulo.fileEditor;
 
 /**
  * @author yole
@@ -11,6 +11,7 @@ public class FileEditorOpenOptions {
   private int myIndex = -1;
   private boolean myExactState = false;
   private boolean myReopeningEditorsOnStartup = false;
+  private boolean mySearchForSplitter = false;
 
   public FileEditorOpenOptions withCurrentTab(boolean current) {
     myCurrentTab = current;
@@ -42,6 +43,11 @@ public class FileEditorOpenOptions {
     return this;
   }
 
+  public FileEditorOpenOptions withSearchForSplitter(boolean search) {
+    mySearchForSplitter = search;
+    return this;
+  }
+
   public boolean isCurrentTab() {
     return myCurrentTab;
   }
@@ -64,5 +70,9 @@ public class FileEditorOpenOptions {
 
   public boolean isReopeningEditorsOnStartup() {
     return myReopeningEditorsOnStartup;
+  }
+
+  public boolean isSearchForSplitter() {
+    return mySearchForSplitter;
   }
 }

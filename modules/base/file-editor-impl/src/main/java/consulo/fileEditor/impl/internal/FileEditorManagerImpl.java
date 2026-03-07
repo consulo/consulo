@@ -19,6 +19,7 @@ import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -79,7 +80,9 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
@@ -110,6 +113,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -144,6 +148,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     private static final AtomicInteger ourOpenFilesSetModificationCount = new AtomicInteger();
 
     public static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
+
+    private record OpenFileAsyncState(
+        FileEditorWindow window,
+        FileEditorProvider[] providers,
+        AsyncFileEditorProvider.Builder[] builders
+    ) {
+    }
 
     public FileEditorManagerImpl(
         @Nonnull Application application,
@@ -728,6 +739,242 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         assertDispatchThread();
 
         return openFileImpl2(UIAccess.get(), window, file, focusEditor);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<FileEditorOpenResult> openFileAsync(
+        @Nonnull VirtualFile file,
+        @Nonnull FileEditorOpenOptions options
+    ) {
+        if (!file.isValid()) {
+            return CompletableFuture.failedFuture(
+                new IllegalArgumentException("file is not valid: " + file));
+        }
+
+        boolean searchForSplitter = options.isSearchForSplitter();
+        boolean focusEditor = options.isFocusEditor();
+        boolean current = options.isCurrentTab();
+        Boolean pin = options.getPin();
+        int index = options.getIndex();
+
+        return (CompletableFuture<FileEditorOpenResult>) CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine
+
+                // Step 1 (UIAction): Find window, check if file is already open
+                .first(UIAction.<Void, OpenFileAsyncState>apply((input, continuation) -> {
+                    @SuppressWarnings("unchecked")
+                    Continuation<FileEditorOpenResult> typedContinuation = (Continuation<FileEditorOpenResult>) continuation;
+
+                    if (isOpenInNewWindow()) {
+                        Pair<FileEditor[], FileEditorProvider[]> pair = openFileInNewWindow(file);
+                        typedContinuation.finishEarly(FileEditorOpenResult.of(pair.getFirst(), pair.getSecond()));
+                        return null;
+                    }
+
+                    FileEditorWindow wndToOpenIn = null;
+                    if (searchForSplitter) {
+                        Set<FileEditorsSplitters> all = getAllSplitters();
+                        FileEditorsSplitters active = getActiveSplittersSync();
+                        if (active.getCurrentWindow() != null && active.getCurrentWindow().isFileOpen(file)) {
+                            wndToOpenIn = active.getCurrentWindow();
+                        }
+                        else {
+                            for (FileEditorsSplitters splitters : all) {
+                                FileEditorWindow window = splitters.getCurrentWindow();
+                                if (window == null) {
+                                    continue;
+                                }
+
+                                if (window.isFileOpen(file)) {
+                                    wndToOpenIn = window;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        wndToOpenIn = getSplitters().getCurrentWindow();
+                    }
+
+                    FileEditorsSplitters splitters = getSplitters();
+
+                    if (wndToOpenIn == null) {
+                        wndToOpenIn = splitters.getOrCreateCurrentWindow(file);
+                    }
+
+                    openAssociatedFile(UIAccess.current(), file, wndToOpenIn, splitters);
+
+                    // Check if already open
+                    FileEditorWithProviderComposite existing = wndToOpenIn.findFileComposite(file);
+                    if (existing != null) {
+                        typedContinuation.finishEarly(FileEditorOpenResult.of(existing.getEditors(), existing.getProviders()));
+                        return null;
+                    }
+
+                    return new OpenFileAsyncState(wndToOpenIn, null, null);
+                }))
+
+                // Step 2 (ReadLock): Get providers, create async builders
+                .then(ReadLock.<OpenFileAsyncState, OpenFileAsyncState>apply(state -> {
+                    if (myProject.isDisposed() || !file.isValid()) {
+                        return new OpenFileAsyncState(state.window(), new FileEditorProvider[0], null);
+                    }
+
+                    FileEditorProvider[] newProviders =
+                        FileEditorProviderManager.getInstance().getProviders(myProject, file);
+                    if (newProviders.length == 0) {
+                        return new OpenFileAsyncState(state.window(), newProviders, null);
+                    }
+
+                    AsyncFileEditorProvider.Builder[] builders =
+                        new AsyncFileEditorProvider.Builder[newProviders.length];
+                    for (int i = 0; i < newProviders.length; i++) {
+                        try {
+                            FileEditorProvider provider = newProviders[i];
+                            if (myProject.isDisposed() || !file.isValid()) {
+                                return new OpenFileAsyncState(state.window(), new FileEditorProvider[0], null);
+                            }
+                            if (provider instanceof AsyncFileEditorProvider asyncProvider) {
+                                builders[i] = asyncProvider.createEditorAsync(myProject, file);
+                            }
+                        }
+                        catch (ProcessCanceledException e) {
+                            throw e;
+                        }
+                        catch (Exception | AssertionError e) {
+                            LOG.error(e);
+                        }
+                    }
+                    return new OpenFileAsyncState(state.window(), newProviders, builders);
+                }))
+
+                // Step 3 (UIAction): Create editors, setup UI, return result
+                .then(UIAction.<OpenFileAsyncState, FileEditorOpenResult>apply(state -> {
+                    if (myProject.isDisposed() || !file.isValid()
+                        || state.providers() == null || state.providers().length == 0) {
+                        return FileEditorOpenResult.EMPTY;
+                    }
+
+                    FileEditorWindow window = state.window();
+                    FileEditorProvider[] newProviders = state.providers();
+                    AsyncFileEditorProvider.Builder[] builders = state.builders();
+
+                    return CommandProcessor.getInstance().<FileEditorOpenResult>newCommand()
+                        .project(myProject)
+                        .compute(() -> {
+                            if (myProject.isDisposed() || !file.isValid()) {
+                                return FileEditorOpenResult.EMPTY;
+                            }
+
+                            FileEditorWithProviderComposite composite = window.findFileComposite(file);
+                            boolean newEditor = composite == null;
+
+                            if (newEditor) {
+                                getProject().getMessageBus()
+                                    .syncPublisher(FileEditorManagerBeforeListener.class)
+                                    .beforeFileOpened(this, file);
+
+                                FileEditor[] newEditors = new FileEditor[newProviders.length];
+                                for (int i = 0; i < newProviders.length; i++) {
+                                    try {
+                                        FileEditorProvider provider = newProviders[i];
+                                        FileEditor editor = builders == null || builders[i] == null
+                                            ? provider.createEditor(myProject, file)
+                                            : builders[i].build();
+                                        LOG.assertTrue(
+                                            editor.isValid(),
+                                            "Invalid editor created by provider "
+                                                + (provider == null ? null : provider.getClass().getName())
+                                        );
+                                        newEditors[i] = editor;
+                                        editor.addPropertyChangeListener(myEditorPropertyChangeListener);
+                                        editor.putUserData(DUMB_AWARE, DumbService.isDumbAware(provider));
+                                    }
+                                    catch (ProcessCanceledException e) {
+                                        throw e;
+                                    }
+                                    catch (Exception | AssertionError e) {
+                                        LOG.error(e);
+                                    }
+                                }
+
+                                composite = createComposite(file, newEditors, newProviders);
+                                if (composite == null) {
+                                    return FileEditorOpenResult.EMPTY;
+                                }
+
+                                if (index >= 0) {
+                                    composite.getFile().putUserData(FileEditorWindow.INITIAL_INDEX_KEY, index);
+                                }
+                            }
+
+                            FileEditor[] editors = composite.getEditors();
+                            FileEditorProvider[] providers = composite.getProviders();
+
+                            window.setEditor(composite, current, focusEditor);
+
+                            for (int i = 0; i < editors.length; i++) {
+                                restoreEditorState(file, providers[i], editors[i], null, newEditor);
+                            }
+
+                            // Restore selected editor
+                            FileEditorProvider selectedProvider =
+                                ((FileEditorProviderManagerImpl) FileEditorProviderManager.getInstance())
+                                    .getSelectedFileEditorProvider(
+                                        EditorHistoryManagerImpl.getInstance(myProject),
+                                        file,
+                                        providers
+                                    );
+                            if (selectedProvider != null) {
+                                for (int i = editors.length - 1; i >= 0; i--) {
+                                    if (providers[i].equals(selectedProvider)) {
+                                        composite.setSelectedEditor(i);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            window.getOwner().setCurrentWindow(window, focusEditor);
+                            if (window.getOwner() instanceof FileEditorsSplittersBase base) {
+                                base.afterFileOpen(file);
+                            }
+                            addSelectionRecord(file, window);
+
+                            composite.getSelectedEditor().selectNotify();
+
+                            if (!myProject.getApplication().isUnitTestMode() && focusEditor) {
+                                window.setAsCurrentWindow(true);
+                                ToolWindowManager.getInstance(myProject).activateEditorComponent();
+                                window.getOwner().toFront();
+                            }
+
+                            if (newEditor) {
+                                notifyPublisher(() -> {
+                                    if (isFileOpen(file)) {
+                                        getProject().getMessageBus()
+                                            .syncPublisher(FileEditorManagerListener.class)
+                                            .fileOpened(this, file);
+                                    }
+                                });
+                                ourOpenFilesSetModificationCount.incrementAndGet();
+                            }
+
+                            ((IdeDocumentHistoryImpl) IdeDocumentHistory.getInstance(myProject))
+                                .onSelectionChanged();
+                            updateFileName(file);
+                            IdeDocumentHistory.getInstance(myProject)
+                                .includeCurrentCommandAsNavigation();
+
+                            if (pin != null) {
+                                window.setFilePinned(file, pin);
+                            }
+
+                            return FileEditorOpenResult.of(editors, providers);
+                        });
+                }));
+        }).toFuture();
     }
 
     @Nonnull

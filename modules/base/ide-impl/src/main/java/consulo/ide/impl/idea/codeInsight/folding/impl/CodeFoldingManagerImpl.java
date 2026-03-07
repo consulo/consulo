@@ -60,12 +60,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   @RequiredUIAccess
   public void releaseFoldings(@Nonnull Editor editor) {
     UIAccess.assertIsUIThread();
-    Project project = editor.getProject();
-    if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
-
-    Document document = editor.getDocument();
-    PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-    if (file == null || !file.getViewProvider().isPhysical() || !file.isValid()) return;
 
     EditorFoldingInfoImpl.get(editor).dispose();
   }

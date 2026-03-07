@@ -37,6 +37,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileEditorManager {
@@ -306,6 +307,17 @@ public abstract class FileEditorManager {
   @Nonnull
   @RequiredUIAccess
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull FileEditorWindow window);
+
+  /**
+   * Asynchronously opens a file and returns a future with the result.
+   * Unlike {@link #openFileWithProviders}, this method does not block the calling thread.
+   *
+   * @param file    file to open. Must be valid.
+   * @param options options for opening the file
+   * @return a future that completes with the opened editors and providers
+   */
+  @Nonnull
+  public abstract CompletableFuture<FileEditorOpenResult> openFileAsync(@Nonnull VirtualFile file, @Nonnull FileEditorOpenOptions options);
 
   public abstract boolean isChanged(@Nonnull FileEditorComposite editor);
 
