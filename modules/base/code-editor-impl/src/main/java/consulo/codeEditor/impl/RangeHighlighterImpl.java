@@ -12,8 +12,6 @@ import consulo.document.Document;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.internal.DocumentEx;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
@@ -46,7 +44,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private Color myLineSeparatorColor;
     private SeparatorPlacement mySeparatorPlacement;
     private GutterIconRenderer myGutterIconRenderer;
-    private Object myErrorStripeTooltip;
+    private volatile Object myErrorStripeTooltip;
     private MarkupEditorFilter myFilter = MarkupEditorFilter.EMPTY;
     private CustomHighlighterRenderer myCustomRenderer;
     private LineSeparatorRenderer myLineSeparatorRenderer;
@@ -265,9 +263,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    @RequiredUIAccess
     public void setErrorStripeTooltip(Object tooltipObject) {
-        UIAccess.assertIsUIThread();
         Object old = myErrorStripeTooltip;
         myErrorStripeTooltip = tooltipObject;
         if (!Comparing.equal(old, tooltipObject)) {
@@ -281,9 +277,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    @RequiredUIAccess
     public void setThinErrorStripeMark(boolean value) {
-        UIAccess.assertIsUIThread();
         boolean old = isThinErrorStripeMark();
         setFlag(ERROR_STRIPE_IS_THIN_MASK, value);
         if (old != value) {

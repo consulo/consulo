@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.webcore.packaging;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
 import consulo.ide.localize.IdeLocalize;
@@ -133,7 +133,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                                     LOG.info("Error updating list of repository packages", e1);
                                     myPackages.setPaintBusy(false);
                                 },
-                                IdeaModalityState.any()
+                                ModalityState.any()
                             );
                         }
                     });
@@ -238,7 +238,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                     if (!UIAccess.isUIThread()) {
                         myProject.getApplication().invokeLater(
                             () -> handleInstallationStarted(packageName),
-                            IdeaModalityState.stateForComponent(myMainPanel)
+                            ModalityState.nonModal()
                         );
                     }
                     else {
@@ -254,7 +254,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                     if (!UIAccess.isUIThread()) {
                         myProject.getApplication().invokeLater(
                             () -> handleInstallationFinished(packageName, errorDescription),
-                            IdeaModalityState.stateForComponent(myMainPanel)
+                            ModalityState.nonModal()
                         );
                     }
                     else {
@@ -338,7 +338,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                         doSelectPackage(mySelectedPackageName);
                         setDownloadStatus(false);
                     },
-                    IdeaModalityState.any()
+                    ModalityState.any()
                 );
             }
             catch (IOException e) {
@@ -354,7 +354,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                         LOG.info("Error initializing model", e);
                         setDownloadStatus(false);
                     },
-                    IdeaModalityState.any()
+                    ModalityState.any()
                 );
             }
         });
@@ -522,7 +522,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                             }
                         }
                     },
-                    IdeaModalityState.any()
+                    ModalityState.any()
                 ));
                 versionResult.doWhenRejectedWithThrowable(e -> LOG.info("Error retrieving releases", e));
             }

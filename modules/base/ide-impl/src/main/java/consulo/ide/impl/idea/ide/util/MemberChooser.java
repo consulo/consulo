@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.NonFocusableSetting;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -42,7 +42,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.FactoryMap;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -59,7 +58,7 @@ import java.util.*;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use MemberChooserBuilder")
-public class MemberChooser<T extends ClassMember> extends DialogWrapper implements TypeSafeDataProvider {
+public class MemberChooser<T extends ClassMember> extends DialogWrapper implements UiDataProvider {
     protected Tree myTree;
     private DefaultTreeModel myTreeModel;
     protected JComponent[] myOptionControls;
@@ -744,15 +743,16 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     @Override
-    public void calcData(Key key, DataSink sink) {
-        if (PsiElement.KEY == key) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(PsiElement.KEY, () -> {
             if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
                 T selectedElement = mySelectedElements.iterator().next();
                 if (selectedElement instanceof ClassMemberWithElement) {
-                    sink.put(PsiElement.KEY, ((ClassMemberWithElement) selectedElement).getElement());
+                    return ((ClassMemberWithElement) selectedElement).getElement();
                 }
             }
-        }
+            return null;
+        });
     }
 
     private class MyTreeSelectionListener implements TreeSelectionListener {

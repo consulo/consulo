@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -149,7 +149,7 @@ public class ExternalJavaDocAction extends AnAction {
                         ).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
                     }
                 },
-                IdeaModalityState.nonModal()
+                ModalityState.nonModal()
             );
         });
 

@@ -7,7 +7,6 @@ import consulo.execution.debug.memory.MemoryViewManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -20,11 +19,6 @@ public class SwitchUpdateModeAction extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         return MemoryViewManager.getInstance().isAutoUpdateModeEnabled();
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

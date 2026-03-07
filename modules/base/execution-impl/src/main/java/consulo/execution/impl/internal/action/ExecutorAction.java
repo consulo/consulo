@@ -114,12 +114,6 @@ public class ExecutorAction extends AnAction implements DumbAware {
     }
 
     @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
-    @Nonnull
     public static Image getInformativeIcon(Project project,
                                            Executor executor,
                                            RunnerAndConfigurationSettings selectedConfiguration) {

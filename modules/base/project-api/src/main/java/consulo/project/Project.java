@@ -26,8 +26,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * Project interface class.
  */
@@ -119,12 +117,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   @Nonnull
   String getLocationHash();
 
-  void save();
-
-  @Nonnull
-  default CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-    return CompletableFuture.completedFuture(null);
-  }
+  void save(@Nonnull UIAccess uiAccess);
 
   boolean isOpen();
 

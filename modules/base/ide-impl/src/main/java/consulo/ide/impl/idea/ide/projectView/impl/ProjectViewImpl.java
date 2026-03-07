@@ -19,24 +19,23 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;
@@ -45,18 +44,15 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.*;
-import consulo.language.util.ModuleUtilCore;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
@@ -73,12 +69,13 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.project.ui.view.internal.ProjectViewSharedSettings;
-import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.project.ui.wm.ToolWindowId;
@@ -86,10 +83,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
@@ -100,14 +94,17 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Couple;
@@ -122,6 +119,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -135,7 +133,7 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.AWT)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
+public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentAsync<Element>, Disposable, QuickActionProvider, BusyObject {
     private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
     private static final Key<String> ID_KEY = Key.create("pane-id");
     private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");
@@ -241,6 +239,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         myAutoScrollFromSourceHandler = new MyAutoScrollFromSourceHandler();
 
         myDataProvider = new MyPanel();
+
+        ClientProperty.put(myDataProvider, UiDataProvider.KEY, sink -> uiDataSnapshot(sink));
+        ClientProperty.put(myDataProvider, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, buildNotInHierarchyIterable());
+
         myDataProvider.add(myPanel, BorderLayout.CENTER);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, myPanel) {
             @Nonnull
@@ -291,6 +293,34 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 }
             }
         );
+    }
+
+    @NotNull
+    private Iterable<? extends Component> buildNotInHierarchyIterable() {
+        return () -> JBIterable.from(new ArrayList<>(myId2Pane.values()))
+            .map(pane -> {
+                JComponent last = null;
+                for (Component c : UIUtil.uiParents(pane.getComponentToFocus(), false)) {
+                    if (c == myDataProvider || !(c instanceof JComponent)) return null;
+                    last = (JComponent) c;
+                }
+                return last;
+            })
+            .filter(Component.class)
+            .iterator();
+    }
+
+    private void uiDataSnapshot(@NotNull DataSink sink) {
+        sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
+        sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
+        sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());
+        sink.set(IdeView.KEY, myIdeView);
+        sink.set(PlatformDataKeys.HELP_ID, HelpID.PROJECT_VIEWS);
+        sink.set(QuickActionProvider.KEY, ProjectViewImpl.this);
+        AbstractProjectViewPane selectedPane = getCurrentProjectViewPane();
+        if (selectedPane != null) {
+            selectedPane.uiDataSnapshot(sink);
+        }
     }
 
     private void constructUi() {
@@ -566,8 +596,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         toolWindow.setDefaultContentUiType(ToolWindowContentUiType.COMBO);
         toolWindow.setAdditionalGearActions(myActionGroup);
         toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");
-
-        myContentManager.addDataProvider(dataId -> myDataProvider.getData(dataId));
 
         GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);
         SwingUtilities.invokeLater(() -> splitterProportions.restoreSplitterProportions(myPanel));
@@ -1052,149 +1080,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     }
 
-    private final class MyPanel extends JPanel implements DataProvider {
+    private final class MyPanel extends JPanel {
         MyPanel() {
             super(new BorderLayout());
-        }
-
-        @Nullable
-        @RequiredUIAccess
-        private Object getSelectedNodeElement() {
-            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
-            if (currentProjectViewPane == null) { // can happen if not initialized yet
-                return null;
-            }
-            DefaultMutableTreeNode node = currentProjectViewPane.getSelectedNode();
-            if (node == null) {
-                return null;
-            }
-            Object userObject = node.getUserObject();
-            if (userObject instanceof AbstractTreeNode abstractTreeNode) {
-                return abstractTreeNode.getValue();
-            }
-            return userObject instanceof NodeDescriptor nodeDescriptor ? nodeDescriptor.getElement() : null;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public Object getData(@Nonnull Key<?> dataId) {
-            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
-            if (currentProjectViewPane != null) {
-                Object paneSpecificData = currentProjectViewPane.getData(dataId);
-                if (paneSpecificData != null) {
-                    return paneSpecificData;
-                }
-            }
-
-            if (PsiElement.KEY == dataId) {
-                if (currentProjectViewPane == null) {
-                    return null;
-                }
-                PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
-                return elements.length == 1 ? elements[0] : null;
-            }
-            if (PsiElement.KEY_OF_ARRAY == dataId) {
-                if (currentProjectViewPane == null) {
-                    return null;
-                }
-                PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
-                return elements.length == 0 ? null : elements;
-            }
-            if (Module.KEY == dataId) {
-                VirtualFile[] virtualFiles = getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
-                if (virtualFiles == null || virtualFiles.length <= 1) {
-                    return null;
-                }
-                Set<Module> modules = new HashSet<>();
-                for (VirtualFile virtualFile : virtualFiles) {
-                    modules.add(ModuleUtilCore.findModuleForFile(virtualFile, myProject));
-                }
-                return modules.size() == 1 ? modules.iterator().next() : null;
-            }
-            if (LangDataKeys.TARGET_PSI_ELEMENT == dataId) {
-                return null;
-            }
-            if (CutProvider.KEY == dataId) {
-                return myCopyPasteDelegator.getCutProvider();
-            }
-            if (CopyProvider.KEY == dataId) {
-                return myCopyPasteDelegator.getCopyProvider();
-            }
-            if (PasteProvider.KEY == dataId) {
-                return myCopyPasteDelegator.getPasteProvider();
-            }
-            if (IdeView.KEY == dataId) {
-                return myIdeView;
-            }
-            if (DeleteProvider.KEY == dataId) {
-                Module[] modules = getSelectedModules();
-                if (modules != null) {
-                    return myDeleteModuleProvider;
-                }
-                LibraryOrderEntry orderEntry = getSelectedLibrary();
-                if (orderEntry != null) {
-                    return new DeleteProvider() {
-                        @Override
-                        @RequiredUIAccess
-                        public void deleteElement(@Nonnull DataContext dataContext) {
-                            detachLibrary(orderEntry, myProject);
-                        }
-
-                        @Override
-                        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-                            return true;
-                        }
-                    };
-                }
-                return myDeletePSIElementProvider;
-            }
-            if (HelpManager.HELP_ID == dataId) {
-                return HelpID.PROJECT_VIEWS;
-            }
-            if (ProjectViewImpl.DATA_KEY == dataId) {
-                return ProjectViewImpl.this;
-            }
-            if (PlatformDataKeys.PROJECT_CONTEXT == dataId) {
-                Object selected = getSelectedNodeElement();
-                return selected instanceof Project ? selected : null;
-            }
-            if (LangDataKeys.MODULE_CONTEXT == dataId) {
-                Object selected = getSelectedNodeElement();
-                if (selected instanceof Module module) {
-                    return !module.isDisposed() ? selected : null;
-                }
-                else if (selected instanceof PsiDirectory directory) {
-                    return moduleBySingleContentRoot(directory.getVirtualFile());
-                }
-                else if (selected instanceof VirtualFile virtualFile) {
-                    return moduleBySingleContentRoot(virtualFile);
-                }
-                else {
-                    return null;
-                }
-            }
-
-            if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId) {
-                return getSelectedModules();
-            }
-            if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
-                List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
-                return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[selectedElements.size()]);
-            }
-            if (LibraryGroupElement.ARRAY_DATA_KEY == dataId) {
-                List<LibraryGroupElement> selectedElements = getSelectedElements(LibraryGroupElement.class);
-                return selectedElements.isEmpty() ? null : selectedElements.toArray(new LibraryGroupElement[selectedElements.size()]);
-            }
-            if (NamedLibraryElement.ARRAY_DATA_KEY == dataId) {
-                List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
-                return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[selectedElements.size()]);
-            }
-
-            if (QuickActionProvider.KEY == dataId) {
-                return ProjectViewImpl.this;
-            }
-
-            return null;
         }
 
         @Nullable
@@ -1471,9 +1359,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
     }
 
+    @Nonnull
     @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return UIAction.apply((i, continuation) -> getStateImpl()).toCoroutine();
+    }
+
     @RequiredUIAccess
-    public Element getState() {
+    private Element getStateImpl() {
         Element parentNode = new Element("projectView");
         Element navigatorElement = new Element(ELEMENT_NAVIGATOR);
         AbstractProjectViewPane currentPane = getCurrentProjectViewPane();

@@ -2,7 +2,8 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -10,7 +11,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -24,7 +24,7 @@ import java.util.function.Function;
 /**
  * @author max
  */
-public class ListWithFilter<T> extends JPanel implements DataProvider {
+public class ListWithFilter<T> extends JPanel implements UiDataProvider {
   private final JList<T> myList;
   private final SearchTextField mySearchField = new SearchTextField(false);
   private final NameFilteringListModel<T> myModel;
@@ -33,11 +33,8 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
   private boolean myAutoPackHeight = true;
 
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
-      return mySearchField.getText();
-    }
-    return null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchField.getText());
   }
 
   @Nonnull

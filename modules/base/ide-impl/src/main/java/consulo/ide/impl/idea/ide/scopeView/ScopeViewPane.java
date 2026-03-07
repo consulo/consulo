@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
@@ -27,6 +28,7 @@ import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
@@ -45,7 +47,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -285,12 +286,11 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        Object data = super.getData(dataId);
-        if (data != null) {
-            return data;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        if (myViewPanel != null) {
+            sink.lazy(IdeView.KEY, () -> (IdeView) myViewPanel.getData(IdeView.KEY));
         }
-        return myViewPanel != null ? myViewPanel.getData(dataId) : null;
     }
 
     @Nonnull

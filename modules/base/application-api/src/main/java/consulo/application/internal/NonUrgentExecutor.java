@@ -1,7 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
+import consulo.application.concurrent.ApplicationConcurrency;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
@@ -25,15 +27,12 @@ import java.util.concurrent.Executors;
 public final class NonUrgentExecutor implements Executor {
     private static final NonUrgentExecutor INSTANCE = new NonUrgentExecutor();
 
-    private final Executor myBackend;
-
     private NonUrgentExecutor() {
-        myBackend = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Override
     public void execute(@Nonnull Runnable command) {
-        myBackend.execute(command);
+        Application.get().getInstance(ApplicationConcurrency.class).executor().execute(command);
     }
 
     @Nonnull

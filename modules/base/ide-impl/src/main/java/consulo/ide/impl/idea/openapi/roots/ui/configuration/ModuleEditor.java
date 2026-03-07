@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
@@ -38,7 +39,6 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -482,17 +482,14 @@ public abstract class ModuleEditor implements Disposable {
     myName = name;
   }
 
-  private class ModuleEditorPanel extends JPanel implements DataProvider {
+  private class ModuleEditorPanel extends JPanel implements UiDataProvider {
     public ModuleEditorPanel() {
       super(new BorderLayout());
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (LangDataKeys.MODULE_CONTEXT == dataId) {
-        return getModule();
-      }
-      return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+      sink.set(LangDataKeys.MODULE_CONTEXT, getModule());
     }
 
   }

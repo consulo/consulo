@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -1005,18 +1004,18 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         @Override
         public void actionPerformed(AnActionEvent e) {
             JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-            ListPopupStep step = popupFactory.createActionsStep(
+            ListPopup listPopup = popupFactory.createActionGroupPopup(
+                myActionGroup.getTemplatePresentation().getText(),
                 myActionGroup,
                 e.getDataContext(),
                 false,
                 false,
-                myActionGroup.getTemplatePresentation().getText(),
-                myTree,
                 true,
-                myPreselection != null ? myPreselection.getDefaultIndex() : 0,
-                true
+                null,
+                -1,
+                null,
+                false
             );
-            ListPopup listPopup = popupFactory.createListPopup(step);
             listPopup.setHandleAutoSelectionBeforeShow(true);
             listPopup.showUnderneathOf(myNorthPanel);
         }

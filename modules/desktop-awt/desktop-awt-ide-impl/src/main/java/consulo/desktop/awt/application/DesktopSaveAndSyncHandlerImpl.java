@@ -18,7 +18,6 @@ package consulo.desktop.awt.application;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
@@ -30,6 +29,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.*;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -75,7 +75,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
 
         myIdleListener = () -> {
             if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-                ((FileDocumentManagerEx) fileDocumentManager).saveAllDocuments(false);
+                ((FileDocumentManagerEx) fileDocumentManager).saveAllDocuments(UIAccess.current(), false);
             }
         };
         IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
@@ -116,7 +116,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
     }
 
     private boolean canSyncOrSave() {
-        return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
+        return !myProgressManager.hasModalProgressIndicator();
     }
 
     @Override

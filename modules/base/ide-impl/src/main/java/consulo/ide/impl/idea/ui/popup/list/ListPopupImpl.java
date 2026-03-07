@@ -5,7 +5,8 @@ import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
@@ -863,7 +864,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myIndexForShowingChild = aIndexForShowingChild;
     }
 
-    private class MyList extends JBList implements DataProvider, ListWithInlineButtons {
+    private class MyList extends JBList implements UiDataProvider, ListWithInlineButtons {
         private @Nullable Integer selectedButtonIndex;
 
         MyList() {
@@ -946,19 +947,12 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
-            if (PlatformDataKeys.SELECTED_ITEM == dataId) {
-                return myList.getSelectedValue();
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(PlatformDataKeys.SELECTED_ITEM, myList.getSelectedValue());
+            sink.set(PlatformDataKeys.SELECTED_ITEMS, myList.getSelectedValues());
+            if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
+                sink.set(PlatformDataKeys.SPEED_SEARCH_COMPONENT, mySpeedSearchPatternField);
             }
-            if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
-                return myList.getSelectedValues();
-            }
-            if (PlatformDataKeys.SPEED_SEARCH_COMPONENT == dataId) {
-                if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
-                    return mySpeedSearchPatternField;
-                }
-            }
-            return null;
         }
 
         @Override

@@ -284,7 +284,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
 
         DataContext dataContext = e.getDataContext();
-        List<ActionPopupItem> actionItems = ActionPopupStep.createActionItems(
+        ActionPopupStep.createActionItems(
             new DefaultActionGroup(createItems()),
             dataContext,
             false,
@@ -293,12 +293,12 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             true,
             ActionPlaces.POPUP,
             new BasePresentationFactory()
-        );
-
-        ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
-        popup.setSize(new Dimension(300, 300));
-        popup.setRequestFocus(false);
-        popup.showUnderneathOf(component);
+        ).thenAccept(actionItems -> SwingUtilities.invokeLater(() -> {
+            ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
+            popup.setSize(new Dimension(300, 300));
+            popup.setRequestFocus(false);
+            popup.showUnderneathOf(component);
+        }));
     }
 
     private List<ContextItem> createItems() {

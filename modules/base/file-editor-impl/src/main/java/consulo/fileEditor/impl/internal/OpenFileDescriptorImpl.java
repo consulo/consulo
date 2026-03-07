@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -22,16 +23,22 @@ import consulo.document.FileDocumentManager;
 import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.*;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.navigation.Navigatable;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,6 +50,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements Navigatable, OpenFileDescriptor {
     /**
@@ -135,9 +143,135 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return rangeMarker == null || rangeMarker.isValid();
     }
 
+    @Nonnull
+    @Override
+    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+        if (!getNavigateOptions().canNavigate()) {
+            return CompletableFuture.failedFuture(new IllegalStateException("target not valid"));
+        }
+
+        CoroutineContext coroutineContext = myProject == null
+            ? Application.get().coroutineContext()
+            : myProject.coroutineContext();
+
+        return CoroutineScope.launchAsync(coroutineContext, () -> {
+            return Coroutine
+                // Step 1 (UIAction): Check file type, handle native/directory/requested editor
+                .first(UIAction.<Void, Boolean>apply((input, continuation) -> {
+                    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, myProject);
+                    if (type == null || !myFile.isValid()) {
+                        continuation.finishEarly(null);
+                        return Boolean.FALSE;
+                    }
+
+                    if (type instanceof INativeFileType nativeType) {
+                        nativeType.openFileInAssociatedApplication(myProject, myFile);
+                        continuation.finishEarly(null);
+                        return Boolean.FALSE;
+                    }
+
+                    if (myFile.isDirectory()) {
+                        navigateInProjectView(requestFocus);
+                        continuation.finishEarly(null);
+                        return Boolean.FALSE;
+                    }
+
+                    // Try to navigate in a requested editor first
+                    if (navigateInRequestedEditor()) {
+                        continuation.finishEarly(null);
+                        return Boolean.FALSE;
+                    }
+
+                    return Boolean.TRUE; // need to open file
+                }))
+
+                // Step 2 (CompletableFutureStep): Open file asynchronously using openFileAsync
+                .then(CompletableFutureStep.<Boolean, FileEditorOpenResult>await(needsOpen -> {
+                    // Resolve VirtualFileWindow to host file
+                    VirtualFile fileToOpen = myFile;
+                    if (myFile instanceof VirtualFileWindow virtualFileWindow) {
+                        fileToOpen = virtualFileWindow.getDelegate();
+                    }
+
+                    FileEditorOpenOptions options = new FileEditorOpenOptions()
+                        .withFocusEditor(requestFocus)
+                        .withSearchForSplitter(!myUseCurrentWindow);
+
+                    return FileEditorManager.getInstance(myProject)
+                        .openFileAsync(fileToOpen, options);
+                }))
+
+                // Step 3 (UIAction): Navigate in opened editors
+                .then(UIAction.<FileEditorOpenResult, Void>apply(result -> {
+                    if (result == null || result.isEmpty()) {
+                        return null;
+                    }
+
+                    // Resolve descriptor for navigation (handle VirtualFileWindow offset)
+                    OpenFileDescriptorImpl descriptor = OpenFileDescriptorImpl.this;
+                    if (myFile instanceof VirtualFileWindow virtualFileWindow) {
+                        int hostOffset = virtualFileWindow.getDocumentWindow().injectedToHost(getOffset());
+                        descriptor = new OpenFileDescriptorImpl(myProject, virtualFileWindow.getDelegate(), hostOffset);
+                        descriptor.setUseCurrentWindow(myUseCurrentWindow);
+                    }
+
+                    navigateInOpenedEditors(result, descriptor, requestFocus);
+
+                    return null;
+                }));
+        }).toFuture();
+    }
+
+    private void navigateInOpenedEditors(
+        @Nonnull FileEditorOpenResult result,
+        @Nonnull OpenFileDescriptorImpl descriptor,
+        boolean requestFocus
+    ) {
+        FileEditor[] editors = result.getEditors();
+
+        // Try the selected editor first
+        boolean navigated = false;
+        FileEditor selectedEditor = FileEditorManager.getInstance(myProject).getSelectedEditor(descriptor.getFile());
+
+        for (FileEditor editor : editors) {
+            if (editor instanceof NavigatableFileEditor navEditor && editor == selectedEditor) {
+                if (navEditor.canNavigateTo(descriptor)) {
+                    navEditor.navigateTo(descriptor);
+                    navigated = true;
+                    break;
+                }
+            }
+        }
+
+        // Try other editors
+        if (!navigated) {
+            for (FileEditor editor : editors) {
+                if (editor instanceof NavigatableFileEditor navEditor && editor != selectedEditor) {
+                    if (navEditor.canNavigateTo(descriptor)) {
+                        navEditor.navigateTo(descriptor);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Unfold + focus for TextEditors
+        for (FileEditor editor : editors) {
+            if (editor instanceof TextEditor textEditor) {
+                Editor e = textEditor.getEditor();
+                unfoldCurrentLine(e);
+                if (requestFocus && myProject.getApplication().isSwingApplication()) {
+                    ProjectIdeFocusManager.getInstance(myProject)
+                        .requestFocus(e.getContentComponent(), true);
+                }
+                break;
+            }
+        }
+    }
+
     @Override
     public void navigate(boolean requestFocus) {
-        if (!canNavigate()) {
+        if (!getNavigateOptions().canNavigate()) {
             throw new IllegalStateException("target not valid");
         }
 
@@ -289,13 +423,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     @Override
-    public boolean canNavigate() {
-        return myFile.isValid();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return myFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

@@ -25,6 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIUtil;
@@ -256,7 +257,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
         installKeyDispatcher();
 
         if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         }
     }
 

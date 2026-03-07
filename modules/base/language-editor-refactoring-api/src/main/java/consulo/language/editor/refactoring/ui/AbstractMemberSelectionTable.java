@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.ui;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.language.editor.refactoring.classMember.MemberInfoChange;
 import consulo.language.editor.refactoring.classMember.MemberInfoChangeListener;
@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,7 +52,7 @@ import java.util.List;
 /**
  * @author Dennis.Ushakov
  */
-public abstract class AbstractMemberSelectionTable<T extends PsiElement, M extends MemberInfoBase<T>> extends JBTable implements TypeSafeDataProvider {
+public abstract class AbstractMemberSelectionTable<T extends PsiElement, M extends MemberInfoBase<T>> extends JBTable implements UiDataProvider {
   protected static final int CHECKED_COLUMN = 0;
   protected static final int DISPLAY_NAME_COLUMN = 1;
   protected static final int ABSTRACT_COLUMN = 2;
@@ -163,13 +162,14 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   @Override
-  public void calcData(Key key, DataSink sink) {
-    if (key == PsiElement.KEY) {
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.lazy(PsiElement.KEY, () -> {
       Collection<M> memberInfos = getSelectedMemberInfos();
       if (memberInfos.size() > 0) {
-        sink.put(PsiElement.KEY, memberInfos.iterator().next().getMember());
+        return memberInfos.iterator().next().getMember();
       }
-    }
+      return null;
+    });
   }
 
   public void scrollSelectionInView() {

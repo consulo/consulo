@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -82,7 +83,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
         }
 
         // We save all documents because there is a possible case that there is an external system config file changed inside the ide.
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         final ProjectDataManager projectDataManager = Application.get().getInstance(ProjectDataManager.class);
         ExternalSystemUtil.refreshProject(

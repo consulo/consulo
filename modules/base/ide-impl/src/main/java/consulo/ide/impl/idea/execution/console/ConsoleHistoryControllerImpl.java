@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
@@ -28,7 +28,6 @@ import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -471,13 +470,9 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                     if (loadHistoryOld(id)) {
                         if (!myRootType.isHidden()) {
                             // migrate content
-                            AccessToken token = Application.get().acquireWriteActionLock(getClass());
-                            try {
+                            WriteAction.run(() -> {
                                 VfsUtil.saveText(consoleFile, myContent);
-                            }
-                            finally {
-                                token.finish();
-                            }
+                            });
                         }
                         return true;
                     }

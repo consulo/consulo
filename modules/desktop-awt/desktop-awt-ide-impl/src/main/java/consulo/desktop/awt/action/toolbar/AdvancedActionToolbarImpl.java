@@ -19,7 +19,8 @@ import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -40,7 +41,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -289,7 +289,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         myEngine.updateActionsAsync();
     }
 
-    abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, DataProvider, Disposable {
+    abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, UiDataProvider, Disposable {
         private final JComponent myParent;
 
         PopupToolbar(
@@ -307,14 +307,9 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             setBorder(myParent.getBorder());
         }
 
-        @Nullable
         @Override
-        public Object getData(@Nonnull Key dataId) {
-            Object data = super.getData(dataId);
-            if (data != null) {
-                return data;
-            }
-            return getDataContext().getData(dataId);
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            super.uiDataSnapshot(sink);
         }
 
         @Override

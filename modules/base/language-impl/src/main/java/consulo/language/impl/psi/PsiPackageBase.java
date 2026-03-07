@@ -30,6 +30,7 @@ import consulo.module.content.DirectoryIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.navigation.NavigateOptions;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -376,12 +377,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return false;
-    }
-
-    @Override
     public boolean isPhysical() {
         return true;
     }
@@ -399,8 +394,8 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
-        return isValid();
+    public NavigateOptions getNavigateOptions() {
+        return isValid() ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

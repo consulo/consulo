@@ -2669,7 +2669,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         @Nonnull DumbModeAccessType dumbModeAccessType,
         @Nonnull ThrowableComputable<T, E> computable
     ) throws E {
-        assert myApplication.isReadAccessAllowed();
+        Application.get().assertReadAccessAllowed();
+
         if (FileBasedIndex.isIndexAccessDuringDumbModeEnabled()) {
             Stack<DumbModeAccessType> dumbModeAccessTypeStack = ourDumbModeAccessTypeStack.get();
             dumbModeAccessTypeStack.push(dumbModeAccessType);

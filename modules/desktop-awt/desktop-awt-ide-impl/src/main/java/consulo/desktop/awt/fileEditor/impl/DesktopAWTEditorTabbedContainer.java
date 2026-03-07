@@ -20,7 +20,8 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.Queryable;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -29,14 +30,12 @@ import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
+import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ui.UIAccess;
-import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
-import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
@@ -52,6 +51,7 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -68,7 +68,6 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -445,35 +444,20 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     }
 
-    private class MyDataProvider implements DataProvider {
+    private class MyDataProvider implements UiDataProvider {
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
-            if (Project.KEY == dataId) {
-                return myProject;
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(Project.KEY, myProject);
+            VirtualFile selectedFile = myWindow.getSelectedFile();
+            if (selectedFile != null) {
+                sink.set(VirtualFile.KEY, selectedFile);
             }
-            if (VirtualFile.KEY == dataId) {
-                VirtualFile selectedFile = myWindow.getSelectedFile();
-                return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
+            sink.set(DesktopFileEditorWindow.DATA_KEY, myWindow);
+            sink.set(HelpManager.HELP_ID, HELP_ID);
+            TabInfo selected = myTabs.getSelectedInfo();
+            if (selected != null) {
+                sink.set(CloseAction.CloseTarget.KEY, DesktopAWTEditorTabbedContainer.this);
             }
-            if (DesktopFileEditorWindow.DATA_KEY == dataId) {
-                return myWindow;
-            }
-            if (HelpManager.HELP_ID == dataId) {
-                return HELP_ID;
-            }
-
-            if (CloseAction.CloseTarget.KEY == dataId) {
-                TabInfo selected = myTabs.getSelectedInfo();
-                if (selected != null) {
-                    return DesktopAWTEditorTabbedContainer.this;
-                }
-            }
-
-            if (DesktopFileEditorWindow.DATA_KEY == dataId) {
-                return myWindow;
-            }
-
-            return null;
         }
     }
 

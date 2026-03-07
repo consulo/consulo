@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -386,14 +387,8 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
-        return getGroup() != null && getGroup().canNavigate();
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return getGroup() != null && getGroup().canNavigateToSource();
+    public NavigateOptions getNavigateOptions() {
+        return getGroup() != null ? getGroup().getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

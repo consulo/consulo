@@ -38,6 +38,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -121,7 +122,7 @@ public class ApplyPatchAction extends DumbAwareAction {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not apply patch now")) {
             return;
         }
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         VirtualFile vFile = null;
         String place = e.getPlace();

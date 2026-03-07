@@ -17,6 +17,7 @@
 package consulo.language.editor.refactoring.action;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
@@ -36,11 +37,12 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -72,12 +74,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
         RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {
@@ -105,7 +101,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         Editor editor = e.getData(Editor.KEY);
         PsiElement[] elements = getPsiElementArray(dataContext);
 
-        Runnable markEventCount = UIAccess.current().markEventCount();
         RefactoringActionHandler handler;
         try {
             handler = getHandler(dataContext);
@@ -144,8 +139,6 @@ public abstract class BaseRefactoringAction extends AnAction {
             }
         }
 
-        markEventCount.run();
-
         if (editor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (file == null) {
@@ -163,8 +156,17 @@ public abstract class BaseRefactoringAction extends AnAction {
         return false;
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return OptionalReadLock.apply(i -> {
+            updateInRead(e);
+            return null;
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
+    }
+
+    @RequiredReadAction
+    protected void updateInRead(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);

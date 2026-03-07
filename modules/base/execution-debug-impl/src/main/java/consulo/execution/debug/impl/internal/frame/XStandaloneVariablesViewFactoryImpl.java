@@ -39,6 +39,7 @@ public class XStandaloneVariablesViewFactoryImpl implements XStandaloneVariables
         myProject = project;
     }
 
+    @Nonnull
     @Override
     public XStandaloneVariablesView create(@Nonnull XDebuggerEditorsProvider editorsProvider, @Nonnull XStackFrame stackFrame) {
         return new XStandaloneVariablesViewImpl(myProject, editorsProvider, stackFrame);

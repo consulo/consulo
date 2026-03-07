@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.util.lang.Comparing;
+import consulo.navigation.NavigateOptions;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
@@ -239,8 +240,8 @@ public class DirectoryNode extends PackageDependenciesNode {
   }
 
   @Override
-  public boolean canNavigate() {
-    return false;
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
   }
 
   @Override

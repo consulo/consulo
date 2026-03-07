@@ -21,6 +21,7 @@ import consulo.document.FileDocumentManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -60,7 +61,7 @@ public class RefreshAction extends AnAction implements DumbAware {
             return;
         }
 
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         invokeCustomRefreshes(project);
 
         VirtualFileManager.getInstance().asyncRefresh(() -> {

@@ -16,6 +16,9 @@
 package consulo.ide.impl.language.editor.markup;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipRendererProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TrafficLightRenderer;
@@ -54,17 +57,30 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
   }
 
   @Override
-  @RequiredUIAccess
   public void repaintErrorStripePanel(@Nonnull Editor editor) {
+    if (!myProject.isInitialized()) return;
+    // Read PsiFile on background thread to avoid blocking EDT with read lock
+    ReadAction.nonBlocking(() -> myPsiDocumentManager.getPsiFile(editor.getDocument()))
+        .expireWith(myProject)
+        .expireWhen(() -> editor.isDisposed())
+        .finishOnUiThread(Application::getDefaultModalityState, psiFile -> {
+            if (!editor.isDisposed() && !myProject.isDisposed()) {
+                repaintErrorStripePanel(editor, psiFile);
+            }
+        })
+        .submit(AppExecutorUtil.getAppExecutorService());
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void repaintErrorStripePanel(@Nonnull Editor editor, @Nullable PsiFile psiFile) {
     UIAccess.assertIsUIThread();
     if (!myProject.isInitialized()) return;
-
-    PsiFile file = myPsiDocumentManager.getPsiFile(editor.getDocument());
     EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
     markup.setErrorPanelPopupHandler(new DaemonEditorPopup(myProject, editor));
     markup.setErrorStripTooltipRendererProvider(createTooltipRenderer(editor));
     markup.setMinMarkHeight(DaemonCodeAnalyzerSettings.getInstance().getErrorStripeMarkMinHeight());
-    setOrRefreshErrorStripeRenderer(markup, file);
+    setOrRefreshErrorStripeRenderer(markup, psiFile);
   }
 
   @Override

@@ -2,11 +2,11 @@
 
 package consulo.desktop.awt.wm.navigationToolbar;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
-import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
-import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
@@ -16,12 +16,15 @@ import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -94,8 +97,181 @@ public class NavBarModel {
         return index;
     }
 
+    // ---- Context extraction (EDT-safe, no ReadAction) ----
+
+    public record ContextResult(@Nullable PsiElement element, @Nullable NavBarModelExtension ownerExtension, @Nullable Object root) {
+    }
+
+    /**
+     * Extracts the target element from a DataContext. Safe to call on EDT (no ReadAction).
+     * Returns the element, owner extension, and fallback root for building the model.
+     */
+    public ContextResult extractFromContext(DataContext dataContext) {
+        if (updated && !isFixedComponent) {
+            return new ContextResult(null, null, null);
+        }
+
+        if (dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof NavBarPanel) {
+            return new ContextResult(null, null, null);
+        }
+
+        Pair<PsiElement, NavBarModelExtension> leafElemExt = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+            .computeSafeIfAny(extension -> {
+                PsiElement leafElement = extension.getLeafElement(dataContext);
+                if (leafElement != null) {
+                    return Pair.create(leafElement, extension);
+                }
+                return null;
+            });
+        PsiElement psiElement = leafElemExt != null ? leafElemExt.getFirst() : null;
+        NavBarModelExtension ownerExtension = leafElemExt != null ? leafElemExt.getSecond() : null;
+
+        if (psiElement == null) {
+            psiElement = dataContext.getData(PsiFile.KEY);
+        }
+        if (psiElement == null) {
+            psiElement = dataContext.getData(PsiElement.KEY);
+            if (psiElement == null) {
+                psiElement = findFileSystemItem(dataContext.getData(Project.KEY), dataContext.getData(VirtualFile.KEY));
+            }
+        }
+
+        // If no element found, calculate a root object for fallback
+        if (psiElement == null || !psiElement.isValid()) {
+            if (UISettings.getInstance().getShowNavigationBar() && !myModel.isEmpty()) {
+                return new ContextResult(null, null, null);
+            }
+            Object root = calculateRoot(dataContext);
+            return new ContextResult(null, null, root);
+        }
+
+        return new ContextResult(psiElement, ownerExtension, null);
+    }
+
+    // ---- Async model + presentation building (background thread, inside ReadAction) ----
+
+    /**
+     * Builds the model and pre-computes presentation data for each element.
+     * Must be called inside ReadAction (typically via ReadAction.nonBlocking()).
+     */
+    @RequiredReadAction
+    public List<NavBarItemData> buildModelAndPresentation(
+        @Nullable PsiElement element,
+        @Nullable NavBarModelExtension ownerExtension,
+        @Nullable Object object,
+        @Nonnull NavBarPresentation presentation
+    ) {
+        List<Object> modelElements;
+
+        if (element != null) {
+            if (ownerExtension == null) {
+                element = normalize(element);
+            }
+            if (element != null && isValidReadAction(element)) {
+                modelElements = buildModelElements(element, ownerExtension);
+            }
+            else {
+                modelElements = Collections.emptyList();
+            }
+        }
+        else if (object instanceof PsiElement psiElement) {
+            if (isValidReadAction(psiElement)) {
+                modelElements = buildModelElements(psiElement, null);
+            }
+            else {
+                modelElements = Collections.emptyList();
+            }
+        }
+        else if (object instanceof Module) {
+            modelElements = new ArrayList<>();
+            modelElements.add(myProject);
+            modelElements.add(object);
+        }
+        else if (object != null) {
+            modelElements = Collections.singletonList(object);
+        }
+        else {
+            modelElements = Collections.emptyList();
+        }
+
+        // Pre-compute presentation for each element
+        List<NavBarItemData> result = new ArrayList<>(modelElements.size());
+        for (Object elem : modelElements) {
+            String text = presentation.getPresentableText(elem, false);
+            Image icon = presentation.getIcon(elem);
+            SimpleTextAttributes attributes = presentation.getTextAttributes(elem, false);
+            boolean needPaintIcon = elem instanceof PsiElement psi && psi.getContainingFile() != null;
+            result.add(new NavBarItemData(elem, text, icon, attributes, needPaintIcon));
+        }
+        return result;
+    }
+
+    @RequiredReadAction
+    private List<Object> buildModelElements(PsiElement psiElement, @Nullable NavBarModelExtension ownerExtension) {
+        Set<VirtualFile> roots = new HashSet<>();
+        ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
+        ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
+
+        for (VirtualFile root : projectRootManager.getContentRoots()) {
+            VirtualFile parent = root.getParent();
+            if (parent == null || !projectFileIndex.isInContent(parent)) {
+                roots.add(root);
+            }
+        }
+
+        myProject.getApplication().getExtensionPoint(NavBarModelExtension.class).forEach(modelExtension -> {
+            for (VirtualFile root : modelExtension.additionalRoots(psiElement.getProject())) {
+                VirtualFile parent = root.getParent();
+                if (parent == null || !projectFileIndex.isInContent(parent)) {
+                    roots.add(root);
+                }
+            }
+        });
+
+        List<Object> model = isValidReadAction(psiElement)
+            ? myBuilder.createModel(psiElement, roots, ownerExtension)
+            : Collections.emptyList();
+
+        return ContainerUtil.reverse(model);
+    }
+
+    /**
+     * Applies the model elements (called on EDT, no ReadAction needed).
+     */
+    public void applyModel(List<Object> elements) {
+        setModel(elements);
+        setChanged(false);
+        updated = true;
+    }
+
+    // ---- Revalidation (background) ----
+
+    /**
+     * Checks validity of current model elements. Must be called inside ReadAction.
+     * Returns the valid prefix, or null if no update needed.
+     */
+    @RequiredReadAction
+    @Nullable
+    public List<Object> revalidateInBackground() {
+        List<Object> objects = new ArrayList<>();
+        boolean needUpdate = false;
+        for (Object o : myModel) {
+            Object element = myTreeAnchorizer.retrieveElement(o);
+            if (isValidReadAction(element)) {
+                objects.add(element);
+            }
+            else {
+                needUpdate = true;
+                break;
+            }
+        }
+        return needUpdate ? objects : null;
+    }
+
+    // ---- Legacy methods (kept for compatibility, but callers should migrate) ----
+
     protected void updateModel(DataContext dataContext) {
-        if (LaterInvocator.isInModalContext() || (updated && !isFixedComponent)) {
+        if (updated && !isFixedComponent) {
             return;
         }
 
@@ -206,7 +382,7 @@ public class NavBarModel {
         List<Object> objects = new ArrayList<>();
         boolean update = false;
         for (Object o : myModel) {
-            if (isValid(myTreeAnchorizer.retrieveElement(o))) {
+            if (isValid(myTreeAnchorizer.tryToRetrieveElement(o))) {
                 objects.add(o);
             }
             else {
@@ -259,6 +435,20 @@ public class NavBarModel {
         myChanged = changed;
     }
 
+    @RequiredReadAction
+    static boolean isValidReadAction(Object object) {
+        if (object instanceof Project project) {
+            return !project.isDisposed();
+        }
+        if (object instanceof Module module) {
+            return !module.isDisposed();
+        }
+        if (object instanceof PsiElement element) {
+            return element.isValid();
+        }
+        return object != null;
+    }
+
     static boolean isValid(Object object) {
         if (object instanceof Project project) {
             return !project.isDisposed();
@@ -267,7 +457,10 @@ public class NavBarModel {
             return !module.isDisposed();
         }
         if (object instanceof PsiElement element) {
-            return AccessRule.read(element::isValid);
+            Application application = Application.get();
+            SimpleReference<Boolean> elementRef = new SimpleReference<>();
+            application.tryRunReadAction(elementRef, element::isValid);
+            return Boolean.TRUE.equals(elementRef.get());
         }
         return object != null;
     }

@@ -25,6 +25,7 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.Navigatable;
 import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
@@ -322,13 +323,8 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   }
 
   @Override
-  public boolean canNavigate() {
-    return PsiNavigationSupport.getInstance().canNavigate(this);
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+  public NavigateOptions getNavigateOptions() {
+    return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 
   @Override

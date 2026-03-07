@@ -507,7 +507,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         JComponent editorComponent = getEditorComponent(myProject);
         editorComponent.setFocusable(false);
 
@@ -951,7 +951,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public Element getStateFromUI() {
+    protected Element readStateFromUI() {
         if (myFrame == null) {
             // do nothing if the project was not opened
             return null;
@@ -998,13 +998,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             element.addContent(layoutToRestoreElement);
         }
 
-        return element;
-    }
-
-    @RequiredWriteAction
-    @Nullable
-    @Override
-    public Element getState(Element element) {
         return element;
     }
 

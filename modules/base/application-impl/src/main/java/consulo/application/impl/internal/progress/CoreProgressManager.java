@@ -26,12 +26,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.CoroutineContext;
-import consulo.util.concurrent.coroutine.CoroutineContextOwner;
-import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -52,8 +48,6 @@ import java.util.function.Supplier;
 
 public class CoreProgressManager extends ProgressManager implements ProgressManagerEx, Disposable {
     private static final Logger LOG = Logger.getInstance(CoreProgressManager.class);
-
-    private static final Key VALUE = Key.create("CoreProgressManager#VALUE");
 
     static final int CHECK_CANCELED_DELAY_MILLIS = 10;
     private final AtomicInteger myUnsafeProgressCount = new AtomicInteger(0);
@@ -354,25 +348,16 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             }
         }
         else if (task.isModal()) {
-            runSynchronously(task.asModal());
+            runProcessWithProgressSynchronously(task);
         }
         else {
             Task.Backgroundable backgroundable = task.asBackgroundable();
             if (backgroundable.isConditionalModal() && !backgroundable.shouldStartInBackground()) {
-                runSynchronously(task);
+                runProcessWithProgressSynchronously(task);
             }
             else {
                 runAsynchronously(backgroundable);
             }
-        }
-    }
-
-    private void runSynchronously(@Nonnull Task task) {
-        if (myApplication.isDispatchThread()) {
-            runProcessWithProgressSynchronously(task);
-        }
-        else {
-            myApplication.invokeAndWait(() -> runProcessWithProgressSynchronously(task));
         }
     }
 
@@ -409,7 +394,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
         SimpleReference<IndicatorDisposable> indicatorDisposable = SimpleReference.create();
 
-        CompletableFuture<ProgressIndicator> indicatorFuture = CompletableFuture.supplyAsync(() -> {
+        Supplier<ProgressIndicator> indicatorFactory = () -> {
             ProgressIndicator indicator;
             if (modal) {
                 indicator = application.createProgressWindow(titleText.get(),
@@ -432,7 +417,15 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 Disposer.register(myApplication, disposable);
             }
             return indicator;
-        }, uiAccess);
+        };
+
+        // Create indicator synchronously when already on EDT to avoid a race condition:
+        // If the indicator future is incomplete when NewProgressRunner sets up the CompletableFuture chain,
+        // postComplete() may fire thenAccept(startBlocking) before the join() Signaller,
+        // causing a deadlock where EDT blocks in the event pump and the task thread stays parked.
+        CompletableFuture<ProgressIndicator> indicatorFuture = application.isDispatchThread()
+            ? CompletableFuture.completedFuture(indicatorFactory.get())
+            : CompletableFuture.supplyAsync(indicatorFactory, uiAccess);
 
         CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
             Function<ProgressIndicator, V> task = progressIndicator -> {
@@ -447,26 +440,27 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                                 continuation.scope().cancel();
                             }
                         });
-                    })))
-                    .then(CodeExecution.setScopeParameter(VALUE));
+                    })));
 
                 CoroutineContext coroutineContext = project instanceof CoroutineContextOwner owner
                     ? owner.coroutineContext()
                     : myApplication.coroutineContext();
 
-                CoroutineScope.ScopeFuture<V> scopeFuture = CoroutineScope.produce(
-                    coroutineContext,
-                    scope -> (V) scope.getUserData(VALUE),
-                    rScope -> coroutine.runAsync(rScope, null)
-                );
+                CoroutineScope scope = new CoroutineScope(coroutineContext);
+                Continuation<?> continuation2 = coroutine.runAsync(scope, null);
 
                 try {
-                    return (V) scopeFuture.get();
+                    scope.await();
+                    scope.checkThrowErrors();
+                    if (scope.isCancelled()) {
+                        throw new CancellationException("Scope is cancelled");
+                    }
+                    return (V) continuation2.getResult();
                 }
                 catch (CancellationException e) {
                     throw new ProcessCanceledException(e);
                 }
-                catch (Exception e) {
+                catch (CoroutineException e) {
                     throw new RuntimeException(e);
                 }
             };
@@ -705,12 +699,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 myUnsafeProgressCount.decrementAndGet();
             }
         }
-    }
-
-    @Override
-    public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-        myApplication.runReadAction(action);
-        return true;
     }
 
     private void registerIndicatorAndRun(@Nonnull ProgressIndicator indicator,
@@ -1008,9 +996,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Nonnull
     public static ModalityState getCurrentThreadProgressModality() {
-        ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().threadId());
-        ModalityState modality = indicator == null ? null : indicator.getModalityState();
-        return modality != null ? modality : ModalityState.nonModal();
+        return ModalityState.nonModal();
     }
 
     private static void setCurrentIndicator(long threadId, ProgressIndicator indicator) {

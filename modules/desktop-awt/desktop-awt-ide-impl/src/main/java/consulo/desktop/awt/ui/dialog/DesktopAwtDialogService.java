@@ -176,12 +176,8 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         protected JComponent createSouthPanel() {
             JPanel panel = new JPanel(new BorderLayout());
-            DataManager.registerDataProvider(panel, dataId -> {
-                if (dataId == Dialog.KEY) {
-                    return myDialog;
-                }
-
-                return null;
+            DataManager.registerUiDataProvider(panel, sink -> {
+                sink.set(Dialog.KEY, myDialog);
             });
 
             AnAction[] actions = myDescriptor.createActions(Platform.current().os().isMac());

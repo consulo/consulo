@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -16,6 +16,8 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
@@ -1656,12 +1658,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myMouseOutCanceller = null;
 
         if (myFinalRunnable != null) {
-            IdeaModalityState modalityState = IdeaModalityState.current();
+            ModalityState modalityState = ModalityState.nonModal();
             Runnable finalRunnable = myFinalRunnable;
 
             getFocusManager().doWhenFocusSettlesDown(() -> {
 
-                if (IdeaModalityState.current().equals(modalityState)) {
+                if (ModalityState.nonModal().equals(modalityState)) {
                     finalRunnable.run();
                 }
                 else {
@@ -1718,7 +1720,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    public static class MyContentPanel extends JPanel implements DataProvider {
+    public static class MyContentPanel extends JPanel implements DataProvider, UiDataProvider {
         private final Border myBorder;
 
         @Nullable
@@ -1749,6 +1751,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         @Override
         public Object getData(@Nonnull Key dataId) {
             return myDataProvider != null ? myDataProvider.getData(dataId) : null;
+        }
+
+        @Override
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
         }
 
         public void setDataProvider(@Nullable DataProvider dataProvider) {

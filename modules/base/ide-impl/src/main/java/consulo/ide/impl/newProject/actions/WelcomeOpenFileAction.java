@@ -19,6 +19,9 @@ import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actions.OpenFileAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ProjectManager;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
@@ -26,11 +29,13 @@ import consulo.platform.base.localize.ActionLocalize;
  */
 @ActionImpl(id = "WelcomeScreen.OpenProject")
 public class WelcomeOpenFileAction extends OpenFileAction {
-    public WelcomeOpenFileAction() {
+    @Inject
+    public WelcomeOpenFileAction(@Nonnull ProjectManager projectManager) {
         super(
             ActionLocalize.actionWelcomescreenOpenprojectText(),
             ActionLocalize.actionWelcomescreenOpenprojectDescription(),
-            PlatformIconGroup.welcomeOpenproject()
+            PlatformIconGroup.welcomeOpenproject(),
+            projectManager
         );
     }
 

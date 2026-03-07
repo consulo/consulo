@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.Dumpable;
@@ -1233,9 +1232,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Nonnull
     @Override
-    @RequiredUIAccess
     public EditorHighlighter getHighlighter() {
-        assertReadAccess();
         return myHighlighter;
     }
 
@@ -1244,9 +1241,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         UIAccess.assertIsUIThread();
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
+    @Deprecated
     public static void assertReadAccess() {
-        Application.get().assertReadAccessAllowed();
+        UIAccess.assertIsUIThread();
     }
 
     public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {

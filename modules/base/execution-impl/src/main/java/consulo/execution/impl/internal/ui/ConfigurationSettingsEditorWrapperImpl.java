@@ -20,8 +20,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -33,7 +32,6 @@ import consulo.ui.ex.awt.HideableDecorator;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.VerticalLayout;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -97,7 +95,7 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
         wholePanel.add(myEditor.getComponent());
         wholePanel.add(myBeforeLaunchContainer);
 
-        DataManager.registerDataProvider(wholePanel, new TypeSafeDataProviderAdapter(new MyDataProvider()));
+        DataManager.registerUiDataProvider(wholePanel, new MyDataProvider());
         return ScrollPaneFactory.createScrollPane(wholePanel, true);
     }
 
@@ -157,12 +155,10 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
         myDecorator.setTitle(title);
     }
 
-    private class MyDataProvider implements TypeSafeDataProvider {
+    private class MyDataProvider implements UiDataProvider {
         @Override
-        public void calcData(Key key, DataSink sink) {
-            if (CONFIGURATION_EDITOR_KEY == key) {
-                sink.put(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapperImpl.this);
-            }
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapperImpl.this);
         }
     }
 }

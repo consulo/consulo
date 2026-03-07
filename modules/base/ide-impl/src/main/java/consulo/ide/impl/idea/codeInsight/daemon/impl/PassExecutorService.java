@@ -28,6 +28,8 @@ import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProce
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
@@ -40,6 +42,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -99,7 +102,6 @@ final class PassExecutorService implements Disposable {
         mySubmittedPasses.clear();
     }
 
-    @RequiredUIAccess
     void submitPasses(@Nonnull Map<FileEditor, HighlightingPass[]> passesMap, @Nonnull DaemonProgressIndicator updateProgress) {
         if (isDisposed()) {
             return;
@@ -324,7 +326,6 @@ final class PassExecutorService implements Disposable {
     }
 
     @Nonnull
-    @RequiredUIAccess
     private ScheduledPass createScheduledPass(
         @Nonnull FileEditor fileEditor,
         @Nonnull TextEditorHighlightingPass pass,
@@ -383,26 +384,32 @@ final class PassExecutorService implements Disposable {
 
         if (pass.isRunIntentionPassAfter() && fileEditor instanceof TextEditor) {
             Editor editor = ((TextEditor) fileEditor).getEditor();
-            ShowIntentionsPass ip = new ShowIntentionsPass(myProject, editor, false);
-            ip.setId(nextPassId.incrementAndGet());
-            ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
+            SimpleReference<PsiFile> psiFileRef = SimpleReference.create();
+            if (Application.get().tryRunReadAction(
+                () -> psiFileRef.set(PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument())))) {
+                PsiFile psiFile = psiFileRef.get();
+                if (psiFile != null) {
+                    ShowIntentionsPass ip = new ShowIntentionsPass(psiFile, editor, false);
+                    ip.setId(nextPassId.incrementAndGet());
+                    ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
 
-            createScheduledPass(
-                fileEditor,
-                ip,
-                toBeSubmitted,
-                textEditorHighlightingPasses,
-                freePasses,
-                dependentPasses,
-                updateProgress,
-                threadsToStartCountdown
-            );
+                    createScheduledPass(
+                        fileEditor,
+                        ip,
+                        toBeSubmitted,
+                        textEditorHighlightingPasses,
+                        freePasses,
+                        dependentPasses,
+                        updateProgress,
+                        threadsToStartCountdown
+                    );
+                }
+            }
         }
 
         return scheduledPass;
     }
 
-    @RequiredUIAccess
     private ScheduledPass findOrCreatePredecessorPass(
         @Nonnull FileEditor fileEditor,
         @Nonnull Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted,

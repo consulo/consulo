@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -26,6 +25,7 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.SimpleTreeAnchorizerValue;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -44,6 +44,29 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
     @Inject
     public PsiTreeAnchorizer(Application application) {
         myApplication = application;
+    }
+
+    @Nonnull
+    @Override
+    public TreeAnchorizerValue<?> tryCreateAnchorValue(Object element) {
+        if (element instanceof PsiElement psiElement) {
+            SimpleReference<TreeAnchorizerValue<?>> ref = new SimpleReference<>();
+            myApplication.tryRunReadAction(ref, () -> {
+                if (psiElement.isValid()) {
+                    SmartPsiElementPointer<PsiElement> pointer = SmartPointerManager
+                        .getInstance(psiElement.getProject())
+                        .createSmartPsiElementPointer(psiElement);
+
+                    return new PsiTreeAnchorizerValue(myApplication, pointer);
+                }
+
+                return null;
+            });
+
+            TreeAnchorizerValue<?> result = ref.get();
+            return result != null ? result : new SimpleTreeAnchorizerValue(element);
+        }
+        return super.createAnchorValue(element);
     }
 
     @Nonnull
@@ -81,7 +104,6 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
 
     @Nullable
     @Override
-    @RequiredReadAction
     public Object retrieveElement(@Nonnull Object pointer) {
         if (pointer instanceof SmartPsiElementPointer smartPointer) {
             return myApplication.runReadAction((Supplier<Object>) smartPointer::getElement);

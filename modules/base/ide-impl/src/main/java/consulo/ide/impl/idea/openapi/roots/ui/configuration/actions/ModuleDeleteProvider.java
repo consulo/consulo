@@ -45,6 +45,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
+    private static final ModuleDeleteProvider INSTANCE = new ModuleDeleteProvider();
+
+    public static ModuleDeleteProvider getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);

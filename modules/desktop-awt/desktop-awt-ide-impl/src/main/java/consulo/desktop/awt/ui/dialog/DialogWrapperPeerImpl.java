@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.dialog;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.ui.ApplicationWindowStateService;
@@ -28,8 +27,8 @@ import consulo.application.util.Queryable;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -37,12 +36,12 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
@@ -73,7 +72,6 @@ import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -188,7 +186,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Override
     public Object[] getCurrentModalEntities() {
-        return LaterInvocator.getCurrentModalEntities();
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     /**
@@ -488,16 +486,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
-        Project project = myProject;
 
         if (changeModalityState) {
             commandProcessor.enterModal();
-            if (myPerProjectModality) {
-                LaterInvocator.enterModal(project, myDialog.getWindow());
-            }
-            else {
-                LaterInvocator.enterModal(myDialog);
-            }
         }
 
         if (appStarted) {
@@ -510,12 +501,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         finally {
             if (changeModalityState) {
                 commandProcessor.leaveModal();
-                if (myPerProjectModality) {
-                    LaterInvocator.leaveModal(project, myDialog.getWindow());
-                }
-                else {
-                    LaterInvocator.leaveModal(myDialog);
-                }
             }
 
             myDialog.getFocusManager().doWhenFocusSettlesDown(result.createSetDoneRunnable());
@@ -545,7 +530,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
-        Project project = myProject;
 
         UIAccess uiAccess = UIAccess.current();
 
@@ -559,13 +543,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         uiAccess.give(() -> {
             if (changeModalityState) {
                 commandProcessor.enterModal();
-
-                if (myPerProjectModality) {
-                    LaterInvocator.enterModal(project, myDialog.getWindow());
-                }
-                else {
-                    LaterInvocator.enterModal(myDialog);
-                }
             }
 
             if (appStarted) {
@@ -578,13 +555,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             finally {
                 if (changeModalityState) {
                     commandProcessor.leaveModal();
-
-                    if (myPerProjectModality) {
-                        LaterInvocator.leaveModal(project, myDialog.getWindow());
-                    }
-                    else {
-                        LaterInvocator.leaveModal(myDialog);
-                    }
                 }
             }
         }).notify(result);
@@ -652,7 +622,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
 
-    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, DataProvider, Queryable, AbstractDialog {
+    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, UiDataProvider, Queryable, AbstractDialog {
         private final WeakReference<DialogWrapper> myDialogWrapper;
 
         /**
@@ -712,16 +682,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider dataProvider) {
-                return dataProvider.getData(dataId);
+            if (wrapper instanceof UiDataProvider uiProvider) {
+                sink.uiDataSnapshot(uiProvider);
             }
-            if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)wrapper);
-                return adapter.getData(dataId);
-            }
-            return null;
         }
 
         @Override
@@ -1015,7 +980,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        private class DialogRootPane extends JRootPane implements DataProvider {
+        private class DialogRootPane extends JRootPane implements UiDataProvider {
 
             private final boolean myGlassPaneIsSet;
 
@@ -1078,9 +1043,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public Object getData(@Nonnull Key<?> dataId) {
+            public void uiDataSnapshot(@Nonnull DataSink sink) {
                 DialogWrapper wrapper = myDialogWrapper.get();
-                return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
+                if (wrapper != null) {
+                    sink.lazy(PlatformDataKeys.UI_DISPOSABLE, () -> wrapper.getDisposable());
+                }
             }
         }
 

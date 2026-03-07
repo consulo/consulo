@@ -297,12 +297,12 @@ public abstract class UIInternal {
 
     @Nonnull
     public ModalityState _ModalityState_any() {
-        throw new UnsupportedOperationException();
+        return StubModalityState.INSTANCE;
     }
 
     @Nonnull
     public ModalityState _ModalityState_nonModal() {
-        throw new UnsupportedOperationException();
+        return StubModalityState.INSTANCE;
     }
 
     @Nonnull

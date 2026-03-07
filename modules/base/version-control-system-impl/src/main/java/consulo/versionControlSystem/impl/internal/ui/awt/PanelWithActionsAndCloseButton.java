@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.HelpManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,7 +35,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public abstract class PanelWithActionsAndCloseButton extends JPanel implements DataProvider, Disposable {
+public abstract class PanelWithActionsAndCloseButton extends JPanel implements UiDataProvider, Disposable {
   protected final ContentManager myContentManager;
   private final String myHelpId;
   private final boolean myVerticalToolbar;
@@ -96,8 +97,8 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    return HelpManager.HELP_ID == dataId ? myHelpId : null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(HelpManager.HELP_ID, myHelpId);
   }
 
   protected abstract JComponent createCenterPanel();

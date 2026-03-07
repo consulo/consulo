@@ -2,7 +2,8 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.application.ReadAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.fileEditor.VfsPresentationUtil;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -12,17 +13,16 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
-import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -137,32 +137,19 @@ public class ProjectViewTree extends DnDAwareTree {
   @Nullable
   @Override
   public ColorValue getFileColorFor(Object object) {
-    if (object instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)object;
+    if (object instanceof DefaultMutableTreeNode node) {
       object = node.getUserObject();
     }
-    if (object instanceof AbstractTreeNode) {
-      AbstractTreeNode node = (AbstractTreeNode)object;
-      Object value = node.getValue();
-      if (value instanceof PsiElement) {
-        return ReadAction.compute(() -> getColorForElement((PsiElement)value));
-      }
-    }
-    if (object instanceof ProjectViewNode) {
-      ProjectViewNode node = (ProjectViewNode)object;
-      VirtualFile file = node.getVirtualFile();
-      if (file != null) {
-        Project project = node.getProject();
-        if (project != null && !project.isDisposed()) {
-          ColorValue color = ReadAction.compute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
-          if (color != null) return color;
-        }
-      }
+    if (object instanceof PresentableNodeDescriptor<?> descriptor) {
+      return descriptor.getBackground();
     }
     return null;
   }
 
   @Nullable
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Unsafe - can lock ui")
   public static ColorValue getColorForElement(@Nullable PsiElement psi) {
     ColorValue color = null;
     if (psi != null) {
@@ -175,12 +162,12 @@ public class ProjectViewTree extends DnDAwareTree {
         color = VfsPresentationUtil.getFileBackgroundColor(project, file);
       }
       else if (psi instanceof PsiDirectory) {
-        color = VfsPresentationUtil.getFileBackgroundColor(project, ((PsiDirectory)psi).getVirtualFile());
+        color = VfsPresentationUtil.getFileBackgroundColor(project, ((PsiDirectory) psi).getVirtualFile());
       }
       else if (psi instanceof PsiDirectoryContainer) {
-        PsiDirectory[] dirs = ((PsiDirectoryContainer)psi).getDirectories();
+        PsiDirectory[] dirs = ((PsiDirectoryContainer) psi).getDirectories();
         for (PsiDirectory dir : dirs) {
-            ColorValue c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
+          ColorValue c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
           if (c != null && color == null) {
             color = c;
           }

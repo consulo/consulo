@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.options.ex;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
@@ -295,7 +295,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
         }
 
         private void addUpdateRequest(Runnable updateRequest) {
-            myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.stateForComponent(getWindow()));
+            myUpdateAlarm.addRequest(updateRequest, 500, ModalityState.nonModal());
         }
 
         @Override

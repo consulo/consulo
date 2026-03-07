@@ -70,12 +70,6 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         }
 
         @Override
-        @Nonnull
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.EDT;
-        }
-
-        @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);

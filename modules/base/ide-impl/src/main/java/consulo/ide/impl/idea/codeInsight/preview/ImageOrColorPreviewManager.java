@@ -20,6 +20,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
@@ -47,6 +49,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -92,24 +95,29 @@ public class ImageOrColorPreviewManager implements Disposable {
             }
             else {
                 Collection<PsiElement> elements = myElements;
-                if (!getPsiElementsAt(point, editor).equals(elements)) {
-                    myElements = null;
-                    for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
-                        try {
-                            if (elements != null) {
-                                for (PsiElement element : elements) {
-                                    provider.hide(element, editor);
+                ReadAction.nonBlocking(() -> getPsiElementsAt(point, editor))
+                    .finishOnUiThread(Application::getNoneModalityState, newElements -> {
+                        if (Objects.equals(elements, newElements)) {
+                            return;
+                        }
+
+                        myElements = null;
+                        for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
+                            try {
+                                if (elements != null) {
+                                    for (PsiElement element : elements) {
+                                        provider.hide(element, editor);
+                                    }
+                                }
+                                else {
+                                    provider.hide(null, editor);
                                 }
                             }
-                            else {
-                                provider.hide(null, editor);
+                            catch (Exception e) {
+                                LOG.error(e);
                             }
                         }
-                        catch (Exception e) {
-                            LOG.error(e);
-                        }
-                    }
-                }
+                    });
             }
         }
     };

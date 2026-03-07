@@ -20,7 +20,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Weighted;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -482,7 +483,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
     }
 
-    private class MyComponent extends JPanel implements DataProvider {
+    private class MyComponent extends JPanel implements UiDataProvider {
         @Nullable
         private JComponent myFocusComponent;
 
@@ -517,22 +518,14 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
 
         @Override
-        public final Object getData(@Nonnull Key<?> dataId) {
-            if (FileEditor.KEY == dataId) {
-                return getSelectedEditor();
-            }
-            else if (VirtualFile.KEY == dataId) {
-                return myFile.isValid() ? myFile : null;
-            }
-            else if (VirtualFile.KEY_OF_ARRAY == dataId) {
-                return myFile.isValid() ? new VirtualFile[]{myFile} : null;
-            }
-            else {
-                JComponent component = getPreferredFocusedComponent();
-                if (component instanceof DataProvider dataProvider && component != this) {
-                    return dataProvider.getData(dataId);
-                }
-                return null;
+        public final void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.lazy(FileEditor.KEY, () -> getSelectedEditor());
+            sink.lazy(VirtualFile.KEY, () -> myFile.isValid() ? myFile : null);
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> myFile.isValid() ? new VirtualFile[]{myFile} : null);
+
+            JComponent component = getPreferredFocusedComponent();
+            if (component instanceof UiDataProvider uiDataProvider && component != this) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
         }
     }

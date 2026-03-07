@@ -15,8 +15,7 @@
  */
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
@@ -30,8 +29,6 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 
@@ -52,7 +49,6 @@ public class HighlightingSessionImpl implements HighlightingSession {
   private final Project myProject;
   private final Document myDocument;
   private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
-  private final TransferToEDTQueue<Runnable> myEDTQueue;
 
   private HighlightingSessionImpl(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, EditorColorsScheme editorColorsScheme) {
     myPsiFile = psiFile;
@@ -60,22 +56,9 @@ public class HighlightingSessionImpl implements HighlightingSession {
     myEditorColorsScheme = editorColorsScheme;
     myProject = psiFile.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
-    myEDTQueue = new TransferToEDTQueue<Runnable>("Apply highlighting results", runnable -> {
-      runnable.run();
-      return true;
-    }, () -> myProject.isDisposed() || getProgressIndicator().isCanceled()) {
-      @Override
-      protected void schedule(@Nonnull Runnable updateRunnable) {
-        ApplicationManager.getApplication().invokeLater(updateRunnable, Application.get().getAnyModalityState());
-      }
-    };
   }
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
-
-  void applyInEDT(@Nonnull Runnable runnable) {
-    myEDTQueue.offer(runnable);
-  }
 
   public static HighlightingSession getHighlightingSession(@Nonnull PsiFile psiFile, @Nonnull ProgressIndicator progressIndicator) {
     Map<PsiFile, HighlightingSession> map = ((DaemonProgressIndicator)progressIndicator).getUserData(HIGHLIGHTING_SESSION);
@@ -134,29 +117,31 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return myEditorColorsScheme;
   }
 
-  public void queueHighlightInfo(@Nonnull HighlightInfo info, @Nonnull TextRange restrictedRange, int groupId) {
-    applyInEDT(() -> {
-      EditorColorsScheme colorsScheme = getColorsScheme();
-      UpdateHighlightersUtilImpl
-              .addHighlighterToEditorIncrementally(myProject, getDocument(), getPsiFile(), restrictedRange.getStartOffset(), restrictedRange.getEndOffset(), (HighlightInfoImpl)info, colorsScheme,
-                                                   groupId, myRanges2markersCache);
-    });
+  @RequiredReadAction
+  public void applyHighlightInfo(@Nonnull HighlightInfo info, @Nonnull TextRange restrictedRange, int groupId) {
+    EditorColorsScheme colorsScheme = getColorsScheme();
+    UpdateHighlightersUtilImpl.addHighlighterToEditorIncrementally(
+        myProject, getDocument(), getPsiFile(),
+        restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
+        (HighlightInfoImpl)info, colorsScheme, groupId, myRanges2markersCache);
   }
 
-  public void queueDisposeHighlighterFor(@Nonnull HighlightInfo info) {
+  @RequiredReadAction
+  public void disposeHighlighterFor(@Nonnull HighlightInfo info) {
     RangeHighlighterEx highlighter = ((HighlightInfoImpl)info).getHighlighter();
     if (highlighter == null) return;
     // that highlighter may have been reused for another info
-    applyInEDT(() -> {
-      Object actualInfo = highlighter.getErrorStripeTooltip();
-      if (actualInfo == info && info.getHighlighter() == highlighter) highlighter.dispose();
-    });
+    Object actualInfo = highlighter.getErrorStripeTooltip();
+    if (actualInfo == info && info.getHighlighter() == highlighter) {
+      highlighter.dispose();
+    }
   }
 
-  @RequiredUIAccess
+  /**
+   * No-op: highlights are now applied directly from background thread under read lock.
+   * Kept for API compatibility with {@link #waitForAllSessionsHighlightInfosApplied}.
+   */
   public void waitForHighlightInfosApplied() {
-    UIAccess.assertIsUIThread();
-    myEDTQueue.drain();
   }
 
   public static void clearProgressIndicator(@Nonnull DaemonProgressIndicator indicator) {

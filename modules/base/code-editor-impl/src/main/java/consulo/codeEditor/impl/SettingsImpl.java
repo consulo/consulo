@@ -15,21 +15,24 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.EditorEx;
+import consulo.document.Document;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
-import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ public class SettingsImpl implements EditorSettings {
     @Nullable
     protected final EditorEx myEditor;
     @Nullable
-    private final Language myLanguage;
+    private final Supplier<Language> myLanguageSupplier;
     private Boolean myIsCamelWords;
 
     // This group of settings does not have UI
@@ -106,7 +109,12 @@ public class SettingsImpl implements EditorSettings {
 
     public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, @Nonnull EditorKind kind) {
         myEditor = editor;
-        myLanguage = editor != null && project != null ? getDocumentLanguage(project, editor.getDocument()) : null;
+        if (editor != null && project != null) {
+            myLanguageSupplier = () -> getDocumentLanguage(project, editor.getDocument());
+        }
+        else {
+            myLanguageSupplier = null;
+        }
         if (EditorKind.CONSOLE.equals(kind)) {
             mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.CONSOLE;
         }
@@ -223,20 +231,26 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public int getRightMargin(Project project) {
-        return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(myLanguage);
+        return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(getLanguage());
     }
 
     @Nullable
-    @RequiredReadAction
     private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
         if (project != null) {
-            PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-            PsiFile file = documentManager.getPsiFile(document);
-            if (file != null) {
-                return file.getLanguage();
-            }
+            SimpleReference<Language> result = SimpleReference.create();
+            Application.get().tryRunReadAction(result, () -> {
+                PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+                PsiFile file = documentManager.getPsiFile(document);
+                return file == null ? null : file.getLanguage();
+            });
+            return result.get();
         }
         return null;
+    }
+
+    @Nullable
+    private Language getLanguage() {
+        return myLanguageSupplier != null ? myLanguageSupplier.get() : null;
     }
 
     @Override
@@ -244,7 +258,7 @@ public class SettingsImpl implements EditorSettings {
         if (myWrapWhenTypingReachesRightMargin != null) {
             return myWrapWhenTypingReachesRightMargin;
         }
-        return myEditor == null ? CodeStyle.getDefaultSettings().isWrapOnTyping(myLanguage) : CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).isWrapOnTyping(myLanguage);
+        return myEditor == null ? CodeStyle.getDefaultSettings().isWrapOnTyping(getLanguage()) : CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).isWrapOnTyping(getLanguage());
     }
 
     @Override
@@ -270,8 +284,8 @@ public class SettingsImpl implements EditorSettings {
         }
         return
             myEditor == null ?
-                CodeStyle.getDefaultSettings().getSoftMargins(myLanguage) :
-                CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).getSoftMargins(myLanguage);
+                CodeStyle.getDefaultSettings().getSoftMargins(getLanguage()) :
+                CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).getSoftMargins(getLanguage());
     }
 
     @Override
@@ -395,8 +409,7 @@ public class SettingsImpl implements EditorSettings {
             return;
         }
 
-        PsiDocumentManager psiManager = PsiDocumentManager.getInstance(project);
-        PsiFile file = psiManager.getPsiFile(document);
+        PsiFile file = getPsiFile(project);
         if (file == null) {
             return;
         }
@@ -433,7 +446,9 @@ public class SettingsImpl implements EditorSettings {
     @Nullable
     protected PsiFile getPsiFile(@Nullable Project project) {
         if (project != null && myEditor != null) {
-            return PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument());
+            SimpleReference<PsiFile> result = SimpleReference.create();
+            Application.get().tryRunReadAction(result, () -> PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()));
+            return result.get();
         }
         return null;
     }

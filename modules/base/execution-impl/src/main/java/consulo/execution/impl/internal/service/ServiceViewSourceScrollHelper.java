@@ -117,11 +117,6 @@ final class ServiceViewSourceScrollHelper {
       e.getPresentation().setEnabledAndVisible(project != null && !isAutoScrollFromSourceEnabled(project));
     }
 
-//    @Override
-//    public @NotNull ActionUpdateThread getActionUpdateThread() {
-//      return ActionUpdateThread.BGT;
-//    }
-
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

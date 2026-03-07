@@ -28,7 +28,6 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -436,11 +435,6 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             e.getPresentation().setEnabled(dbFile != null && Files.exists(dbFile));
         }
 
-        @Nonnull
-        @Override
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.BGT;
-        }
     }
 
     private class ImportKeePassDatabaseAction extends DumbAwareAction {
@@ -510,11 +504,6 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             e.getPresentation().setEnabled(getNewDbFileAsString() != null);
         }
 
-        @Nonnull
-        @Override
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.BGT;
-        }
     }
 
     // --- Static utility method to close the current store ---

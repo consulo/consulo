@@ -8,9 +8,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.AppLifecycleListener;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.CaretEvent;
@@ -55,7 +53,6 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.util.ModuleUtilCore;
-import consulo.localize.LocalizeKey;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -64,7 +61,6 @@ import consulo.project.ProjectLocator;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -314,16 +310,6 @@ public final class DaemonListeners implements Disposable {
             HighlightInfoImpl info = HighlightInfoImpl.fromRangeHighlighter(highlighter);
             if (info != null) {
                 GotoNextErrorHandler.navigateToError(myProject, e.getEditor(), info);
-            }
-        }, this);
-
-        LaterInvocator.addModalityStateListener(new ModalityStateListener() {
-            @Override
-            public void beforeModalityStateChanged(boolean __1, Object modalEntity) {
-                // before showing dialog we are in non-modal context yet, and before closing dialog we are still in modal context
-                boolean inModalContext = Registry.is("ide.perProjectModality") || LaterInvocator.isInModalContext();
-                DaemonListeners.this.stopDaemon(inModalContext, "Modality change. Was modal: " + inModalContext);
-                myDaemonCodeAnalyzer.setUpdateByTimerEnabled(inModalContext);
             }
         }, this);
 

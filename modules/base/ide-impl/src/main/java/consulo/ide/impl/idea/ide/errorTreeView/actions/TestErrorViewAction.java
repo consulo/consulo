@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.errorTreeView.actions;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
@@ -102,7 +102,7 @@ public abstract class TestErrorViewAction extends AnAction{
         myMillis += duration;
         incMessageCount();
       },
-      IdeaModalityState.nonModal()
+      ModalityState.nonModal()
     );
   }
 

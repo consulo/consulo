@@ -30,12 +30,15 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -71,40 +74,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * with {@link ModalityState#defaultModalityState()} modality state.
-     *
-     * @param action the runnable to execute.
-     */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open).
-     *
-     * @param action the runnable to execute.
-     * @param modal  the state in which action will be executed
-     */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open)
-     * - unless the expiration condition is fulfilled.
-     *
-     * @param action  the runnable to execute.
-     * @param modal   the state in which action will be executed
-     * @param expired condition to check before execution.
-     */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-        throw new AbstractMethodError();
-    }
-
-    /**
      * Runs the specified read action. Can be called from any thread. The action is executed immediately
      * if no write action is currently running, or blocked until the currently running write action completes.
      *
@@ -123,11 +92,19 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     <T> T runReadAction(@RequiredReadAction @Nonnull Supplier<T> computation);
 
     /**
-     * Grab the lock and run the action, in a non-blocking fashion
+     * Grab the lock and run the action, if write is not running
      *
      * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
      */
     boolean tryRunReadAction(@RequiredReadAction @Nonnull Runnable action);
+
+    /**
+     * Grab the lock and run the action, if write is not running. Set value to ref holder if locked successful
+     *
+     * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
+     */
+    <T, E extends Throwable> boolean tryRunReadAction(@Nonnull SimpleReference<T> ref,
+                                                      @RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -141,27 +118,25 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
     /**
-     * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
+     * Runs the specified write action. Can be called from any thread. The action is executed
      * immediately if no read actions are currently running, or blocked until all read actions complete.
      *
      * @param action the action to run
      */
-    @RequiredUIAccess
     void runWriteAction(@RequiredWriteAction @Nonnull Runnable action);
 
     /**
-     * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+     * Runs the specified computation in a write action. Can be called from any thread.
      * The action is executed immediately if no read actions or write actions are currently running,
      * or blocked until all read actions and write actions complete.
      *
      * @param computation the computation to run
      * @return the result returned by the computation.
      */
-    @RequiredUIAccess
     <T> T runWriteAction(@RequiredWriteAction @Nonnull Supplier<T> computation);
 
     /**
-     * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+     * Runs the specified computation in a write action. Can be called from any thread.
      * The action is executed immediately if no read actions or write actions are currently running,
      * or blocked until all read actions and write actions complete.
      *
@@ -169,7 +144,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    @RequiredUIAccess
     <T, E extends Throwable> T runWriteAction(@RequiredWriteAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
     /**
@@ -199,10 +173,11 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void assertIsDispatchThread();
 
     /**
-     * Asserts whether the method is being called from the write thread.
+     * @deprecated Write actions are no longer tied to a specific thread. Use {@link #assertWriteAccessAllowed()} instead.
      */
+    @Deprecated
     default void assertIsWriteThread() {
-        assertIsDispatchThread();
+        assertWriteAccessAllowed();
     }
 
     /**
@@ -229,9 +204,12 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
 
     /**
      * Saves all open documents and projects.
+     *
+     * @return a {@link Continuation} that completes when the save operation finishes, or {@code null} if saving was skipped
      */
     @RequiredUIAccess
-    void saveAll();
+    @Nullable
+    Continuation<Void> saveAll();
 
     /**
      * Saves all application settings.
@@ -251,7 +229,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @see #runWriteAction(Runnable)
      */
     default boolean isWriteAccessAllowed() {
-        return isDispatchThread();
+        return false;
     }
 
     /**
@@ -348,7 +326,9 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the current modality state.
      */
     @Nonnull
-    ModalityState getCurrentModalityState();
+    default ModalityState getCurrentModalityState() {
+        return ModalityState.any();
+    }
 
     /**
      * Returns the modality state for the dialog to which the specified component belongs.
@@ -357,8 +337,9 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the modality state.
      */
     @Nonnull
+    @Deprecated
     default ModalityState getModalityStateForComponent(@Nonnull Component c) {
-        throw new AbstractMethodError("AWT/Swing dependency");
+        return ModalityState.any();
     }
 
     /**
@@ -368,7 +349,10 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the modality state for the current thread.
      */
     @Nonnull
-    ModalityState getDefaultModalityState();
+    @Deprecated
+    default ModalityState getDefaultModalityState() {
+        return ModalityState.any();
+    }
 
     /**
      * Returns the modality state representing the state when no modal dialogs
@@ -378,7 +362,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      */
     @Nonnull
     default ModalityState getNoneModalityState() {
-        return ModalityState.nonModal();
+        return ModalityState.any();
     }
 
     /**
@@ -547,23 +531,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     // region Deprecated stuff
-
-    /**
-     * Returns lock used for read operations, should be closed in finally block
-     */
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use runReadAction(Runnable)")
-    AccessToken acquireReadActionLock();
-
-    /**
-     * Returns lock used for write operations, should be closed in finally block
-     */
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use runWriteAction(Runnable)")
-    @RequiredUIAccess
-    AccessToken acquireWriteActionLock(@Nonnull Class marker);
 
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

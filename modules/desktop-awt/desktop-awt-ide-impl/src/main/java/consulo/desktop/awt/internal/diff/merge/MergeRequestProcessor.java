@@ -21,6 +21,8 @@ import consulo.application.HelpManager;
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffPlaces;
@@ -214,7 +216,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         ActionGroup group = collectToolbarActions(viewerActions);
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DIFF_TOOLBAR, group, true);
 
-        DataManager.registerDataProvider(toolbar.getComponent(), myMainPanel);
+        DataManager.registerUiDataProvider(toolbar.getComponent(), myMainPanel);
         toolbar.setTargetComponent(toolbar.getComponent());
 
         myToolbarPanel.setContent(toolbar.getComponent());
@@ -367,7 +369,8 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Nullable
     public String getHelpId() {
-        return (String)myMainPanel.getData(HelpManager.HELP_ID);
+        String helpId = myRequest.getUserData(DiffUserDataKeys.HELP_ID);
+        return helpId != null ? helpId : "procedures.vcWithIDEA.commonVcsOps.integrateDiffs.resolveConflict";
     }
 
     //
@@ -451,53 +454,38 @@ public abstract class MergeRequestProcessor implements Disposable {
     // Helpers
     //
 
-    private class MyPanel extends JPanel implements DataProvider {
+    private class MyPanel extends JPanel implements UiDataProvider {
         public MyPanel() {
             super(new BorderLayout());
         }
 
-        @Nullable
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
-            Object data;
-
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
             DataProvider contentProvider =
                 ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
-            if (contentProvider != null) {
-                data = contentProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (contentProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
 
-            if (Project.KEY == dataId) {
-                return myProject;
-            }
-            else if (HelpManager.HELP_ID == dataId) {
+            sink.set(Project.KEY, myProject);
+            sink.lazy(HelpManager.HELP_ID, () -> {
                 if (myRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
                     return myRequest.getUserData(DiffUserDataKeys.HELP_ID);
                 }
                 else {
                     return "procedures.vcWithIDEA.commonVcsOps.integrateDiffs.resolveConflict";
                 }
-            }
+            });
 
             DataProvider requestProvider = myRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (requestProvider != null) {
-                data = requestProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (requestProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
 
             DataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (contextProvider != null) {
-                data = contextProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (contextProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
-            return null;
         }
     }
 

@@ -19,7 +19,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -44,6 +44,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
@@ -52,7 +53,6 @@ import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.usage.*;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
@@ -506,7 +506,7 @@ public class FindInProjectUtil {
         }
     }
 
-    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
+    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, UiDataProvider {
         @Nonnull
         protected final Project myProject;
         @Nonnull
@@ -584,18 +584,13 @@ public class FindInProjectUtil {
         }
 
         @Override
+        public NavigateOptions getNavigateOptions() {
+            return NavigateOptions.CANT_NAVIGATE;
+        }
+
+        @Override
         public void navigate(boolean requestFocus) {
             throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean canNavigate() {
-            return false;
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
         }
 
         @Override
@@ -612,12 +607,8 @@ public class FindInProjectUtil {
         }
 
         @Override
-        @RequiredReadAction
-        public void calcData(@Nonnull Key key, @Nonnull DataSink sink) {
-            if (UsageView.USAGE_SCOPE == key) {
-                SearchScope scope = getScopeFromModel(myProject, myFindModel);
-                sink.put(UsageView.USAGE_SCOPE, scope);
-            }
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.lazy(UsageView.USAGE_SCOPE, () -> getScopeFromModel(myProject, myFindModel));
         }
     }
 

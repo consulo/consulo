@@ -28,6 +28,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -54,7 +55,7 @@ public class CodeInspectionOnEditorAction extends AnAction {
     }
 
     protected static void analyze(Project project, PsiFile psiFile) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         InspectionManagerImpl inspectionManagerEx = (InspectionManagerImpl) InspectionManager.getInstance(project);
         AnalysisScope scope = new AnalysisScope(psiFile);
         GlobalInspectionContextImpl inspectionContext = inspectionManagerEx.createNewGlobalContext(false);

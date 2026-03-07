@@ -16,6 +16,7 @@
 package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.internal.AsyncExecutionService;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
@@ -25,11 +26,6 @@ import java.util.concurrent.Callable;
 
 @Nonnull
 public final class ReadAction<T> {
-    @Deprecated
-    public static AccessToken start() {
-        return ApplicationManager.getApplication().acquireReadActionLock();
-    }
-
     public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
         Application.get().runReadAction((ThrowableSupplier<Object, E>) () -> {
             action.run();

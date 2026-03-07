@@ -3,7 +3,6 @@
  */
 package consulo.desktop.awt.editor.impl.view;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -164,18 +163,18 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public LogicalPosition offsetToLogicalPosition(int offset) {
-        assertIsReadAccess();
+        UIAccess.assertIsUIThread();
         return myMapper.offsetToLogicalPosition(offset);
     }
 
     public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
-        assertIsReadAccess();
+        UIAccess.assertIsUIThread();
         return myMapper.logicalPositionToOffset(pos);
     }
 
     @Nonnull
     public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos, boolean beforeSoftWrap) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.logicalToVisualPosition(pos, beforeSoftWrap);
@@ -183,7 +182,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualToLogicalPosition(pos);
@@ -191,21 +190,21 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public VisualPosition offsetToVisualPosition(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.offsetToVisualPosition(offset, leanTowardsLargerOffsets, beforeSoftWrap);
     }
 
     public int visualPositionToOffset(VisualPosition visualPosition) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualPositionToOffset(visualPosition);
     }
 
     public int offsetToVisualLine(int offset, boolean beforeSoftWrap) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.offsetToVisualLine(offset, beforeSoftWrap);
@@ -213,7 +212,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Override
     public int visualLineToOffset(int visualLine) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualLineToOffset(visualLine);
@@ -221,7 +220,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.xyToVisualPosition(p);
@@ -229,7 +228,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public Point2D visualPositionToXY(@Nonnull VisualPosition pos) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualPositionToXY(pos);
@@ -237,14 +236,14 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     @Nonnull
     public Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.offsetToXY(offset, leanTowardsLargerOffsets, beforeSoftWrap);
     }
 
     public void setPrefix(String prefixText, TextAttributes attributes) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myPrefixText = prefixText;
         synchronized (myLock) {
             myPrefixLayout = prefixText == null || prefixText.isEmpty() ? null : LineLayout.create(this, prefixText, attributes.getFontType());
@@ -270,19 +269,19 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     public void paint(Graphics2D g) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myEditor.getSoftWrapModel().prepareToMapping();
         checkFontRenderContext(g.getFontRenderContext());
         myPainter.paint(g);
     }
 
     public void repaintCarets() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myPainter.repaintCarets();
     }
 
     public Dimension getPreferredSize() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert !myEditor.isPurePaintingMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return mySizeManager.getPreferredSize();
@@ -298,21 +297,21 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
      * @return preferred pixel width
      */
     public int getPreferredWidth(int beginLine, int endLine) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert !myEditor.isPurePaintingMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return mySizeManager.getPreferredWidth(beginLine, endLine);
     }
 
     public int getPreferredHeight() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert !myEditor.isPurePaintingMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return mySizeManager.getPreferredHeight();
     }
 
     public int getMaxWidthInRange(int startOffset, int endOffset) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         int startVisualLine = offsetToVisualLine(startOffset, false);
         int endVisualLine = offsetToVisualLine(endOffset, true);
         return getMaxTextWidthInLineRange(startVisualLine, endVisualLine) + getInsets().left;
@@ -335,7 +334,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     public void reinitSettings() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         synchronized (myLock) {
             myPlainSpaceWidth = -1;
             myTabSize = -1;
@@ -360,7 +359,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     public void invalidateRange(int startOffset, int endOffset) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         int textLength = myDocument.getTextLength();
         if (startOffset > endOffset || startOffset >= textLength || endOffset < 0) {
             return;
@@ -375,14 +374,14 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
      * Invoked when document might have changed, but no notifications were sent (for a hacky document in EditorTextFieldCellRenderer)
      */
     public void reset() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myLogicalPositionCache.reset(true);
         myTextLayoutCache.resetToDocumentSize(true);
         mySizeManager.reset();
     }
 
     public boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myDocument.getTextLength() == 0) {
             return false;
         }
@@ -407,7 +406,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     public boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         int offset = visualPositionToOffset(visualPosition);
         int otherSideOffset = visualPositionToOffset(visualPosition.leanRight(!visualPosition.leansRight));
         return offset != otherSideOffset;
@@ -418,7 +417,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
      * corresponding boundary is not found.
      */
     public int findNearestDirectionBoundary(int offset, boolean lookForward) {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         int textLength = myDocument.getTextLength();
         if (textLength == 0 || offset < 0 || offset > textLength) {
             return -1;
@@ -677,14 +676,6 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
 
     int getBidiFlags() {
         return myBidiFlags;
-    }
-
-    private static void assertIsDispatchThread() {
-        UIAccess.assertIsUIThread();
-    }
-
-    private static void assertIsReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
     }
 
     @Override

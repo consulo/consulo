@@ -23,7 +23,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
@@ -96,7 +97,7 @@ import java.util.*;
 /**
  * @author max
  */
-public class InspectionResultsView extends JPanel implements Disposable, OccurenceNavigator, DataProvider {
+public class InspectionResultsView extends JPanel implements Disposable, OccurenceNavigator, UiDataProvider {
     public static final Key<InspectionResultsView> DATA_KEY = Key.create("inspectionView");
 
     private final Project myProject;
@@ -631,75 +632,101 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     }
 
     @Override
-    @RequiredReadAction
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (HelpManager.HELP_ID == dataId) {
-            return HELP_ID;
-        }
-        if (DATA_KEY == dataId) {
-            return this;
-        }
-        if (myTree == null) {
-            return null;
-        }
-        TreePath[] paths = myTree.getSelectionPaths();
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(HelpManager.HELP_ID, HELP_ID);
+        sink.set(DATA_KEY, this);
 
-        if (paths == null || paths.length == 0) {
-            return null;
-        }
-
-        if (paths.length > 1) {
-            if (PsiElement.KEY_OF_ARRAY == dataId) {
-                return collectPsiElements();
-            }
-            return null;
-        }
-
-        TreePath path = paths[0];
-
-        InspectionTreeNode selectedNode = (InspectionTreeNode) path.getLastPathComponent();
-
-        if (selectedNode instanceof RefElementNode refElementNode) {
-            RefEntity refElement = refElementNode.getElement();
-            if (refElement == null) {
+        sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
+            if (myTree == null) {
                 return null;
             }
-            RefEntity item = refElement.getRefManager().getRefinedElement(refElement);
-
-            if (!item.isValid()) {
+            TreePath[] paths = myTree.getSelectionPaths();
+            if (paths == null || paths.length <= 1) {
                 return null;
             }
+            return collectPsiElements();
+        });
 
-            PsiElement psiElement = item instanceof RefElement ? ((RefElement) item).getPsiElement() : null;
-            if (psiElement == null) {
+        sink.lazy(Navigatable.KEY, () -> {
+            if (myTree == null) {
                 return null;
             }
-
-            CommonProblemDescriptor problem = refElementNode.getProblem();
-            if (problem != null) {
-                if (problem instanceof ProblemDescriptor problemDescriptor) {
-                    psiElement = problemDescriptor.getPsiElement();
-                    if (psiElement == null) {
+            TreePath[] paths = myTree.getSelectionPaths();
+            if (paths == null || paths.length != 1) {
+                return null;
+            }
+            InspectionTreeNode selectedNode = (InspectionTreeNode) paths[0].getLastPathComponent();
+            if (selectedNode instanceof RefElementNode refElementNode) {
+                RefEntity refElement = refElementNode.getElement();
+                if (refElement == null) {
+                    return null;
+                }
+                RefEntity item = refElement.getRefManager().getRefinedElement(refElement);
+                if (!item.isValid()) {
+                    return null;
+                }
+                PsiElement psiElement = item instanceof RefElement ? ((RefElement) item).getPsiElement() : null;
+                if (psiElement == null) {
+                    return null;
+                }
+                CommonProblemDescriptor problem = refElementNode.getProblem();
+                if (problem != null) {
+                    if (problem instanceof ProblemDescriptor problemDescriptor) {
+                        psiElement = problemDescriptor.getPsiElement();
+                        if (psiElement == null) {
+                            return null;
+                        }
+                    }
+                    else {
                         return null;
                     }
                 }
-                else {
-                    return null;
-                }
-            }
-
-            if (Navigatable.KEY == dataId) {
                 return getSelectedNavigatable(problem, psiElement);
             }
-            else if (PsiElement.KEY == dataId) {
+            else if (selectedNode instanceof ProblemDescriptionNode descriptionNode) {
+                return getSelectedNavigatable(descriptionNode.getDescriptor());
+            }
+            return null;
+        });
+
+        sink.lazy(PsiElement.KEY, () -> {
+            if (myTree == null) {
+                return null;
+            }
+            TreePath[] paths = myTree.getSelectionPaths();
+            if (paths == null || paths.length != 1) {
+                return null;
+            }
+            InspectionTreeNode selectedNode = (InspectionTreeNode) paths[0].getLastPathComponent();
+            if (selectedNode instanceof RefElementNode refElementNode) {
+                RefEntity refElement = refElementNode.getElement();
+                if (refElement == null) {
+                    return null;
+                }
+                RefEntity item = refElement.getRefManager().getRefinedElement(refElement);
+                if (!item.isValid()) {
+                    return null;
+                }
+                PsiElement psiElement = item instanceof RefElement ? ((RefElement) item).getPsiElement() : null;
+                if (psiElement == null) {
+                    return null;
+                }
+                CommonProblemDescriptor problem = refElementNode.getProblem();
+                if (problem != null) {
+                    if (problem instanceof ProblemDescriptor problemDescriptor) {
+                        psiElement = problemDescriptor.getPsiElement();
+                        if (psiElement == null) {
+                            return null;
+                        }
+                    }
+                    else {
+                        return null;
+                    }
+                }
                 return psiElement.isValid() ? psiElement : null;
             }
-        }
-        else if (selectedNode instanceof ProblemDescriptionNode descriptionNode && Navigatable.KEY == dataId) {
-            return getSelectedNavigatable(descriptionNode.getDescriptor());
-        }
-
-        return null;
+            return null;
+        });
     }
 
     @Nullable

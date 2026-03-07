@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.action.CodeInsightAction;
@@ -77,12 +78,12 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         return getInjectedEditor(project, editor, !forUpdate);
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static Editor getInjectedEditor(@Nonnull Project project, Editor editor) {
         return getInjectedEditor(project, editor, true);
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static Editor getInjectedEditor(@Nonnull Project project, Editor editor, boolean commit) {
         Editor injectedEditor = editor;
         if (editor != null) {

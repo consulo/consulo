@@ -15,12 +15,14 @@
  */
 package consulo.project.ui.view.tree;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
@@ -46,15 +48,27 @@ public interface TreeStructureProvider {
     Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings);
 
     /**
+     * Override to populate UI data snapshot for the selection.
+     *
+     * @param sink      the data sink to populate
+     * @param selection the currently selected nodes
+     */
+    default void uiDataSnapshot(@Nonnull DataSink sink,
+                                @Nonnull Collection<? extends AbstractTreeNode> selection) {
+        // default: delegate to legacy getData for backward compatibility
+    }
+
+    /**
      * Returns a user data object of the specified type for the specified selection in the
      * project view.
      *
      * @param selected the list of nodes currently selected in the project view.
-     * @param dataKey  the identifier of the requested data object (for example, as defined in
-     *                 {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys})
+     * @param dataKey  the identifier of the requested data object
      * @return the data object, or null if no data object can be returned by this provider.
-     * @see DataProvider
+     * @deprecated Use {@link #uiDataSnapshot(DataSink, Collection)} instead.
      */
+    @Deprecated
+    @DeprecationInfo("Use #uiDataSnapshot(DataSink, Collection)")
     @Nullable
     default Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
         return null;

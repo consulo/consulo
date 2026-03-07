@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
-import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.dataContext.DataContext;
@@ -222,9 +222,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return;
         }
 
-        ProgressIndicatorUtils.yieldToPendingWriteActions();
-        ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
-            () -> {
+        ReadAction.nonBlocking(() -> {
                 if (!isDumbAware() && DumbService.isDumb(myProject)) {
                     return;
                 }
@@ -272,9 +270,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 finally {
                     Disposer.dispose(popup);
                 }
-            },
-            progressIndicator
-        );
+            })
+            .wrapProgress(progressIndicator)
+            .executeSynchronously();
     }
 
     private boolean processElement(
@@ -334,7 +332,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
             PsiElement psiElement = preparePsi(element, modifiers, searchText);
             Navigatable extNavigatable = createExtendedNavigatable(psiElement, searchText, modifiers);
-            if (extNavigatable != null && extNavigatable.canNavigate()) {
+            if (extNavigatable != null && extNavigatable.getNavigateOptions().canNavigate()) {
                 extNavigatable.navigate(true);
                 return true;
             }

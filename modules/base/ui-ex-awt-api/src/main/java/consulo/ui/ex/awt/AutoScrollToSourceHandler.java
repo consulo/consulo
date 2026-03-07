@@ -194,7 +194,7 @@ public abstract class AutoScrollToSourceHandler {
                 }
                 for (Navigatable navigatable : navigatables) {
                     // we are not going to open modal dialog during autoscrolling
-                    if (!navigatable.canNavigateToSource()) {
+                    if (!navigatable.getNavigateOptions().canNavigateToSource()) {
                         return;
                     }
                 }

@@ -2,7 +2,6 @@
 package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ProgressDialog;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -15,6 +14,7 @@ import consulo.ui.ex.awt.LabeledTitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.ui.ModalityState;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -271,7 +271,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
     @Override
     public void hide() {
-        ApplicationManager.getApplication().invokeLater(this::hideImmediately, IdeaModalityState.any());
+        ApplicationManager.getApplication().invokeLater(this::hideImmediately, ModalityState.any());
     }
 
     @Override
@@ -301,9 +301,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
         if (myPopup.getPeer().isRealDialog()) {
             myPopup.getPeer().setAutoRequestFocus(false);
-            if (isWriteActionProgress()) {
-                myPopup.setModal(false); // display the dialog and continue with EDT execution, don't block it forever
-            }
         }
         myPopup.pack();
 
@@ -325,10 +322,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     @Override
     public void runRepaintRunnable() {
         myRepaintRunnable.run();
-    }
-
-    private boolean isWriteActionProgress() {
-        return myProgressWindow instanceof PotemkinProgress;
     }
 
     private class MyDialogWrapper extends DialogWrapper {
@@ -386,7 +379,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
 
         private boolean useLightPopup() {
-            return System.getProperty("vintage.progress") == null && !isWriteActionProgress();
+            return System.getProperty("vintage.progress") == null;
         }
 
         @Nonnull

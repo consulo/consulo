@@ -2,8 +2,10 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.application.HelpManager;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.PlatformDataKeys;
@@ -18,7 +20,6 @@ import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
@@ -44,7 +45,7 @@ import java.util.*;
 /**
  * @author yole
  */
-public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataProvider, Disposable, DecoratorManager {
+public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvider, Disposable, DecoratorManager {
   private static final Border RIGHT_BORDER = IdeBorderFactory.createBorder(SideBorder.TOP | SideBorder.LEFT);
 
   private final Project myProject;
@@ -324,37 +325,22 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   }
 
   @Override
-  public void calcData(Key<?> dataId, DataSink sink) {
-    if (VcsDataKeys.CHANGES == dataId) {
-      Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
-      sink.put(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
+    sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
+    int count = myChangesTree.getSelectionCount();
+    sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, count > 0 ? Boolean.TRUE : Boolean.FALSE);
+    Collection<Change> changesWithMoved = collectChanges(getSelectedChangeLists(), true);
+    sink.set(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN, changesWithMoved.toArray(new Change[changesWithMoved.size()]));
+    List<CommittedChangeList> lists = getSelectedChangeLists();
+    if (!lists.isEmpty()) {
+      sink.set(VcsDataKeys.CHANGE_LISTS, lists.toArray(new CommittedChangeList[lists.size()]));
     }
-    else if (VcsDataKeys.HAVE_SELECTED_CHANGES == dataId) {
-      int count = myChangesTree.getSelectionCount();
-      sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, count > 0 ? Boolean.TRUE : Boolean.FALSE);
-    }
-    else if (VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN == dataId) {
-      Collection<Change> changes = collectChanges(getSelectedChangeLists(), true);
-      sink.put(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN, changes.toArray(new Change[changes.size()]));
-    }
-    else if (VcsDataKeys.CHANGE_LISTS == dataId) {
-      List<CommittedChangeList> lists = getSelectedChangeLists();
-      if (!lists.isEmpty()) {
-        sink.put(VcsDataKeys.CHANGE_LISTS, lists.toArray(new CommittedChangeList[lists.size()]));
-      }
-    }
-    else if (Navigatable.KEY_OF_ARRAY == dataId) {
-      Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
-      Navigatable[] result = ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes));
-      sink.put(Navigatable.KEY_OF_ARRAY, result);
-    }
-    else if (HelpManager.HELP_ID == dataId) {
-      sink.put(HelpManager.HELP_ID, myHelpId);
-    }
-    else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS == dataId) {
-      List<Change> selectedChanges = myDetailsView.getSelectedChanges();
-      sink.put(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
-    }
+    Navigatable[] navigatables = ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes));
+    sink.set(Navigatable.KEY_OF_ARRAY, navigatables);
+    sink.set(HelpManager.HELP_ID, myHelpId);
+    List<Change> selectedChanges = myDetailsView.getSelectedChanges();
+    sink.set(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
   }
 
   public TreeExpander getTreeExpander() {
@@ -441,7 +427,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     }
   }
 
-  private class ChangesBrowserTree extends Tree implements TypeSafeDataProvider {
+  private class ChangesBrowserTree extends Tree implements UiDataProvider {
     public ChangesBrowserTree() {
       super(buildTreeModel(myFilteringStrategy.filterChangeLists(myChangeLists)));
     }
@@ -451,22 +437,23 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
       return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void calcData(Key key, DataSink sink) {
-      if (CopyProvider.KEY == key) {
-        sink.put(CopyProvider.KEY, myCopyProvider);
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+      sink.set(CopyProvider.KEY, myCopyProvider);
+      sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+      DataContext dataContext = DataManager.getInstance().getDataContext(myDetailsView.getComponent());
+      Change[] selectedChanges = dataContext.getData(VcsDataKeys.SELECTED_CHANGES);
+      if (selectedChanges != null) {
+        sink.set(VcsDataKeys.SELECTED_CHANGES, selectedChanges);
       }
-      else if (PlatformDataKeys.TREE_EXPANDER == key) {
-        sink.put(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+      Change[] leadSelection = dataContext.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
+      if (leadSelection != null) {
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, leadSelection);
       }
-      else {
-        if (VcsDataKeys.SELECTED_CHANGES == key || VcsDataKeys.CHANGE_LEAD_SELECTION == key
-          || CommittedChangesBrowserUseCase.DATA_KEY == key) {
-          Object data = myDetailsView.getData(key);
-          if (data != null) {
-            sink.put(key, data);
-          }
-        }
+      CommittedChangesBrowserUseCase useCase = dataContext.getData(CommittedChangesBrowserUseCase.DATA_KEY);
+      if (useCase != null) {
+        sink.set(CommittedChangesBrowserUseCase.DATA_KEY, useCase);
       }
     }
   }

@@ -5,7 +5,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -59,7 +60,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, DataProvider, Disposable {
+public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, UiDataProvider, Disposable {
     protected static final Logger LOG = Logger.getInstance(TodoPanel.class);
 
     @Nonnull
@@ -404,8 +405,11 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
     }
 
     @Override
-    public Object getData(@Nonnull Key dataId) {
-        if (Navigatable.KEY == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(HelpManager.HELP_ID, "find.todoList");
+        sink.set(TODO_PANEL_DATA_KEY, this);
+        sink.lazy(Navigatable.KEY, () -> {
             TreePath path = myTree.getSelectionPath();
             if (path == null) {
                 return null;
@@ -415,7 +419,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
                 return null;
             }
             Object element = nodeDescriptor.getElement();
-            if (!(element instanceof TodoFileNode || element instanceof TodoItemNode)) { // allow user to use F4 only on files an TODOs
+            if (!(element instanceof TodoFileNode || element instanceof TodoItemNode)) {
                 return null;
             }
             TodoItemNode pointer = myTodoTreeBuilder.getFirstPointerForElement(element);
@@ -426,34 +430,20 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
                     pointer.getValue().getRangeMarker().getStartOffset()
                 );
             }
-            else {
-                return null;
-            }
-        }
-        else if (VirtualFile.KEY == dataId) {
+            return null;
+        });
+        sink.lazy(VirtualFile.KEY, () -> {
             PsiFile file = getSelectedFile();
             return file != null ? file.getVirtualFile() : null;
-        }
-        else if (PsiElement.KEY == dataId) {
-            return getSelectedElement();
-        }
-        else if (VirtualFile.KEY_OF_ARRAY == dataId) {
+        });
+        sink.lazy(PsiElement.KEY, () -> getSelectedElement());
+        sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> {
             PsiFile file = getSelectedFile();
             if (file != null) {
                 return new VirtualFile[]{file.getVirtualFile()};
             }
-            else {
-                return VirtualFile.EMPTY_ARRAY;
-            }
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            //noinspection HardCodedStringLiteral
-            return "find.todoList";
-        }
-        else if (TODO_PANEL_DATA_KEY == dataId) {
-            return this;
-        }
-        return super.getData(dataId);
+            return VirtualFile.EMPTY_ARRAY;
+        });
     }
 
     @Nullable

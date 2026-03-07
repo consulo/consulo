@@ -15,6 +15,7 @@
  */
 package consulo.usage.impl.internal.rule;
 
+import consulo.navigation.NavigateOptions;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -115,17 +116,12 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         }
 
         @Override
+        public NavigateOptions getNavigateOptions() {
+            return NavigateOptions.CANT_NAVIGATE;
+        }
+
+        @Override
         public void navigate(boolean focus) {
-        }
-
-        @Override
-        public boolean canNavigate() {
-            return false;
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
         }
 
         @Override

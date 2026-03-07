@@ -22,12 +22,12 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.bind</artifactId>
-    <version>3-SNAPSHOT</version>
+    <version>4-SNAPSHOT</version>
     <relativePath>../bind/pom.xml</relativePath>
   </parent>
 
   <artifactId>arch.ide-api-provided</artifactId>
-  <version>3-SNAPSHOT</version>
+  <version>4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <dependencies>

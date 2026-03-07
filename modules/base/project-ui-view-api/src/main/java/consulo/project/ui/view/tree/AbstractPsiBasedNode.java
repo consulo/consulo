@@ -18,11 +18,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.StatePreservingNavigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.tree.TreeNode;
 import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.ui.ex.tree.PresentationData;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Class for node descriptors based on PsiElements. Subclasses should define
@@ -241,21 +244,30 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         navigate(requestFocus, false);
     }
 
+    @Nonnull
     @Override
-    public boolean canNavigate() {
-        NavigationItem item = getNavigationItem();
-        return item != null && item.canNavigate();
+    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+        if (!getNavigateOptions().canNavigate()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        PsiElement psiElement = extractPsiFromValue();
+        if (psiElement == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        if (requestFocus) {
+            return PopupNavigationUtil.openFileWithPsiElementAsync(uiAccess, psiElement, requestFocus, requestFocus);
+        }
+        NavigationItem navigationItem = getNavigationItem();
+        if (navigationItem != null) {
+            return navigationItem.navigateAsync(uiAccess, requestFocus);
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public boolean canNavigateToSource() {
+    public NavigateOptions getNavigateOptions() {
         NavigationItem item = getNavigationItem();
-        return item != null && item.canNavigateToSource();
-    }
-
-    @Nullable
-    protected String calcTooltip() {
-        return null;
+        return item != null ? item.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

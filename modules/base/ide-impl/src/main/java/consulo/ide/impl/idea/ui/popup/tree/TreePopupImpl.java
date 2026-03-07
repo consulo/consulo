@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.popup.tree;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
@@ -343,7 +343,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
           if (insideOnChosen.get()) {
             LOG.error("Showing dialogs from popup onChosen can result in focus issues. Please put the handler into BaseStep.doFinalStep or PopupStep.getFinalRunnable.");
           }
-        }, IdeaModalityState.any());
+        }, ModalityState.any());
 
         PopupStep queriedStep;
         try {

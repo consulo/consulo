@@ -9,6 +9,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -44,11 +45,8 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.EmptyAction;
-import consulo.ui.ex.awt.AbstractLayoutManager;
-import consulo.ui.ex.awt.JBScrollBar;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
@@ -68,7 +66,7 @@ import java.util.Collections;
  * @author Gregory.Shrago
  * In case of REPL consider to use {@link LanguageConsoleBuilder}
  */
-public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx, DataProvider {
+public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx {
     private final Helper myHelper;
 
     private final ConsoleExecutionEditor myConsoleExecutionEditor;
@@ -134,7 +132,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         myPanel.add(myConsoleExecutionEditor.getComponent());
         myPanel.add(myScrollBar);
         myPanel.setBackground(TargetAWT.to(myConsoleExecutionEditor.getEditor().getBackgroundColor()));
-        DataManager.registerDataProvider(myPanel, this);
+        ClientProperty.put(myPanel, UiDataProvider.KEY, this);
     }
 
     @Override
@@ -419,12 +417,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         }
     }
 
-    @Nullable
-    @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
-        return super.getData(dataId);
-    }
-
     @Override
     @Nonnull
     public EditorEx getCurrentEditor() {
@@ -520,24 +512,14 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             editorSettings.setAdditionalLinesCount(1);
             editorSettings.setAdditionalColumnsCount(1);
 
-            DataManager.registerDataProvider(editor.getComponent(), (dataId) -> getEditorData(editor, dataId));
+            ClientProperty.put(editor.getComponent(), UiDataProvider.KEY, sink -> {
+                sink.set(OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR, editor);
+            });
         }
 
         @Nonnull
         public PsiFile getFileSafe() {
             return file == null || !file.isValid() ? file = getFile() : file;
-        }
-
-        @Nullable
-        protected Object getEditorData(@Nonnull EditorEx editor, Key dataId) {
-            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
-                return editor;
-            }
-            else if (project.isInitialized()) {
-                Caret caret = editor.getCaretModel().getCurrentCaret();
-                return FileEditorManagerEx.getInstanceEx(project).getData(dataId, editor, caret);
-            }
-            return null;
         }
     }
 

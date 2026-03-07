@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.localize.LocalizeValue;
@@ -65,7 +66,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
     @Override
     public void runCheckinHandlers(Runnable finishAction) {
         Runnable performCheckoutAction = () -> {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
             finishAction.run();
         };
 

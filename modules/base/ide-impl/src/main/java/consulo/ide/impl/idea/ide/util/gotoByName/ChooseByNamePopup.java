@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Semaphore;
@@ -90,7 +89,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       if (selEnd > selStart) {
         myTextField.select(selStart, selEnd);
       }
-      rebuildList(SelectionPolicyKt.fromIndex(myInitialIndex), 0, IdeaModalityState.current(), null);
+      rebuildList(SelectionPolicyKt.fromIndex(myInitialIndex), 0, ModalityState.nonModal(), null);
     }
     if (myOldFocusOwner != null) {
       myPreviouslyFocusedComponent = myOldFocusOwner;
@@ -454,7 +453,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   public List<Object> calcPopupElements(@Nonnull String text, boolean checkboxState) {
     List<Object> elements = List.of("empty");
     Semaphore semaphore = new Semaphore(1);
-    scheduleCalcElements(text, checkboxState, IdeaModalityState.nonModal(), SelectMostRelevant.INSTANCE, set -> {
+    scheduleCalcElements(text, checkboxState, ModalityState.nonModal(), SelectMostRelevant.INSTANCE, set -> {
       elements.clear();
       elements.addAll(set);
       semaphore.up();

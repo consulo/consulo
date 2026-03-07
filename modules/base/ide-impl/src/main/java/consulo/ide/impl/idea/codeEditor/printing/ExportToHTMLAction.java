@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -27,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -67,5 +69,20 @@ public class ExportToHTMLAction extends AnAction {
         }
         PsiFile psiFile = e.getData(PsiFile.KEY);
         presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
+    }
+
+    @Nonnull
+    @Override
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return OptionalReadLock.apply(o -> {
+            Presentation presentation = e.getPresentation();
+            if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
+                presentation.setEnabled(true);
+                return null;
+            }
+            PsiFile psiFile = e.getData(PsiFile.KEY);
+            presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
+            return null;
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
     }
 }

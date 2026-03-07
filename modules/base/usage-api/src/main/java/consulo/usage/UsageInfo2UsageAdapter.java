@@ -22,7 +22,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
@@ -39,6 +39,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -55,7 +56,6 @@ import consulo.usage.rule.UsageInModule;
 import consulo.usage.util.ChunkExtractor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -74,7 +74,7 @@ import java.util.function.Predicate;
  * @author max
  */
 public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, UsageInLibrary, UsageInFile, PsiElementUsage,
-    MergeableUsage, Comparable<UsageInfo2UsageAdapter>, RenameableUsage, TypeSafeDataProvider, UsagePresentation {
+    MergeableUsage, Comparable<UsageInfo2UsageAdapter>, RenameableUsage, UiDataProvider, UsagePresentation {
     public static final Function<UsageInfo, Usage> CONVERTER = UsageInfo2UsageAdapter::new;
     private static final Comparator<UsageInfo> BY_NAVIGATION_OFFSET = Comparator.comparingInt(UsageInfo::getNavigationOffset);
 
@@ -262,7 +262,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     @Override
     @RequiredReadAction
     public void navigate(boolean focus) {
-        if (canNavigate()) {
+        if (getNavigateOptions().canNavigate()) {
             openTextEditor(focus);
         }
     }
@@ -274,15 +274,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         VirtualFile file = getFile();
-        return file != null && file.isValid();
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+        return file != null && file.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @RequiredReadAction
@@ -498,14 +492,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (key == UsageView.USAGE_INFO_KEY) {
-            sink.put(UsageView.USAGE_INFO_KEY, getUsageInfo());
-        }
-        if (key == UsageView.USAGE_INFO_LIST_KEY) {
-            List<UsageInfo> list = Arrays.asList(getMergedInfos());
-            sink.put(UsageView.USAGE_INFO_LIST_KEY, list);
-        }
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(UsageView.USAGE_INFO_KEY, getUsageInfo());
+        sink.set(UsageView.USAGE_INFO_LIST_KEY, Arrays.asList(getMergedInfos()));
     }
 
     @Override

@@ -50,7 +50,7 @@ public class EditSourceOnDoubleClickHandlerBase {
     // navigate to source is preferred if the tree provides a navigatable object for the given path
     if (behavior == ExpandOnDoubleClick.NAVIGATABLE) {
       Navigatable navigatable = TreeUtil.getNavigatable(tree, path);
-      if (navigatable != null && navigatable.canNavigateToSource()) return false;
+      if (navigatable != null && navigatable.getNavigateOptions().canNavigateToSource()) return false;
     }
     if (behavior == ExpandOnDoubleClick.ALWAYS) return true;
     // for backward compatibility

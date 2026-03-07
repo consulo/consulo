@@ -64,6 +64,7 @@ public class XFramesView extends XDebugView {
     private final XDebuggerFramesList myFramesList;
     private final ComboBox<XExecutionStack> myThreadComboBox;
     private final Object2IntMap<XExecutionStack> myExecutionStacksWithSelection = new Object2IntOpenHashMap<>();
+    private final XDebugSessionImpl mySession;
     private XExecutionStack mySelectedStack;
     private int mySelectedFrameIndex;
     private Rectangle myVisibleRect;
@@ -73,7 +74,8 @@ public class XFramesView extends XDebugView {
     private boolean myThreadsCalculated = false;
     private boolean myRefresh = false;
 
-    public XFramesView(@Nonnull Project project) {
+    public XFramesView(@Nonnull Project project, XDebugSessionImpl session) {
+        mySession = session;
         myMainPanel = new JPanel(new BorderLayout());
 
         myFramesList = new XDebuggerFramesList(project);
@@ -81,7 +83,7 @@ public class XFramesView extends XDebugView {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (myListenersEnabled && !e.getValueIsAdjusting() && mySelectedFrameIndex != myFramesList.getSelectedIndex()) {
-                    processFrameSelection(getSession(e), true);
+                    processFrameSelection(mySession, true);
                 }
             }
         });
@@ -91,7 +93,7 @@ public class XFramesView extends XDebugView {
                 if (myListenersEnabled) {
                     int i = myFramesList.locationToIndex(e.getPoint());
                     if (i != -1 && myFramesList.isSelectedIndex(i)) {
-                        processFrameSelection(getSession(e), true);
+                        processFrameSelection(mySession, true);
                     }
                 }
             }
@@ -141,7 +143,6 @@ public class XFramesView extends XDebugView {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 Object item = e.getItem();
                 if (item != mySelectedStack && item instanceof XExecutionStack) {
-                    XDebugSession session = getSession(e);
                     if (session != null) {
                         myRefresh = false;
                         updateFrames((XExecutionStack) item, session, null);
@@ -152,7 +153,7 @@ public class XFramesView extends XDebugView {
         myThreadComboBox.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                XDebugSession session = getSession(e);
+                XDebugSession session = mySession;
                 XSuspendContext context = session == null ? null : session.getSuspendContext();
                 if (context != null && !myThreadsCalculated) {
                     myThreadsCalculated = true;
@@ -201,6 +202,11 @@ public class XFramesView extends XDebugView {
 
     private StackFramesListBuilder getOrCreateBuilder(XExecutionStack executionStack, XDebugSession session) {
         return myBuilders.computeIfAbsent(executionStack, k -> new StackFramesListBuilder(executionStack, session));
+    }
+
+    @Override
+    protected XDebugSession getSession() {
+        return mySession;
     }
 
     @Override

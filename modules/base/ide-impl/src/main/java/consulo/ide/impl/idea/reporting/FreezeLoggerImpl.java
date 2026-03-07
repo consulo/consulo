@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.reporting;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ApplicationManager;
 import consulo.application.util.FreezeLogger;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -49,7 +49,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
       return;
     }
 
-    IdeaModalityState initial = IdeaModalityState.current();
+    ModalityState initial = ModalityState.nonModal();
     ALARM.cancelAllRequests();
     ALARM.addRequest(() -> dumpThreads(project, initial), MAX_ALLOWED_TIME);
 
@@ -65,7 +65,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
     return Registry.is("typing.freeze.report.dumps");
   }
 
-  private static void dumpThreads(@Nullable ComponentManager project, @Nonnull IdeaModalityState initialState) {
+  private static void dumpThreads(@Nullable ComponentManager project, @Nonnull ModalityState initialState) {
     ThreadInfo[] infos = ThreadDumper.getThreadInfos();
     String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
     if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {
@@ -75,9 +75,9 @@ public class FreezeLoggerImpl extends FreezeLogger {
     boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project)project);
 
     ApplicationManager.getApplication().invokeLater(() -> {
-      if (!initialState.equals(IdeaModalityState.current())) return;
+      if (!initialState.equals(ModalityState.nonModal())) return;
       sendDumpsInBackground(infos, isInDumbMode);
-    }, IdeaModalityState.any());
+    }, ModalityState.any());
   }
 
   private static void sendDumpsInBackground(ThreadInfo[] infos, boolean isInDumbMode) {

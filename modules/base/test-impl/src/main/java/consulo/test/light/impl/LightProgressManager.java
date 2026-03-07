@@ -121,12 +121,6 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-    action.run();
-    return true;
-  }
-
-  @Override
   public boolean isInNonCancelableSection() {
     return false;
   }

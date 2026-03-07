@@ -463,18 +463,6 @@ public class WebUIInternalImpl extends UIInternal {
 //    action.run();
   }
 
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_any() {
-    return WebModalityState.INSTANCE;
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return WebModalityState.INSTANCE;
-  }
-
   private RuntimeException notSupported() {
     return new UnsupportedOperationException();
   }

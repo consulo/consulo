@@ -3,9 +3,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.event.ModalityStateListener;
-import consulo.application.impl.internal.LaterInvocator;
+import consulo.ui.ModalityState;
 import consulo.util.collection.FactoryMap;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
@@ -25,7 +23,7 @@ import java.util.*;
 
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
-public class UiActivityMonitorImpl extends UiActivityMonitor implements ModalityStateListener, Disposable {
+public class UiActivityMonitorImpl extends UiActivityMonitor implements Disposable {
   private final Map<Project, BusyContainer> myObjects = FactoryMap.create(this::create);
 
   @Nonnull
@@ -64,17 +62,11 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   };
 
   public void installListener() {
-    LaterInvocator.addModalityStateListener(this, this);
   }
 
   @Override
   public void dispose() {
     myObjects.clear();
-  }
-
-  @Override
-  public void beforeModalityStateChanged(boolean entering, @Nonnull Object modalEntity) {
-    SwingUtilities.invokeLater(this::maybeReady);
   }
 
   public void maybeReady() {
@@ -124,8 +116,8 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     addActivity(activity, getDefaultModalityState());
   }
 
-  private static IdeaModalityState getDefaultModalityState() {
-    return (IdeaModalityState)ApplicationManager.getApplication().getNoneModalityState();
+  private static ModalityState getDefaultModalityState() {
+    return ApplicationManager.getApplication().getNoneModalityState();
   }
 
   @Override
@@ -189,21 +181,21 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   private static class ActivityInfo {
-    private final IdeaModalityState myEffectiveState;
+    private final ModalityState myEffectiveState;
 
-    private ActivityInfo(@Nonnull IdeaModalityState effectiveState) {
+    private ActivityInfo(@Nonnull ModalityState effectiveState) {
       myEffectiveState = effectiveState;
     }
 
     @Nonnull
-    public IdeaModalityState getEffectiveState() {
+    public ModalityState getEffectiveState() {
       return myEffectiveState;
     }
   }
 
   @Nonnull
-  protected IdeaModalityState getCurrentState() {
-    return IdeaModalityState.current();
+  protected ModalityState getCurrentState() {
+    return ModalityState.nonModal();
   }
 
   private class BusyImpl extends BusyObject.Impl {
@@ -247,7 +239,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
       if (infoToCheck.isEmpty()) return true;
 
-      IdeaModalityState current = getCurrentState();
+      ModalityState current = getCurrentState();
       for (Map.Entry<UiActivity, ActivityInfo> entry : infoToCheck.entrySet()) {
         ActivityInfo info = entry.getValue();
         if (!current.dominates(info.getEffectiveState())) {
@@ -258,7 +250,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       return true;
     }
 
-    public void addActivity(@Nonnull UiActivity activity, @Nonnull IdeaModalityState effectiveModalityState) {
+    public void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
       if (!myToWatch.isEmpty() && !myToWatch.contains(activity)) return;
 
       myActivities.put(activity, new ActivityInfo(effectiveModalityState));
@@ -383,7 +375,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       getOrCreateBusy(activity);
       Set<BusyImpl> busies = myObject2Activities.keySet();
       for (BusyImpl each : busies) {
-        each.addActivity(activity, (IdeaModalityState)state);
+        each.addActivity(activity, state);
       }
     }
 

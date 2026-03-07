@@ -233,7 +233,7 @@ public class ExternalStorageManager {
 
             LOG.info("Reloading components: " + reloadComponentNames);
 
-            AppUIExecutor.onWriteThread(ModalityState.nonModal()).later().execute(() -> {
+            AppUIExecutor.onUiThread(ModalityState.nonModal()).later().execute(() -> {
                 myApplicationStore.reinitComponents(reloadComponentNames, true);
 
                 myApplication.invokeLater(() -> {
@@ -312,7 +312,7 @@ public class ExternalStorageManager {
 
             myStorage.setInitialized(true);
 
-            StoreUtil.save(myApplicationStore, true, null);
+            StoreUtil.save(myApplicationStore, myApplication.getLastUIAccess(), true, null);
 
             // if there plugins change - require restart
             if (myPluginManager.updatePlugins(indicator)) {

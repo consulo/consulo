@@ -30,11 +30,6 @@ public final class CopyConfigurationAction extends AnAction {
         super(ActionLocalize.actionRundashboardCopyconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
     }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);

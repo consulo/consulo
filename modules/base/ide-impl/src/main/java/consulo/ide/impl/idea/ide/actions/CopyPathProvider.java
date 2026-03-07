@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
@@ -34,6 +35,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -81,19 +83,23 @@ public class CopyPathProvider extends DumbAwareAction {
             .build();
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-        Editor editor = e.getData(Editor.KEY);
-        Project project = e.getData(Project.KEY);
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return OptionalReadLock.apply(i -> {
+            Editor editor = e.getData(Editor.KEY);
+            Project project = e.getData(Project.KEY);
 
-        DataContext dataContext = e.getDataContext();
-        String qualifiedName = project != null
-            ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
-            : null;
+            DataContext dataContext = e.getDataContext();
+            String qualifiedName = project != null
+                ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
+                : null;
 
-        Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
-        presentation.setEnabledAndVisible(qualifiedName != null);
+            Presentation presentation = e.getPresentation();
+            presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
+            presentation.setEnabledAndVisible(qualifiedName != null);
+            return null;
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
     }
 
     @Nullable

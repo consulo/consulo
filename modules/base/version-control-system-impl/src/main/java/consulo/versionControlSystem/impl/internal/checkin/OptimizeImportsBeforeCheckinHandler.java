@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
@@ -64,7 +65,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
         Runnable performCheckoutAction = () -> {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
             finishAction.run();
         };
 

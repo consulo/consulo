@@ -21,6 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.WindowHacking;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
@@ -251,7 +252,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
         myJFrame = new MyFrame();
         myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
-        myJFrame.toUIWindow().addUserDataProvider(key -> getData(key));
+        myJFrame.toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+            if (myProject != null && myProject.isInitialized()) {
+                sink.set(Project.KEY, myProject);
+            }
+            sink.set(IdeFrame.KEY, this);
+        });
 
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = new IdeRootPane(actionManager, dataManager, application, this);
@@ -460,19 +466,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myJFrame.getAccessibleContextWithoutInitialization();
     }
 
-    private Object getData(@Nonnull Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            if (myProject != null) {
-                return myProject.isInitialized() ? myProject : null;
-            }
-        }
-
-        if (IdeFrame.KEY == dataId) {
-            return this;
-        }
-
-        return null;
-    }
 
     public void setProject(Project project) {
         if (WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && myProject != project && project != null) {

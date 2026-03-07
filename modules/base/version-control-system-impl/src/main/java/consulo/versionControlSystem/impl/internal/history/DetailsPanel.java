@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.impl.internal.history;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
@@ -38,7 +39,7 @@ import java.util.List;
 import static consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer.formatTextWithLinks;
 import static consulo.versionControlSystem.ui.awt.VcsFontUtil.getHtmlWithFonts;
 
-class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
+class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -122,9 +123,8 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
     return true;
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    return KEY == dataId ? this : null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(CopyProvider.KEY, this);
   }
 }

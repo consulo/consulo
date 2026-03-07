@@ -18,7 +18,8 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
@@ -68,7 +69,7 @@ import java.util.function.Predicate;
 /**
  * @author spLeaner
  */
-public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<AWTEvent>, DataProvider {
+public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<AWTEvent>, UiDataProvider {
     private static final Key<String> WIDGET_ID = Key.create("STATUS_BAR_WIDGET_ID");
 
     private static final int MIN_ICON_HEIGHT = 24 + 1 + 1;
@@ -322,18 +323,10 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull Key dataId) {
-        if (Project.KEY == dataId) {
-            return getProject();
-        }
-        if (StatusBar.KEY == dataId) {
-            return this;
-        }
-        if (HOVERED_WIDGET_ID == dataId) {
-            return myHoveredComponent instanceof JComponent ? UIUtil.getClientProperty((JComponent) myHoveredComponent, WIDGET_ID) : null;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(Project.KEY, this::getProject);
+        sink.set(StatusBar.KEY, this);
+        sink.lazy(HOVERED_WIDGET_ID, () -> myHoveredComponent instanceof JComponent ? UIUtil.getClientProperty((JComponent) myHoveredComponent, WIDGET_ID) : null);
     }
 
     @Override

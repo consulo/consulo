@@ -21,6 +21,7 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposer;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.Label;
@@ -251,44 +252,26 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
         if (myTreeBrowser != null && myTreeBrowser.isVisible()) {
-            return null;
+            return;
         }
-        if (Navigatable.KEY == dataId) {
+        sink.lazy(Navigatable.KEY, () -> {
             if (mySelectedFile == null || !mySelectedFile.isValid()) {
                 return null;
             }
             return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(mySelectedFile).build();
-        }
-        else if (VirtualFile.KEY_OF_ARRAY == dataId) {
-            return getVirtualFileArray();
-        }
-        else if (VcsDataKeys.IO_FILE_ARRAY == dataId) {
-            return getFileArray();
-        }
-        else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
-            if (myGroupByChangeList) {
-                return myTreeBrowser != null ? myTreeBrowser.getTreeExpander() : null;
-            }
-            else {
-                return myTreeExpander;
-            }
-        }
-        else if (VcsDataKeys.UPDATE_VIEW_SELECTED_PATH == dataId) {
-            return mySelectedUrl;
-        }
-        else if (VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE == dataId) {
-            return myTreeIterable;
-        }
-        else if (VcsDataKeys.LABEL_BEFORE == dataId) {
-            return myBefore;
-        }
-        else if (VcsDataKeys.LABEL_AFTER == dataId) {
-            return myAfter;
-        }
-
-        return super.getData(dataId);
+        });
+        sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> getVirtualFileArray());
+        sink.lazy(VcsDataKeys.IO_FILE_ARRAY, () -> getFileArray());
+        sink.set(PlatformDataKeys.TREE_EXPANDER, myGroupByChangeList
+            ? (myTreeBrowser != null ? myTreeBrowser.getTreeExpander() : null)
+            : myTreeExpander);
+        sink.set(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH, mySelectedUrl);
+        sink.set(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE, myTreeIterable);
+        sink.set(VcsDataKeys.LABEL_BEFORE, myBefore);
+        sink.set(VcsDataKeys.LABEL_AFTER, myAfter);
     }
 
     private class MyTreeIterator implements Iterator<Pair<FilePath, FileStatus>> {

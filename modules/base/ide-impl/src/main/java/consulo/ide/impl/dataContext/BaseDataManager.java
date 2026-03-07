@@ -16,21 +16,15 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.*;
 import consulo.dataContext.internal.DataManagerEx;
-import consulo.dataContext.internal.DataRuleHoler;
-import consulo.dataContext.internal.GetDataRuleCache;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncPromise;
@@ -48,19 +42,14 @@ import jakarta.inject.Provider;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2019-02-16
  */
-public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
-    public static interface DataContextWithEventCount extends DataContext {
-        void setEventCount(int eventCount, Object caller);
-    }
-
+public abstract class BaseDataManager implements DataManagerEx {
     public static abstract class BaseDataContext<M extends BaseDataManager, C> implements DataContext, UserDataHolder {
         private final M myDataManager;
         private final Reference<C> myRef;
@@ -150,7 +139,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
                 return (T) component;
             }
             if (ModalityState.KEY == dataId) {
-                return (T) IdeaModalityState.nonModal(); //FIXME [VISTALL] stub
+                return (T) ModalityState.nonModal(); //FIXME [VISTALL] stub
             }
             if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
                 Editor editor = (Editor) getDataManager().getData(dataId, component);
@@ -179,34 +168,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         myWindowManager = windowManagerProvider;
     }
 
-    @Override
-    @Nullable
-    public <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId) {
-        GetDataRule<T> rule = getRuleFromMap(dataId);
-        if (rule != null) {
-            return rule;
-        }
-
-        final GetDataRule<T> plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
-        if (plainRule != null) {
-            return new GetDataRule<>() {
-                @Nonnull
-                @Override
-                public Key<T> getKey() {
-                    return plainRule.getKey();
-                }
-
-                @Nullable
-                @Override
-                public T getData(@Nonnull DataProvider dataProvider) {
-                    return plainRule.getData(key -> dataProvider.getData(AnActionEvent.injectedId(key)));
-                }
-            };
-        }
-
-        return null;
-    }
-
     @Nonnull
     @Override
     public AsyncResult<DataContext> getDataContextFromFocus() {
@@ -224,13 +185,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Nullable
-    @SuppressWarnings("unchecked")
-    protected <T> GetDataRule<T> getRuleFromMap(@Nonnull Key<T> dataId) {
-        Map<Key, GetDataRule> map = myApplication.getExtensionPoint(GetDataRule.class).getOrBuildCache(GetDataRuleCache.CACHE_KEY);
-        return map.get(dataId);
-    }
-
-    @Nullable
     public <T> T getDataFromProvider(@Nonnull DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
@@ -240,18 +194,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
             if (data != null) {
                 return validated(data, dataId, provider);
             }
-
-            GetDataRule<T> dataRule = getDataRule(dataId);
-            if (dataRule != null) {
-                Set<Key> ids = alreadyComputedIds == null ? new HashSet<>() : alreadyComputedIds;
-                ids.add(dataId);
-                data = dataRule.getData(id -> getDataFromProvider(provider, id, ids));
-
-                if (data != null) {
-                    return validated(data, dataId, provider);
-                }
-            }
-
             return null;
         }
         finally {
@@ -297,13 +239,33 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     @Nullable
     protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
-            DataProvider dataProvider = c::getUserData;
+            DataProvider dataProvider = getDataProviderForComponent(c);
             T data = getDataFromProvider(dataProvider, dataId, null);
             if (data != null) {
                 return data;
             }
         }
         return null;
+    }
+
+    @Nonnull
+    protected DataProvider getDataProviderForComponent(@Nonnull consulo.ui.Component component) {
+        if (component instanceof UiDataProvider uiProvider) {
+            return new UiDataProviderAdapter(uiProvider);
+        }
+        return component::getUserData;
+    }
+
+    @Nonnull
+    @Override
+    public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+        consulo.ui.Component component = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+        List<DataProvider> providers = new ArrayList<>();
+        for (consulo.ui.Component c = component; c != null; c = c.getParent()) {
+            DataProvider provider = getDataProviderForComponent(c);
+            providers.add(PreCachedDataContext.initProviderForAsync(provider));
+        }
+        return new PreCachedDataContext(this, providers);
     }
 
     @Nonnull

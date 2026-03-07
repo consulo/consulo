@@ -18,7 +18,8 @@ package consulo.execution.debug.impl.internal.ui.tree;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.RemoteRunProfile;
 import consulo.execution.debug.XDebugSession;
@@ -71,7 +72,7 @@ import java.util.function.Predicate;
 /**
  * @author nik
  */
-public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposable, XValueTree {
+public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Disposable, XValueTree {
     private final ComponentListener myMoveListener = new ComponentAdapter() {
         @Override
         public void componentMoved(ComponentEvent e) {
@@ -297,18 +298,16 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull Key dataId) {
-        if (XDEBUGGER_TREE_KEY == dataId || XValueTree.KEY == dataId) {
-            return this;
-        }
-        if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(XDEBUGGER_TREE_KEY, this);
+        sink.set(XValueTree.KEY, this);
+        sink.lazy(PlatformDataKeys.PREDEFINED_TEXT, () -> {
             XValueNodeImpl[] selectedNodes = getSelectedNodes(XValueNodeImpl.class, null);
             if (selectedNodes.length == 1 && selectedNodes[0].getFullValueEvaluator() == null) {
                 return DebuggerUIImplUtil.getNodeRawValue(selectedNodes[0]);
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     public void rebuildAndRestore(XDebuggerTreeState treeState) {

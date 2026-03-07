@@ -19,6 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -94,7 +95,7 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         boolean result = true;
 
         if (!files.isEmpty()) {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
             @SuppressWarnings("unchecked") Consumer<List<Change>> consumer = browser == null ? null : changes -> {
                 browser.rebuildList();

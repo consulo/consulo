@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
@@ -43,11 +43,12 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
@@ -57,12 +58,13 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2017-09-25
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
     public static final String ID = "ToolWindowManager";
 
     /**
@@ -224,10 +226,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     public abstract void initializeUI();
 
     @RequiredUIAccess
-    protected abstract void initializeEditorComponent();
+    public abstract void initializeEditorComponent();
 
     @RequiredUIAccess
-    protected void postInitialize() {
+    public void postInitialize() {
         updateToolWindowsPane();
     }
 
@@ -275,14 +277,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Nonnull
-    protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
-        List<AsyncResult<Void>> results = new ArrayList<>();
+    public CompletableFuture<?> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
+        List<CompletableFuture<?>> results = new ArrayList<>();
 
-        myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
-            AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
-            results.add(toolWindowResult);
-
-            uiAccess.give(() -> {
+        for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+            results.add(uiAccess.giveAsync(() -> {
                 if (factory.validate(myProject)) {
                     try {
                         initToolWindow(factory);
@@ -294,14 +293,14 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                         LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
                     }
                 }
-            }).notify(toolWindowResult);
-        });
+            }));
+        }
 
-        return AsyncResult.merge(results);
+        return CompletableFuture.allOf(results.toArray(CompletableFuture[]::new));
     }
 
     @RequiredUIAccess
-    protected void connectModuleExtensionListener() {
+    public void connectModuleExtensionListener() {
         myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void rootsChanged(ModuleRootEvent event) {
@@ -1203,6 +1202,16 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Override
     public void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l) {
         myDispatcher.removeListener(l);
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    protected abstract Element readStateFromUI();
+
+    @Nonnull
+    @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return Coroutine.first(UIAction.<Void, Element>apply(ignored -> readStateFromUI()));
     }
 
     @Override

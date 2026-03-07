@@ -23,11 +23,6 @@ public final class AddServiceActionGroup extends DefaultActionGroup implements D
         return true;
     }
 
-//    @Override
-//    public @NotNull ActionUpdateThread getActionUpdateThread() {
-//        return ActionUpdateThread.BGT;
-//    }
-
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(getSelectedView(e) != null);

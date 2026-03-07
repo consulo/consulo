@@ -18,7 +18,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.compiler.internal.CompilerWorkspaceConfiguration;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -104,7 +105,7 @@ import static consulo.util.lang.StringUtil.isEmpty;
 /**
  * @author Vladislav.Soroka
  */
-public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildConsoleView, Filterable<ExecutionNodeImpl>, OccurenceNavigator {
+public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildConsoleView, Filterable<ExecutionNodeImpl>, OccurenceNavigator {
     private static final Logger LOG = Logger.getInstance(BuildTreeConsoleView.class);
 
     private static final String TREE = "tree";
@@ -887,21 +888,11 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull Key dataId) {
-        if (HelpManager.HELP_ID == dataId) {
-            return "reference.build.tool.window";
-        }
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            return extractSelectedNodesNavigatables();
-        }
-        if (Navigatable.KEY == dataId) {
-            return extractSelectedNodeNavigatable();
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(HelpManager.HELP_ID, "reference.build.tool.window");
+        sink.set(Project.KEY, myProject);
+        sink.lazy(Navigatable.KEY_OF_ARRAY, () -> (Navigatable[]) extractSelectedNodesNavigatables());
+        sink.lazy(Navigatable.KEY, () -> (Navigatable) extractSelectedNodeNavigatable());
     }
 
     private

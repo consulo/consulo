@@ -2,7 +2,8 @@ package consulo.execution.coverage.view;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunManager;
@@ -53,7 +54,7 @@ import java.awt.event.MouseEvent;
  * @author anna
  * @since 2012-01-02
  */
-public class CoverageView extends JPanel implements DataProvider, Disposable {
+public class CoverageView extends JPanel implements UiDataProvider, Disposable {
     private static final String ACTION_DRILL_DOWN = "DrillDown";
     private static final String ACTION_GO_UP = "GoUp";
     private static final String HELP_ID = "reference.toolWindows.Coverage";
@@ -243,7 +244,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
             return;
         }
         if (treeStructure.getChildElements(element).length == 0) {
-            if (element.canNavigate()) {
+            if (element.getNavigateOptions().canNavigate()) {
                 element.navigate(true);
             }
             return;
@@ -284,14 +285,9 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     @Override
-    public Object getData(@Nonnull Key dataId) {
-        if (Navigatable.KEY == dataId) {
-            return getSelectedValue();
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return HELP_ID;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(Navigatable.KEY, getSelectedValue());
+        sink.set(HelpManager.HELP_ID, HELP_ID);
     }
 
     private static class NodeDescriptorTableCellRenderer extends DefaultTableCellRenderer {

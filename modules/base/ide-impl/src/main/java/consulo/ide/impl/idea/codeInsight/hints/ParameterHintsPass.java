@@ -55,7 +55,6 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
 
     /**
      * Updates inlays recursively for a given element.
-     * Use {@link NonBlockingReadActionImpl#waitForAsyncTaskCompletion() } in tests to wait for the results.
      * <p>
      * Return promise in EDT.
      */

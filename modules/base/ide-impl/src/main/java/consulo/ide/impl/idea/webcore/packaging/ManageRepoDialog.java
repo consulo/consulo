@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.webcore.packaging;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -55,7 +55,7 @@ public class ManageRepoDialog extends DialogWrapper {
                     repoModel.addElement(repoUrl);
                 }
             },
-            IdeaModalityState.any()
+            ModalityState.any()
         ));
         result.doWhenRejectedWithThrowable(e -> application.invokeLater(() -> {
             if (isDisposed()) {

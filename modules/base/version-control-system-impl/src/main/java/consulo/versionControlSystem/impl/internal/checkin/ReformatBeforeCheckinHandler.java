@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.project.Project;
@@ -62,7 +63,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
         Runnable performCheckoutAction = () -> {
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
             finishAction.run();
         };
 

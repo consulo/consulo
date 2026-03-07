@@ -17,6 +17,7 @@ package consulo.language.editor.impl.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.LangDataKeys;
@@ -37,12 +38,14 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -71,13 +74,17 @@ public abstract class BaseAnalysisAction extends AnAction {
         myAnalysisNoon = analysisNoon;
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = event.getData(Project.KEY);
-        boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
-        presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+        return OptionalReadLock.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            DataContext dataContext = event.getDataContext();
+            Project project = event.getData(Project.KEY);
+            boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
+            presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+            return null;
+        }, () -> event.getPresentation().setEnabled(false)).toCoroutine();
     }
 
     @Override
@@ -130,7 +137,7 @@ public abstract class BaseAnalysisAction extends AnAction {
             uiOptions.SCOPE_TYPE = oldScopeType;
         }
         uiOptions.ANALYZE_TEST_SOURCES = dlg.isInspectTestSources();
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         analyze(project, scope);
     }

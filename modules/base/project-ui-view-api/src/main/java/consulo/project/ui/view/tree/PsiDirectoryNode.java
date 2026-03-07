@@ -18,6 +18,7 @@ package consulo.project.ui.view.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.language.content.ProjectRootsUtil;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackageHelper;
@@ -174,20 +175,16 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     }
 
     @Override
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         VirtualFile file = getVirtualFile();
         Project project = getProject();
 
         ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
-        return file != null &&
+        boolean canNavigate = file != null &&
             ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings())
                 || (ProjectRootsUtil.isModuleSourceRoot(file, project) && service.canOpenContentEntriesSettings())
                 || (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return false;
+        return canNavigate ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

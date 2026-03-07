@@ -17,8 +17,6 @@ package consulo.application.concurrent.coroutine;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import jakarta.annotation.Nonnull;
@@ -49,18 +47,10 @@ public final class WriteLock<I, O> extends CoroutineStep<I, O> {
 
     @Override
     protected O execute(I input, Continuation<?> continuation) {
-        UIAccess.assetIsNotUIThread();
+        Application application =
+            Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
 
-        ApplicationWithIntentWriteLock application =
-            (ApplicationWithIntentWriteLock) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
-
-        try {
-            application.acquireWriteIntentLock(WriteLock.class.getName());
-            //noinspection RequiredXAction
-            return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
-        }
-        finally {
-            application.releaseWriteIntentLock();
-        }
+        //noinspection RequiredXAction
+        return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
     }
 }

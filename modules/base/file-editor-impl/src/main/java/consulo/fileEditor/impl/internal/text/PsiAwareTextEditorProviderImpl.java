@@ -17,6 +17,7 @@ package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
@@ -52,11 +53,19 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     super(textEditorComponentContainerFactory);
   }
 
+  @Nonnull
+  @Override
+  protected FileEditor createEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document) {
+    return new PsiAwareTextEditorImpl(project, file, document, this);
+  }
+
   @RequiredUIAccess
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new PsiAwareTextEditorImpl(project, file, this);
+    Document document = Application.get().runReadAction(
+        (java.util.function.Supplier<Document>) () -> FileDocumentManager.getInstance().getDocument(file));
+    return new PsiAwareTextEditorImpl(project, file, document, this);
   }
 
   @Override

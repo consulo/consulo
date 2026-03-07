@@ -16,7 +16,7 @@
 package consulo.fileEditor.internal;
 
 import consulo.application.Application;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -30,7 +30,7 @@ public class SearchReplaceComponentBuilder {
   private final Project myProject;
   private final JComponent myTargetComponent;
 
-  private DataProvider myDataProvider;
+  private UiDataProvider myDataProvider;
 
   private Runnable myReplaceAction;
   private Runnable myCloseAction;
@@ -50,7 +50,7 @@ public class SearchReplaceComponentBuilder {
   }
 
   @Nonnull
-  public SearchReplaceComponentBuilder withDataProvider(@Nonnull DataProvider provider) {
+  public SearchReplaceComponentBuilder withDataProvider(@Nonnull UiDataProvider provider) {
     myDataProvider = provider;
     return this;
   }

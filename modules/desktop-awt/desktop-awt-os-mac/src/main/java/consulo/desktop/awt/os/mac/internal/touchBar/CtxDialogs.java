@@ -1,7 +1,6 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
@@ -57,7 +56,7 @@ final class CtxDialogs {
         // Process customizations
         //
 
-        ModalityState ms = LaterInvocator.getCurrentModalityState();
+        ModalityState ms = ModalityState.nonModal();
         final TBPanel.CrossEscInfo crossEscInfo = isCrossEscGroup(actions) ? new TBPanel.CrossEscInfo(true, false) : null;
         Customizer customizer = new Customizer(crossEscInfo, null/*dialog actions mustn't be closed because of auto-close*/) {
             private final @Nonnull WeakReference<Component> myRoot = new WeakReference<>(contentPane);

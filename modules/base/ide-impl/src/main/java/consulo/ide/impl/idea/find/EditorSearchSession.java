@@ -10,10 +10,12 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.dataContext.DataManager;
 import consulo.document.RangeMarker;
 import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.fileEditor.internal.SearchReplaceComponent;
@@ -57,7 +59,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * @author max, andrey.zaytsev
  */
-public class EditorSearchSession implements SearchSession, DataProvider, SelectionListener, SearchResults.SearchResultsListener, SearchReplaceComponent.Listener {
+public class EditorSearchSession implements SearchSession, UiDataProvider, SelectionListener, SearchResults.SearchResultsListener, SearchReplaceComponent.Listener {
     private static final String FIND_TYPE = "FindInFile";
     public static final Key<EditorSearchSession> SESSION_KEY = Key.create("EditorSearchSession");
 
@@ -226,7 +228,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     public static EditorSearchSession get(@Nullable Editor editor) {
         JComponent headerComponent = editor != null ? editor.getHeaderComponent() : null;
         SearchReplaceComponent searchReplaceComponent = ObjectUtil.tryCast(headerComponent, SearchReplaceComponent.class);
-        return searchReplaceComponent != null ? searchReplaceComponent.getDataUnchecked(SESSION_KEY) : null;
+        return searchReplaceComponent != null ? DataManager.getInstance().getDataContext(searchReplaceComponent.getComponent()).getData(SESSION_KEY) : null;
     }
 
     @Nonnull
@@ -279,21 +281,11 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull Key dataId) {
-        if (SearchSession.KEY == dataId) {
-            return this;
-        }
-        if (SESSION_KEY == dataId) {
-            return this;
-        }
-        if (EditorKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
-            return myEditor;
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return myFindModel.isReplaceState() ? HelpID.REPLACE_IN_EDITOR : HelpID.FIND_IN_EDITOR;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(SearchSession.KEY, this);
+        sink.set(SESSION_KEY, this);
+        sink.set(EditorKeys.EDITOR_EVEN_IF_INACTIVE, myEditor);
+        sink.set(HelpManager.HELP_ID, myFindModel.isReplaceState() ? HelpID.REPLACE_IN_EDITOR : HelpID.FIND_IN_EDITOR);
     }
 
     @Override

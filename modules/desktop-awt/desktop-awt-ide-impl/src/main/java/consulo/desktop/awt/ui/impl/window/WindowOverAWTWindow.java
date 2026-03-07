@@ -38,7 +38,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -152,12 +151,6 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     @Override
     public void setSize(@Nonnull Size2D size) {
         throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        return myUIDataObject.addUserDataProvider(function);
     }
 
     @Override

@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.CommonBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -52,7 +53,7 @@ import java.util.function.Function;
  * @author max
  * @since 2006-07-20
  */
-public class ChangeListViewerDialog extends DialogWrapper implements DataProvider, LegacyDialog {
+public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvider, LegacyDialog {
   private Project myProject;
   private CommittedChangeList myChangeList;
   private InternalRepositoryChangesBrowser myChangesBrowser;
@@ -121,16 +122,12 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (VcsDataKeys.CHANGES == dataId) {
-      return myChanges;
+  @Override
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(VcsDataKeys.CHANGES, myChanges);
+    if (myChangeList instanceof VcsRevisionNumberAware) {
+      sink.set(VcsDataKeys.VCS_REVISION_NUMBER, ((VcsRevisionNumberAware)myChangeList).getRevisionNumber());
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBER == dataId) {
-      if (myChangeList instanceof VcsRevisionNumberAware) {
-        return ((VcsRevisionNumberAware)myChangeList).getRevisionNumber();
-      }
-    }
-    return null;
   }
 
   public void setConvertor(Function<Change, Change> convertor) {
@@ -152,12 +149,9 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@Nonnull Key dataId) {
-        Object data = super.getData(dataId);
-        if (data != null) {
-          return data;
-        }
-        return ChangeListViewerDialog.this.getData(dataId);
+      public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        ChangeListViewerDialog.this.uiDataSnapshot(sink);
       }
 
       @Override

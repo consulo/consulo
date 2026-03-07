@@ -3,6 +3,8 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -40,6 +42,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -181,9 +184,10 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         );
     }
 
+    @SuppressWarnings("unchecked")
     @Nonnull
     @Override
-    public ListPopupStep<ActionPopupItem> createActionsStep(
+    public PopupStep createActionsStep(
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         @Nullable String actionPlace,
@@ -195,7 +199,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         int defaultOptionIndex,
         boolean autoSelectionEnabled
     ) {
-        return ActionPopupStep.createActionsStep(
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        CompletableFuture<ListPopupStep<ActionPopupItem>> stepFuture = ActionPopupStep.createActionsStep(
             actionGroup,
             dataContext,
             showNumbers,
@@ -208,8 +213,20 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             actionPlace,
             null,
             defaultOptionIndex,
-            new BasePresentationFactory()
+            new BasePresentationFactory(),
+            indicator
         );
+        return new AsyncPopupStep<>() {
+            @Override
+            public PopupStep call() throws Exception {
+                return stepFuture.get();
+            }
+
+            @Override
+            public void cancelBackgroundWork() {
+                indicator.cancel();
+            }
+        };
     }
 
     @Nonnull

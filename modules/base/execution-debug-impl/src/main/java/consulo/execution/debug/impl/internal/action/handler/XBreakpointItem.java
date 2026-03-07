@@ -24,6 +24,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
 import consulo.execution.debug.impl.internal.breakpoint.ui.XLightBreakpointPropertiesPanel;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
@@ -121,21 +122,15 @@ class XBreakpointItem extends BreakpointItem {
   @Override
   public void navigate(boolean requestFocus) {
     Navigatable navigatable = myBreakpoint.getNavigatable();
-    if (navigatable != null && navigatable.canNavigate()) {
+    if (navigatable != null && navigatable.getNavigateOptions().canNavigate()) {
       navigatable.navigate(requestFocus);
     }
   }
 
   @Override
-  public boolean canNavigate() {
+  public NavigateOptions getNavigateOptions() {
     Navigatable navigatable = myBreakpoint.getNavigatable();
-    return navigatable != null && navigatable.canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    Navigatable navigatable = myBreakpoint.getNavigatable();
-    return navigatable != null && navigatable.canNavigateToSource();
+    return navigatable != null ? navigatable.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   private XBreakpointManagerImpl getManager() {

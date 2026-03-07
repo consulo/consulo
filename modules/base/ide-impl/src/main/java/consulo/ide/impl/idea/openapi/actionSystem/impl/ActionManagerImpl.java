@@ -5,7 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.internal.LastActionTracker;
 import consulo.application.progress.ProgressIndicator;
@@ -1550,7 +1550,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                             if (!result.isProcessed()) {
                                 WindowEvent we = (WindowEvent) event1;
                                 IdeFocusManager.findInstanceByComponent(we.getWindow())
-                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
+                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), ModalityState.nonModal());
                             }
                         }
                     },
@@ -1562,7 +1562,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 result.setDone();
                 queueActionPerformedEvent(action, context, event);
             },
-            IdeaModalityState.defaultModalityState()
+            ModalityState.nonModal()
         );
     }
 
@@ -1643,12 +1643,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
 
         private void runListenerAction(@Nonnull TimerListener listener) {
-            IdeaModalityState modalityState = (IdeaModalityState) listener.getModalityState();
+            ModalityState modalityState = (ModalityState) listener.getModalityState();
             if (modalityState == null) {
                 return;
             }
             LOG.debug("notify ", listener);
-            if (!IdeaModalityState.current().dominates(modalityState)) {
+            if (!ModalityState.nonModal().dominates(modalityState)) {
                 try {
                     listener.run();
                 }

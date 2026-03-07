@@ -2,22 +2,18 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AllIcons;
-import consulo.application.util.registry.Registry;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.psi.PsiElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.image.Image;
-import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -33,7 +29,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class NavBarItem extends SimpleColoredComponent implements DataProvider, Disposable {
+public class NavBarItem extends SimpleColoredComponent implements UiDataProvider, Disposable {
   private final String myText;
   private final SimpleTextAttributes myAttributes;
   private final int myIndex;
@@ -42,6 +38,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   private final TreeAnchorizerValue<?> myObject;
   private final boolean isPopupElement;
   private final NavBarUI myUI;
+  private final boolean myNeedPaintIcon;
 
   public NavBarItem(NavBarPanel panel, Object object, int idx, Disposable parent) {
     this(panel, object, idx, parent, false);
@@ -53,6 +50,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     myObject = object == null ? null : TreeAnchorizer.getService().createAnchorValue(object);
     myIndex = idx;
     isPopupElement = idx == -1;
+    myNeedPaintIcon = false;
 
     if (object != null) {
       NavBarPresentation presentation = myPanel.getPresentation();
@@ -88,6 +86,38 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     else {
       setIconOpaque(true);
       setFocusBorderAroundIcon(true);
+    }
+
+    update();
+  }
+
+  /**
+   * Constructor accepting pre-computed presentation data.
+   * No ReadAction needed — all presentation is pre-computed on background thread.
+   */
+  public NavBarItem(NavBarPanel panel, NavBarItemData data, int idx, Disposable parent) {
+    myPanel = panel;
+    myUI = panel.getNavBarUI();
+    myObject = TreeAnchorizer.getService().tryCreateAnchorValue(data.element());
+    myIndex = idx;
+    isPopupElement = false;
+    myText = data.text();
+    myIcon = data.icon();
+    myAttributes = data.attributes();
+    myNeedPaintIcon = data.needPaintIcon();
+
+    Disposer.register(parent == null ? panel : parent, this);
+
+    setOpaque(false);
+    setIpad(myUI.getElementIpad(false));
+    setBorder(null);
+    setPaintFocusBorder(false);
+    setIconOpaque(false);
+    if (myPanel.allowNavItemsFocus()) {
+      setFocusTraversalKeysEnabled(false);
+      setFocusable(true);
+      addKeyListener(new KeyHandler());
+      addFocusListener(new FocusHandler());
     }
 
     update();
@@ -183,11 +213,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   }
 
   public boolean needPaintIcon() {
-    if (Registry.is("navBar.show.icons") || isPopupElement || isLastElement()) {
-      return true;
-    }
-    Object object = getObject();
-    return object instanceof PsiElement && ((PsiElement)object).getContainingFile() != null;
+    return myNeedPaintIcon;
   }
 
   @Nonnull
@@ -227,10 +253,12 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     return myIndex == myPanel.getModel().getSelectedIndex() - 1;
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    return myPanel.getDataImpl(dataId, this, () -> JBIterable.of(getObject()));
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    Object obj = getObject();
+    sink.set(NavBarPanel.NAV_BAR_ITEMS, obj != null ? List.of(obj) : List.of());
+    // Delegate non-selection data to panel (Project, CopyPaste, IdeView, etc.)
+    sink.uiDataSnapshot(myPanel);
   }
 
   @Override

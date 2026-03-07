@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 
 import jakarta.annotation.Nonnull;
@@ -26,6 +27,7 @@ public interface ErrorStripeRenderer {
   int getSquareSize();
 
   @Nonnull
+  @RequiredReadAction
   default AnalyzerStatus getStatus(@Nonnull Editor editor) {
     return AnalyzerStatus.DEFAULT.getValue();
   }

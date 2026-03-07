@@ -15,21 +15,13 @@
  */
 package consulo.desktop.awt.ui;
 
-import consulo.application.AccessToken;
 import consulo.awt.hacking.AppContextHacking;
 
 import java.awt.*;
 
 class IdeKeyboardFocusManager extends DefaultKeyboardFocusManager {
-  @Override
-  public boolean dispatchEvent(AWTEvent e) {
-    try (AccessToken ignore = (EventQueue.isDispatchThread() ? IdeEventQueue.startActivity(e) : null)) {
-      return super.dispatchEvent(e);
+    static IdeKeyboardFocusManager replaceDefault() {
+        AppContextHacking.put(KeyboardFocusManager.class, new IdeKeyboardFocusManager());
+        return (IdeKeyboardFocusManager) getCurrentKeyboardFocusManager();
     }
-  }
-
-  static IdeKeyboardFocusManager replaceDefault() {
-    AppContextHacking.put(KeyboardFocusManager.class, new IdeKeyboardFocusManager());
-    return (IdeKeyboardFocusManager)getCurrentKeyboardFocusManager();
-  }
 }

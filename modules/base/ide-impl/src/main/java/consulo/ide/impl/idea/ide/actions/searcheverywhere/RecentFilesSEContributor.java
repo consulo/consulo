@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
-import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
@@ -70,9 +70,7 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
         List<VirtualFile> history = Lists.reverse(EditorHistoryManagerImpl.getInstance(myProject).getFileList());
 
         List<FoundItemDescriptor<Object>> res = new ArrayList<>();
-        ProgressIndicatorUtils.yieldToPendingWriteActions();
-        ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
-            () -> {
+        ReadAction.nonBlocking(() -> {
                 PsiManager psiManager = PsiManager.getInstance(myProject);
                 Stream<VirtualFile> stream = history.stream();
                 if (!StringUtil.isEmptyOrSpaces(searchString)) {
@@ -90,9 +88,9 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
                 );
 
                 ContainerUtil.process(res, predicate);
-            },
-            progressIndicator
-        );
+            })
+            .wrapProgress(progressIndicator)
+            .executeSynchronously();
     }
 
     @Override

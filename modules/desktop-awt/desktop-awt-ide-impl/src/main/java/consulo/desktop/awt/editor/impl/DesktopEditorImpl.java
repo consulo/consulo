@@ -2,7 +2,6 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -76,6 +75,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;
@@ -638,7 +638,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                             EditorInternalUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
                         }
                     },
-                    IdeaModalityState.any()
+                    ModalityState.any()
                 );
             }
         }

@@ -17,6 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -38,7 +39,6 @@ import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -68,8 +68,12 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       myOwner = owner;
       myParent = parent;
 
-      toUIWindow().putUserData(IdeFrame.KEY, this);
-      toUIWindow().addUserDataProvider(this::getData);
+      toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(IdeFrame.KEY, this);
+        if (owner != null) {
+          owner.uiDataSnapshot(sink);
+        }
+      });
 
       setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
@@ -155,13 +159,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setMenuBar((MenuBar)null);
     }
 
-    private Object getData(@Nonnull Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
-    }
-
     @Override
     public void paint(Graphics g) {
       UISettingsUtil.setupAntialiasing(g);
@@ -186,15 +183,12 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-      toUIWindow().putUserData(IdeFrame.KEY, this);
-      toUIWindow().addUserDataProvider(this::getData);
-    }
-
-    private Object getData(@Nonnull Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
+      toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(IdeFrame.KEY, this);
+        if (owner != null) {
+            owner.uiDataSnapshot(sink);
+        }
+      });
     }
 
     @Nonnull

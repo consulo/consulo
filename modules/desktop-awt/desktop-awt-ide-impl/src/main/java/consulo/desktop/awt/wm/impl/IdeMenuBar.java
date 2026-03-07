@@ -16,7 +16,6 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.dataContext.DataContext;
@@ -33,6 +32,7 @@ import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Animator;
@@ -440,8 +440,8 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
   private final class MyTimerListener implements TimerListener {
     @Override
-    public IdeaModalityState getModalityState() {
-      return IdeaModalityState.stateForComponent(IdeMenuBar.this);
+    public ModalityState getModalityState() {
+      return ModalityState.nonModal();
     }
 
     @Override

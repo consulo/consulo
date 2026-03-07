@@ -27,6 +27,7 @@ import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesManager;
 import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -96,13 +97,8 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                 }
 
                 @Override
-                public boolean canNavigate() {
-                    return bookmark.canNavigate();
-                }
-
-                @Override
-                public boolean canNavigateToSource() {
-                    return bookmark.canNavigateToSource();
+                public NavigateOptions getNavigateOptions() {
+                    return bookmark.getNavigateOptions();
                 }
 
                 @Override

@@ -23,14 +23,13 @@ import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -282,12 +281,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
 
     if (myExecuteInDispatchThread) {
       Application application = Application.get();
-      if(application.isUnifiedApplication()) {
-        application.getLastUIAccess().giveAndWaitIfNeed(toRun);
-      }
-      else {
-        UIUtil.invokeAndWaitIfNeeded(toRun);
-      }
+      application.getLastUIAccess().execute(toRun);
     }
     else {
       toRun.run();

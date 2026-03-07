@@ -6,6 +6,10 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tree.PresentationData;
@@ -48,6 +52,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
     }
 
     setForcedForeground(presentation);
+    setBackground(presentation);
   }
 
   @Override
@@ -62,6 +67,29 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
 
     if (presentation.getForcedTextForeground() == null) {
       presentation.setForcedTextForeground(fgColor);
+    }
+  }
+
+  protected void setBackground(@Nonnull PresentationData presentation) {
+    Project project = getProject();
+    if (project == null || project.isDisposed()) return;
+
+    VirtualFile file = getVirtualFile();
+
+    if (file == null) {
+      Object value = getValue();
+      if (value instanceof PsiFileSystemItem) {
+        file = ((PsiFileSystemItem) value).getVirtualFile();
+      }
+      else if (value instanceof PsiElement psiElement) {
+        if (psiElement.isValid()) {
+          file = PsiUtilCore.getVirtualFile(psiElement);
+        }
+      }
+    }
+
+    if (file != null) {
+      presentation.setBackground(VfsPresentationUtil.getFileBackgroundColor(project, file));
     }
   }
 

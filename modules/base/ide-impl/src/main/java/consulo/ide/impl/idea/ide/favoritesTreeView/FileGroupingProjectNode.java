@@ -22,6 +22,7 @@ import consulo.project.ui.view.tree.ViewSettings;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.navigation.NavigateOptions;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -76,12 +77,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
 
   // todo possibly we need file
   @Override
-  public boolean canNavigate() {
-    return myVirtualFile != null && myVirtualFile.isValid();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return myVirtualFile != null && myVirtualFile.isValid();
+  public NavigateOptions getNavigateOptions() {
+    return myVirtualFile != null && myVirtualFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 }

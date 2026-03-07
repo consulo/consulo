@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.simple;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.dataContext.DataSink;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
@@ -819,20 +820,17 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     // Helpers
     //
 
-    @Nullable
     @Override
-    @RequiredUIAccess
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
-            return myPrevNextDifferenceIterable;
-        }
-        else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
             SimpleDiffChange change = getSelectedChange(getCurrentSide());
             if (change != null) {
                 return new LineRange(change.getStartLine(getCurrentSide()), change.getEndLine(getCurrentSide()));
             }
-        }
-        return super.getData(dataId);
+            return null;
+        });
     }
 
     private class MySyncScrollable extends BaseSyncScrollable {

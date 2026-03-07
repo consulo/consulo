@@ -22,8 +22,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -89,10 +87,8 @@ public interface DataManager {
     throw new UnsupportedOperationException();
   }
 
-  public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
-
-  public static void registerDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull DataProvider provider) {
-    component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, provider);
+  public static void registerUiDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull UiDataProvider provider) {
+    component.putClientProperty(UiDataProvider.KEY, provider);
   }
 
   /**
@@ -100,15 +96,6 @@ public interface DataManager {
    */
   default DataContext getDataContext(@Nullable java.awt.Component component) {
     throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  public static DataProvider getDataProvider(@Nonnull javax.swing.JComponent component) {
-    return (DataProvider)component.getClientProperty(CLIENT_PROPERTY_DATA_PROVIDER);
-  }
-
-  public static void removeDataProvider(@Nonnull javax.swing.JComponent component) {
-    component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, null);
   }
   // endregion
 }

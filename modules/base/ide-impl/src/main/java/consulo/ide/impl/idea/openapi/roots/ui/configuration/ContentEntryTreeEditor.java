@@ -19,7 +19,8 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
@@ -51,7 +52,6 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ComparatorUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -265,18 +265,14 @@ public class ContentEntryTreeEditor {
         }
     }
 
-    private class MyPanel extends JPanel implements DataProvider {
+    private class MyPanel extends JPanel implements UiDataProvider {
         private MyPanel(LayoutManager layout) {
             super(layout);
         }
 
         @Override
-        @Nullable
-        public Object getData(@Nonnull Key<?> dataId) {
-            if (FileSystemTree.DATA_KEY == dataId) {
-                return myFileSystemTree;
-            }
-            return null;
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
         }
     }
 

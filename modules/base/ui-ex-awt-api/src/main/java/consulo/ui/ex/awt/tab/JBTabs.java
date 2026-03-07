@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.tab;
 
 import consulo.component.util.ActiveRunnable;
-import consulo.dataContext.DataProvider;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.concurrent.ActionCallback;
@@ -57,9 +56,6 @@ public interface JBTabs {
 
     @Nonnull
     JBTabsPresentation getPresentation();
-
-    @Nullable
-    DataProvider getDataProvider();
 
     @Nullable
     TabInfo getTargetInfo();

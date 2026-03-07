@@ -16,6 +16,7 @@
 package consulo.usage.impl.internal.rule;
 
 import consulo.application.AllIcons;
+import consulo.navigation.NavigateOptions;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;
@@ -111,14 +112,9 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     @Override
     public boolean isValid() { return true; }
     @Override
+    public NavigateOptions getNavigateOptions() { return NavigateOptions.CANT_NAVIGATE; }
+    @Override
     public void navigate(boolean focus) { }
-    @Override
-    public boolean canNavigate() { return false; }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return false;
-    }
 
     @Override
     public int compareTo(UsageGroup usageGroup) {

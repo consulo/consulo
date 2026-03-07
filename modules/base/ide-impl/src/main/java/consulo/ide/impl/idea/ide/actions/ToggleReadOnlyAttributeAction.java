@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -95,7 +96,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
     public void actionPerformed(@Nonnull AnActionEvent e) {
         myApplication.runWriteAction(() -> {
             // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
             try {
                 VirtualFile[] files = getFiles(e.getDataContext());

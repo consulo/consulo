@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -147,7 +148,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             if (!manager.myUnsavedDocuments.isEmpty()) {
                 manager.myOnClose = true;
                 try {
-                    manager.saveAllDocuments();
+                    manager.saveAllDocuments(UIAccess.current());
                 }
                 finally {
                     manager.myOnClose = false;
@@ -187,9 +188,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
     }
 
+    @RequiredReadAction
     @Nullable
     @Override
-    @RequiredUIAccess
     public Document getDocument(@Nonnull VirtualFile file) {
         Application.get().assertReadAccessAllowed();
         DocumentEx document = (DocumentEx) getCachedDocument(file);
@@ -328,13 +329,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         });
     }
 
-    /**
-     * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
-     */
     @Override
-    @RequiredUIAccess
-    public void saveAllDocuments(boolean isExplicit) {
-        UIAccess.assertIsUIThread();
+    @RequiredWriteAction
+    public void saveAllDocuments(@Nonnull UIAccess uiAccess, boolean isExplicit) {
+        Application.get().assertWriteAccessAllowed();
 
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
@@ -368,7 +366,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
 
         if (!failedToSave.isEmpty()) {
-            handleErrorsOnSave(failedToSave);
+            uiAccess.give(() -> handleErrorsOnSave(failedToSave));
         }
     }
 

@@ -21,6 +21,7 @@ import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
@@ -32,6 +33,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.io.FileUtil;
@@ -46,6 +48,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
     public PsiFileNode(Project project, @Nonnull PsiFile value, ViewSettings viewSettings) {
@@ -93,8 +96,11 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     }
 
     @Override
-    public boolean canNavigate() {
-        return isNavigatableLibraryRoot() || super.canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        if (isNavigatableLibraryRoot()) {
+            return NavigateOptions.CAN_NAVIGATE_NO_SOURCE;
+        }
+        return super.getNavigateOptions();
     }
 
     private boolean isNavigatableLibraryRoot() {
@@ -128,6 +134,21 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         }
 
         super.navigate(requestFocus);
+    }
+
+    @Nonnull
+    @Override
+    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+        VirtualFile jarRoot = getArchiveRoot();
+        Project project = getProject();
+        if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
+            OrderEntry orderEntry = ModuleContentLibraryUtil.findLibraryEntry(jarRoot, project);
+            if (orderEntry != null) {
+                return uiAccess.giveAsync(() -> ProjectSettingsService.getInstance(project).openLibraryOrSdkSettings(orderEntry));
+            }
+        }
+
+        return super.navigateAsync(uiAccess, requestFocus);
     }
 
     @Nonnull

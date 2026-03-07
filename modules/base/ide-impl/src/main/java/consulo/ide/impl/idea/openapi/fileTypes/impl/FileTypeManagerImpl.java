@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.ui.ModalityState;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
@@ -221,7 +221,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                         myPatternsTable.removeAllAssociations(scheme);
                         app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
                     },
-                    ModalityStateImpl.NON_MODAL
+                    ModalityState.nonModal()
                 );
             }
 

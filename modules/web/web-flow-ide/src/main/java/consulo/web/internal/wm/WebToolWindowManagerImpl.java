@@ -118,7 +118,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
         setEditorComponent(editorComponent);
@@ -218,18 +218,10 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     protected void updateToolWindowsPane() {
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Element getStateFromUI() {
+    protected Element readStateFromUI() {
         return new Element("state");
-    }
-
-    @Nullable
-    @Override
-    @RequiredUIAccess
-    public Element getState(Element element) {
-        return element;
     }
 
     @Override

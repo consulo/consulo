@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.InspectionsAggregationUtil;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
@@ -304,7 +304,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
             if (myTreeTable != null) {
                 if (!myUpdateAlarm.isDisposed()) {
                     myUpdateAlarm.cancelAllRequests();
-                    myUpdateAlarm.addRequest(myUpdateRunnable, 10, IdeaModalityState.stateForComponent(myTreeTable));
+                    myUpdateAlarm.addRequest(myUpdateRunnable, 10, ModalityState.nonModal());
                 }
             }
         }

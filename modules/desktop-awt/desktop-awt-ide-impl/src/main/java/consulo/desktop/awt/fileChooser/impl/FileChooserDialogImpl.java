@@ -18,12 +18,12 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.*;
@@ -38,6 +38,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -51,7 +52,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -370,7 +370,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                 new ApplicationActivationListener() {
                     @Override
                     public void applicationActivated(IdeFrame ideFrame) {
-                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.nonModal());
                     }
                 }
             );
@@ -569,23 +569,16 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
-    protected final class MyPanel extends JPanel implements DataProvider {
+    protected final class MyPanel extends JPanel implements UiDataProvider {
         public MyPanel() {
             super(new BorderLayout(0, 0));
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
-            if (VirtualFile.KEY_OF_ARRAY == dataId) {
-                return myFileSystemTree.getSelectedFiles();
-            }
-            else if (PathField.PATH_FIELD == dataId) {
-                return (PathField)FileChooserDialogImpl.this::toggleShowTextField;
-            }
-            else if (FileSystemTree.DATA_KEY == dataId) {
-                return myFileSystemTree;
-            }
-            return myChooserDescriptor.getUserData(dataId);
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> myFileSystemTree.getSelectedFiles());
+            sink.set(PathField.PATH_FIELD, (PathField)FileChooserDialogImpl.this::toggleShowTextField);
+            sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
         }
     }
 

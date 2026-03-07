@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.memory.MemoryViewManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -41,8 +40,4 @@ public class ShowClassesWithInstanceAction extends ToggleAction implements DumbA
         }
     }
 
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
 }

@@ -25,7 +25,6 @@ import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.impl.internal.text.TextEditorPsiDataProvider;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
@@ -75,7 +74,8 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     myProblemSolver = problemSolver;
     myPsiTreeChangeListener = new MyPsiTreeChangeListener();
     myProblemListener = new MyProblemListener();
-    registerExtraEditorDataProvider(new TextEditorPsiDataProvider(), null);
+    // PSI data is now provided by TextEditorPsiDataRule (UiDataRule) via DataSink.lazy()
+    // instead of TextEditorPsiDataProvider (EditorDataProvider) called synchronously on EDT
 
     // reinit syntax highlighter for Groovy. In power save mode keywords are highlighted by GroovySyntaxHighlighter insteadof
     // GrKeywordAndDeclarationHighlighter. So we need to drop caches for token types attributes in LayeredLexerEditorHighlighter

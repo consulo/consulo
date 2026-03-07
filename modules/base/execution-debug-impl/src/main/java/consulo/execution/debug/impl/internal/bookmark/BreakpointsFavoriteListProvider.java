@@ -161,7 +161,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
 
     @RequiredReadAction
     private static boolean checkNavigatable(AbstractTreeNode<?> node) {
-        if (node.getValue() instanceof Navigatable navigatable && navigatable.canNavigate()) {
+        if (node.getValue() instanceof Navigatable navigatable && navigatable.getNavigateOptions().canNavigate()) {
             return true;
         }
         Collection<? extends AbstractTreeNode> children = node.getChildren();

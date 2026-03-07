@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.internal;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 27/06/2023
  */
-public interface SearchReplaceComponent extends DataProvider {
+public interface SearchReplaceComponent extends UiDataProvider {
     public interface Listener extends EventListener {
         default void searchFieldDocumentChanged() {
         }

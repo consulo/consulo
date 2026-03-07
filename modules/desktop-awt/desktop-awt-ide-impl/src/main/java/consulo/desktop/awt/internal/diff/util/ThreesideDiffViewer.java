@@ -30,15 +30,14 @@ import consulo.desktop.awt.internal.diff.EditorHolder;
 import consulo.desktop.awt.internal.diff.EditorHolderFactory;
 import consulo.desktop.awt.internal.diff.util.side.ThreesideContentPanel;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -155,16 +154,11 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     return getCurrentSide().select(getEditorHolders());
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (VirtualFile.KEY == dataId) {
-      return DiffImplUtil.getVirtualFile(myRequest, getCurrentSide());
-    }
-    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
-      return getCurrentSide().select(myRequest.getContents());
-    }
-    return super.getData(dataId);
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    super.uiDataSnapshot(sink);
+    sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, getCurrentSide()));
+    sink.lazy(DiffDataKeys.CURRENT_CONTENT, () -> getCurrentSide().select(myRequest.getContents()));
   }
 
   //

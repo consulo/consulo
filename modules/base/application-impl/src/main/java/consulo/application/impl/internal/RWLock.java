@@ -47,8 +47,4 @@ public interface RWLock {
     void writeLock();
 
     void writeUnlock();
-
-    void writeIntentLock();
-
-    void writeIntentUnlock();
 }

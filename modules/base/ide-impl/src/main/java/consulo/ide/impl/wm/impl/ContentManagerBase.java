@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -43,6 +43,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,7 +70,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     private boolean myDisposed;
     protected final Project myProject;
 
-    protected final List<DataProvider> myDataProviders = new SmartList<>();
+    protected final List<UiDataProvider> myDataProviders = new SmartList<>();
     private List<Content> mySelectionHistory = new ArrayList<>();
 
     /**
@@ -566,7 +567,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    public void addDataProvider(@Nonnull DataProvider provider) {
+    public void addUiDataProvider(@NotNull UiDataProvider provider) {
         myDataProviders.add(provider);
     }
 

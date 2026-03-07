@@ -28,20 +28,17 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface InvokerFactory {
-  @Nonnull
-  static InvokerFactory getInstance() {
-    return Application.get().getInstance(InvokerFactory.class);
-  }
+    @Nonnull
+    static InvokerFactory getInstance() {
+        return Application.get().getInstance(InvokerFactory.class);
+    }
 
-  @Nonnull
-  Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent);
+    @Nonnull
+    Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent);
 
-  @Nonnull
-  Invoker forBackgroundPoolWithReadAction(@Nonnull Disposable parent);
+    @Nonnull
+    Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent);
 
-  @Nonnull
-  Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent);
-
-  @Nonnull
-  Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent);
+    @Nonnull
+    Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent);
 }

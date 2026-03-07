@@ -18,7 +18,8 @@ package consulo.desktop.awt.internal.versionControlSystem.patch;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.TextEditorHolder;
 import consulo.desktop.awt.internal.diff.action.SetEditorSettingsAction;
 import consulo.desktop.awt.internal.diff.merge.MergeModelBase;
@@ -58,7 +59,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.primitive.ints.IntList;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
@@ -69,7 +69,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-class ApplyPatchViewer implements DataProvider, Disposable {
+class ApplyPatchViewer implements UiDataProvider, Disposable {
     public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
 
     @Nullable
@@ -287,16 +287,10 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return myPatchChanges;
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
-            return myPrevNextDifferenceIterable;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(Project.KEY, myProject);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
     }
 
     @Nonnull

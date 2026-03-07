@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.HighlighterLayer;
@@ -88,7 +88,7 @@ public class EditorAdapter {
         }
 
         if (myFlushAlarm.getActiveRequestCount() == 0) {
-            myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.nonModal());
+            myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, ModalityState.nonModal());
         }
     }
 

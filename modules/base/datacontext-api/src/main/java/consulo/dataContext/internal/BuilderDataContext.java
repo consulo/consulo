@@ -16,8 +16,6 @@
 package consulo.dataContext.internal;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
@@ -40,16 +38,7 @@ public class BuilderDataContext implements DataContext {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getData(@Nonnull Key<T> dataId) {
-    Object result = getDataFromSelfOrParent(dataId);
-
-    if (result == null) {
-      GetDataRule rule = ((DataRuleHoler)DataManager.getInstance()).getDataRule(dataId);
-      if (rule != null) {
-        return (T)rule.getData(this::getDataFromSelfOrParent);
-      }
-    }
-
-    return (T)result;
+    return (T) getDataFromSelfOrParent(dataId);
   }
 
   private Object getDataFromSelfOrParent(@Nonnull Key dataId) {

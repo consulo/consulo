@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.annotation.ExternalLanguageAnnotators;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
@@ -155,7 +155,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
                 List<HighlightInfo> infos = getHighlights();
                 UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
               }
-            }, IdeaModalityState.stateForComponent(myEditor.getComponent()));
+            }, ModalityState.nonModal());
           }
         });
       }

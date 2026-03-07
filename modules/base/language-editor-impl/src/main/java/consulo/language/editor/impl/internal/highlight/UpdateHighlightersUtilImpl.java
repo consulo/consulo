@@ -27,8 +27,6 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -49,7 +47,7 @@ public class UpdateHighlightersUtilImpl {
             && info.getGutterIconRenderer() == null;
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void addHighlighterToEditorIncrementally(
         @Nonnull Project project,
         @Nonnull Document document,
@@ -62,7 +60,6 @@ public class UpdateHighlightersUtilImpl {
         int group,
         @Nonnull Map<TextRange, RangeMarker> ranges2markersCache
     ) {
-        UIAccess.assertIsUIThread();
         if (UpdateHighlightersUtil.isFileLevelOrGutterAnnotation(info)) {
             return;
         }
@@ -143,7 +140,7 @@ public class UpdateHighlightersUtilImpl {
         return o1.getDescription().compareTo(o2.getDescription());
     };
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void setHighlightersInRange(
         @Nonnull Project project,
         @Nonnull Document document,
@@ -154,7 +151,6 @@ public class UpdateHighlightersUtilImpl {
         @Nonnull MarkupModelEx markup,
         int group
     ) {
-        UIAccess.assertIsUIThread();
 
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         HighlightersRecycler infosToRemove = new HighlightersRecycler();
@@ -305,7 +301,6 @@ public class UpdateHighlightersUtilImpl {
 
         TextRange finalInfoRange = new TextRange(infoStartOffset, infoEndOffset);
         TextAttributes infoAttributes = info.getTextAttributes(psiFile, colorsScheme);
-        @RequiredUIAccess
         Consumer<RangeHighlighterEx> changeAttributes = finalHighlighter -> {
             if (infoAttributes != null) {
                 finalHighlighter.setTextAttributes(infoAttributes);
@@ -416,10 +411,8 @@ public class UpdateHighlightersUtilImpl {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, null);
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void updateHighlightersByTyping(@Nonnull Project project, @Nonnull DocumentEvent e) {
-        UIAccess.assertIsUIThread();
-
         Document document = e.getDocument();
         if (document instanceof DocumentEx && document.isInBulkUpdate()) {
             return;
@@ -516,7 +509,7 @@ public class UpdateHighlightersUtilImpl {
 
 
     // set highlights inside startOffset,endOffset but outside priorityRange
-    @RequiredUIAccess
+    @RequiredReadAction
     static void setHighlightersOutsideRange(
         @Nonnull Project project,
         @Nonnull Document document,
@@ -529,7 +522,6 @@ public class UpdateHighlightersUtilImpl {
         @Nonnull ProperTextRange priorityRange,
         int group
     ) {
-        UIAccess.assertIsUIThread();
 
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         if (startOffset == 0 && endOffset == document.getTextLength()) {
@@ -544,7 +536,6 @@ public class UpdateHighlightersUtilImpl {
         Lists.quickSort(infos, BY_START_OFFSET_NODUPS);
         Set<HighlightInfo> infoSet = new HashSet<>(infos);
 
-        @RequiredUIAccess
         Predicate<HighlightInfo> processor = info -> {
             HighlightInfoImpl highlightInfo = (HighlightInfoImpl) info;
             if (highlightInfo.getGroup() == group) {

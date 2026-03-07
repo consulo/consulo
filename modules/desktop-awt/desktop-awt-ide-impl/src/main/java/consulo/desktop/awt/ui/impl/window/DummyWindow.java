@@ -31,8 +31,6 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.function.Function;
-
 /**
  * @author VISTALL
  * @since 06/01/2022
@@ -87,12 +85,6 @@ public class DummyWindow implements Window {
     @RequiredUIAccess
     @Override
     public void setSize(@Nonnull Size2D size) {
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        throw new UnsupportedOperationException();
     }
 
     @Nonnull

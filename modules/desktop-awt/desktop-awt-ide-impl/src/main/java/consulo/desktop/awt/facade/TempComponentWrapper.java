@@ -30,7 +30,6 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -86,12 +85,6 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
     @RequiredUIAccess
     @Override
     public void setSize(@Nonnull Size2D size) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
         throw new UnsupportedOperationException();
     }
 

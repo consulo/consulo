@@ -7,6 +7,7 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
@@ -106,14 +107,9 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   }
 
   @Override
-  public boolean canNavigate() {
+  public NavigateOptions getNavigateOptions() {
     T element = getElement();
-    return element instanceof Navigatable && ((Navigatable)element).canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+    return element instanceof Navigatable n ? n.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   @Nonnull

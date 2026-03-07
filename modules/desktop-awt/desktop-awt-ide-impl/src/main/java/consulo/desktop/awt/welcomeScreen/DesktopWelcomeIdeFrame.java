@@ -16,6 +16,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.Application;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
@@ -41,7 +42,7 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
     @RequiredUIAccess
     public DesktopWelcomeIdeFrame(Application application, Runnable clearInstance) {
         myFrame = new FlatWelcomeFrame(application, clearInstance);
-        myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
+        myFrame.toUIWindow().putUserData(UiDataProvider.KEY, sink -> sink.set(IdeFrame.KEY, this));
     }
 
     @Override

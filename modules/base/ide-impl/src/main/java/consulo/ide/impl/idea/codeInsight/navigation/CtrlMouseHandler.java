@@ -533,7 +533,7 @@ public final class CtrlMouseHandler {
             }
             if (targetElements.length == 1) {
                 Navigatable descriptor = EditSourceUtil.getDescriptor(targetElements[0]);
-                if (descriptor == null || !descriptor.canNavigate()) {
+                if (descriptor == null || !descriptor.getNavigateOptions().canNavigate()) {
                     return null;
                 }
                 targetElement = targetElements[0];

@@ -23,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.KeepingPopupOpenAction;
+import consulo.ui.ex.awt.popup.ListPopupModel;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -67,12 +68,10 @@ public class BranchMoreAction extends DumbAwareAction implements KeepingPopupOpe
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         setExpanded(!myIsExpanded);
-        InputEvent event = e.getInputEvent();
-        if (event != null && event.getSource() instanceof JComponent) {
-            DataProvider dataProvider = DataManager.getDataProvider((JComponent) event.getSource());
-            if (dataProvider != null) {
-                ObjectUtil.assertNotNull(dataProvider.getDataUnchecked(BranchListPopup.POPUP_MODEL)).refilter();
-            }
+
+        ListPopupModel model = e.getData(BranchListPopup.POPUP_MODEL);
+        if (model != null) {
+            model.refilter();
         }
     }
 

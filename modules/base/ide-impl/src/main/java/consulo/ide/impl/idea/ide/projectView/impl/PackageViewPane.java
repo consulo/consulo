@@ -50,7 +50,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSink;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -114,23 +114,20 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DeleteProvider.KEY == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(PackageElement.DATA_KEY, this::getSelectedPackageElement);
+        sink.lazy(DeleteProvider.KEY, () -> {
             PackageElement selectedPackageElement = getSelectedPackageElement();
             if (selectedPackageElement != null) {
                 return myDeletePSIElementProvider;
             }
-        }
-        if (PackageElement.DATA_KEY == dataId) {
-            return getSelectedPackageElement();
-        }
-        if (Module.KEY == dataId) {
+            return null;
+        });
+        sink.lazy(Module.KEY, () -> {
             PackageElement packageElement = getSelectedPackageElement();
-            if (packageElement != null) {
-                return packageElement.getModule();
-            }
-        }
-        return super.getData(dataId);
+            return packageElement != null ? packageElement.getModule() : null;
+        });
     }
 
     @Nullable

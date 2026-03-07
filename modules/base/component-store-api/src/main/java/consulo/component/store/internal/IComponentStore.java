@@ -15,7 +15,6 @@
  */
 package consulo.component.store.internal;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
@@ -35,10 +34,7 @@ public interface IComponentStore {
 
   void load() throws IOException, StateStorageException;
 
-  void save(boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
-
-  @RequiredWriteAction
-  void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  void save(@Nonnull UIAccess uiAccess, boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
    * Return storable info about component

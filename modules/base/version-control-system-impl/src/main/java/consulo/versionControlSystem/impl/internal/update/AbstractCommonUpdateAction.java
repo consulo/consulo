@@ -34,7 +34,6 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.errorTreeView.HotfixData;
@@ -80,12 +79,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         myActionInfo = actionInfo;
         myScopeInfo = scopeInfo;
         myAlwaysVisible = alwaysVisible;
-    }
-
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     private String getCompleteActionName(VcsContext dataContext) {

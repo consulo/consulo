@@ -57,9 +57,11 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
         return true;
     }
 
+    @RequiredReadAction
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
+    public void updateInRead(@Nonnull AnActionEvent e) {
+        super.updateInRead(e);
+        
         RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
         if (handler instanceof TitledHandler titledHandler) {
             e.getPresentation().setTextValue(titledHandler.getActionTitleValue());

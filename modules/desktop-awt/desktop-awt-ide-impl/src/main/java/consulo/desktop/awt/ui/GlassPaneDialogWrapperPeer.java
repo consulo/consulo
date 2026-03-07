@@ -19,9 +19,8 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
@@ -45,7 +44,6 @@ import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -377,7 +375,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         });
     }
 
-    private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, DataProvider {
+    private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, UiDataProvider {
         private final WeakReference<DialogWrapper> myDialogWrapper;
         private final IdeGlassPaneEx myPane;
         private JComponent myContentPane;
@@ -598,16 +596,11 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider) {
-                return ((DataProvider) wrapper).getData(dataId);
+            if (wrapper instanceof UiDataProvider uiProvider) {
+                sink.uiDataSnapshot(uiProvider);
             }
-            else if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider) wrapper);
-                return adapter.getData(dataId);
-            }
-            return null;
         }
 
         @Override

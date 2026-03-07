@@ -8,7 +8,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.CheckCanceledHook;
-import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.SuspenderProgressManager;
 import consulo.application.internal.UnsafeProgressIndicator;
 import consulo.application.progress.*;
@@ -111,11 +110,6 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
                 systemNotify(notificationInfo);
             }
         }
-    }
-
-    @Override
-    public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-        return ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, indicator);
     }
 
     /**

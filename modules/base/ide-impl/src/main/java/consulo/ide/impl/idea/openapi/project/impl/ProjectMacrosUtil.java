@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.project.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.macro.PathMacros;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.localize.LocalizeValue;
@@ -85,7 +85,7 @@ public class ProjectMacrosUtil {
 
     Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
 
-    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.nonModal());
+    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, ModalityState.nonModal());
     return result[0];
   }
 

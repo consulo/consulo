@@ -87,13 +87,7 @@ public abstract class PluginTab implements Disposable {
     protected void init() {
         myRoot = new Wrapper();
 
-        DataManager.registerDataProvider(myRoot, dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-
-            return null;
-        });
+        DataManager.registerUiDataProvider(myRoot, sink -> sink.set(KEY, this));
 
         OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f);
         myRoot.setContent(splitter);

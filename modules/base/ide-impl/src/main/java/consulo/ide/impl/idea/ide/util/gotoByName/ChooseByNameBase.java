@@ -6,11 +6,11 @@ import com.google.common.primitives.Ints;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.ReadAction;
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ReadTask;
 import consulo.application.internal.TooManyUsagesStatus;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -271,7 +271,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return myModel;
     }
 
-    public class JPanelProvider extends JPanel implements DataProvider, QuickSearchComponent {
+    public class JPanelProvider extends JPanel implements UiDataProvider, QuickSearchComponent {
         private JBPopup myHint;
         private boolean myFocusRequested;
 
@@ -279,30 +279,28 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
-            if (PlatformDataKeys.SEARCH_INPUT_TEXT == dataId) {
-                return myTextField.getText();
-            }
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(PlatformDataKeys.SEARCH_INPUT_TEXT, myTextField.getText());
+            sink.set(HelpManager.HELP_ID, myModel.getHelpId());
+            sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, getBounds());
 
-            if (HelpManager.HELP_ID == dataId) {
-                return myModel.getHelpId();
-            }
-
-            if (myCalcElementsThread != null) {
-                return null;
-            }
-            if (PsiElement.KEY == dataId) {
+            sink.lazy(PsiElement.KEY, () -> {
+                if (myCalcElementsThread != null) {
+                    return null;
+                }
                 Object element = getChosenElement();
-
-                if (element instanceof PsiElement) {
-                    return element;
+                if (element instanceof PsiElement psiElement) {
+                    return psiElement;
                 }
-
                 if (element instanceof DataProvider dataProvider) {
-                    return dataProvider.getData(dataId);
+                    return (PsiElement) dataProvider.getData(PsiElement.KEY);
                 }
-            }
-            else if (PsiElement.KEY_OF_ARRAY == dataId) {
+                return null;
+            });
+            sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
+                if (myCalcElementsThread != null) {
+                    return null;
+                }
                 List<Object> chosenElements = getChosenElements();
                 List<PsiElement> result = new ArrayList<>(chosenElements.size());
                 for (Object element : chosenElements) {
@@ -311,11 +309,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     }
                 }
                 return PsiUtilCore.toPsiElementArray(result);
-            }
-            else if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-                return getBounds();
-            }
-            return null;
+            });
         }
 
         @Override
@@ -567,7 +561,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             protected void textChanged(@Nonnull DocumentEvent e) {
                 SelectionPolicy toSelect =
                     currentChosenInfo != null && currentChosenInfo.hasSamePattern(ChooseByNameBase.this) ? PreserveSelection.INSTANCE : SelectMostRelevant.INSTANCE;
-                rebuildList(toSelect, myRebuildDelay, IdeaModalityState.current(), null);
+                rebuildList(toSelect, myRebuildDelay, ModalityState.nonModal(), null);
             }
         });
 
@@ -616,7 +610,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     case KeyEvent.VK_ENTER:
                         if (myList.getSelectedValue() == EXTRA_ELEM) {
                             myMaximumListSizeLimit += myListSizeIncreasing;
-                            rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, IdeaModalityState.current(), null);
+                            rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, ModalityState.nonModal(), null);
                             e.consume();
                         }
                         break;
@@ -647,7 +641,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     if (selectedCellBounds != null && selectedCellBounds.contains(e.getPoint())) { // Otherwise it was reselected in the selection listener
                         if (myList.getSelectedValue() == EXTRA_ELEM) {
                             myMaximumListSizeLimit += myListSizeIncreasing;
-                            rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, IdeaModalityState.current(), null);
+                            rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, ModalityState.nonModal(), null);
                         }
                         else {
                             doClose(true);
@@ -746,7 +740,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         rebuildList(
             initial ? SelectionPolicyKt.fromIndex(myInitialIndex) : SelectMostRelevant.INSTANCE,
             myRebuildDelay,
-            IdeaModalityState.current(),
+            ModalityState.nonModal(),
             null
         );
     }
@@ -950,7 +944,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             myAlarm.addRequest(
                 () -> rebuildList(pos, 0, modalityState, postRunnable),
                 delay,
-                IdeaModalityState.stateForComponent(myTextField)
+                ModalityState.nonModal()
             );
             return;
         }
@@ -1149,7 +1143,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     protected void chosenElementMightChange() {
     }
 
-    protected final class MyTextField extends JTextField implements PopupOwner, TypeSafeDataProvider {
+    protected final class MyTextField extends JTextField implements PopupOwner, UiDataProvider {
         private final KeyStroke myCompletionKeyStroke;
         private final KeyStroke forwardStroke;
         private final KeyStroke backStroke;
@@ -1187,16 +1181,12 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public void calcData(@Nonnull Key key, @Nonnull DataSink sink) {
-            if (LangDataKeys.POSITION_ADJUSTER_POPUP.equals(key)) {
-                if (myDropdownPopup != null && myDropdownPopup.isVisible()) {
-                    sink.put(key, myDropdownPopup);
-                }
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            if (myDropdownPopup != null && myDropdownPopup.isVisible()) {
+                sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, myDropdownPopup);
             }
-            else if (LangDataKeys.PARENT_POPUP.equals(key)) {
-                if (myTextPopup != null && myTextPopup.isVisible()) {
-                    sink.put(key, myTextPopup);
-                }
+            if (myTextPopup != null && myTextPopup.isVisible()) {
+                sink.set(LangDataKeys.PARENT_POPUP, myTextPopup);
             }
         }
 
@@ -1212,7 +1202,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 int oldPos = myList.getSelectedIndex();
                 myHistory.add(Pair.create(pattern, oldPos));
                 Runnable postRunnable = () -> fillInCommonPrefix(pattern);
-                rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), postRunnable);
+                rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), postRunnable);
                 return;
             }
             if (keyStroke.equals(backStroke)) {
@@ -1223,7 +1213,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     Pair<String, Integer> last = myHistory.remove(myHistory.size() - 1);
                     myTextField.setText(last.first);
                     myFuture.add(Pair.create(oldText, oldPos));
-                    rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
+                    rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), null);
                 }
                 return;
             }
@@ -1235,7 +1225,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     Pair<String, Integer> next = myFuture.remove(myFuture.size() - 1);
                     myTextField.setText(next.first);
                     myHistory.add(Pair.create(oldText, oldPos));
-                    rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
+                    rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.nonModal(), null);
                 }
                 return;
             }
@@ -1378,7 +1368,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     public static final String EXTRA_ELEM = "...";
 
-    private class CalcElementsThread extends ReadTask {
+    private class CalcElementsThread {
         @Nonnull
         private final String myPattern;
         private final boolean myCheckboxState;
@@ -1412,45 +1402,46 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             UIAccess.assertIsUIThread();
             myCalcElementsThread = this;
             showCard(SEARCHING_CARD, 200);
-            ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, this);
-        }
 
-        @Override
-        public Continuation runBackgroundProcess(@Nonnull ProgressIndicator indicator) {
-            if (myProject == null || DumbService.isDumbAware(myModel)) {
-                return super.runBackgroundProcess(indicator);
+            NonBlockingReadAction<Runnable> readAction = ReadAction.<Runnable>nonBlocking(() -> {
+                    if (isProjectDisposed()) {
+                        return null;
+                    }
+
+                    Set<Object> elements = Collections.synchronizedSet(new LinkedHashSet<>());
+                    scheduleIncrementalListUpdate(elements, 0);
+
+                    boolean scopeExpanded = populateElements(elements);
+                    String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : scopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
+
+                    AnchoredSet resultSet = new AnchoredSet(filter(elements));
+                    return () -> {
+                        if (!checkDisposed() && !myProgress.isCanceled()) {
+                            CalcElementsThread currentBgProcess = myCalcElementsThread;
+                            LOG.assertTrue(currentBgProcess == this, currentBgProcess);
+
+                            showCard(cardToShow, 0);
+
+                            Set<Object> filtered = resultSet.getElements();
+                            backgroundCalculationFinished(filtered, mySelectionPolicy);
+                            myCallback.accept(filtered);
+                        }
+                    };
+                })
+                .wrapProgress(myProgress)
+                .expireWhen(() -> myCalcElementsThread != CalcElementsThread.this);
+
+            if (myProject != null && !DumbService.isDumbAware(myModel)) {
+                readAction = readAction.inSmartMode(myProject);
             }
 
-            return DumbService.getInstance(myProject).runReadActionInSmartMode(() -> performInReadAction(indicator));
-        }
-
-        @Nullable
-        @Override
-        @RequiredReadAction
-        public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
-            if (isProjectDisposed()) {
-                return null;
-            }
-
-            Set<Object> elements = Collections.synchronizedSet(new LinkedHashSet<>());
-            scheduleIncrementalListUpdate(elements, 0);
-
-            boolean scopeExpanded = populateElements(elements);
-            String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : scopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
-
-            AnchoredSet resultSet = new AnchoredSet(filter(elements));
-            return new Continuation(() -> {
-                if (!checkDisposed() && !myProgress.isCanceled()) {
-                    CalcElementsThread currentBgProcess = myCalcElementsThread;
-                    LOG.assertTrue(currentBgProcess == this, currentBgProcess);
-
-                    showCard(cardToShow, 0);
-
-                    Set<Object> filtered = resultSet.getElements();
-                    backgroundCalculationFinished(filtered, mySelectionPolicy);
-                    myCallback.accept(filtered);
-                }
-            }, myModalityState);
+            readAction
+                .finishOnUiThread(app -> myModalityState, continuation -> {
+                    if (continuation != null) {
+                        continuation.run();
+                    }
+                })
+                .submit(PooledThreadExecutor.getInstance());
         }
 
         private void scheduleIncrementalListUpdate(@Nonnull Set<Object> elements, int lastCount) {
@@ -1500,16 +1491,6 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 return true;
             }
             return false;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void onCanceled(@Nonnull ProgressIndicator indicator) {
-            LOG.assertTrue(myCalcElementsThread == this, myCalcElementsThread);
-
-            if (!isProjectDisposed() && !checkDisposed()) {
-                new CalcElementsThread(myPattern, myCheckboxState, myModalityState, mySelectionPolicy, myCallback).scheduleThread();
-            }
         }
 
         private void addElementsByPattern(
@@ -1663,7 +1644,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                         myCalcUsagesThread = new CalcElementsThread(
                             text,
                             everywhere,
-                            IdeaModalityState.nonModal(),
+                            ModalityState.nonModal(),
                             PreserveSelection.INSTANCE,
                             __ -> {
                             }

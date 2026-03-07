@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
 import consulo.application.ReadAction;
@@ -423,6 +424,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
+    @RequiredReadAction
     @Override
     @Nonnull
     public AnalyzerStatus getStatus(@Nonnull Editor editor) {

@@ -81,7 +81,7 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
                     return;
                 }
 
-                newProject.save();
+                newProject.save(uiAccess);
 
                 ModifiableModuleModel modifiableModel = ModuleManager.getInstance(newProject).getModifiableModel();
 
@@ -99,7 +99,7 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
                     modifiableModel.commit();
                 });
 
-                newProject.save();
+                newProject.save(uiAccess);
 
                 ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(result);
             }

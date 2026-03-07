@@ -19,6 +19,7 @@ package consulo.externalTool.impl.internal;
 import consulo.component.persist.scheme.SchemeElement;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
@@ -279,7 +280,7 @@ public class Tool implements SchemeElement {
         if (project == null) {
             return false;
         }
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         try {
             if (isUseConsole()) {
                 ToolRunProfile profile = new ToolRunProfile(this, dataContext);

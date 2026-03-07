@@ -15,26 +15,15 @@
  */
 package consulo.codeEditor.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.ui.ex.CopyProvider;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
-@ExtensionImpl
-public class CopyProviderRule implements GetDataRule<CopyProvider> {
-  @Nonnull
-  @Override
-  public Key<CopyProvider> getKey() {
-    return CopyProvider.KEY;
-  }
-
-  @Override
-  public CopyProvider getData(@Nonnull DataProvider dataProvider) {
-    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+public final class CopyProviderRule {
+  static CopyProvider getData(@Nonnull DataSnapshot dataProvider) {
+    Editor editor = dataProvider.get(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCopyProvider() : null;
   }
 }

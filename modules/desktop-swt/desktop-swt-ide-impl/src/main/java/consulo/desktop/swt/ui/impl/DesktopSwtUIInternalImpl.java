@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.ui.impl;
 
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
 import consulo.desktop.swt.ui.impl.layout.*;
@@ -344,15 +343,4 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtTreeImpl<E>(rootValue, model);
   }
 
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_any() {
-    return ModalityStateImpl.ANY;
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return ModalityStateImpl.NON_MODAL;
-  }
 }

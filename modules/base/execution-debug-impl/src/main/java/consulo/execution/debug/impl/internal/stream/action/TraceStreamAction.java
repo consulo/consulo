@@ -8,7 +8,6 @@ import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.stream.ChainStatus;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -59,12 +58,6 @@ public class TraceStreamAction extends AnAction {
                     break;
             }
         }
-    }
-
-    @Nonnull
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @RequiredUIAccess

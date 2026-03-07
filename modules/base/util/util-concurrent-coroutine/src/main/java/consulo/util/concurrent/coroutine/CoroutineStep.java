@@ -145,4 +145,8 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
     protected void terminateCoroutine(Continuation<?> continuation) {
         continuation.getCurrentCoroutine().terminate(continuation);
     }
+
+    public Coroutine<I, O> toCoroutine() {
+        return Coroutine.first(this);
+    }
 }

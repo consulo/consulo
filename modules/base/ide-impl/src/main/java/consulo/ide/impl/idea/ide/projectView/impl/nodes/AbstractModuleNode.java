@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -115,7 +116,9 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
     }
 
     @Override
-    public boolean canNavigate() {
-        return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null;
+    public NavigateOptions getNavigateOptions() {
+        return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null
+            ? NavigateOptions.CAN_NAVIGATE_FULL
+            : NavigateOptions.CANT_NAVIGATE;
     }
 }

@@ -27,7 +27,7 @@ public final class NavBarIdeView implements IdeView {
 
     if (element instanceof Navigatable) {
       Navigatable navigatable = (Navigatable)element;
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         ((Navigatable)element).navigate(true);
       }
     }

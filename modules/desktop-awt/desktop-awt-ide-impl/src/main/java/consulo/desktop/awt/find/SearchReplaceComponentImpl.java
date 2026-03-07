@@ -4,7 +4,8 @@ package consulo.desktop.awt.find;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.impl.internal.search.ContextAwareShortcutProvider;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.find.FindInProjectSettings;
@@ -71,7 +72,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private final Runnable myCloseAction;
     private final Runnable myReplaceAction;
 
-    private final DataProvider myDataProviderDelegate;
+    private final UiDataProvider myDataProviderDelegate;
 
     private boolean myMultilineMode;
     @Nonnull
@@ -95,7 +96,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         @Nonnull DefaultActionGroup replaceFieldActions,
         @Nullable Runnable replaceAction,
         @Nullable Runnable closeAction,
-        @Nullable DataProvider dataProvider
+        @Nullable UiDataProvider dataProvider
     ) {
         myProject = project;
         myTargetComponent = targetComponent;
@@ -286,13 +287,12 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         myStatusColor = UIUtil.getErrorForeground();
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key dataId) {
-        if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
-            return mySearchTextComponent.getText();
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchTextComponent.getText());
+        if (myDataProviderDelegate != null) {
+            sink.uiDataSnapshot(myDataProviderDelegate);
         }
-        return myDataProviderDelegate != null ? myDataProviderDelegate.getData(dataId) : null;
     }
 
     @Override

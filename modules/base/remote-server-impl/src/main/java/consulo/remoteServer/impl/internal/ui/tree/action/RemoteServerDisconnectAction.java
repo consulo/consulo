@@ -8,7 +8,6 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
@@ -37,10 +36,5 @@ public class RemoteServerDisconnectAction extends DumbAwareAction {
         if (connection != null) {
             connection.disconnect();
         }
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

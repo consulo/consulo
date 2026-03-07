@@ -37,6 +37,7 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.TreeExpander;
@@ -164,7 +165,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
             event -> {
                 Object attachedObject = event.getAttachedObject();
                 if (attachedObject instanceof ShelvedChangeListDragBean) {
-                    FileDocumentManager.getInstance().saveAllDocuments();
+                    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
                     ShelvedChangeListDragBean shelvedBean = (ShelvedChangeListDragBean) attachedObject;
                     ShelveChangesManagerImpl.getInstance(myProject)
                         .unshelveSilentlyAsynchronously(myProject,

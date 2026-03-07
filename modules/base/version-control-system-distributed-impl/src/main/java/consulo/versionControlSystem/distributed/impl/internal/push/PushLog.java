@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.application.Application;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -30,7 +31,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesBrowser;
@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Function;
 
-public class PushLog extends JPanel implements DataProvider {
+public class PushLog extends JPanel implements UiDataProvider {
     private static final String START_EDITING = "startEditing";
     private final ChangesBrowser<Change> myChangesBrowser;
     private final CheckboxTree myTree;
@@ -406,14 +406,13 @@ public class PushLog extends JPanel implements DataProvider {
     }
 
     // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (VcsDataKeys.CHANGES == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(VcsDataKeys.CHANGES, () -> {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
-        }
-        else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS_REVISION_NUMBERS, () -> {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(
                 ContainerUtil.map(
@@ -425,8 +424,7 @@ public class PushLog extends JPanel implements DataProvider {
                 ),
                 VcsRevisionNumber.class
             );
-        }
-        return null;
+        });
     }
 
     @Nonnull

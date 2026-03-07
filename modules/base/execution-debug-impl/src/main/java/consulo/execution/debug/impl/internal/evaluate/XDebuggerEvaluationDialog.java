@@ -18,7 +18,8 @@ package consulo.execution.debug.impl.internal.evaluate;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -368,14 +369,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    private class EvaluationMainPanel extends BorderLayoutPanel implements DataProvider {
-        @Nullable
+    private class EvaluationMainPanel extends BorderLayoutPanel implements UiDataProvider {
         @Override
-        public Object getData(@Nonnull @NonNls Key<?> dataId) {
-            if (KEY == dataId) {
-                return XDebuggerEvaluationDialog.this;
-            }
-            return null;
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(XDebuggerEvaluationDialog.KEY, XDebuggerEvaluationDialog.this);
         }
     }
 }

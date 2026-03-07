@@ -188,7 +188,11 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
     public final <V> void continueAccept(
         CompletableFuture<V> rPreviousExecution, Consumer<V> fNext) {
         if (!cancelled) {
-            currentExecution = rPreviousExecution.thenAcceptAsync(fNext, this)
+            currentExecution = rPreviousExecution.thenAcceptAsync(v -> {
+                    if (!finished) {
+                        fNext.accept(v);
+                    }
+                }, this)
                 .exceptionally(this::fail);
         }
         else if (currentExecution != null) {
@@ -212,7 +216,12 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
         CoroutineStep<O, ?> nextStep) {
         if (!cancelled) {
             CompletableFuture<O> rNextExecution =
-                previousExecution.thenApplyAsync(next, this);
+                previousExecution.thenApplyAsync(i -> {
+                    if (finished) {
+                        return null;
+                    }
+                    return next.apply(i);
+                }, this);
 
             currentExecution = rNextExecution;
 
@@ -611,6 +620,40 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
     }
 
     /**
+     * Converts this continuation into a {@link CompletableFuture} that
+     * completes when this continuation finishes execution.
+     *
+     * @return A completable future that will be completed with the result
+     * of the coroutine execution, cancelled if the coroutine is
+     * cancelled, or completed exceptionally if the coroutine fails
+     */
+    public CompletableFuture<T> toFuture() {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        onFinish(c -> future.complete(c.getResult()));
+        // fail() sets error BEFORE calling cancel(), so check error here
+        // to let onError handle the future instead of cancelling it
+        onCancel(c -> {
+            if (c.getError() == null) {
+                future.cancel(false);
+            }
+        });
+        onError(c -> future.completeExceptionally(c.getError()));
+        return future;
+    }
+
+    /**
+     * Finishes this continuation early with the given result, skipping
+     * any remaining steps in the coroutine chain. Subsequent steps will
+     * be no-ops. The result will be available via {@link #getResult()}
+     * and {@link #toFuture()}.
+     *
+     * @param result The result value to finish with
+     */
+    public void finishEarly(T result) {
+        finish(result);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -626,8 +669,9 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param result The result of the coroutine execution
      */
     void finish(T result) {
-        assert !finished;
-        assert coroutineStack.size() == 1;
+        if (finished) {
+            return;
+        }
 
         try {
             this.result = result;

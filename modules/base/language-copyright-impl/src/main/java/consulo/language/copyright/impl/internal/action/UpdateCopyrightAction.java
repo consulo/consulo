@@ -33,6 +33,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -54,13 +56,16 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
         );
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        boolean enabled = isEnabled(event);
-        event.getPresentation().setEnabled(enabled);
-        if (ActionPlaces.isPopupPlace(event.getPlace())) {
-            event.getPresentation().setVisible(enabled);
-        }
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+        return CodeExecution.run(() -> {
+            boolean enabled = isEnabled(event);
+            event.getPresentation().setEnabled(enabled);
+            if (ActionPlaces.isPopupPlace(event.getPlace())) {
+                event.getPresentation().setVisible(enabled);
+            }
+        }).toCoroutine();
     }
 
     private static boolean isEnabled(@Nonnull AnActionEvent e) {

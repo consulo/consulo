@@ -15,7 +15,8 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -25,12 +26,13 @@ import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.PresentationFactory;
+import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
@@ -49,6 +51,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public final class ActionMenu extends JMenu {
+    private static final Logger LOG = Logger.getInstance(ActionMenu.class);
+
     private final String myPlace;
     private DataContext myContext;
     private final ActionRef<ActionGroup> myGroup;
@@ -60,6 +64,7 @@ public final class ActionMenu extends JMenu {
     private Component[] myMenuComponents;
     // protector for update inside setMnemonic
     private boolean myMnemonicUpdate;
+    private ProgressIndicator myFillIndicator;
 
     private LocalizeValue myTextValue = LocalizeValue.empty();
 
@@ -242,9 +247,7 @@ public final class ActionMenu extends JMenu {
             if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
                 myMenuComponents = null;
             }
-            else {
-                fillMenu(ActionMenu.this);
-            }
+            // For non-Mac, fillMenu is called from setPopupMenuVisible()
         }
     }
 
@@ -283,7 +286,69 @@ public final class ActionMenu extends JMenu {
         return false;
     }
 
+    @Override
+    public void setPopupMenuVisible(boolean visible) {
+        if (visible && !isTopMenuBarAfterOpenJDKMemLeakFix()) {
+            // Cancel any previous expansion
+            if (myFillIndicator != null) {
+                myFillIndicator.cancel();
+            }
+            myFillIndicator = new EmptyProgressIndicator();
+
+            removeAll();
+
+            // Add animated loading indicator while actions are expanding
+            JMenuItem loadingItem = new JMenuItem(AnimatedIcon.Default.INSTANCE);
+            loadingItem.setEnabled(false);
+            add(loadingItem);
+
+            // Show popup immediately with loading indicator
+            super.setPopupMenuVisible(true);
+
+            // Start async fill — Utils.fillMenu adds items via thenAcceptAsync on EDT
+            DataContext context = getDataContext();
+            boolean mayContextBeInvalid = myContext == null;
+            Utils.fillMenu(myGroup.getAction(), this, isMnemonicEnabled(), myPresentationFactory,
+                    context, myPlace, mayContextBeInvalid, false, myEnableIcons, myFillIndicator)
+                .whenComplete((result, error) -> {
+                    // Remove loading indicator — real items were already added by Utils.fillMenu
+                    remove(loadingItem);
+
+                    if (error != null) {
+                        LOG.error("Failed to fill menu", error);
+                    }
+
+                    // Resize the visible popup to fit the new items
+                    JPopupMenu popup = getPopupMenu();
+                    if (popup.isVisible()) {
+                        popup.pack();
+                        popup.repaint();
+                    }
+                });
+            return;
+        }
+        super.setPopupMenuVisible(visible);
+    }
+
+    private DataContext getDataContext() {
+        if (myContext != null) {
+            return myContext;
+        }
+        @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
+        DataContext context = contextFromFocus;
+        if (!context.hasData(UIExAWTDataKey.CONTEXT_COMPONENT)) {
+            IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
+            context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
+        }
+        return context;
+    }
+
     private void clearItems() {
+        if (myFillIndicator != null) {
+            myFillIndicator.cancel();
+            myFillIndicator = null;
+        }
+
         if (isTopMenuBar()) {
             for (Component menuComponent : getMenuComponents()) {
                 if (menuComponent instanceof ActionMenu actionMenu) {
@@ -305,26 +370,10 @@ public final class ActionMenu extends JMenu {
         validate();
     }
 
-    @RequiredUIAccess
     private void fillMenu(JMenu menu) {
-        DataContext context;
-        boolean mayContextBeInvalid;
-
-        if (myContext != null) {
-            context = myContext;
-            mayContextBeInvalid = false;
-        }
-        else {
-            @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
-            context = contextFromFocus;
-            if (!context.hasData(UIExAWTDataKey.CONTEXT_COMPONENT)) {
-                IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
-                context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
-            }
-            mayContextBeInvalid = true;
-        }
-
-        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, LaterInvocator.isInModalContext(), myEnableIcons);
+        DataContext context = getDataContext();
+        boolean mayContextBeInvalid = myContext == null;
+        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, false, myEnableIcons);
     }
 
     private class MenuItemSynchronizer implements PropertyChangeListener {

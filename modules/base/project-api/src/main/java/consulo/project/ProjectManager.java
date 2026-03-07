@@ -29,6 +29,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Provides project management.
  */
@@ -46,16 +49,27 @@ public interface ProjectManager {
     }
 
     @Nonnull
+    CompletableFuture<Project> openProjectAsync(
+        @Nonnull Path filePath,
+        @Nonnull UIAccess uiAccess,
+        @Nonnull ProjectOpenContext context
+    );
+
+    @Nonnull
+    @Deprecated
     AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
 
     @Nonnull
+    @Deprecated
     default AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
         return openProjectAsync(file, uiAccess, new ProjectOpenContext());
     }
 
     @Nonnull
+    @Deprecated
     AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
 
+    @Deprecated
     default AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         return openProjectAsync(project, uiAccess, new ProjectOpenContext());
     }

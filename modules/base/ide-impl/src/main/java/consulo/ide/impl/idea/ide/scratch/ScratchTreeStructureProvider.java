@@ -13,7 +13,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.language.Language;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.*;
@@ -29,7 +28,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.TreeHelper;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -170,28 +168,6 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     return list;
   }
 
-  /**
-   * @deprecated Use modify method instead
-   */
-  @Deprecated
-  public static AbstractTreeNode<?> createRootNode(@Nonnull Project project, ViewSettings settings) {
-    return new MyProjectNode(project, settings);
-  }
-
-  @Override
-  @Nullable
-  public Object getData(@Nonnull Collection<AbstractTreeNode> selected, @Nonnull Key<?> dataId) {
-    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
-      AbstractTreeNode<?> single = JBIterable.from(selected).single();
-      if (single instanceof MyRootNode myRootNode) {
-        VirtualFile file = myRootNode.getVirtualFile();
-        Project project = single.getProject();
-        return file == null || project == null ? null : PsiManager.getInstance(project).findDirectory(file);
-      }
-    }
-    return null;
-  }
-
   private static final class MyProjectNode extends ProjectViewNode<String> {
     MyProjectNode(Project project, ViewSettings settings) {
       super(project, ScratchesNamedScope.ID, settings);
@@ -229,7 +205,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
   }
 
-  private static class MyRootNode extends ProjectViewNode<RootType> implements PsiFileSystemItemFilter {
+  public static class MyRootNode extends ProjectViewNode<RootType> implements PsiFileSystemItemFilter {
     MyRootNode(Project project, @Nonnull RootType type, ViewSettings settings) {
       super(project, type, settings);
     }

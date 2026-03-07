@@ -15,6 +15,12 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Implementation of {@link Navigatable} interface which actually doesn't allow navigation. Its {@link #INSTANCE} can be passed to methods which
  * expect non-null instance of {@link Navigatable} if you cannot provide a real implementation.
@@ -25,17 +31,16 @@ public final class NonNavigatable implements Navigatable {
   private NonNavigatable() {
   }
 
+  @RequiredReadAction
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
   }
 
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+        return CompletableFuture.completedFuture(null);
+    }
 }
