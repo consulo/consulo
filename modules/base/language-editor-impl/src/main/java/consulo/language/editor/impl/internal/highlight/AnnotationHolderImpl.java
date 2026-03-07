@@ -230,7 +230,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     @Nullable
     @Contract(pure = true)
     private static String wrapXml(@Nullable String message) {
-        return message == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+        return message == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(message));
     }
 
     @Override

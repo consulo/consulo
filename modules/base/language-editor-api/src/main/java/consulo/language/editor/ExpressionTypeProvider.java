@@ -45,7 +45,7 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
   /**
    * Returns HTML string for type info hint.
    *
-   * @see consulo.util.lang.StringUtil#escapeXmlEntities(String)
+   * @see consulo.util.lang.xml.XmlStringUtil#escapeText(CharSequence)
    */
   @Nonnull
   public abstract String getInformationHint(@Nonnull T element);

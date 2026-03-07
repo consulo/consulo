@@ -51,7 +51,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @ExtensionImpl
@@ -143,7 +144,7 @@ public class InjectLanguageAction implements IntentionAction {
             if (TemporaryPlacesRegistry.getInstance(project).getLanguageInjectionSupport().addInjectionInPlace(language, host)) {
                 Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
                 LocalizeValue text = LanguageInjectAdvancedLocalize.temporarilyInjected(
-                    language.getDisplayName().map(StringUtil::escapeXml)
+                    language.getDisplayName().map((Function<String, String>) XmlStringUtil::escapeText)
                 );
                 if (data != null) {
                     SmartPsiElementPointer<PsiLanguageInjectionHost> pointer =

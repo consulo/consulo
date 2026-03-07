@@ -15,9 +15,9 @@
  */
 package consulo.versionControlSystem.ui.awt;
 
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,30 +27,30 @@ import java.awt.*;
  * @since 2011-07-01
  */
 public class UIVcsUtil {
-  private UIVcsUtil() {
-  }
+    private UIVcsUtil() {
+    }
 
-  public static JPanel errorPanel(String text, boolean isError) {
-    JLabel label = new JLabel("<html><body>" + escapeXmlAndAddBr(text) + "</body></html>");
-    label.setForeground(isError ? SimpleTextAttributes.ERROR_ATTRIBUTES.getFgColor() : UIUtil.getInactiveTextColor());
-    JPanel wrapper = new JPanel(new GridBagLayout());
-    wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
+    public static JPanel errorPanel(String text, boolean isError) {
+        JLabel label = new JLabel("<html><body>" + escapeXmlAndAddBr(text) + "</body></html>");
+        label.setForeground(isError ? SimpleTextAttributes.ERROR_ATTRIBUTES.getFgColor() : UIUtil.getInactiveTextColor());
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
                                                          new Insets(1,1,1,1), 0,0));
-    return wrapper;
-  }
+        return wrapper;
+    }
 
-  private static String escapeXmlAndAddBr(String text) {
-    String escaped = StringUtil.escapeXml(text);
-    escaped = StringUtil.replace(escaped, "\n", "<br/>");
-    return escaped;
-  }
+    private static String escapeXmlAndAddBr(String text) {
+        return XmlStringUtil.escapeText(text).replace("\n", "<br/>");
+    }
 
-  public static JPanel infoPanel(String header, String text) {
-    JLabel label = new JLabel("<html><body><h4>" + StringUtil.escapeXml(header) +
-                                    "</h4>" + escapeXmlAndAddBr(text) + "</body></html>");
-    JPanel wrapper = new JPanel(new GridBagLayout());
-    wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
+    public static JPanel infoPanel(String header, String text) {
+        JLabel label = new JLabel(
+            "<html><body><h4>" + XmlStringUtil.escapeText(header) +
+                "</h4>" + escapeXmlAndAddBr(text) + "</body></html>"
+        );
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
                                                          new Insets(1,1,1,1), 0,0));
-    return wrapper;
-  }
+        return wrapper;
+    }
 }
