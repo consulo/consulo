@@ -43,6 +43,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -211,11 +212,13 @@ public class BookmarkImpl implements Bookmark {
     }
 
     @Override
+    @RequiredReadAction
     public String toString() {
         StringBuilder result = new StringBuilder(getQualifiedName());
-        String description = StringUtil.escapeXml(getNotEmptyDescription());
+        String description = getNotEmptyDescription();
         if (description != null) {
-            result.append(": ").append(description);
+            result.append(": ");
+            XmlStringUtil.escapeText(description, result);
         }
         return result.toString();
     }
@@ -257,15 +260,15 @@ public class BookmarkImpl implements Bookmark {
     }
 
     private LocalizeValue getBookmarkTooltip() {
-        String description = StringUtil.escapeXml(getNotEmptyDescription());
+        String description = getNotEmptyDescription();
         if (myMnemonic != 0) {
             return description != null
-                ? BookmarkLocalize.tooltipBookmark0WithDescription(myMnemonic, description)
+                ? BookmarkLocalize.tooltipBookmark0WithDescription(myMnemonic, XmlStringUtil.escapeText(description))
                 : BookmarkLocalize.tooltipBookmark0(myMnemonic);
         }
         else {
             return description != null
-                ? BookmarkLocalize.tooltipBookmarkWithDescription(description)
+                ? BookmarkLocalize.tooltipBookmarkWithDescription(XmlStringUtil.escapeText(description))
                 : BookmarkLocalize.tooltipBookmark();
         }
     }

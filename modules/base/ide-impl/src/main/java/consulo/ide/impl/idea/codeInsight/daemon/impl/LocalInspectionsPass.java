@@ -754,7 +754,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         LocalizeValue tooltip = LocalizeValue.empty();
         if (descriptor.showTooltip()) {
             tooltip = message.map(text -> XmlStringUtil.wrapInHtml(
-                (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeString(text)) + link
+                (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeText(text)) + link
             ));
         }
         HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element);
