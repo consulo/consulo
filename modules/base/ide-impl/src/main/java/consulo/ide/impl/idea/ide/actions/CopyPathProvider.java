@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
@@ -86,7 +86,7 @@ public class CopyPathProvider extends DumbAwareAction {
     @Nonnull
     @Override
     public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
-        return ReadLock.apply(i -> {
+        return OptionalReadLock.apply(i -> {
             Editor editor = e.getData(Editor.KEY);
             Project project = e.getData(Project.KEY);
 
@@ -99,7 +99,7 @@ public class CopyPathProvider extends DumbAwareAction {
             presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
             presentation.setEnabledAndVisible(qualifiedName != null);
             return null;
-        }).toCoroutine();
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
     }
 
     @Nullable

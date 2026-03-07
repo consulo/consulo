@@ -37,7 +37,6 @@ import consulo.web.internal.ui.base.TargetVaddin;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -102,12 +101,6 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
     @Override
     public void setSize(@Nonnull Size2D size) {
 
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        throw new UnsupportedOperationException();
     }
 
     @Nonnull

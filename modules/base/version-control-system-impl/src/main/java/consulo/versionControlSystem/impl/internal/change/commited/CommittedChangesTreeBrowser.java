@@ -2,6 +2,8 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.application.HelpManager;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -440,17 +442,18 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
     public void uiDataSnapshot(@Nonnull DataSink sink) {
       sink.set(CopyProvider.KEY, myCopyProvider);
       sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
-      Object selectedChanges = myDetailsView.getData(VcsDataKeys.SELECTED_CHANGES);
+      DataContext dataContext = DataManager.getInstance().getDataContext(myDetailsView.getComponent());
+      Change[] selectedChanges = dataContext.getData(VcsDataKeys.SELECTED_CHANGES);
       if (selectedChanges != null) {
-        sink.set(VcsDataKeys.SELECTED_CHANGES, (Change[]) selectedChanges);
+        sink.set(VcsDataKeys.SELECTED_CHANGES, selectedChanges);
       }
-      Object leadSelection = myDetailsView.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
+      Change[] leadSelection = dataContext.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
       if (leadSelection != null) {
-        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, (Change[]) leadSelection);
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, leadSelection);
       }
-      Object useCase = myDetailsView.getData(CommittedChangesBrowserUseCase.DATA_KEY);
+      CommittedChangesBrowserUseCase useCase = dataContext.getData(CommittedChangesBrowserUseCase.DATA_KEY);
       if (useCase != null) {
-        sink.set(CommittedChangesBrowserUseCase.DATA_KEY, (CommittedChangesBrowserUseCase) useCase);
+        sink.set(CommittedChangesBrowserUseCase.DATA_KEY, useCase);
       }
     }
   }

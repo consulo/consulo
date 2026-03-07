@@ -17,7 +17,7 @@ package consulo.fileEditor.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import jakarta.annotation.Nonnull;
@@ -43,5 +43,5 @@ public interface SearchReplaceComponentFactory {
                                   @Nonnull DefaultActionGroup replaceFieldActions,
                                   @Nullable Runnable replaceAction,
                                   @Nullable Runnable closeAction,
-                                  @Nullable DataProvider dataProvider);
+                                  @Nullable UiDataProvider dataProvider);
 }

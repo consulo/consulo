@@ -27,7 +27,7 @@ import consulo.application.util.Queryable;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -36,7 +36,6 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
@@ -73,7 +72,6 @@ import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -624,7 +622,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
 
-    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, DataProvider, Queryable, AbstractDialog {
+    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, UiDataProvider, Queryable, AbstractDialog {
         private final WeakReference<DialogWrapper> myDialogWrapper;
 
         /**
@@ -684,16 +682,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider dataProvider) {
-                return dataProvider.getData(dataId);
-            }
             if (wrapper instanceof UiDataProvider uiProvider) {
-                UiDataProviderAdapter adapter = new UiDataProviderAdapter(uiProvider);
-                return adapter.getData(dataId);
+                sink.uiDataSnapshot(uiProvider);
             }
-            return null;
         }
 
         @Override
@@ -987,7 +980,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        private class DialogRootPane extends JRootPane implements DataProvider {
+        private class DialogRootPane extends JRootPane implements UiDataProvider {
 
             private final boolean myGlassPaneIsSet;
 
@@ -1050,9 +1043,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public Object getData(@Nonnull Key<?> dataId) {
+            public void uiDataSnapshot(@Nonnull DataSink sink) {
                 DialogWrapper wrapper = myDialogWrapper.get();
-                return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
+                if (wrapper != null) {
+                    sink.lazy(PlatformDataKeys.UI_DISPOSABLE, () -> wrapper.getDisposable());
+                }
             }
         }
 

@@ -15,10 +15,11 @@
  */
 package consulo.execution.test;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
@@ -55,8 +56,35 @@ public class TestsUIUtil {
     private TestsUIUtil() {
     }
 
+    public static void uiSnapshot(DataSink sink, AbstractTestProxy testProxy, TestFrameworkRunningModel model) {
+        TestConsoleProperties properties = model.getProperties();
+        Project project = properties.getProject();
+        if (testProxy == null) {
+            return;
+        }
+        sink.set(AbstractTestProxy.KEY, testProxy);
+        sink.lazy(Navigatable.KEY, () -> getOpenFileDescriptor(testProxy, model));
+        sink.lazy(PsiElement.KEY, () -> {
+            Location location = testProxy.getLocation(project, properties.getScope());
+            if (location != null) {
+                PsiElement element = location.getPsiElement();
+                return element.isValid() ? element : null;
+            }
+            else {
+                return null;
+            }
+        });
+
+        sink.lazy(Location.DATA_KEY, () -> testProxy.getLocation(project, properties.getScope()));
+
+        if (properties.getConfiguration() instanceof RunConfiguration runConfiguration) {
+            sink.set(RunConfiguration.KEY, runConfiguration);
+        }
+    }
+
     @Nullable
     @SuppressWarnings("unchecked")
+    @Deprecated
     public static <T> T getData(AbstractTestProxy testProxy, Key<T> dataId, TestFrameworkRunningModel model) {
         TestConsoleProperties properties = model.getProperties();
         Project project = properties.getProject();
@@ -99,6 +127,7 @@ public class TestsUIUtil {
         return false;
     }
 
+    @RequiredReadAction
     public static Navigatable getOpenFileDescriptor(AbstractTestProxy testProxy, TestFrameworkRunningModel model) {
         TestConsoleProperties testConsoleProperties = model.getProperties();
         return getOpenFileDescriptor(
@@ -108,6 +137,7 @@ public class TestsUIUtil {
         );
     }
 
+    @RequiredReadAction
     private static Navigatable getOpenFileDescriptor(
         AbstractTestProxy proxy,
         TestConsoleProperties testConsoleProperties,

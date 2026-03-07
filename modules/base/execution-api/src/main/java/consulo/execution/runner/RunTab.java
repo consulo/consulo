@@ -16,7 +16,8 @@
 package consulo.execution.runner;
 
 import consulo.content.scope.SearchScope;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.ExecutionSearchScopeProvider;
 import consulo.execution.configuration.RunConfigurationBase;
@@ -36,104 +37,101 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public abstract class RunTab implements DataProvider, Disposable {
-  @Nonnull
-  protected final RunnerLayoutUi myUi;
-  private LogFilesManager myManager;
-  protected RunContentDescriptor myRunContentDescriptor;
+public abstract class RunTab implements UiDataProvider, Disposable {
+    @Nonnull
+    protected final RunnerLayoutUi myUi;
+    private LogFilesManager myManager;
+    protected RunContentDescriptor myRunContentDescriptor;
 
-  protected ExecutionEnvironment myEnvironment;
-  protected final Project myProject;
-  private final SearchScope mySearchScope;
+    protected ExecutionEnvironment myEnvironment;
+    protected final Project myProject;
+    private final SearchScope mySearchScope;
 
-  private LogConsoleManagerBase logConsoleManager;
+    private LogConsoleManagerBase logConsoleManager;
 
-  protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
-    this(
-      environment.getProject(),
-      ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
-      runnerType,
-      environment.getExecutor().getId(),
-      environment.getRunProfile().getName()
-    );
+    protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
+        this(
+            environment.getProject(),
+            ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
+            runnerType,
+            environment.getExecutor().getId(),
+            environment.getRunProfile().getName()
+        );
 
-    myEnvironment = environment;
-  }
-
-  @Override
-  public void dispose() {
-    myRunContentDescriptor = null;
-    myEnvironment = null;
-    logConsoleManager = null;
-  }
-
-  protected RunTab(
-    @Nonnull Project project,
-    @Nonnull SearchScope searchScope,
-    @Nonnull String runnerType,
-    @Nonnull String runnerTitle,
-    @Nonnull String sessionName
-  ) {
-    myProject = project;
-    mySearchScope = searchScope;
-
-    myUi = RunnerLayoutUiFactory.getInstance(project).create(runnerType, runnerTitle, sessionName, this);
-    myUi.getContentManager().addDataProvider(this);
-  }
-
-  @Nullable
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if (RunProfile.KEY == dataId) {
-      return myEnvironment == null ? null : myEnvironment.getRunProfile();
+        myEnvironment = environment;
     }
-    else if (ExecutionEnvironment.KEY == dataId) {
-      return myEnvironment;
-    }
-    else if (RunContentDescriptor.KEY == dataId) {
-      return myRunContentDescriptor;
-    }
-    return null;
-  }
 
-  @Nonnull
-  public LogConsoleManagerBase getLogConsoleManager() {
-    if (logConsoleManager == null) {
-      logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
-        @Override
-        protected Image getDefaultIcon() {
-          return ExecutionIconGroup.console();
+    @Override
+    public void dispose() {
+        myRunContentDescriptor = null;
+        myEnvironment = null;
+        logConsoleManager = null;
+    }
+
+    protected RunTab(
+        @Nonnull Project project,
+        @Nonnull SearchScope searchScope,
+        @Nonnull String runnerType,
+        @Nonnull String runnerTitle,
+        @Nonnull String sessionName
+    ) {
+        myProject = project;
+        mySearchScope = searchScope;
+
+        myUi = RunnerLayoutUiFactory.getInstance(project).create(runnerType, runnerTitle, sessionName, this);
+        myUi.getContentManager().addUiDataProvider(this);
+    }
+
+    @Override
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        if (myEnvironment != null) {
+            sink.set(RunProfile.KEY, myEnvironment.getRunProfile());
+            sink.set(ExecutionEnvironment.KEY, myEnvironment);
         }
 
-        @Override
-        protected RunnerLayoutUi getUi() {
-          return myUi;
+        if (myRunContentDescriptor != null) {
+            sink.set(RunContentDescriptor.KEY, myRunContentDescriptor);
         }
+    }
 
-        @Override
-        public ProcessHandler getProcessHandler() {
-          return myRunContentDescriptor == null ? null : myRunContentDescriptor.getProcessHandler();
+    @Nonnull
+    public LogConsoleManagerBase getLogConsoleManager() {
+        if (logConsoleManager == null) {
+            logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
+                @Override
+                protected Image getDefaultIcon() {
+                    return ExecutionIconGroup.console();
+                }
+
+                @Override
+                protected RunnerLayoutUi getUi() {
+                    return myUi;
+                }
+
+                @Override
+                public ProcessHandler getProcessHandler() {
+                    return myRunContentDescriptor == null ? null : myRunContentDescriptor.getProcessHandler();
+                }
+            };
         }
-      };
+        return logConsoleManager;
     }
-    return logConsoleManager;
-  }
 
-  protected final void initLogConsoles(
-    @Nonnull RunProfile runConfiguration,
-    @Nonnull RunContentDescriptor contentDescriptor,
-    @Nullable ExecutionConsole console
-  ) {
-    ProcessHandler processHandler = contentDescriptor.getProcessHandler();
-    if (runConfiguration instanceof RunConfigurationBase) {
-      RunConfigurationBase configuration = (RunConfigurationBase)runConfiguration;
-      if (myManager == null) {
-        myManager = new LogFilesManager(getLogConsoleManager());
-      }
-      myManager.addLogConsoles(configuration, processHandler);
-      if (processHandler != null) {
-        OutputFileUtil.attachDumpListener(configuration, processHandler, console);
-      }
+    protected final void initLogConsoles(
+        @Nonnull RunProfile runConfiguration,
+        @Nonnull RunContentDescriptor contentDescriptor,
+        @Nullable ExecutionConsole console
+    ) {
+        ProcessHandler processHandler = contentDescriptor.getProcessHandler();
+        if (runConfiguration instanceof RunConfigurationBase) {
+            RunConfigurationBase configuration = (RunConfigurationBase) runConfiguration;
+            if (myManager == null) {
+                myManager = new LogFilesManager(getLogConsoleManager());
+            }
+            myManager.addLogConsoles(configuration, processHandler);
+            if (processHandler != null) {
+                OutputFileUtil.attachDumpListener(configuration, processHandler, console);
+            }
+        }
     }
-  }
 }

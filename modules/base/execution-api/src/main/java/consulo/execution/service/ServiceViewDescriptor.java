@@ -43,10 +43,6 @@ public interface ServiceViewDescriptor {
     return getToolbarActions();
   }
 
-  default @Nullable DataProvider getDataProvider() {
-    return null;
-  }
-
   default void onNodeSelected(List<Object> selectedServices) {
   }
 

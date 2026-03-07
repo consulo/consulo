@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.localize.IdeLocalize;
@@ -121,11 +122,9 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    public final Object getData(@Nonnull Key<?> dataId) {
-        if (DeleteProvider.KEY == dataId) {
-            return myDeleteElementProvider;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DeleteProvider.KEY, myDeleteElementProvider);
     }
 
     @Nonnull

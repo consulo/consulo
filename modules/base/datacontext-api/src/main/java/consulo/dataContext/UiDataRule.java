@@ -22,10 +22,9 @@ import jakarta.annotation.Nonnull;
 /**
  * Extension point for computing derived data from an already-collected snapshot.
  * <p>
- * Unlike {@link GetDataRule} which works with {@link DataProvider}, this rule
- * works with the {@link UiDataProvider} / {@link DataSink} system. Rules can
- * read already-collected immediate data via {@link DataSnapshot} and contribute
- * additional data (including lazy/deferred values) via {@link DataSink}.
+ * This rule works with the {@link UiDataProvider} / {@link DataSink} system.
+ * Rules can read already-collected immediate data via {@link DataSnapshot}
+ * and contribute additional data (including lazy/deferred values) via {@link DataSink}.
  * <p>
  * Example: computing {@code PSI_FILE} from {@code VIRTUAL_FILE} + {@code PROJECT}.
  */

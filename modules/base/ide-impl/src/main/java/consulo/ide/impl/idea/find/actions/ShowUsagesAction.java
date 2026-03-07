@@ -27,7 +27,8 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
@@ -93,7 +94,6 @@ import consulo.usage.internal.NullUsage;
 import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -1370,7 +1370,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return newFileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
     }
 
-    private static class MyTable extends JBTable implements DataProvider {
+    private static class MyTable extends JBTable implements UiDataProvider {
         private static final int MARGIN = 2;
 
         public MyTable() {
@@ -1384,18 +1384,15 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
 
         @Override
-        @RequiredReadAction
-        public Object getData(@Nonnull Key<?> dataId) {
-            if (PsiElement.KEY == dataId) {
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.lazy(PsiElement.KEY, () -> {
                 int[] selected = getSelectedRows();
                 if (selected.length == 1) {
                     return getPsiElementForHint(getValueAt(selected[0], 0));
                 }
-            }
-            else if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
-                return PopupUtil.getPopupContainerFor(this);
-            }
-            return null;
+                return null;
+            });
+            sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, PopupUtil.getPopupContainerFor(this));
         }
 
         @Override

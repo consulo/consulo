@@ -17,7 +17,8 @@
 package consulo.desktop.awt.execution.ui;
 
 import consulo.application.ui.DimensionService;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.impl.internal.ui.layout.ViewContextEx;
 import consulo.execution.impl.internal.ui.layout.action.CloseViewAction;
 import consulo.execution.impl.internal.ui.layout.action.MinimizeViewAction;
@@ -110,21 +111,14 @@ public class GridCellImpl implements GridCell {
                     }
                 };
             }
-        }.setDataProvider(new DataProvider() {
+        }.setDataProvider(new UiDataProvider() {
             @Override
-            @Nullable
-            public Object getData(@Nonnull Key dataId) {
-                if (ViewContext.CONTENT_KEY == dataId) {
-                    TabInfo target = myTabs.getTargetInfo();
-                    if (target != null) {
-                        return new Content[]{getContentFor(target)};
-                    }
+            public void uiDataSnapshot(@Nonnull DataSink sink) {
+                sink.set(ViewContext.CONTEXT_KEY, myContext);
+                TabInfo target = myTabs.getTargetInfo();
+                if (target != null) {
+                    sink.set(ViewContext.CONTENT_KEY, new Content[]{getContentFor(target)});
                 }
-                else if (ViewContext.CONTEXT_KEY == dataId) {
-                    return myContext;
-                }
-
-                return null;
             }
         });
         myTabs.getPresentation().setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal()).setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true).setTabDraggingEnabled(true)
@@ -288,7 +282,7 @@ public class GridCellImpl implements GridCell {
         return myTabs.getComponent().isAncestorOf(c);
     }
 
-    private static class ProviderWrapper extends NonOpaquePanel implements DataProvider {
+    private static class ProviderWrapper extends NonOpaquePanel implements UiDataProvider {
         Content myContent;
         ViewContext myContext;
 
@@ -300,15 +294,9 @@ public class GridCellImpl implements GridCell {
         }
 
         @Override
-        @Nullable
-        public Object getData(@Nonnull Key dataId) {
-            if (ViewContext.CONTENT_KEY == dataId) {
-                return new Content[]{myContent};
-            }
-            else if (ViewContext.CONTEXT_KEY == dataId) {
-                return myContext;
-            }
-            return null;
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(ViewContext.CONTENT_KEY, new Content[]{myContent});
+            sink.set(ViewContext.CONTEXT_KEY, myContext);
         }
     }
 

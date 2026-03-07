@@ -15,12 +15,12 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.QuickActionProvider;
 import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.awt.event.ContainerEvent;
 import java.util.Collections;
 import java.util.List;
 
-public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements QuickActionProvider, DataProvider {
+public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements QuickActionProvider, UiDataProvider {
 
   private JComponent myToolbar;
 
@@ -99,9 +99,10 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
   }
 
   @Override
-  @Nullable
-  public Object getData(@Nonnull Key<?> dataId) {
-    return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    if (myProvideQuickActions) {
+      sink.set(QuickActionProvider.KEY, this);
+    }
   }
 
   public SimpleToolWindowPanel setProvideQuickActions(boolean provide) {

@@ -20,10 +20,10 @@ import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.component.util.ActiveRunnable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
@@ -40,6 +40,7 @@ import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -79,7 +80,7 @@ import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
  * For implementation use {@link JBEditorTabs} or {@link TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
-    implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
+    implements JBTabs, PropertyChangeListener, TimerListener, UiDataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
 
     private static final String uiClassID = "JBEditorTabsUI";
 
@@ -118,7 +119,7 @@ public abstract class JBTabsImpl extends JComponent
     private boolean mySideComponentOnTabs = true;
     private boolean mySideComponentBefore = true;
 
-    private DataProvider myDataProvider;
+    private UiDataProvider myDataProvider;
 
     private final WeakHashMap<Component, Component> myDeferredToRemove = new WeakHashMap<>();
 
@@ -2292,22 +2293,13 @@ public abstract class JBTabsImpl extends JComponent
         return this;
     }
 
-
     @Override
-    @Nullable
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
         if (myDataProvider != null) {
-            Object value = myDataProvider.getData(dataId);
-            if (value != null) {
-                return value;
-            }
+            myDataProvider.uiDataSnapshot(sink);
         }
-
-        if (QuickActionProvider.KEY == dataId) {
-            return this;
-        }
-
-        return NAVIGATION_ACTIONS_KEY == dataId ? this : null;
+        sink.set(QuickActionProvider.KEY, this);
+        sink.set(NAVIGATION_ACTIONS_KEY, this);
     }
 
     @Override
@@ -2326,16 +2318,10 @@ public abstract class JBTabsImpl extends JComponent
         return result;
     }
 
-    @Override
-    public DataProvider getDataProvider() {
-        return myDataProvider;
-    }
-
-    public JBTabsImpl setDataProvider(@Nonnull DataProvider dataProvider) {
+    public JBTabsImpl setDataProvider(@Nonnull UiDataProvider dataProvider) {
         myDataProvider = dataProvider;
         return this;
     }
-
 
     public static boolean isSelectionClick(MouseEvent e, boolean canBeQuick) {
         if (e.getClickCount() == 1 || canBeQuick) {

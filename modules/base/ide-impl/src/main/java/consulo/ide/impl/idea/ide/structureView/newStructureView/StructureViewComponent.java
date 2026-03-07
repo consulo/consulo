@@ -12,7 +12,8 @@ import consulo.application.util.registry.RegistryValue;
 import consulo.component.util.ModificationTracker;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
@@ -88,7 +89,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-public class StructureViewComponent extends SimpleToolWindowPanel implements TreeActionsOwner, DataProvider, StructureView.Scrollable {
+public class StructureViewComponent extends SimpleToolWindowPanel implements TreeActionsOwner, UiDataProvider, StructureView.Scrollable {
   private static final Logger LOG = Logger.getInstance(StructureViewComponent.class);
 
   private static final Key<TreeState> STRUCTURE_VIEW_STATE_KEY = Key.create("STRUCTURE_VIEW_STATE");
@@ -627,44 +628,31 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    if (PsiElement.KEY == dataId) {
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    super.uiDataSnapshot(sink);
+    sink.lazy(PsiElement.KEY, () -> {
       PsiElement element = getSelectedValues().filter(PsiElement.class).single();
       return element != null && element.isValid() ? element : null;
-    }
-    if (PsiElement.KEY_OF_ARRAY == dataId) {
-      return PsiUtilCore.toPsiElementArray(getSelectedValues().filter(PsiElement.class).toList());
-    }
-    if (FileEditor.KEY == dataId) {
-      return myFileEditor;
-    }
-    if (CutProvider.KEY == dataId) {
-      return myCopyPasteDelegator.getCutProvider();
-    }
-    if (CopyProvider.KEY == dataId) {
-      return myCopyPasteDelegator.getCopyProvider();
-    }
-    if (PasteProvider.KEY == dataId) {
-      return myCopyPasteDelegator.getPasteProvider();
-    }
-    if (Navigatable.KEY == dataId) {
+    });
+    sink.lazy(PsiElement.KEY_OF_ARRAY, () -> PsiUtilCore.toPsiElementArray(getSelectedValues().filter(PsiElement.class).toList()));
+    sink.set(FileEditor.KEY, myFileEditor);
+    sink.set(CutProvider.KEY, myCopyPasteDelegator.getCutProvider());
+    sink.set(CopyProvider.KEY, myCopyPasteDelegator.getCopyProvider());
+    sink.set(PasteProvider.KEY, myCopyPasteDelegator.getPasteProvider());
+    sink.lazy(Navigatable.KEY, () -> {
       List<Object> list = JBIterable.of(getTree().getSelectionPaths())
         .map(TreePath::getLastPathComponent)
         .map(StructureViewComponent::unwrapNavigatable)
         .toList();
       Object[] selectedElements = list.isEmpty() ? null : ArrayUtil.toObjectArray(list);
       if (selectedElements == null || selectedElements.length == 0) return null;
-      if (selectedElements[0] instanceof Navigatable) {
-        return selectedElements[0];
+      if (selectedElements[0] instanceof Navigatable navigatable) {
+        return navigatable;
       }
-    }
-    if (HelpManager.HELP_ID == dataId) {
-      return getHelpID();
-    }
-    if (Project.KEY == dataId) {
-      return myProject;
-    }
-    return super.getData(dataId);
+      return null;
+    });
+    sink.set(HelpManager.HELP_ID, getHelpID());
+    sink.set(Project.KEY, myProject);
   }
 
   @Override

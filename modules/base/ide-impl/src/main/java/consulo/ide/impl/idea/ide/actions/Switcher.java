@@ -12,7 +12,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorManager;
@@ -239,7 +240,7 @@ public class Switcher extends AnAction implements DumbAware {
         }
     }
 
-    public static class SwitcherPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, DataProvider, QuickSearchComponent {
+    public static class SwitcherPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, UiDataProvider, QuickSearchComponent {
         static final Object RECENT_LOCATIONS = new Object();
         final JBPopup myPopup;
         final JBList<Object> toolWindows;
@@ -258,18 +259,15 @@ public class Switcher extends AnAction implements DumbAware {
         final int myBaseModifier;
         private JBPopup myHint;
 
-        @Nullable
         @Override
-        public Object getData(@Nonnull Key dataId) {
-            if (Project.KEY == dataId) {
-                return this.project;
-            }
-            if (PlatformDataKeys.SELECTED_ITEM == dataId) {
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(Project.KEY, this.project);
+            sink.lazy(PlatformDataKeys.SELECTED_ITEM, () -> {
                 List list = getSelectedList().getSelectedValuesList();
                 Object o = ContainerUtil.getOnlyItem(list);
                 return o instanceof FileInfo fileInfo ? fileInfo.first : null;
-            }
-            if (VirtualFile.KEY_OF_ARRAY == dataId) {
+            });
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> {
                 List list = getSelectedList().getSelectedValuesList();
                 if (!list.isEmpty()) {
                     List<VirtualFile> vFiles = new ArrayList<>();
@@ -280,8 +278,8 @@ public class Switcher extends AnAction implements DumbAware {
                     }
                     return vFiles.isEmpty() ? null : vFiles.toArray(VirtualFile.EMPTY_ARRAY);
                 }
-            }
-            return null;
+                return null;
+            });
         }
 
         private class MyFocusTraversalPolicy extends FocusTraversalPolicy {

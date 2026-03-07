@@ -59,13 +59,13 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     @Nonnull
     @Override
     public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
-        return Coroutine.first(CodeExecution.run(() -> {
+        return CodeExecution.run(() -> {
             boolean enabled = isEnabled(event);
             event.getPresentation().setEnabled(enabled);
             if (ActionPlaces.isPopupPlace(event.getPlace())) {
                 event.getPresentation().setVisible(enabled);
             }
-        }));
+        }).toCoroutine();
     }
 
     private static boolean isEnabled(@Nonnull AnActionEvent e) {

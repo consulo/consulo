@@ -16,7 +16,8 @@
 package consulo.execution.test.ui;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.test.*;
@@ -49,7 +50,7 @@ import java.util.List;
  * @author anna
  * @since 2007-05-25
  */
-public abstract class TestTreeView extends Tree implements DataProvider, CopyProvider {
+public abstract class TestTreeView extends Tree implements UiDataProvider, CopyProvider {
   public static final Key<TestFrameworkRunningModel> MODEL_DATA_KEY = Key.create("testFrameworkModel.dataId");
 
   private TestFrameworkRunningModel myModel;
@@ -84,12 +85,10 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if (CopyProvider.KEY == dataId) {
-      return this;
-    }
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(CopyProvider.KEY, this);
 
-    if (PsiElement.KEY_OF_ARRAY == dataId) {
+    sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
         List<PsiElement> els = new ArrayList<>(paths.length);
@@ -105,9 +104,10 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
         }
         return els.isEmpty() ? null : els.toArray(new PsiElement[els.size()]);
       }
-    }
+      return null;
+    });
 
-    if (Location.DATA_KEYS == dataId) {
+    sink.lazy(Location.DATA_KEYS, () -> {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
         List<Location<?>> locations = new ArrayList<>(paths.length);
@@ -123,17 +123,18 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
         }
         return locations.isEmpty() ? null : locations.toArray(new Location[locations.size()]);
       }
-    }
+      return null;
+    });
 
-    if (MODEL_DATA_KEY == dataId) {
-      return myModel;
-    }
+    sink.set(MODEL_DATA_KEY, myModel);
 
     TreePath selectionPath = getSelectionPath();
-    if (selectionPath == null) return null;
-    AbstractTestProxy testProxy = getSelectedTest(selectionPath);
-    if (testProxy == null) return null;
-    return TestsUIUtil.getData(testProxy, dataId, myModel);
+    if (selectionPath != null) {
+      AbstractTestProxy testProxy = getSelectedTest(selectionPath);
+      if (testProxy != null) {
+        TestsUIUtil.uiSnapshot(sink, testProxy, myModel);
+      }
+    }
   }
 
   @Override

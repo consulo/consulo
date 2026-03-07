@@ -42,7 +42,6 @@ import jakarta.annotation.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -173,12 +172,6 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public <T> T getUserData(@Nonnull Key<T> key) {
         return dataObject().getUserData(key);
-    }
-
-    @Override
-    @Nonnull
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        return dataObject().addUserDataProvider(function);
     }
 
     @Nonnull

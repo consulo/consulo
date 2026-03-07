@@ -16,7 +16,7 @@
 package consulo.desktop.awt.find;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.fileEditor.internal.SearchReplaceComponentFactory;
 import consulo.project.Project;
@@ -47,7 +47,7 @@ public class SearchReplaceComponentFactoryImpl implements SearchReplaceComponent
                                        @Nonnull DefaultActionGroup replaceFieldActions,
                                        @Nullable Runnable replaceAction,
                                        @Nullable Runnable closeAction,
-                                       @Nullable DataProvider dataProvider) {
+                                       @Nullable UiDataProvider dataProvider) {
     return new SearchReplaceComponentImpl(project,
                                           targetComponent,
                                           searchToolbar1Actions,

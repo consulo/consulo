@@ -16,21 +16,21 @@
 
 package consulo.desktop.awt.execution.ui;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.TabImpl;
 import consulo.execution.impl.internal.ui.layout.ViewContextEx;
 import consulo.execution.internal.layout.*;
 import consulo.execution.ui.layout.PlaceInGrid;
-import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.ex.awt.NullableComponent;
 import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.tab.JBTabsPresentation;
 import consulo.ui.ex.content.Content;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,7 +39,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider {
+public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvider {
     private final ThreeComponentsSplitter myTopSplit = new ThreeComponentsSplitter(false, true);
     private final Splitter mySplitter = new Splitter(true);
 
@@ -389,15 +389,10 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     }
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (ViewContext.CONTEXT_KEY == dataId) {
-            return myViewContext;
-        }
-        else if (ViewContext.CONTENT_KEY == dataId) {
-            List<Content> contents = getContents();
-            return contents.toArray(new Content[contents.size()]);
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(ViewContext.CONTEXT_KEY, myViewContext);
+
+        List<Content> contents = getContents();
+        sink.set(ViewContext.CONTENT_KEY, contents.toArray(new Content[contents.size()]));
     }
 }

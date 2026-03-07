@@ -29,13 +29,12 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.disposer.Disposer;
+import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.List;
@@ -129,16 +128,11 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myHolder;
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (VirtualFile.KEY == dataId) {
-      return DiffImplUtil.getVirtualFile(myRequest, mySide);
-    }
-    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
-      return getContent();
-    }
-    return super.getData(dataId);
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    super.uiDataSnapshot(sink);
+    sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, mySide));
+    sink.set(DiffDataKeys.CURRENT_CONTENT, getContent());
   }
 
   //

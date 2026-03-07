@@ -21,6 +21,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.Settings;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.bundle.SdkTable;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.configurable.BaseProjectStructureShowSettingsUtil;
@@ -122,7 +123,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
         return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
-            Settings editor = dialog.getDataUnchecked(Settings.KEY);
+            Settings editor = DataManager.getInstance().getDataContext(dialog.getContentPane()).getData(Settings.KEY);
             assert editor != null;
             editor.select(configurableClass).doWhenDone(afterSelect);
         });
@@ -211,7 +212,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     @Override
     public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
         return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
-            ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
+            ProjectStructureSelector editor = DataManager.getInstance().getDataContext(dialog.getContentPane()).getData(ProjectStructureSelector.KEY);
             assert editor != null;
             consumer.accept(editor);
         });

@@ -15,6 +15,7 @@
  */
 package consulo.dataContext;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -49,7 +50,7 @@ public interface DataSink {
      * @param key          the data key
      * @param dataSupplier supplier invoked later under {@code tryRunReadAction}
      */
-    <T> void lazy(@Nonnull Key<T> key, @Nonnull Supplier<T> dataSupplier);
+    <T> void lazy(@Nonnull Key<T> key, @RequiredReadAction @Nonnull Supplier<T> dataSupplier);
 
     /**
      * Registers a lazy data function that receives a {@link DataSnapshot}
@@ -60,7 +61,7 @@ public interface DataSink {
      * @param dataFunction function invoked later under {@code tryRunReadAction},
      *                     receiving a snapshot of immediate data
      */
-    <T> void lazyValue(@Nonnull Key<T> key, @Nonnull Function<DataSnapshot, T> dataFunction);
+    <T> void lazyValue(@Nonnull Key<T> key, @RequiredReadAction @Nonnull Function<DataSnapshot, T> dataFunction);
 
     /**
      * Delegates to another {@link UiDataProvider} to populate this sink.

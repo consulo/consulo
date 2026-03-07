@@ -91,13 +91,7 @@ public class PluginsPanel implements Disposable {
         // set default Repository tab if no plugins installed
         select(pluginsCount == 0 ? myRepositoryTab : myInstalledTab);
 
-        DataManager.registerDataProvider(myTabbedPane, dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-
-            return null;
-        });
+        DataManager.registerUiDataProvider(myTabbedPane, sink -> sink.set(KEY, this));
 
         PluginsOptionGroup group = new PluginsOptionGroup();
         group.add(new InstallPluginFromDiskAction(this));

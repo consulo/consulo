@@ -15,22 +15,19 @@
  */
 package consulo.ide.impl.idea.ui.content.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
+import consulo.ide.impl.wm.impl.ContentManagerBase;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.Comparing;
-import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.wm.impl.ContentManagerBase;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,97 +37,95 @@ import java.awt.*;
  */
 @SuppressWarnings("deprecation")
 public class DesktopContentManagerImpl extends ContentManagerBase {
-  protected JComponent myComponent;
+    protected JComponent myComponent;
 
-  public DesktopContentManagerImpl(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
-    super(contentUI, canCloseContents, project);
-  }
-
-  @Override
-  protected void updateUI() {
-    myUI.getComponent().updateUI();
-  }
-
-  @Nonnull
-  @Override
-  protected AsyncResult<Void> requestFocusForComponent() {
-    return getFocusManager().requestFocus(myComponent, true);
-  }
-
-  @Override
-  protected boolean isSelectionHoldsFocus() {
-    boolean focused = false;
-    Content[] selection = getSelectedContents();
-    for (Content each : selection) {
-      if (UIUtil.isFocusAncestor(each.getComponent())) {
-        focused = true;
-        break;
-      }
-    }
-    return focused;
-  }
-
-  @Override
-  public Content getContent(JComponent component) {
-    Content[] contents = getContents();
-    for (Content content : contents) {
-      if (Comparing.equal(component, content.getComponent())) {
-        return content;
-      }
-    }
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public JComponent getComponent() {
-    if (myComponent == null) {
-      myComponent = new MyNonOpaquePanel();
-
-      NonOpaquePanel contentComponent = new NonOpaquePanel();
-      contentComponent.setContent(myUI.getComponent());
-      contentComponent.setFocusCycleRoot(true);
-
-      myComponent.add(contentComponent, BorderLayout.CENTER);
-    }
-    return myComponent;
-  }
-
-  @Nonnull
-  @Override
-  public AsyncResult<Void> requestFocus(Content content, boolean forced) {
-    Content toSelect = content == null ? getSelectedContent() : content;
-    if (toSelect == null) return AsyncResult.rejected();
-    assert myContents.contains(toSelect);
-    JComponent preferredFocusableComponent = toSelect.getPreferredFocusableComponent();
-    return preferredFocusableComponent != null ? getFocusManager().requestFocusInProject(preferredFocusableComponent, myProject) : AsyncResult.rejected();
-  }
-
-  private class MyNonOpaquePanel extends NonOpaquePanel implements DataProvider {
-    public MyNonOpaquePanel() {
-      super(new BorderLayout());
+    public DesktopContentManagerImpl(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
+        super(contentUI, canCloseContents, project);
     }
 
     @Override
-    @Nullable
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
-      if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
-        return DesktopContentManagerImpl.this;
-      }
-
-      for (DataProvider dataProvider : myDataProviders) {
-        Object data = dataProvider.getData(dataId);
-        if (data != null) {
-          return data;
-        }
-      }
-
-      if (myUI instanceof DataProvider) {
-        return ((DataProvider)myUI).getData(dataId);
-      }
-
-      DataProvider provider = DataManager.getDataProvider(this);
-      return provider == null ? null : provider.getData(dataId);
+    protected void updateUI() {
+        myUI.getComponent().updateUI();
     }
-  }
+
+    @Nonnull
+    @Override
+    protected AsyncResult<Void> requestFocusForComponent() {
+        return getFocusManager().requestFocus(myComponent, true);
+    }
+
+    @Override
+    protected boolean isSelectionHoldsFocus() {
+        boolean focused = false;
+        Content[] selection = getSelectedContents();
+        for (Content each : selection) {
+            if (UIUtil.isFocusAncestor(each.getComponent())) {
+                focused = true;
+                break;
+            }
+        }
+        return focused;
+    }
+
+    @Override
+    public Content getContent(JComponent component) {
+        Content[] contents = getContents();
+        for (Content content : contents) {
+            if (Comparing.equal(component, content.getComponent())) {
+                return content;
+            }
+        }
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        if (myComponent == null) {
+            myComponent = new MyNonOpaquePanel();
+
+            NonOpaquePanel contentComponent = new NonOpaquePanel();
+            contentComponent.setContent(myUI.getComponent());
+            contentComponent.setFocusCycleRoot(true);
+
+            myComponent.add(contentComponent, BorderLayout.CENTER);
+        }
+        return myComponent;
+    }
+
+    @Nonnull
+    @Override
+    public AsyncResult<Void> requestFocus(Content content, boolean forced) {
+        Content toSelect = content == null ? getSelectedContent() : content;
+        if (toSelect == null) {
+            return AsyncResult.rejected();
+        }
+        assert myContents.contains(toSelect);
+        JComponent preferredFocusableComponent = toSelect.getPreferredFocusableComponent();
+        return preferredFocusableComponent != null ? getFocusManager().requestFocusInProject(preferredFocusableComponent, myProject) : AsyncResult.rejected();
+    }
+
+    private class MyNonOpaquePanel extends NonOpaquePanel implements UiDataProvider {
+        public MyNonOpaquePanel() {
+            super(new BorderLayout());
+        }
+
+        @Override
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            for (UiDataProvider uiDataProvider : myDataProviders) {
+                uiDataProvider.uiDataSnapshot(sink);
+            }
+
+            ContentUI ui = myUI;
+            if (ui instanceof UiDataProvider uiDataProvider) {
+                uiDataProvider.uiDataSnapshot(sink);
+            }
+
+            sink.set(PlatformDataKeys.CONTENT_MANAGER, DesktopContentManagerImpl.this);
+
+            if (getContentCount() > 1) {
+                sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, DesktopContentManagerImpl.this);
+            }
+        }
+    }
 }

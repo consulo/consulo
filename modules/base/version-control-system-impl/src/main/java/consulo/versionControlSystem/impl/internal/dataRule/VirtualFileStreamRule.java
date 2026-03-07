@@ -15,10 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSnapshot;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -26,23 +23,15 @@ import jakarta.annotation.Nullable;
 
 import java.util.stream.Stream;
 
-@ExtensionImpl
-public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
-  @Nonnull
-  @Override
-  public Key<Stream<VirtualFile>> getKey() {
-    return VcsDataKeys.VIRTUAL_FILE_STREAM;
-  }
-
+public final class VirtualFileStreamRule {
   @Nullable
-  @Override
-  public Stream<VirtualFile> getData(@Nonnull DataProvider dataProvider) {
-    VirtualFile[] files = dataProvider.getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
+  public static Stream<VirtualFile> getData(@Nonnull DataSnapshot dataProvider) {
+    VirtualFile[] files = dataProvider.get(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       return Stream.of(files);
     }
 
-    VirtualFile file = dataProvider.getDataUnchecked(VirtualFile.KEY);
+    VirtualFile file = dataProvider.get(VirtualFile.KEY);
     if (file != null) {
       return Stream.of(file);
     }

@@ -271,7 +271,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return myModel;
     }
 
-    public class JPanelProvider extends JPanel implements DataProvider, QuickSearchComponent {
+    public class JPanelProvider extends JPanel implements UiDataProvider, QuickSearchComponent {
         private JBPopup myHint;
         private boolean myFocusRequested;
 
@@ -279,30 +279,28 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
-            if (PlatformDataKeys.SEARCH_INPUT_TEXT == dataId) {
-                return myTextField.getText();
-            }
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(PlatformDataKeys.SEARCH_INPUT_TEXT, myTextField.getText());
+            sink.set(HelpManager.HELP_ID, myModel.getHelpId());
+            sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, getBounds());
 
-            if (HelpManager.HELP_ID == dataId) {
-                return myModel.getHelpId();
-            }
-
-            if (myCalcElementsThread != null) {
-                return null;
-            }
-            if (PsiElement.KEY == dataId) {
+            sink.lazy(PsiElement.KEY, () -> {
+                if (myCalcElementsThread != null) {
+                    return null;
+                }
                 Object element = getChosenElement();
-
-                if (element instanceof PsiElement) {
-                    return element;
+                if (element instanceof PsiElement psiElement) {
+                    return psiElement;
                 }
-
                 if (element instanceof DataProvider dataProvider) {
-                    return dataProvider.getData(dataId);
+                    return (PsiElement) dataProvider.getData(PsiElement.KEY);
                 }
-            }
-            else if (PsiElement.KEY_OF_ARRAY == dataId) {
+                return null;
+            });
+            sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
+                if (myCalcElementsThread != null) {
+                    return null;
+                }
                 List<Object> chosenElements = getChosenElements();
                 List<PsiElement> result = new ArrayList<>(chosenElements.size());
                 for (Object element : chosenElements) {
@@ -311,11 +309,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                     }
                 }
                 return PsiUtilCore.toPsiElementArray(result);
-            }
-            else if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-                return getBounds();
-            }
-            return null;
+            });
         }
 
         @Override

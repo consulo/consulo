@@ -16,12 +16,9 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
-import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,18 +28,10 @@ import java.util.List;
 /**
  * @author cdr
  */
-@ExtensionImpl
-public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
-  @Nonnull
-  @Override
-  public Key<List<UsageInfo>> getKey() {
-    return UsageView.USAGE_INFO_LIST_KEY;
-  }
-
-  @Override
+public final class UsageInfo2ListRule {
   @Nullable
-  public List<UsageInfo> getData(@Nonnull DataProvider dataProvider) {
-    UsageInfo usageInfo = dataProvider.getDataUnchecked(UsageView.USAGE_INFO_KEY);
+  static List<UsageInfo> getData(@Nonnull DataSnapshot dataProvider) {
+    UsageInfo usageInfo = dataProvider.get(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;
   }

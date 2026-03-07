@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.util.side;
 
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.EditorEx;
 import consulo.desktop.awt.internal.diff.EditorHolderFactory;
 import consulo.desktop.awt.internal.diff.TextEditorHolder;
@@ -194,13 +195,10 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DiffDataKeys.CURRENT_EDITOR == dataId) {
-            return getEditor();
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.CURRENT_EDITOR, getEditor());
     }
 
     protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {

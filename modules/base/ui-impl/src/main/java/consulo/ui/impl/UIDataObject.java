@@ -46,8 +46,6 @@ public class UIDataObject extends UserDataHolderBase {
     @Nullable
     private Map<BorderPosition, BorderInfo> myBorders;
 
-    private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = LazyValue.atomicNotNull(Lists::newLockFreeCopyOnWriteList);
-
     @Nonnull
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
                                                                                      @Nonnull ComponentEventListener<C, E> listener) {
@@ -67,22 +65,9 @@ public class UIDataObject extends UserDataHolderBase {
         return (ComponentEventListener<C, E>) eventDispatcher.getMulticaster();
     }
 
-    @Nonnull
-    public <T> Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        myUserDataProviders.get().add(function);
-        return () -> myUserDataProviders.get().remove(function);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getUserData(@Nonnull Key<T> key) {
-        List<Function<Key<?>, Object>> value = myUserDataProviders.get();
-        for (Function<Key<?>, Object> function : value) {
-            Object funcValue = function.apply(key);
-            if (funcValue != null) {
-                return (T) funcValue;
-            }
-        }
         return super.getUserData(key);
     }
 

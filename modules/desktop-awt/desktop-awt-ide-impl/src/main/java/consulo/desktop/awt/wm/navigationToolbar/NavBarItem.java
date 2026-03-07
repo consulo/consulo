@@ -2,13 +2,11 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AllIcons;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.psi.PsiElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
@@ -215,14 +213,7 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
   }
 
   public boolean needPaintIcon() {
-    if (Registry.is("navBar.show.icons") || isPopupElement || isLastElement()) {
-      return true;
-    }
-    if (myNeedPaintIcon) {
-      return true;
-    }
-    Object object = getObject();
-    return object instanceof PsiElement && ((PsiElement)object).getContainingFile() != null;
+    return myNeedPaintIcon;
   }
 
   @Nonnull

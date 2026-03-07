@@ -20,7 +20,8 @@ import consulo.ui.ModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
@@ -59,8 +60,6 @@ import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
@@ -396,15 +395,14 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     return toolWindow != null && toolWindow.isVisible();
   }
 
-  private class ContentPanel extends JPanel implements DataProvider {
+  private class ContentPanel extends JPanel implements UiDataProvider {
     public ContentPanel() {
       super(new BorderLayout());
     }
 
     @Override
-    public Object getData(@Nonnull @NonNls Key dataId) {
-      if (dataId == ourDataSelectorKey) return StructureViewWrapperImpl.this;
-      return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+      sink.set(ourDataSelectorKey, StructureViewWrapperImpl.this);
     }
   }
 }

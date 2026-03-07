@@ -20,7 +20,8 @@ import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -78,7 +79,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjPredicate;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -131,7 +131,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * <li>Folding area</li>
  * </ul>
  */
-public class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
+public class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, UiDataProvider, Accessible {
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         protected void hoverChanged(@Nonnull Component component, boolean hovered) {
@@ -784,26 +784,16 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return Math.max(0, myEditor.getDocument().getLineCount() - 1);
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
         if (myEditor.isDisposed()) {
-            return null;
+            return;
         }
 
-        if (EditorGutter.KEY == dataId) {
-            return this;
-        }
-        if (Editor.KEY == dataId) {
-            return myEditor;
-        }
-        if (EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR == dataId) {
-            return myLastActionableClick == null ? null : myLastActionableClick.myLogicalLineAtCursor;
-        }
-        if (EditorGutterComponentEx.ICON_CENTER_POSITION == dataId) {
-            return myLastActionableClick == null ? null : myLastActionableClick.myIconCenterPosition;
-        }
-        return null;
+        sink.set(EditorGutter.KEY, this);
+        sink.set(Editor.KEY, myEditor);
+        sink.lazy(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR, () -> myLastActionableClick == null ? null : myLastActionableClick.myLogicalLineAtCursor);
+        sink.lazy(EditorGutterComponentEx.ICON_CENTER_POSITION, () -> myLastActionableClick == null ? null : myLastActionableClick.myIconCenterPosition);
     }
 
     @FunctionalInterface

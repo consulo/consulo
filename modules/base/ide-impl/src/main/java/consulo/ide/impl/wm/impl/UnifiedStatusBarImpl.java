@@ -18,6 +18,7 @@ package consulo.ide.impl.wm.impl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
@@ -43,7 +44,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -115,8 +115,10 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
       leftPanel().add(swicher.getUIComponent());
     }
 
-    myComponent.addUserDataProvider(Project.KEY, this::getProject);
-    myComponent.addUserDataProvider(StatusBar.KEY, () -> this);
+    myComponent.putUserData(UiDataProvider.KEY, sink -> {
+        sink.set(Project.KEY, getProject());
+        sink.set(StatusBar.KEY, this);
+    });
 
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }

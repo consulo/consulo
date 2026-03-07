@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.view;
 
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 10-Aug-22
  */
-public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposable {
+public interface ProjectViewPane extends UserDataHolder, Disposable {
   @Nonnull
   String getId();
 

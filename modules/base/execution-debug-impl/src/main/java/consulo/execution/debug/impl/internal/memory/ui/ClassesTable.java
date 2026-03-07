@@ -5,7 +5,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ClassesTable extends JBTable implements DataProvider, Disposable {
+public class ClassesTable extends JBTable implements UiDataProvider, Disposable {
     public static final Key<TypeInfo> SELECTED_CLASS_KEY = Key.create("ClassesTable.SelectedClass");
     public static final Key<ReferenceCountProvider> REF_COUNT_PROVIDER_KEY =
         Key.create("ClassesTable.ReferenceCountProvider");
@@ -380,17 +381,10 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         fireTableDataChanged();
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (dataId == SELECTED_CLASS_KEY) {
-            return getSelectedClass();
-        }
-
-        if (dataId == REF_COUNT_PROVIDER_KEY) {
-            return myCountProvider;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(SELECTED_CLASS_KEY, getSelectedClass());
+        sink.set(REF_COUNT_PROVIDER_KEY, myCountProvider);
     }
 
     public void clean(@Nonnull String emptyText) {

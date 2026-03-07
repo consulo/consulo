@@ -104,11 +104,8 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         };
         myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
         myComponent.setTransferHandler(new MyTransferHandler());
-        DataManager.registerDataProvider(myComponent, dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-            return null;
+        DataManager.registerUiDataProvider(myComponent, sink -> {
+            sink.set(KEY, this);
         });
 
         AWTComponentProviderUtil.putMark(myComponent, this);

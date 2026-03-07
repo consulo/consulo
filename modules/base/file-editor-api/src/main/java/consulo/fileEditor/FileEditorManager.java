@@ -18,7 +18,6 @@ package consulo.fileEditor;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -32,9 +31,9 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
@@ -199,15 +198,6 @@ public abstract class FileEditorManager {
    */
   @Nonnull
   public abstract Project getProject();
-
-  public abstract void registerExtraEditorDataProvider(@Nonnull EditorDataProvider provider, Disposable parentDisposable);
-
-  /**
-   * Returns data associated with given editor/caret context. Data providers are registered via
-   * {@link #registerExtraEditorDataProvider(EditorDataProvider, Disposable)} method.
-   */
-  @Nullable
-  public abstract Object getData(@Nonnull Key<?> dataId, @Nonnull Editor editor, @Nonnull Caret caret);
 
   /**
    * Selects a specified file editor tab for the specified editor.

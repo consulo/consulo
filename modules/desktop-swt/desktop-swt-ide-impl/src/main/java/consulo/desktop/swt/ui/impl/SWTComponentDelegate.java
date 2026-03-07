@@ -35,8 +35,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
-import java.util.function.Function;
-
 /**
  * @author VISTALL
  * @since 2021-04-29
@@ -172,12 +170,6 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
                 control.getParent().requestLayout();
             }
         }
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-        return myDataObject.addUserDataProvider(function);
     }
 
     @Nonnull

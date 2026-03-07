@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
@@ -296,7 +296,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     @Nonnull
     @Override
     public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
-        return ReadLock.apply(o -> {
+        return OptionalReadLock.apply(o -> {
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
             if (project == null) {
@@ -361,7 +361,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
             }
             presentation.setEnabled(true);
             return null;
-        }).toCoroutine();
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
     }
 
     @Nullable

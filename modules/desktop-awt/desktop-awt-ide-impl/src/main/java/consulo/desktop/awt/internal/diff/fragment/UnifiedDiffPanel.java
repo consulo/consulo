@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.fragment;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.util.DiffPanelBase;
 import consulo.diff.DiffContext;
 import consulo.diff.comparison.DiffTooBigException;
@@ -42,7 +42,7 @@ public class UnifiedDiffPanel extends DiffPanelBase {
     public UnifiedDiffPanel(
         @Nullable Project project,
         @Nonnull UnifiedContentPanel content,
-        @Nonnull DataProvider provider,
+        @Nonnull UiDataProvider provider,
         @Nonnull DiffContext context
     ) {
         super(project, provider, context);

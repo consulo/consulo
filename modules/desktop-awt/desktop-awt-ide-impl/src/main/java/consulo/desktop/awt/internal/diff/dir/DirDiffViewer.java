@@ -88,9 +88,10 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
 
     myPanel = new JPanel(new BorderLayout());
     myPanel.add(myDirDiffPanel.getPanel(), BorderLayout.CENTER);
-    DataManager.registerDataProvider(myPanel,
-      dataId -> HelpManager.HELP_ID == dataId ? "reference.dialogs.diff.folder" : myDirDiffPanel.getData(dataId)
-    );
+    DataManager.registerUiDataProvider(myPanel, sink -> {
+      sink.set(HelpManager.HELP_ID, "reference.dialogs.diff.folder");
+      myDirDiffPanel.uiDataSnapshot(sink);
+    });
   }
 
   @Nonnull

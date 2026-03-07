@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.change;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 
@@ -23,7 +23,7 @@ import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
  * @author VISTALL
  * @since 2025-08-30
  */
-public interface RepositoryChangesBrowser extends ChangesBrowser<Change>, DataProvider {
+public interface RepositoryChangesBrowser extends ChangesBrowser<Change>, UiDataProvider {
     AnAction getEditSourceAction();
 
     void setUseCase(CommittedChangesBrowserUseCase useCase);

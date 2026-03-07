@@ -8,6 +8,8 @@ import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ModalityState;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.*;
@@ -18,7 +20,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -88,7 +89,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
-public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider, OccurenceNavigator {
+public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, UiDataProvider, OccurenceNavigator {
     private static final String CONSOLE_VIEW_POPUP_MENU = "ConsoleView.PopupMenu";
     private static final Logger LOG = Logger.getInstance(ConsoleViewImpl.class);
 
@@ -940,11 +941,14 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
         if (myEditor == null) {
-            return null;
+            return;
         }
-        if (Navigatable.KEY == dataId) {
+        sink.set(Editor.KEY, myEditor);
+        sink.set(HelpManager.HELP_ID, myHelpId);
+        sink.set(ConsoleView.KEY, this);
+        sink.lazy(Navigatable.KEY, () -> {
             LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
             HyperlinkInfo info = myHyperlinks.getHyperlinkInfoByLineAndCol(pos.line, pos.column);
             OpenFileDescriptor openFileDescriptor =
@@ -953,18 +957,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
                 return null;
             }
             return openFileDescriptor;
-        }
-
-        if (Editor.KEY == dataId) {
-            return myEditor;
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        if (KEY == dataId) {
-            return this;
-        }
-        return null;
+        });
     }
 
     @Override

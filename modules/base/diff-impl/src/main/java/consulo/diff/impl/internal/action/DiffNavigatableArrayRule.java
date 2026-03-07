@@ -15,30 +15,17 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataSnapshot;
 import consulo.diff.DiffDataKeys;
-import consulo.dataContext.GetDataRule;
-import consulo.dataContext.DataProvider;
-import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-@ExtensionImpl
-public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {
-  @Nonnull
-  @Override
-  public Key<Navigatable[]> getKey() {
-    return DiffDataKeys.NAVIGATABLE_ARRAY;
-  }
-
-  @Override
-  public Navigatable[] getData(@Nonnull DataProvider dataProvider) {
-    Navigatable element = dataProvider.getDataUnchecked(DiffDataKeys.NAVIGATABLE);
-    if (element == null) {
-      return null;
+public final class DiffNavigatableArrayRule {
+    @Nullable
+    static Navigatable[] getData(@Nonnull DataSnapshot dataProvider) {
+        Navigatable element = dataProvider.get(DiffDataKeys.NAVIGATABLE);
+        if (element == null) return null;
+        return new Navigatable[]{element};
     }
-
-    return new Navigatable[]{element};
-  }
 }
-

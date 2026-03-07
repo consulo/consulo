@@ -17,7 +17,7 @@ package consulo.ui.ex.content;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.BusyObject;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -130,7 +130,7 @@ public interface ContentManager extends Disposable, BusyObject {
     @Nonnull
     AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced);
 
-    void addDataProvider(@Nonnull DataProvider provider);
+    void addUiDataProvider(@Nonnull UiDataProvider provider);
 
     @Nonnull
     default ContentFactory getFactory() {

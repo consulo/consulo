@@ -15,27 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.InternalEditorKeys;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
-@ExtensionImpl
-public class FileEditorRule implements GetDataRule<FileEditor> {
-  @Nonnull
-  @Override
-  public Key<FileEditor> getKey() {
-    return FileEditor.KEY;
-  }
-
-  @Override
-  public FileEditor getData(@Nonnull DataProvider dataProvider) {
-    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+public final class FileEditorRule {
+  static FileEditor getData(@Nonnull DataSnapshot dataProvider) {
+    Editor editor = dataProvider.get(Editor.KEY);
     if (editor == null) {
       return null;
     }

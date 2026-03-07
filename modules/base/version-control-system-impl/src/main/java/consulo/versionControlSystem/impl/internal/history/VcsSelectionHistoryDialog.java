@@ -18,7 +18,8 @@ package consulo.versionControlSystem.impl.internal.history;
 import consulo.application.HelpManager;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.ProgressManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.Block;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
@@ -70,7 +71,7 @@ import java.util.List;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 
-public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvider {
+public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataProvider {
     private static final Logger LOG = Logger.getInstance(VcsSelectionHistoryDialog.class);
 
     private static final VcsRevisionNumber LOCAL_REVISION_NUMBER = new VcsRevisionNumber() {
@@ -475,28 +476,19 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        else if (VcsDataKeys.VCS_VIRTUAL_FILE == dataId) {
-            return myFile;
-        }
-        else if (VcsDataKeys.VCS_FILE_REVISION == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(Project.KEY, myProject);
+        sink.set(VcsDataKeys.VCS_VIRTUAL_FILE, myFile);
+        sink.lazy(VcsDataKeys.VCS_FILE_REVISION, () -> {
             VcsFileRevision selectedObject = myList.getSelectedObject();
             return selectedObject instanceof CurrentRevision ? null : selectedObject;
-        }
-        else if (VcsDataKeys.VCS_FILE_REVISIONS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS_FILE_REVISIONS, () -> {
             List<VcsFileRevision> revisions = ContainerUtil.filter(myList.getSelectedObjects(), Predicates.notEqualTo(myLocalRevision));
             return ArrayUtil.toObjectArray(revisions, VcsFileRevision.class);
-        }
-        else if (VcsDataKeys.VCS == dataId) {
-            return myActiveVcs.getKeyInstanceMethod();
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        return null;
+        });
+        sink.set(VcsDataKeys.VCS, myActiveVcs.getKeyInstanceMethod());
+        sink.set(HelpManager.HELP_ID, myHelpId);
     }
 
     private class MyDiffAction extends DumbAwareAction {

@@ -1,7 +1,8 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewContributor;
 import consulo.execution.service.ServiceViewDescriptor;
@@ -146,7 +147,7 @@ final class ServiceViewDragHelper {
     return content;
   }
 
-  static final class ServiceViewDragBean implements DataProvider {
+  static final class ServiceViewDragBean implements UiDataProvider {
     private final ServiceView myServiceView;
     private final List<ServiceViewItem> myItems;
     private final ServiceViewContributor myContributor;
@@ -181,17 +182,11 @@ final class ServiceViewDragHelper {
       return myContributor;
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
-        return ContainerUtil.map2Array(myItems, ServiceViewItem::getValue);
-      }
-      if (PlatformDataKeys.SELECTED_ITEM.is(dataId)) {
-        ServiceViewItem item = ContainerUtil.getOnlyItem(myItems);
-        return item != null ? item.getValue() : null;
-      }
-      return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+      sink.set(PlatformDataKeys.SELECTED_ITEMS, ContainerUtil.map2Array(myItems, ServiceViewItem::getValue));
+      ServiceViewItem item = ContainerUtil.getOnlyItem(myItems);
+      sink.set(PlatformDataKeys.SELECTED_ITEM, item != null ? item.getValue() : null);
     }
   }
 

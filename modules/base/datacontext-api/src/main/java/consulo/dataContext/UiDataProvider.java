@@ -15,6 +15,7 @@
  */
 package consulo.dataContext;
 
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -32,6 +33,8 @@ import jakarta.annotation.Nonnull;
  * When both are implemented, {@code UiDataProvider} takes priority.
  */
 public interface UiDataProvider {
+    Key<UiDataProvider> KEY = Key.of(UiDataProvider.class);
+
     /**
      * Called on EDT to populate the data sink.
      * <p>

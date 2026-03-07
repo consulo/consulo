@@ -19,7 +19,8 @@ import com.google.common.primitives.Ints;
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.logging.Logger;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
@@ -29,7 +30,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.log.VcsCommitStyleFactory;
@@ -54,8 +54,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.BasicTableHeaderUI;
@@ -71,7 +69,7 @@ import java.util.*;
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.BOLD;
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.ITALIC;
 
-public class VcsLogGraphTable extends TableWithProgress implements DataProvider, CopyProvider {
+public class VcsLogGraphTable extends TableWithProgress implements UiDataProvider, CopyProvider {
   private static final Logger LOG = Logger.getInstance(VcsLogGraphTable.class);
 
   public static final int ROOT_INDICATOR_WHITE_WIDTH = 5;
@@ -289,10 +287,9 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     }
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key dataId) {
-    return KEY == dataId ? this : null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(CopyProvider.KEY, this);
   }
 
   @Override

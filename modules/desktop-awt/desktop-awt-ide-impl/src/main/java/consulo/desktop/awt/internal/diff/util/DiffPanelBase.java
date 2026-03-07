@@ -15,12 +15,11 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffContext;
-import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.Wrapper;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,10 +28,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DiffPanelBase extends JPanel implements DataProvider {
+public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
   @Nullable protected final Project myProject;
   @Nonnull
-  private final DataProvider myDataProvider;
+  private final UiDataProvider myDataProvider;
   @Nonnull
   protected final DiffContext myContext;
 
@@ -56,7 +55,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
   protected String myCurrentCard;
 
   public DiffPanelBase(@Nullable Project project,
-                       @Nonnull DataProvider provider,
+                       @Nonnull UiDataProvider provider,
                        @Nonnull DiffContext context) {
     super(new BorderLayout());
     myProject = project;
@@ -99,10 +98,9 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     if (restoreFocus) myContext.requestFocus();
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    return myDataProvider.getData(dataId);
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.uiDataSnapshot(myDataProvider);
   }
 
   //

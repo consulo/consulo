@@ -29,7 +29,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -76,7 +77,6 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
@@ -101,7 +101,7 @@ import java.util.regex.Pattern;
 /**
  * @author Konstantin Bulenkov
  */
-public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disposable {
+public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Disposable {
     private static final String REFS_CACHE = "References Resolve Cache";
     private static final ColorValue SELECTION_BG_COLOR = new LightDarkColorValue(new RGBColor(0, 153, 153), new RGBColor(0, 80, 80));
     private static final Logger LOG = Logger.getInstance(PsiViewerDialog.class);
@@ -797,8 +797,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (Navigatable.KEY == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.lazy(Navigatable.KEY, () -> {
             String fqn = null;
             if (myPsiTree.hasFocus()) {
                 TreePath path = myPsiTree.getSelectionPath();
@@ -825,8 +825,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             if (fqn != null) {
                 return getContainingFileForClass(fqn);
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     private class MyPsiTreeSelectionListener implements TreeSelectionListener {

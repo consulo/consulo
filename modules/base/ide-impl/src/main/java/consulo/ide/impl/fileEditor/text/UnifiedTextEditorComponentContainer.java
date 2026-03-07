@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.fileEditor.text;
 
-import consulo.dataContext.UiDataProvider;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.internal.TextEditorComponentContainer;
-import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.ui.Component;
 import consulo.ui.layout.DockLayout;
 
@@ -35,8 +34,7 @@ public class UnifiedTextEditorComponentContainer implements TextEditorComponentC
   public UnifiedTextEditorComponentContainer(Editor editor, Disposable parentDisposable, UiDataProvider uiDataProvider) {
     myDockLayout = DockLayout.create();
 
-    UiDataProviderAdapter adapter = new UiDataProviderAdapter(uiDataProvider);
-    myDockLayout.addUserDataProvider(adapter::getData);
+    myDockLayout.putUserData(UiDataProvider.KEY, uiDataProvider);
     myDockLayout.center(editor.getUIComponent());
   }
 

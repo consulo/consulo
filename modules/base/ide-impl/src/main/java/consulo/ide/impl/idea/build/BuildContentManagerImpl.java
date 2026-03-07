@@ -2,30 +2,27 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ModalityState;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.compiler.localize.CompilerLocalize;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.content.ContentUtilEx;
 import consulo.language.LangBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.internal.StartupManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -97,21 +94,6 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         toolWindow.setDisplayName(CompilerLocalize.toolwindowBuildDisplayName());
         toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowbuild());
         ContentManager contentManager = toolWindow.getContentManager();
-        contentManager.addDataProvider(new DataProvider() {
-            private int myInsideGetData = 0;
-
-            @Override
-            public Object getData(@Nonnull Key dataId) {
-                myInsideGetData++;
-                try {
-                    return myInsideGetData == 1
-                        ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
-                }
-                finally {
-                    myInsideGetData--;
-                }
-            }
-        });
 
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
         return toolWindow;

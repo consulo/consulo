@@ -15,85 +15,74 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSnapshot;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.GetDataRule;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.usage.Usage;
-import consulo.usage.internal.UsageDataUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
+import consulo.usage.internal.UsageDataUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-@ExtensionImpl
-public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
-    @Nonnull
-    @Override
-    public Key<VirtualFile[]> getKey() {
-        return VirtualFile.KEY_OF_ARRAY;
-    }
-
-    @Override
-    public VirtualFile[] getData(@Nonnull DataProvider dataProvider) {
+public final class VirtualFileArrayRule {
+    static VirtualFile[] getData(@Nonnull DataSnapshot dataProvider) {
         // Try to detect multi-selection.
 
-        Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);
+        Project project = dataProvider.get(PlatformDataKeys.PROJECT_CONTEXT);
         if (project != null && !project.isDisposed()) {
             return ProjectRootManager.getInstance(project).getContentRoots();
         }
 
-        Module[] selectedModules = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        Module[] selectedModules = dataProvider.get(LangDataKeys.MODULE_CONTEXT_ARRAY);
         if (selectedModules != null && selectedModules.length > 0) {
             return getFilesFromModules(selectedModules);
         }
 
-        Module selectedModule = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
+        Module selectedModule = dataProvider.get(LangDataKeys.MODULE_CONTEXT);
         if (selectedModule != null && !selectedModule.isDisposed()) {
             return ModuleRootManager.getInstance(selectedModule).getContentRoots();
         }
 
-        PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
+        PsiElement[] psiElements = dataProvider.get(PsiElement.KEY_OF_ARRAY);
         if (psiElements != null && psiElements.length != 0) {
             return getFilesFromPsiElements(psiElements);
         }
 
         // VirtualFile -> VirtualFile[]
-        VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+        VirtualFile vFile = dataProvider.get(VirtualFile.KEY);
         if (vFile != null) {
             return new VirtualFile[]{vFile};
         }
 
         //
 
-        PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
+        PsiFile psiFile = dataProvider.get(PsiFile.KEY);
         if (psiFile != null && psiFile.getVirtualFile() != null) {
             return new VirtualFile[]{psiFile.getVirtualFile()};
         }
 
-        PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
+        PsiElement elem = dataProvider.get(PsiElement.KEY);
         if (elem != null) {
             return getFilesFromPsiElement(elem);
         }
 
-        Usage[] usages = dataProvider.getDataUnchecked(UsageView.USAGES_KEY);
-        UsageTarget[] usageTargets = dataProvider.getDataUnchecked(UsageView.USAGE_TARGETS_KEY);
+        Usage[] usages = dataProvider.get(UsageView.USAGES_KEY);
+        UsageTarget[] usageTargets = dataProvider.get(UsageView.USAGE_TARGETS_KEY);
         if (usages != null || usageTargets != null) {
             return UsageDataUtil.provideVirtualFileArray(usages, usageTargets);
         }

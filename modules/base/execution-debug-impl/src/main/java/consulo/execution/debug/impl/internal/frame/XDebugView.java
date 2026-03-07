@@ -15,21 +15,16 @@
  */
 package consulo.execution.debug.impl.internal.frame;
 
-import consulo.execution.internal.layout.ViewContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.dataContext.DataContext;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
+import consulo.ui.ex.awt.util.SingleAlarm;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
-import java.util.EventObject;
 
 /**
  * @author nik
@@ -57,19 +52,14 @@ public abstract class XDebugView implements Disposable {
   public abstract void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session);
 
   @Nullable
-  protected static XDebugSession getSession(@Nonnull EventObject e) {
-    Component component = e.getSource() instanceof Component ? (Component)e.getSource() : null;
-    return component == null ? null : getSession(component);
-  }
-
-  @Nullable
+  @Deprecated
   public static XDebugSession getSession(@Nonnull Component component) {
-    return getData(XDebugSession.DATA_KEY, component);
+    return DataManager.getInstance().getDataContext(component).getData(XDebugSession.DATA_KEY);
   }
 
   @Nullable
-  protected VirtualFile getCurrentFile(@Nonnull Component component) {
-    XDebugSession session = getSession(component);
+  protected VirtualFile getCurrentFile() {
+    XDebugSession session = getSession();
     if (session != null) {
       XSourcePosition position = session.getCurrentPosition();
       if (position != null) {
@@ -79,18 +69,5 @@ public abstract class XDebugView implements Disposable {
     return null;
   }
 
-
-  @Nullable
-  public static <T> T getData(Key<T> key, @Nonnull Component component) {
-    DataContext dataContext = DataManager.getInstance().getDataContext(component);
-    ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);
-    ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();
-    if (contentManager != null) {
-      T data = DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(key);
-      if (data != null) {
-        return data;
-      }
-    }
-    return dataContext.getData(key);
-  }
+  protected abstract XDebugSession getSession();
 }

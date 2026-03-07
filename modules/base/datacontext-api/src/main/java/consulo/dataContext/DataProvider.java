@@ -15,6 +15,7 @@
  */
 package consulo.dataContext;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
@@ -30,6 +31,8 @@ import jakarta.annotation.Nullable;
  *
  * @see DataContext
  */
+@Deprecated
+@DeprecationInfo("Use UiDataProvider")
 public interface DataProvider {
     /**
      * Returns the object corresponding to the specified data identifier. Some of the supported

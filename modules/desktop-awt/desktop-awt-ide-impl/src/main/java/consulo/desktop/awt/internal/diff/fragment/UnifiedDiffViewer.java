@@ -25,6 +25,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataSink;
 import consulo.desktop.awt.internal.diff.action.OpenInEditorWithMouseAction;
 import consulo.desktop.awt.internal.diff.action.SetEditorSettingsAction;
 import consulo.desktop.awt.internal.diff.util.*;
@@ -1271,26 +1272,19 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Helpers
     //
 
-    @Nullable
     @Override
-    @RequiredUIAccess
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
-            return myPrevNextDifferenceIterable;
-        }
-        else if (VirtualFile.KEY == dataId) {
-            return DiffImplUtil.getVirtualFile(myRequest, myMasterSide);
-        }
-        else if (DiffDataKeys.CURRENT_EDITOR == dataId) {
-            return myEditor;
-        }
-        else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
+        sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, myMasterSide));
+        sink.set(DiffDataKeys.CURRENT_EDITOR, myEditor);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
             UnifiedDiffChange change = getCurrentChange();
             if (change != null) {
                 return new LineRange(change.getLine1(), change.getLine2());
             }
-        }
-        return super.getData(dataId);
+            return null;
+        });
     }
 
     private class MyStatusPanel extends StatusPanel {

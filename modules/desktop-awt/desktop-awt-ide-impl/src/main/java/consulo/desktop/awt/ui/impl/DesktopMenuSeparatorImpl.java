@@ -32,8 +32,6 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.function.Function;
-
 /**
  * @author VISTALL
  * @since 2018-05-09
@@ -95,12 +93,6 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
     @RequiredUIAccess
     @Override
     public void setSize(@Nonnull Size2D size) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
         throw new UnsupportedOperationException();
     }
 

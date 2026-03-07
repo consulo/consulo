@@ -31,7 +31,6 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
-import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
@@ -57,7 +56,6 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -79,23 +77,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
 
         public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
             super(delegate, caret);
-        }
-
-        @Nullable
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T> T getData(@Nonnull Key<T> dataId) {
-            Project project = super.getData(Project.KEY);
-            if (project != null) {
-                FileEditorManager fm = FileEditorManager.getInstance(project);
-                if (fm != null) {
-                    Object data = fm.getData(dataId, myCaret.getEditor(), myCaret);
-                    if (data != null) {
-                        return (T) data;
-                    }
-                }
-            }
-            return super.getData(dataId);
         }
     }
 

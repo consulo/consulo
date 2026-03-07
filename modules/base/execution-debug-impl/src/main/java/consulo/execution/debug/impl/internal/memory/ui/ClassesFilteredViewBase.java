@@ -2,7 +2,8 @@
 package consulo.execution.debug.impl.internal.memory.ui;
 
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
@@ -35,7 +36,7 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implements DataProvider, Disposable {
+public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implements UiDataProvider, Disposable {
     protected static final double DELAY_BEFORE_INSTANCES_QUERY_COEFFICIENT = 0.5;
     protected static final double MAX_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(2);
     protected static final int DEFAULT_BATCH_SIZE = Integer.MAX_VALUE;
@@ -269,10 +270,8 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         return myTable;
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
     }
 
     private static class FilterTextField extends SearchTextField {

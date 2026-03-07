@@ -16,32 +16,20 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
-@ExtensionImpl
-public class FileTextRule implements GetDataRule<String> {
-  @Nonnull
-  @Override
-  public Key<String> getKey() {
-    return PlatformDataKeys.FILE_TEXT;
-  }
-
-  @Override
-  public String getData(@Nonnull DataProvider dataProvider) {
-    VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+public final class FileTextRule {
+  static String getData(@Nonnull DataSnapshot dataProvider) {
+    VirtualFile virtualFile = dataProvider.get(VirtualFile.KEY);
     if (virtualFile == null) {
       return null;
     }
@@ -51,7 +39,7 @@ public class FileTextRule implements GetDataRule<String> {
       return null;
     }
 
-    Project project = dataProvider.getDataUnchecked(Project.KEY);
+    Project project = dataProvider.get(Project.KEY);
     if (project == null) {
       return null;
     }

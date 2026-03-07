@@ -4,7 +4,8 @@ package consulo.ide.impl.idea.build;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.localize.LocalizeValue;
@@ -12,7 +13,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Vladislav.Soroka
  */
 //@ApiStatus.Experimental
-public class CompositeView<T extends ComponentContainer> extends JPanel implements ComponentContainer, DataProvider {
+public class CompositeView<T extends ComponentContainer> extends JPanel implements ComponentContainer, UiDataProvider {
   private final Map<String, T> myViewMap = new ConcurrentHashMap<>();
   private final String mySelectionStateKey;
   private final AtomicReference<String> myVisibleViewRef = new AtomicReference<>();
@@ -130,17 +130,14 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   @Override
-  @Nullable
-  public Object getData(@Nonnull Key dataId) {
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
     String visibleViewName = myVisibleViewRef.get();
     if (visibleViewName != null) {
       T visibleView = getView(visibleViewName);
-      if (visibleView instanceof DataProvider) {
-        Object data = ((DataProvider)visibleView).getData(dataId);
-        if (data != null) return data;
+      if (visibleView instanceof UiDataProvider uiDataProvider) {
+        sink.uiDataSnapshot(uiDataProvider);
       }
     }
-    return null;
   }
 
   private void setStoredState(String viewName) {

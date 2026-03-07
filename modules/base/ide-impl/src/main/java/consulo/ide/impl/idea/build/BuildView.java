@@ -12,7 +12,8 @@ import consulo.build.ui.event.StartBuildEvent;
 import consulo.build.ui.impl.internal.event.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.build.ui.progress.BuildProgressListener;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunProfile;
@@ -46,7 +47,7 @@ import java.util.function.*;
 /**
  * @author Vladislav.Soroka
  */
-public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, DataProvider, Filterable<ExecutionNodeImpl>, OccurenceNavigator, ObservableConsoleView {
+public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, UiDataProvider, Filterable<ExecutionNodeImpl>, OccurenceNavigator, ObservableConsoleView {
   public static final String CONSOLE_VIEW_NAME = "consoleView";
   //@ApiStatus.Experimental
   public static final Key<List<AnAction>> RESTART_ACTIONS = Key.create("restart actions");
@@ -364,25 +365,19 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     delegateToConsoleView(ConsoleView::allowHeavyFilters);
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    if (KEY == dataId) {
-      return getConsoleView();
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    super.uiDataSnapshot(sink);
+    ExecutionConsole consoleView = getConsoleView();
+    if (consoleView instanceof ConsoleView cv) {
+      sink.set(ConsoleView.KEY, cv);
     }
-    Object data = super.getData(dataId);
-    if (data != null) return data;
-    if (RunProfile.KEY == dataId) {
-      ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
-      return environment == null ? null : environment.getRunProfile();
+    ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
+    if (environment != null) {
+      sink.set(RunProfile.KEY, environment.getRunProfile());
+      sink.set(ExecutionEnvironment.KEY, environment);
     }
-    if (ExecutionEnvironment.KEY == dataId) {
-      return myBuildDescriptor.getExecutionEnvironment();
-    }
-    if (RESTART_ACTIONS == dataId) {
-      return myBuildDescriptor.getRestartActions();
-    }
-    return null;
+    sink.set(RESTART_ACTIONS, myBuildDescriptor.getRestartActions());
   }
 
   @Override

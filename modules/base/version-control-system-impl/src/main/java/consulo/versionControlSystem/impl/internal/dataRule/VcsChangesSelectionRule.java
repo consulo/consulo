@@ -15,11 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
@@ -29,31 +26,23 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 
-@ExtensionImpl
-public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
-  @Nonnull
-  @Override
-  public Key<ChangesSelection> getKey() {
-    return VcsDataKeys.CHANGES_SELECTION;
-  }
-
+public final class VcsChangesSelectionRule {
   @Nullable
-  @Override
-  public ChangesSelection getData(@Nonnull DataProvider dataProvider) {
+  public static ChangesSelection getData(@Nonnull DataSnapshot dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
   @Nullable
-  public ChangesSelection getChangesSelection(@Nonnull DataProvider dataProvider) {
-    Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
+  public static ChangesSelection getChangesSelection(@Nonnull DataSnapshot dataProvider) {
+    Change currentChange = dataProvider.get(VcsDataKeys.CURRENT_CHANGE);
 
-    Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);
+    Change[] selectedChanges = dataProvider.get(VcsDataKeys.SELECTED_CHANGES);
     if (selectedChanges != null) {
       int index = Math.max(ArrayUtil.indexOf(selectedChanges, currentChange), 0);
       return new ChangesSelection(Arrays.asList(selectedChanges), index);
     }
 
-    Change[] changes = dataProvider.getDataUnchecked(VcsDataKeys.CHANGES);
+    Change[] changes = dataProvider.get(VcsDataKeys.CHANGES);
     if (changes != null) {
       int index = Math.max(ArrayUtil.indexOf(changes, currentChange), 0);
       return new ChangesSelection(Arrays.asList(changes), index);

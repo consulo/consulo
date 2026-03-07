@@ -20,7 +20,8 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -141,7 +142,7 @@ public class AnalyzeStacktraceUtil {
         return editorPanel;
     }
 
-    public static final class StacktraceEditorPanel extends JPanel implements DataProvider, Disposable {
+    public static final class StacktraceEditorPanel extends JPanel implements UiDataProvider, Disposable {
         private final Project myProject;
         private final Editor myEditor;
 
@@ -153,11 +154,8 @@ public class AnalyzeStacktraceUtil {
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
-            if (Editor.KEY == dataId) {
-                return myEditor;
-            }
-            return null;
+        public void uiDataSnapshot(@Nonnull DataSink sink) {
+            sink.set(Editor.KEY, myEditor);
         }
 
         public Editor getEditor() {

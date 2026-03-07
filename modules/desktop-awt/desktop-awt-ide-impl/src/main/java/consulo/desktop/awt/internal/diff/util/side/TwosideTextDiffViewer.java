@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.util.side;
 
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.VisibleAreaEvent;
@@ -363,13 +364,10 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DiffDataKeys.CURRENT_EDITOR == dataId) {
-            return getCurrentEditor();
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.CURRENT_EDITOR, getCurrentEditor());
     }
 
     private class MyVisibleAreaListener implements VisibleAreaListener {

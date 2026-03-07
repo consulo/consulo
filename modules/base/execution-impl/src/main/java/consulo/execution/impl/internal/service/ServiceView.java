@@ -2,16 +2,16 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.application.HelpManager;
-import consulo.application.util.RecursionManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.service.*;
+import consulo.execution.service.ServiceViewActionUtils;
+import consulo.execution.service.ServiceViewDescriptor;
+import consulo.execution.service.ServiceViewOptions;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
@@ -23,157 +23,143 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class ServiceView extends JPanel implements Disposable {
-  private final Project myProject;
-  private final ServiceViewModel myModel;
-  protected final ServiceViewUi myUi;
-  private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
+    private final Project myProject;
+    private final ServiceViewModel myModel;
+    protected final ServiceViewUi myUi;
+    private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
-  protected ServiceView(LayoutManager layout, @Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewUi ui) {
-    super(layout);
-    myProject = project;
-    myModel = model;
-    myUi = ui;
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  Project getProject() {
-    return myProject;
-  }
-
-  public ServiceViewModel getModel() {
-    return myModel;
-  }
-
-  ServiceViewUi getUi() {
-    return myUi;
-  }
-
-  void saveState(@Nonnull ServiceViewState state) {
-    myModel.saveState(state);
-  }
-
-  @Nonnull
-  abstract List<ServiceViewItem> getSelectedItems();
-
-  abstract Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass);
-
-  abstract Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass);
-
-  abstract Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass);
-
-  abstract void onViewSelected();
-
-  abstract void onViewUnselected();
-
-  public boolean isGroupByServiceGroups() {
-    return myModel.isGroupByServiceGroups();
-  }
-
-  public void setGroupByServiceGroups(boolean value) {
-    myModel.setGroupByServiceGroups(value);
-  }
-
-  public boolean isGroupByContributor() {
-    return myModel.isGroupByContributor();
-  }
-
-  public void setGroupByContributor(boolean value) {
-    myModel.setGroupByContributor(value);
-  }
-
-  abstract List<Object> getChildrenSafe(@Nonnull List<Object> valueSubPath, @Nonnull Class<?> contributorClass);
-
-  void setAutoScrollToSourceHandler(@Nonnull AutoScrollToSourceHandler autoScrollToSourceHandler) {
-    myAutoScrollToSourceHandler = autoScrollToSourceHandler;
-  }
-
-  void onViewSelected(@Nonnull ServiceViewDescriptor descriptor) {
-    descriptor.onNodeSelected(ContainerUtil.map(getSelectedItems(), ServiceViewItem::getValue));
-    if (myAutoScrollToSourceHandler != null) {
-      myAutoScrollToSourceHandler.onMouseClicked(this);
+    protected ServiceView(LayoutManager layout, @Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewUi ui) {
+        super(layout);
+        myProject = project;
+        myModel = model;
+        myUi = ui;
     }
-  }
 
-  public abstract void jumpToServices();
+    @Override
+    public void dispose() {
+    }
 
-  static ServiceView createView(@Nonnull Project project, @Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
-    setViewModelState(viewModel, viewState);
-    ServiceView serviceView = createTreeView(project, viewModel, viewState);
-    setDataProvider(serviceView);
-    return serviceView;
-  }
+    Project getProject() {
+        return myProject;
+    }
 
-  private static ServiceView createTreeView(@Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewState state) {
-    return new ServiceTreeView(project, model, new ServiceViewTreeUi(state), state);
-  }
+    public ServiceViewModel getModel() {
+        return myModel;
+    }
 
-  private static void setDataProvider(ServiceView serviceView) {
-    ServiceViewOptions viewOptions = new ServiceViewOptions() {
-      @Override
-      public boolean isGroupByContributor() {
-        return serviceView.isGroupByContributor();
-      }
+    ServiceViewUi getUi() {
+        return myUi;
+    }
 
-      @Override
-      public boolean isGroupByServiceGroups() {
-        return serviceView.isGroupByServiceGroups();
-      }
-    };
-    DataManager.registerDataProvider(serviceView, dataId -> {
-      if (HelpManager.HELP_ID.is(dataId)) {
-        return ServiceViewManagerImpl.getToolWindowContextHelpId();
-      }
-      if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
-        return ContainerUtil.map2Array(serviceView.getSelectedItems(), ServiceViewItem::getValue);
-      }
-      if (PlatformDataKeys.SELECTED_ITEM.is(dataId)) {
-        ServiceViewItem item = ContainerUtil.getOnlyItem(serviceView.getSelectedItems());
-        return item != null ? item.getValue() : null;
-      }
-      if (ServiceViewActionProvider.SERVICES_SELECTED_ITEMS.is(dataId)) {
-        return serviceView.getSelectedItems();
-      }
-      if (DeleteProvider.KEY.is(dataId)) {
-        List<ServiceViewItem> selection = serviceView.getSelectedItems();
-        ServiceViewContributor<?> contributor = ServiceViewDragHelper.getTheOnlyRootContributor(selection);
-        DataProvider delegate = contributor == null ? null : contributor.getViewDescriptor(serviceView.getProject()).getDataProvider();
-        DeleteProvider deleteProvider = delegate == null ? null : delegate.getDataUnchecked(DeleteProvider.KEY);
-        if (deleteProvider == null) return new ServiceViewDeleteProvider(serviceView);
+    void saveState(@Nonnull ServiceViewState state) {
+        myModel.saveState(state);
+    }
 
-        if (deleteProvider instanceof ServiceViewContributorDeleteProvider) {
-          ((ServiceViewContributorDeleteProvider)deleteProvider).setFallbackProvider(new ServiceViewDeleteProvider(serviceView));
+    @Nonnull
+    abstract List<ServiceViewItem> getSelectedItems();
+
+    abstract Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+
+    abstract Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+
+    abstract Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+
+    abstract void onViewSelected();
+
+    abstract void onViewUnselected();
+
+    public boolean isGroupByServiceGroups() {
+        return myModel.isGroupByServiceGroups();
+    }
+
+    public void setGroupByServiceGroups(boolean value) {
+        myModel.setGroupByServiceGroups(value);
+    }
+
+    public boolean isGroupByContributor() {
+        return myModel.isGroupByContributor();
+    }
+
+    public void setGroupByContributor(boolean value) {
+        myModel.setGroupByContributor(value);
+    }
+
+    abstract List<Object> getChildrenSafe(@Nonnull List<Object> valueSubPath, @Nonnull Class<?> contributorClass);
+
+    void setAutoScrollToSourceHandler(@Nonnull AutoScrollToSourceHandler autoScrollToSourceHandler) {
+        myAutoScrollToSourceHandler = autoScrollToSourceHandler;
+    }
+
+    void onViewSelected(@Nonnull ServiceViewDescriptor descriptor) {
+        descriptor.onNodeSelected(ContainerUtil.map(getSelectedItems(), ServiceViewItem::getValue));
+        if (myAutoScrollToSourceHandler != null) {
+            myAutoScrollToSourceHandler.onMouseClicked(this);
         }
-        return deleteProvider;
-      }
-      if (CopyProvider.KEY.is(dataId)) {
-        return new ServiceViewCopyProvider(serviceView);
-      }
-      if (ServiceViewActionUtils.CONTRIBUTORS_KEY.is(dataId)) {
-        return serviceView.getModel().getRoots().stream().map(ServiceViewItem::getRootContributor).collect(Collectors.toSet());
-      }
-      if (ServiceViewActionUtils.OPTIONS_KEY.is(dataId)) {
-        return viewOptions;
-      }
-      List<ServiceViewItem> selectedItems = serviceView.getSelectedItems();
-      if (Navigatable.KEY_OF_ARRAY.is(dataId)) {
-        List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, item -> item.getViewDescriptor().getNavigatable());
-        return navigatables.toArray(Navigatable.EMPTY_ARRAY);
-      }
-      ServiceViewItem selectedItem = ContainerUtil.getOnlyItem(selectedItems);
-      ServiceViewDescriptor descriptor = selectedItem == null || selectedItem.isRemoved() ? null : selectedItem.getViewDescriptor();
-      DataProvider dataProvider = descriptor == null ? null : descriptor.getDataProvider();
-      if (dataProvider != null) {
-        return RecursionManager.doPreventingRecursion(serviceView, false, () -> dataProvider.getData(dataId));
-      }
-      return null;
-    });
-  }
+    }
 
-  private static void setViewModelState(@Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
-    viewModel.setGroupByServiceGroups(viewState.groupByServiceGroups);
-    viewModel.setGroupByContributor(viewState.groupByContributor);
-  }
+    public abstract void jumpToServices();
+
+    static ServiceView createView(@Nonnull Project project, @Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
+        setViewModelState(viewModel, viewState);
+        ServiceView serviceView = createTreeView(project, viewModel, viewState);
+        setDataProvider(serviceView);
+        return serviceView;
+    }
+
+    private static ServiceView createTreeView(@Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewState state) {
+        return new ServiceTreeView(project, model, new ServiceViewTreeUi(state), state);
+    }
+
+    private static void setDataProvider(ServiceView serviceView) {
+        ServiceViewOptions viewOptions = new ServiceViewOptions() {
+            @Override
+            public boolean isGroupByContributor() {
+                return serviceView.isGroupByContributor();
+            }
+
+            @Override
+            public boolean isGroupByServiceGroups() {
+                return serviceView.isGroupByServiceGroups();
+            }
+        };
+
+        DataManager.registerUiDataProvider(serviceView, sink -> {
+            sink.set(HelpManager.HELP_ID, ServiceViewManagerImpl.getToolWindowContextHelpId());
+
+            List<ServiceViewItem> selectedItems = serviceView.getSelectedItems();
+            sink.set(PlatformDataKeys.SELECTED_ITEMS, ContainerUtil.map2Array(selectedItems, ServiceViewItem::getValue));
+
+            ServiceViewItem item = ContainerUtil.getOnlyItem(selectedItems);
+            if (item != null) {
+                sink.set(PlatformDataKeys.SELECTED_ITEM, item);
+            }
+
+            sink.set(ServiceViewActionProvider.SERVICES_SELECTED_ITEMS, selectedItems);
+            sink.set(CopyProvider.KEY, new ServiceViewCopyProvider(serviceView));
+            sink.set(ServiceViewActionUtils.CONTRIBUTORS_KEY, serviceView.getModel()
+                .getRoots()
+                .stream()
+                .map(ServiceViewItem::getRootContributor)
+                .collect(Collectors.toSet())
+            );
+            sink.set(ServiceViewActionUtils.OPTIONS_KEY, viewOptions);
+
+            sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
+                List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, it -> it.getViewDescriptor().getNavigatable());
+                return navigatables.toArray(Navigatable.EMPTY_ARRAY);
+            });
+
+
+            ServiceViewItem selectedItem = ContainerUtil.getOnlyItem(selectedItems);
+            ServiceViewDescriptor descriptor = selectedItem == null || selectedItem.isRemoved() ? null : selectedItem.getViewDescriptor();
+            if (descriptor instanceof UiDataProvider uiDataProvider) {
+                uiDataProvider.uiDataSnapshot(sink);
+            }
+        });
+    }
+
+    private static void setViewModelState(@Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
+        viewModel.setGroupByServiceGroups(viewState.groupByServiceGroups);
+        viewModel.setGroupByContributor(viewState.groupByContributor);
+    }
 }

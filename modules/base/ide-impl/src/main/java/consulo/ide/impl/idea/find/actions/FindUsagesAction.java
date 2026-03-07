@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.find.FindManager;
 import consulo.find.localize.FindLocalize;
@@ -39,7 +39,8 @@ import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;import jakarta.inject.Inject;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 @ActionImpl(id = "FindUsages")
 public class FindUsagesAction extends AnAction {
@@ -89,10 +90,10 @@ public class FindUsagesAction extends AnAction {
     @Nonnull
     @Override
     public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
-        return Coroutine.first(ReadLock.apply(o -> {
+        return OptionalReadLock.apply(o -> {
             FindUsagesInFileAction.updateFindUsagesAction(e);
             return null;
-        }));
+        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
     }
 
     @RequiredUIAccess

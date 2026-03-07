@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
@@ -40,6 +41,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @see Application#runReadAction(java.util.function.Supplier)
      */
     @Nullable
+    @RequiredReadAction
     public abstract Document getDocument(@Nonnull VirtualFile file);
 
     /**

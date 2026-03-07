@@ -16,7 +16,8 @@
 package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.application.ApplicationBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.Language;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
@@ -25,8 +26,6 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -38,7 +37,7 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 10/30/12 5:28 PM
  */
-public class ArrangementMatchingRulesPanel extends JPanel implements DataProvider {
+public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvider {
 
   @Nonnull
   protected final ArrangementSectionRulesControl myControl;
@@ -106,12 +105,8 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
     myControl.hideEditor();
   }
 
-  @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
-    if (ArrangementSectionRulesControl.KEY == dataId) {
-      return myControl;
-    }
-    return null;
+  public void uiDataSnapshot(@Nonnull DataSink sink) {
+    sink.set(ArrangementSectionRulesControl.KEY, myControl);
   }
 }

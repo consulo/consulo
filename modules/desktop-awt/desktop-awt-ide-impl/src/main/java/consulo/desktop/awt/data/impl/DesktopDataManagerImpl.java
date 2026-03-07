@@ -133,11 +133,10 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     }
     else if (component instanceof JComponent jComponent) {
       // Check for registered UiDataProvider first (via DataManager.registerUiDataProvider)
-      Object uiDataObj = jComponent.getClientProperty(DataManager.CLIENT_PROPERTY_UI_DATA_PROVIDER);
+      Object uiDataObj = jComponent.getClientProperty(UiDataProvider.KEY);
       if (uiDataObj instanceof UiDataProvider uiProvider) {
         return new UiDataProviderAdapter(uiProvider);
       }
-      dataProvider = DataManager.getDataProvider(jComponent);
     }
     // special case for desktop impl. Later removed since we don't want use AWT
     else if (component instanceof FromSwingComponentWrapper) {

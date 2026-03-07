@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.simple;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
@@ -226,14 +227,13 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
             int lineCount = getLineCount(getEditor().getDocument());
             return new LineRange(0, lineCount);
-        }
-        return super.getData(dataId);
+        });
     }
 
     private class MyInitialScrollHelper extends MyInitialScrollPositionHelper {

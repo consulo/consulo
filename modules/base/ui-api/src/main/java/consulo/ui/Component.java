@@ -40,6 +40,9 @@ import java.util.function.Supplier;
 public interface Component extends UserDataHolder {
     Key<Component> KEY = Key.of(Component.class);
 
+    @Override
+    <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
+
     @RequiredUIAccess
     default void addBorder(@Nonnull BorderPosition borderPosition) {
         addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
@@ -139,14 +142,6 @@ public interface Component extends UserDataHolder {
         setSize(size);
         return this;
     }
-
-    @Nonnull
-    default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-        return addUserDataProvider(k -> k == key ? supplier.get() : null);
-    }
-
-    @Nonnull
-    Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
 
     @Nonnull
     Font getFont();

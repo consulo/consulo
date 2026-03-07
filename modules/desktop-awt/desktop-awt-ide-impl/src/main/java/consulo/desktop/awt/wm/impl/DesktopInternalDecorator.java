@@ -18,7 +18,8 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
@@ -58,7 +59,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -73,7 +73,7 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider, ToolWindowInternalDecorator {
+public final class DesktopInternalDecorator extends JPanel implements Queryable, UiDataProvider, ToolWindowInternalDecorator {
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         @RequiredUIAccess
@@ -225,13 +225,9 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         myToolWindow.getContentUI().setType(myInfo.getContentUiType());
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
-        if (ToolWindow.KEY == dataId) {
-            return myToolWindow;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(ToolWindow.KEY, myToolWindow);
     }
 
     @Override

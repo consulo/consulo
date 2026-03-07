@@ -16,7 +16,8 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -24,8 +25,6 @@ import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.internal.TabFactoryBuilder;
 import consulo.ui.ex.awt.internal.TabbedPaneHolder;
-import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -345,7 +344,7 @@ public class TabbedPaneWrapper {
     myTabbedPane.removeAll();
   }
 
-  public static final class TabWrapper extends JPanel implements DataProvider {
+  public static final class TabWrapper extends JPanel implements UiDataProvider {
     private JComponent myComponent;
 
     private boolean myCustomFocus = true;
@@ -357,15 +356,12 @@ public class TabbedPaneWrapper {
     }
 
     /*
-     * Make possible to search down for DataProviders
+     * Make possible to search down for UiDataProviders
      */
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (myComponent instanceof DataProvider) {
-        return ((DataProvider)myComponent).getData(dataId);
-      }
-      else {
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+      if (myComponent instanceof UiDataProvider uiDataProvider) {
+        sink.uiDataSnapshot(uiDataProvider);
       }
     }
 

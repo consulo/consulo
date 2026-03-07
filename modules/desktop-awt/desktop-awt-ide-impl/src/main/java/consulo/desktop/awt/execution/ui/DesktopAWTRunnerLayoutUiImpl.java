@@ -16,6 +16,7 @@
 
 package consulo.desktop.awt.execution.ui;
 
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.RunnerLayoutImpl;
@@ -41,7 +42,6 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +67,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         Disposer.register(this, myContentUI);
 
         myViewsContentManager = getContentFactory().createContentManager(myContentUI.getContentUI(), true, project);
-        myViewsContentManager.addDataProvider(this);
+        myViewsContentManager.addUiDataProvider(this);
         Disposer.register(this, myViewsContentManager);
     }
 
@@ -386,13 +386,10 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return contents;
     }
 
-    @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key dataId) {
-        if (QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
-            return myContentUI;
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(QuickActionProvider.KEY, myContentUI);
+        sink.set(RunnerContentUi.KEY, myContentUI);
     }
 
     @Override

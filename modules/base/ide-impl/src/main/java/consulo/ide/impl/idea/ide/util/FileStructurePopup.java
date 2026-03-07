@@ -10,6 +10,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
@@ -584,39 +585,22 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
         scrollPane.setBorder(IdeBorderFactory.createBorder(JBCurrentTheme.Popup.toolbarBorderColor(), SideBorder.TOP | SideBorder.BOTTOM));
         panel.add(scrollPane, BorderLayout.CENTER);
-        DataManager.registerDataProvider(panel, dataId -> {
-            if (Project.KEY == dataId) {
-                return myProject;
+        DataManager.registerUiDataProvider(panel, sink -> {
+            sink.set(Project.KEY, myProject);
+            sink.set(FileEditor.KEY, myFileEditor);
+            if (myFileEditor instanceof TextEditor textEditor) {
+                sink.set(OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR, textEditor.getEditor());
             }
-            if (FileEditor.KEY == dataId) {
-                return myFileEditor;
-            }
-            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId && myFileEditor instanceof TextEditor textEditor) {
-                return textEditor.getEditor();
-            }
-            if (PsiElement.KEY == dataId) {
-                return getSelectedElements().filter(PsiElement.class).first();
-            }
-            if (PsiElement.KEY_OF_ARRAY == dataId) {
-                return PsiUtilCore.toPsiElementArray(getSelectedElements().filter(PsiElement.class).toList());
-            }
-            if (Navigatable.KEY == dataId) {
-                return getSelectedElements().filter(Navigatable.class).first();
-            }
-            if (Navigatable.KEY_OF_ARRAY == dataId) {
+            sink.lazy(PsiElement.KEY, () -> getSelectedElements().filter(PsiElement.class).first());
+            sink.lazy(PsiElement.KEY_OF_ARRAY, () -> PsiUtilCore.toPsiElementArray(getSelectedElements().filter(PsiElement.class).toList()));
+            sink.lazy(Navigatable.KEY, () -> getSelectedElements().filter(Navigatable.class).first());
+            sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
                 List<Navigatable> result = getSelectedElements().filter(Navigatable.class).toList();
                 return result.isEmpty() ? null : result.toArray(new Navigatable[0]);
-            }
-            if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
-                return myPopup;
-            }
-            if (CopyProvider.KEY == dataId) {
-                return myCopyPasteDelegator.getCopyProvider();
-            }
-            if (PlatformDataKeys.TREE_EXPANDER == dataId) {
-                return myTreeExpander;
-            }
-            return null;
+            });
+            sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, myPopup);
+            sink.set(CopyProvider.KEY, myCopyPasteDelegator.getCopyProvider());
+            sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
         });
 
         panel.addFocusListener(new FocusAdapter() {

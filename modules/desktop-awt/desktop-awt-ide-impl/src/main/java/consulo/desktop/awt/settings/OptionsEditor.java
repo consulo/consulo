@@ -29,7 +29,8 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
@@ -61,7 +62,6 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -80,7 +80,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class OptionsEditor implements DataProvider, Disposable, AWTEventListener, UISettingsListener, Settings {
+public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListener, UISettingsListener, Settings {
     private static class SearchableWrapper implements SearchableConfigurable {
         private final Configurable myConfigurable;
 
@@ -1208,14 +1208,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-        if (Settings.KEY == dataId) {
-            return this;
-        }
-        else if (ProjectStructureSelector.KEY == dataId) {
-            return new ProjectStructureSelectorOverSettings(this);
-        }
-        return null;
+    public void uiDataSnapshot(@Nonnull DataSink sink) {
+        sink.set(Settings.KEY, this);
+        sink.lazy(ProjectStructureSelector.KEY, () -> new ProjectStructureSelectorOverSettings(this));
     }
 
     public JTree getPreferredFocusedComponent() {

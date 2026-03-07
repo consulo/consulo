@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
@@ -86,7 +87,7 @@ public class OptimizeImportsAction extends AnAction {
         }
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private void updatePresentationForFiles(
         @Nonnull Presentation presentation,
         boolean enabled,
@@ -225,7 +226,7 @@ public class OptimizeImportsAction extends AnAction {
     @Nonnull
     @Override
     public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
-        return ReadLock.apply(i -> {
+        return OptionalReadLock.apply(i -> {
             Presentation presentation = event.getPresentation();
             if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
                 presentation.setVisible(false);
@@ -294,10 +295,10 @@ public class OptimizeImportsAction extends AnAction {
 
             updatePresentationForFiles(presentation, true, psiFiles);
             return null;
-        }).toCoroutine();
+        }, () -> event.getPresentation().setEnabled(false)).toCoroutine();
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private static boolean isOptimizeImportsAvailable(PsiFile file) {
         return !ImportOptimizer.forFile(file).isEmpty();
     }
