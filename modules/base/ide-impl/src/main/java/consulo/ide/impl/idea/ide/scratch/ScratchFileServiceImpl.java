@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
@@ -28,6 +28,7 @@ import consulo.component.persist.Storage;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
@@ -54,6 +55,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -68,168 +70,177 @@ import java.util.List;
 @ServiceImpl
 public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element>, Disposable {
 
-  private static final RootType NULL_TYPE = new RootType("", null) {
-  };
-
-  private final LightDirectoryIndex<RootType> myIndex;
-  private final MyLanguages myScratchMapping;
-
-  @Inject
-  protected ScratchFileServiceImpl(Application application) {
-    myScratchMapping = new MyLanguages();
-
-    Disposer.register(this, myScratchMapping);
-
-    myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {
-      LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-      for (RootType r : RootType.getAllRootTypes()) {
-        index.putInfo(fileSystem.findFileByPath(getRootPath(r)), r);
-      }
-    });
-    initFileOpenedListener(application.getMessageBus());
-  }
-
-  @Nonnull
-  @Override
-  public String getRootPath(@Nonnull RootType rootId) {
-    return getRootPath() + "/" + rootId.getId();
-  }
-
-  @Nullable
-  @Override
-  public RootType getRootType(@Nullable VirtualFile file) {
-    if (file == null) return null;
-    VirtualFile directory = file.isDirectory() ? file : file.getParent();
-    RootType result = myIndex.getInfoForFile(directory);
-    return result == NULL_TYPE ? null : result;
-  }
-
-  private void initFileOpenedListener(MessageBus messageBus) {
-    final FileEditorManagerAdapter editorListener = new FileEditorManagerAdapter() {
-      @Override
-      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-        if (!isEditable(file)) return;
-        RootType rootType = getRootType(file);
-        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
-          fileEditorTrackingRootType.fileOpened(file, source);
-        }
-      }
-
-      @Override
-      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-        if (Boolean.TRUE.equals(file.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
-        if (!isEditable(file)) return;
-
-        RootType rootType = getRootType(file);
-        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
-          fileEditorTrackingRootType.fileClosed(file, source);
-        }
-      }
-
-      @RequiredReadAction
-      boolean isEditable(@Nonnull VirtualFile file) {
-        return FileDocumentManager.getInstance().getDocument(file) != null;
-      }
+    private static final RootType NULL_TYPE = new RootType("", null) {
     };
-    ProjectManagerListener projectListener = new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {
-        project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, editorListener);
-        FileEditorManager editorManager = FileEditorManager.getInstance(project);
-        for (VirtualFile virtualFile : editorManager.getOpenFiles()) {
-          editorListener.fileOpened(editorManager, virtualFile);
-        }
-      }
-    };
-    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-      projectListener.projectOpened(project, project.getApplication().getLastUIAccess());
+
+    private final LightDirectoryIndex<RootType> myIndex;
+    private final MyLanguages myScratchMapping;
+
+    @Inject
+    protected ScratchFileServiceImpl(Application application) {
+        myScratchMapping = new MyLanguages();
+
+        Disposer.register(this, myScratchMapping);
+
+        myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {
+            LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+            for (RootType r : RootType.getAllRootTypes()) {
+                index.putInfo(fileSystem.findFileByPath(getRootPath(r)), r);
+            }
+        });
+        initFileOpenedListener(application.getMessageBus());
     }
-    messageBus.connect().subscribe(ProjectManagerListener.class, projectListener);
-  }
 
-  @Nonnull
-  protected String getRootPath() {
-    return FileUtil.toSystemIndependentName(ContainerPathManager.get().getScratchPath());
-  }
-
-  @Nonnull
-  @Override
-  public PerFileMappings<Language> getScratchesMapping() {
-    return new PerFileMappings<>() {
-      @Override
-      public void setMapping(@Nullable VirtualFile file, @Nullable Language value) {
-        myScratchMapping.setMapping(file, value == null ? null : value.getID());
-      }
-
-      @Nullable
-      @Override
-      public Language getMapping(@Nullable VirtualFile file) {
-        return Language.findLanguageByID(myScratchMapping.getMapping(file));
-      }
-    };
-  }
-
-  @Nullable
-  @Override
-  public Element getState() {
-    return myScratchMapping.getState();
-  }
-
-  @Override
-  public void loadState(Element state) {
-    myScratchMapping.loadState(state);
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  private static class MyLanguages extends PerFileMappingsBase<String> {
-    @Override
     @Nonnull
-    public List<String> getAvailableValues() {
-      return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
+    @Override
+    public String getRootPath(@Nonnull RootType rootId) {
+        return getRootPath() + "/" + rootId.getId();
     }
 
     @Nullable
     @Override
-    protected String serialize(String languageID) {
-      return languageID;
+    public RootType getRootType(@Nullable VirtualFile file) {
+        if (file == null) {
+            return null;
+        }
+        VirtualFile directory = file.isDirectory() ? file : file.getParent();
+        RootType result = myIndex.getInfoForFile(directory);
+        return result == NULL_TYPE ? null : result;
+    }
+
+    private void initFileOpenedListener(MessageBus messageBus) {
+        final FileEditorManagerAdapter editorListener = new FileEditorManagerAdapter() {
+            @Override
+            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+                Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+                if (document == null) {
+                    return;
+                }
+                RootType rootType = getRootType(file);
+                if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+                    fileEditorTrackingRootType.fileOpened(file, source);
+                }
+            }
+
+            @Override
+            public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+                if (Boolean.TRUE.equals(file.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) {
+                    return;
+                }
+
+                ReadAction.nonBlocking(() -> FileDocumentManager.getInstance().getDocument(file))
+                    .finishOnUiThread(document -> {
+                        RootType rootType = getRootType(file);
+                        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+                            fileEditorTrackingRootType.fileClosed(file, source);
+                        }
+                    })
+                    .submitDefault();
+            }
+        };
+        ProjectManagerListener projectListener = new ProjectManagerListener() {
+            @Override
+            public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {
+                project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, editorListener);
+                FileEditorManager editorManager = FileEditorManager.getInstance(project);
+                for (VirtualFile virtualFile : editorManager.getOpenFiles()) {
+                    editorListener.fileOpened(editorManager, virtualFile);
+                }
+            }
+        };
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            projectListener.projectOpened(project, project.getApplication().getLastUIAccess());
+        }
+        messageBus.connect().subscribe(ProjectManagerListener.class, projectListener);
+    }
+
+    @Nonnull
+    protected String getRootPath() {
+        return FileUtil.toSystemIndependentName(ContainerPathManager.get().getScratchPath());
+    }
+
+    @Nonnull
+    @Override
+    public PerFileMappings<Language> getScratchesMapping() {
+        return new PerFileMappings<>() {
+            @Override
+            public void setMapping(@Nullable VirtualFile file, @Nullable Language value) {
+                myScratchMapping.setMapping(file, value == null ? null : value.getID());
+            }
+
+            @Nullable
+            @Override
+            public Language getMapping(@Nullable VirtualFile file) {
+                return Language.findLanguageByID(myScratchMapping.getMapping(file));
+            }
+        };
     }
 
     @Nullable
     @Override
-    protected String handleUnknownMapping(VirtualFile file, String value) {
-      return PlainTextLanguage.INSTANCE.getID();
+    public Element getState() {
+        return myScratchMapping.getState();
     }
-  }
 
-  @Override
-  public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-
-    String fullPath = getRootPath(rootType) + "/" + pathName;
-    if (option != Option.create_new_always) {
-      VirtualFile file = LocalFileSystem.getInstance().findFileByPath(fullPath);
-      if (file != null && !file.isDirectory()) return file;
-      if (option == Option.existing_only) return null;
+    @Override
+    public void loadState(Element state) {
+        myScratchMapping.loadState(state);
     }
-    String ext = PathUtil.getFileExtension(pathName);
-    String fileNameExt = PathUtil.getFileName(pathName);
-    String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
-    return WriteAction.compute(() -> {
-      VirtualFile dir = VfsUtil.createDirectories(PathUtil.getParentPath(fullPath));
-      if (option == Option.create_new_always) {
-        return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
-      }
-      else {
-        return dir.createChildData(LocalFileSystem.getInstance(), fileNameExt);
-      }
-    });
-  }
 
-  @Nullable
-  static Language getLanguageByFileName(@Nullable VirtualFile file) {
-    return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
-  }
+    @Override
+    public void dispose() {
+    }
+
+    private static class MyLanguages extends PerFileMappingsBase<String> {
+        @Override
+        @Nonnull
+        public List<String> getAvailableValues() {
+            return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
+        }
+
+        @Nullable
+        @Override
+        protected String serialize(String languageID) {
+            return languageID;
+        }
+
+        @Nullable
+        @Override
+        protected String handleUnknownMapping(VirtualFile file, String value) {
+            return PlainTextLanguage.INSTANCE.getID();
+        }
+    }
+
+    @Override
+    public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
+        ApplicationManager.getApplication().assertReadAccessAllowed();
+
+        String fullPath = getRootPath(rootType) + "/" + pathName;
+        if (option != Option.create_new_always) {
+            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(fullPath);
+            if (file != null && !file.isDirectory()) {
+                return file;
+            }
+            if (option == Option.existing_only) {
+                return null;
+            }
+        }
+        String ext = PathUtil.getFileExtension(pathName);
+        String fileNameExt = PathUtil.getFileName(pathName);
+        String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
+        return WriteAction.compute(() -> {
+            VirtualFile dir = VirtualFileUtil.createDirectories(PathUtil.getParentPath(fullPath));
+            if (option == Option.create_new_always) {
+                return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
+            }
+            else {
+                return dir.createChildData(LocalFileSystem.getInstance(), fileNameExt);
+            }
+        });
+    }
+
+    @Nullable
+    static Language getLanguageByFileName(@Nullable VirtualFile file) {
+        return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
+    }
 }

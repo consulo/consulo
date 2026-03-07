@@ -64,6 +64,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -760,16 +761,25 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return;
         }
 
+        Application application = Application.get();
+        
         myStatusUpdates.queue(Update.create("icon", () -> {
-            if (errorStripeRenderer != null) {
-                AnalyzerStatus newStatus = errorStripeRenderer.getStatus(myEditor);
-                if (!AnalyzerStatus.equals(newStatus, analyzerStatus)) {
-                    changeStatus(newStatus);
-                }
+            if (errorStripeRenderer == null) {
+                return;
+            }
 
-                if (myErrorPanel != null) {
-                    myErrorPanel.repaint();
-                }
+            SimpleReference<AnalyzerStatus> newStatusRef = new SimpleReference<>();
+            if (!application.tryRunReadAction(newStatusRef, () -> errorStripeRenderer.getStatus(myEditor))) {
+                return;
+            }
+
+            AnalyzerStatus newStatus = newStatusRef.get();
+            if (!AnalyzerStatus.equals(newStatus, analyzerStatus)) {
+                changeStatus(newStatus);
+            }
+
+            if (myErrorPanel != null) {
+                myErrorPanel.repaint();
             }
         }));
     }

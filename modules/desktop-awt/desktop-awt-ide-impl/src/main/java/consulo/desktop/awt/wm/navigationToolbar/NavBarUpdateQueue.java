@@ -40,7 +40,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     private volatile List<NavBarItemData> myItemDataCache;
 
     public NavBarUpdateQueue(NavBarPanel panel) {
-        super("NavBar", Registry.intValue("navBar.updateMergeTime"), true, panel, panel);
+        super("NavBar", 100, true, panel, panel);
         myPanel = panel;
         setTrackUiActivity(true);
         IdeEventQueueProxy.getInstance().addActivityListener(this::restartRebuild, panel);
