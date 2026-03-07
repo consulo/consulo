@@ -310,10 +310,13 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
             }
             for (ShelvedChangeImpl shelvedChange : allShelvedChanges) {
                 if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
-                    Navigatable navigatable = requestFocus -> {
-                        VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
-                        if (vf != null) {
-                            OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
+                    Navigatable navigatable = new Navigatable() {
+                        @Override
+                        public void navigate(boolean requestFocus) {
+                            VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
+                            if (vf != null) {
+                                OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
+                            }
                         }
                     };
                     navigatables.add(navigatable);

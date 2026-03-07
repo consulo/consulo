@@ -20,6 +20,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
+import consulo.navigation.NavigateOptions;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.usage.UsageViewBundle;
@@ -94,17 +95,12 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
+    public NavigateOptions getNavigateOptions() {
+      return NavigateOptions.CANT_NAVIGATE;
+    }
+
+    @Override
     public void navigate(boolean requestFocus) {
-    }
-
-    @Override
-    public boolean canNavigate() {
-      return false;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return canNavigate();
     }
 
     public boolean equals(Object o) {
@@ -165,17 +161,12 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
+    public NavigateOptions getNavigateOptions() {
+      return NavigateOptions.CANT_NAVIGATE;
+    }
+
+    @Override
     public void navigate(boolean focus) throws UnsupportedOperationException {
-    }
-
-    @Override
-    public boolean canNavigate() {
-      return false;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return false;
     }
 
     @Override

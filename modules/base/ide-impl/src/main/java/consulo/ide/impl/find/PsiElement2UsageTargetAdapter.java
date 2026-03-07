@@ -37,6 +37,7 @@ import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
@@ -95,23 +96,16 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     @RequiredReadAction
     public void navigate(boolean requestFocus) {
         PsiElement element = getElement();
-        if (element instanceof Navigatable navigatable && navigatable.canNavigate()) {
+        if (element instanceof Navigatable navigatable && navigatable.getNavigateOptions().canNavigate()) {
             navigatable.navigate(requestFocus);
         }
     }
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         PsiElement element = getElement();
-        return element instanceof Navigatable navigatable && navigatable.canNavigate();
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        PsiElement element = getElement();
-        return element instanceof Navigatable navigatable && navigatable.canNavigateToSource();
+        return element instanceof Navigatable navigatable ? navigatable.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

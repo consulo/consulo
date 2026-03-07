@@ -22,6 +22,7 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -157,17 +158,12 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
                                                                .line(targetPosition.line)
                                                                .column(targetPosition.column)
                                                                .build();
-      if (descriptor.canNavigate()) descriptor.navigate(true);
+      if (descriptor.getNavigateOptions().canNavigate()) descriptor.navigate(true);
     }
 
     @Override
-    public boolean canNavigate() {
-      return myTargetFile.isValid();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return false;
+    public NavigateOptions getNavigateOptions() {
+      return myTargetFile.isValid() ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Nonnull

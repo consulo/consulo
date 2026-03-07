@@ -35,6 +35,7 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
@@ -186,13 +187,8 @@ public class BookmarkImpl implements Bookmark {
     }
 
     @Override
-    public boolean canNavigate() {
-        return myTarget.canNavigate();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return myTarget.canNavigateToSource();
+    public NavigateOptions getNavigateOptions() {
+        return myTarget.getNavigateOptions();
     }
 
     @Override

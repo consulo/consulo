@@ -763,7 +763,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 if (selectedNode == null) {
                     return false;
                 }
-                else if (selectedNode.canNavigateToSource()) {
+                else if (selectedNode.getNavigateOptions().canNavigateToSource()) {
                     selectedNode.navigate(true);
                     myPopup.cancel();
                     return true;

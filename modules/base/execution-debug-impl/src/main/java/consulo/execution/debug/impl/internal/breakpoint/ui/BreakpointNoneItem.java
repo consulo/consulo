@@ -17,6 +17,7 @@ package consulo.execution.debug.impl.internal.breakpoint.ui;
 
 
 import consulo.codeEditor.util.popup.DetailView;
+import consulo.navigation.NavigateOptions;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
@@ -64,17 +65,12 @@ public class BreakpointNoneItem extends BreakpointItem {
   }
 
   @Override
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
+  }
+
+  @Override
   public void navigate(boolean requestFocus) {
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
   }
 
   @Override

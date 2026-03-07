@@ -44,6 +44,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
@@ -583,18 +584,13 @@ public class FindInProjectUtil {
         }
 
         @Override
+        public NavigateOptions getNavigateOptions() {
+            return NavigateOptions.CANT_NAVIGATE;
+        }
+
+        @Override
         public void navigate(boolean requestFocus) {
             throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean canNavigate() {
-            return false;
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
         }
 
         @Override

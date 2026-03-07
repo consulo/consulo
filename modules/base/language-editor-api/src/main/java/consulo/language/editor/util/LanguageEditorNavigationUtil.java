@@ -73,7 +73,7 @@ public class LanguageEditorNavigationUtil {
             .compute(() -> {
                 if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
                     NavigationItem navigationItem = (NavigationItem)element;
-                    if (navigationItem.canNavigate()) {
+                    if (navigationItem.getNavigateOptions().canNavigate()) {
                         navigationItem.navigate(requestFocus);
                         return true;
                     }

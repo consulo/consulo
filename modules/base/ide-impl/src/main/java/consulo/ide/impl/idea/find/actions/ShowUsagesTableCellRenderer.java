@@ -214,7 +214,7 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
         }
         GroupNode parentGroup = (GroupNode) node.getParent();
         appendGroupText(parentGroup, panel, fileBgColor);
-        if (node.canNavigateToSource()) {
+        if (node.getNavigateOptions().canNavigateToSource()) {
             SimpleColoredComponent renderer = new SimpleColoredComponent();
 
             renderer.setIcon(group.getIcon());

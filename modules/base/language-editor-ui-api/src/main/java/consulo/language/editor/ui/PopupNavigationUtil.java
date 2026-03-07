@@ -59,7 +59,7 @@ public final class PopupNavigationUtil {
     ) {
         return getPsiElementPopup(elements, renderer, title, element -> {
             Navigatable descriptor = EditSourceUtil.getDescriptor(element);
-            if (descriptor != null && descriptor.canNavigate()) {
+            if (descriptor != null && descriptor.getNavigateOptions().canNavigate()) {
                 descriptor.navigate(true);
             }
             return true;

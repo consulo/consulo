@@ -138,7 +138,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
                 OpenFileDescriptorImpl descriptor =
                     new OpenFileDescriptorImpl(psiElement.getProject(), file, popup.getLinePosition(), popup.getColumnPosition());
                 Navigatable n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
-                if (n.canNavigate()) {
+                if (n.getNavigateOptions().canNavigate()) {
                     n.navigate(true);
                     return;
                 }

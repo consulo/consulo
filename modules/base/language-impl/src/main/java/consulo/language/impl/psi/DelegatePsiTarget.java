@@ -21,7 +21,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.navigation.SimpleNavigateOptions;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -57,13 +59,9 @@ public class DelegatePsiTarget implements PsiTarget {
   }
 
   @Override
-  public boolean canNavigate() {
-    return EditSourceUtil.canNavigate(myElement);
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return EditSourceUtil.canNavigate(myElement);
+  public NavigateOptions getNavigateOptions() {
+    boolean canNav = EditSourceUtil.canNavigate(myElement);
+    return new SimpleNavigateOptions(canNav, canNav);
   }
 
   @Override

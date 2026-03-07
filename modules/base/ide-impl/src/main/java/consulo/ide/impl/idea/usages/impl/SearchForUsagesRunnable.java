@@ -472,7 +472,7 @@ class SearchForUsagesRunnable implements Runnable {
             application.invokeLater(
                 () -> {
                     Usage usage = myFirstUsage.get();
-                    if (usage.canNavigate()) {
+                    if (usage.getNavigateOptions().canNavigate()) {
                         usage.navigate(true);
                         flashUsageScriptaculously(usage);
                     }

@@ -20,8 +20,9 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.navigation.ItemPresentation;
-import consulo.document.util.TextRange;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
+import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -64,13 +65,8 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
   }
 
   @Override
-  public boolean canNavigate() {
-    return myStartElement instanceof Navigatable && ((Navigatable)myStartElement).canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+  public NavigateOptions getNavigateOptions() {
+    return myStartElement instanceof Navigatable n ? n.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   @Nonnull

@@ -375,7 +375,7 @@ public class TargetElementUtil {
             for (ResolveResult r : results) {
                 PsiElement element = r.getElement();
                 if (EditSourceUtil.canNavigate(element)
-                    || element instanceof Navigatable navigatable && navigatable.canNavigateToSource()) {
+                    || element instanceof Navigatable navigatable && navigatable.getNavigateOptions().canNavigateToSource()) {
                     navigatableResults.add(element);
                 }
             }

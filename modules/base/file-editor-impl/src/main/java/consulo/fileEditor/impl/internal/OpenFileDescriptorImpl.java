@@ -15,6 +15,8 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.application.Application;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -26,12 +28,18 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.navigation.Navigatable;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,6 +51,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements Navigatable, OpenFileDescriptor {
     /**
@@ -135,9 +144,42 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return rangeMarker == null || rangeMarker.isValid();
     }
 
+    @Nonnull
+    @Override
+    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+        CoroutineContext coroutineContext = myProject == null
+            ? Application.get().coroutineContext()
+            : myProject.coroutineContext();
+
+        return CoroutineScope.launchAsync(coroutineContext, () -> {
+            return Coroutine.first(ReadLock.apply(i -> {
+                    NavigateOptions options = getNavigateOptions();
+                    if (!options.canNavigate()) {
+                        throw new IllegalStateException("target not valid");
+                    }
+                    return options;
+                }))
+                .then(UIAction.apply((navigateOptions, continuation) -> {
+                    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, myProject);
+                    if (type == null || !myFile.isValid()) {
+                        return navigateOptions;
+                    }
+
+                    if (type instanceof INativeFileType) {
+                        ((INativeFileType) type).openFileInAssociatedApplication(myProject, myFile);
+                        // we invoke native - stop sequence 
+                        continuation.finishEarly(null);
+                        return navigateOptions;
+                    }
+
+                    return navigateOptions;
+                }));
+        }).toFuture();
+    }
+
     @Override
     public void navigate(boolean requestFocus) {
-        if (!canNavigate()) {
+        if (!getNavigateOptions().canNavigate()) {
             throw new IllegalStateException("target not valid");
         }
 
@@ -289,13 +331,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     @Override
-    public boolean canNavigate() {
-        return myFile.isValid();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return myFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

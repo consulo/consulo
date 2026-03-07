@@ -28,6 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -507,13 +508,8 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         }
 
         @Override
-        public boolean canNavigate() {
-            return myModule != null && !myModule.isDisposed();
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
+        public NavigateOptions getNavigateOptions() {
+            return myModule != null && !myModule.isDisposed() ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
         }
 
         @Nonnull

@@ -39,6 +39,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -261,7 +262,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     @Override
     @RequiredReadAction
     public void navigate(boolean focus) {
-        if (canNavigate()) {
+        if (getNavigateOptions().canNavigate()) {
             openTextEditor(focus);
         }
     }
@@ -273,15 +274,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         VirtualFile file = getFile();
-        return file != null && file.isValid();
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+        return file != null && file.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @RequiredReadAction

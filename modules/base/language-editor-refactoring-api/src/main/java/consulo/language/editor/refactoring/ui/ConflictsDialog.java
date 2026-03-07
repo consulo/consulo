@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.fileEditor.FileEditorLocation;
+import consulo.navigation.NavigateOptions;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
@@ -313,15 +314,8 @@ public class ConflictsDialog extends DialogWrapper {
             }
 
             @Override
-            @RequiredReadAction
-            public boolean canNavigateToSource() {
-                return false;
-            }
-
-            @Override
-            @RequiredReadAction
-            public boolean canNavigate() {
-                return false;
+            public NavigateOptions getNavigateOptions() {
+                return NavigateOptions.CANT_NAVIGATE;
             }
 
             @Override

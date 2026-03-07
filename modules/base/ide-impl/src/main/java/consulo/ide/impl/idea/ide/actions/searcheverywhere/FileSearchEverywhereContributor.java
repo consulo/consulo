@@ -103,7 +103,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
                 Couple<Integer> pos = getLineAndColumn(searchText);
                 OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, virtualFile, pos.first, pos.second);
                 descriptor.setUseCurrentWindow(openInCurrentWindow(modifiers));
-                if (descriptor.canNavigate()) {
+                if (descriptor.getNavigateOptions().canNavigate()) {
                     descriptor.navigate(true);
                     return true;
                 }

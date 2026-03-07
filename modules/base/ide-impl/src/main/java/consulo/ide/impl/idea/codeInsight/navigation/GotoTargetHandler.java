@@ -172,7 +172,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
                     Navigatable nav =
                         element instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor((PsiElement)element);
                     try {
-                        if (nav != null && nav.canNavigate()) {
+                        if (nav != null && nav.getNavigateOptions().canNavigate()) {
                             navigateToElement(nav);
                         }
                     }
@@ -267,7 +267,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     protected boolean navigateToElement(PsiElement target) {
         Navigatable descriptor = target instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor(target);
-        if (descriptor != null && descriptor.canNavigate()) {
+        if (descriptor != null && descriptor.getNavigateOptions().canNavigate()) {
             navigateToElement(descriptor);
             return true;
         }

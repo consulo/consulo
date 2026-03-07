@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.util.lang.StringUtil;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
@@ -66,13 +67,8 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
   }
 
   @Override
-  public boolean canNavigate() {
-    return getUsage().isValid() && getUsage().canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return getUsage().isValid() && getUsage().canNavigate();
+  public NavigateOptions getNavigateOptions() {
+    return getUsage().isValid() ? getUsage().getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   @Override

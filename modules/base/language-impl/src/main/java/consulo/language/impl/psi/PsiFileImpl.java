@@ -39,6 +39,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -1032,21 +1033,15 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     @Override
     @RequiredReadAction
     public void navigate(boolean requestFocus) {
-        assert canNavigate() : this;
+        assert getNavigateOptions().canNavigate() : this;
         //noinspection ConstantConditions
         PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
     }
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
-        return PsiNavigationSupport.getInstance().canNavigate(this);
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

@@ -194,9 +194,6 @@ public class FileTypeChooser extends DialogWrapper {
     @Nullable
     @RequiredUIAccess
     public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nullable Project project) {
-        if (project != null && !(file instanceof FakeVirtualFile)) {
-            PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
-        }
         FileType type = file.getFileType();
         if (type == UnknownFileType.INSTANCE) {
             type = getKnownFileTypeOrAssociate(file.getName());

@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.execution.ui.console.HyperlinkInfoBase;
+import consulo.navigation.Navigatable;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -329,9 +330,12 @@ public class EditorHyperlinkSupport {
       if (info.includeInOccurenceNavigation()) {
         boolean inCollapsedRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(next.getStartOffset()) != null;
         if (!inCollapsedRegion) {
-          return new OccurenceNavigator.OccurenceInfo(requestFocus -> {
-            action.accept(next);
-            linkFollowed(editor, ranges, next);
+          return new OccurenceNavigator.OccurenceInfo(new Navigatable() {
+              @Override
+              public void navigate(boolean requestFocus) {
+                  action.accept(next);
+                  linkFollowed(editor, ranges, next);
+              }
           }, newIndex == -1 ? -1 : newIndex + 1, ranges.size());
         }
       }

@@ -27,6 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.navigation.NavigateOptions;
 import consulo.usage.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -122,13 +123,8 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    public boolean canNavigate() {
-      return myFile.isValid();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+      return myFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

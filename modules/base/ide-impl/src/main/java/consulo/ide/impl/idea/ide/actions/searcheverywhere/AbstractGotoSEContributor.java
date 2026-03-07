@@ -332,7 +332,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
             PsiElement psiElement = preparePsi(element, modifiers, searchText);
             Navigatable extNavigatable = createExtendedNavigatable(psiElement, searchText, modifiers);
-            if (extNavigatable != null && extNavigatable.canNavigate()) {
+            if (extNavigatable != null && extNavigatable.getNavigateOptions().canNavigate()) {
                 extNavigatable.navigate(true);
                 return true;
             }

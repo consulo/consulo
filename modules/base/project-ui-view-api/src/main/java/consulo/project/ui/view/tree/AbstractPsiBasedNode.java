@@ -18,6 +18,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.StatePreservingNavigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -242,15 +243,9 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         NavigationItem item = getNavigationItem();
-        return item != null && item.canNavigate();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        NavigationItem item = getNavigationItem();
-        return item != null && item.canNavigateToSource();
+        return item != null ? item.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Nullable

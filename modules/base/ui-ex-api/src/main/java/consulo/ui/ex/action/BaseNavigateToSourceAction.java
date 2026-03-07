@@ -87,7 +87,7 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         }
 
         for (Navigatable navigatable : navigatables) {
-            if (navigatable.canNavigate()) {
+            if (navigatable.getNavigateOptions().canNavigate()) {
                 return navigatable instanceof NavigateWithDelegate delegate ? delegate.getDelegate() : navigatable;
             }
         }

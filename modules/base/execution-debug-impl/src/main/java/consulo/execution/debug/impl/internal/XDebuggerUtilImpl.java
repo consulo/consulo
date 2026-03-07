@@ -471,7 +471,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @Nullable
     public static Editor createEditor(@Nonnull OpenFileDescriptor descriptor) {
-        return descriptor.canNavigate()
+        return descriptor.getNavigateOptions().canNavigate()
             ? FileEditorManager.getInstance((Project) descriptor.getProject()).openTextEditor(descriptor, false) : null;
     }
 

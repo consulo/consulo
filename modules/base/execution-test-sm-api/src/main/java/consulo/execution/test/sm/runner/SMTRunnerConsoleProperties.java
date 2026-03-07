@@ -151,16 +151,6 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
                     public void navigate(boolean requestFocus) {
                         info.navigate(project);
                     }
-
-                    @Override
-                    public boolean canNavigate() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean canNavigateToSource() {
-                        return true;
-                    }
                 };
             }
         }

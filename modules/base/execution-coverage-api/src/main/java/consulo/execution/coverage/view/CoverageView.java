@@ -244,7 +244,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
             return;
         }
         if (treeStructure.getChildElements(element).length == 0) {
-            if (element.canNavigate()) {
+            if (element.getNavigateOptions().canNavigate()) {
                 element.navigate(true);
             }
             return;

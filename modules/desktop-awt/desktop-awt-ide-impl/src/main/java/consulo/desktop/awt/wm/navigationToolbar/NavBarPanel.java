@@ -562,7 +562,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
 
     protected void doubleClick(Object object) {
         if (object instanceof Navigatable navigatable) {
-            if (navigatable.canNavigate()) {
+            if (navigatable.getNavigateOptions().canNavigate()) {
                 navigatable.navigate(true);
             }
         }

@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.*;
@@ -153,8 +154,8 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     }
 
     @Override
-    public boolean canNavigate() {
-        return true;
+    public NavigateOptions getNavigateOptions() {
+        return NavigateOptions.CAN_NAVIGATE_FULL;
     }
 
     @Nonnull

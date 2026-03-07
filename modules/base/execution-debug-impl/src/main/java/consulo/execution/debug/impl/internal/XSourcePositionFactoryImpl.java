@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.XSourcePositionFactory;
 import consulo.language.psi.PsiElement;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -48,14 +49,10 @@ public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
         }
 
         @Override
-        public boolean canNavigate() {
-            return myPosition.getFile().isValid();
+        public NavigateOptions getNavigateOptions() {
+            return myPosition.getFile().isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
         }
 
-        @Override
-        public boolean canNavigateToSource() {
-            return canNavigate();
-        }
     }
 
     @Override

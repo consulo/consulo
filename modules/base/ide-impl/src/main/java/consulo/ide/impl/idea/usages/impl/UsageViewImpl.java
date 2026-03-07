@@ -30,6 +30,7 @@ import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -697,7 +698,7 @@ public class UsageViewImpl implements UsageViewEx {
                 }
                 else if (node.isLeaf()) {
                     Navigatable navigatable = getNavigatableForNode(node, !myPresentation.isReplaceMode());
-                    if (navigatable != null && navigatable.canNavigate()) {
+                    if (navigatable != null && navigatable.getNavigateOptions().canNavigate()) {
                         navigatable.navigate(false);
                     }
                 }
@@ -1843,7 +1844,7 @@ public class UsageViewImpl implements UsageViewEx {
     private static Navigatable getNavigatableForNode(@Nonnull DefaultMutableTreeNode node, boolean allowRequestFocus) {
         Object userObject = node.getUserObject();
         if (userObject instanceof Navigatable navigatable) {
-            return navigatable.canNavigate() ? new Navigatable() {
+            return navigatable.getNavigateOptions().canNavigate() ? new Navigatable() {
                 @Override
                 public void navigate(boolean requestFocus) {
                     navigatable.navigate(allowRequestFocus && requestFocus);
@@ -1851,14 +1852,8 @@ public class UsageViewImpl implements UsageViewEx {
 
                 @Override
                 @RequiredReadAction
-                public boolean canNavigate() {
-                    return navigatable.canNavigate();
-                }
-
-                @Override
-                @RequiredReadAction
-                public boolean canNavigateToSource() {
-                    return navigatable.canNavigateToSource();
+                public NavigateOptions getNavigateOptions() {
+                    return navigatable.getNavigateOptions();
                 }
             } : null;
         }

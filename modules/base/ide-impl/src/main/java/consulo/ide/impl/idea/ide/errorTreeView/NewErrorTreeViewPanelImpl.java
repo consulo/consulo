@@ -371,7 +371,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
             return;
         }
         Navigatable navigatable = element.getNavigatable();
-        if (navigatable.canNavigate()) {
+        if (navigatable.getNavigateOptions().canNavigate()) {
             navigatable.navigate(focusEditor);
         }
     }

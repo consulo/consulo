@@ -21,6 +21,7 @@ import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
@@ -93,8 +94,11 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     }
 
     @Override
-    public boolean canNavigate() {
-        return isNavigatableLibraryRoot() || super.canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        if (isNavigatableLibraryRoot()) {
+            return NavigateOptions.CAN_NAVIGATE_NO_SOURCE;
+        }
+        return super.getNavigateOptions();
     }
 
     private boolean isNavigatableLibraryRoot() {

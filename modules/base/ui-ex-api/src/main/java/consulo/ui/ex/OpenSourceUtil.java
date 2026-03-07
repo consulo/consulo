@@ -16,7 +16,6 @@
 package consulo.ui.ex;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
 import consulo.navigation.Navigatable;
 import consulo.navigation.StatePreservingNavigatable;
 
@@ -27,10 +26,6 @@ public class OpenSourceUtil {
 
   public static void openSourcesFrom(DataContext context, boolean requestFocus) {
     navigate(requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
-  }
-
-  public static void openSourcesFrom(DataProvider context, boolean requestFocus) {
-    navigate(requestFocus, context.getDataUnchecked(Navigatable.KEY_OF_ARRAY));
   }
 
   /**
@@ -47,7 +42,7 @@ public class OpenSourceUtil {
   public static void navigate(boolean requestFocus, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         navigatable.navigate(requestFocus);
       }
     }
@@ -56,7 +51,7 @@ public class OpenSourceUtil {
   public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable) {
           ((StatePreservingNavigatable)navigatable).navigate(requestFocus, true);
         } else {

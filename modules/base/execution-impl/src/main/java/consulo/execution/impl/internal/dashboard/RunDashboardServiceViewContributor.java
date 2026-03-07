@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
@@ -328,14 +329,10 @@ public final class RunDashboardServiceViewContributor
                 }
 
                 @Override
-                public boolean canNavigate() {
-                    return value.get() != null;
+                public NavigateOptions getNavigateOptions() {
+                    return value.get() != null ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
                 }
 
-                @Override
-                public boolean canNavigateToSource() {
-                    return canNavigate();
-                }
             };
 
         }
