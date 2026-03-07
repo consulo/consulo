@@ -25,5 +25,8 @@ public interface TreeAnchorizerValue<T> {
     @Nullable
     T extractValue();
 
+    @Nullable
+    T tryExtractValue();
+
     void dispose();
 }

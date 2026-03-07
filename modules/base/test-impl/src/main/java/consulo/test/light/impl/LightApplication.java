@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
@@ -297,19 +296,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     @Override
     public UIAccess getLastUIAccess() {
         throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public AccessToken acquireReadActionLock() {
-        throw new UnsupportedOperationException();
-    }
-
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
-        return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
     @RequiredUIAccess

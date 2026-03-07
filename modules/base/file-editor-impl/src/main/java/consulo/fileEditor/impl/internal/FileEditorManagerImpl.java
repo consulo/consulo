@@ -913,6 +913,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                             FileEditor[] editors = composite.getEditors();
                             FileEditorProvider[] providers = composite.getProviders();
 
+                            for (FileEditor editor : editors) {
+                                if (editor instanceof TextEditor textEditor) {
+                                    Editor editorEditor = textEditor.getEditor();
+                                    TextEditorProvider.putTextEditor(editorEditor, textEditor);
+                                }
+                            }
+
                             window.setEditor(composite, current, focusEditor);
 
                             for (int i = 0; i < editors.length; i++) {

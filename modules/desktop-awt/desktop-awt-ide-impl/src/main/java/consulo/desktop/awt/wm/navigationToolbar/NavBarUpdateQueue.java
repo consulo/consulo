@@ -2,7 +2,6 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -21,13 +20,16 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class NavBarUpdateQueue extends MergingUpdateQueue {
+    private record UpdateData(List<NavBarItemData> navItems, List<Object> elements) {
+
+    }
+    
     private final AtomicBoolean myModelUpdating = new AtomicBoolean(Boolean.FALSE);
     private final Alarm myUserActivityAlarm = new Alarm(this);
     private Runnable myRunWhenListRebuilt;
@@ -128,16 +130,13 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
                     items = model.buildModelAndPresentation(null, null, finalObject, presentation);
                 }
 
-                return Map.<List<NavBarItemData>, List<Object>>entry(items, items.stream().map(NavBarItemData::element).toList());
+                model.applyModel(items.stream().map(NavBarItemData::element).toList());
+                myItemDataCache = items;
+                myModelUpdating.set(false);
             })
             .expireWith(myPanel)
-            .finishOnUiThread(e -> {
-                model.applyModel(e.getValue());
-                myItemDataCache = e.getKey();
-                myModelUpdating.set(false);
-                queueRebuildUi();
-            })
-            .submit(AppExecutorUtil.getAppExecutorService());
+            .finishOnUiThread(e -> queueRebuildUi())
+            .submitDefault();
 
         myBackgroundTask = promise;
 

@@ -18,7 +18,6 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.concurrent.ApplicationConcurrency;
@@ -75,7 +74,9 @@ import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.*;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.SemVer;
+import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
@@ -101,72 +102,6 @@ import java.util.function.Supplier;
  * @since 2018-05-12
  */
 public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, StorableComponent {
-    private class ReadAccessToken extends AccessToken {
-        private final RWLock.ReadToken myReader;
-
-        private ReadAccessToken() {
-            myReader = myLock.startRead();
-        }
-
-        @Override
-        public void finish() {
-            myLock.endRead(myReader);
-        }
-    }
-
-    private class WriteAccessToken extends AccessToken {
-        @Nonnull
-        private final Class<?> clazz;
-
-        WriteAccessToken(@Nonnull Class<?> clazz) {
-            this.clazz = clazz;
-            startWrite(clazz);
-            markThreadNameInStackTrace();
-        }
-
-        @Override
-        public void finish() {
-            try {
-                endWrite(clazz);
-            }
-            finally {
-                unmarkThreadNameInStackTrace();
-            }
-        }
-
-        private void markThreadNameInStackTrace() {
-            String id = id();
-
-            if (id != null) {
-                Thread thread = Thread.currentThread();
-                thread.setName(thread.getName() + id);
-            }
-        }
-
-        private void unmarkThreadNameInStackTrace() {
-            String id = id();
-
-            if (id != null) {
-                Thread thread = Thread.currentThread();
-                String name = thread.getName();
-                name = StringUtil.replace(name, id, "");
-                thread.setName(name);
-            }
-        }
-
-        @Nullable
-        private String id() {
-            Class<?> aClass = getClass();
-            String name = aClass.getName();
-            name = name.substring(name.lastIndexOf('.') + 1);
-            name = name.substring(name.lastIndexOf('$') + 1);
-            if (!name.equals("AccessToken")) {
-                return " [" + name + "]";
-            }
-            return null;
-        }
-    }
-
     private static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
     private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
@@ -531,15 +466,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return ApplicationInfo.getInstance().getBuild();
     }
 
-    @Nonnull
-    @Override
-    public AccessToken acquireReadActionLock() {
-        DeprecatedMethodException.report("Use runReadAction() instead");
-
-        // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-        return isWriteThread() || myLock.isReadLockedByThisThread() ? AccessToken.EMPTY_ACCESS_TOKEN : new ReadAccessToken();
-    }
-
     @Override
     public <T, E extends Throwable> boolean tryRunReadAction(@Nonnull SimpleReference<T> ref,
                                                           @Nonnull ThrowableSupplier<T, E> computation) throws E {
@@ -849,14 +775,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
                 fireAfterWriteActionFinished(clazz);
             }
         }
-    }
-
-    @Nonnull
-    @Override
-    public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
-        DeprecatedMethodException.report("Use runWriteAction() instead");
-
-        return new WriteAccessToken(clazz);
     }
 
     @Override

@@ -532,22 +532,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
 
     // region Deprecated stuff
 
-    /**
-     * Returns lock used for read operations, should be closed in finally block
-     */
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use runReadAction(Runnable)")
-    AccessToken acquireReadActionLock();
-
-    /**
-     * Returns lock used for write operations, should be closed in finally block
-     */
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use runWriteAction(Runnable)")
-    AccessToken acquireWriteActionLock(@Nonnull Class marker);
-
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
     default boolean isInternal() {

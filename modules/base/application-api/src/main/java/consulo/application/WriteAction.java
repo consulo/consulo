@@ -17,41 +17,22 @@ package consulo.application;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
 
-import java.util.function.Supplier;
-
+@Deprecated
+@DeprecationInfo("View WriteLock")
 public final class WriteAction {
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use AccessRule.writeAsync()")
-    public static AccessToken start() {
-        // get useful information about the write action
-        Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
-        return start(aClass);
-    }
-
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo("Use AccessRule.writeAsync()")
-    public static AccessToken start(@Nonnull Class clazz) {
-        return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
-    }
-
     public static void runAndWait(@RequiredWriteAction Runnable runnable) {
         run(runnable::run);
     }
 
-    public static <T> T computeAndWait(@RequiredWriteAction Supplier<T> supplier) {
-        return compute(supplier::get);
-    }
-
     public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-        compute(() -> {
+        Application application = Application.get();
+        application.runWriteAction((ThrowableSupplier<Object, E>) () -> {
             action.run();
             return null;
         });
@@ -64,6 +45,7 @@ public final class WriteAction {
 
     public static void runLater(@RequiredWriteAction Runnable runnable) {
         Application application = Application.get();
-        application.invokeLater(() -> application.runWriteAction(runnable));
+        ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+        concurrency.executor().execute(() -> application.runWriteAction(runnable));
     }
 }

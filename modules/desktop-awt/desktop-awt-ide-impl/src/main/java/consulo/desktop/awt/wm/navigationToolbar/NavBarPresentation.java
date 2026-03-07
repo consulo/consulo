@@ -161,7 +161,7 @@ public class NavBarPresentation {
 
         }
         else if (object instanceof Project project) {
-            Module[] modules = Application.get().runReadAction((Supplier<Module[]>)() -> ModuleManager.getInstance(project).getModules());
+            Module[] modules = ModuleManager.getInstance(project).getModules();
             for (Module module : modules) {
                 if (WolfTheProblemSolver.getInstance(project).hasProblemFilesBeneath(module)) {
                     return WOLFED;

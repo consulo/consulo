@@ -4,6 +4,7 @@ package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
 import consulo.dataContext.DataContext;
@@ -23,6 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -380,7 +382,7 @@ public class NavBarModel {
         List<Object> objects = new ArrayList<>();
         boolean update = false;
         for (Object o : myModel) {
-            if (isValid(myTreeAnchorizer.retrieveElement(o))) {
+            if (isValid(myTreeAnchorizer.tryToRetrieveElement(o))) {
                 objects.add(o);
             }
             else {
@@ -455,7 +457,10 @@ public class NavBarModel {
             return !module.isDisposed();
         }
         if (object instanceof PsiElement element) {
-            return AccessRule.read(element::isValid);
+            Application application = Application.get();
+            SimpleReference<Boolean> elementRef = new SimpleReference<>();
+            application.tryRunReadAction(elementRef, element::isValid);
+            return Boolean.TRUE.equals(elementRef.get());
         }
         return object != null;
     }

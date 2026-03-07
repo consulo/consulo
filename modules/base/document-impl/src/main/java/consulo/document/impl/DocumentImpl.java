@@ -16,7 +16,6 @@
 package consulo.document.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
@@ -1033,7 +1032,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @Nonnull
     @Override
     public String getText() {
-        return AccessRule.read(this::doGetText);
+        Application.get().assertReadAccessAllowed();
+        return doGetText();
     }
 
     @Nonnull
@@ -1048,7 +1048,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @Nonnull
     @Override
     public String getText(@Nonnull TextRange range) {
-        return AccessRule.read(() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
+        Application.get().assertReadAccessAllowed();
+        return myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString();
     }
 
     @Override

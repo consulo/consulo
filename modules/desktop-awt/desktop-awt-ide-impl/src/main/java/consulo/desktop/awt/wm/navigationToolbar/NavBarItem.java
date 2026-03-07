@@ -98,7 +98,7 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
   public NavBarItem(NavBarPanel panel, NavBarItemData data, int idx, Disposable parent) {
     myPanel = panel;
     myUI = panel.getNavBarUI();
-    myObject = data.element() == null ? null : TreeAnchorizer.getService().createAnchorValue(data.element());
+    myObject = TreeAnchorizer.getService().tryCreateAnchorValue(data.element());
     myIndex = idx;
     isPopupElement = false;
     myText = data.text();

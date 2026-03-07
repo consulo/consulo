@@ -28,6 +28,12 @@ public record SimpleTreeAnchorizerValue(@Nullable Object value) implements TreeA
         return value();
     }
 
+    @Nullable
+    @Override
+    public Object tryExtractValue() {
+        return value();
+    }
+
     @Override
     public void dispose() {
 
