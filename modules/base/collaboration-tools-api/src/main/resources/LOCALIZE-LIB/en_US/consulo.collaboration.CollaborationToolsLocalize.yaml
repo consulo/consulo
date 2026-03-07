@@ -1,0 +1,400 @@
+http.status.error:
+    text: 'HTTP Request {0} failed with status code {1} and response body: {2}'
+http.request.error:
+    text: HTTP request error
+http.status.error.refresh.token:
+    text: The authorization token was revoked
+graphql.errors:
+    text: 'GraphQL error: {0}'
+account.choose.link:
+    text: Choose an account
+account.token.invalid:
+    text: Invalid access token
+account.token.missing:
+    text: Missing access token
+account.token.missing.for:
+    text: Missing access token for {0}
+accounts.add.link:
+    text: Add account…
+accounts.none.added:
+    text: No accounts added
+accounts.set.default:
+    text: Set as Default
+accounts.error.password.not.saved:
+    text: Credentials will not be saved for future use
+accounts.error.password.not.saved.colon:
+    text: 'Credentials will not be saved for future use:'
+accounts.error.password.not.saved.link:
+    text: Configure password store
+accounts.error.password.not.saved.solution:
+    text: You can change this in Settings | Appearance \& Behavior | System Settings | Passwords
+action.CodeReview.MarkChangesViewed.text:
+    text: Mark as Viewed
+action.CodeReview.MarkChangesNotViewed.text:
+    text: Mark as Not Viewed
+action.CodeReview.ToggleChangesViewed.description:
+    text: Toggle viewed/not viewed state for the selection or file
+action.CodeReview.ToggleChangesViewed.markViewed:
+    text: Mark as Viewed
+action.CodeReview.ToggleChangesViewed.markNotViewed:
+    text: Mark as Not Viewed
+action.CodeReview.ToggleChangesViewed.markFileViewed:
+    text: Mark File as Viewed
+action.CodeReview.ToggleChangesViewed.markFileNotViewed:
+    text: Mark File as Not Viewed
+action.CodeReview.ToggleChangesViewed.markAllViewed:
+    text: Mark All as Viewed
+action.CodeReview.ToggleChangesViewed.markAllNotViewed:
+    text: Mark All as Not Viewed
+diff.add.comment.icon.tooltip:
+    text: Leave a comment
+diff.discard.new.comment.icon.tooltip:
+    text: Discard a comment
+action.CodeReview.CreateDiffComment.text:
+    text: Add Review Comment
+tooltip.code.review.files.not.viewed:
+    text: '{0,choice,1#{0} file|2#{0} files} not viewed'
+error.address.unresolved:
+    text: Address unresolved
+error.connection.error:
+    text: Connection error
+error.unknown:
+    text: Unknown error
+login.again.action.text:
+    text: Log in again…
+login.button:
+    text: Log In
+login.dialog.title:
+    text: Log In with Access Token
+login.field.server:
+    text: 'Server:'
+login.field.token:
+    text: 'Token:'
+login.link:
+    text: Log in
+login.progress:
+    text: Logging in…
+login.server.empty:
+    text: Server address is empty
+login.server.invalid:
+    text: Server address is not valid
+login.token.empty:
+    text: Token is empty
+login.token.generate:
+    text: Generate…
+login.via.git:
+    text: Log in via Git
+login.dialog.error.account.already.exists:
+    text: Account {0} already exists
+login.dialog.error.account.username.mismatch:
+    text: Username for chosen account ({0}) does not match requested username {1}
+accounts.saving.credentials:
+    text: Saving credentials
+repository.and.account.selector.login.again.action.text:
+    text: Log in again…
+review.list.connection.error:
+    text: Connection error occurred
+review.list.connection.failed:
+    text: Could not connect to repository
+review.list.connection.failed.repository.account:
+    text: Could not connect to repository {0} with account {1}
+review.list.empty.state.loading:
+    text: Loading…
+review.list.info:
+    text: '{0} · created {1}'
+review.list.info.author:
+    text: '{0} · created {1}, by {2}'
+review.list.filter.quick.title:
+    text: Quick Filters
+review.list.filter.quick.clear:
+    text: Clear {0} Filters
+review.login.note.gear:
+    text: Change repository or account later under the gear icon
+review.login.note.more:
+    text: Change repository or account later under the More icon
+review.details.action.merge.group:
+    text: Merge Review…
+review.details.action.merge:
+    text: Merge…
+review.details.action.rebase:
+    text: Rebase
+review.details.action.squash.and.merge:
+    text: Squash and Merge…
+review.details.action.remove.reviewer:
+    text: Remove {0} from reviewers
+review.details.action.request:
+    text: Request Review…
+review.details.action.rerequest:
+    text: Re-request Review…
+review.details.action.set.myself.as.reviewer:
+    text: Set Myself as Reviewer
+review.details.action.branch.checkout.remote.action.description:
+    text: Checkout review request branch
+review.details.action.branch.show.remote.branch.in.log.action.description:
+    text: Show review request branch in Git Log
+review.details.branch.cannot.checkout.as.branch:
+    text: Remote branches are not available for private forks
+review.details.branch.checkout.remote:
+    text: Checkout ''{0}''…
+review.details.branch.checkout.remote.as.detached.head:
+    text: Checkout ''{0}'' as detached HEAD…
+review.details.branch.show.remote.in.git.log:
+    text: Show ''{0}'' in Git Log
+review.details.branch.copy.name:
+    text: Copy Branch Name
+review.details.branch.checkout.remote.ad.label:
+    text: '{0} ← {1}'
+review.details.action.branch.checkout.failed:
+    text: Branch checkout failed
+review.details.action.branch.checkout.failed.remote:
+    text: Cannot resolve git remote for merge request source repository
+review.details.commits.details.hide:
+    text: Hide details
+review.details.commits.details.show:
+    text: Show details
+review.details.commits.popup.all:
+    text: All commits ({0})
+review.details.commits.popup.text:
+    text: '{0} commits'
+review.details.commits.search.placeholder:
+    text: Search commits
+review.details.commits.title.text:
+    text: '{0, choice, 1#Changes|2#Changes from}'
+review.details.review.state.open:
+    text: OPEN
+review.details.review.state.closed:
+    text: CLOSED
+review.details.review.state.merged:
+    text: MERGED
+review.details.review.state.draft:
+    text: DRAFT
+review.details.status.ci.failed:
+    text: Checks failed
+review.details.status.ci.link.details:
+    text: Details…
+review.details.status.ci.passed:
+    text: All required checks have passed
+review.details.status.ci.progress.and.failed:
+    text: Checks in progress, and some already failed…
+review.details.status.ci.progress:
+    text: Checks in progress…
+review.details.status.ci.popup.title:
+    text: Open in Browser
+review.details.status.conflicts:
+    text: Branch has conflicts that must be resolved
+review.details.status.conflicts.pending:
+    text: Checking branch for conflicts
+review.details.status.conflicts.resolve:
+    text: Resolve
+review.details.status.conversations:
+    text: Review has conversations that must be resolved
+review.details.status.not.authorized.to.merge:
+    text: You are not authorized to merge request into this branch
+review.details.status.reviewer.approved:
+    text: '{0} approved review'
+review.details.status.reviewer.missing:
+    text: Missing reviewer
+review.details.status.reviewer.need.review:
+    text: Waiting for review from {0}
+review.details.status.reviewer.required:
+    text: At least {0} approving review is required by reviewers with write access
+review.details.status.reviewer.wait.for.updates:
+    text: '{0} is waiting for updates'
+review.details.view.timeline.action:
+    text: View Timeline
+review.details.resolveConflicts.error.alreadyResolvedLocally:
+    text: Already resolved locally, push your changes to resolve
+review.details.resolveConflicts.error.mergeInProgress:
+    text: Merge is already in progress
+review.details.resolveConflicts.error.detailsNotLoaded:
+    text: Details have not finished loading
+review.details.resolve.conflicts.head:
+    text: Source
+review.details.resolve.conflicts.base:
+    text: Target
+review.comment.placeholder:
+    text: Review comment
+review.submit.action:
+    text: Submit
+review.submit.failed:
+    text: Failed to submit review
+review.start.submit.action.short:
+    text: Submit…
+review.start.submit.action.short.with.comments:
+    text: Submit ({0})…
+review.start.submit.action:
+    text: Submit Review…
+review.start.submit.action.with.comments:
+    text: Submit Review ({0})…
+review.submit.review.title:
+    text: Submit Review
+review.pending.comments.count:
+    text: '{0} pending {0, choice, 1#comment|2#comments}'
+review.diff.discussions.view.option.all:
+    text: All
+review.diff.discussions.view.option.do.not.show:
+    text: Do Not Show
+review.diff.discussions.view.option.unresolved.only:
+    text: Unresolved Only
+review.diff.action.show.text:
+    text: Show Review Diff
+review.diff.action.show.description:
+    text: Show selected changes in review diff
+review.diff.toolbar.label:
+    text: 'Review:'
+review.editor.mode.title:
+    text: Review Mode
+review.editor.mode.description.title:
+    text: Configure review mode
+review.editor.mode.description:
+    text: In Review Mode, you can see review comments and proposed changes right in the editor
+review.editor.action.disable.text:
+    text: Disable Review Mode
+review.editor.action.show.unresolved.text:
+    text: Show Unresolved Comments Only
+review.editor.action.show.all.text:
+    text: Show All Comments
+review.editor.action.update.text:
+    text: Update Branch to Enable Review Mode…
+review.editor.action.highlight.lines.text:
+    text: Highlight Lines
+review.editor.action.add.comment.text:
+    text: Add Review Comment
+review.editor.action.add.comment.description:
+    text: Create a new code review comment on the line under the caret
+review.editor.action.add.comment.multiline.text:
+    text: Add Multiline Review Comment
+review.editor.action.add.comment.multiline.description:
+    text: Create a new code review comment on the selected lines
+review.thread.diff.not.loaded:
+    text: Could not load diff hunk for thread
+review.thread.more.replies:
+    text: '{0} more replies'
+review.thread.outdated.tag:
+    text: OUTDATED
+review.thread.pending.tag:
+    text: PENDING
+review.thread.resolved.tag:
+    text: RESOLVED
+review.comments.reply.action:
+    text: Reply
+review.comments.reply.hint:
+    text: '{0} to reply'
+review.comments.save.as.draft.action:
+    text: Save as draft
+review.comments.replies.action:
+    text: '{0} {0, choice, 1#reply|2#replies}'
+review.comments.resolve.action:
+    text: Resolve
+review.comments.unresolve.action:
+    text: Unresolve
+review.comments.post.now.action:
+    text: Post now
+review.comments.delete.confirmation.title:
+    text: Delete Comment
+review.comments.delete.confirmation:
+    text: Are you sure you want to delete this comment?
+review.comments.discard.new.confirmation.title:
+    text: Discard Comment
+review.comments.discard.new.confirmation:
+    text: Are you sure you want to discard the unsaved comment?
+review.comments.code.outline.tooltip.explanation:
+    text: Drag to select several lines for commenting
+review.comments.code.outline.tooltip.suggestion.disabling:
+    text: The range of this comment is not adjustable as it contains suggestion
+review.comments.code.outline.tooltip.commit.review.disabling:
+    text: Comment range cannot be adjusted while reviewing a single commit
+review.comment.new.line.hint:
+    text: '{0} to add new line'
+review.comment.save:
+    text: Save Changes
+review.comment.save.hint:
+    text: '{0} to save changes'
+review.comment.action:
+    text: Add a Comment
+review.comment.submit:
+    text: Add Comment
+review.comment.hint:
+    text: '{0} to comment'
+review.comments.reaction.tooltip:
+    text: '{0} reacted with ''''{1}'''' emoji'
+review.comments.reaction.add.tooltip:
+    text: Add reaction
+action.CodeReview.NextComment.text:
+    text: Next Comment
+action.CodeReview.NextComment.description:
+    text: Go to next visible comment
+action.CodeReview.PreviousComment.text:
+    text: Previous Comment
+action.CodeReview.PreviousComment.description:
+    text: Go to previous visible comment
+clone.dialog.button.login.mnemonic:
+    text: '&Log In'
+clone.dialog.clone.failed:
+    text: Clone failed
+clone.dialog.directory.to.clone.label.text:
+    text: 'Directory:'
+clone.dialog.error.destination.not.exist:
+    text: Clone Failed. Destination doesn't exist
+clone.dialog.error.load.repositories:
+    text: Unable to load repositories
+clone.dialog.error.retry:
+    text: Retry
+clone.dialog.error.unable.to.create.destination.directory:
+    text: Unable to create destination directory
+clone.dialog.error.unable.to.find.destination.directory:
+    text: Unable to find destination directory
+clone.dialog.insufficient.scopes:
+    text: 'The following scopes must be granted to the access token: {0}'
+clone.dialog.label.no.accounts:
+    text: No accounts
+clone.dialog.login.error.server:
+    text: Server access failure
+clone.dialog.login.failed:
+    text: Login failed
+clone.dialog.login.with.token.action:
+    text: Log In with Token…
+clone.dialog.repository.url.text:
+    text: Clone ''{0}''
+dialog.review.merge.commit.button.merge:
+    text: Merge
+dialog.review.merge.commit.message:
+    text: 'Merge commit message:'
+dialog.review.merge.commit.title.with.squash:
+    text: Squash and Merge Review
+dialog.review.merge.commit.title:
+    text: Merge Review
+notification.group.vcs.hosting.integrations:
+    text: VCS hosting integrations
+popup.data.loading.error:
+    text: Something went wrong
+advanced.settings.collab.tools:
+    text: Code Review Tools
+advanced.setting.enable.combined.diff.for.codereview:
+    text: All-in-one Diff for Code Reviews
+advanced.setting.enable.combined.diff.for.codereview.description:
+    text: If enabled, all changed files in code reviews are shown in a single scrollable Diff view
+advanced.setting.show.review.threads.with.increased.margins:
+    text: Keep increased margins for Diff threads
+snippet.create.path.mode:
+    text: 'Path handling mode:'
+snippet.create.path.mode.unavailable.tooltip:
+    text: This naming scheme causes conflicts
+snippet.create.path.mode.tooltip:
+    text: How paths should be included in file names
+snippet.create.path.mode.project.relative:
+    text: Project relative
+snippet.create.path.mode.project.relative.tooltip:
+    text: Include relative path from project root
+snippet.create.path.mode.content.root.relative:
+    text: Content root relative
+snippet.create.path.mode.content.root.relative.tooltip:
+    text: Include relative path from content root
+snippet.create.path.mode.relative:
+    text: Relative
+snippet.create.path.mode.relative.tooltip:
+    text: Include relative path from nearest common parent
+snippet.create.path.mode.none:
+    text: No paths
+snippet.create.path.mode.none.tooltip:
+    text: Drop all paths, only use file names
