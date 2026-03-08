@@ -4,6 +4,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -320,19 +321,23 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             closeHint();
             return;
         }
-        Context context = createContext(editor, targetOffset);
-        if (context == null) {
-            closeHint();
-            return;
-        }
-        Context.Relation relation = isHintShown() ? context.compareTo(myContext) : Context.Relation.DIFFERENT;
-        if (relation == Context.Relation.SAME) {
-            return;
-        }
-        else if (relation == Context.Relation.DIFFERENT) {
-            closeHint();
-        }
-        scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
+
+        ReadAction.nonBlocking(() -> createContext(editor, targetOffset))
+            .finishOnUiThread(context -> {
+                if (context == null) {
+                    closeHint();
+                    return;
+                }
+                Context.Relation relation = isHintShown() ? context.compareTo(myContext) : Context.Relation.DIFFERENT;
+                if (relation == Context.Relation.SAME) {
+                    return;
+                }
+                else if (relation == Context.Relation.DIFFERENT) {
+                    closeHint();
+                }
+                scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
+            })
+            .submitDefault();
     }
 
     @RequiredReadAction

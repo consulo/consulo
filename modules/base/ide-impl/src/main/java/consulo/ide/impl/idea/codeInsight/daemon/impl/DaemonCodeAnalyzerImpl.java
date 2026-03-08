@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -38,6 +39,7 @@ import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
+import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
@@ -730,6 +732,23 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             dca.myUpdateRunnableFuture.cancel(false);
             DaemonProgressIndicator progress = dca.createUpdateProgress(editorsWithHighlighters.keySet());
 
+            // Pre-create HighlightingSessions on EDT with visibleRange (JetBrains pattern).
+            // This makes visibleRange available to background factories via
+            // HighlightingSessionImpl.getFromCurrentIndicator(psiFile).getVisibleRange().
+            for (Map.Entry<FileEditor, BackgroundEditorHighlighter> entry : editorsWithHighlighters.entrySet()) {
+                FileEditor fileEditor = entry.getKey();
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
+                    Document document = editor.getDocument();
+                    PsiFile psiFile = dca.myPsiDocumentManager.getPsiFile(document);
+                    if (psiFile != null) {
+                        ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
+                        HighlightingSessionImpl.getOrCreateHighlightingSession(
+                            psiFile, progress, editor.getColorsScheme(), visibleRange);
+                    }
+                }
+            }
+
             // Submit pass creation and execution to background thread.
             // createPassesForEditor() needs read access (getPsiFile, etc.),
             // which EDT no longer has implicitly with StampedRWLock.
@@ -776,17 +795,21 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             return;
         }
 
-        // Create passes under read action (getPsiFile and other PSI access requires it)
+        // Create passes under the DaemonProgressIndicator (so factories can use
+        // HighlightingSessionImpl.getFromCurrentIndicator()) and under read action
+        // (getPsiFile and other PSI access requires it).
         Map<FileEditor, HighlightingPass[]> passes = new HashMap<>(editorsWithHighlighters.size());
-        Application.get().runReadAction(() -> {
-            for (Map.Entry<FileEditor, BackgroundEditorHighlighter> entry : editorsWithHighlighters.entrySet()) {
-                if (progress.isCanceled()) {
-                    return;
+        ProgressManager.getInstance().executeProcessUnderProgress(() -> {
+            Application.get().runReadAction(() -> {
+                for (Map.Entry<FileEditor, BackgroundEditorHighlighter> entry : editorsWithHighlighters.entrySet()) {
+                    if (progress.isCanceled()) {
+                        return;
+                    }
+                    HighlightingPass[] highlightingPasses = entry.getValue().createPassesForEditor();
+                    passes.put(entry.getKey(), highlightingPasses);
                 }
-                HighlightingPass[] highlightingPasses = entry.getValue().createPassesForEditor();
-                passes.put(entry.getKey(), highlightingPasses);
-            }
-        });
+            });
+        }, progress);
 
         if (progress.isCanceled()) {
             return;

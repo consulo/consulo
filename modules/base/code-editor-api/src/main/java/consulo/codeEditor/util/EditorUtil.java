@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.util;
 
-import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
@@ -26,6 +25,8 @@ import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.util.LoggerUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
@@ -394,15 +395,15 @@ public class EditorUtil {
     /**
      * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
      */
+    @RequiredUIAccess
     public static boolean checkMaxCarets(@Nonnull Editor editor) {
-        return ReadAction.compute(() -> {
-            CaretModel caretModel = editor.getCaretModel();
-            if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
-                notifyMaxCarets(editor);
-                return true;
-            }
-            return false;
-        });
+        UIAccess.assertIsUIThread();
+        CaretModel caretModel = editor.getCaretModel();
+        if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
+            notifyMaxCarets(editor);
+            return true;
+        }
+        return false;
     }
 
     /**

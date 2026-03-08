@@ -137,8 +137,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         });
     }
 
+    @RequiredReadAction
     private PsiFile getPsiFile() {
-        return ReadAction.compute(() -> PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument));
+        return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     }
 
     @Nonnull
@@ -303,11 +304,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
         Icon icon = TargetAWT.to(getIcon(status));
         icon.paintIcon(c, g, r.x, r.y);
-    }
-
-    @Override
-    public int getSquareSize() {
-        return HighlightDisplayLevel.getEmptyIconDim();
     }
 
     @Nonnull

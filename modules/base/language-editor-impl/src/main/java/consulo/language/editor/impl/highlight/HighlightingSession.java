@@ -15,11 +15,12 @@
  */
 package consulo.language.editor.impl.highlight;
 
-import consulo.document.Document;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.Document;
+import consulo.document.util.ProperTextRange;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public interface HighlightingSession {
@@ -36,4 +37,7 @@ public interface HighlightingSession {
   ProgressIndicator getProgressIndicator();
 
   EditorColorsScheme getColorsScheme();
+
+  @Nonnull
+  ProperTextRange getVisibleRange();
 }

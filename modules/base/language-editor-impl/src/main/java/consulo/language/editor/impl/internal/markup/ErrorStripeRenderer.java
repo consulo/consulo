@@ -18,13 +18,16 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public interface ErrorStripeRenderer {
   void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r);
 
-  int getSquareSize();
+  default int getSquareSize() {
+      return HighlightDisplayLevel.getEmptyIconDim();
+  }
 
   @Nonnull
   @RequiredReadAction

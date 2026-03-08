@@ -17,14 +17,16 @@ package consulo.language.editor.impl.internal.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.highlight.HighlightingSession;
-import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -48,14 +50,22 @@ public class HighlightingSessionImpl implements HighlightingSession {
   @Nonnull
   private final Project myProject;
   private final Document myDocument;
+  @Nonnull
+  private final ProperTextRange myVisibleRange;
   private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
 
-  private HighlightingSessionImpl(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, EditorColorsScheme editorColorsScheme) {
+  private HighlightingSessionImpl(
+      @Nonnull PsiFile psiFile,
+      @Nonnull DaemonProgressIndicator progressIndicator,
+      EditorColorsScheme editorColorsScheme,
+      @Nonnull ProperTextRange visibleRange
+  ) {
     myPsiFile = psiFile;
     myProgressIndicator = progressIndicator;
     myEditorColorsScheme = editorColorsScheme;
     myProject = psiFile.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
+    myVisibleRange = visibleRange;
   }
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
@@ -66,14 +76,42 @@ public class HighlightingSessionImpl implements HighlightingSession {
   }
 
   @Nonnull
-  public static HighlightingSession getOrCreateHighlightingSession(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, @Nullable EditorColorsScheme editorColorsScheme) {
+  public static HighlightingSession getOrCreateHighlightingSession(
+      @Nonnull PsiFile psiFile,
+      @Nonnull DaemonProgressIndicator progressIndicator,
+      @Nullable EditorColorsScheme editorColorsScheme,
+      @Nonnull ProperTextRange visibleRange
+  ) {
     HighlightingSession session = getHighlightingSession(psiFile, progressIndicator);
     if (session == null) {
       ConcurrentMap<PsiFile, HighlightingSession> map = progressIndicator.getUserData(HIGHLIGHTING_SESSION);
       if (map == null) {
         map = progressIndicator.putUserDataIfAbsent(HIGHLIGHTING_SESSION, new ConcurrentHashMap<>());
       }
-      session = Maps.cacheOrGet(map, psiFile, new HighlightingSessionImpl(psiFile, progressIndicator, editorColorsScheme));
+      session = Maps.cacheOrGet(map, psiFile,
+          new HighlightingSessionImpl(psiFile, progressIndicator, editorColorsScheme, visibleRange));
+    }
+    return session;
+  }
+
+  /**
+   * Retrieves the HighlightingSession for the given PsiFile from the current DaemonProgressIndicator.
+   * Must be called from a thread running under a DaemonProgressIndicator
+   * (via {@link ProgressManager#executeProcessUnderProgress}).
+   *
+   * <p>This follows the JetBrains pattern where the session (with pre-computed visible range)
+   * is created on EDT and stored on the DaemonProgressIndicator, then factories
+   * retrieve it on the background thread.</p>
+   */
+  @Nonnull
+  public static HighlightingSession getFromCurrentIndicator(@Nonnull PsiFile psiFile) {
+    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    if (!(indicator instanceof DaemonProgressIndicator dpi)) {
+      throw new IllegalStateException("Must be run under DaemonProgressIndicator, but got: " + indicator);
+    }
+    HighlightingSession session = getHighlightingSession(psiFile, dpi);
+    if (session == null) {
+      throw new IllegalStateException("No HighlightingSession for " + psiFile + " in " + indicator);
     }
     return session;
   }
@@ -115,6 +153,12 @@ public class HighlightingSessionImpl implements HighlightingSession {
   @Override
   public EditorColorsScheme getColorsScheme() {
     return myEditorColorsScheme;
+  }
+
+  @Nonnull
+  @Override
+  public ProperTextRange getVisibleRange() {
+    return myVisibleRange;
   }
 
   @RequiredReadAction

@@ -3,6 +3,7 @@ package consulo.language.editor.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.fileEditor.highlight.HighlightingPass;
@@ -15,7 +16,9 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,6 +39,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     private volatile int myId;
     private volatile boolean myDumb;
     private EditorColorsScheme myColorsScheme;
+    private ImaginaryEditor myImaginaryEditor;
 
     protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document, boolean runIntentionPassAfter) {
         myDocument = document;
@@ -64,6 +68,9 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
 
     @Nullable
     public EditorColorsScheme getColorsScheme() {
+        if (myImaginaryEditor != null) {
+            return myImaginaryEditor.getColorsScheme();
+        }
         return myColorsScheme;
     }
 
@@ -71,11 +78,19 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myColorsScheme = colorsScheme;
     }
 
+    @Nullable
+    public ImaginaryEditor getImaginaryEditor() {
+        return myImaginaryEditor;
+    }
+
+    public void setImaginaryEditor(@Nullable ImaginaryEditor imaginaryEditor) {
+        myImaginaryEditor = imaginaryEditor;
+    }
+
     protected boolean isDumbMode() {
         return myDumb;
     }
 
-    @RequiredReadAction
     protected boolean isValid() {
         if (isDumbMode() && !DumbService.isDumbAware(this)) {
             return false;
@@ -89,15 +104,21 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
             if (myDocument.getModificationStamp() != myInitialDocStamp) {
                 return false;
             }
-            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
-            return file != null && file.isValid();
+
+            SimpleReference<Boolean> isValidRef = new SimpleReference<>();
+            myProject.getApplication().tryRunReadAction(isValidRef, () -> {
+                PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
+                return file != null && file.isValid();
+            });
+
+            return Boolean.TRUE.equals(isValidRef.get());
         }
 
         return true;
     }
 
+    @RequiredUIAccess
     @Override
-    @RequiredReadAction
     public final void applyInformationToEditor() {
         if (!isValid()) {
             return; // Document has changed.

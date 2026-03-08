@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.Document;
@@ -72,10 +73,17 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
         myCaretOffset = myEditor.getCaretModel().getOffset();
     }
 
+    @Nonnull
+    private Editor getEditorForRead() {
+        ImaginaryEditor imaginary = getImaginaryEditor();
+        return imaginary != null ? imaginary : myEditor;
+    }
+
     @Override
     @RequiredReadAction
     public void doCollectInformation(@Nonnull ProgressIndicator progress) {
-        HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
+        Editor editor = getEditorForRead();
+        HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(editor, myFile);
         if (highlightUsagesHandler != null) {
             List<PsiElement> targets = highlightUsagesHandler.getTargets();
             highlightUsagesHandler.computeUsages(targets);
@@ -98,13 +106,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
             TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED
         ));
-        PsiElement myTarget = TargetElementUtil.findTargetElement(myEditor, flags, myCaretOffset);
+        PsiElement myTarget = TargetElementUtil.findTargetElement(editor, flags, myCaretOffset);
 
         if (myTarget == null) {
-            if (!PsiDocumentManager.getInstance(myProject).isUncommited(myEditor.getDocument())) {
+            if (!PsiDocumentManager.getInstance(myProject).isUncommited(editor.getDocument())) {
                 // when document is committed, try to check injected stuff - it's fast
                 Editor injectedEditor =
-                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(myEditor, myFile, myCaretOffset);
+                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, myFile, myCaretOffset);
                 myTarget = TargetElementUtil.findTargetElement(injectedEditor, flags, injectedEditor.getCaretModel().getOffset());
             }
         }
@@ -113,12 +121,12 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             highlightTargetUsages(myTarget);
         }
         else {
-            PsiReference ref = TargetElementUtil.findReference(myEditor);
+            PsiReference ref = TargetElementUtil.findReference(editor);
             if (ref instanceof PsiPolyVariantReference) {
                 if (!ref.getElement().isValid()) {
                     throw new PsiInvalidElementAccessException(
                         ref.getElement(),
-                        "Invalid element in " + ref + " of " + ref.getClass() + "; editor=" + myEditor
+                        "Invalid element in " + ref + " of " + ref.getClass() + "; editor=" + editor
                     );
                 }
                 ResolveResult[] results = ((PsiPolyVariantReference) ref).multiResolve(false);
@@ -129,7 +137,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                             if (!target.isValid()) {
                                 throw new PsiInvalidElementAccessException(
                                     target,
-                                    "Invalid element returned from " + ref + " of " + ref.getClass() + "; editor=" + myEditor
+                                    "Invalid element returned from " + ref + " of " + ref.getClass() + "; editor=" + editor
                                 );
                             }
                             highlightTargetUsages(target);

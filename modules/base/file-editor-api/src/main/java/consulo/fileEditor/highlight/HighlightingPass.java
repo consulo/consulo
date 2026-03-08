@@ -19,6 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 public interface HighlightingPass {
@@ -37,6 +38,7 @@ public interface HighlightingPass {
   /**
    * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
    * This method is called from the event dispatch thread.
-   */ 
+   */
+  @RequiredUIAccess
   void applyInformationToEditor();
 }

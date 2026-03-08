@@ -18,6 +18,7 @@ package consulo.language.editor.impl.internal.highlight;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
@@ -83,7 +84,11 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
     myFinished = false;
     if (myFile != null) {
-      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, (DaemonProgressIndicator)progress, getColorsScheme());
+      // Session may already exist (pre-created on EDT with visible range).
+      // Fallback visibleRange covers the entire document for edge cases (e.g., injected files).
+      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(
+          myFile, (DaemonProgressIndicator)progress, getColorsScheme(),
+          new ProperTextRange(0, myDocument.getTextLength()));
     }
     try {
       collectInformationWithProgress(progress);

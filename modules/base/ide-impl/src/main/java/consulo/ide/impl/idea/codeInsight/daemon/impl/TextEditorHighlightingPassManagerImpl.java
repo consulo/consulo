@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.document.Document;
 import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.Pass;
@@ -148,6 +149,8 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
                 "; File: " + psiFile +
                 "; Virtual file: " + PsiUtilCore.getVirtualFile(psiFile);
         }
+        ImaginaryEditor imaginaryEditor = ImaginaryEditor.create(editor);
+
         TIntObjectHashMap<TextEditorHighlightingPass> id2Pass = new TIntObjectHashMap<>();
         IntList passesRefusedToCreate = IntLists.newArrayList();
         myRegisteredPassFactories.forEachKey(passId -> {
@@ -162,8 +165,8 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
                 passesRefusedToCreate.add(passId);
             }
             else {
-                // init with editor's colors scheme
-                pass.setColorsScheme(editor.getColorsScheme());
+                // init with imaginary editor (captures editor state for background thread safety)
+                pass.setImaginaryEditor(imaginaryEditor);
 
                 IntList ids = IntLists.newArrayList(passConfig.completionPredecessorIds.length);
                 for (int id : passConfig.completionPredecessorIds) {
