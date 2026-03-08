@@ -33,10 +33,11 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
-import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.project.internal.ProjectOpenService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -144,12 +145,17 @@ public class OpenFileAction extends AnAction implements DumbAware {
                     UIUtil.getQuestionIcon()
                 );
                 if (answer == 0) {
-                    ProjectImplUtil.openAsync(
-                        file.getPath(),
-                        project,
-                        false,
-                        UIAccess.current()
-                    ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                    ProjectOpenContext openContext = new ProjectOpenContext();
+                    if (project != null) {
+                        openContext.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+                    }
+                    Application.get().getInstance(ProjectOpenService.class)
+                        .openProjectAsync(file.toNioPath(), UIAccess.current(), openContext)
+                        .whenComplete((openedProject, error) -> {
+                            if (error == null && openedProject != null) {
+                                FileChooserUtil.setLastOpenedFile(openedProject, file);
+                            }
+                        });
                     return;
                 }
             }

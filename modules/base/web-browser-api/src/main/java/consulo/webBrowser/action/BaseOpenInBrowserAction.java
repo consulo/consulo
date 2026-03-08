@@ -27,6 +27,7 @@ import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -187,7 +188,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             if (!urls.isEmpty()) {
                 chooseUrl(urls).doWhenDone(url -> {
                     //noinspection RequiredXAction
-                    Application.get().saveAll();
+                    Application.get().saveAllWithProgress(UIAccess.current());
                     BrowserLauncher.getInstance().browse(url.toExternalForm(), browser, request.getProject());
                 });
             }

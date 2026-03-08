@@ -15,11 +15,10 @@
  */
 package consulo.project.internal;
 
-import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -35,8 +34,25 @@ public abstract class ProjectOpenProcessor {
 
     public abstract boolean canOpenProject(@Nonnull File file);
 
+    /**
+     * Extend the coroutine chain with preparation steps for opening a project.
+     * The chain receives a {@link VirtualFile} (the project directory) as input
+     * and must return a {@link VirtualFile} as output (typically the same one).
+     * <p>
+     * Processors should add steps to create directory structure (.consulo/, modules, etc.)
+     * or show import wizards. The actual project opening is handled by the service.
+     * <p>
+     * Default implementation: no-op (returns chain unchanged).
+     *
+     * @param uiAccess UI access for EDT operations
+     * @param context  project open context with configuration keys
+     * @param in       the incoming coroutine chain ending with VirtualFile
+     * @return the extended coroutine chain
+     */
     @Nonnull
-    public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
-                                                            @Nonnull UIAccess uiAccess,
-                                                            @Nonnull ProjectOpenContext context);
+    public <I> Coroutine<I, VirtualFile> prepareSteps(@Nonnull UIAccess uiAccess,
+                                                       @Nonnull ProjectOpenContext context,
+                                                       @Nonnull Coroutine<I, VirtualFile> in) {
+        return in;
+    }
 }

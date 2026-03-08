@@ -15,6 +15,7 @@
  */
 package consulo.project.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
@@ -40,7 +41,6 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
@@ -332,12 +332,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
     }
 
-    @RequiredUIAccess
+    @RequiredWriteAction
     @Override
     public void dispose() {
         ApplicationEx application = (ApplicationEx) getApplication();
-
-        UIAccess.assertIsUIThread();
 
         assert application.isWriteAccessAllowed();  // dispose must be under write action
 

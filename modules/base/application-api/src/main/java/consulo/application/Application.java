@@ -42,6 +42,7 @@ import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -210,6 +211,15 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     @RequiredUIAccess
     @Nullable
     Continuation<Void> saveAll();
+
+    /**
+     * Saves all open documents, projects, and application settings with a visible progress dialog.
+     *
+     * @param uiAccess the UI access to use for the progress dialog
+     * @return a {@link CompletableFuture} that completes when the save operation finishes
+     */
+    @Nonnull
+    CompletableFuture<Void> saveAllWithProgress(@Nonnull UIAccess uiAccess);
 
     /**
      * Saves all application settings.

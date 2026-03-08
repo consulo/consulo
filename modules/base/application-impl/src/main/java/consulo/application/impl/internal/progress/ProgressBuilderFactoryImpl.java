@@ -30,7 +30,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -53,9 +53,9 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
             @Nonnull
             @Override
             public <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
-                                                    @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
+                                                    @Nonnull Supplier<Coroutine<?, V>> supplier) {
                 assertCreated();
-                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, pipelineBuilder);
+                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, supplier);
             }
         };
     }

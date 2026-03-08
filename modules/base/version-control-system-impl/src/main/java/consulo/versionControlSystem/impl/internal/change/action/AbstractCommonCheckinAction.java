@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
@@ -90,7 +91,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     @Nonnull
     @RequiredUIAccess
     protected FilePath[] prepareRootsForCommit(@Nonnull FilePath[] roots, @Nonnull Project project) {
-        project.getApplication().saveAll();
+        Application.get().saveAllWithProgress(UIAccess.current());
 
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }

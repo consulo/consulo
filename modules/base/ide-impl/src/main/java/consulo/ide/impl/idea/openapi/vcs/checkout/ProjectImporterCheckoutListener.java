@@ -16,10 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.application.Application;
+import consulo.project.Project;
+import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
-import consulo.project.Project;
+import consulo.project.internal.ProjectOpenService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -54,7 +56,12 @@ public class ProjectImporterCheckoutListener implements PreCheckoutListener {
                             UIUtil.getQuestionIcon()
                         );
                         if (rc == Messages.YES) {
-                            ProjectImplUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
+                            ProjectOpenContext context = new ProjectOpenContext();
+                            if (project != null) {
+                                context.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+                            }
+                            Application.get().getInstance(ProjectOpenService.class)
+                                .openProjectAsync(file.toPath(), UIAccess.current(), context);
                         }
                         return true;
                     }

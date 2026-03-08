@@ -35,6 +35,8 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.StartupProgress;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -317,6 +319,41 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
             saveSettings(uiAccess);
         })).runAsync(scope, null);
+    }
+
+    @Nonnull
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(@Nonnull UIAccess uiAccess) {
+        if (myDoNotSave) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        ProgressBuilderFactory progressBuilderFactory = getInstance(ProgressBuilderFactory.class);
+
+        return progressBuilderFactory
+            .newProgressBuilder(null, ApplicationLocalize.applicationSaveAllProgress())
+            .execute(uiAccess, () -> Coroutine
+                .first(WriteLock.apply(ignored -> {
+                    FileDocumentManager.getInstance().saveAllDocuments(uiAccess);
+                    return null;
+                }))
+                .then(CodeExecution.run(() -> {
+                    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                    for (Project openProject : openProjects) {
+                        if (openProject.isDisposed()) {
+                            LOG.error("Project is disposed: " + openProject.getName()
+                                + ", isInitialized: " + openProject.isInitialized());
+                            continue;
+                        }
+
+                        ProjectEx project = (ProjectEx) openProject;
+                        if (project.isInitialized()) {
+                            project.save(uiAccess);
+                        }
+                    }
+
+                    saveSettings(uiAccess);
+                })));
     }
 
     @Override

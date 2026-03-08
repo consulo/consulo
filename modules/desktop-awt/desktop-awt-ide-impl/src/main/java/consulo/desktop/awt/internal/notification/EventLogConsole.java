@@ -105,7 +105,7 @@ class EventLogConsole {
                 @Override
                 public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
                     if (project == myProjectModel.getProject()) {
-                        EditorFactory.getInstance().releaseEditor(editor);
+                        uiAccess.give(() -> EditorFactory.getInstance().releaseEditor(editor));
                     }
                 }
             }

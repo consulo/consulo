@@ -52,9 +52,11 @@ public class CloseProjectAction extends AnAction implements DumbAware {
     public void actionPerformed(@Nonnull AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
 
-        myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).doWhenDone(() -> {
-            myRecentProjectsManager.updateLastProjectPath();
-            myWelcomeFrameManager.showIfNoProjectOpened();
+        myProjectManager.closeProjectAsync(project, UIAccess.current()).whenComplete((closed, e) -> {
+            if (Boolean.TRUE.equals(closed)) {
+                myRecentProjectsManager.updateLastProjectPath();
+                myWelcomeFrameManager.showIfNoProjectOpened();
+            }
         });
     }
 

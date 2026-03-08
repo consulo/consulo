@@ -31,6 +31,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowLayout;
@@ -187,9 +188,24 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         MessageBusConnection busConnection = project.getMessageBus().connect(this);
         busConnection.subscribe(ToolWindowManagerListener.class, myDispatcher.getMulticaster());
+
+        busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+            @Override
+            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                if (project == myProject) {
+                    UIAccess.assetIsNotUIThread();
+
+                    uiAccess.giveAndWait(() -> {
+                        for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
+                            unregisterToolWindow(id);
+                        }
+                    });
+                }
+            }
+        });
     }
 
-    // region Factory Abstract KeymapGroupImpl
+    // region Factory
 
     @Nonnull
     protected abstract InternalDecoratorListener createInternalDecoratorListener();
@@ -954,7 +970,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         boolean visible = before != null && before.isVisible();
         Object label = createInitializingLabel();
         ToolWindowAnchor toolWindowAnchor = factory.getAnchor();
-        ToolWindow window = registerToolWindow(
+        ToolWindowBase toolWindow = (ToolWindowBase) registerToolWindow(
             factory.getId(),
             factory.getDisplayName(),
             label,
@@ -964,7 +980,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             DumbService.isDumbAware(factory),
             factory.shouldBeAvailable(myProject)
         );
-        ToolWindowBase toolWindow = (ToolWindowBase) registerDisposable(factory.getId(), myProject, window);
 
         toolWindow.setContentFactory(factory);
 
@@ -1186,6 +1201,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         boolean secondary
     ) {
         ToolWindow window = registerToolWindow(id, null, anchor, secondary, canCloseContent, canWorkInDumbMode, true);
+        if (parentDisposable == myProject) {
+            return window; // hack - not need register disposable twice, it will disposed anyway
+        }
+
         return registerDisposable(id, parentDisposable, window);
     }
 
@@ -1339,13 +1358,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Override
-    @RequiredUIAccess
     public void dispose() {
-        for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
-            unregisterToolWindow(id);
-        }
-
-        assert myId2StripeButton.isEmpty();
     }
 
     @RequiredUIAccess
@@ -1456,45 +1469,4 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     public Project getProject() {
         return myProject;
     }
-
-    // TODO [VISTALL]  AWT & Swing dependency
-
-    // region AWT & Swing dependency
-    @Nonnull
-    @Override
-    @RequiredUIAccess
-    public ToolWindow registerToolWindow(@Nonnull String id, @Nonnull JComponent component, @Nonnull ToolWindowAnchor anchor) {
-        return registerToolWindow(id, component, anchor, false);
-    }
-
-    @Nonnull
-    @Override
-    @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor,
-        @Nonnull Disposable parentDisposable,
-        boolean canWorkInDumbMode,
-        boolean canCloseContents
-    ) {
-        return registerDisposable(
-            id,
-            parentDisposable,
-            registerToolWindow(id, component, anchor, false, canCloseContents, canWorkInDumbMode, true)
-        );
-    }
-
-    @Nonnull
-    @RequiredUIAccess
-    private ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor,
-        boolean canWorkInDumbMode
-    ) {
-        return registerToolWindow(id, component, anchor, false, false, canWorkInDumbMode, true);
-    }
-
-    // endregion
 }

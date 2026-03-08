@@ -122,7 +122,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
     @Override
     public void saveProjectsAndDocuments() {
         if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
-            myApplication.saveAll();
+            myApplication.saveAllWithProgress(myApplication.getLastUIAccess());
         }
     }
 

@@ -11,6 +11,8 @@ import consulo.bookmark.event.BookmarksListener;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.project.ui.view.ProjectViewPaneSelectionHelper;
 import consulo.project.ui.view.ProjectViewPaneSelectionHelper.SelectionDescriptor;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.tree.RestoreSelectionListener;
 import consulo.ide.impl.idea.ui.tree.TreeCollector;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNodeUpdater;
@@ -276,13 +278,17 @@ class AsyncProjectViewSupport {
     }, list, false);
   }
 
+  @RequiredUIAccess
   private static void setModel(@Nonnull JTree tree, @Nonnull AsyncTreeModel model) {
     RestoreSelectionListener listener = new RestoreSelectionListener();
     tree.addTreeSelectionListener(listener);
     tree.setModel(model);
+    UIAccess uiAccess = UIAccess.current();
     Disposer.register(model, () -> {
-      tree.setModel(null);
-      tree.removeTreeSelectionListener(listener);
+      uiAccess.give(() -> {
+        tree.setModel(null);
+        tree.removeTreeSelectionListener(listener);
+      });
     });
   }
 }

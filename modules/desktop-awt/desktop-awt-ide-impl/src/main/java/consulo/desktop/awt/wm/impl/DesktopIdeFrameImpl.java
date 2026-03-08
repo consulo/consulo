@@ -37,12 +37,12 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -373,12 +373,18 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                     return;
                 }
 
-                ProjectManagerEx projectManager = (ProjectManagerEx) ProjectManager.getInstance();
+                ProjectManager projectManager = ProjectManager.getInstance();
 
                 Project[] openProjects = projectManager.getOpenProjects();
                 if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
                     if (myProject != null && myProject.isOpen()) {
-                        projectManager.closeAndDispose(myProject);
+                        ProjectManager.getInstance().closeProjectAsync(myProject, UIAccess.current()).whenComplete((closed, error) -> {
+                            if (error == null && closed) {
+                                Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
+                                WelcomeFrameManager.getInstance().showIfNoProjectOpened();
+                            }
+                        });
+                        return;
                     }
 
                     Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();

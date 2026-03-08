@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.ProgressBuilderFactory;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.diagram.GraphProvider;
 import consulo.diagram.impl.internal.DiagramSupportEapDescriptor;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFileSystem;
@@ -80,11 +81,9 @@ public class ShowDiagramAction extends AnAction {
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
             .cancelable()
-            .execute(UIAccess.current(), coroutine -> {
-                return coroutine.then(ReadLock.apply(o -> {
-                    return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
-                }));
-            });
+            .execute(UIAccess.current(), () -> Coroutine.first(ReadLock.apply(o -> {
+                return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
+            })));
 
         UIAccess uiAccess = UIAccess.current();
 

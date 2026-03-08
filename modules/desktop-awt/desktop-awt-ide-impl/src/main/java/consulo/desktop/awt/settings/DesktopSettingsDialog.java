@@ -30,6 +30,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
@@ -203,7 +204,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
 
         saveCurrentConfigurable();
 
-        Application.get().saveAll();
+        Application.get().saveAllWithProgress(UIAccess.current());
 
         super.doOKAction();
     }

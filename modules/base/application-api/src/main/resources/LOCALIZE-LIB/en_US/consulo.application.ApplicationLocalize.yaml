@@ -10,6 +10,8 @@ action.remove:
     text: R&emove
 action.resume.text:
     text: Resume
+application.save.all.progress:
+    text: Saving...
 application.save.settings.error:
     text: 'Could not save application settings: {0}'
 arrangement.action.rule.add.description:

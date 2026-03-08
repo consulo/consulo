@@ -45,6 +45,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -191,6 +192,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     @Override
     public Continuation<Void> saveAll() {
         throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(@Nonnull UIAccess uiAccess) {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

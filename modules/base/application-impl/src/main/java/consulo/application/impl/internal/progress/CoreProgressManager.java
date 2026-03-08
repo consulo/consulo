@@ -27,7 +27,6 @@ import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
 import consulo.util.concurrent.coroutine.*;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -387,7 +386,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                                                 @Nonnull LocalizeValue titleText,
                                                 boolean modal,
                                                 boolean cancelable,
-                                                @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
+                                                @Nonnull Supplier<Coroutine<?, V>> supplier) {
         ProgressBuilderTaskInfo info = new ProgressBuilderTaskInfo(titleText, cancelable);
 
         BaseApplication application = (BaseApplication) Application.get();
@@ -429,24 +428,23 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
         CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
             Function<ProgressIndicator, V> task = progressIndicator -> {
-                Coroutine<?, ?> coroutine = pipelineBuilder
-                    .apply(Coroutine.first(CodeExecution.consume((v, continuation) -> {
-                        continuation.scope().putCopyableUserData(UIAccess.KEY, uiAccess);
-                        continuation.scope().putCopyableUserData(ProgressIndicator.KEY, progress);
-
-                        progressIndicator.addListener(new ProgressIndicatorListener() {
-                            @Override
-                            public void canceled() {
-                                continuation.scope().cancel();
-                            }
-                        });
-                    })));
+                Coroutine<?, ?> coroutine = supplier.get();
 
                 CoroutineContext coroutineContext = project instanceof CoroutineContextOwner owner
                     ? owner.coroutineContext()
                     : myApplication.coroutineContext();
 
                 CoroutineScope scope = new CoroutineScope(coroutineContext);
+                scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+                scope.putCopyableUserData(ProgressIndicator.KEY, progress);
+
+                progressIndicator.addListener(new ProgressIndicatorListener() {
+                    @Override
+                    public void canceled() {
+                        scope.cancel();
+                    }
+                });
+
                 Continuation<?> continuation2 = coroutine.runAsync(scope, null);
 
                 try {

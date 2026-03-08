@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -41,6 +42,6 @@ public class SaveAllAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        myApplication.saveAll();
+        myApplication.saveAllWithProgress(UIAccess.current());
     }
 }

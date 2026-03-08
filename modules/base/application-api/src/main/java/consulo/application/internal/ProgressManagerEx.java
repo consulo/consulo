@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -57,5 +57,5 @@ public interface ProgressManagerEx {
                                          @Nonnull LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,
-                                         @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+                                         @Nonnull Supplier<Coroutine<?, V>> supplier);
 }

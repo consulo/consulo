@@ -22,11 +22,11 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
@@ -242,7 +242,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     @RequiredUIAccess
     public void doCancelAction() {
         if (myChangesWereApplied) {
-            Application.get().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         super.doCancelAction();
     }
@@ -255,7 +255,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
                 myConfigurable.apply();
             }
 
-            Application.get().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {

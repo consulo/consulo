@@ -20,7 +20,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -35,6 +35,6 @@ public interface ProgressBuilder {
 
     @Nonnull
     <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
-                                     @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+                                     @Nonnull Supplier<Coroutine<?, V>> supplier);
 
 }

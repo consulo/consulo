@@ -66,7 +66,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     myWindow.addCloseListener((e) -> {
       myWindow.close();
-      ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
+      ProjectManager.getInstance().closeProjectAsync(myProject, UIAccess.current());
     });
 
     myWindow.setContent(myRootView.getRootPanel().getComponent());

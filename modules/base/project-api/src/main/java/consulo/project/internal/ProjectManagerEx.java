@@ -18,8 +18,6 @@ package consulo.project.internal;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,10 +34,6 @@ public interface ProjectManagerEx extends ProjectManager {
     @Nullable
     Project newProject(String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings);
 
-    // returns true on success
-    @RequiredUIAccess
-    boolean closeAndDispose(@Nonnull Project project);
-
     @Nullable
     @Override
     default Project createProject(String name, String path) {
@@ -47,9 +41,6 @@ public interface ProjectManagerEx extends ProjectManager {
     }
 
     boolean canClose(Project project);
-
-    @RequiredUIAccess
-    boolean closeProject(@Nonnull Project project, boolean save, boolean dispose, boolean checkCanClose);
 
     @Nonnull
     Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);

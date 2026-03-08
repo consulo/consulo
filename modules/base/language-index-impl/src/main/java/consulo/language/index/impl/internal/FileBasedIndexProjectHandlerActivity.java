@@ -25,7 +25,6 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.event.DumbModeListener;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
@@ -42,19 +41,10 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
-        FileBasedIndex index = FileBasedIndex.getInstance();
-
-        project.getMessageBus().connect().subscribe(DumbModeListener.class, new DumbModeListener() {
-            @Override
-            public void exitDumbMode() {
-                LOG.info("Has changed files: " + (FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project) != null) + "; project=" + project);
-            }
-        });
+        FileBasedIndexImpl index = (FileBasedIndexImpl) FileBasedIndex.getInstance();
 
         // schedule dumb mode start after the read action we're currently in
-        if (index instanceof FileBasedIndexImpl) {
-            DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
-        }
+        DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
 
         FileBaseIndexSet set = new FileBaseIndexSet(FileBasedIndexScanRunnableCollector.getInstance(project));
         index.registerIndexableSet(set, project);

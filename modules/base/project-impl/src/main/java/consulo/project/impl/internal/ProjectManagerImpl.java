@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.internal.ComponentBinding;
@@ -27,10 +26,8 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
@@ -39,20 +36,14 @@ import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.ProjectReloadState;
 import consulo.project.internal.SingleProjectHolder;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.ShutDownTracker;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -283,17 +274,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Nonnull
-    private Collection<Project> removeFromOpened(@Nonnull Project project) {
+    Collection<Project> removeFromOpened(@Nonnull Project project) {
         synchronized (lock) {
             myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
             SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
             return Arrays.asList(myOpenProjects);
         }
-    }
-
-    private static boolean canCancelProjectLoading() {
-        ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-        return !(indicator instanceof NonCancelableSection);
     }
 
     @Override
@@ -310,64 +296,13 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
         String basePath = project.getBasePath();
 
-        closeAndDisposeAsync(project, uiAccess).doWhenDone(() -> ProjectImplUtil.openAsync(basePath, null, true, uiAccess));
-    }
-
-    @Override
-    @RequiredUIAccess
-    public boolean closeProject(@Nonnull Project project) {
-        return closeProject(project, true, false, true);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public boolean closeProject(@Nonnull Project project, boolean save, boolean dispose, boolean checkCanClose) {
-        if (!isProjectOpened(project)) {
-            return true;
-        }
-
-        if (checkCanClose && !canClose(project)) {
-            return false;
-        }
-        ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
-        shutDownTracker.registerStopperThread(Thread.currentThread());
-        try {
-            UIAccess uiAccess = UIAccess.current();
-
-            if (save) {
-                FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
-                project.save(uiAccess);
+        closeProjectAsync(project, uiAccess).whenComplete((closed, error) -> {
+            if (error == null && closed) {
+                ProjectOpenContext ctx = new ProjectOpenContext();
+                ctx.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, true);
+                myProjectOpenService.get().openProjectAsync(Path.of(basePath), uiAccess, ctx);
             }
-
-            if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
-                return false;
-            }
-
-            myApplication.getMessageBus()
-                .syncPublisher(ProjectManagerListener.class)
-                .projectClosing(project); // somebody can start progress here, do not wrap in write action
-
-            myApplication.runWriteAction(() -> {
-                removeFromOpened(project);
-
-                myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
-
-                if (dispose) {
-                    Disposer.dispose(project);
-                }
-            });
-        }
-        finally {
-            shutDownTracker.unregisterStopperThread(Thread.currentThread());
-        }
-
-        return true;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public boolean closeAndDispose(@Nonnull Project project) {
-        return closeProject(project, true, true, true);
+        });
     }
 
     @Override
@@ -429,48 +364,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return () -> myCloseProjectVetos.remove(projectVeto);
     }
 
-    @RequiredUIAccess
-    private static boolean ensureCouldCloseIfUnableToSave(@Nonnull Project project) {
-        ProjectStorageUtil.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager()
-            .getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, project);
-        if (notifications.length == 0) {
-            return true;
-        }
-
-        String fileNames = StringUtil.join(notifications[0].getFileNames(), "\n");
-
-        return Messages.showDialog(
-            project,
-            ProjectLocalize.dialogUnsavedProjectText(project.getApplication().getName()).get(),
-            ProjectLocalize.dialogUnsavedProjectTitle().get(),
-            ProjectLocalize.dialogUnsavedProjectReadOnlyFiles(fileNames).get(),
-            new String[]{CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get()},
-            0,
-            1,
-            UIUtil.getWarningIcon()
-        ) == 0;
-    }
-
-    @Nonnull
-    @Override
-    public AsyncResult<Project> openProjectAsync(
-        @Nonnull VirtualFile file,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull ProjectOpenContext context
-    ) {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Nonnull
-    @Override
-    public AsyncResult<Project> openProjectAsync(
-        @Nonnull Project project,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull ProjectOpenContext context
-    ) {
-        throw new UnsupportedOperationException();
-    }
 
     @Nonnull
     @Override
@@ -478,76 +371,4 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return myExcludeRootsCache.getExcludedUrls();
     }
 
-    @Nonnull
-    @Override
-    public AsyncResult<Void> closeAndDisposeAsync(
-        @Nonnull Project project,
-        @Nonnull UIAccess uiAccess,
-        boolean checkCanClose,
-        boolean save,
-        boolean dispose
-    ) {
-        if (!isProjectOpened(project)) {
-            return AsyncResult.resolved();
-        }
-
-        AsyncResult<Void> mainResult = AsyncResult.undefined();
-
-        AsyncResult<Void> closeCheckInsideUI = AsyncResult.undefined();
-
-        if (checkCanClose) {
-            uiAccess.give(() -> {
-                boolean canClose = canClose(project);
-                if (canClose) {
-                    closeCheckInsideUI.setDone();
-                }
-                else {
-                    closeCheckInsideUI.setRejected();
-                }
-            });
-        }
-        else {
-            closeCheckInsideUI.setDone();
-        }
-
-        closeCheckInsideUI.doWhenRejected((Runnable) mainResult::setRejected);
-
-        closeCheckInsideUI.doWhenDone(() -> {
-            Thread executeThread = Thread.currentThread();
-            ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
-            shutDownTracker.registerStopperThread(executeThread);
-            try {
-                if (save) {
-                    uiAccess.giveAndWaitIfNeed(() -> {
-                        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
-                        project.save(uiAccess);
-                    });
-                }
-
-                myApplication.getMessageBus()
-                    .syncPublisher(ProjectManagerListener.class)
-                    .projectClosing(project); // somebody can start progress here, do not wrap in write action
-
-                WriteAction.runAndWait(() -> {
-                    removeFromOpened(project);
-
-                    myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
-
-                    if (dispose) {
-                        Disposer.dispose(project);
-                    }
-                });
-
-                mainResult.setDone();
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-                mainResult.rejectWithThrowable(e);
-            }
-            finally {
-                shutDownTracker.unregisterStopperThread(Thread.currentThread());
-            }
-        });
-        return mainResult;
-    }
 }

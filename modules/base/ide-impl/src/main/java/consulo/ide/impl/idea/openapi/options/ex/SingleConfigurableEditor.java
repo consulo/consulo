@@ -18,16 +18,16 @@ package consulo.ide.impl.idea.openapi.options.ex;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.ui.ModalityState;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
@@ -236,7 +236,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     @RequiredUIAccess
     public void doCancelAction() {
         if (myChangesWereApplied) {
-            Application.get().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         super.doCancelAction();
     }
@@ -249,7 +249,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
                 myConfigurable.apply();
             }
 
-            Application.get().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {

@@ -22,10 +22,8 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.DefaultProjectFactory;
+import consulo.project.internal.ProjectCloseService;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -56,33 +54,23 @@ public interface ProjectManager {
     );
 
     @Nonnull
-    @Deprecated
-    AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
-
-    @Nonnull
-    @Deprecated
-    default AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
-        return openProjectAsync(file, uiAccess, new ProjectOpenContext());
+    default CompletableFuture<Boolean> closeProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        return closeProjectAsync(project, uiAccess, true, true, true);
     }
 
     @Nonnull
-    @Deprecated
-    AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
-
-    @Deprecated
-    default AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        return openProjectAsync(project, uiAccess, new ProjectOpenContext());
-    }
-
-    @Nonnull
-    default AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        return closeAndDisposeAsync(project, uiAccess, true, true, true);
+    default CompletableFuture<Boolean> closeProjectAsync(
+        @Nonnull Project project,
+        @Nonnull UIAccess uiAccess,
+        boolean checkCanClose,
+        boolean save,
+        boolean dispose
+    ) {
+        return Application.get().getInstance(ProjectCloseService.class)
+            .closeProjectAsync(project, uiAccess, checkCanClose, save, dispose);
     }
 
     boolean isProjectOpened(Project project);
-
-    @Nonnull
-    AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
     /**
      * Adds listener to the specified project.
@@ -120,14 +108,6 @@ public interface ProjectManager {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
 
-    /**
-     * Closes the specified project.
-     *
-     * @param project the project to close.
-     * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
-     */
-    @RequiredUIAccess
-    boolean closeProject(@Nonnull Project project);
 
     /**
      * Asynchronously reloads the specified project.

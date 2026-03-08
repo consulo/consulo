@@ -33,6 +33,7 @@ import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.OptionsDialog;
@@ -120,7 +121,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
                 Application application = project.getApplication();
                 if (application.isDispatchThread()) {
-                    application.saveAll();
+                    Application.get().saveAllWithProgress(UIAccess.current());
                 }
                 Task.Backgroundable task = new Updater(project, roots, vcsToVirtualFiles);
                 if (application.isUnitTestMode()) {

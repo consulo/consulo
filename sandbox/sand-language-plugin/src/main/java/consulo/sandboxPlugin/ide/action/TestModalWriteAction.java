@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.application.progress.ProgressIndicator;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -51,8 +52,7 @@ public class TestModalWriteAction extends DumbAwareAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         myProgressBuilderFactory.newProgressBuilder(e.getData(Project.KEY), LocalizeValue.localizeTODO("Test Write"))
             .cancelable()
-            .execute(UIAccess.current(), coroutine -> {
-                return coroutine.then(WriteLock.apply((o, c) -> {
+            .execute(UIAccess.current(), () -> Coroutine.first(WriteLock.apply((o, c) -> {
                     ProgressIndicator indicator = ProgressIndicator.from(c);
                     indicator.setIndeterminate(false);
                     
@@ -64,7 +64,6 @@ public class TestModalWriteAction extends DumbAwareAction {
                         TimeoutUtil.sleep(1000L);
                     }
                     return null;
-                }));
-            });
+                })));
     }
 }

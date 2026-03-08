@@ -548,6 +548,8 @@ project.load.default.error:
     text: Error Loading Default Project
 project.load.new.version.warning:
     text: The project {0} you are about to open has been created by a newer version of {1}. If you open it, your project is likely to be corrupted. Continue?
+project.close.progress:
+    text: Closing Project
 project.load.progress:
     text: Loading Project
 project.load.undefined.path.variables.all.needed:
