@@ -21,20 +21,22 @@ import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.navigation.NavigateOptions;
-import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.library.util.ModuleContentLibraryUtil;
+import consulo.navigation.NavigatableWithText;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -50,7 +52,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
+public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText, PathElementIdProvider {
     public PsiFileNode(Project project, @Nonnull PsiFile value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
@@ -224,5 +226,10 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
         return super.contains(file) || isArchive() && Comparing.equal(VirtualFilePathUtil.getLocalFile(file), getVirtualFile());
+    }
+
+    @Override
+    public @Nonnull String getPathElementId() {
+        return TreeState.defaultPathElementId(this);
     }
 }
