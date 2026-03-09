@@ -627,6 +627,7 @@ public class StringUtilTest {
         assertThat(StringUtil.isNotNegativeNumber("foo")).isFalse();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testIsQuotedString() {
         assertFalse(StringUtil.isQuotedString(""));
@@ -641,56 +642,63 @@ public class StringUtilTest {
     @SuppressWarnings("NullArgumentToVariableArgMethod")
     @Test
     void testJoinArray1() {
-        assertThat(StringUtil.join(null)).isEmpty();
-        assertThat(StringUtil.join(new String[0])).isEmpty();
+        assertThat(StringUtil.join(null)).isSameAs("");
+        assertThat(StringUtil.join(new String[0])).isSameAs("");
+        assertThat(StringUtil.join("foo")).isSameAs("foo");
         assertThat(StringUtil.join("foo", "bar")).isEqualTo("foobar");
     }
 
     @Test
     void testJoinArray2() {
-        assertThat(StringUtil.join(new String[]{"foo", "", "bar"}, ",")).isEqualTo("foo,,bar");
+        assertThat(StringUtil.join(new String[0], ","))
+            .isEqualTo(StringUtil.join(new String[0], ",", sb()).toString())
+            .isSameAs("");
+        assertThat(StringUtil.join(new String[]{"foo"}, ","))
+            .isEqualTo(StringUtil.join(new String[]{"foo"}, ",", sb()).toString())
+            .isSameAs("foo");
+        assertThat(StringUtil.join(new String[]{"foo", "", "bar"}, ","))
+            .isEqualTo(StringUtil.join(new String[]{"foo", "", "bar"}, ",", sb()).toString())
+            .isEqualTo("foo,,bar");
     }
 
     @Test
     void testJoinArrayFunction() {
-        assertThat(StringUtil.join(new StringBuilder[]{}, StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(new StringBuilder[]{}, StringBuilder::toString, ",")).isSameAs("");
         assertThat(StringUtil.join(new StringBuilder[]{sb("qqq")}, StringBuilder::toString, ",")).isEqualTo("qqq");
         assertThat(StringUtil.join(new StringBuilder[]{sb()}, StringBuilder::toString, ",")).isEmpty();
-        assertThat(StringUtil.join(new StringBuilder[]{sb()}, sb -> null, ",")).isEmpty();
-        assertThat(StringUtil.join(new StringBuilder[]{sb("a"), sb("b")}, StringBuilder::toString, ","))
-            .isEqualTo("a,b");
-        assertThat(StringUtil.join(new StringBuilder[]{sb("foo"), sb(), sb("bar")}, StringBuilder::toString, ","))
-            .isEqualTo("foo,bar");
+        assertThat(StringUtil.join(new StringBuilder[]{sb()}, sb -> null, ",")).isSameAs("");
+        assertThat(StringUtil.join(new StringBuilder[]{sb("a"), sb("b")}, StringBuilder::toString, ",")).isEqualTo("a,b");
+        assertThat(StringUtil.join(new StringBuilder[]{sb("foo"), sb(), sb("bar")}, StringBuilder::toString, ",")).isEqualTo("foo,bar");
     }
 
     @Test
     void testJoinCollection() {
-        assertThat(StringUtil.join(List.of(), ",")).isEmpty();
-        assertThat(StringUtil.join(List.of("qqq"), ",")).isEqualTo("qqq");
-        assertThat(StringUtil.join(Collections.singletonList(null), ",")).isEmpty();
+        assertThat(StringUtil.join(List.of(), ",")).isSameAs("");
+        assertThat(StringUtil.join(List.of("qqq"), ",")).isSameAs("qqq");
+        assertThat(StringUtil.join(Collections.singletonList(null), ",")).isSameAs("");
         assertThat(StringUtil.join(List.of("a", "b"), ",")).isEqualTo("a,b");
         assertThat(StringUtil.join(List.of("foo", "", "bar"), ",")).isEqualTo("foo,,bar");
+        assertThat(StringUtil.join(Arrays.asList("foo", null, "bar"), ",")).isEqualTo("foo,bar");
     }
 
     @Test
     void testJoinCollectionFunction() {
-        assertThat(StringUtil.join(List.<StringBuilder>of(), StringBuilder::toString, ",")).isEmpty();
+        assertThat(StringUtil.join(List.<StringBuilder>of(), StringBuilder::toString, ",")).isSameAs("");
         assertThat(StringUtil.join(List.of(sb("qqq")), StringBuilder::toString, ",")).isEqualTo("qqq");
         assertThat(StringUtil.join(List.of(sb()), StringBuilder::toString, ",")).isEmpty();
-        assertThat(StringUtil.join(List.of(sb()), sb -> null, ",")).isEmpty();
-        assertThat(StringUtil.join(List.of(sb("a"), sb("b")), StringBuilder::toString, ","))
-            .isEqualTo("a,b");
-        assertThat(StringUtil.join(List.of(sb("foo"), sb(), sb("bar")), StringBuilder::toString, ","))
-            .isEqualTo("foo,bar");
+        assertThat(StringUtil.join(List.of(sb()), sb -> null, ",")).isSameAs("");
+        assertThat(StringUtil.join(List.of(sb("a"), sb("b")), StringBuilder::toString, ",")).isEqualTo("a,b");
+        assertThat(StringUtil.join(List.of(sb("foo"), sb(), sb("bar")), StringBuilder::toString, ",")).isEqualTo("foo,bar");
     }
 
     @Test
     void testJoinIterable() {
         assertThat(StringUtil.join((Iterable) List.of(), ",")).isEmpty();
         assertThat(StringUtil.join((Iterable) List.of("foo"), ",")).isEqualTo("foo");
-        assertThat(StringUtil.join((Iterable) Collections.singletonList(null), ",")).isEqualTo("null");
+        assertThat(StringUtil.join((Iterable) Collections.singletonList(null), ",")).isEqualTo("null"); // TODO: Seems inconsistent
         assertThat(StringUtil.join((Iterable) List.of("foo", "bar"), ",")).isEqualTo("foo,bar");
         assertThat(StringUtil.join((Iterable) List.of("foo", "", "bar"), ",")).isEqualTo("foo,,bar");
+        assertThat(StringUtil.join((Iterable) Arrays.asList("foo", null, "bar"), ",")).isEqualTo("foo,null,bar");
     }
 
     @Test
@@ -699,8 +707,7 @@ public class StringUtilTest {
         assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("qqq")), StringBuilder::toString, ",")).isEqualTo("qqq");
         assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb()), StringBuilder::toString, ",")).isEmpty();
         assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb()), sb -> null, ",")).isEmpty();
-        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("a"), sb("b")), StringBuilder::toString, ","))
-            .isEqualTo("a,b");
+        assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("a"), sb("b")), StringBuilder::toString, ",")).isEqualTo("a,b");
         assertThat(StringUtil.join((Iterable<StringBuilder>) List.of(sb("foo"), sb(), sb("bar")), StringBuilder::toString, ","))
             .isEqualTo("foo,bar");
     }

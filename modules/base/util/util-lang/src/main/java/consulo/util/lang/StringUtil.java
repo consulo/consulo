@@ -1651,15 +1651,26 @@ public final class StringUtil {
     @Nonnull
     @Contract(pure = true)
     public static String join(@Nullable String... strings) {
-        if (strings == null || strings.length == 0) {
+        int length = strings == null ? 0 : strings.length;
+        if (length == 0) {
             return "";
         }
-
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            builder.append(string);
+        else if (length == 1) {
+            return String.valueOf(strings[0]);
         }
-        return builder.toString();
+
+        return join(new StringBuilder(), strings).toString();
+    }
+
+    @Nonnull
+    @Contract(mutates = "param1")
+    public static StringBuilder join(@Nonnull StringBuilder result, @Nullable String... strings) {
+        if (strings != null) {
+            for (String string : strings) {
+                result.append(string);
+            }
+        }
+        return result;
     }
 
     @Nonnull
@@ -1669,31 +1680,81 @@ public final class StringUtil {
     }
 
     @Nonnull
+    @Contract(mutates = "param3")
+    public static StringBuilder join(@Nonnull String[] strings, @Nonnull String separator, @Nonnull StringBuilder result) {
+        return join(strings, 0, strings.length, separator, result);
+    }
+
+    @Nonnull
     @Contract(pure = true)
     public static String join(@Nonnull String[] strings, int startIndex, int endIndex, @Nonnull String separator) {
-        StringBuilder result = new StringBuilder();
+        if (endIndex == startIndex) {
+            return "";
+        }
+        else if (endIndex == startIndex + 1) {
+            return String.valueOf(strings[startIndex]);
+        }
+        return join(strings, startIndex, endIndex, separator, new StringBuilder()).toString();
+    }
+
+    @Nonnull
+    @Contract(mutates = "param5")
+    public static StringBuilder join(
+        @Nonnull String[] strings,
+        int startIndex,
+        int endIndex,
+        @Nonnull String separator,
+        @Nonnull StringBuilder result
+    ) {
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 result.append(separator);
             }
             result.append(strings[i]);
         }
-        return result.toString();
+        return result;
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> String join(@Nonnull T[] items, @Nonnull Function<T, String> f, @Nonnull String separator) {
-        return join(Arrays.asList(items), f, separator);
+        int length = items.length;
+        if (length == 0) {
+            return "";
+        }
+        else if (length == 1) {
+            return notNullize(f.apply(items[0]));
+        }
+        return join(items, f, separator, new StringBuilder()).toString();
     }
 
+    @Nonnull
+    @Contract(mutates = "param4")
+    public static <T> StringBuilder join(
+        @Nonnull T[] items,
+        @Nonnull Function<T, String> f,
+        @Nonnull String separator,
+        @Nonnull StringBuilder result
+    ) {
+        return join(Arrays.asList(items), f, separator, result);
+    }
+
+    @Nonnull
+    @Contract(pure = true)
     public static String join(@Nonnull Collection<String> strings, @Nonnull String separator) {
-        StringBuilder result = new StringBuilder();
-        join(strings, separator, result);
-        return result.toString();
+        if (strings.isEmpty()) {
+            return "";
+        }
+        else if (strings.size() == 1) {
+            String item = strings instanceof List<String> list ? list.get(0) : strings.iterator().next();
+            return notNullize(item);
+        }
+        return join(strings, separator, new StringBuilder()).toString();
     }
 
-    public static void join(@Nonnull Collection<String> strings, @Nonnull String separator, @Nonnull StringBuilder result) {
+    @Nonnull
+    @Contract(mutates = "param3")
+    public static StringBuilder join(@Nonnull Collection<String> strings, @Nonnull String separator, @Nonnull StringBuilder result) {
         boolean isFirst = true;
         for (String string : strings) {
             if (string == null) {
@@ -1708,6 +1769,7 @@ public final class StringUtil {
             }
             result.append(string);
         }
+        return result;
     }
 
     @Nonnull
@@ -1720,24 +1782,38 @@ public final class StringUtil {
         if (items.isEmpty()) {
             return "";
         }
-        return join((Iterable<? extends T>) items, f, separator);
+        else if (items.size() == 1) {
+            T item = items instanceof List<? extends T> list ? list.get(0) : items.iterator().next();
+            return notNullize(f.apply(item));
+        }
+        return join(items, f, separator, new StringBuilder()).toString();
+    }
+
+    @Nonnull
+    @Contract(mutates = "param4")
+    public static <T> StringBuilder join(
+        @Nonnull Collection<? extends T> items,
+        @Nonnull Function<? super T, String> f,
+        @Nonnull String separator,
+        @Nonnull StringBuilder result
+    ) {
+        return join((Iterable<? extends T>) items, f, separator, result);
     }
 
     @Contract(pure = true)
     public static String join(@Nonnull Iterable<?> items, @Nonnull String separator) {
-        StringBuilder result = new StringBuilder();
-        join(items, separator, result);
-        return result.toString();
+        return join(items, separator, new StringBuilder()).toString();
     }
 
     @Contract(mutates = "param3")
-    public static void join(@Nonnull Iterable<?> items, @Nonnull String separator, @Nonnull StringBuilder result) {
+    public static StringBuilder join(@Nonnull Iterable<?> items, @Nonnull String separator, @Nonnull StringBuilder result) {
         for (Object item : items) {
             result.append(item).append(separator);
         }
         if (result.length() > 0) {
             result.setLength(result.length() - separator.length());
         }
+        return result;
     }
 
     @Nonnull
@@ -1747,13 +1823,11 @@ public final class StringUtil {
         @Nonnull Function<? super T, String> f,
         @Nonnull String separator
     ) {
-        StringBuilder result = new StringBuilder();
-        join(items, f, separator, result);
-        return result.toString();
+        return join(items, f, separator, new StringBuilder()).toString();
     }
 
     @Contract(mutates = "param4")
-    public static <T> void join(
+    public static <T> StringBuilder join(
         @Nonnull Iterable<? extends T> items,
         @Nonnull Function<? super T, String> f,
         @Nonnull String separator,
@@ -1774,6 +1848,7 @@ public final class StringUtil {
             }
             result.append(string);
         }
+        return result;
     }
 
     /**
