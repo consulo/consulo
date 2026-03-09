@@ -116,8 +116,6 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         return elementInRange;
     }
 
-    private static final char[] QUOTES = {'"', '\''};
-
     public static boolean parseStringCharacters(@Nonnull String chars, @Nonnull StringBuilder out, @Nullable int[] sourceOffsets) {
         return parseStringCharacters(chars, out, sourceOffsets, true);
     }
@@ -128,31 +126,12 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         @Nullable int[] sourceOffsets,
         boolean textBlock
     ) {
-        return parseStringCharacters(chars, out, sourceOffsets, true, true, QUOTES);
-    }
-
-    @Deprecated
-    public static boolean parseStringCharacters(
-        @Nonnull String chars,
-        @Nonnull StringBuilder out,
-        @Nullable int[] sourceOffsets,
-        boolean slashMustBeEscaped,
-        boolean exitOnEscapingWrongSymbol,
-        @Nonnull char... endChars
-    ) {
         LOG.assertTrue(sourceOffsets == null || sourceOffsets.length == chars.length() + 1);
         if (noEscape(chars, sourceOffsets)) {
             out.append(chars);
             return true;
         }
-        return parseStringCharactersWithEscape(
-            chars,
-            out,
-            sourceOffsets,
-            slashMustBeEscaped,
-            exitOnEscapingWrongSymbol,
-            endChars
-        );
+        return parseStringCharactersWithEscape(chars, textBlock, out, sourceOffsets);
     }
 
     /**
@@ -171,7 +150,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
             return chars;
         }
         StringBuilder out = new StringBuilder(chars.length());
-        return parseStringCharactersWithEscape(chars, out, sourceOffsets, true, true, QUOTES) ? out : null;
+        return parseStringCharactersWithEscape(chars, true, out, sourceOffsets) ? out : null;
     }
 
     private static boolean noEscape(@Nonnull String chars, @Nullable int[] sourceOffsets) {
@@ -186,11 +165,9 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
     static boolean parseStringCharactersWithEscape(
         @Nonnull String chars,
+        boolean textBlock,
         @Nonnull StringBuilder out,
-        @Nullable int[] sourceOffsets,
-        boolean slashMustBeEscaped,
-        boolean exitOnEscapingWrongSymbol,
-        @Nonnull char[] endChars
+        @Nullable int[] sourceOffsets
     ) {
         int index = 0;
         int outOffset = out.length();
@@ -204,17 +181,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                 out.append(c);
                 continue;
             }
-            index = parseEscapedSymbol(
-                false,
-                chars,
-                index,
-                sourceOffsets,
-                slashMustBeEscaped,
-                exitOnEscapingWrongSymbol,
-                endChars,
-                out,
-                outOffset
-            );
+            index = parseEscapedSymbol(false, chars, index, textBlock, out);
             if (index == -1) {
                 return false;
             }
@@ -229,35 +196,21 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         boolean isAfterEscapedBackslash,
         @Nonnull String chars,
         int index,
-        @Nullable int[] sourceOffsets,
-        boolean slashMustBeEscaped,
-        boolean exitOnEscapingWrongSymbol,
-        @Nonnull char[] endChars,
-        @Nonnull StringBuilder out,
-        int outOffset
+        boolean textBlock,
+        @Nonnull StringBuilder out
     ) {
         if (index == chars.length()) {
             return -1;
         }
         char c = chars.charAt(index++);
-        if (parseEscapedChar(c, out)) {
+        if (parseEscapedChar(c, textBlock, out)) {
             return index;
         }
         switch (c) {
             case '\\' -> {
                 boolean isUnicodeSequenceStart = isAfterEscapedBackslash && index < chars.length() && chars.charAt(index) == 'u';
                 if (isUnicodeSequenceStart) {
-                    index = parseUnicodeEscape(
-                        true,
-                        chars,
-                        index,
-                        sourceOffsets,
-                        slashMustBeEscaped,
-                        exitOnEscapingWrongSymbol,
-                        endChars,
-                        out,
-                        outOffset
-                    );
+                    index = parseUnicodeEscape(true, chars, index, textBlock, out);
                 }
                 else {
                     out.append('\\');
@@ -270,47 +223,13 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
             case 'u' -> {
                 if (isAfterEscapedBackslash) {
-                    if (!handleUnexpectedChar(
-                        sourceOffsets,
-                        slashMustBeEscaped,
-                        exitOnEscapingWrongSymbol,
-                        endChars,
-                        out,
-                        index - 1,
-                        outOffset,
-                        c
-                    )) {
-                        return -1;
-                    }
+                    return -1;
                 }
-                else {
-                    index = parseUnicodeEscape(
-                        false,
-                        chars,
-                        index - 1,
-                        sourceOffsets,
-                        slashMustBeEscaped,
-                        exitOnEscapingWrongSymbol,
-                        endChars,
-                        out,
-                        outOffset
-                    );
-                }
+                index = parseUnicodeEscape(false, chars, index - 1, textBlock, out);
             }
 
             default -> {
-                if (!handleUnexpectedChar(
-                    sourceOffsets,
-                    slashMustBeEscaped,
-                    exitOnEscapingWrongSymbol,
-                    endChars,
-                    out,
-                    index - 1,
-                    outOffset,
-                    c
-                )) {
-                    return -1;
-                }
+                return -1;
             }
         }
         return index;
@@ -320,15 +239,10 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         boolean isAfterEscapedBackslash,
         @Nonnull String s,
         int index,
-        @Nullable int[] sourceOffsets,
-        boolean slashMustBeEscaped,
-        boolean exitOnEscapingWrongSymbol,
-        @Nonnull char[] endChars,
-        @Nonnull StringBuilder out,
-        int outOffset
+        boolean textBlock,
+        @Nonnull StringBuilder out
     ) {
         int len = s.length();
-        int start = index - 1;
         // uuuuu1234 is valid too
         do {
             index++;
@@ -346,7 +260,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
             }
             int code = Integer.parseInt(s.substring(index, index + 4), 16);
             // unicode escaped line separators are invalid here when not a text block
-            if (code == 0x000A || code == 0x000D) {
+            if (!textBlock && (code == 0x000A || code == 0x000D)) {
                 return -1;
             }
             char escapedChar = (char) code;
@@ -358,34 +272,12 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                 }
                 else {
                     // u005cxyz
-                    return parseEscapedSymbol(
-                        true,
-                        s,
-                        index + 4,
-                        sourceOffsets,
-                        slashMustBeEscaped,
-                        exitOnEscapingWrongSymbol,
-                        endChars,
-                        out,
-                        outOffset
-                    );
+                    return parseEscapedSymbol(true, s, index + 4, textBlock, out);
                 }
             }
             if (isAfterEscapedBackslash) {
                 // e.g. \u005c\u006e is converted to newline
-                if (parseEscapedChar(escapedChar, out)) {
-                    return index + 4;
-                }
-                if (handleUnexpectedChar(
-                    sourceOffsets,
-                    slashMustBeEscaped,
-                    exitOnEscapingWrongSymbol,
-                    endChars,
-                    out,
-                    start,
-                    outOffset,
-                    escapedChar
-                )) {
+                if (parseEscapedChar(escapedChar, textBlock, out)) {
                     return index + 4;
                 }
                 return -1;
@@ -399,35 +291,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         }
     }
 
-    private static boolean handleUnexpectedChar(
-        @Nullable int[] sourceOffsets,
-        boolean slashMustBeEscaped,
-        boolean exitOnEscapingWrongSymbol,
-        @Nonnull char[] endChars,
-        @Nonnull StringBuilder out,
-        int start,
-        int outOffset,
-        char c
-    ) {
-        if (CharArrayUtil.indexOf(endChars, c, 0, endChars.length) != -1) {
-            out.append(c);
-        }
-        else if (!exitOnEscapingWrongSymbol) {
-            if (!slashMustBeEscaped) {
-                out.append('\\');
-                if (sourceOffsets != null) {
-                    sourceOffsets[out.length() - outOffset] = start;
-                }
-            }
-            out.append(c);
-        }
-        else {
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean parseEscapedChar(char c, @Nonnull StringBuilder out) {
+    private static boolean parseEscapedChar(char c, boolean textBlock, @Nonnull StringBuilder out) {
         return switch (c) {
             case 'b' -> {
                 out.append('\b');
@@ -453,7 +317,15 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                 out.append('\t');
                 yield true;
             }
-            case '\n' -> true;
+            case '\'' -> {
+                out.append('\'');
+                yield true;
+            }
+            case '\"' -> {
+                out.append('"');
+                yield true;
+            }
+            case '\n' -> textBlock; // escaped newline only valid inside text block
             default -> false;
         };
     }
