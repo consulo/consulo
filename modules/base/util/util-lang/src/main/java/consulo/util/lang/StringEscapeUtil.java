@@ -179,6 +179,7 @@ public class StringEscapeUtil {
                     case 'f' -> builder.append('\f');
                     case 'n' -> builder.append('\n');
                     case 'r' -> builder.append('\r');
+                    case 's' -> builder.append(' ');
                     case 't' -> builder.append('\t');
 
                     case '0', '1', '2', '3', '4', '5', '6', '7' -> {
