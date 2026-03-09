@@ -23,6 +23,7 @@ module consulo.project.api {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.sand.language.plugin,
+        consulo.compiler.impl,
         consulo.application.impl,
         consulo.component.impl,
         consulo.module.impl,
@@ -30,6 +31,7 @@ module consulo.project.api {
         consulo.version.control.system.impl,
         consulo.compiler.artifact.impl,
         consulo.project.impl,
+        consulo.project.ui.api,
         consulo.project.ui.impl,
         consulo.execution.impl,
         consulo.language.impl,
@@ -38,5 +40,6 @@ module consulo.project.api {
         consulo.external.system.impl,
         consulo.external.service.impl,
         consulo.module.content.impl,
-        consulo.file.editor.impl;
+        consulo.file.editor.impl,
+        consulo.welcome.screen.impl;
 }

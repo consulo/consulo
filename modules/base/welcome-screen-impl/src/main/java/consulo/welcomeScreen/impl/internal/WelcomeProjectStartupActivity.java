@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.compiler.impl.internal;
+package consulo.welcomeScreen.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.application.progress.Task;
-import consulo.compiler.TranslatingCompilerFilesMonitor;
-import consulo.compiler.localize.CompilerLocalize;
+import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.project.Project;
-import consulo.project.internal.ProjectEx;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
+import consulo.welcomeScreen.impl.internal.editor.WelcomeConfigurationFileEditorProvider;
 import jakarta.annotation.Nonnull;
+
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 2023-04-17
+ * @since 2026-03-08
  */
-@ExtensionImpl(profiles = ProjectEx.DEFAULT_PROJECT)
-public class TranslationCompilerPostStartupActivity implements PostStartupActivity, DumbAware {
+@ExtensionImpl
+public class WelcomeProjectStartupActivity implements PostStartupActivity, DumbAware {
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl) TranslatingCompilerFilesMonitor.getInstance();
+        if (!project.isWelcomeProject()) {
+            return;
+        }
 
-        monitor.startAsyncScan(project);
-
-        Task.Backgroundable.queue(
-            project,
-            CompilerLocalize.compilerInitialScanningProgressText(),
-            false,
-            indicator -> monitor.runScan(indicator, project)
-        );
+        uiAccess.give(() -> {
+            ConfigurationFileEditorManager editorManager =
+                project.getApplication().getInstance(ConfigurationFileEditorManager.class);
+            editorManager.open(project, WelcomeConfigurationFileEditorProvider.class, Map.of());
+        });
     }
 }

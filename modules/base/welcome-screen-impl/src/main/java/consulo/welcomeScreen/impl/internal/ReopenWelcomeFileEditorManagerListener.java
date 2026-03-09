@@ -1,0 +1,54 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.welcomeScreen.impl.internal;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicImpl;
+import consulo.configuration.editor.ConfigurationFileEditorManager;
+import consulo.configuration.editor.internal.ConfigurationEditorVirtualFile;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.welcomeScreen.impl.internal.editor.WelcomeConfigurationFileEditorProvider;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+
+import java.util.Map;
+
+/**
+ * @author VISTALL
+ * @since 2026-03-09
+ */
+@TopicImpl(ComponentScope.PROJECT)
+public class ReopenWelcomeFileEditorManagerListener implements FileEditorManagerListener {
+    private final Project myProject;
+
+    @Inject
+    public ReopenWelcomeFileEditorManagerListener(Project project) {
+        myProject = project;
+    }
+
+    @Override
+    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+        if (file instanceof ConfigurationEditorVirtualFile cev && cev.getProvider() instanceof WelcomeConfigurationFileEditorProvider) {
+            myProject.getUIAccess().give(() -> {
+                ConfigurationFileEditorManager editorManager = myProject.getApplication().getInstance(ConfigurationFileEditorManager.class);
+                editorManager.open(myProject, WelcomeConfigurationFileEditorProvider.class, Map.of());
+            });
+        }
+    }
+}

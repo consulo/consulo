@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.start;
+package consulo.versionControlSystem.internal;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import jakarta.inject.Inject;
+import consulo.project.internal.ProjectEx;
 import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 23-Sep-17
+ * @since 2026-03-09
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
-    @Inject
-    public UnifiedWelcomeFrameManager(Application application) {
-        super(application);
-    }
+@ServiceImpl(profiles = ProjectEx.WELCOME_PROJECT)
+public class WelcomeProjectChangesView extends StubChangesView {
+
 }

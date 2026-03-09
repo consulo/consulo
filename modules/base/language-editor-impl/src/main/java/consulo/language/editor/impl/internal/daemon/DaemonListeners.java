@@ -58,6 +58,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.project.ProjectType;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -71,6 +72,7 @@ import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -85,6 +87,7 @@ import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Singleton
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
@@ -119,7 +122,7 @@ public final class DaemonListeners implements Disposable {
 
         MessageBus messageBus = myProject.getMessageBus();
         myDaemonEventPublisher = messageBus.syncPublisher(DaemonListener.class);
-        if (project.isDefault()) {
+        if (project.getProjectType() != ProjectType.REGULAR) {
             return;
         }
 
@@ -416,14 +419,14 @@ public final class DaemonListeners implements Disposable {
     }
 
     private class MyCommandListener implements CommandListener {
-        private final String myCutActionId;
+        private final Supplier<String> myCutActionIdValue;
 
         private MyCommandListener(ActionManager actionManager) {
-            myCutActionId = actionManager
+            myCutActionIdValue = LazyValue.notNull(() -> actionManager
                 .getAction(IdeActions.ACTION_EDITOR_CUT)
                 .getTemplatePresentation()
                 .getTextValue()
-                .getId();
+                .getId());
         }
 
         @Override
@@ -435,7 +438,9 @@ public final class DaemonListeners implements Disposable {
 
             String commandId = event.getCommandNameValue().getId();
 
-            cutOperationJustHappened = myCutActionId.equals(commandId);
+            String cutActionId = myCutActionIdValue.get();
+
+            cutOperationJustHappened = cutActionId.equals(commandId);
             if (!myDaemonCodeAnalyzer.isRunning()) {
                 return;
             }

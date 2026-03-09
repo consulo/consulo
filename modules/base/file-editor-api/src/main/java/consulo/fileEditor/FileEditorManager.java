@@ -189,6 +189,8 @@ public abstract class FileEditorManager {
   public abstract void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener, @Nonnull Disposable parentDisposable);
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract List<FileEditor> openEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor);
 
   /**
@@ -293,8 +295,8 @@ public abstract class FileEditorManager {
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
    *
-   * @see consulo.ide.impl.idea.ui.docking.DockManager#getContainers()
-   * @see consulo.ide.impl.idea.ui.docking.DockContainer#closeAll()
+   * @see DockManager#getContainers()
+   * @see DockContainer#closeAll()
    */
   public abstract void closeAllFiles();
 
@@ -302,10 +304,14 @@ public abstract class FileEditorManager {
   public abstract FileEditorsSplitters getSplitters();
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull FileEditorWindow window);
 
   /**

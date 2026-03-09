@@ -20,7 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
-import consulo.project.event.ProjectManagerListener;
+import consulo.project.ProjectManager;
+import consulo.project.internal.WelcomeProjectManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
@@ -53,66 +54,53 @@ public abstract class WelcomeFrameManager {
     return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
   }
 
-  private IdeFrame myFrameInstance;
-
   protected final Application myApplication;
 
   protected WelcomeFrameManager(Application application) {
     myApplication = application;
-
-    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
-        uiAccess.give(() -> closeFrame());
-      }
-    });
   }
 
   @Nullable
   @RequiredUIAccess
   public IdeFrame getCurrentFrame() {
     UIAccess.assertIsUIThread();
-    return myFrameInstance;
-  }
-
-  protected void frameClosed() {
-    myFrameInstance = null;
+    WelcomeProjectManager welcomeProjectManager = WelcomeProjectManager.getInstance();
+    Project welcomeProject = welcomeProjectManager.getOpenWelcomeProject();
+    if (welcomeProject != null) {
+      return WindowManager.getInstance().getIdeFrame(welcomeProject);
+    }
+    return null;
   }
 
   @RequiredUIAccess
   public void showFrame() {
-    UIAccess.assertIsUIThread();
-
-    if (myFrameInstance == null) {
-      myFrameInstance = createFrame();
-      myFrameInstance.getWindow().show();
-    }
+    WelcomeProjectManager.getInstance().openWelcomeProjectAsync(UIAccess.current());
   }
 
   @RequiredUIAccess
   public void closeFrame() {
     UIAccess.assertIsUIThread();
-    IdeFrame frameInstance = myFrameInstance;
-
-    if (frameInstance == null) {
-      return;
-    }
-
-    frameInstance.getWindow().close();
+    WelcomeProjectManager.getInstance().closeWelcomeProjectAsync(UIAccess.current());
   }
 
   public void showIfNoProjectOpened() {
     myApplication.invokeLater((DumbAwareRunnable)() -> {
       WindowManagerEx windowManager = (WindowManagerEx)WindowManager.getInstance();
       windowManager.disposeRootFrame();
-      IdeFrame[] frames = windowManager.getAllProjectFrames();
-      if (frames.length == 0) {
+
+      // Check if there are any non-welcome project frames open
+      Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+      boolean hasRealProject = false;
+      for (Project project : openProjects) {
+        if (!project.isWelcomeProject() && !project.isDefault()) {
+          hasRealProject = true;
+          break;
+        }
+      }
+
+      if (!hasRealProject) {
         showFrame();
       }
     }, myApplication.getNoneModalityState());
   }
-
-  @Nonnull
-  @RequiredUIAccess
-  protected abstract IdeFrame createFrame();
 }

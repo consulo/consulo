@@ -54,6 +54,10 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
     @Override
     @RequiredReadAction
     public String getProjectTitle(@Nonnull Project project) {
+        if (project.isWelcomeProject()) {
+            return project.getApplication().getName().get();
+        }
+
         String basePath = project.getBasePath();
         if (basePath == null) {
             return project.getName();

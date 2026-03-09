@@ -158,8 +158,9 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     Project project = parent instanceof ProjectViewProjectNode ? parent.getProject() : null;
     if (project == null) return children;
     if (project.getApplication().isUnitTestMode()) return children;
-    if (children.isEmpty()
-      && JBIterable.from(RootType.getAllRootTypes()).filterMap(o -> createRootTypeNode(project, o, settings)).isEmpty()) {
+    if (!project.isWelcomeProject()
+        && children.isEmpty()
+        && JBIterable.from(RootType.getAllRootTypes()).filterMap(o -> createRootTypeNode(project, o, settings)).isEmpty()) {
       return children;
     }
     List<AbstractTreeNode> list = new ArrayList<>(children.size() + 1);

@@ -16,6 +16,7 @@
 package consulo.fileEditor;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,15 @@ public final class FileEditorOpenResult {
 
     public boolean isEmpty() {
         return myEntries.isEmpty();
+    }
+
+    @Nullable
+    public FileEditor getFirstEditor() {
+        if (myEntries.isEmpty()) {
+            return null;
+        }
+        FileEditorWithProvider first = myEntries.getFirst();
+        return first.getFileEditor();
     }
 
     /**

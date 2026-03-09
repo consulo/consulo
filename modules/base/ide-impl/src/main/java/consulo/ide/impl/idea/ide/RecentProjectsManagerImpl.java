@@ -251,19 +251,19 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         synchronized (myStateLock) {
             myState.openPaths.clear();
-            if (openProjects.length == 0) {
-                myState.lastPath = null;
-            }
-            else {
-                myState.lastPath = getProjectPath(openProjects[openProjects.length - 1]);
-                for (Project openProject : openProjects) {
-                    String path = getProjectPath(openProject);
-                    if (path != null) {
-                        myState.openPaths.add(path);
-                        myState.names.put(path, getProjectDisplayName(openProject));
-                    }
+            String lastPath = null;
+            for (Project openProject : openProjects) {
+                if (openProject.isWelcomeProject()) {
+                    continue;
+                }
+                String path = getProjectPath(openProject);
+                if (path != null) {
+                    myState.openPaths.add(path);
+                    myState.names.put(path, getProjectDisplayName(openProject));
+                    lastPath = path;
                 }
             }
+            myState.lastPath = lastPath;
         }
     }
 
@@ -457,6 +457,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectOpened(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             String path = getProjectPath(project);
             if (path != null) {
                 markPathRecent(path, project);
@@ -474,6 +478,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
         @Override
         public void projectClosing(@Nonnull Project project) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             synchronized (myStateLock) {
                 String projectPath = getProjectPath(project);
 
@@ -492,6 +500,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
             if (openProjects.length > 0) {
                 String path = getProjectPath(openProjects[openProjects.length - 1]);

@@ -25,6 +25,7 @@ import consulo.fileEditor.ReadMeFileProvider;
 import consulo.fileEditor.TextEditorWithPreview;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
+import consulo.project.internal.ProjectEx;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -38,7 +39,7 @@ import java.nio.file.Path;
  * @author VISTALL
  * @since 2025-01-21
  */
-@ExtensionImpl(order = "last")
+@ExtensionImpl(order = "last", profiles = ProjectEx.DEFAULT_PROJECT)
 public class ReadMeOpenActivity implements PostStartupActivity, DumbAware {
     private static final String SHOW_TIME_KEY = "ReadMeOpenActivity.showTime";
 

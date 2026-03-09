@@ -21,6 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
+import consulo.versionControlSystem.change.ChangesViewManager;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,8 +32,10 @@ import jakarta.annotation.Nonnull;
 public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ChangesViewManagerImpl changesViewManager = (ChangesViewManagerImpl) ChangesViewManagerImpl.getInstance(project);
+    ChangesViewManager changesViewManager = ChangesViewManagerImpl.getInstance(project);
 
-    changesViewManager.projectOpened();
+    if (changesViewManager instanceof ChangesViewManagerImpl impl) {
+        impl.projectOpened();
+    }
   }
 }

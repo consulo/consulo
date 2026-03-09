@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.start;
+package consulo.project;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import consulo.project.internal.ProjectEx;
 
 /**
  * @author VISTALL
- * @since 23-Sep-17
+ * @since 2026-03-08
  */
-@Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
-    @Inject
-    public UnifiedWelcomeFrameManager(Application application) {
-        super(application);
+public enum ProjectType {
+    REGULAR(ProjectEx.REGULAR_PROJECT),
+    DEFAULT(ProjectEx.DEFAULT_PROJECT),
+    WELCOME(ProjectEx.WELCOME_PROJECT);
+
+    private final int myProfileBit;
+
+    ProjectType(int profileBit) {
+        myProfileBit = profileBit;
+    }
+
+    public int getProfileBit() {
+        return myProfileBit;
     }
 }

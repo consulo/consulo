@@ -373,6 +373,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                     return;
                 }
 
+                // Closing the welcome project frame means exiting the app
+                if (myProject != null && myProject.isWelcomeProject()) {
+                    Application.get().exit();
+                    return;
+                }
+
                 ProjectManager projectManager = ProjectManager.getInstance();
 
                 Project[] openProjects = projectManager.getOpenProjects();

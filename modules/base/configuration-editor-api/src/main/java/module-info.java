@@ -8,7 +8,7 @@ module consulo.configuration.editor.api {
 
     exports consulo.configuration.editor;
 
-    exports consulo.configuration.editor.internal to consulo.configuration.editor.impl;
+    exports consulo.configuration.editor.internal to consulo.configuration.editor.impl, consulo.welcome.screen.impl;
 
     // TODO remove in future
     requires java.desktop;

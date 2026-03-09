@@ -32,7 +32,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.project.internal.WelcomeProjectManager;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -110,73 +110,91 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         @Nonnull UIAccess uiAccess,
         @Nonnull ProjectOpenContext context) {
 
-        // Pre-resolve VirtualFile and processor before chain construction
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
-        if (virtualFile == null) {
-            WelcomeFrameManager.getInstance().showIfNoProjectOpened();
-            return CompletableFuture.completedFuture(null);
-        }
+        boolean isWelcome = WelcomeProjectManager.WELCOME_PATH.equals(filePath);
 
-        ProjectOpenProcessor processor = myProjectOpenProcessors.findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+        VirtualFile virtualFile = null;
+        ProjectOpenProcessor processor = null;
+
+        if (!isWelcome) {
+            // Pre-resolve VirtualFile and processor before chain construction
+            virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
+            if (virtualFile == null) {
+                WelcomeProjectManager.getInstance().openWelcomeProjectAsync(uiAccess);
+                return CompletableFuture.completedFuture(null);
+            }
+            processor = myProjectOpenProcessors.findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+        }
 
         Boolean forceNewFrame = context.getUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME);
         Project activeProject = context.getUserData(ProjectOpenContext.ACTIVE_PROJECT);
 
         CompletableFuture<Project> resultFuture = new CompletableFuture<>();
 
-        // Phase 1: Show dialog, close project, prepare directory, create ProjectImpl, allocate frame
+        final VirtualFile finalVirtualFile = virtualFile;
+        final ProjectOpenProcessor finalProcessor = processor;
+
+        // Phase 1: Resolve project, show dialog if needed, allocate frame
         // Use null project for progress scope — activeProject may be closed during this phase
         CompletableFuture<ProjectImpl> projectInit = myProgressBuilderFactory
             .newProgressBuilder(null, ProjectLocalize.projectLoadProgress())
             .cancelable()
             .execute(uiAccess, () -> {
-                // Base chain: determine projectToClose, show dialog, close if needed
-                Coroutine<?, OpenContext> baseChain = Coroutine
-                    .first(CodeExecution.<Void, OpenContext>apply((input, continuation) -> {
-                        Project projectToClose = null;
-                        if (!Boolean.TRUE.equals(forceNewFrame)) {
-                            Project[] openProjects = myProjectManager.getOpenProjects();
-                            if (openProjects.length > 0) {
-                                projectToClose = activeProject != null ? activeProject : openProjects[openProjects.length - 1];
+                Coroutine<?, ProjectImpl> chain;
+
+                if (isWelcome) {
+                    // Welcome project: use pre-created project, skip dialog/processor/VirtualFile
+                    ProjectImpl welcomeProject = (ProjectImpl) WelcomeProjectManager.getInstance().getOpenWelcomeProject();
+                    chain = Coroutine.first(CodeExecution.<Void, ProjectImpl>apply(input -> welcomeProject));
+                }
+                else {
+                    // Regular project: dialog, processor, create ProjectImpl
+                    Coroutine<?, OpenContext> baseChain = Coroutine
+                        .first(CodeExecution.<Void, OpenContext>apply((input, continuation) -> {
+                            Project projectToClose = null;
+                            if (!Boolean.TRUE.equals(forceNewFrame)) {
+                                Project[] openProjects = myProjectManager.getOpenProjects();
+                                if (openProjects.length > 0) {
+                                    projectToClose = activeProject != null ? activeProject : openProjects[openProjects.length - 1];
+                                }
                             }
-                        }
-                        return new OpenContext(projectToClose, virtualFile);
-                    }))
-                    // Handle "same window / new window" dialog and close if needed
-                    .then(CompletableFutureStep.<OpenContext, OpenContext>await(openContext -> {
-                        if (openContext.projectToClose() == null) {
-                            return CompletableFuture.completedFuture(openContext);
-                        }
+                            return new OpenContext(projectToClose, finalVirtualFile);
+                        }))
+                        // Handle "same window / new window" dialog and close if needed
+                        .then(CompletableFutureStep.<OpenContext, OpenContext>await(openContext -> {
+                            if (openContext.projectToClose() == null) {
+                                return CompletableFuture.completedFuture(openContext);
+                            }
 
-                        return confirmAndCloseProjectAsync(openContext, uiAccess);
-                    }))
-                    // Cancel if dialog was cancelled (null means cancelled)
-                    .then(CodeExecution.<OpenContext, OpenContext>apply((openContext, continuation) -> {
-                        if (openContext == null) {
-                            continuation.cancel();
-                            return null;
-                        }
-                        return openContext;
-                    }));
+                            return confirmAndCloseProjectAsync(openContext, uiAccess);
+                        }))
+                        // Cancel if dialog was cancelled (null means cancelled)
+                        .then(CodeExecution.<OpenContext, OpenContext>apply((openContext, continuation) -> {
+                            if (openContext == null) {
+                                continuation.cancel();
+                                return null;
+                            }
+                            return openContext;
+                        }));
 
-                // Extract VirtualFile from OpenContext for processor
-                Coroutine<?, VirtualFile> preProcessor = baseChain
-                    .then(CodeExecution.apply(OpenContext::virtualFile));
+                    // Extract VirtualFile from OpenContext for processor
+                    Coroutine<?, VirtualFile> preProcessor = baseChain
+                        .then(CodeExecution.apply(OpenContext::virtualFile));
 
-                // Let processor extend chain with preparation steps (default: no-op)
-                Coroutine<?, VirtualFile> withProcessor = processor != null
-                    ? processor.prepareSteps(uiAccess, context, preProcessor)
-                    : preProcessor;
+                    // Let processor extend chain with preparation steps (default: no-op)
+                    Coroutine<?, VirtualFile> withProcessor = finalProcessor != null
+                        ? finalProcessor.prepareSteps(uiAccess, context, preProcessor)
+                        : preProcessor;
 
-                // Create ProjectImpl from VirtualFile
-                Coroutine<?, ProjectImpl> chain = withProcessor
-                    .then(CodeExecution.<VirtualFile, ProjectImpl>apply((projectDir, continuation) -> {
-                        if (projectDir == null) {
-                            continuation.cancel();
-                            return null;
-                        }
-                        return new ProjectImpl(myApplication, myProjectManager, projectDir, null, myComponentBinding);
-                    }));
+                    // Create ProjectImpl from VirtualFile
+                    chain = withProcessor
+                        .then(CodeExecution.<VirtualFile, ProjectImpl>apply((projectDir, continuation) -> {
+                            if (projectDir == null) {
+                                continuation.cancel();
+                                return null;
+                            }
+                            return new ProjectImpl(myApplication, myProjectManager, projectDir, null, myComponentBinding);
+                        }));
+                }
 
                 // Allocate frame
                 return myProjectFrameAllocator.allocateFrame(context, chain);
@@ -187,11 +205,15 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             if (throwable != null) {
                 LOG.warn("Failed to open project: " + filePath, throwable);
                 resultFuture.completeExceptionally(throwable);
-                WelcomeFrameManager.getInstance().showIfNoProjectOpened();
+                if (!isWelcome) {
+                    WelcomeProjectManager.getInstance().openWelcomeProjectAsync(uiAccess);
+                }
             }
             else if (projectImpl == null) {
                 resultFuture.completeExceptionally(new FileNotFoundException("Failed to open project: " + filePath));
-                WelcomeFrameManager.getInstance().showIfNoProjectOpened();
+                if (!isWelcome) {
+                    WelcomeProjectManager.getInstance().openWelcomeProjectAsync(uiAccess);
+                }
             }
             else {
                 doOpenInProject(projectImpl, filePath, uiAccess, context, resultFuture);
@@ -230,7 +252,9 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
                 init = myProjectFrameAllocator.initializeSteps(project, init);
 
-                init = init.then(WriteLock.apply((o, c) -> {
+                // Welcome project has no modules — skip module loading
+                if (!project.isWelcomeProject()) {
+                    init = init.then(WriteLock.apply((o, c) -> {
                         ProgressIndicator indicator = ProgressIndicator.from(c);
                         indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
                         indicator.setText2Value(LocalizeValue.empty());
@@ -238,8 +262,10 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                         ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
                         moduleManager.loadModulesNew(indicator);
                         return o;
-                    }))
-                    .then(CodeExecution.supply((o) -> {
+                    }));
+                }
+
+                init = init.then(CodeExecution.supply((o) -> {
                         ProgressIndicator indicator = ProgressIndicator.from(o);
 
                         indicator.setTextValue(ProjectLocalize.progressTitlePreparingWorkspace());
@@ -270,7 +296,9 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                     future.completeExceptionally(throwable);
                 }
                 else {
-                    updateLastProjectLocation(filePath.toString());
+                    if (!project.isWelcomeProject()) {
+                        updateLastProjectLocation(filePath.toString());
+                    }
                     future.complete(project);
                 }
             });
@@ -285,6 +313,25 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
     private CompletableFuture<OpenContext> confirmAndCloseProjectAsync(
         @Nonnull OpenContext openContext,
         @Nonnull UIAccess uiAccess) {
+
+        // If the project to close is the welcome project, skip dialog and close via WelcomeProjectManager
+        // (which properly saves state before dispose)
+        if (openContext.projectToClose() != null && openContext.projectToClose().isWelcomeProject()) {
+            CompletableFuture<OpenContext> result = new CompletableFuture<>();
+            WelcomeProjectManager.getInstance().closeWelcomeProjectAsync(uiAccess)
+                .whenComplete((closed, error) -> {
+                    if (error != null) {
+                        result.completeExceptionally(error);
+                    }
+                    else if (Boolean.TRUE.equals(closed)) {
+                        result.complete(new OpenContext(null, openContext.virtualFile()));
+                    }
+                    else {
+                        result.complete(null);
+                    }
+                });
+            return result;
+        }
 
         ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
         int confirmOpenNewProject = settings.getConfirmOpenNewProject();

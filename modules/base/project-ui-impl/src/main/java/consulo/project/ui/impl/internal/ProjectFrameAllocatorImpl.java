@@ -46,11 +46,9 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
     private static final Key<ToolWindowManagerBase> TOOL_WINDOW_MANAGER = Key.create(ToolWindowManagerBase.class);
 
     private final WindowManagerEx myWindowManager;
-    private final WelcomeFrameManager myWelcomeFrameManager;
 
     @Inject
-    public ProjectFrameAllocatorImpl(WindowManager windowManager, WelcomeFrameManager welcomeFrameManager) {
-        myWelcomeFrameManager = welcomeFrameManager;
+    public ProjectFrameAllocatorImpl(WindowManager windowManager) {
         myWindowManager = (WindowManagerEx) windowManager;
     }
 
@@ -60,9 +58,6 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
         IdeFrameEx frame = myWindowManager.allocateFrame(project, state);
-
-        // force close welcome frame after frame allocating, since its project open
-        myWelcomeFrameManager.closeFrame();
 
         frame.initialize();
 
@@ -82,11 +77,6 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
             .then(UIAction.apply((project, continuation) -> {
                 IdeFrameEx ideFrame = (IdeFrameEx) Objects.requireNonNull(continuation.getUserData(IdeFrame.KEY));
                 ideFrame.initialize();
-                return project;
-            }))
-            .then(UIAction.apply((project, continuation) -> {
-                // force close welcome frame after frame allocating, since its project open
-                myWelcomeFrameManager.closeFrame();
                 return project;
             }))
             .then(UIAction.apply((project, continuation) -> {

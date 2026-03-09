@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,6 +35,11 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
+    @Override
+    public boolean validate(@Nonnull Project project) {
+        return project.getProjectType() == ProjectType.REGULAR;
+    }
+
     @Nonnull
     @Override
     public String getId() {

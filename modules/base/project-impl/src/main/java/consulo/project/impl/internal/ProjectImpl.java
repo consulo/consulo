@@ -32,6 +32,7 @@ import consulo.component.store.internal.StoreUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
@@ -121,7 +122,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             putUserData(CREATION_TRACE, ExceptionUtil.currentStackTrace());
         }
 
-        if (!isDefault()) {
+        if (getProjectType() == ProjectType.REGULAR) {
             if (noUIThread) {
                 getStateStore().setProjectFilePathNoUI(dirPath);
             }
@@ -149,7 +150,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public int getProfiles() {
-        return myParent.getProfiles() | (isDefault() ? DEFAULT_PROJECT : REGULAR_PROJECT);
+        return myParent.getProfiles() | getProjectType().getProfileBit();
     }
 
     @Nullable

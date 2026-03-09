@@ -33,6 +33,7 @@ import consulo.component.store.internal.StateStorage.SaveSession;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -152,7 +153,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     @Override
     @Nullable
     public VirtualFile getProjectBaseDir() {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return null;
         }
 
@@ -166,7 +167,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     @Override
     public String getProjectBasePath() {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return null;
         }
 
@@ -185,7 +186,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
 
     private String getBasePath(@Nonnull File file) {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return file.getParent();
         }
         else {
@@ -218,11 +219,11 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     @Override
     public String getPresentableUrl() {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return null;
         }
         if (myPresentableUrl == null) {
-            String url = !myProject.isDefault() ? getProjectBasePath() : getProjectFilePath();
+            String url = getProjectBasePath();
             if (url != null) {
                 myPresentableUrl = FileUtil.toSystemDependentName(url);
             }
@@ -232,7 +233,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     @Override
     public VirtualFile getProjectFile() {
-        return myProject.isDefault() ? null : ((FileBasedStorage) getDefaultFileStorage()).getVirtualFile();
+        return myProject.getProjectType() == ProjectType.REGULAR ? ((FileBasedStorage) getDefaultFileStorage()).getVirtualFile() : null;
     }
 
     @Nonnull
@@ -245,7 +246,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     @Override
     public VirtualFile getWorkspaceFile() {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return null;
         }
         FileBasedStorage storage = (FileBasedStorage) getStateStorageManager().getStateStorage(StoragePathMacros.WORKSPACE_FILE, RoamingType.DISABLED);
@@ -266,7 +267,12 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     @Nonnull
     @Override
     public String getProjectFilePath() {
-        return myProject.isDefault() ? "" : ((FileBasedStorage) getDefaultFileStorage()).getFilePath();
+        if (myProject.getProjectType() == ProjectType.REGULAR) {
+            return ((FileBasedStorage) getDefaultFileStorage()).getFilePath();
+        }
+        else {
+            return "";
+        }
     }
 
     @Nonnull

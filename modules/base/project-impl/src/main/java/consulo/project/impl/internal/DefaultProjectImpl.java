@@ -18,6 +18,7 @@ package consulo.project.impl.internal;
 import consulo.application.Application;
 import consulo.component.internal.ComponentBinding;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
@@ -57,8 +58,9 @@ public class DefaultProjectImpl extends ProjectImpl {
     return myInitialized;
   }
 
+  @Nonnull
   @Override
-  public boolean isDefault() {
-    return true;
+  public ProjectType getProjectType() {
+    return ProjectType.DEFAULT;
   }
 }
