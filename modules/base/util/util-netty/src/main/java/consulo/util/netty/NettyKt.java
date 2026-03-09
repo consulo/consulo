@@ -29,7 +29,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioServerSocketChannel;
 import io.netty.channel.socket.oio.OioSocketChannel;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;

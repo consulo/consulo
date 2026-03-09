@@ -16,8 +16,6 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.EmptyIterator;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Iterator;
 import java.util.PrimitiveIterator;
@@ -29,14 +27,11 @@ import java.util.function.IntFunction;
  * @since 2022-03-13
  */
 public final class Iterators {
-    @Nonnull
     public static <T> Iterator<T> empty() {
         return EmptyIterator.getInstance();
     }
 
-    @Nonnull
-    @Contract(pure = true)
-    public static <U> Iterator<U> mapIterator(@Nonnull PrimitiveIterator.OfInt iterator, @Nonnull IntFunction<? extends U> mapper) {
+    public static <U> Iterator<U> mapIterator(PrimitiveIterator.OfInt iterator, IntFunction<? extends U> mapper) {
         return new Iterator<>() {
             @Override
             public boolean hasNext() {
@@ -55,11 +50,9 @@ public final class Iterators {
         };
     }
 
-    @Contract(pure = true)
-    @Nonnull
     public static <T, U> Iterator<U> mapIterator(
-        @Nonnull Iterator<? extends T> iterator,
-        @Nonnull Function<? super T, ? extends U> mapper
+        Iterator<? extends T> iterator,
+        Function<? super T, ? extends U> mapper
     ) {
         return new Iterator<>() {
             @Override

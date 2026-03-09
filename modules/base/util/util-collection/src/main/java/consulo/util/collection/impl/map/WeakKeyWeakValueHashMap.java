@@ -19,7 +19,6 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.impl.map.RefHashMap;
 import consulo.util.collection.impl.map.RefKeyRefValueHashMap;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -34,24 +33,21 @@ public final class WeakKeyWeakValueHashMap<K, V> extends RefKeyRefValueHashMap<K
   }
 
   private static class WeakValueReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    @Nonnull
     private final RefHashMap.Key<K> key;
 
-    private WeakValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+    private WeakValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
       super(referent, q);
       this.key = key;
     }
 
-    @Nonnull
     @Override
     public RefHashMap.Key<K> getKey() {
       return key;
     }
   }
 
-  @Nonnull
   @Override
-  protected ValueReference<K, V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+  protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
     return new WeakValueReference<>(key, referent, q);
   }
 }

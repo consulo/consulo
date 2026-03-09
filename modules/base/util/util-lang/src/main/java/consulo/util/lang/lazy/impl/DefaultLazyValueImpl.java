@@ -16,7 +16,6 @@
 package consulo.util.lang.lazy.impl;
 
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -40,7 +39,6 @@ public class DefaultLazyValueImpl<T> implements LazyValue<T> {
     return myValue;
   }
 
-  @Nonnull
   @Override
   public T get() {
     T result = myValue;

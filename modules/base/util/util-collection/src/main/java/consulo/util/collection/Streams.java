@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -41,7 +40,6 @@ public class Streams {
   }
 
   @SafeVarargs
-  @Nonnull
   public static <T> Stream<T> stream(T... args) {
     return args == null ? Stream.<T>empty() : Arrays.stream(args);
   }

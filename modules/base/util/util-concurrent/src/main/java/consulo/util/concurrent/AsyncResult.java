@@ -18,8 +18,7 @@ package consulo.util.concurrent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,42 +31,35 @@ public class AsyncResult<T> extends ActionCallback {
 
   private static final AsyncResult REJECTED = new Rejected();
 
-  @Nonnull
   public static <R> AsyncResult<R> undefined() {
     return new AsyncResult<>();
   }
 
-  @Nonnull
   public static <R> AsyncResult<R> rejected() {
     //noinspection unchecked
     return REJECTED;
   }
 
-  @Nonnull
-  public static <R> AsyncResult<R> rejected(@Nonnull String errorMessage) {
+  public static <R> AsyncResult<R> rejected(String errorMessage) {
     AsyncResult<R> result = new AsyncResult<>();
     result.reject(errorMessage);
     return result;
   }
 
-  @Nonnull
   public static <R> AsyncResult<R> resolved() {
     return resolved(null);
   }
 
-  @Nonnull
   public static <R> AsyncResult<R> resolved(@Nullable R result) {
     return new AsyncResult<R>().setDone(result);
   }
 
-  @Nonnull
   @Deprecated
   public static <R> AsyncResult<R> done(@Nullable R result) {
     return new AsyncResult<R>().setDone(result);
   }
 
-  @Nonnull
-  public static <T> AsyncResult<T> merge(@Nonnull Collection<AsyncResult<T>> list) {
+  public static <T> AsyncResult<T> merge(Collection<AsyncResult<T>> list) {
     if (list.isEmpty()) {
       return resolved();
     }
@@ -112,76 +104,65 @@ public class AsyncResult<T> extends ActionCallback {
     myResult = result;
   }
 
-  @Nonnull
   public AsyncResult<T> setDone(T result) {
     myResult = result;
     setDone();
     return this;
   }
 
-  @Nonnull
   public AsyncResult<T> setRejected(T result) {
     myResult = result;
     setRejected();
     return this;
   }
 
-  @Nonnull
-  public <DependentResult> AsyncResult<DependentResult> subResult(@Nonnull Function<T, DependentResult> doneHandler) {
+  public <DependentResult> AsyncResult<DependentResult> subResult(Function<T, DependentResult> doneHandler) {
     return subResult(new AsyncResult<DependentResult>(), doneHandler);
   }
 
-  @Nonnull
-  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@Nonnull SubAsyncResult subResult, @Nonnull Function<T, SubResult> doneHandler) {
+  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(SubAsyncResult subResult, Function<T, SubResult> doneHandler) {
     doWhenDone(new SubResultDoneCallback<>(subResult, doneHandler)).notifyWhenRejected(subResult);
     return subResult;
   }
 
-  @Nonnull
-  public ActionCallback subCallback(@Nonnull Consumer<T> doneHandler) {
+  public ActionCallback subCallback(Consumer<T> doneHandler) {
     ActionCallback subCallback = new ActionCallback();
     doWhenDone(new SubCallbackDoneCallback<>(subCallback, doneHandler)).notifyWhenRejected(subCallback);
     return subCallback;
   }
 
-  @Nonnull
   @Override
-  public AsyncResult<T> doWhenDone(@Nonnull Runnable runnable) {
+  public AsyncResult<T> doWhenDone(Runnable runnable) {
     super.doWhenDone(runnable);
     return this;
   }
 
-  @Nonnull
   @Override
   public AsyncResult<T> rejectWithThrowable(Throwable error) {
     super.rejectWithThrowable(error);
     return this;
   }
 
-  @Nonnull
-  public AsyncResult<T> doWhenDone(@Nonnull Consumer<T> consumer) {
+  public AsyncResult<T> doWhenDone(Consumer<T> consumer) {
     doWhenDone(() -> consumer.accept(myResult));
     return this;
   }
 
-  @Nonnull
-  public AsyncResult<T> doWhenRejected(@Nonnull BiConsumer<T, String> consumer) {
+  public AsyncResult<T> doWhenRejected(BiConsumer<T, String> consumer) {
     doWhenRejected(() -> consumer.accept(myResult, myError));
     return this;
   }
 
   @Override
-  @Nonnull
-  public AsyncResult<T> doWhenProcessed(@Nonnull Runnable runnable) {
+  public AsyncResult<T> doWhenProcessed(Runnable runnable) {
     doWhenDone(runnable);
     doWhenRejected(runnable);
     return this;
   }
 
   @Override
-  @Nonnull
   @SuppressWarnings("unchecked")
-  public final AsyncResult<T> notify(@Nonnull ActionCallback child) {
+  public final AsyncResult<T> notify(ActionCallback child) {
     if (child instanceof AsyncResult) {
       return notify((AsyncResult<T>)child);
     }
@@ -189,15 +170,13 @@ public class AsyncResult<T> extends ActionCallback {
     return this;
   }
 
-  @Nonnull
-  public final AsyncResult<T> notify(@Nonnull AsyncResult<T> child) {
+  public final AsyncResult<T> notify(AsyncResult<T> child) {
     doWhenDone((Consumer<T>)child::setDone);
     doWhenRejected(child::reject);
     doWhenRejectedWithThrowable(child::rejectWithThrowable);
     return this;
   }
 
-  @Nonnull
   public AsyncResult<Void> toVoid() {
     AsyncResult<Void> result = new AsyncResult<>();
     doWhenDone((Runnable)result::setDone);
@@ -219,8 +198,7 @@ public class AsyncResult<T> extends ActionCallback {
     return myResult;
   }
 
-  @Nonnull
-  public final AsyncResult<T> doWhenProcessed(@Nonnull Consumer<T> consumer) {
+  public final AsyncResult<T> doWhenProcessed(Consumer<T> consumer) {
     doWhenDone(consumer);
     doWhenRejected((result, error) -> consumer.accept(result));
     return this;

@@ -16,7 +16,6 @@
 package consulo.util.lang.function;
 
 import consulo.annotation.DeprecationInfo;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Predicate;
 
@@ -44,7 +43,6 @@ public interface Condition<T> extends Predicate<T> {
             return object != null;
         }
 
-        @NonNls
         @Override
         public String toString() {
             return "Condition.NOT_NULL";
@@ -60,7 +58,6 @@ public interface Condition<T> extends Predicate<T> {
             return true;
         }
 
-        @NonNls
         @Override
         public String toString() {
             return "Condition.TRUE";
@@ -75,7 +72,6 @@ public interface Condition<T> extends Predicate<T> {
             return false;
         }
 
-        @NonNls
         @Override
         public String toString() {
             return "Condition.FALSE";

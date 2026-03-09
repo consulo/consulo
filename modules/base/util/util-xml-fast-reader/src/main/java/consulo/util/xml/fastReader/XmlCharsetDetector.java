@@ -19,8 +19,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -68,7 +67,7 @@ public class XmlCharsetDetector {
   }
 
   @Nullable
-  public static String extractXmlEncodingFromProlog(@Nonnull CharSequence text) {
+  public static String extractXmlEncodingFromProlog(CharSequence text) {
     int index = 0;
 
     index = skipWhiteSpace(index, text);
@@ -100,7 +99,7 @@ public class XmlCharsetDetector {
     return null;
   }
 
-  private static int skipWhiteSpace(int start, @Nonnull byte[] bytes) {
+  private static int skipWhiteSpace(int start, byte[] bytes) {
     while (start < bytes.length) {
       char c = (char)bytes[start];
       if (!Character.isWhitespace(c)) break;
@@ -109,7 +108,7 @@ public class XmlCharsetDetector {
     return start;
   }
 
-  private static int skipWhiteSpace(int start, @Nonnull CharSequence text) {
+  private static int skipWhiteSpace(int start, CharSequence text) {
     while (start < text.length()) {
       char c = text.charAt(start);
       if (!Character.isWhitespace(c)) break;

@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
@@ -32,8 +30,7 @@ public class ObjectUtil {
    *             it's recommended to supply that field name (possibly qualified with the class name).
    * @return a new sentinel object
    */
-  @Nonnull
-  public static Object sentinel(@Nonnull String name) {
+  public static Object sentinel(String name) {
     return new Sentinel(name);
   }
 
@@ -48,7 +45,7 @@ public class ObjectUtil {
   private static class Sentinel {
     private final String myName;
 
-    Sentinel(@Nonnull String name) {
+    Sentinel(String name) {
       myName = name;
     }
 
@@ -64,8 +61,7 @@ public class ObjectUtil {
    * {@code ofInterface} must represent an interface class.
    * Useful for stubs in generic code, e.g. for storing in {@code List<T>} to represent empty special value.
    */
-  @Nonnull
-  public static <T> T sentinel(@Nonnull String name, @Nonnull Class<T> ofInterface) {
+  public static <T> T sentinel(String name, Class<T> ofInterface) {
     if (!ofInterface.isInterface()) {
       throw new IllegalArgumentException("Expected interface but got: " + ofInterface);
     }
@@ -80,12 +76,11 @@ public class ObjectUtil {
     });
   }
 
-  @Nonnull
   public static <T> T assertNotNull(@Nullable T t) {
     return notNull(t);
   }
 
-  public static <T> void assertAllElementsNotNull(@Nonnull T[] array) {
+  public static <T> void assertAllElementsNotNull(T[] array) {
     for (int i = 0; i < array.length; i++) {
       T t = array[i];
       if (t == null) {
@@ -94,17 +89,14 @@ public class ObjectUtil {
     }
   }
 
-  @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
   public static <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
     return t1 == null ? t2 : t1;
   }
 
-  @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
   public static <T> T coalesce(@Nullable T t1, @Nullable T t2) {
     return chooseNotNull(t1, t2);
   }
 
-  @Contract(value = "!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null", pure = true)
   public static <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
     return t1 != null ? t1 : t2 != null ? t2 : t3;
   }
@@ -119,7 +111,7 @@ public class ObjectUtil {
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
    * @see java.util.Collections#binarySearch(List, Object, Comparator)
    */
-  public static int binarySearch(int fromIndex, int toIndex, @Nonnull IntUnaryOperator indexComparator) {
+  public static int binarySearch(int fromIndex, int toIndex, IntUnaryOperator indexComparator) {
     int low = fromIndex;
     int high = toIndex - 1;
     while (low <= high) {
@@ -141,26 +133,21 @@ public class ObjectUtil {
     return null;
   }
 
-  @Nonnull
   public static <T> T notNull(@Nullable T value) {
     //noinspection ConstantConditions
     return notNull(value, value);
   }
 
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> T notNull(@Nullable T value, @Nonnull T defaultValue) {
+  public static <T> T notNull(@Nullable T value, T defaultValue) {
     return value == null ? defaultValue : value;
   }
 
-  @Nonnull
-  public static <T> T notNull(@Nullable T value, @Nonnull Supplier<? extends T> defaultValue) {
+  public static <T> T notNull(@Nullable T value, Supplier<? extends T> defaultValue) {
     return value == null ? defaultValue.get() : value;
   }
 
-  @Contract(value = "null, _ -> null", pure = true)
   @Nullable
-  public static <T> T tryCast(@Nullable Object obj, @Nonnull Class<T> clazz) {
+  public static <T> T tryCast(@Nullable Object obj, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       return clazz.cast(obj);
     }
@@ -168,7 +155,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  public static <T, S> S doIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, Function<? super T, ? extends S> convertor) {
+  public static <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> convertor) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       return convertor.apply((T)obj);
@@ -176,19 +163,18 @@ public class ObjectUtil {
     return null;
   }
 
-  @Contract("null, _ -> null")
   @Nullable
-  public static <T, S> S doIfNotNull(@Nullable T obj, @Nonnull Function<? super T, ? extends S> function) {
+  public static <T, S> S doIfNotNull(@Nullable T obj, Function<? super T, ? extends S> function) {
     return obj == null ? null : function.apply(obj);
   }
 
-  public static <T> void consumeIfNotNull(@Nullable T obj, @Nonnull Consumer<? super T> consumer) {
+  public static <T> void consumeIfNotNull(@Nullable T obj, Consumer<? super T> consumer) {
     if (obj != null) {
       consumer.accept(obj);
     }
   }
 
-  public static <T> void consumeIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, Consumer<? super T> consumer) {
+  public static <T> void consumeIfCast(@Nullable Object obj, Class<T> clazz, Consumer<? super T> consumer) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       consumer.accept((T)obj);
@@ -196,8 +182,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  @Contract("null, _ -> null")
-  public static <T> T nullizeByCondition(@Nullable T obj, @Nonnull Predicate<? super T> condition) {
+  public static <T> T nullizeByCondition(@Nullable T obj, Predicate<? super T> condition) {
     if (condition.test(obj)) {
       return null;
     }
@@ -205,8 +190,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  @Contract("null, _ -> null")
-  public static <T> T nullizeIfDefaultValue(@Nullable T obj, @Nonnull T defaultValue) {
+  public static <T> T nullizeIfDefaultValue(@Nullable T obj, T defaultValue) {
     if (obj == defaultValue) {
       return null;
     }
@@ -234,7 +218,6 @@ public class ObjectUtil {
   //  }
   //  return -(low + 1);
   //}
-  @Nonnull
   public static  String objectInfo(@Nullable Object o) {
     return o != null ? o + " (" + o.getClass().getName() + ")" : "null";
   }

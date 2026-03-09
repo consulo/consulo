@@ -17,8 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.map.LinkedHashMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -93,7 +92,7 @@ public class SLRUMap<K,V> {
     myProtectedQueue.put(getStableKey(key), value);
   }
 
-  public void put(K key, @Nonnull V value) {
+  public void put(K key, V value) {
     V oldValue = myProtectedQueue.remove(key);
     if (oldValue != null) {
       onDropFromCache(key, oldValue);

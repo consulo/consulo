@@ -23,7 +23,6 @@ import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 import gnu.trove.TObjectHash;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -67,7 +66,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
 
   private class MyEntrySet extends AbstractSet<IntObjectEntry<V>> {
 
-    @Nonnull
     @Override
     public Iterator<IntObjectEntry<V>> iterator() {
       return new MyEntryIterator<>(MyIntObjectHashMap.this.iterator());
@@ -101,7 +99,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
 
   private class MyValues extends AbstractCollection<V> {
 
-    @Nonnull
     @Override
     public Iterator<V> iterator() {
       return new MyValuesIterator<>(MyIntObjectHashMap.this.iterator());
@@ -138,7 +135,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
   }
 
   private class MyKeySet extends AbstractIntSet {
-    @Nonnull
     @Override
     public PrimitiveIterator.OfInt iterator() {
       return new MyKeySetIterator(MyIntObjectHashMap.this.iterator());
@@ -190,7 +186,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return super.put(key, value);
   }
 
-  @Nonnull
   @Override
   public Set<IntObjectEntry<V>> entrySet() {
     if(myEntrySet == null) {
@@ -199,7 +194,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return myEntrySet;
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     if(myValues == null) {
@@ -208,7 +202,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return myValues;
   }
 
-  @Nonnull
   @Override
   public IntSet keySet() {
     if(myKeySet == null) {

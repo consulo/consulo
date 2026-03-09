@@ -18,8 +18,7 @@ package consulo.util.collection;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,18 +50,15 @@ import java.util.function.Predicate;
  */
 public abstract class JBIterator<E> implements Iterator<E> {
 
-  @Nonnull
-  public static <E extends JBIterator<?>> JBIterable<E> cursor(@Nonnull E iterator) {
+  public static <E extends JBIterator<?>> JBIterable<E> cursor(E iterator) {
     return JBIterable.<E>generate(iterator, Functions.<E>id()).intercept(CURSOR_NEXT);
   }
 
-  @Nonnull
-  public static <E> JBIterator<E> from(@Nonnull Iterator<E> it) {
+  public static <E> JBIterator<E> from(Iterator<E> it) {
     return it instanceof JBIterator ? (JBIterator<E>)it : wrap(it);
   }
 
-  @Nonnull
-  static <E> JBIterator<E> wrap(@Nonnull final Iterator<E> it) {
+  static <E> JBIterator<E> wrap(final Iterator<E> it) {
     return new JBIterator<E>() {
       @Override
       protected E nextImpl() {
@@ -164,39 +160,32 @@ public abstract class JBIterator<E> implements Iterator<E> {
     myNext = o;
   }
 
-  @Nonnull
-  public final <T> JBIterator<T> map(@Nonnull Function<? super E, T> function) {
+  public final <T> JBIterator<T> map(Function<? super E, T> function) {
     return addOp(true, new TransformOp<E, T>(function));
   }
 
-  @Nonnull
-  public final JBIterator<E> filter(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> filter(Predicate<? super E> condition) {
     return addOp(true, new FilterOp<E>(condition));
   }
 
-  @Nonnull
   public final JBIterator<E> take(int count) {
     // add first so that the underlying iterator stay on 'count' position
     return addOp(!(myLastOp instanceof NextOp), new WhileOp<E>(new CountDown<E>(count)));
   }
 
-  @Nonnull
-  public final JBIterator<E> takeWhile(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> takeWhile(Predicate<? super E> condition) {
     return addOp(true, new WhileOp<E>(condition));
   }
 
-  @Nonnull
   public final JBIterator<E> skip(int count) {
     return skipWhile(new CountDown<E>(count));
   }
 
-  @Nonnull
-  public final JBIterator<E> skipWhile(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> skipWhile(Predicate<? super E> condition) {
     return addOp(true, new SkipOp<E>(condition));
   }
 
-  @Nonnull
-  private <T> T addOp(boolean last, @Nonnull Op op) {
+  private <T> T addOp(boolean last, Op op) {
     if (op.impl == null) {
       myFirstOp = myLastOp = op;
     }
@@ -216,7 +205,6 @@ public abstract class JBIterator<E> implements Iterator<E> {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
   public final List<E> toList() {
     return Collections.unmodifiableList(ContainerUtil.newArrayList(JBIterable.once(this)));
   }
@@ -227,18 +215,15 @@ public abstract class JBIterator<E> implements Iterator<E> {
     return "{cur=" + myCurrent + "; next=" + myNext + (ops.size() < 2 ? "" : "; ops=" + ops) + "}";
   }
 
-  @Nonnull
   public final JBIterable<Function<Object, Object>> getTransformations() {
     return (JBIterable<Function<Object, Object>>)(JBIterable)operationsImpl().map(op -> op.impl).filter(Function.class);
   }
 
-  @Nonnull
   private JBIterable<Op> operationsImpl() {
     return JBIterable.generate(myFirstOp, op -> op.nextOp);
   }
 
-  @Nonnull
-  static String toShortString(@Nonnull Object o) {
+  static String toShortString(Object o) {
     String name = o.getClass().getName();
     int idx = name.lastIndexOf('$');
     if (idx > 0 && idx < name.length() && StringUtil.isJavaIdentifierStart(name.charAt(idx + 1))) {

@@ -17,13 +17,12 @@ package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.Attribute;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class AttributeBinding extends BasePrimitiveBinding {
   private final Class<?> valueClass;
 
-  public AttributeBinding(@Nonnull MutableAccessor accessor, @Nonnull Attribute attribute) {
+  public AttributeBinding(MutableAccessor accessor, Attribute attribute) {
     super(accessor, attribute.value(), attribute.converter());
 
     valueClass = XmlSerializerImpl.typeToClass(accessor.getGenericType());
@@ -31,7 +30,7 @@ class AttributeBinding extends BasePrimitiveBinding {
 
   @Override
   @Nullable
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -47,7 +46,7 @@ class AttributeBinding extends BasePrimitiveBinding {
     return new org.jdom.Attribute(myName, stringValue);
   }
 
-  void set(@Nonnull Object host, @Nonnull String value) {
+  void set(Object host, String value) {
     if (myConverter == null) {
       XmlSerializerImpl.doSet(host, value, myAccessor, valueClass);
     }

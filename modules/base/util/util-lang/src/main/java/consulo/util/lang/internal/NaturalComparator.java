@@ -16,8 +16,6 @@
 package consulo.util.lang.internal;
 
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -43,8 +41,7 @@ public class NaturalComparator implements Comparator<String> {
     return naturalCompare(s1, s2, s1.length(), s2.length(), true);
   }
 
-  @Contract(pure = true)
-  private static int naturalCompare(@Nonnull String s1, @Nonnull String s2, int length1, int length2, boolean ignoreCase) {
+  private static int naturalCompare(String s1, String s2, int length1, int length2, boolean ignoreCase) {
     int i = 0;
     int j = 0;
     for (; i < length1 && j < length2; i++, j++) {
@@ -92,7 +89,7 @@ public class NaturalComparator implements Comparator<String> {
     return ignoreCase ? naturalCompare(s1, s2, length1, length2, false) : 0;
   }
 
-  private static int compareCharRange(@Nonnull String s1, @Nonnull String s2, int offset1, int offset2, int end1) {
+  private static int compareCharRange(String s1, String s2, int offset1, int offset2, int end1) {
     for (int i = offset1, j = offset2; i < end1; i++, j++) {
       int diff = s1.charAt(i) - s2.charAt(j);
       if (diff != 0) return diff;

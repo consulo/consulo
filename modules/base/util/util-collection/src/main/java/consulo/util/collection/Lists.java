@@ -17,9 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.list.LockFreeCopyOnWriteArrayList;
 import consulo.util.collection.impl.list.SortedList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -42,26 +40,18 @@ public final class Lists {
      * N.B. Avoid using {@code list.toArray(new T[list.size()])} on this list because it is inherently racey and
      * therefore can return array with null elements at the end.
      */
-    @Nonnull
-    @Contract(pure = true)
     public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList() {
         return new LockFreeCopyOnWriteArrayList<>();
     }
 
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
+    public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList(Collection<? extends T> c) {
         return new LockFreeCopyOnWriteArrayList<>(c);
     }
 
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> List<T> newSortedList(@Nonnull Comparator<T> comparator) {
+    public static <T> List<T> newSortedList(Comparator<T> comparator) {
         return new SortedList<>(comparator);
     }
 
-    @Nonnull
-    @Contract(pure = true)
     public static <T> List<T> notNullize(@Nullable List<T> list) {
         return list == null ? List.of() : list;
     }
@@ -70,19 +60,17 @@ public final class Lists {
         quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
     }
 
-    @Nonnull
-    @Contract(pure = true)
     @SafeVarargs
-    public static <T> List<T> append(@Nonnull List<? extends T> list, @Nonnull T... values) {
+    public static <T> List<T> append(List<? extends T> list, T... values) {
         return ContainerUtil.concat(list, List.of(values));
     }
 
     // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
-    public static <T> void quickSort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
+    public static <T> void quickSort(List<T> list, Comparator<? super T> comparator) {
         quickSort(list, comparator, 0, list.size());
     }
 
-    private static <T> void quickSort(@Nonnull List<T> x, @Nonnull Comparator<? super T> comparator, int off, int len) {
+    private static <T> void quickSort(List<T> x, Comparator<? super T> comparator, int off, int len) {
         // Insertion sort on smallest arrays
         if (len < 7) {
             for (int i = off; i < len + off; i++) {
@@ -151,7 +139,7 @@ public final class Lists {
     /*
      * Returns the index of the median of the three indexed longs.
      */
-    private static <T> int med3(@Nonnull List<T> x, Comparator<? super T> comparator, int a, int b, int c) {
+    private static <T> int med3(List<T> x, Comparator<? super T> comparator, int a, int b, int c) {
         return comparator.compare(x.get(a), x.get(b)) < 0
             ? comparator.compare(x.get(b), x.get(c)) < 0 ? b : comparator.compare(x.get(a), x.get(c)) < 0 ? c : a
             : comparator.compare(x.get(c), x.get(b)) < 0 ? b : comparator.compare(x.get(c), x.get(a)) < 0 ? c : a;
@@ -170,9 +158,7 @@ public final class Lists {
      * @return read-only list consisting of the elements with nulls filtered out
      */
     @SafeVarargs
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> List<T> packNullables(@Nonnull T... elements) {
+    public static <T> List<T> packNullables(T... elements) {
         List<T> list = new ArrayList<>();
         for (T element : elements) {
             addIfNotNull(list, element);
@@ -180,8 +166,7 @@ public final class Lists {
         return list.isEmpty() ? List.of() : list;
     }
 
-    @Contract(pure = true)
-    public static <T> int indexOfIdentity(@Nonnull List<? extends T> list, T element) {
+    public static <T> int indexOfIdentity(List<? extends T> list, T element) {
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
             if (list.get(i) == element) {
                 return i;
@@ -190,11 +175,8 @@ public final class Lists {
         return -1;
     }
 
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> Iterable<T> iterateBackward(@Nonnull List<? extends T> list) {
+    public static <T> Iterable<T> iterateBackward(List<? extends T> list) {
         return new Iterable<>() {
-            @Nonnull
             @Override
             public Iterator<T> iterator() {
                 return new Iterator<>() {
@@ -220,15 +202,13 @@ public final class Lists {
     }
 
     @Nullable
-    @Contract(pure = true)
-    public static <T, U extends T> U findLastInstance(@Nonnull List<T> list, @Nonnull Class<U> clazz) {
+    public static <T, U extends T> U findLastInstance(List<T> list, Class<U> clazz) {
         int i = lastIndexOf(list, clazz::isInstance);
         //noinspection unchecked
         return i < 0 ? null : (U) list.get(i);
     }
 
-    @Contract(pure = true)
-    public static <T> int lastIndexOf(@Nonnull List<T> list, @Nonnull Predicate<? super T> condition) {
+    public static <T> int lastIndexOf(List<T> list, Predicate<? super T> condition) {
         for (int i = list.size() - 1; i >= 0; i--) {
             T t = list.get(i);
             if (condition.test(t)) {
@@ -247,18 +227,14 @@ public final class Lists {
      * @param <T>      type of list
      * @return new list with no more than {@code maxItems} first elements
      */
-    @Nonnull
-    @Contract(pure = true)
-    public static <T> List<T> getFirstItems(@Nonnull List<T> items, int maxItems) {
+    public static <T> List<T> getFirstItems(List<T> items, int maxItems) {
         return items.subList(0, Math.min(maxItems, items.size()));
     }
 
-    @Nonnull
-    @Contract(pure = true)
     public static <T> List<T> mergeSortedLists(
-        @Nonnull List<? extends T> list1,
-        @Nonnull List<? extends T> list2,
-        @Nonnull Comparator<? super T> comparator,
+        List<? extends T> list1,
+        List<? extends T> list2,
+        Comparator<? super T> comparator,
         boolean mergeEqualItems
     ) {
         List<T> result = new ArrayList<>(list1.size() + list2.size());

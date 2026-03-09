@@ -18,14 +18,13 @@ package consulo.util.xml.serializer;
 import consulo.util.xml.serializer.internal.BeanBinding;
 import consulo.util.xml.serializer.internal.InternalReflectionUtil;
 import consulo.util.xml.serializer.internal.MutableAccessor;
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class XmlSerializerUtil {
   private XmlSerializerUtil() {
   }
 
-  public static <T> void copyBean(@Nonnull T from, @Nonnull T to) {
+  public static <T> void copyBean(T from, T to) {
     assert from.getClass().isAssignableFrom(to.getClass()) : "Beans of different classes specified: Cannot assign " +
                                                              from.getClass() + " to " + to.getClass();
     for (MutableAccessor accessor : BeanBinding.getAccessors(from.getClass())) {
@@ -33,7 +32,7 @@ public class XmlSerializerUtil {
     }
   }
 
-  public static <T> T createCopy(@Nonnull T from) {
+  public static <T> T createCopy(T from) {
     try {
       @SuppressWarnings("unchecked")
       T to = (T)InternalReflectionUtil.newInstance(from.getClass());
@@ -45,8 +44,7 @@ public class XmlSerializerUtil {
     }
   }
 
-  @Nonnull
-  public static List<MutableAccessor> getAccessors(@Nonnull Class<?> aClass) {
+  public static List<MutableAccessor> getAccessors(Class<?> aClass) {
     return BeanBinding.getAccessors(aClass);
   }
 }

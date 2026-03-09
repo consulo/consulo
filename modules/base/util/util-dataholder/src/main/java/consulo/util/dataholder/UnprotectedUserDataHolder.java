@@ -1,9 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class UnprotectedUserDataHolder implements UserDataHolder {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         T value = myUserData != null ? (T)myUserData.get(key) : null;
         if (value == null && key instanceof KeyWithDefaultValue keyWithDefaultValue) {
             value = (T)keyWithDefaultValue.getDefaultValue();
@@ -27,7 +26,7 @@ public class UnprotectedUserDataHolder implements UserDataHolder {
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         if (myUserData == null) {
             myUserData = new HashMap<>();
         }

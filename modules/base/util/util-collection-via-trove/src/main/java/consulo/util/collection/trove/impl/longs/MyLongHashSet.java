@@ -20,7 +20,6 @@ import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 import gnu.trove.TLongHashSet;
 import gnu.trove.TLongIterator;
 
-import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**
@@ -92,7 +91,6 @@ public class MyLongHashSet implements LongSet {
     mySet.clear();
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfLong iterator() {
     return new Iter(mySet.iterator());

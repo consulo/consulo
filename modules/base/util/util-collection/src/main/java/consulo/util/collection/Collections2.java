@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -28,9 +27,8 @@ public class Collections2 {
   /**
    * Create collection from iterable. Optimized version if iterable is collection
    */
-  @Nonnull
   @SuppressWarnings("unchecked")
-  public static <C extends Collection<E>, E> C of(@Nonnull Iterable<E> iterable, @Nonnull Function<Collection<E>, C> factory) {
+  public static <C extends Collection<E>, E> C of(Iterable<E> iterable, Function<Collection<E>, C> factory) {
     if (iterable instanceof Collection) {
       return (C)factory.apply((Collection)iterable);
     }

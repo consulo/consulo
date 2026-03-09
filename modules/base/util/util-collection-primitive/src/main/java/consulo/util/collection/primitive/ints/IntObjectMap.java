@@ -15,8 +15,7 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -30,10 +29,8 @@ public interface IntObjectMap<V> {
     V1 getValue();
   }
 
-  @Nonnull
   IntSet keySet();
 
-  @Nonnull
   int[] keys();
 
   /**
@@ -51,10 +48,8 @@ public interface IntObjectMap<V> {
 
   V remove(int key);
 
-  @Nonnull
   Set<IntObjectEntry<V>> entrySet();
 
-  @Nonnull
   Collection<V> values();
 
   int size();

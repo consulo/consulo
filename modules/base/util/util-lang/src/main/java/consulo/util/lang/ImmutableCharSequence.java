@@ -15,25 +15,21 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Contract;
 
 public abstract class ImmutableCharSequence implements CharSequence {
 
-    public static CharSequence asImmutable(@Nonnull CharSequence cs) {
+    public static CharSequence asImmutable(CharSequence cs) {
         return isImmutable(cs) ? cs : cs.toString();
     }
 
-    public static boolean isImmutable(@Nonnull CharSequence cs) {
+    public static boolean isImmutable(CharSequence cs) {
         if (cs instanceof ImmutableCharSequence) {
             return true;
         }
         return cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence) cs).getBaseSequence());
     }
 
-    @Contract(pure = true)
-    @Nonnull
-    public ImmutableCharSequence replace(int start, int end, @Nonnull CharSequence seq) {
+    public ImmutableCharSequence replace(int start, int end, CharSequence seq) {
         return delete(start, end).insert(start, seq);
     }
 

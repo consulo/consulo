@@ -15,12 +15,10 @@
  */
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,8 +43,7 @@ public class PatternUtil {
     }
   }
 
-  @Nonnull
-  public static String convertToRegex(@Nonnull String mask) {
+  public static String convertToRegex(String mask) {
     List<String> strings = StringUtil.split(mask, "\\");
     StringBuilder pattern = new StringBuilder();
     String separator = "";
@@ -63,8 +60,7 @@ public class PatternUtil {
     return pattern.toString();
   }
 
-  @Nonnull
-  public static Pattern fromMask(@Nonnull String mask) {
+  public static Pattern fromMask(String mask) {
     try {
       return Pattern.compile(convertToRegex(mask));
     }
@@ -74,7 +70,6 @@ public class PatternUtil {
     }
   }
 
-  @Contract("_, !null->!null")
   public static Pattern compileSafe(String pattern, Pattern def) {
     try {
       return Pattern.compile(pattern);

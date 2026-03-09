@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -33,18 +32,18 @@ public class NotNullList<E> extends ArrayList<E> {
   public NotNullList() {
   }
 
-  public NotNullList(@Nonnull Collection<? extends E> c) {
+  public NotNullList(Collection<? extends E> c) {
     super(c);
     checkNotNullCollection(c);
   }
 
   @Override
-  public boolean add(@Nonnull E e) {
+  public boolean add(E e) {
     return super.add(e);
   }
 
   @Override
-  public void add(int index, @Nonnull E element) {
+  public void add(int index, E element) {
     super.add(index, element);
   }
 
@@ -55,35 +54,32 @@ public class NotNullList<E> extends ArrayList<E> {
   }
 
   @Override
-  public E set(int index, @Nonnull E element) {
+  public E set(int index, E element) {
     return super.set(index, element);
   }
 
   @Override
-  @Nonnull
   public E get(int index) {
     return super.get(index);
   }
 
-  private void checkNotNullCollection(@Nonnull Collection<? extends E> c) {
+  private void checkNotNullCollection(Collection<? extends E> c) {
     for (E e : c) {
       if (e == null) throw new IllegalArgumentException("null element in the collection: " + c);
     }
   }
 
   @Override
-  public boolean addAll(int index, @Nonnull Collection<? extends E> c) {
+  public boolean addAll(int index, Collection<? extends E> c) {
     checkNotNullCollection(c);
     return super.addAll(index, c);
   }
 
-  @Nonnull
   @Override
   public List<E> subList(int fromIndex, int toIndex) {
     final List<E> subList = super.subList(fromIndex, toIndex);
     return new AbstractList<E>() {
       @Override
-      @Nonnull
       public E get(int index) {
         return subList.get(index);
       }
@@ -94,17 +90,17 @@ public class NotNullList<E> extends ArrayList<E> {
       }
 
       @Override
-      public boolean add(@Nonnull E e) {
+      public boolean add(E e) {
         return subList.add(e);
       }
 
       @Override
-      public E set(int index, @Nonnull E element) {
+      public E set(int index, E element) {
         return subList.set(index, element);
       }
 
       @Override
-      public void add(int index, @Nonnull E element) {
+      public void add(int index, E element) {
         subList.add(index, element);
       }
 
@@ -114,14 +110,13 @@ public class NotNullList<E> extends ArrayList<E> {
         return subList.addAll(index, c);
       }
 
-      @Nonnull
       @Override
       public List<E> subList(int fromIndex, int toIndex) {
         return subList.subList(fromIndex, toIndex);
       }
 
       @Override
-      public boolean addAll(@Nonnull Collection<? extends E> c) {
+      public boolean addAll(Collection<? extends E> c) {
         checkNotNullCollection(c);
         return subList.addAll(c);
       }

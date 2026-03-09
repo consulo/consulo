@@ -17,14 +17,13 @@ package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.internal.AbstractCollectionBinding;
 import consulo.util.xml.serializer.internal.MutableAccessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 
 class ArrayBinding extends AbstractCollectionBinding {
-  public ArrayBinding(@Nonnull Class<?> valueClass, @Nullable MutableAccessor accessor) {
+  public ArrayBinding(Class<?> valueClass, @Nullable MutableAccessor accessor) {
     super(valueClass.getComponentType(), accessor);
   }
 
@@ -39,9 +38,8 @@ class ArrayBinding extends AbstractCollectionBinding {
     return result.toArray((Object[])Array.newInstance(itemType, result.size()));
   }
 
-  @Nonnull
   @Override
-  Collection<Object> getIterable(@Nonnull Object o) {
+  Collection<Object> getIterable(Object o) {
     return Arrays.asList((Object[])o);
   }
 }

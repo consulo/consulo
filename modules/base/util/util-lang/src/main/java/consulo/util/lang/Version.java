@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -33,7 +32,7 @@ public class Version {
   }
 
   @Nullable
-  public static Version parseVersion(@Nonnull String versionString) {
+  public static Version parseVersion(String versionString) {
     String[] versions = versionString.split("\\.");
     String version = versions[0];
     int major = parseNumber(version, -1);
@@ -94,7 +93,7 @@ public class Version {
     return compareTo(major, minor, bugfix) < 0;
   }
 
-  public int compareTo(@Nonnull Version version) {
+  public int compareTo(Version version) {
     return compareTo(version.major, version.minor, version.bugfix);
   }
 

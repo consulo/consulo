@@ -11,7 +11,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import jakarta.annotation.Nonnull;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -588,18 +587,17 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final int hash;
     final K key;
     volatile V val;
-    @Nonnull
     final HashingStrategy<K> hashingStrategy;
     volatile Node<K, V> next;
 
-    Node(int hash, K key, V val, @Nonnull HashingStrategy<K> hashingStrategy) {
+    Node(int hash, K key, V val, HashingStrategy<K> hashingStrategy) {
       this.hash = hash;
       this.key = key;
       this.val = val;
       this.hashingStrategy = hashingStrategy;
     }
 
-    Node(int hash, K key, V val, Node<K, V> next, @Nonnull HashingStrategy<K> hashingStrategy) {
+    Node(int hash, K key, V val, Node<K, V> next, HashingStrategy<K> hashingStrategy) {
       this(hash, key, val, hashingStrategy);
       this.next = next;
     }
@@ -886,7 +884,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     }
   };
 
-  public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<K> hashingStrategy) {
+  public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<K> hashingStrategy) {
     if (!(loadFactor > 0.0f) || initialCapacity < 0 || concurrencyLevel <= 0) {
       throw new IllegalArgumentException();
     }
@@ -900,7 +898,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     this.hashingStrategy = hashingStrategy == THIS ? this : hashingStrategy;
   }
 
-  public ConcurrentHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+  public ConcurrentHashMap(HashingStrategy<K> hashingStrategy) {
     this(DEFAULT_CAPACITY, LOAD_FACTOR, NCPU, hashingStrategy);
   }
   // Original (since JDK1.2) Map methods
@@ -1964,7 +1962,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class ForwardingNode<K, V> extends Node<K, V> {
     final Node<K, V>[] nextTable;
 
-    ForwardingNode(Node<K, V>[] tab, @Nonnull HashingStrategy<K> hashingStrategy) {
+    ForwardingNode(Node<K, V>[] tab, HashingStrategy<K> hashingStrategy) {
       super(MOVED, null, null, hashingStrategy);
       this.nextTable = tab;
     }
@@ -1997,7 +1995,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * A place-holder node used in computeIfAbsent and compute.
    */
   static final class ReservationNode<K, V> extends Node<K, V> {
-    ReservationNode(@Nonnull HashingStrategy<K> hashingStrategy) {
+    ReservationNode(HashingStrategy<K> hashingStrategy) {
       super(RESERVED, null, null, hashingStrategy);
     }
 
@@ -2418,7 +2416,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     TreeNode<K, V> prev;    // needed to unlink next upon deletion
     boolean red;
 
-    TreeNode(int hash, K key, V val, Node<K, V> next, TreeNode<K, V> parent, @Nonnull HashingStrategy<K> hashingStrategy) {
+    TreeNode(int hash, K key, V val, Node<K, V> next, TreeNode<K, V> parent, HashingStrategy<K> hashingStrategy) {
       super(hash, key, val, next, hashingStrategy);
       this.parent = parent;
     }
@@ -2490,7 +2488,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     /**
      * Creates bin with initial set of nodes headed by b.
      */
-    TreeBin(TreeNode<K, V> b, @Nonnull HashingStrategy<K> hashingStrategy) {
+    TreeBin(TreeNode<K, V> b, HashingStrategy<K> hashingStrategy) {
       super(TREEBIN, null, null, hashingStrategy);
       this.first = b;
       TreeNode<K, V> r = null;
@@ -5688,11 +5686,11 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     return spread(hashingStrategy.hashCode(key));
   }
 
-  private boolean isEqual(@Nonnull K key1, K key2) {
+  private boolean isEqual(K key1, K key2) {
     return isEqual(key1, key2, hashingStrategy);
   }
 
-  private static <K> boolean isEqual(@Nonnull K key1, K key2, @Nonnull HashingStrategy<K> hashingStrategy) {
+  private static <K> boolean isEqual(K key1, K key2, HashingStrategy<K> hashingStrategy) {
     return key1 == key2 || key2 != null && hashingStrategy.equals(key1, key2);
   }
 }

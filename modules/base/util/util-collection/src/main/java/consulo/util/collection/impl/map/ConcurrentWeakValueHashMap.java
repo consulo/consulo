@@ -18,7 +18,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -33,12 +32,11 @@ public final class ConcurrentWeakValueHashMap<K, V> extends ConcurrentRefValueHa
   private static class MyWeakReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
     private final K key;
 
-    private MyWeakReference(@Nonnull K key, @Nonnull V referent, @Nonnull ReferenceQueue<V> q) {
+    private MyWeakReference(K key, V referent, ReferenceQueue<V> q) {
       super(referent, q);
       this.key = key;
     }
 
-    @Nonnull
     @Override
     public K getKey() {
       return key;
@@ -58,9 +56,8 @@ public final class ConcurrentWeakValueHashMap<K, V> extends ConcurrentRefValueHa
     }
   }
 
-  @Nonnull
   @Override
-  public ValueReference<K, V> createValueReference(@Nonnull K key, @Nonnull V value) {
+  public ValueReference<K, V> createValueReference(K key, V value) {
     return new MyWeakReference<>(key, value, myQueue);
   }
 }

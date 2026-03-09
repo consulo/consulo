@@ -23,8 +23,7 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -34,7 +33,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
   protected final Class<?> itemType;
   private final AbstractCollection annotation;
 
-  public AbstractCollectionBinding(@Nonnull Class elementType, @Nullable MutableAccessor accessor) {
+  public AbstractCollectionBinding(Class elementType, @Nullable MutableAccessor accessor) {
     super(accessor);
 
     itemType = elementType;
@@ -47,7 +46,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
   }
 
   @Override
-  public void init(@Nonnull Type originalType) {
+  public void init(Type originalType) {
     if (annotation == null || annotation.surroundWithTag()) {
       return;
     }
@@ -58,7 +57,6 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
     }
   }
 
-  @Nonnull
   private synchronized Map<Class<?>, Binding> getElementBindings() {
     if (itemBindings == null) {
       Binding binding = XmlSerializerImpl.getBinding(itemType);
@@ -85,7 +83,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
   }
 
   @Nullable
-  private Binding getElementBinding(@Nonnull Element element) {
+  private Binding getElementBinding(Element element) {
     for (Binding binding : getElementBindings().values()) {
       if (binding.isBoundTo(element)) {
         return binding;
@@ -96,12 +94,11 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
 
   abstract Object processResult(Collection result, Object target);
 
-  @Nonnull
-  abstract Collection<Object> getIterable(@Nonnull Object o);
+  abstract Collection<Object> getIterable(Object o);
 
   @Nullable
   @Override
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Collection<Object> collection = getIterable(o);
 
     String tagName = getTagName(o);
@@ -130,7 +127,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
 
   @Nullable
   @Override
-  public Object deserializeList(Object context, @Nonnull List<Element> elements) {
+  public Object deserializeList(Object context, List<Element> elements) {
     Collection result;
     if (getTagName(context) == null) {
       if (context instanceof Collection) {
@@ -158,7 +155,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
 
 
   @Nullable
-  private Object serializeItem(@Nullable Object value, Object context, @Nonnull SerializationFilter filter) {
+  private Object serializeItem(@Nullable Object value, Object context, SerializationFilter filter) {
     if (value == null) {
       LOG.warn("Collection " + myAccessor + " contains 'null' object");
       return null;
@@ -184,7 +181,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
     }
   }
 
-  private Object deserializeItem(@Nonnull Element node, Object context) {
+  private Object deserializeItem(Element node, Object context) {
     Binding binding = getElementBinding(node);
     if (binding == null) {
       String attributeName = annotation == null ? Constants.VALUE : annotation.elementValueAttribute();
@@ -203,7 +200,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
   }
 
   @Override
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(Object context, Element element) {
     Collection result;
     if (getTagName(context) == null) {
       if (context instanceof Collection) {
@@ -227,8 +224,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
     return processResult(result, context);
   }
 
-  @Nonnull
-  private Collection deserializeSingle(Object context, @Nonnull Element node) {
+  private Collection deserializeSingle(Object context, Element node) {
     Collection result = createCollection(node.getName());
     for (Element child : node.getChildren()) {
       //noinspection unchecked
@@ -237,12 +233,12 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
     return result;
   }
 
-  protected Collection createCollection(@Nonnull String tagName) {
+  protected Collection createCollection(String tagName) {
     return new ArrayList();
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element element) {
+  public boolean isBoundTo(Element element) {
     String tagName = getTagName(element);
     if (tagName == null) {
       if (element.getName().equals(annotation == null ? Constants.OPTION : annotation.elementTag())) {

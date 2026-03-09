@@ -18,7 +18,6 @@ package consulo.util.io;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.SLRUMap;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,6 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
 
   protected abstract void disposeAccessor(T fileAccessor) throws IOException;
 
-  @Nonnull
   public final Handle<T> get(K key) {
     Handle<T> cached = getIfCached(key);
     if (cached != null) return cached;
@@ -60,7 +58,6 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
   //private static final AtomicInteger myCreateRequests = new AtomicInteger();
   //private static final AtomicInteger myCloseRequests = new AtomicInteger();
   //private static final AtomicLong myCloseTime = new AtomicLong();
-  @Nonnull
   private Handle<T> createHandle(K key) {
     Handle<T> cached;
     try {

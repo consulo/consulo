@@ -15,15 +15,13 @@
  */
 package consulo.util.socketConnection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
  * @author nik
  */
 public interface SocketConnection<Request extends AbstractRequest, Response extends AbstractResponse> {
-  @Nonnull
   ConnectionState getState();
 
   void open() throws IOException;
@@ -31,20 +29,19 @@ public interface SocketConnection<Request extends AbstractRequest, Response exte
   /**
    * Return runnable for unregister this listener
    */
-  @Nonnull
-  Runnable addListener(@Nonnull SocketConnectionListener listener);
+  Runnable addListener(SocketConnectionListener listener);
 
   int getPort();
 
-  void sendRequest(@Nonnull Request request);
+  void sendRequest(Request request);
 
-  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler);
+  void sendRequest(Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler);
 
-  <R extends Response> void registerHandler(@Nonnull Class<R> responseClass, @Nonnull AbstractResponseHandler<R> handler);
+  <R extends Response> void registerHandler(Class<R> responseClass, AbstractResponseHandler<R> handler);
 
   void close();
 
-  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, @Nonnull Runnable onTimeout);
+  void sendRequest(Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, Runnable onTimeout);
 
   boolean isStopping();
 }

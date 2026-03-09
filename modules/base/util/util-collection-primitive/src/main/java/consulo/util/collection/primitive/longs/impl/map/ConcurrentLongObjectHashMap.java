@@ -8,7 +8,6 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMa
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.LockSupport;
 
@@ -141,7 +140,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return key;
     }
 
-    @Nonnull
     @Override
     public final V getValue() {
       return val;
@@ -449,7 +447,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * specified value
    */
   @Override
-  public boolean containsValue(@Nonnull Object value) {
+  public boolean containsValue(Object value) {
     Node<V>[] t;
     if ((t = table) != null) {
       Traverser<V> it = new Traverser<>(t, t.length, 0, t.length);
@@ -476,14 +474,14 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * {@code null} if there was no mapping for {@code key}
    */
   @Override
-  public V put(long key, @Nonnull V value) {
+  public V put(long key, V value) {
     return putVal(key, value, false);
   }
 
   /**
    * Implementation for put and putIfAbsent
    */
-  final V putVal(long key, @Nonnull V value, boolean onlyIfAbsent) {
+  final V putVal(long key, V value, boolean onlyIfAbsent) {
     int hash = spread(key);
     int binCount = 0;
     for (Node<V>[] tab = table; ; ) {
@@ -693,7 +691,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    *
    * @return the collection view
    */
-  @Nonnull
   @Override
   public Collection<V> values() {
     ValuesView<V> vs;
@@ -824,7 +821,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * or {@code null} if there was no mapping for the key
    */
   @Override
-  public V putIfAbsent(long key, @Nonnull V value) {
+  public V putIfAbsent(long key, V value) {
     return putVal(key, value, true);
   }
 
@@ -832,7 +829,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long key, @Nonnull Object value) {
+  public boolean remove(long key, Object value) {
     return replaceNode(key, null, value) != null;
   }
 
@@ -840,7 +837,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * {@inheritDoc}
    */
   @Override
-  public boolean replace(long key, @Nonnull V oldValue, @Nonnull V newValue) {
+  public boolean replace(long key, V oldValue, V newValue) {
     return replaceNode(key, newValue, oldValue) != null;
   }
 
@@ -851,7 +848,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * or {@code null} if there was no mapping for the key
    */
   @Override
-  public V replace(long key, @Nonnull V value) {
+  public V replace(long key, V value) {
     return replaceNode(key, value, null);
   }
 
@@ -898,7 +895,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    *
    * @return an enumeration of the keys in this table
    */
-  @Nonnull
   @Override
   public long[] keys() {
     Object[] entries = new EntrySetView<>(this).toArray();
@@ -917,7 +913,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @see #values()
    */
   @Override
-  @Nonnull
   public Enumeration<V> elements() {
     Node<V>[] t;
     int f = (t = table) == null ? 0 : t.length;
@@ -2310,7 +2305,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           return k;
         }
 
-        @Nonnull
         @Override
         public V getValue() {
           return v;
@@ -2372,7 +2366,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      *
      * @return an iterator over the elements in this collection
      */
-    @Nonnull
     @Override
     public abstract Iterator<E> iterator();
 
@@ -2384,7 +2377,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
 
     private static final String oomeMsg = "Required array size too large";
 
-    @Nonnull
     @Override
     public final Object[] toArray() {
       long sz = map.mappingCount();
@@ -2412,10 +2404,9 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return (i == n) ? r : Arrays.copyOf(r, i);
     }
 
-    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public final <T> T[] toArray(@Nonnull T[] a) {
+    public final <T> T[] toArray(T[] a) {
       long sz = map.mappingCount();
       if (sz > MAX_ARRAY_SIZE) {
         throw new OutOfMemoryError(oomeMsg);
@@ -2476,7 +2467,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     }
 
     @Override
-    public final boolean containsAll(@Nonnull Collection<?> c) {
+    public final boolean containsAll(Collection<?> c) {
       if (c != this) {
         for (Object e : c) {
           if (e == null || !contains(e)) {
@@ -2488,7 +2479,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     }
 
     @Override
-    public final boolean removeAll(@Nonnull Collection<?> c) {
+    public final boolean removeAll(Collection<?> c) {
       boolean modified = false;
       for (Iterator<E> it = iterator(); it.hasNext(); ) {
         if (c.contains(it.next())) {
@@ -2500,7 +2491,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     }
 
     @Override
-    public final boolean retainAll(@Nonnull Collection<?> c) {
+    public final boolean retainAll(Collection<?> c) {
       boolean modified = false;
       for (Iterator<E> it = iterator(); it.hasNext(); ) {
         if (!c.contains(it.next())) {
@@ -2540,7 +2531,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return false;
     }
 
-    @Nonnull
     @Override
     public final Iterator<V> iterator() {
       ConcurrentLongObjectHashMap<V> m = map;
@@ -2555,12 +2545,11 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     }
 
     @Override
-    public final boolean addAll(@Nonnull Collection<? extends V> c) {
+    public final boolean addAll(Collection<? extends V> c) {
       throw new UnsupportedOperationException();
     }
   }
 
-  @Nonnull
   @Override
   public Iterable<LongEntry<V>> entries() {
     return new EntrySetView<>(this);
@@ -2595,7 +2584,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     /**
      * @return an iterator over the entries of the backing map
      */
-    @Nonnull
     @Override
     public Iterator<LongEntry<V>> iterator() {
       ConcurrentLongObjectHashMap<V> m = map;
@@ -2694,8 +2682,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @return value if there is no entry in the map, or corresponding value if entry already exists
    */
   @Override
-  @Nonnull
-  public V cacheOrGet(long key, @Nonnull V defaultValue) {
+  public V cacheOrGet(long key, V defaultValue) {
     V v = get(key);
     if (v != null) return v;
     V prev = putIfAbsent(key, defaultValue);

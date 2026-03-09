@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -80,7 +79,6 @@ public class FList<E> extends AbstractList<E> {
     return this;
   }
 
-  @Nonnull
   @Override
   public Iterator<E> iterator() {
     return new Iterator<E>() {

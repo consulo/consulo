@@ -18,8 +18,7 @@ package consulo.util.socketConnection;
 import consulo.util.socketConnection.impl.ServerSocketConnectionImpl;
 import consulo.util.socketConnection.impl.SocketConnectionImpl;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.InetAddress;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -30,7 +29,7 @@ public final class SocketConnectionFactory {
   private SocketConnectionFactory() {
   }
 
-  public static <Request extends AbstractRequest, Response extends AbstractResponse> SocketConnection<Request, Response> createServerConnection(@Nonnull ScheduledExecutorService executorService,
+  public static <Request extends AbstractRequest, Response extends AbstractResponse> SocketConnection<Request, Response> createServerConnection(ScheduledExecutorService executorService,
                                                                                                                                                 int defaultPort,
                                                                                                                                                 int attempts,
                                                                                                                                                 RequestResponseExternalizerFactory<Request, Response> factory) {
@@ -38,13 +37,13 @@ public final class SocketConnectionFactory {
   }
 
 
-  public static <Request extends AbstractRequest, Response extends AbstractResponse> SocketConnection<Request, Response> createServerConnection(@Nonnull ScheduledExecutorService executorService,
+  public static <Request extends AbstractRequest, Response extends AbstractResponse> SocketConnection<Request, Response> createServerConnection(ScheduledExecutorService executorService,
                                                                                                                                                 int defaultPort,
                                                                                                                                                 RequestResponseExternalizerFactory<Request, Response> factory) {
     return new ServerSocketConnectionImpl<>(executorService, defaultPort, 1, factory);
   }
 
-  public static <Request extends AbstractRequest, Response extends AbstractResponse> ClientSocketConnection<Request, Response> createConnection(@Nonnull ScheduledExecutorService executor,
+  public static <Request extends AbstractRequest, Response extends AbstractResponse> ClientSocketConnection<Request, Response> createConnection(ScheduledExecutorService executor,
                                                                                                                                                 @Nullable InetAddress host,
                                                                                                                                                 int initialPort,
                                                                                                                                                 int portsNumberToTry,

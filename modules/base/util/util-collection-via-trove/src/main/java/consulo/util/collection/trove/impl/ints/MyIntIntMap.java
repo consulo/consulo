@@ -20,7 +20,6 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntIterator;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class MyIntIntMap extends TIntIntHashMap implements IntIntMap {
   }
 
   @Override
-  public void forEach(@Nonnull BiIntConsumer consumer) {
+  public void forEach(BiIntConsumer consumer) {
     TIntIntIterator iterator = iterator();
 
     while (iterator.hasNext()) {

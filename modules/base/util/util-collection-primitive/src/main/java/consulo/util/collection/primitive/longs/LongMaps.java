@@ -16,23 +16,17 @@
 package consulo.util.collection.primitive.longs;
 
 import consulo.util.collection.primitive.longs.impl.map.ConcurrentLongObjectHashMap;
-import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09/02/2021
  */
 public final class LongMaps {
-  @Nonnull
-  @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap() {
     return new ConcurrentLongObjectHashMap<V>();
   }
 
-  @Nonnull
-  @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap(int initialCapacity) {
     return new ConcurrentLongObjectHashMap<V>(initialCapacity);
   }

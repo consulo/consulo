@@ -20,7 +20,6 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public class JDOMExternalizableStringList extends ArrayList<String> implements J
   public JDOMExternalizableStringList() {
   }
 
-  public JDOMExternalizableStringList(@Nonnull Collection<? extends String> c) {
+  public JDOMExternalizableStringList(Collection<? extends String> c) {
     super(c);
   }
 

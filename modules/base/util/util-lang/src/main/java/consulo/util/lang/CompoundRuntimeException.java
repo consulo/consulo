@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -28,10 +27,9 @@ import java.util.function.Function;
  * @author mike
  */
 public class CompoundRuntimeException extends RuntimeException {
-  @Nonnull
   private final List<? extends Throwable> myExceptions;
 
-  public CompoundRuntimeException(@Nonnull List<? extends Throwable> throwables) {
+  public CompoundRuntimeException(List<? extends Throwable> throwables) {
     myExceptions = throwables;
   }
 
@@ -78,7 +76,7 @@ public class CompoundRuntimeException extends RuntimeException {
     }, s::print);
   }
 
-  private String processAll(@Nonnull Function<? super Throwable, String> exceptionProcessor, @Nonnull Consumer<? super String> stringProcessor) {
+  private String processAll(Function<? super Throwable, String> exceptionProcessor, Consumer<? super String> stringProcessor) {
     if (myExceptions.size() == 1) {
       Throwable throwable = myExceptions.get(0);
       String s = exceptionProcessor.apply(throwable);

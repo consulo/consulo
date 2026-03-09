@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 
@@ -16,7 +14,6 @@ public class Comparing {
   private Comparing() {
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
   public static <T> boolean equal(@Nullable T arg1, @Nullable T arg2) {
     if (arg1 == arg2) return true;
     if (arg1 == null || arg2 == null) {
@@ -41,22 +38,18 @@ public class Comparing {
     return Arrays.equals(arr1, arr2);
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
   public static boolean equal(CharSequence s1, CharSequence s2) {
     return StringUtil.equal(s1, s2, true);
   }
 
-  @Contract(value = "null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true", pure = true)
   public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
     return StringUtil.equal(s1, s2, caseSensitive);
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
   public static boolean equal(@Nullable String arg1, @Nullable String arg2) {
     return arg1 == null ? arg2 == null : arg1.equals(arg2);
   }
 
-  @Contract(value = "null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true", pure = true)
   public static boolean equal(@Nullable String arg1, @Nullable String arg2, boolean caseSensitive) {
     return arg1 == null ? arg2 == null : caseSensitive ? arg1.equals(arg2) : arg1.equalsIgnoreCase(arg2);
   }
@@ -75,7 +68,7 @@ public class Comparing {
     return equal(arg1 == null ? "" : arg1, arg2 == null ? "" : arg2, caseSensitive);
   }
 
-  public static <T> boolean haveEqualElements(@Nonnull Collection<? extends T> a, @Nonnull Collection<? extends T> b) {
+  public static <T> boolean haveEqualElements(Collection<? extends T> a, Collection<? extends T> b) {
     if (a.size() != b.size()) {
       return false;
     }
@@ -122,7 +115,7 @@ public class Comparing {
   /**
    * @see AbstractSet#hashCode()
    */
-  public static int unorderedHashcode(@Nonnull Collection<?> collection) {
+  public static int unorderedHashcode(Collection<?> collection) {
     int h = 0;
     for (Object obj : collection) {
       if (obj != null) {
@@ -178,7 +171,7 @@ public class Comparing {
     return o1.compareTo(o2);
   }
 
-  public static <T> int compare(@Nullable T o1, @Nullable T o2, @Nonnull Comparator<? super T> notNullComparator) {
+  public static <T> int compare(@Nullable T o1, @Nullable T o2, Comparator<? super T> notNullComparator) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;

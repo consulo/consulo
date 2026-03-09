@@ -21,8 +21,7 @@ import org.jdom.Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -40,10 +39,10 @@ public class DefaultJDOMExternalizer {
   }
 
   public interface JDOMFilter {
-    boolean isAccept(@Nonnull Field field);
+    boolean isAccept(Field field);
   }
 
-  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode) throws WriteExternalException {
+  public static void writeExternal(Object data, Element parentNode) throws WriteExternalException {
     writeExternal(data, parentNode, null);
   }
 
@@ -53,7 +52,7 @@ public class DefaultJDOMExternalizer {
    * @param filter     null means all elements accepted
    * @throws WriteExternalException
    */
-  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode, @Nullable JDOMFilter filter) throws WriteExternalException {
+  public static void writeExternal(Object data, Element parentNode, @Nullable JDOMFilter filter) throws WriteExternalException {
     Field[] fields = data.getClass().getFields();
 
     for (Field field : fields) {
@@ -159,7 +158,7 @@ public class DefaultJDOMExternalizer {
     return value;
   }
 
-  public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException {
+  public static void readExternal(Object data, Element parentNode) throws InvalidDataException {
     if (parentNode == null) return;
 
     for (Element e : parentNode.getChildren("option")) {
@@ -290,7 +289,7 @@ public class DefaultJDOMExternalizer {
     }
   }
 
-  public static int toInt(@Nonnull String value) throws InvalidDataException {
+  public static int toInt(String value) throws InvalidDataException {
     int i;
     try {
       i = Integer.parseInt(value);

@@ -17,18 +17,15 @@ package consulo.util.collection;
 
 import consulo.util.lang.function.Functions;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 public class JBTreeTraverser<T> extends FilteredTraverserBase<T, JBTreeTraverser<T>> {
 
-  @Nonnull
-  public static <T> JBTreeTraverser<T> from(@Nonnull Function<T, ? extends Iterable<? extends T>> treeStructure) {
+  public static <T> JBTreeTraverser<T> from(Function<T, ? extends Iterable<? extends T>> treeStructure) {
     return new JBTreeTraverser<T>(treeStructure);
   }
 
-  @Nonnull
-  public static <T> JBTreeTraverser<T> of(@Nonnull Function<T, T[]> treeStructure) {
+  public static <T> JBTreeTraverser<T> of(Function<T, T[]> treeStructure) {
     return new JBTreeTraverser<T>(Functions.compose(treeStructure, Functions.<T>wrapArray()));
   }
 
@@ -40,7 +37,6 @@ public class JBTreeTraverser<T> extends FilteredTraverserBase<T, JBTreeTraverser
     super(meta, treeStructure);
   }
 
-  @Nonnull
   @Override
   protected JBTreeTraverser<T> newInstance(Meta<T> meta) {
     return new JBTreeTraverser<T>(meta, getTree());

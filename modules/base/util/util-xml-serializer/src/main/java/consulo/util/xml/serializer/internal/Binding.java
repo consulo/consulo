@@ -16,8 +16,7 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.SerializationFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,30 +33,29 @@ public abstract class Binding {
         myAccessor = accessor;
     }
 
-    @Nonnull
     public MutableAccessor getAccessor() {
         return myAccessor;
     }
 
     @Nullable
-    public abstract Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter);
+    public abstract Object serialize(Object o, @Nullable Object context, SerializationFilter filter);
 
     @Nullable
-    public Object deserialize(Object context, @Nonnull Element element) {
+    public Object deserialize(Object context, Element element) {
         return context;
     }
 
-    public boolean isBoundTo(@Nonnull Element element) {
+    public boolean isBoundTo(Element element) {
         return false;
     }
 
-    void init(@Nonnull Type originalType) {
+    void init(Type originalType) {
         // called (and make sense) only if MainBinding
     }
 
     @SuppressWarnings("CastToIncompatibleInterface")
     @Nullable
-    public static Object deserializeList(@Nonnull Binding binding, Object context, @Nonnull List<Element> nodes) {
+    public static Object deserializeList(Binding binding, Object context, List<Element> nodes) {
         if (binding instanceof MultiNodeBinding) {
             return ((MultiNodeBinding) binding).deserializeList(context, nodes);
         }

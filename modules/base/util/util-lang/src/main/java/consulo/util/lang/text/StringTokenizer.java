@@ -1,7 +1,6 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang.text;
 
-import jakarta.annotation.Nonnull;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -44,7 +43,7 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
     maxDelimChar = m;
   }
 
-  public StringTokenizer(@Nonnull String str, @Nonnull String delim, boolean returnDelims) {
+  public StringTokenizer(String str, String delim, boolean returnDelims) {
     currentPosition = 0;
     newPosition = -1;
     delimsChanged = false;
@@ -55,11 +54,11 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
     setMaxDelimChar();
   }
 
-  public StringTokenizer(@Nonnull String str, @Nonnull String delim) {
+  public StringTokenizer(String str, String delim) {
     this(str, delim, false);
   }
 
-  public StringTokenizer(@Nonnull String str) {
+  public StringTokenizer(String str) {
     this(str, " \t\n\r\f", false);
   }
 
@@ -102,7 +101,6 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
     return newPosition < maxPosition;
   }
 
-  @Nonnull
   public String nextToken() {
     currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(currentPosition);
 
@@ -118,8 +116,7 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
     return str.substring(start, currentPosition);
   }
 
-  @Nonnull
-  public String nextToken(@Nonnull String delim) {
+  public String nextToken(String delim) {
     delimiters = delim;
 
     /* delimiter string specified, so set the appropriate flag. */
@@ -140,7 +137,6 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
   }
 
   @Override
-  @Nonnull
   public String nextElement() {
     return nextToken();
   }
@@ -168,7 +164,7 @@ public final class StringTokenizer implements Enumeration<String>, Iterator<Stri
     return currentPosition;
   }
 
-  public void reset(@Nonnull String s) {
+  public void reset(String s) {
     str = s;
     currentPosition = 0;
     newPosition = -1;

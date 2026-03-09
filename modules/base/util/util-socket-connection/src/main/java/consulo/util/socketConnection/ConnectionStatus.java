@@ -1,6 +1,5 @@
 package consulo.util.socketConnection;
 
-import jakarta.annotation.Nonnull;
 
 public enum ConnectionStatus {
   NOT_CONNECTED("Not connected"),
@@ -14,7 +13,6 @@ public enum ConnectionStatus {
     myStatusText = statusText;
   }
 
-  @Nonnull
   public String getStatusText() {
     return myStatusText;
   }

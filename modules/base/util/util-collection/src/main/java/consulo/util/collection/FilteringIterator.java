@@ -16,7 +16,6 @@
 package consulo.util.collection;
 
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -38,7 +37,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     @Deprecated
     public static final Predicate NOT_NULL = Predicates.notNull();
 
-    public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Predicate<? super Dom> condition) {
+    public FilteringIterator(Iterator<Dom> delegate, Predicate<? super Dom> condition) {
         myDelegate = delegate;
         myCondition = condition;
     }

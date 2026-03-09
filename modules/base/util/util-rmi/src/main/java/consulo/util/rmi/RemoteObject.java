@@ -15,8 +15,7 @@
  */
 package consulo.util.rmi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.rmi.Remote;
@@ -63,7 +62,7 @@ public class RemoteObject implements Remote, Unreferenced {
     }
   }
 
-  public synchronized void unexportChildren(@Nonnull Collection<WeakReference<RemoteObject>> children) throws RemoteException {
+  public synchronized void unexportChildren(Collection<WeakReference<RemoteObject>> children) throws RemoteException {
     if (children.isEmpty()) return;
     ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
     for (WeakReference<? extends RemoteObject> child : children) {

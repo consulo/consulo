@@ -3,8 +3,7 @@ package consulo.util.io.zip;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -26,9 +25,9 @@ public class ZipUtil {
     }
 
     public static boolean addFileToZip(
-        @Nonnull ZipOutputStream zos,
-        @Nonnull File file,
-        @Nonnull String relativeName,
+        ZipOutputStream zos,
+        File file,
+        String relativeName,
         @Nullable Set<String> writtenItemRelativePaths,
         @Nullable FileFilter fileFilter
     ) throws IOException {
@@ -39,12 +38,12 @@ public class ZipUtil {
      * Adds a new file entry to the ZIP output stream.
      */
     public static boolean addFileToZip(
-        @Nonnull ZipOutputStream zos,
-        @Nonnull File file,
-        @Nonnull String relativeName,
+        ZipOutputStream zos,
+        File file,
+        String relativeName,
         @Nullable Set<String> writtenItemRelativePaths,
         @Nullable FileFilter fileFilter,
-        @Nonnull FileContentProcessor contentProcessor
+        FileContentProcessor contentProcessor
     ) throws IOException {
         while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
             relativeName = relativeName.substring(1);
@@ -85,10 +84,10 @@ public class ZipUtil {
     }
 
     public static boolean addFileOrDirRecursively(
-        @Nonnull ZipOutputStream zipOutputStream,
+        ZipOutputStream zipOutputStream,
         @Nullable File jarFile,
-        @Nonnull File file,
-        @Nonnull String relativePath,
+        File file,
+        String relativePath,
         @Nullable FileFilter fileFilter,
         @Nullable Set<String> writtenItemRelativePaths
     ) throws IOException {
@@ -100,10 +99,10 @@ public class ZipUtil {
     }
 
     public static boolean addDirToZipRecursively(
-        @Nonnull ZipOutputStream outputStream,
+        ZipOutputStream outputStream,
         @Nullable File jarFile,
-        @Nonnull File dir,
-        @Nonnull String relativePath,
+        File dir,
+        String relativePath,
         @Nullable FileFilter fileFilter,
         @Nullable Set<String> writtenItemRelativePaths
     ) throws IOException {
@@ -124,21 +123,21 @@ public class ZipUtil {
     }
 
 
-    public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+    public static void extract(File file, File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
         extract(file, outputDir, filenameFilter, true);
     }
 
-    public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+    public static void extract(File file, File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
         try (ZipFile zipFile = new ZipFile(file)) {
             extract(zipFile, outputDir, filenameFilter, overwrite);
         }
     }
 
-    public static void extract(@Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+    public static void extract(ZipFile zipFile, File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
         extract(zipFile, outputDir, filenameFilter, true);
     }
 
-    public static void extract(@Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+    public static void extract(ZipFile zipFile, File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
         Enumeration entries = zipFile.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -173,8 +172,7 @@ public class ZipUtil {
         }
     }
 
-    @Nonnull
-    public static File compressFile(@Nonnull File srcFile, @Nonnull File zipFile) throws IOException {
+    public static File compressFile(File srcFile, File zipFile) throws IOException {
         try (InputStream is = new FileInputStream(srcFile)) {
             try (ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
                 os.putNextEntry(new ZipEntry(srcFile.getName()));

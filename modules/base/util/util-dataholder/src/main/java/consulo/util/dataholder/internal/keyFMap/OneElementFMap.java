@@ -17,39 +17,35 @@ package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public class OneElementFMap<V> implements KeyFMap {
     private final Key myKey;
     private final V myValue;
 
-    public OneElementFMap(@Nonnull Key key, @Nonnull V value) {
+    public OneElementFMap(Key key, V value) {
         myKey = key;
         myValue = value;
     }
 
-    @Nonnull
     @Override
-    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+    public <V> KeyFMap plus(Key<V> key, V value) {
         if (myKey == key) {
             return new OneElementFMap<>(key, value);
         }
         return new PairElementsFMap(myKey, myValue, key, value);
     }
 
-    @Nonnull
     @Override
-    public KeyFMap minus(@Nonnull Key<?> key) {
+    public KeyFMap minus(Key<?> key) {
         return key == myKey ? KeyFMap.EMPTY_MAP : this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V get(@Nonnull Key<V> key) {
+    public <V> V get(Key<V> key) {
         return myKey == key ? (V)myValue : null;
     }
 
-    @Nonnull
     @Override
     public Key[] getKeys() {
         return new Key[]{myKey};

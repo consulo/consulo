@@ -18,7 +18,6 @@ import consulo.util.interner.Interner;
 import consulo.util.lang.Comparing;
 import org.jdom.*;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class JDOMInterner {
@@ -62,8 +61,7 @@ public class JDOMInterner {
    * - is immutable (all modifications methods like setName(), setParent() etc will throw)<br/>
    * - has {@code clone()} method which will return modifiable org.jdom.Element copy.<br/>
    */
-  @Nonnull
-  public static Element internElement(@Nonnull Element element) {
+  public static Element internElement(Element element) {
     return ourDefaultInterner.intern(element);
   }
 
@@ -130,7 +128,7 @@ public class JDOMInterner {
    * Replace all strings in JDOM {@code element} with their interned variants with the help of {@code interner} to reduce memory.
    * It's better to use {@link #internElement(Element)} though because the latter will intern the Element instances too.
    */
-  public static void internStringsInElement(@Nonnull Element element, @Nonnull Interner<String> interner) {
+  public static void internStringsInElement(Element element, Interner<String> interner) {
     element.setName(intern(interner, element.getName()));
 
     for (Attribute attr : element.getAttributes()) {
@@ -157,8 +155,7 @@ public class JDOMInterner {
     }
   }
 
-  @Nonnull
-  private static String intern(@Nonnull Interner<String> interner, @Nonnull String s) {
+  private static String intern(Interner<String> interner, String s) {
     return interner.intern(s);
   }
 
@@ -200,8 +197,7 @@ public class JDOMInterner {
     return object.getValue().hashCode();
   }
 
-  @Nonnull
-  public synchronized Element intern(@Nonnull Element element) {
+  public synchronized Element intern(Element element) {
     if (element instanceof ImmutableElement) return element;
     Element interned = myElements.get(element);
     if (interned == null) {
@@ -211,12 +207,11 @@ public class JDOMInterner {
     return interned;
   }
 
-  public static boolean isInterned(@Nonnull Element element) {
+  public static boolean isInterned(Element element) {
     return element instanceof ImmutableElement;
   }
 
-  @Nonnull
-  synchronized Text internText(@Nonnull Text text) {
+  synchronized Text internText(Text text) {
     if (text instanceof ImmutableText || text instanceof ImmutableCDATA) return text;
     Text interned = myTexts.get(text);
     if (interned == null) {

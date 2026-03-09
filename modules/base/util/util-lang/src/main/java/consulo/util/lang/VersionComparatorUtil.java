@@ -2,7 +2,6 @@ package consulo.util.lang;
 
 import consulo.util.lang.text.StringTokenizer;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +58,6 @@ public class VersionComparatorUtil {
       myPriority = priority;
     }
 
-    @Nonnull
     public static VersionTokenType lookup(String str) {
       if (str == null) {
         return _WS;

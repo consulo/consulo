@@ -5,7 +5,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 import java.util.function.Supplier;
@@ -15,18 +14,15 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
   private final Map<K, MyReference<K, V>> myMap;
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
-  @Nonnull
   public static UnsupportedOperationException pointlessContainsKey() {
     return new UnsupportedOperationException("containsKey() makes no sense for weak/soft map because GC can clear the value any moment now");
   }
 
-  @Nonnull
   public static UnsupportedOperationException pointlessContainsValue() {
     return new UnsupportedOperationException("containsValue() makes no sense for weak/soft map because GC can clear the key any moment now");
   }
 
   protected interface MyReference<K, T> extends Supplier<T> {
-    @Nonnull
     K getKey();
   }
 
@@ -34,11 +30,11 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
     myMap = Maps.newHashMap(HashingStrategy.canonical());
   }
 
-  RefValueHashMap(@Nonnull HashingStrategy<K> strategy) {
+  RefValueHashMap(HashingStrategy<K> strategy) {
     myMap = Maps.newHashMap(strategy);
   }
 
-  protected abstract MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<? super V> queue);
+  protected abstract MyReference<K, V> createReference(K key, V value, ReferenceQueue<? super V> queue);
 
   private void processQueue() {
     while (true) {
@@ -61,7 +57,7 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public V put(@Nonnull K key, V value) {
+  public V put(K key, V value) {
     processQueue();
     MyReference<K, V> reference = createReference(key, value, myQueue);
     MyReference<K, V> oldRef = myMap.put(key, reference);
@@ -76,7 +72,7 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
+  public void putAll(Map<? extends K, ? extends V> t) {
     throw new UnsupportedOperationException();
   }
 
@@ -105,13 +101,11 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return myMap.keySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<>();
@@ -125,7 +119,6 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
     return result;
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     throw new UnsupportedOperationException();

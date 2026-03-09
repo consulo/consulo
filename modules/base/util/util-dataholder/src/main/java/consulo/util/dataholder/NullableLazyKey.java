@@ -16,7 +16,7 @@
 package consulo.util.dataholder;
 
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 

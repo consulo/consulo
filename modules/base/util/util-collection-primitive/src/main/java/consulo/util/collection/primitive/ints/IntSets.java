@@ -18,7 +18,6 @@ package consulo.util.collection.primitive.ints;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,17 +26,14 @@ import jakarta.annotation.Nonnull;
 public class IntSets {
   private static final PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
 
-  @Nonnull
   public static IntSet newHashSet() {
     return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, null);
   }
 
-  @Nonnull
   public static IntSet newHashSet(int capacity) {
     return ourFactory.newIntHashSet(capacity, null);
   }
 
-  @Nonnull
   public static IntSet newHashSet(int[] array) {
     return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, array);
   }

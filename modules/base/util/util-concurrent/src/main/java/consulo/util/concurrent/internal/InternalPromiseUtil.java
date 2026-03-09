@@ -6,8 +6,7 @@ import consulo.util.concurrent.Obsolescent;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.ExceptionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -42,25 +41,25 @@ public class InternalPromiseUtil {
     }
   }
 
-  public static boolean isHandlerObsolete(@Nonnull Object handler) {
+  public static boolean isHandlerObsolete(Object handler) {
     return handler instanceof Obsolescent && ((Obsolescent)handler).isObsolete();
   }
 
   public interface PromiseImpl<T> {
-    void _setValue(@Nonnull PromiseValue<T> value);
+    void _setValue(PromiseValue<T> value);
   }
 
   public interface CompletablePromise<T> extends Promise<T> {
     void setResult(@Nullable T t);
 
-    boolean setError(@Nonnull Throwable error);
+    boolean setError(Throwable error);
   }
 
   @SuppressWarnings("ExceptionClassNameDoesntEndWithException")
   public static class MessageError extends RuntimeException {
     public final boolean log;
 
-    public MessageError(@Nonnull String message, boolean isLog) {
+    public MessageError(String message, boolean isLog) {
       super(message);
 
       log = isLog;
@@ -89,7 +88,6 @@ public class InternalPromiseUtil {
       this.error = error;
     }
 
-    @Nonnull
     public Promise.State getState() {
       return error == null ? Promise.State.SUCCEEDED : Promise.State.REJECTED;
     }
@@ -148,7 +146,6 @@ public class InternalPromiseUtil {
       return getValue() != null;
     }
 
-    @Nonnull
     @Override
     public final Promise.State getState() {
       PromiseValue<T> value = getValue();
@@ -172,7 +169,7 @@ public class InternalPromiseUtil {
     }
 
     @Override
-    public final T get(long timeout, @Nonnull TimeUnit unit) throws ExecutionException, TimeoutException {
+    public final T get(long timeout, TimeUnit unit) throws ExecutionException, TimeoutException {
       return blockingGet((int)timeout, unit);
     }
 

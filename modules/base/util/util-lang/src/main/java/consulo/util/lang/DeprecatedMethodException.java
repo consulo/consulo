@@ -5,16 +5,15 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 
 public class DeprecatedMethodException extends RuntimeException {
   private static final Logger LOG = LoggerFactory.getLogger(DeprecatedMethodException.class);
 
-  public DeprecatedMethodException(@Nonnull String message) {
+  public DeprecatedMethodException(String message) {
     super(message);
   }
 
-  public static void report(@Nonnull String message) {
+  public static void report(String message) {
     String msg = "This method in " + ReflectionUtil.findCallerClass(2) + " is deprecated and going to be removed soon. " + message;
     LOG.warn(msg, new DeprecatedMethodException(msg));
   }

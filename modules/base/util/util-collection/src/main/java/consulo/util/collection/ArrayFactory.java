@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.IntFunction;
 
 /**
@@ -23,12 +22,10 @@ import java.util.function.IntFunction;
  */
 @FunctionalInterface
 public interface ArrayFactory<T> extends IntFunction<T[]> {
-  @Nonnull
-  static <K> ArrayFactory<K> of(@Nonnull IntFunction<K[]> factory) {
+  static <K> ArrayFactory<K> of(IntFunction<K[]> factory) {
     return new ArrayFactory<>() {
       private K[] myEmptyArray;
 
-      @Nonnull
       @Override
       public K[] create(int count) {
         if (count == 0) {
@@ -44,7 +41,6 @@ public interface ArrayFactory<T> extends IntFunction<T[]> {
     };
   }
 
-  @Nonnull
   T[] create(int count);
 
   @Override

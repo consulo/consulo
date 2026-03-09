@@ -20,7 +20,6 @@ import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.*;
 
@@ -52,7 +51,7 @@ public class NetUtil {
     return InetAddress.getLoopbackAddress();
   }
 
-  public static boolean isLocalhost(@Nonnull String host) {
+  public static boolean isLocalhost(String host) {
     return host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("::1");
   }
 

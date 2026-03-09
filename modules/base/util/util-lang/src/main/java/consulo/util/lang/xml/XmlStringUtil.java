@@ -18,9 +18,7 @@ package consulo.util.lang.xml;
 
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.internal.Verifier;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.xml.CommonXmlStrings.*;
@@ -33,8 +31,7 @@ public class XmlStringUtil {
   private XmlStringUtil() {
   }
 
-  @Nonnull
-  public static String wrapInCDATA(@Nonnull String str) {
+  public static String wrapInCDATA(String str) {
     StringBuilder sb = new StringBuilder();
     int cur = 0, len = str.length();
     while (cur < len) {
@@ -57,7 +54,7 @@ public class XmlStringUtil {
     if (str == null) return null;
     StringBuilder buffer = null;
     for (int i = 0; i < str.length(); i++) {
-      @NonNls String entity;
+      String entity;
       char ch = str.charAt(i);
       switch (ch) {
         case '\n':
@@ -115,17 +112,15 @@ public class XmlStringUtil {
     return buffer == null ? str : buffer.toString();
   }
 
-  @Nonnull
-  public static String wrapInHtml(@Nonnull CharSequence result) {
+  public static String wrapInHtml(CharSequence result) {
     return HTML_START + result + HTML_END;
   }
 
-  public static boolean isWrappedInHtml(@Nonnull String tooltip) {
+  public static boolean isWrappedInHtml(String tooltip) {
     return StringUtil.startsWithIgnoreCase(tooltip, HTML_START) && StringUtil.endsWithIgnoreCase(tooltip, HTML_END);
   }
 
-  @Nonnull
-  public static String stripHtml(@Nonnull String toolTip) {
+  public static String stripHtml(String toolTip) {
     toolTip = StringUtil.trimStart(toolTip, HTML_START);
     toolTip = StringUtil.trimStart(toolTip, BODY_START);
     toolTip = StringUtil.trimEnd(toolTip, HTML_END);
@@ -137,8 +132,7 @@ public class XmlStringUtil {
    * Converts {@code text} to a string which can be used inside an HTML document: if it's already an HTML text the root html/body tags will
    * be stripped, if it's a plain text special characters will be escaped
    */
-  @Nonnull
-  public static String convertToHtmlContent(@Nonnull String text) {
+  public static String convertToHtmlContent(String text) {
     return isWrappedInHtml(text) ? stripHtml(text) : escapeString(text);
   }
 
@@ -150,8 +144,7 @@ public class XmlStringUtil {
    * @see <a href="https://www.w3.org/International/questions/qa-controls">https://www.w3.org/International/questions/qa-controls</a>
    * @see Verifier#isXMLCharacter(int)
    */
-  @Nonnull
-  public static String escapeIllegalXmlChars(@Nonnull String text) {
+  public static String escapeIllegalXmlChars(String text) {
     StringBuilder b = null;
     int lastPos = 0;
     for (int i = 0; i < text.length(); i++) {
@@ -174,8 +167,7 @@ public class XmlStringUtil {
   /**
    * @see XmlStringUtil#escapeIllegalXmlChars(String)
    */
-  @Nonnull
-  public static String unescapeIllegalXmlChars(@Nonnull String text) {
+  public static String unescapeIllegalXmlChars(String text) {
     StringBuilder b = null;
     int lastPos = 0;
     for (int i = 0; i < text.length(); i++) {

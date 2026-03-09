@@ -4,8 +4,7 @@ import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class LocalFileUrl implements Url {
   private final String path;
@@ -13,11 +12,10 @@ public final class LocalFileUrl implements Url {
   /**
    * Use {@link Urls#newLocalFileUrl(String)} instead
    */
-  public LocalFileUrl(@Nonnull String path) {
+  public LocalFileUrl(String path) {
     this.path = path;
   }
 
-  @Nonnull
   @Override
   public String getPath() {
     return path;
@@ -33,7 +31,6 @@ public final class LocalFileUrl implements Url {
     return path;
   }
 
-  @Nonnull
   @Override
   public String toExternalForm() {
     return path;
@@ -57,7 +54,6 @@ public final class LocalFileUrl implements Url {
     return null;
   }
 
-  @Nonnull
   @Override
   public Url trimParameters() {
     return this;
