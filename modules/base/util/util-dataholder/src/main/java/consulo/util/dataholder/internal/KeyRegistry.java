@@ -19,6 +19,7 @@ import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -43,6 +44,7 @@ public class KeyRegistry {
         return index;
     }
 
+    @Nullable
     public Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
         for (IntObjectMap.IntObjectEntry<Key> key : myAllKeys.entrySet()) {
             if (name.equals(nameFunc.apply(key.getValue()))) {
@@ -52,6 +54,7 @@ public class KeyRegistry {
         return null;
     }
 
+    @Nullable
     @SuppressWarnings("unchecked")
     public <T> Key<T> getKeyByIndex(int index) {
         return myAllKeys.get(index);

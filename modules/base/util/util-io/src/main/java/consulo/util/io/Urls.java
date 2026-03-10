@@ -44,6 +44,7 @@ public final class Urls {
     return new LocalFileUrl(path);
   }
 
+  @Nullable
   public static Url newFromEncoded(String url) {
     Url result = parseEncoded(url);
     if (result == null) {
@@ -75,7 +76,9 @@ public final class Urls {
 
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
-   */ public static Url newFromIdea(String url) {
+   */
+  @Nullable
+  public static Url newFromIdea(String url) {
     Url result = parseFromIdea(url);
     if (result == null) {
       LOG.error(url, new IllegalAccessException(url));

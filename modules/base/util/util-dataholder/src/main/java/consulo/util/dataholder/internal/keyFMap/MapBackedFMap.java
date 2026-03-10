@@ -20,6 +20,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.KeyRegistry;
+import org.jspecify.annotations.Nullable;
 
 
 import static consulo.util.dataholder.internal.keyFMap.ArrayBackedFMap.getKeysByIndices;
@@ -84,6 +85,7 @@ class MapBackedFMap implements KeyFMap {
         return new MapBackedFMap(this, keyCode);
     }
 
+    @Nullable
     @Override
     public <V> V get(Key<V> key) {
         //noinspection unchecked

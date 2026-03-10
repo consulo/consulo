@@ -80,6 +80,7 @@ public class Key<T> {
         return of(name);
     }
 
+    @Nullable
     public T get(@Nullable UserDataHolder holder) {
         return holder == null ? null : holder.getUserData(this);
     }

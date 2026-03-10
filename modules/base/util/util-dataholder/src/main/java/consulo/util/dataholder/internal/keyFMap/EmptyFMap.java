@@ -16,6 +16,7 @@
 package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 
 class EmptyFMap implements KeyFMap {
@@ -34,6 +35,7 @@ class EmptyFMap implements KeyFMap {
         return this;
     }
 
+    @Nullable
     @Override
     public <V> V get(Key<V> key) {
         return null;

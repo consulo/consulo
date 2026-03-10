@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Stack;
@@ -50,13 +52,15 @@ public class StdXMLBuilder
    /**
     * This stack contains the current element and its parents.
     */
-   private Stack stack;
+   @Nullable
+   private Stack stack = null;
 
 
    /**
     * The root element of the parsed XML tree.
     */
-   private IXMLElement root;
+   @Nullable
+   private IXMLElement root = null;
 
 
    /**
@@ -81,23 +85,7 @@ public class StdXMLBuilder
     */
    public StdXMLBuilder(IXMLElement prototype)
    {
-      this.stack = null;
-      this.root = null;
       this.prototype = prototype;
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.prototype = null;
-      this.root = null;
-      this.stack.clear();
-      this.stack = null;
-      super.finalize();
    }
 
 

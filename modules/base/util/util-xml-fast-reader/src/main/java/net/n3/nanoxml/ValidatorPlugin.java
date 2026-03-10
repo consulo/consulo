@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Reader;
 import java.io.IOException;
 import java.util.Properties;
@@ -48,16 +50,8 @@ public class ValidatorPlugin
    /**
     * The delegate.
     */
-   private IXMLValidator delegate;
-
-
-   /**
-    * Initializes the plugin.
-    */
-   public ValidatorPlugin()
-   {
-      this.delegate = null;
-   }
+   @Nullable
+   private IXMLValidator delegate = null;
 
 
    /**

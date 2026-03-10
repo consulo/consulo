@@ -16,6 +16,8 @@
 package consulo.util.dataholder;
 
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 2026-01-29
@@ -23,6 +25,7 @@ package consulo.util.dataholder;
 public interface CopyableUserDataHolder extends UserDataHolder {
     <T> void putCopyableUserData(Key<T> key, T value);
 
+    @Nullable
     <T> T getCopyableUserData(Key<T> key);
 
     void copyCopyableDataTo(CopyableUserDataHolder clone);

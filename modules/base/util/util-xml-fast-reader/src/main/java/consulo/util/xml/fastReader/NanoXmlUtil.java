@@ -156,12 +156,12 @@ public class NanoXmlUtil {
     }
 
     @Override
-    public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
+    public void startElement(String name, @Nullable String nsPrefix, @Nullable String nsURI, String systemID, int lineNr) throws Exception {
       myLocation.push(myLocation.getFirst() + "." + name);
     }
 
     @Override
-    public void endElement(String name, String nsPrefix, String nsURI) throws Exception {
+    public void endElement(String name, @Nullable String nsPrefix, @Nullable String nsURI) throws Exception {
       myLocation.pop();
     }
 
@@ -252,8 +252,10 @@ public class NanoXmlUtil {
   }
 
   private static class MyXMLReader extends StdXMLReader {
-    private String publicId;
-    private String systemId;
+    @Nullable
+    private String publicId = null;
+    @Nullable
+    private String systemId = null;
 
     MyXMLReader(Reader documentReader) {
       super(documentReader);
@@ -286,8 +288,10 @@ public class NanoXmlUtil {
   }
 
   private static class RootTagInfoBuilder implements IXMLBuilder {
-    private String myRootTagName;
-    private String myNamespace;
+    @Nullable
+    private String myRootTagName = null;
+    @Nullable
+    private String myNamespace = null;
 
     @Override
     public void startBuilding(String systemID, int lineNr) {

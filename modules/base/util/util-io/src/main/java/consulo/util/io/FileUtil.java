@@ -130,7 +130,8 @@ public class FileUtil {
 
     private static final Random RANDOM = new Random();
 
-    private static String ourCanonicalTempPathCache;
+    @Nullable
+    private static String ourCanonicalTempPathCache = null;
 
     public static String getTempDirectory() {
         if (ourCanonicalTempPathCache == null) {
@@ -819,6 +820,7 @@ public class FileUtil {
     }
 
     @Contract("_,!null -> !null")
+    @Nullable
     public static CharSequence getExtension(CharSequence fileName, @Nullable String defaultValue) {
         int index = StringUtil.lastIndexOf(fileName, '.', 0, fileName.length());
         if (index < 0) {
@@ -1066,7 +1068,8 @@ public class FileUtil {
         return result.toString();
     }
 
-    @Contract("null -> null")
+    @Contract("null -> null; !null -> !null")
+    @Nullable
     public static String toCanonicalUriPath(@Nullable String path) {
         return toCanonicalPath(path, '/', false);
     }
@@ -1078,7 +1081,8 @@ public class FileUtil {
      * <br>
      * If the path may contain symlinks, use {@link FileUtil#toCanonicalPath(String, boolean)} instead.
      */
-    @Contract("null -> null")
+    @Contract("null -> null; !null -> !null")
+    @Nullable
     public static String toCanonicalPath(@Nullable String path) {
         return toCanonicalPath(path, File.separatorChar, true);
     }
@@ -1099,6 +1103,7 @@ public class FileUtil {
      * 'root/dir1/link_to_dir1/../dir2' should be resolved to 'root/dir2'
      */
     @Contract("null, _ -> null")
+    @Nullable
     public static String toCanonicalPath(@Nullable String path, boolean resolveSymlinksIfNecessary) {
         return toCanonicalPath(path, File.separatorChar, true, resolveSymlinksIfNecessary);
     }
@@ -1121,7 +1126,8 @@ public class FileUtil {
         }
     };
 
-    @Contract("null, _, _, _ -> null")
+    @Contract("null,_,_,_ -> null; !null,_,_,_ -> !null")
+    @Nullable
     private static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, boolean resolveSymlinks) {
         SymlinkResolver symlinkResolver = resolveSymlinks ? SYMLINK_RESOLVER : null;
         return toCanonicalPath(path, separatorChar, removeLastSlash, symlinkResolver);
@@ -1133,14 +1139,16 @@ public class FileUtil {
      * what {@link File#getCanonicalPath()} will return), so if the path may contain symlinks,
      * consider using {@link FileUtil#toCanonicalPath(String, boolean)} instead.
      */
-    @Contract("null, _, _ -> null")
+    @Contract("null,_,_ -> null; !null,_,_ -> !null")
+    @Nullable
     public static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
         return toCanonicalPath(path, separatorChar, removeLastSlash, null);
     }
 
-    @Contract("null, _, _, _ -> null")
+    @Contract("null,_,_,_ -> null; !null,_,_,_ -> !null")
+    @Nullable
     protected static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, @Nullable SymlinkResolver resolver) {
-        if (path == null || path.length() == 0) {
+        if (path == null || path.isEmpty()) {
             return path;
         }
         if (path.charAt(0) == '.') {
@@ -1184,7 +1192,7 @@ public class FileUtil {
             char c = path.charAt(i);
             if (c == '/') {
                 if (!separator) {
-                    if (!processDots(result, dots, start, resolver)) {
+                    if (!processDots(result, dots, start, Objects.requireNonNull(resolver))) {
                         return resolver.resolveSymlinksAndCanonicalize(path, separatorChar, removeLastSlash);
                     }
                     dots = 0;
@@ -1211,7 +1219,7 @@ public class FileUtil {
         }
 
         if (dots > 0) {
-            if (!processDots(result, dots, start, resolver)) {
+            if (!processDots(result, dots, start, Objects.requireNonNull(resolver))) {
                 return resolver.resolveSymlinksAndCanonicalize(path, separatorChar, removeLastSlash);
             }
         }

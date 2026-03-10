@@ -233,6 +233,7 @@ public class URLUtil {
         return decoded.toString();
     }
 
+    @Nullable
     public static URL internProtocol(URL url) {
         try {
             String protocol = url.getProtocol();

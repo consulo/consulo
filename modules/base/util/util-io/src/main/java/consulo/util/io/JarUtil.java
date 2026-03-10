@@ -49,6 +49,7 @@ public class JarUtil {
     return getJarAttributeImpl(file, entryName, attribute);
   }
 
+  @Nullable
   private static String getJarAttributeImpl(File file, @Nullable String entryName, Attributes.Name attribute) {
     if (file.canRead()) {
       try {

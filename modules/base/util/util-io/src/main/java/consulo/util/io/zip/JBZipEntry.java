@@ -17,6 +17,7 @@ package consulo.util.io.zip;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,12 +46,13 @@ public class JBZipEntry implements Cloneable {
   private long csize = -1;    // compressed size of entry data
   private int method = -1;    // compression method
   private byte[] extra = ArrayUtil.EMPTY_BYTE_ARRAY;   // optional extra field data for entry
-  private String comment;     // optional comment string for entry
+  @Nullable
+  private String comment = null; // optional comment string for entry
 
   private int internalAttributes = 0;
   private int platform = PLATFORM_FAT;
   private long externalAttributes = 0;
-  private String name = null;
+  private String name;
 
   private long headerOffset = -1;
   private final JBZipFile myFile;
@@ -433,6 +435,7 @@ public class JBZipEntry implements Cloneable {
    * @return the comment string for the entry, or null if none
    * @see #setComment(String)
    */
+  @Nullable
   public String getComment() {
     return comment;
   }

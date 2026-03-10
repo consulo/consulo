@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,13 +56,17 @@ public class StdXMLReader
     */
    private class StackedReader
    {
-   
+
+      @Nullable
       PushbackReader pbReader;
-   
+
+      @Nullable
       LineNumberReader lineReader;
-   
+
+      @Nullable
       URL systemId;
-   
+
+      @Nullable
       String publicId;
    
    }
@@ -176,22 +182,6 @@ public class StdXMLReader
       } catch (MalformedURLException e) {
          // never happens
       }
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.currentReader.lineReader = null;
-      this.currentReader.pbReader = null;
-      this.currentReader.systemId = null;
-      this.currentReader.publicId = null;
-      this.currentReader = null;
-      this.readers.clear();
-      super.finalize();
    }
 
 

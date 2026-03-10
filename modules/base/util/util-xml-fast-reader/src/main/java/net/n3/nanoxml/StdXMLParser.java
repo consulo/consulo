@@ -25,12 +25,10 @@
  *
  *  3. This notice may not be removed or altered from any source distribution.
  */
-
 package net.n3.nanoxml;
 
+import org.jspecify.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.CharArrayReader;
 import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -43,20 +41,21 @@ import java.util.Vector;
  * @author Marc De Scheemaecker
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.5 $
  */
-public class StdXMLParser
-   implements IXMLParser
+public class StdXMLParser implements IXMLParser
 {
 
    /**
     * The builder which creates the logical structure of the XML data.
     */
-   private IXMLBuilder builder;
+   @Nullable
+   private IXMLBuilder builder = null;
 
 
    /**
     * The reader from which the parser retrieves its data.
     */
-   private IXMLReader reader;
+   @Nullable
+   private IXMLReader reader = null;
 
 
    /**
@@ -69,7 +68,8 @@ public class StdXMLParser
     * The validator that will process entity references and validate the XML
     * data.
     */
-   private IXMLValidator validator;
+   @Nullable
+   private IXMLValidator validator = null;
 
 
    /**
@@ -77,24 +77,7 @@ public class StdXMLParser
     */
    public StdXMLParser()
    {
-      this.builder = null;
-      this.validator = null;
-      this.reader = null;
       this.entityResolver = new XMLEntityResolver();
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.builder = null;
-      this.reader = null;
-      this.entityResolver = null;
-      this.validator = null;
-      super.finalize();
    }
 
 
