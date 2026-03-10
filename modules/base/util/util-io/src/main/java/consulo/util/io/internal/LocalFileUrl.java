@@ -65,8 +65,8 @@ public final class LocalFileUrl implements Url {
   }
 
   @Override
-  public boolean equals(Object o) {
-    return this == o || (o instanceof LocalFileUrl localFileUrl && path.equals(localFileUrl.path));
+  public boolean equals(@Nullable Object o) {
+    return this == o || (o instanceof LocalFileUrl that && path.equals(that.path));
   }
 
   @Override

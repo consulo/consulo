@@ -16,6 +16,7 @@
 package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 
 public class PairElementsFMap implements KeyFMap {
@@ -54,6 +55,7 @@ public class PairElementsFMap implements KeyFMap {
         return this;
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public <V> V get(Key<V> key) {

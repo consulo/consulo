@@ -67,6 +67,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         other.setUserMap(getUserMap());
     }
 
+    @Nullable
     @Override
     public <T> T getUserData(Key<T> key) {
         return getUserMap().get(key);
@@ -91,6 +92,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         return ourUpdaterVarHandle.compareAndSet(this, oldMap, newMap);
     }
 
+    @Nullable
     public <T> T getCopyableUserData(Key<T> key) {
         KeyFMap map = getUserData(COPYABLE_USER_MAP_KEY);
         //noinspection unchecked,ConstantConditions

@@ -251,6 +251,7 @@ public final class CharsetToolkit {
    *
    * @return the Charset recognized.
    */
+  @Nullable
   public Charset guessEncoding(int startOffset, int endOffset, Charset defaultCharset) {
     // if the file has a Byte Order Marker, we can assume the file is in UTF-xx
     // otherwise, the file would not be human readable
@@ -432,10 +433,12 @@ public final class CharsetToolkit {
     return null;
   }
 
+  @Nullable
   public Charset guessEncoding(int guess_length) {
     return guessEncoding(0, guess_length, defaultCharset);
   }
 
+  @Nullable
   public static Charset guessEncoding(File f, int bufferLength, Charset defaultCharset) throws IOException {
     byte[] buffer = new byte[bufferLength];
     int read;
@@ -565,8 +568,7 @@ public final class CharsetToolkit {
    * Currently, these are UTF-16xx and UTF-32xx families.
    * UTF-8, on the other hand, might have BOM {@link #UTF8_BOM} which is optional, thus it won't be returned in this method.
    */
-  @Nullable
-  public static byte[] getMandatoryBom(Charset charset) {
+  public static byte @Nullable [] getMandatoryBom(Charset charset) {
     return CHARSET_TO_MANDATORY_BOM.get(charset);
   }
 
@@ -574,8 +576,7 @@ public final class CharsetToolkit {
    * @return BOM which can be associated with this charset, or null otherwise.
    * Currently, these are UTF-16xx, UTF-32xx and UTF-8.
    */
-  @Nullable
-  public static byte[] getPossibleBom(Charset charset) {
+  public static byte @Nullable [] getPossibleBom(Charset charset) {
     if (charset.equals(StandardCharsets.UTF_8)) return UTF8_BOM;
     return CHARSET_TO_MANDATORY_BOM.get(charset);
   }

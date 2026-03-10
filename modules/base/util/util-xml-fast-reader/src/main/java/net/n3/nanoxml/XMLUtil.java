@@ -28,6 +28,8 @@
 
 package net.n3.nanoxml;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -335,7 +337,7 @@ class XMLUtil
     *		if an error occurred reading the data
     */
    static void skipWhitespace(IXMLReader   reader,
-                              StringBuffer buffer)
+                              @Nullable StringBuffer buffer)
       throws IOException
    {
       char ch;

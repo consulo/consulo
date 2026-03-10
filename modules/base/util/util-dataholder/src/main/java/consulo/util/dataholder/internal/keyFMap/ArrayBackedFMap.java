@@ -18,7 +18,9 @@ package consulo.util.dataholder.internal.keyFMap;
 import consulo.util.dataholder.Key;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.internal.KeyRegistry;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 
 public class ArrayBackedFMap implements KeyFMap {
     private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
@@ -61,7 +63,7 @@ public class ArrayBackedFMap implements KeyFMap {
             newValues = ArrayUtil.append(values, value, ArrayUtil.OBJECT_ARRAY_FACTORY);
         }
         //noinspection ConstantConditions
-        return new ArrayBackedFMap(newKeys, newValues);
+        return new ArrayBackedFMap(Objects.requireNonNull(newKeys), Objects.requireNonNull(newValues));
     }
 
     private int size() {
@@ -80,16 +82,16 @@ public class ArrayBackedFMap implements KeyFMap {
                     int i2 = 3 - (i + 2) / 2;
                     Key<Object> key1 = ourRegistry.getKeyByIndex(keys[i1]);
                     Key<Object> key2 = ourRegistry.getKeyByIndex(keys[i2]);
-                    if (key1 == null && key2 == null) {
-                        return EMPTY_MAP;
+                    if (key1 != null && key2 != null) {
+                        return new PairElementsFMap(key1, values[i1], key2, values[i2]);
                     }
-                    if (key1 == null) {
-                        return new OneElementFMap<>(key2, values[i2]);
-                    }
-                    if (key2 == null) {
+                    if (key1 != null) {
                         return new OneElementFMap<>(key1, values[i1]);
                     }
-                    return new PairElementsFMap(key1, values[i1], key2, values[i2]);
+                    if (key2 != null) {
+                        return new OneElementFMap<>(key2, values[i2]);
+                    }
+                    return EMPTY_MAP;
                 }
                 int[] newKeys = ArrayUtil.remove(keys, i);
                 Object[] newValues = ArrayUtil.remove(values, i, ArrayUtil.OBJECT_ARRAY_FACTORY);
@@ -99,6 +101,7 @@ public class ArrayBackedFMap implements KeyFMap {
         return this;
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public <V> V get(Key<V> key) {
