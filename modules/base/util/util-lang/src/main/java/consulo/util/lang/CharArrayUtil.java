@@ -105,8 +105,7 @@ public class CharArrayUtil {
         return fromSequence(seq);
     }
 
-    @Nullable
-    public static char[] fromSequenceWithoutCopying(@Nullable CharSequence seq) {
+    public static char @Nullable [] fromSequenceWithoutCopying(@Nullable CharSequence seq) {
         if (seq instanceof CharSequenceBackedByArray arraySeq) {
             return arraySeq.getChars();
         }

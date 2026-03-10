@@ -24,9 +24,11 @@ import consulo.util.xml.serializer.internal.Binding;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import java.util.Objects;
+
 public final class SkipDefaultsSerializationFilter extends SkipDefaultValuesSerializationFilters {
     public boolean equal(Binding binding, Object bean) {
-        Accessor accessor = binding.getAccessor();
+        Accessor accessor = Objects.requireNonNull(binding.getAccessor());
         return equal(binding, accessor.read(bean), accessor.read(getDefaultBean(bean)));
     }
 

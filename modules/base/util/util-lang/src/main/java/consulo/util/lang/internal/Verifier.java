@@ -54,6 +54,9 @@
 
 package consulo.util.lang.internal;
 
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
 /**
  * A utility class to handle well-formedness checks on names, data, and other
  * verification tasks for JDOM. The class is final and may not be subclassed.
@@ -312,7 +315,7 @@ final public class Verifier {
    *
    * @return the CHARFLAGS array.
    */
-  private static final byte[] buildBitFlags() {
+  private static byte[] buildBitFlags() {
     byte[] ret = new byte[CHARCNT];
     int index = 0;
     for (int i = 0; i < VALCONST.length; i++) {
@@ -368,7 +371,8 @@ final public class Verifier {
   private Verifier() {
   }
 
-  private static final String checkJDOMName(String name) {
+  @Nullable
+  private static String checkJDOMName(String name) {
     // Check basic XML name rules first
     // Cannot be empty or null
     if (name == null) {
@@ -382,15 +386,13 @@ final public class Verifier {
 
     // Cannot start with a number
     if ((byte)0 == (CHARFLAGS[name.charAt(0)] & MASKXMLSTARTCHAR)) {
-      return "XML name '" + name + "' cannot begin with the character \"" +
-        name.charAt(0) + "\"";
+      return "XML name '" + name + "' cannot begin with the character \"" + name.charAt(0) + "\"";
     }
     // Ensure legal content for non-first chars
     // also check char 0 to catch colon char ':'
     for (int i = name.length() - 1; i >= 1; i--) {
       if ((byte)0 == (byte)(CHARFLAGS[name.charAt(i)] & MASKXMLNAMECHAR)) {
-        return "XML name '" + name + "' cannot contain the character \""
-          + name.charAt(i) + "\"";
+        return "XML name '" + name + "' cannot contain the character \"" + name.charAt(i) + "\"";
       }
     }
 
@@ -406,6 +408,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
+  @Nullable
   public static String checkElementName(String name) {
     return checkJDOMName(name);
   }
@@ -418,6 +421,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
+  @Nullable
   public static String checkAttributeName(String name) {
     // Attribute names may not be xmlns since we do this internally too
     if ("xmlns".equals(name)) {
@@ -446,6 +450,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
+  @Nullable
   public static String checkCharacterData(String text) {
     if (text == null) {
       return "A null is not a legal XML value";
@@ -479,8 +484,7 @@ final public class Verifier {
         // we will expect the low char on the next index,
         i++;
         if (i >= len) {
-          return String.format("Truncated Surrogate Pair 0x%04x????",
-                               (int)text.charAt(i - 1));
+          return String.format("Truncated Surrogate Pair 0x%04x????", (int)text.charAt(i - 1));
         }
         if (isLowSurrogate(text.charAt(i))) {
           // we now have the low char of a pair, decode and validate
@@ -489,23 +493,19 @@ final public class Verifier {
             // Likely this character can't be easily displayed
             // because it's a control so we use it'd hexadecimal
             // representation in the reason.
-            return String.format("0x%06x is not a legal XML character",
-                                 decodeSurrogatePair(
-                                   text.charAt(i - 1), text.charAt(i)));
+            return String.format("0x%06x is not a legal XML character", decodeSurrogatePair(text.charAt(i - 1), text.charAt(i)));
           }
         }
         else {
           // we got a normal character, but we wanted a low surrogate
-          return String.format("Illegal Surrogate Pair 0x%04x%04x",
-                               (int)text.charAt(i - 1), (int)text.charAt(i));
+          return String.format("Illegal Surrogate Pair 0x%04x%04x", (int)text.charAt(i - 1), (int)text.charAt(i));
         }
       }
       else {
         // Likely this character can't be easily displayed
         // because it's a control so we use its hexadecimal
         // representation in the reason.
-        return String.format("0x%04x is not a legal XML character",
-                             (int)text.charAt(i));
+        return String.format("0x%04x is not a legal XML character", (int)text.charAt(i));
       }
     }
 
@@ -521,15 +521,15 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> is name is OK.
    */
+  @Nullable
   public static String checkCDATASection(String data) {
-    String reason = null;
-    if ((reason = checkCharacterData(data)) != null) {
+    String reason = checkCharacterData(data);
+    if (reason != null) {
       return reason;
     }
 
-    if (data.indexOf("]]>") != -1) {
-      return "CDATA cannot internally contain a CDATA ending " +
-        "delimiter (]]>)";
+    if (data.contains("]]>")) {
+      return "CDATA cannot internally contain a CDATA ending delimiter (]]>)";
     }
 
     // If we got here, everything is OK
@@ -544,9 +544,10 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
+  @Nullable
   public static String checkNamespacePrefix(String prefix) {
     // Manually do rules, since URIs can be null or empty
-    if ((prefix == null) || (prefix.equals(""))) {
+    if (StringUtil.isEmpty(prefix)) {
       return null;
     }
 
@@ -586,9 +587,10 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkNamespaceURI(String uri) {
+  @Nullable
+  public static String checkNamespaceURI(@Nullable String uri) {
     // Manually do rules, since URIs can be null or empty
-    if ((uri == null) || (uri.equals(""))) {
+    if (StringUtil.isEmpty(uri)) {
       return null;
     }
 
@@ -623,15 +625,16 @@ final public class Verifier {
    * @return <code>String</code> reason target is illegal, or
    * <code>null</code> if target is OK.
    */
+  @Nullable
   public static String checkProcessingInstructionTarget(String target) {
     // Check basic XML name rules first
-    String reason;
-    if ((reason = checkXMLName(target)) != null) {
+    String reason = checkXMLName(target);
+    if (reason != null) {
       return reason;
     }
 
     // No colons allowed, per Namespace Specification Section 6
-    if (target.indexOf(":") != -1) {
+    if (target.contains(":")) {
       return "Processing instruction targets cannot contain colons";
     }
 
@@ -659,15 +662,13 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
+  @Nullable
   public static String checkProcessingInstructionData(String data) {
     // Check basic XML name rules first
     String reason = checkCharacterData(data);
 
-    if (reason == null) {
-      if (data.indexOf("?>") >= 0) {
-        return "Processing instructions cannot contain " +
-          "the string \"?>\"";
-      }
+    if (reason == null && data.contains("?>")) {
+      return "Processing instructions cannot contain the string \"?>\"";
     }
 
     return reason;
@@ -681,13 +682,14 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
+  @Nullable
   public static String checkCommentData(String data) {
-    String reason = null;
-    if ((reason = checkCharacterData(data)) != null) {
+    String reason = checkCharacterData(data);
+    if (reason != null) {
       return reason;
     }
 
-    if (data.indexOf("--") != -1) {
+    if (data.contains("--")) {
       return "Comments cannot contain double hyphens (--)";
     }
     if (data.endsWith("-")) {
@@ -748,21 +750,19 @@ final public class Verifier {
    * @return <code>String</code> reason public ID is illegal, or
    * <code>null</code> if public ID is OK.
    */
+  @Nullable
   public static String checkPublicID(String publicID) {
-    String reason = null;
-
     if (publicID == null) return null;
     // This indicates there is no public ID
 
     for (int i = 0; i < publicID.length(); i++) {
       char c = publicID.charAt(i);
       if (!isXMLPublicIDCharacter(c)) {
-        reason = c + " is not a legal character in public IDs";
-        break;
+        return c + " is not a legal character in public IDs";
       }
     }
 
-    return reason;
+    return null;
   }
 
 
@@ -774,22 +774,19 @@ final public class Verifier {
    * @return <code>String</code> reason system literal is illegal, or
    * <code>null</code> if system literal is OK.
    */
+  @Nullable
   public static String checkSystemLiteral(String systemLiteral) {
-    String reason = null;
-
     if (systemLiteral == null) return null;
     // This indicates there is no system ID
 
     if (systemLiteral.indexOf('\'') != -1
       && systemLiteral.indexOf('"') != -1) {
-      reason =
+      return
         "System literals cannot simultaneously contain both single and double quotes.";
     }
     else {
-      reason = checkCharacterData(systemLiteral);
+      return checkCharacterData(systemLiteral);
     }
-
-    return reason;
   }
 
   /**
@@ -800,6 +797,7 @@ final public class Verifier {
    * @return <code>String</code> reason the name is illegal, or
    * <code>null</code> if OK.
    */
+  @Nullable
   public static String checkXMLName(String name) {
     // Cannot be empty or null
     if ((name == null)) {
@@ -838,6 +836,7 @@ final public class Verifier {
    * @return <code>String</code> reason the URI is illegal, or
    * <code>null</code> if OK.
    */
+  @Nullable
   public static String checkURI(String uri) {
     // URIs can be null or empty
     if ((uri == null) || (uri.equals(""))) {

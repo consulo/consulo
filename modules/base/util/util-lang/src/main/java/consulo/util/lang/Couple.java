@@ -16,17 +16,19 @@
 package consulo.util.lang;
 
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author Konstantin Bulenkov
  */
 public class Couple<T> extends Pair<T, T> {
   private static final Couple EMPTY_COUPLE = of(null, null);
 
-  public Couple(T first, T second) {
+  public Couple(@Nullable T first, @Nullable T second) {
     super(first, second);
   }
 
-  public static <T> Couple<T> of(T first, T second) {
+  public static <T> Couple<T> of(@Nullable T first, @Nullable T second) {
     return new Couple<>(first, second);
   }
 

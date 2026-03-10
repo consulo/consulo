@@ -35,8 +35,9 @@ public class BeanBinding extends Binding {
     private static final Map<Class, List<MutableAccessor>> ourAccessorCache = ContainerUtil.createConcurrentSoftValueMap();
 
     private final String myTagName;
+
     @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
-    private Binding[] myBindings;
+    private Binding @Nullable [] myBindings = null;
 
     public final Class<?> myBeanClass;
 
@@ -54,8 +55,6 @@ public class BeanBinding extends Binding {
 
     @Override
     public synchronized void init(Type originalType) {
-        assert myBindings == null;
-
         List<MutableAccessor> accessors = getAccessors(myBeanClass);
         myBindings = new Binding[accessors.size()];
         for (int i = 0, size = accessors.size(); i < size; i++) {
@@ -69,14 +68,16 @@ public class BeanBinding extends Binding {
         return serializeInto(o, context == null ? null : new Element(myTagName), filter);
     }
 
+    @Nullable
     public Element serialize(Object object, boolean createElementIfEmpty, SerializationFilter filter) {
         return serializeInto(object, createElementIfEmpty ? new Element(myTagName) : null, filter);
     }
 
     @Nullable
     public Element serializeInto(Object o, @Nullable Element element, SerializationFilter filter) {
+        assert myBindings != null;
         for (Binding binding : myBindings) {
-            Accessor accessor = binding.getAccessor();
+            Accessor accessor = Objects.requireNonNull(binding.getAccessor());
 
             if (filter instanceof SkipDefaultsSerializationFilter) {
                 if (((SkipDefaultsSerializationFilter) filter).equal(binding, o)) {
@@ -111,7 +112,7 @@ public class BeanBinding extends Binding {
     }
 
     @Override
-    public Object deserialize(Object context, Element element) {
+    public Object deserialize(@Nullable Object context, Element element) {
         if (myBeanClass.isRecord()) {
             RecordComponent[] components = myBeanClass.getRecordComponents();
             Map<String, Object> values = new LinkedHashMap<>();
@@ -139,8 +140,9 @@ public class BeanBinding extends Binding {
     }
 
     public boolean equalByFields(Object currentValue, Object defaultValue, SkipDefaultsSerializationFilter filter) {
+        assert myBindings != null;
         for (Binding binding : myBindings) {
-            Accessor accessor = binding.getAccessor();
+            Accessor accessor = Objects.requireNonNull(binding.getAccessor());
             if (!filter.equal(binding, accessor.read(currentValue), accessor.read(defaultValue))) {
                 return false;
             }
@@ -149,6 +151,7 @@ public class BeanBinding extends Binding {
     }
 
     public Map<String, Float> computeBindingWeights(Set<String> accessorNameTracker) {
+        assert myBindings != null;
         Map<String, Float> weights = new HashMap<>(accessorNameTracker.size());
         float weight = 0;
         float step = (float) myBindings.length / (float) accessorNameTracker.size();
@@ -159,7 +162,7 @@ public class BeanBinding extends Binding {
 
         weight = 0;
         for (Binding binding : myBindings) {
-            String name = binding.getAccessor().getName();
+            String name = Objects.requireNonNull(binding.getAccessor()).getName();
             if (!weights.containsKey(name)) {
                 weights.put(name, weight);
             }
@@ -170,25 +173,30 @@ public class BeanBinding extends Binding {
     }
 
     public void sortBindings(Map<String, Float> weights) {
+        assert myBindings != null;
         Arrays.sort(myBindings, (o1, o2) -> {
-            String n1 = o1.getAccessor().getName();
-            String n2 = o2.getAccessor().getName();
-            Float w1 = ObjectUtil.notNull(weights.get(n1), 0f);
-            Float w2 = ObjectUtil.notNull(weights.get(n2), 0f);
+            MutableAccessor a1 = o1.getAccessor();
+            MutableAccessor a2 = o2.getAccessor();
+            Float w1 = ObjectUtil.notNull(weights.get(a1 != null ? a1.getName() : null), 0f);
+            Float w2 = ObjectUtil.notNull(weights.get(a2 != null ? a2.getName() : null), 0f);
             return (int) (w1 - w2);
         });
     }
 
     public void deserializeIntoObject(Object result, Element element, @Nullable Set<String> accessorNameTracker) {
+        assert myBindings != null;
         nextAttribute:
         for (org.jdom.Attribute attribute : element.getAttributes()) {
             if (StringUtil.isEmpty(attribute.getNamespaceURI())) {
                 for (Binding binding : myBindings) {
-                    if (binding instanceof AttributeBinding && ((AttributeBinding) binding).myName.equals(attribute.getName())) {
+                    if (binding instanceof AttributeBinding attrBinding && attrBinding.myName.equals(attribute.getName())) {
                         if (accessorNameTracker != null) {
-                            accessorNameTracker.add(binding.getAccessor().getName());
+                            MutableAccessor accessor = binding.getAccessor();
+                            if (accessor != null) {
+                                accessorNameTracker.add(accessor.getName());
+                            }
                         }
-                        ((AttributeBinding) binding).set(result, attribute.getValue());
+                        attrBinding.set(result, attribute.getValue());
                         continue nextAttribute;
                     }
                 }
@@ -221,7 +229,10 @@ public class BeanBinding extends Binding {
                     }
                     else {
                         if (accessorNameTracker != null) {
-                            accessorNameTracker.add(binding.getAccessor().getName());
+                            MutableAccessor accessor = binding.getAccessor();
+                            if (accessor != null) {
+                                accessorNameTracker.add(accessor.getName());
+                            }
                         }
                         binding.deserialize(result, child);
                     }
@@ -236,7 +247,10 @@ public class BeanBinding extends Binding {
                 List<Element> elements = entry.getValue();
 
                 if (accessorNameTracker != null) {
-                    accessorNameTracker.add(binding.getAccessor().getName());
+                    MutableAccessor accessor = binding.getAccessor();
+                    if (accessor != null) {
+                        accessorNameTracker.add(accessor.getName());
+                    }
                 }
                 ((MultiNodeBinding) binding).deserializeList(result, elements);
             }
@@ -259,6 +273,7 @@ public class BeanBinding extends Binding {
         return name.isEmpty() ? aClass.getSuperclass().getSimpleName() : name;
     }
 
+    @Nullable
     private static String getTagNameFromAnnotation(Class<?> aClass) {
         Tag tag = aClass.getAnnotation(Tag.class);
         return tag != null && !tag.value().isEmpty() ? tag.value() : null;
@@ -306,7 +321,10 @@ public class BeanBinding extends Binding {
             }
 
             Pair<String, Boolean> propertyData = getPropertyData(method.getName()); // (name,isSetter)
-            if (propertyData == null || propertyData.first.equals("class") || method.getParameterTypes().length != (propertyData.second ? 1 : 0)) {
+            if (propertyData == null
+                || propertyData.first == null
+                || propertyData.first.equals("class")
+                || method.getParameterTypes().length != (propertyData.second == Boolean.TRUE ? 1 : 0)) {
                 continue;
             }
 
@@ -314,10 +332,13 @@ public class BeanBinding extends Binding {
             if (candidate == null) {
                 candidate = Couple.of();
             }
-            if ((propertyData.second ? candidate.second : candidate.first) != null) {
+            if ((propertyData.second == Boolean.TRUE ? candidate.second : candidate.first) != null) {
                 continue;
             }
-            candidate = Couple.of(propertyData.second ? candidate.first : method, propertyData.second ? method : candidate.second);
+            candidate = Couple.of(
+                propertyData.second == Boolean.TRUE ? candidate.first : method,
+                propertyData.second == Boolean.TRUE ? method : candidate.second
+            );
             candidates.put(propertyData.first, candidate);
         }
         for (Map.Entry<String, Couple<Method>> candidate : candidates.entrySet()) {

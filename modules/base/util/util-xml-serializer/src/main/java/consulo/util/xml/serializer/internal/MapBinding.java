@@ -45,10 +45,14 @@ class MapBinding extends Binding implements MultiNodeBinding {
 
   private final MapAnnotation myMapAnnotation;
 
+  @Nullable
   private Class<?> keyClass;
+  @Nullable
   private Class<?> valueClass;
 
+  @Nullable
   private Binding keyBinding;
+  @Nullable
   private Binding valueBinding;
 
   public MapBinding(MutableAccessor accessor) {
@@ -124,7 +128,8 @@ class MapBinding extends Binding implements MultiNodeBinding {
   }
 
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    assert context != null;
     if (myMapAnnotation == null || myMapAnnotation.surroundWithTag()) {
       return deserialize(context, element.getChildren());
     }
@@ -136,6 +141,8 @@ class MapBinding extends Binding implements MultiNodeBinding {
   private Map deserialize(Object context, List<Element> childNodes) {
     Map map = (Map)context;
     map.clear();
+
+    assert keyClass != null && valueClass != null;
 
     for (Element childNode : childNodes) {
       if (!childNode.getName().equals(getEntryAttributeName())) {
@@ -173,6 +180,7 @@ class MapBinding extends Binding implements MultiNodeBinding {
     }
   }
 
+  @Nullable
   private Object deserializeKeyOrValue(Element entry, String attributeName, Object context, @Nullable Binding binding, Class<?> valueClass) {
     Attribute attribute = entry.getAttribute(attributeName);
     if (attribute != null) {

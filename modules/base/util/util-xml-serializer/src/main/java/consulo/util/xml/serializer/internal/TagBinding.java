@@ -37,6 +37,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   @Nullable
   @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    assert myAccessor != null;
     Object value = myAccessor.read(o);
     Element serialized = new Element(myName);
     if (value == null) {
@@ -82,7 +83,8 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    assert myAccessor != null && context != null;
     if (myBinding == null) {
       String value = XmlSerializerImpl.getTextValue(element, myTextIfEmpty);
       XmlSerializerImpl.doSet(context, value, myAccessor, XmlSerializerImpl.typeToClass(myAccessor.getGenericType()));
@@ -94,11 +96,11 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   }
 
   private void deserialize(Object o, List<Element> children) {
-    assert myBinding != null;
-    if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeIntoObject(o, children.get(0), null);
+    assert myAccessor != null;
+    if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
+      beanBinding.deserializeIntoObject(o, children.get(0), null);
     }
-    else {
+    else if (myBinding != null) {
       myAccessor.set(o, Binding.deserializeList(myBinding, myAccessor.read(o), children));
     }
   }

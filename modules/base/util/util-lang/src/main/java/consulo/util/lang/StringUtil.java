@@ -18,8 +18,8 @@ package consulo.util.lang;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.internal.NaturalComparator;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,10 +98,8 @@ public final class StringUtil {
     private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
     private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
-    private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
     private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
     private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
-    private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
     private static final String VOWELS = "aeiouy";
 
@@ -151,7 +149,7 @@ public final class StringUtil {
                 if (i == 0) {
                     return text;
                 }
-
+                assert newText != null;
                 newText.append(text, i, text.length());
                 break;
             }
@@ -738,12 +736,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static String capitalizeWords(
-        String text,
-        String tokenizerDelim,
-        boolean allWords,
-        boolean leaveOriginalDelims
-    ) {
+    public static String capitalizeWords(String text, String tokenizerDelim, boolean allWords, boolean leaveOriginalDelims) {
         StringTokenizer tokenizer = new StringTokenizer(text, tokenizerDelim, leaveOriginalDelims);
         StringBuilder out = new StringBuilder(text.length());
         boolean toCapitalize = true;
@@ -761,6 +754,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null", pure = true)
+    @Nullable
     public static String decapitalize(@Nullable String s) {
         if (isEmpty(s)) {
             return s;
@@ -1021,14 +1015,14 @@ public final class StringUtil {
         return unifyLineSeparators(text, newSeparator, null, false);
     }
 
-    public static String convertLineSeparators(String text, String newSeparator, @Nullable int[] offsetsToKeep) {
+    public static String convertLineSeparators(String text, String newSeparator, int @Nullable [] offsetsToKeep) {
         return convertLineSeparators(text, newSeparator, offsetsToKeep, false);
     }
 
     public static String convertLineSeparators(
         String text,
         String newSeparator,
-        @Nullable int[] offsetsToKeep,
+        int @Nullable [] offsetsToKeep,
         boolean keepCarriageReturn
     ) {
         return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
@@ -1078,7 +1072,7 @@ public final class StringUtil {
     public static CharSequence unifyLineSeparators(
         CharSequence text,
         String newSeparator,
-        @Nullable int[] offsetsToKeep,
+        int @Nullable [] offsetsToKeep,
         boolean keepCarriageReturn
     ) {
         StringBuilder buffer = null;
@@ -1137,7 +1131,7 @@ public final class StringUtil {
         return buffer == null ? text : buffer;
     }
 
-    private static void shiftOffsets(int[] offsets, int changeOffset, int oldLength, int newLength) {
+    private static void shiftOffsets(int @Nullable [] offsets, int changeOffset, int oldLength, int newLength) {
         if (offsets == null) {
             return;
         }
@@ -1408,6 +1402,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Nullable
     public static String escapeMnemonics(@Nullable String text) {
         if (text == null) {
             return null;
@@ -1444,6 +1439,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Nullable
     public static String trim(@Nullable String s) {
         return s == null ? null : s.trim();
     }
@@ -1478,6 +1474,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null", pure = true)
+    @Nullable
     public static String trimToNull(@Nullable String s) {
         if (s == null) {
             return null;
@@ -1556,36 +1553,32 @@ public final class StringUtil {
 
     @Contract(pure = true)
     public static Iterable<String> tokenize(StringTokenizer tokenizer) {
-        return new Iterable<>() {
+        return () -> new Iterator<>() {
             @Override
-            public Iterator<String> iterator() {
-                return new Iterator<>() {
-                    @Override
-                    public boolean hasNext() {
-                        return tokenizer.hasMoreTokens();
-                    }
+            public boolean hasNext() {
+                return tokenizer.hasMoreTokens();
+            }
 
-                    @Override
-                    public String next() {
-                        return tokenizer.nextToken();
-                    }
+            @Override
+            public String next() {
+                return tokenizer.nextToken();
+            }
 
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
         };
     }
 
     @Contract(pure = true)
-    public static String join(@Nullable String... strings) {
+    public static String join(String @Nullable ... strings) {
         int length = strings == null ? 0 : strings.length;
         if (length == 0) {
             return "";
         }
         else if (length == 1) {
+            assert strings != null;
             return String.valueOf(strings[0]);
         }
 
@@ -1593,7 +1586,7 @@ public final class StringUtil {
     }
 
     @Contract(mutates = "param1")
-    public static StringBuilder join(StringBuilder result, @Nullable String... strings) {
+    public static StringBuilder join(StringBuilder result, String @Nullable ... strings) {
         if (strings != null) {
             for (String string : strings) {
                 result.append(string);
@@ -1624,13 +1617,7 @@ public final class StringUtil {
     }
 
     @Contract(mutates = "param5")
-    public static StringBuilder join(
-        String[] strings,
-        int startIndex,
-        int endIndex,
-        String separator,
-        StringBuilder result
-    ) {
+    public static StringBuilder join(String[] strings, int startIndex, int endIndex, String separator, StringBuilder result) {
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 result.append(separator);
@@ -1694,11 +1681,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static <T> String join(
-        Collection<? extends T> items,
-        Function<? super T, String> f,
-        String separator
-    ) {
+    public static <T> String join(Collection<? extends T> items, Function<? super T, String> f, String separator) {
         if (items.isEmpty()) {
             return "";
         }
@@ -1736,11 +1719,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static <T> String join(
-        Iterable<? extends T> items,
-        Function<? super T, String> f,
-        String separator
-    ) {
+    public static <T> String join(Iterable<? extends T> items, Function<? super T, String> f, String separator) {
         return join(items, f, separator, new StringBuilder()).toString();
     }
 
@@ -1974,6 +1953,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Nullable
     public static String toUpperCase(@Nullable String s) {
         return s == null ? null : s.toUpperCase(Locale.US);
     }
@@ -2010,6 +1990,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Nullable
     public static String toLowerCase(@Nullable String str) {
         return str == null ? null : str.toLowerCase(Locale.US);
     }
@@ -2300,8 +2281,7 @@ public final class StringUtil {
         if (slashRIndex != -1) {
             String context =
                 String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
-            context = escapeStringCharacters(context);
-            LOG.error("Wrong line separators: '" + context + "' at offset " + slashRIndex);
+            LOG.error("Wrong line separators: " + StringEscapeUtil.quote(context, '"') + " at offset " + slashRIndex);
         }
     }
 
@@ -2378,7 +2358,8 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null->!null", pure = true)
-    public static String internEmptyString(String s) {
+    @Nullable
+    public static String internEmptyString(@Nullable String s) {
         return s == null ? null : s.isEmpty() ? "" : s;
     }
 
@@ -2602,6 +2583,7 @@ public final class StringUtil {
 
     // TODO: process all escapes
     @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Nullable
     public static String unescapeXml(@Nullable String text) {
         if (text == null) {
             return null;
@@ -2612,6 +2594,7 @@ public final class StringUtil {
     @Contract(value = "null -> null; !null -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
+    @Nullable
     public static String escapeXml(@Nullable String text) {
         if (text == null) {
             return null;
@@ -3225,9 +3208,8 @@ public final class StringUtil {
         return text.substring(0, i);
     }
 
-    private static final Pattern UNICODE_CHAR = Pattern.compile("\\\\u[0-9a-eA-E]{4}");
-
-    public static String replaceUnicodeEscapeSequences(String text) {
+    @Nullable
+    public static String replaceUnicodeEscapeSequences(@Nullable String text) {
         if (text == null) {
             return null;
         }

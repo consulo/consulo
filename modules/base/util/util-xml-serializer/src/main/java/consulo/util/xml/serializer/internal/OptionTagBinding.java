@@ -45,15 +45,16 @@ class OptionTagBinding extends BasePrimitiveBinding {
 
       String tagName = optionTag.tag();
       if (StringUtil.isEmpty(myNameAttribute) && Constants.OPTION.equals(tagName)) {
-        tagName = myAccessor.getName();
+        tagName = accessor.getName();
       }
       myTagName = tagName;
     }
   }
 
-  @Override
   @Nullable
+  @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    assert myAccessor != null;
     Object value = myAccessor.read(o);
     Element targetElement = new Element(myTagName);
 
@@ -86,7 +87,8 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    assert myAccessor != null && context != null;
     Attribute valueAttribute = element.getAttribute(myValueAttribute);
     if (valueAttribute == null) {
       if (myValueAttribute.isEmpty()) {

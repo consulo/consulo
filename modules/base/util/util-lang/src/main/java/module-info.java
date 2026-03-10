@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.util.lang {
   requires jdk.unsupported;
   requires consulo.annotation;

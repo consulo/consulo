@@ -36,7 +36,7 @@ public class Comparing {
    * @deprecated same as {@link Arrays#equals(Object[], Object[])}
    */
   @Deprecated
-  public static <T> boolean equal(@Nullable T[] arr1, @Nullable T[] arr2) {
+  public static <T> boolean equal(@Nullable T @Nullable [] arr1, @Nullable T @Nullable [] arr2) {
     return Arrays.equals(arr1, arr2);
   }
 
@@ -89,7 +89,7 @@ public class Comparing {
     return true;
   }
 
-  public static <T> boolean haveEqualElements(@Nullable T[] a, @Nullable T[] b) {
+  public static <T> boolean haveEqualElements(@Nullable T @Nullable [] a, @Nullable T @Nullable [] b) {
     if (a == null || b == null) {
       //noinspection ArrayEquality
       return a == b;
@@ -151,7 +151,7 @@ public class Comparing {
     return Double.compare(o1, o2);
   }
 
-  public static int compare(@Nullable byte[] o1, @Nullable byte[] o2) {
+  public static int compare(byte @Nullable [] o1, byte @Nullable [] o2) {
     //noinspection ArrayEquality
     if (o1 == o2) return 0;
     if (o1 == null) return 1;

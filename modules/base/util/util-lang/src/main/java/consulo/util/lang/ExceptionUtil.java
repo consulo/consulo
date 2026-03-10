@@ -32,12 +32,15 @@ public class ExceptionUtil {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @Nullable
   public static <T> T findCause(Throwable e, Class<T> clazz) {
-    while (e != null && !clazz.isInstance(e)) {
-      e = e.getCause();
+    @Nullable
+    Throwable cause = e;
+    while (cause != null && !clazz.isInstance(cause)) {
+      cause = cause.getCause();
     }
-    @SuppressWarnings("unchecked") T t = (T)e;
-    return t;
+    return (T) cause;
   }
 
   public static boolean causedBy(Throwable e, Class clazz) {

@@ -34,20 +34,23 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XmlSerializerImpl {
+    @Nullable
     private static Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
 
+    @Nullable
     public static Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
         try {
             Class<?> aClass = object.getClass();
             Binding binding = getClassBinding(aClass, aClass, null);
-            if (binding instanceof BeanBinding) {
+            if (binding instanceof BeanBinding beanBinding) {
                 // top level expects not null (null indicates error, empty element will be omitted)
-                return ((BeanBinding) binding).serialize(object, true, filter);
+                return beanBinding.serialize(object, true, filter);
             }
-            else {
+            else if (binding != null) {
                 //noinspection ConstantConditions
                 return (Element) binding.serialize(object, null, filter);
             }
+            return null;
         }
         catch (XmlSerializationException e) {
             throw e;

@@ -31,11 +31,13 @@ class TextBinding extends Binding {
   @Nullable
   @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    assert myAccessor != null;
     Object value = myAccessor.read(o);
     return value == null ? null : new Text(XmlSerializerImpl.convertToString(value));
   }
 
   void set(Object context, String value) {
+    assert myAccessor != null;
     XmlSerializerImpl.doSet(context, value, myAccessor, valueClass);
   }
 }

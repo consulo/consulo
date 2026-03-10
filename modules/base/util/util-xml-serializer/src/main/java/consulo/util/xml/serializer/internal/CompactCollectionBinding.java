@@ -33,7 +33,7 @@ class CompactCollectionBinding extends Binding {
   protected CompactCollectionBinding(MutableAccessor accessor) {
     super(accessor);
 
-    name = myAccessor.getName();
+    name = accessor.getName();
   }
 
   @Nullable
@@ -54,7 +54,8 @@ class CompactCollectionBinding extends Binding {
 
   @Nullable
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    assert context != null;
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>)context;
     list.clear();

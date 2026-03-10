@@ -22,12 +22,13 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 03/01/2022
+ * @since 2022-01-03
  */
 public class DefaultLazyValueImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
-  protected volatile T myValue;
+  @Nullable
+  protected volatile T myValue = null;
 
   public DefaultLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;

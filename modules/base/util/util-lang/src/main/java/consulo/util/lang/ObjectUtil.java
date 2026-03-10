@@ -8,6 +8,7 @@ import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.*;
 
 /**
@@ -77,8 +78,9 @@ public class ObjectUtil {
     });
   }
 
+  @Deprecated
   public static <T> T assertNotNull(@Nullable T t) {
-    return notNull(t);
+    return Objects.requireNonNull(t);
   }
 
   public static <T> void assertAllElementsNotNull(T[] array) {
@@ -91,20 +93,22 @@ public class ObjectUtil {
   }
 
   @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
+  @Nullable
   public static <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
     return t1 == null ? t2 : t1;
   }
 
   @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
+  @Nullable
   public static <T> T coalesce(@Nullable T t1, @Nullable T t2) {
     return chooseNotNull(t1, t2);
   }
 
   @Contract(value = "!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null", pure = true)
+  @Nullable
   public static <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
     return t1 != null ? t1 : t2 != null ? t2 : t3;
   }
-
 
   /**
    * Performs binary search on the range [fromIndex, toIndex)
@@ -137,9 +141,9 @@ public class ObjectUtil {
     return null;
   }
 
+  @Deprecated
   public static <T> T notNull(@Nullable T value) {
-    //noinspection ConstantConditions
-    return notNull(value, value);
+    return Objects.requireNonNull(value);
   }
 
   @Contract(pure = true)

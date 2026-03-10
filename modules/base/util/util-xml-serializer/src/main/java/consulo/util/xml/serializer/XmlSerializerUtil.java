@@ -18,6 +18,8 @@ package consulo.util.xml.serializer;
 import consulo.util.xml.serializer.internal.BeanBinding;
 import consulo.util.xml.serializer.internal.InternalReflectionUtil;
 import consulo.util.xml.serializer.internal.MutableAccessor;
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 public class XmlSerializerUtil {
@@ -32,6 +34,7 @@ public class XmlSerializerUtil {
     }
   }
 
+  @Nullable
   public static <T> T createCopy(T from) {
     try {
       @SuppressWarnings("unchecked")

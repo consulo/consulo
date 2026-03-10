@@ -31,11 +31,11 @@ public abstract class BasePrimitiveBinding extends Binding {
     protected BasePrimitiveBinding(MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
         super(accessor);
 
-        myName = StringUtil.isEmpty(suggestedName) ? myAccessor.getName() : suggestedName;
+        myName = StringUtil.isEmpty(suggestedName) ? accessor.getName() : suggestedName;
         if (converterClass == null || converterClass == Converter.class) {
             myConverter = null;
             if (!(this instanceof AttributeBinding)) {
-                myBinding = XmlSerializerImpl.getBinding(myAccessor);
+                myBinding = XmlSerializerImpl.getBinding(accessor);
             }
         }
         else {

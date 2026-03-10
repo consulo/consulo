@@ -87,6 +87,7 @@ public class ReflectionUtil {
     return new ArrayList<>(result);
   }
 
+  @Nullable
   public static Type resolveVariableInHierarchy(TypeVariable variable, Class aClass) {
     Type type;
     Class current = aClass;
@@ -274,6 +275,7 @@ public class ReflectionUtil {
     return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
   }
 
+  @Nullable
   public static <T> T getField(Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, String fieldName) {
     try {
       Field field = findAssignableField(objectClass, fieldType, fieldName);
@@ -289,6 +291,7 @@ public class ReflectionUtil {
     }
   }
 
+  @Nullable
   public static <T> T getStaticFieldValue(Class objectClass, @Nullable Class<T> fieldType, String fieldName) {
     try {
       Field field = findAssignableField(objectClass, fieldType, fieldName);
@@ -320,6 +323,7 @@ public class ReflectionUtil {
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
   }
 
+  @Nullable
   public static Field processFields(Class clazz, Predicate<Field> checker) {
     SimpleReference<Field> fieldRef = SimpleReference.create();
 
@@ -430,8 +434,7 @@ public class ReflectionUtil {
       //todo[peter] don't create new instance each time
       return Array.newInstance(getRawType(((GenericArrayType)type).getGenericComponentType()), 0).getClass();
     }
-    assert false : type;
-    return null;
+    throw new IllegalArgumentException("Unknown type " + type);
   }
 
   public static Class<?> boxType(Class<?> type) {

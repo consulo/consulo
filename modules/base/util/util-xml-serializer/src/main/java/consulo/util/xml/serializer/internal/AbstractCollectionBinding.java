@@ -28,9 +28,11 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 abstract class AbstractCollectionBinding extends Binding implements MultiNodeBinding {
+  @Nullable
   private Map<Class<?>, Binding> itemBindings;
 
   protected final Class<?> itemType;
+  @Nullable
   private final AbstractCollection annotation;
 
   public AbstractCollectionBinding(Class elementType, @Nullable MutableAccessor accessor) {
@@ -181,7 +183,8 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
     }
   }
 
-  private Object deserializeItem(Element node, Object context) {
+  @Nullable
+  private Object deserializeItem(Element node, @Nullable Object context) {
     Binding binding = getElementBinding(node);
     if (binding == null) {
       String attributeName = annotation == null ? Constants.VALUE : annotation.elementValueAttribute();
@@ -200,12 +203,13 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
   }
 
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    assert context != null;
     Collection result;
     if (getTagName(context) == null) {
-      if (context instanceof Collection) {
-        result = (Collection)context;
-        result.clear();
+      if (context instanceof Collection collection) {
+        collection.clear();
+        result = collection;
       }
       else {
         result = new ArrayList();

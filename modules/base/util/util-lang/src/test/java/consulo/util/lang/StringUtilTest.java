@@ -855,7 +855,6 @@ public class StringUtilTest {
     @SuppressWarnings("deprecation")
     @Test
     void testParseBoolean() {
-        assertThat(StringUtil.parseBoolean(null, true)).isFalse();
         assertThat(StringUtil.parseBoolean("", true)).isFalse();
         assertThat(StringUtil.parseBoolean("false", true)).isFalse();
         assertThat(StringUtil.parseBoolean("true", false)).isTrue();

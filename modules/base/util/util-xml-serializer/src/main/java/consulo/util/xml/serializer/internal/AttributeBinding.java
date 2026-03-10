@@ -31,6 +31,7 @@ class AttributeBinding extends BasePrimitiveBinding {
   @Override
   @Nullable
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    assert myAccessor != null;
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -47,6 +48,7 @@ class AttributeBinding extends BasePrimitiveBinding {
   }
 
   void set(Object host, String value) {
+    assert myAccessor != null;
     if (myConverter == null) {
       XmlSerializerImpl.doSet(host, value, myAccessor, valueClass);
     }
