@@ -20,8 +20,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +33,6 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, HashingStrategy<K> {
   final ReferenceQueue<K> myReferenceQueue = new ReferenceQueue<>();
   private final ConcurrentMap<KeyReference<K>, V> myMap; // hashing strategy must be canonical, we compute corresponding hash codes using our own myHashingStrategy
-  @Nonnull
   private final HashingStrategy<? super K> myHashingStrategy;
 
   @FunctionalInterface
@@ -49,8 +47,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     int hashCode();
   }
 
-  @Nonnull
-  abstract KeyReference<K> createKeyReference(@Nonnull K key, @Nonnull HashingStrategy<? super K> hashingStrategy);
+  abstract KeyReference<K> createKeyReference(K key, HashingStrategy<? super K> hashingStrategy);
 
   private static final HardKey<?> NULL_KEY = new HardKey<Object>() {
     @Override
@@ -63,7 +60,6 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     }
   };
 
-  @Nonnull
   private KeyReference<K> createKeyReference(@Nullable K key) {
     if (key == null) {
       //noinspection unchecked
@@ -113,11 +109,11 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     this(initialCapacity, loadFactor, DEFAULT_CONCURRENCY_LEVEL, (HashingStrategy<? super K>)THIS);
   }
 
-  public ConcurrentRefHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentRefHashMap(HashingStrategy<? super K> hashingStrategy) {
     this(DEFAULT_CAPACITY, LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL, hashingStrategy);
   }
 
-  public ConcurrentRefHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentRefHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     myHashingStrategy = hashingStrategy == THIS ? this : hashingStrategy;
     myMap = Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
   }
@@ -174,7 +170,6 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
   private static final ThreadLocal<HardKey<?>> HARD_KEY = ThreadLocal.withInitial(HardKey::new);
 
-  @Nonnull
   private HardKey<K> createHardKey(@Nullable Object o) {
     if (o == null) {
       //noinspection unchecked
@@ -188,7 +183,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     return hardKey;
   }
 
-  private static void releaseHardKey(@Nonnull HardKey<?> key) {
+  private static void releaseHardKey(HardKey<?> key) {
     key.setKey(null, 0);
   }
 
@@ -201,7 +196,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
   }
 
   @Override
-  public V put(@Nullable K key, @Nonnull V value) {
+  public V put(@Nullable K key, V value) {
     processQueue();
     KeyReference<K> weakKey = createKeyReference(key);
     return myMap.put(weakKey, value);
@@ -229,7 +224,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
                                  will leave it alone as long as this Entry
                                  exists */
 
-    RefEntry(@Nonnull Map.Entry<?, V> ent, @Nullable K key) {
+    RefEntry(Map.Entry<?, V> ent, @Nullable K key) {
       this.ent = ent;
       this.key = key;
     }
@@ -245,7 +240,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     }
 
     @Override
-    public V setValue(@Nonnull V value) {
+    public V setValue(V value) {
       return ent.setValue(value);
     }
 
@@ -268,7 +263,6 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
   private class EntrySet extends AbstractSet<Map.Entry<K, V>> {
     private final Set<Map.Entry<KeyReference<K>, V>> hashEntrySet = myMap.entrySet();
 
-    @Nonnull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new Iterator<Map.Entry<K, V>>() {
@@ -355,7 +349,6 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
   private Set<Map.Entry<K, V>> entrySet;
 
-  @Nonnull
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     Set<Entry<K, V>> es = entrySet;
@@ -364,26 +357,26 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
   }
 
   @Override
-  public V putIfAbsent(@Nullable K key, @Nonnull V value) {
+  public V putIfAbsent(@Nullable K key, V value) {
     processQueue();
     return myMap.putIfAbsent(createKeyReference(key), value);
   }
 
   @Override
-  public boolean remove(@Nullable Object key, @Nonnull Object value) {
+  public boolean remove(@Nullable Object key, Object value) {
     processQueue();
     //noinspection unchecked
     return myMap.remove(createKeyReference((K)key), value);
   }
 
   @Override
-  public boolean replace(@Nullable K key, @Nonnull V oldValue, @Nonnull V newValue) {
+  public boolean replace(@Nullable K key, V oldValue, V newValue) {
     processQueue();
     return myMap.replace(createKeyReference(key), oldValue, newValue);
   }
 
   @Override
-  public V replace(@Nullable K key, @Nonnull V value) {
+  public V replace(@Nullable K key, V value) {
     processQueue();
     return myMap.replace(createKeyReference(key), value);
   }

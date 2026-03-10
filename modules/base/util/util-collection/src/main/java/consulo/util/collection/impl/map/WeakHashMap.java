@@ -17,7 +17,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
@@ -36,22 +35,20 @@ public abstract class WeakHashMap<K, V> extends RefHashMap<K, V> {
     super(initialCapacity);
   }
 
-  public WeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+  public WeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
     super(initialCapacity, loadFactor, strategy);
   }
 
-  @Nonnull
   @Override
-  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull HashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+  protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
     return new WeakKey<>(k, strategy, q);
   }
 
   private static class WeakKey<T> extends WeakReference<T> implements Key<T> {
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
-    @Nonnull
     private final HashingStrategy<? super T> myStrategy;
 
-    private WeakKey(@Nonnull T k, @Nonnull HashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+    private WeakKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = strategy.hashCode(k);

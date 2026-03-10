@@ -17,14 +17,12 @@ package consulo.util.collection.primitive.bytes;
 
 import consulo.util.collection.primitive.bytes.impl.list.ByteArrayList;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09/05/2021
  */
 public final class ByteLists {
-  @Nonnull
   public static ByteList newArrayList() {
     return new ByteArrayList();
   }

@@ -20,8 +20,7 @@ import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.XmlSerializationException;
 import consulo.util.xml.serializer.annotation.CollectionBean;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
@@ -37,8 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XmlSerializerImpl {
     private static Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
 
-    @Nonnull
-    public static Element serialize(@Nonnull Object object, @Nonnull SerializationFilter filter) throws XmlSerializationException {
+    public static Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
         try {
             Class<?> aClass = object.getClass();
             Binding binding = getClassBinding(aClass, aClass, null);
@@ -60,7 +58,7 @@ public class XmlSerializerImpl {
     }
 
     @Nullable
-    public static Element serializeIfNotDefault(@Nonnull Object object, @Nonnull SerializationFilter filter) {
+    public static Element serializeIfNotDefault(Object object, SerializationFilter filter) {
         Class<?> aClass = object.getClass();
         Binding binding = getClassBinding(aClass, aClass, null);
         assert binding != null;
@@ -68,18 +66,17 @@ public class XmlSerializerImpl {
     }
 
     @Nullable
-    public static Binding getBinding(@Nonnull Type type) {
+    public static Binding getBinding(Type type) {
         return getClassBinding(typeToClass(type), type, null);
     }
 
     @Nullable
-    public static Binding getBinding(@Nonnull MutableAccessor accessor) {
+    public static Binding getBinding(MutableAccessor accessor) {
         Type type = accessor.getGenericType();
         return getClassBinding(typeToClass(type), type, accessor);
     }
 
-    @Nonnull
-    public static Class<?> typeToClass(@Nonnull Type type) {
+    public static Class<?> typeToClass(Type type) {
         if (type instanceof Class) {
             return (Class<?>) type;
         }
@@ -93,7 +90,7 @@ public class XmlSerializerImpl {
     }
 
     @Nullable
-    public static synchronized Binding getClassBinding(@Nonnull Class<?> aClass, @Nonnull Type originalType, @Nullable MutableAccessor accessor) {
+    public static synchronized Binding getClassBinding(Class<?> aClass, Type originalType, @Nullable MutableAccessor accessor) {
         if (aClass.isPrimitive() ||
             aClass == String.class ||
             aClass == Integer.class ||
@@ -124,7 +121,6 @@ public class XmlSerializerImpl {
         return binding;
     }
 
-    @Nonnull
     private static Map<Pair<Type, MutableAccessor>, Binding> getBindingCacheMap() {
         Map<Pair<Type, MutableAccessor>, Binding> map = consulo.util.lang.ref.SoftReference.dereference(ourBindings);
         if (map == null) {
@@ -134,8 +130,7 @@ public class XmlSerializerImpl {
         return map;
     }
 
-    @Nonnull
-    private static Binding getNonCachedClassBinding(@Nonnull Class<?> aClass, @Nullable MutableAccessor accessor, @Nonnull Type originalType) {
+    private static Binding getNonCachedClassBinding(Class<?> aClass, @Nullable MutableAccessor accessor, Type originalType) {
         if (aClass.isArray()) {
             if (Element.class.isAssignableFrom(aClass.getComponentType())) {
                 assert accessor != null;
@@ -170,7 +165,7 @@ public class XmlSerializerImpl {
     }
 
     @Nullable
-    static Object convert(@Nullable String value, @Nonnull Class<?> valueClass) {
+    static Object convert(@Nullable String value, Class<?> valueClass) {
         if (value == null) {
             return null;
         }
@@ -216,7 +211,7 @@ public class XmlSerializerImpl {
         }
     }
 
-    static void doSet(@Nonnull Object host, @Nullable String value, @Nonnull MutableAccessor accessor, @Nonnull Class<?> valueClass) {
+    static void doSet(Object host, @Nullable String value, MutableAccessor accessor, Class<?> valueClass) {
         if (value == null) {
             accessor.set(host, null);
         }
@@ -285,8 +280,7 @@ public class XmlSerializerImpl {
         }
     }
 
-    @Nonnull
-    static String convertToString(@Nonnull Object value) {
+    static String convertToString(Object value) {
         if (value instanceof Date) {
             return Long.toString(((Date) value).getTime());
         }
@@ -295,8 +289,7 @@ public class XmlSerializerImpl {
         }
     }
 
-    @Nonnull
-    static String getTextValue(@Nonnull Element element, @Nonnull String defaultText) {
+    static String getTextValue(Element element, String defaultText) {
         List<Content> content = element.getContent();
         String value = defaultText;
         if (!content.isEmpty()) {

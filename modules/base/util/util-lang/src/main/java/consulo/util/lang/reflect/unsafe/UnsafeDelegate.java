@@ -15,7 +15,6 @@
  */
 package consulo.util.lang.reflect.unsafe;
 
-import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
@@ -30,7 +29,6 @@ import java.nio.ByteBuffer;
 public class UnsafeDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(UnsafeDelegate.class);
 
-  @Nonnull
   public static UnsafeDelegate get() {
     return ourInstance;
   }
@@ -132,7 +130,7 @@ public class UnsafeDelegate {
     return myUnsafe.getLong(address);
   }
 
-  public boolean invokeCleaner(@Nonnull ByteBuffer buffer) {
+  public boolean invokeCleaner(ByteBuffer buffer) {
     try {
       myUnsafe.invokeCleaner(buffer);
       return true;

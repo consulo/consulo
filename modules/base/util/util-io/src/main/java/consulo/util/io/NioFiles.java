@@ -2,8 +2,7 @@
 package consulo.util.io;
 
 import consulo.util.io.internal.OSInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +80,7 @@ public final class NioFiles {
     /**
      * A stream-friendly wrapper around {@link Paths#get} that turns {@link InvalidPathException} into {@code null}.
      */
-    public static @Nullable Path toPath(@Nonnull String path) {
+    public static @Nullable Path toPath(String path) {
         try {
             return Paths.get(path);
         }
@@ -94,7 +93,7 @@ public final class NioFiles {
      * A null-safe replacement for {@link Path#getFileName} + {@link Path#toString} combination
      * (the former returns {@code null} on root directories).
      */
-    public static @Nonnull String getFileName(@Nonnull Path path) {
+    public static String getFileName(Path path) {
         Path name = path.getFileName();
         return (name != null ? name : path).toString();
     }
@@ -102,7 +101,7 @@ public final class NioFiles {
     /**
      * Same as {@link Files#size(Path)}, but returns {@code -1} instead of throwing {@link IOException}.
      */
-    public static long sizeIfExists(@Nonnull Path path) {
+    public static long sizeIfExists(Path path) {
         try {
             return Files.size(path);
         }
@@ -115,7 +114,7 @@ public final class NioFiles {
      * A drop-in replacement for {@link Files#createDirectories} that doesn't stumble upon symlinks - unlike the original.
      * I.e., this method accepts "/path/.../dir_link" (where "dir_link" is a symlink to a directory), while the original fails.
      */
-    public static @Nonnull Path createDirectories(@Nonnull Path path) throws IOException {
+    public static Path createDirectories(Path path) throws IOException {
         try {
             tryCreateDirectory(path);
         }
@@ -148,7 +147,7 @@ public final class NioFiles {
      * Creates all parent directories of the given path; returns the argument.
      * Example: {@code Files.newOutputStream(NioFiles.createParentDirectories(file))}.
      */
-    public static @Nonnull Path createParentDirectories(@Nonnull Path path) throws IOException {
+    public static Path createParentDirectories(Path path) throws IOException {
         Path parent = path.getParent();
         if (parent != null) createDirectories(parent);
         return path;
@@ -158,7 +157,7 @@ public final class NioFiles {
      * An accompaniment for {@link Files#createFile} that doesn't fret upon existing files (and symlinks to),
      * and also creates missing directories.
      */
-    public static @Nonnull Path createIfNotExists(@Nonnull Path path) throws IOException {
+    public static Path createIfNotExists(Path path) throws IOException {
         createParentDirectories(path);
         try {
             Files.createFile(path);
@@ -174,7 +173,7 @@ public final class NioFiles {
     /**
      * Like {@link Files#isWritable}, but interprets {@link SecurityException} as a negative result.
      */
-    public static boolean isWritable(@Nonnull Path path) {
+    public static boolean isWritable(Path path) {
         try {
             return Files.isWritable(path);
         }
@@ -188,7 +187,7 @@ public final class NioFiles {
      * On POSIX file systems, deletes all write permissions when {@code value} is {@code true} or
      * adds the "owner-write" one otherwise.
      */
-    public static void setReadOnly(@Nonnull Path path, boolean value) throws IOException {
+    public static void setReadOnly(Path path, boolean value) throws IOException {
         PosixFileAttributeView posixView;
         DosFileAttributeView dosView;
 
@@ -211,7 +210,7 @@ public final class NioFiles {
     /**
      * On POSIX file systems, the method sets "owner-exec" permission (if not yet set); on others, it does nothing.
      */
-    public static void setExecutable(@Nonnull Path file) throws IOException {
+    public static void setExecutable(Path file) throws IOException {
         PosixFileAttributeView view = Files.getFileAttributeView(file, PosixFileAttributeView.class);
         if (view != null) {
             Set<PosixFilePermission> permissions = view.readAttributes().permissions();
@@ -225,7 +224,7 @@ public final class NioFiles {
      * A convenience wrapper around {@link Files#newDirectoryStream(Path)} that returns all entries of the given directory,
      * ignores exceptions (returns an empty list), and doesn't forget to close the directory stream.
      */
-    public static @Nonnull List<Path> list(@Nonnull Path directory) {
+    public static List<Path> list(Path directory) {
         try {
             List<Path> files = new ArrayList<>();
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
@@ -243,7 +242,7 @@ public final class NioFiles {
      *
      * @see #BROKEN_SYMLINK
      */
-    public static @Nonnull BasicFileAttributes readAttributes(@Nonnull Path path) throws IOException, SecurityException {
+    public static BasicFileAttributes readAttributes(Path path) throws IOException, SecurityException {
         try {
             return Files.readAttributes(path, BasicFileAttributes.class, NO_FOLLOW);
         }
@@ -284,7 +283,7 @@ public final class NioFiles {
     /**
      * See {@link #copyRecursively(Path, Path, Consumer)}.
      */
-    public static void copyRecursively(@Nonnull Path from, @Nonnull Path to) throws IOException {
+    public static void copyRecursively(Path from, Path to) throws IOException {
         copyRecursively(from, to, null);
     }
 
@@ -295,7 +294,7 @@ public final class NioFiles {
      * Invokes the callback before copying a file or a directory.
      * Fails fast (throws an exception right after meeting a problematic file or directory); does not try to delete an incomplete copy.</p>
      */
-    public static void copyRecursively(@Nonnull Path from, @Nonnull Path to, @Nullable Consumer<? super Path> callback) throws IOException {
+    public static void copyRecursively(Path from, Path to, @Nullable Consumer<? super Path> callback) throws IOException {
         Files.walkFileTree(from, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {

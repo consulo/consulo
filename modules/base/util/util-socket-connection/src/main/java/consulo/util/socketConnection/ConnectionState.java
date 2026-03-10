@@ -1,29 +1,26 @@
 package consulo.util.socketConnection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ConnectionState {
   private final String message;
   private final ConnectionStatus status;
   private final Object messageLinkListener;
 
-  public ConnectionState(@Nonnull ConnectionStatus status, @Nullable String message, @Nullable Object messageLinkListener) {
+  public ConnectionState(ConnectionStatus status, @Nullable String message, @Nullable Object messageLinkListener) {
     this.status = status;
     this.message = message;
     this.messageLinkListener = messageLinkListener;
   }
 
-  public ConnectionState(@Nonnull ConnectionStatus status) {
+  public ConnectionState(ConnectionStatus status) {
     this(status, null, null);
   }
 
-  @Nonnull
   public ConnectionStatus getStatus() {
     return status;
   }
 
-  @Nonnull
   public String getMessage() {
     return message == null ? status.getStatusText() : message;
   }

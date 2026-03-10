@@ -19,7 +19,6 @@ import consulo.util.lang.LoggerAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -39,7 +38,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   }
 
   // For testing only
-  UnsafeWeakList(@Nonnull WeakReferenceArray<T> array) {
+  UnsafeWeakList(WeakReferenceArray<T> array) {
     myArray = array;
   }
 
@@ -87,7 +86,6 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     tryReduceCapacity(-1);
   }
 
-  @Nonnull
   @Override
   public Iterator<T> iterator() {
     return new MyIterator();

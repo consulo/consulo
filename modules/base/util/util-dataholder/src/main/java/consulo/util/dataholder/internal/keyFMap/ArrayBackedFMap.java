@@ -19,7 +19,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.internal.KeyRegistry;
 
-import jakarta.annotation.Nonnull;
 
 public class ArrayBackedFMap implements KeyFMap {
     private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
@@ -28,14 +27,13 @@ public class ArrayBackedFMap implements KeyFMap {
     private final int[] keys;
     private final Object[] values;
 
-    ArrayBackedFMap(@Nonnull int[] keys, @Nonnull Object[] values) {
+    ArrayBackedFMap(int[] keys, Object[] values) {
         this.keys = keys;
         this.values = values;
     }
 
-    @Nonnull
     @Override
-    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+    public <V> KeyFMap plus(Key<V> key, V value) {
         int oldSize = size();
         int keyCode = key.hashCode();
         int[] newKeys = null;
@@ -70,9 +68,8 @@ public class ArrayBackedFMap implements KeyFMap {
         return keys.length;
     }
 
-    @Nonnull
     @Override
-    public KeyFMap minus(@Nonnull Key<?> key) {
+    public KeyFMap minus(Key<?> key) {
         int oldSize = size();
         int keyCode = key.hashCode();
         for (int i = 0; i < oldSize; i++) {
@@ -104,7 +101,7 @@ public class ArrayBackedFMap implements KeyFMap {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V get(@Nonnull Key<V> key) {
+    public <V> V get(Key<V> key) {
         int oldSize = size();
         int keyCode = key.hashCode();
         for (int i = 0; i < oldSize; i++) {
@@ -132,23 +129,19 @@ public class ArrayBackedFMap implements KeyFMap {
         return false;
     }
 
-    @Nonnull
     public int[] getKeyIds() {
         return keys;
     }
 
-    @Nonnull
     @Override
     public Key[] getKeys() {
         return getKeysByIndices(keys);
     }
 
-    @Nonnull
     public Object[] getValues() {
         return values;
     }
 
-    @Nonnull
     static Key[] getKeysByIndices(int[] indexes) {
         Key[] result = new Key[indexes.length];
 

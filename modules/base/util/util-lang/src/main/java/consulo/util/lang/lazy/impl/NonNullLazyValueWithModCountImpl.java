@@ -17,8 +17,7 @@ package consulo.util.lang.lazy.impl;
 
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
@@ -45,7 +44,6 @@ public class NonNullLazyValueWithModCountImpl<T> implements LazyValue<T> {
     return myValue;
   }
 
-  @Nonnull
   @Override
   public T get() {
     T result = myValue;

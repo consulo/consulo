@@ -23,8 +23,7 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 class OptionTagBinding extends BasePrimitiveBinding {
@@ -32,7 +31,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   private final String myNameAttribute;
   private final String myValueAttribute;
 
-  public OptionTagBinding(@Nonnull MutableAccessor accessor, @Nullable OptionTag optionTag) {
+  public OptionTagBinding(MutableAccessor accessor, @Nullable OptionTag optionTag) {
     super(accessor, optionTag == null ? null : optionTag.value(), optionTag == null ? null : optionTag.converter());
 
     if (optionTag == null) {
@@ -54,7 +53,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
 
   @Override
   @Nullable
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     Element targetElement = new Element(myTagName);
 
@@ -87,7 +86,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(Object context, Element element) {
     Attribute valueAttribute = element.getAttribute(myValueAttribute);
     if (valueAttribute == null) {
       if (myValueAttribute.isEmpty()) {
@@ -115,7 +114,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element element) {
+  public boolean isBoundTo(Element element) {
     if (!element.getName().equals(myTagName)) {
       return false;
     }

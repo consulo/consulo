@@ -3,8 +3,7 @@ package consulo.util.lang;
 
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -75,7 +74,7 @@ public class Comparing {
     return equal(arg1 == null ? "" : arg1, arg2 == null ? "" : arg2, caseSensitive);
   }
 
-  public static <T> boolean haveEqualElements(@Nonnull Collection<? extends T> a, @Nonnull Collection<? extends T> b) {
+  public static <T> boolean haveEqualElements(Collection<? extends T> a, Collection<? extends T> b) {
     if (a.size() != b.size()) {
       return false;
     }
@@ -122,7 +121,7 @@ public class Comparing {
   /**
    * @see AbstractSet#hashCode()
    */
-  public static int unorderedHashcode(@Nonnull Collection<?> collection) {
+  public static int unorderedHashcode(Collection<?> collection) {
     int h = 0;
     for (Object obj : collection) {
       if (obj != null) {
@@ -178,7 +177,7 @@ public class Comparing {
     return o1.compareTo(o2);
   }
 
-  public static <T> int compare(@Nullable T o1, @Nullable T o2, @Nonnull Comparator<? super T> notNullComparator) {
+  public static <T> int compare(@Nullable T o1, @Nullable T o2, Comparator<? super T> notNullComparator) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;

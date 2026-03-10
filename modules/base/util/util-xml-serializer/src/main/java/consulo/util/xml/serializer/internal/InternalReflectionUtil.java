@@ -15,7 +15,6 @@
  */
 package consulo.util.xml.serializer.internal;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -26,8 +25,7 @@ import java.lang.reflect.InvocationTargetException;
  * Since reflection after java 9 can check by stack, we dont need export to util.lang
  */
 public class InternalReflectionUtil {
-  @Nonnull
-  public static <T> T newInstance(@Nonnull Class<? extends T> clazz) {
+  public static <T> T newInstance(Class<? extends T> clazz) {
     try {
       Constructor<? extends T> declaredConstructor = clazz.getDeclaredConstructor();
       declaredConstructor.setAccessible(true);

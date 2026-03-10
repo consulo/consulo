@@ -22,7 +22,6 @@ import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 import java.util.function.Supplier;
@@ -35,8 +34,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   private final ConcurrentIntObjectHashMap<IntReference<V>> myMap = new ConcurrentIntObjectHashMap<>();
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
-  @Nonnull
-  protected abstract IntReference<V> createReference(int key, @Nonnull V value, @Nonnull ReferenceQueue<V> queue);
+  protected abstract IntReference<V> createReference(int key, V value, ReferenceQueue<V> queue);
 
   interface IntReference<V> extends Supplier<V> {
     int getKey();
@@ -54,9 +52,8 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     }
   }
 
-  @Nonnull
   @Override
-  public V cacheOrGet(int key, @Nonnull V value) {
+  public V cacheOrGet(int key, V value) {
     processQueue();
     IntReference<V> newRef = createReference(key, value, myQueue);
     while (true) {
@@ -74,19 +71,19 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   @Override
-  public boolean remove(int key, @Nonnull V value) {
+  public boolean remove(int key, V value) {
     processQueue();
     return myMap.remove(key, createReference(key, value, myQueue));
   }
 
   @Override
-  public boolean replace(int key, @Nonnull V oldValue, @Nonnull V newValue) {
+  public boolean replace(int key, V oldValue, V newValue) {
     processQueue();
     return myMap.replace(key, createReference(key, oldValue, myQueue), createReference(key, newValue, myQueue));
   }
 
   @Override
-  public V put(int key, @Nonnull V value) {
+  public V put(int key, V value) {
     processQueue();
     IntReference<V> ref = myMap.put(key, createReference(key, value, myQueue));
     return SoftReference.deref(ref);
@@ -111,7 +108,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   @Override
-  public boolean containsValue(@Nonnull Object value) {
+  public boolean containsValue(Object value) {
     throw RefValueHashMap.pointlessContainsValue();
   }
 
@@ -121,19 +118,16 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     processQueue();
   }
 
-  @Nonnull
   @Override
   public int[] keys() {
     return myMap.keys();
   }
 
-  @Nonnull
   @Override
   public Set<IntObjectEntry<V>> entrySet() {
     return new MyEntrySetView();
   }
 
-  @Nonnull
   @Override
   public IntSet keySet() {
     // todo [vistall] todo
@@ -141,7 +135,6 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   private class MyEntrySetView extends AbstractSet<IntObjectEntry<V>> {
-    @Nonnull
     @Override
     public Iterator<IntObjectEntry<V>> iterator() {
       return entriesIterator();
@@ -153,7 +146,6 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     }
   }
 
-  @Nonnull
   private Iterator<IntObjectEntry<V>> entriesIterator() {
     final Iterator<IntObjectEntry<IntReference<V>>> entryIterator = myMap.entrySet().iterator();
     return new Iterator<>() {
@@ -215,7 +207,6 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     return myMap.isEmpty();
   }
 
-  @Nonnull
   public Iterator<V> elementsIterator() {
     final Iterator<IntReference<V>> elementRefs = myMap.values().iterator();
     return new Iterator<V>() {
@@ -247,7 +238,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
 
   @Override
-  public V putIfAbsent(int key, @Nonnull V value) {
+  public V putIfAbsent(int key, V value) {
     IntReference<V> newRef = createReference(key, value, myQueue);
     while (true) {
       processQueue();
@@ -263,7 +254,6 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     }
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     Set<V> result = new HashSet<>();

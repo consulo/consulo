@@ -22,7 +22,6 @@ import consulo.util.socketConnection.RequestResponseExternalizerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -39,7 +38,7 @@ public class ServerSocketConnectionImpl<Request extends AbstractRequest, Respons
   private final int myConnectionAttempts;
   private final Executor myExecutor;
 
-  public ServerSocketConnectionImpl(ScheduledExecutorService executor, int defaultPort, int connectionAttempts, @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
+  public ServerSocketConnectionImpl(ScheduledExecutorService executor, int defaultPort, int connectionAttempts, RequestResponseExternalizerFactory<Request, Response> factory) {
     super(executor, factory);
     myExecutor = executor;
     myDefaultPort = defaultPort;
@@ -60,7 +59,6 @@ public class ServerSocketConnectionImpl<Request extends AbstractRequest, Respons
     });
   }
 
-  @Nonnull
   private ServerSocket createSocket() throws IOException {
     IOException exc = null;
     for (int i = 0; i < myConnectionAttempts; i++) {

@@ -17,8 +17,7 @@ package consulo.util.lang;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility wrappers for accessing system properties.
@@ -114,7 +113,7 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as integer, or default value.
    */
-  public static int getIntProperty(@Nonnull String key, int defaultValue) {
+  public static int getIntProperty(String key, int defaultValue) {
     String value = System.getProperty(key);
     if (value != null) {
       try {
@@ -135,7 +134,7 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as boolean, or default value.
    */
-  public static boolean getBooleanProperty(@Nonnull String key, boolean defaultValue) {
+  public static boolean getBooleanProperty(String key, boolean defaultValue) {
     String value = System.getProperty(key);
     if (value != null) {
       return Boolean.parseBoolean(value);
@@ -144,7 +143,7 @@ public class SystemProperties {
     return defaultValue;
   }
 
-  public static float getFloatProperty(@Nonnull String key, float defaultValue) {
+  public static float getFloatProperty(String key, float defaultValue) {
     String value = System.getProperty(key);
     if (value != null) {
       try {

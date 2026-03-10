@@ -19,8 +19,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 public interface Interner<T> {
@@ -28,7 +27,6 @@ public interface Interner<T> {
    * Allow to reuse structurally equal objects to avoid memory being wasted on them. Objects are cached on weak references
    * and garbage-collected when not needed anymore.
    */
-  @Nonnull
   public static <T> Interner<T> createWeakInterner() {
     return new MapBasedInterner<T>(ContainerUtil.createConcurrentWeakKeyWeakValueMap());
   }
@@ -37,8 +35,7 @@ public interface Interner<T> {
    * Allow to reuse structurally equal objects to avoid memory being wasted on them. Objects are cached on weak references
    * and garbage-collected when not needed anymore.
    */
-  @Nonnull
-  public static <T> Interner<T> createWeakInterner(@Nonnull HashingStrategy<T> strategy) {
+  public static <T> Interner<T> createWeakInterner(HashingStrategy<T> strategy) {
     return new MapBasedInterner<T>(ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy));
   }
 
@@ -48,7 +45,6 @@ public interface Interner<T> {
    *
    * @author peter
    */
-  @Nonnull
   public static <T> Interner<T> createConcurrentHashInterner() {
     return new MapBasedInterner<>(Maps.newConcurrentHashMap());
   }
@@ -59,8 +55,7 @@ public interface Interner<T> {
    *
    * @author peter
    */
-  @Nonnull
-  public static <T> Interner<T> createConcurrentHashInterner(@Nonnull HashingStrategy<T> strategy) {
+  public static <T> Interner<T> createConcurrentHashInterner(HashingStrategy<T> strategy) {
     return new MapBasedInterner<>(Maps.newConcurrentHashMap(strategy));
   }
 
@@ -70,29 +65,26 @@ public interface Interner<T> {
    *
    * @author peter
    */
-  @Nonnull
-  public static <T> Interner<T> createHashInterner(@Nonnull HashingStrategy<T> strategy) {
+  public static <T> Interner<T> createHashInterner(HashingStrategy<T> strategy) {
     return new MapBasedInterner<>(Maps.newHashMap(strategy));
   }
 
   /**
    * Default interner for strings
    */
-  @Nonnull
   public static Interner<String> createStringInterner() {
     return createConcurrentHashInterner();
   }
 
-  @Nonnull
-  T intern(@Nonnull T item);
+  T intern(T item);
 
-  default void internAll(@Nonnull Iterable<? extends T> iterable) {
+  default void internAll(Iterable<? extends T> iterable) {
     for (T t : iterable) {
       intern(t);
     }
   }
 
-  default void internAll(@Nonnull T[] values) {
+  default void internAll(T[] values) {
     for (T t : values) {
       intern(t);
     }
@@ -102,10 +94,9 @@ public interface Interner<T> {
    * Return interned value. Null if not interned
    */
   @Nullable
-  T get(@Nonnull T item);
+  T get(T item);
 
   void clear();
 
-  @Nonnull
   Set<T> getValues();
 }

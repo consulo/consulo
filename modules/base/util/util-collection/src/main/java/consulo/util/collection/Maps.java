@@ -17,10 +17,9 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,8 +38,7 @@ public final class Maps {
      * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
      * or corresponding value if entry already exists.
      */
-    @Nonnull
-    public static <K, V> V cacheOrGet(@Nonnull Map<K, V> map, @Nonnull K key, @Nonnull V defaultValue) {
+    public static <K, V> V cacheOrGet(Map<K, V> map, K key, V defaultValue) {
         V v = map.get(key);
         if (v != null) {
             return v;
@@ -49,7 +47,7 @@ public final class Maps {
         return prev == null ? defaultValue : prev;
     }
 
-    public static <K, V> void putIfNotNull(K key, @Nullable V value, @Nonnull Map<K, V> result) {
+    public static <K, V> void putIfNotNull(K key, @Nullable V value, Map<K, V> result) {
         if (value != null) {
             result.put(key, value);
         }
@@ -59,62 +57,52 @@ public final class Maps {
      * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
      * or corresponding value if entry already exists.
      */
-    @Nonnull
-    public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull K key, @Nonnull V defaultValue) {
+    public static <K, V> V cacheOrGet(ConcurrentMap<K, V> map, K key, V defaultValue) {
         return cacheOrGet((Map<K, V>)map, key, defaultValue);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map, @Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, map, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newHashMap(int initialCapacity, @Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> Map<K, V> newHashMap(int initialCapacity, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(initialCapacity, 1f, null, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> Map<K, V> newHashMap(int initialCapacity, float loadFactor, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(initialCapacity, loadFactor, null, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> Map<K, V> newHashMap(HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, null, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newLinkedHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> Map<K, V> newLinkedHashMap(HashingStrategy<K> hashingStrategy) {
         return new LinkedHashMap<>(hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
         return new java.util.concurrent.ConcurrentHashMap<K, V>();
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakValueHashMap() {
         return new ConcurrentWeakValueHashMap<K, V>();
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftValueHashMap() {
         return new ConcurrentSoftValueHashMap<K, V>();
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(HashingStrategy<K> hashingStrategy) {
         return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(hashingStrategy);
     }
 
@@ -124,7 +112,6 @@ public final class Maps {
      * Null values are allowed
      */
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newWeakValueHashMap() {
         return new WeakValueHashMap<K, V>(HashingStrategy.<K>canonical());
     }
@@ -135,25 +122,21 @@ public final class Maps {
      * Null values are allowed
      */
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newWeakHashMap() {
         return newWeakHashMap(4);
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity) {
         return newWeakHashMap(initialCapacity, 0.8f, HashingStrategy.canonical());
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    @Nonnull
-    public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+    public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
     }
 
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newWeakKeyWeakValueHashMap() {
         return new WeakKeyWeakValueHashMap<K, V>(true);
     }
@@ -164,53 +147,45 @@ public final class Maps {
      * Null values are allowed
      */
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newSoftValueHashMap() {
         return new SoftValueHashMap<K, V>(HashingStrategy.canonical());
     }
 
-    @Nonnull
     public static <K, V> Map<K, V> newWeakKeySoftValueHashMap() {
         return new WeakKeySoftValueHashMap<K, V>();
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftHashMap() {
         return new ConcurrentSoftHashMap<K, V>();
     }
 
-    @Nonnull
     @Contract(value = " -> new", pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap() {
         return new ConcurrentWeakHashMap<K, V>(0.75f);
     }
 
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakIdentityMap() {
         return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(HashingStrategy.<K>identity());
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap() {
         return newConcurrentWeakKeyWeakValueHashMap(HashingStrategy.<K>canonical());
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap(@Nonnull HashingStrategy<K> strategy) {
+    public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap(HashingStrategy<K> strategy) {
         return new ConcurrentWeakKeyWeakValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), strategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftHashMap(
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull HashingStrategy<K> hashingStrategy
+        HashingStrategy<K> hashingStrategy
     ) {
         return new consulo.util.collection.impl.map.ConcurrentSoftHashMap<K, V>(
             initialCapacity,
@@ -220,13 +195,12 @@ public final class Maps {
         );
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull HashingStrategy<K> hashingStrategy
+        HashingStrategy<K> hashingStrategy
     ) {
         return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(
             initialCapacity,
@@ -236,7 +210,6 @@ public final class Maps {
         );
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap() {
         return newConcurrentWeakKeySoftValueHashMap(
@@ -247,47 +220,41 @@ public final class Maps {
         );
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap(
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull HashingStrategy<K> hashingStrategy
+        HashingStrategy<K> hashingStrategy
     ) {
         return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(int initialCapacity) {
         return new java.util.concurrent.ConcurrentHashMap<>(initialCapacity);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
         return new java.util.concurrent.ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull HashingStrategy<T> hashStrategy
+        HashingStrategy<T> hashStrategy
     ) {
         return new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(@Nonnull HashingStrategy<T> hashStrategy) {
+    public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(HashingStrategy<T> hashStrategy) {
         return new ConcurrentHashMap<>(hashStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap() {
         return new ConcurrentSoftKeySoftValueHashMap<K, V>(
@@ -298,13 +265,12 @@ public final class Maps {
         );
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap(
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull HashingStrategy<K> hashingStrategy
+        HashingStrategy<K> hashingStrategy
     ) {
         return new consulo.util.collection.impl.map.ConcurrentSoftKeySoftValueHashMap<K, V>(
             initialCapacity,
@@ -320,24 +286,21 @@ public final class Maps {
      * Null values are allowed
      */
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <K, V> Map<K, V> newSoftHashMap() {
         return newSoftHashMap(HashingStrategy.canonical());
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @Nonnull
-    public static <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy) {
+    public static <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newSoftHashMap(strategy);
     }
 
-    public static void trimToSize(@Nonnull Map<?, ?> map) {
+    public static void trimToSize(Map<?, ?> map) {
         ourFactory.trimToSize(map);
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @Nonnull
-    public static <K, V> Map<K, V> newLinkedHashMap(@Nonnull Predicate<Map<K, V>> removeEldestEntryFunc) {
+    public static <K, V> Map<K, V> newLinkedHashMap(Predicate<Map<K, V>> removeEldestEntryFunc) {
         return new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
@@ -346,15 +309,13 @@ public final class Maps {
         };
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
         return map == null ? Collections.emptyMap() : map;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <A, B> Map<B, A> reverseMap(@Nonnull Map<A, B> map) {
+    public static <A, B> Map<B, A> reverseMap(Map<A, B> map) {
         Map<B, A> result = new HashMap<B, A>();
         for (Map.Entry<A, B> entry : map.entrySet()) {
             result.put(entry.getValue(), entry.getKey());

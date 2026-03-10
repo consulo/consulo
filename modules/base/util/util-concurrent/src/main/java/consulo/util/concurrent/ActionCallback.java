@@ -15,8 +15,7 @@
  */
 package consulo.util.concurrent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,14 +101,12 @@ public class ActionCallback {
     protected void freeResources() {
     }
 
-    @Nonnull
     public ActionCallback reject(String error) {
         myError = error;
         setRejected();
         return this;
     }
 
-    @Nonnull
     public ActionCallback rejectWithThrowable(Throwable error) {
         myThrowable = error;
         setRejected();
@@ -121,20 +118,17 @@ public class ActionCallback {
         return myError;
     }
 
-    @Nonnull
-    public ActionCallback doWhenDone(@Nonnull Runnable runnable) {
+    public ActionCallback doWhenDone(Runnable runnable) {
         myDone.doWhenExecuted(runnable);
         return this;
     }
 
-    @Nonnull
-    public final ActionCallback doWhenRejected(@Nonnull Runnable runnable) {
+    public final ActionCallback doWhenRejected(Runnable runnable) {
         myRejected.doWhenExecuted(runnable);
         return this;
     }
 
-    @Nonnull
-    public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull Runnable runnable) {
+    public final ActionCallback doWhenRejectedButNotThrowable(Runnable runnable) {
         myRejected.doWhenExecuted(() -> {
             if (myThrowable == null) {
                 runnable.run();
@@ -143,8 +137,7 @@ public class ActionCallback {
         return this;
     }
 
-    @Nonnull
-    public final ActionCallback doWhenRejectedWithThrowable(@Nonnull Consumer<Throwable> consumer) {
+    public final ActionCallback doWhenRejectedWithThrowable(Consumer<Throwable> consumer) {
         myRejected.doWhenExecuted(() -> {
             if (myThrowable != null) {
                 consumer.accept(myThrowable);
@@ -153,36 +146,30 @@ public class ActionCallback {
         return this;
     }
 
-    @Nonnull
-    public final ActionCallback doWhenRejected(@Nonnull Consumer<String> consumer) {
+    public final ActionCallback doWhenRejected(Consumer<String> consumer) {
         myRejected.doWhenExecuted(() -> consumer.accept(myError));
         return this;
     }
 
-    @Nonnull
-    public ActionCallback doWhenProcessed(@Nonnull Runnable runnable) {
+    public ActionCallback doWhenProcessed(Runnable runnable) {
         doWhenDone(runnable);
         doWhenRejected(runnable);
         return this;
     }
 
-    @Nonnull
-    public final ActionCallback notifyWhenDone(@Nonnull ActionCallback child) {
+    public final ActionCallback notifyWhenDone(ActionCallback child) {
         return doWhenDone(child.createSetDoneRunnable());
     }
 
-    @Nonnull
-    public final ActionCallback notifyWhenRejected(@Nonnull ActionCallback child) {
+    public final ActionCallback notifyWhenRejected(ActionCallback child) {
         return doWhenRejected(() -> child.reject(myError));
     }
 
-    @Nonnull
-    public ActionCallback notify(@Nonnull ActionCallback child) {
+    public ActionCallback notify(ActionCallback child) {
         return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
     }
 
-    @Nonnull
-    public final ActionCallback processOnDone(@Nonnull Runnable runnable, boolean requiresDone) {
+    public final ActionCallback processOnDone(Runnable runnable, boolean requiresDone) {
         if (requiresDone) {
             return doWhenDone(runnable);
         }
@@ -211,11 +198,10 @@ public class ActionCallback {
     public static class Chunk {
         private final Set<ActionCallback> myCallbacks = new LinkedHashSet<>();
 
-        public void add(@Nonnull ActionCallback callback) {
+        public void add(ActionCallback callback) {
             myCallbacks.add(callback);
         }
 
-        @Nonnull
         public ActionCallback create() {
             if (myCallbacks.isEmpty()) {
                 return new Done();
@@ -229,7 +215,6 @@ public class ActionCallback {
             return result;
         }
 
-        @Nonnull
         public ActionCallback getWhenProcessed() {
             ActionCallback result = new ActionCallback(myCallbacks.size());
             Runnable setDoneRunnable = result.createSetDoneRunnable();
@@ -240,13 +225,11 @@ public class ActionCallback {
         }
     }
 
-    @Nonnull
     public Runnable createSetDoneRunnable() {
         return this::setDone;
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    @Nonnull
     @Deprecated
     /**
      * @deprecated use {@link #notifyWhenRejected(ActionCallback)}

@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -55,7 +54,6 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
         return myValueToKeysMap.get(value);
     }
 
-    @Nonnull
     @Override
     public Set<K> keySet() {
         return myKeyToValueMap.keySet();
@@ -113,19 +111,17 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
+    public void putAll(Map<? extends K, ? extends V> t) {
         for (K k1 : t.keySet()) {
             put(k1, t.get(k1));
         }
     }
 
-    @Nonnull
     @Override
     public Collection<V> values() {
         return myValueToKeysMap.keySet();
     }
 
-    @Nonnull
     @Override
     public Set<Entry<K, V>> entrySet() {
         return myKeyToValueMap.entrySet();

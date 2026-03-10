@@ -9,8 +9,7 @@ import net.n3.nanoxml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -55,11 +54,11 @@ public class NanoXmlUtil {
     parse(reader, builder, null);
   }
 
-  public static void parse(@Nonnull CharSequence text, @Nonnull IXMLBuilder builder, @Nullable IXMLValidator validator) {
+  public static void parse(CharSequence text, IXMLBuilder builder, @Nullable IXMLValidator validator) {
     parse(new CharSequenceReader(text), builder, validator);
   }
 
-  public static void parse(@Nonnull Reader reader, @Nonnull IXMLBuilder builder, @Nullable IXMLValidator validator) {
+  public static void parse(Reader reader, IXMLBuilder builder, @Nullable IXMLValidator validator) {
     try {
       parse(new MyXMLReader(reader), builder, validator);
     }
@@ -101,27 +100,22 @@ public class NanoXmlUtil {
     }
   }
 
-  @Nonnull
   public static XmlFileHeader parseHeaderWithException(CharSequence text) {
     return parseHeader(new MyXMLReader(new CharSequenceReader(text)));
   }
 
-  @Nonnull
   public static XmlFileHeader parseHeaderWithException(Reader reader) {
     return parseHeader(new MyXMLReader(reader));
   }
 
-  @Nonnull
   public static XmlFileHeader parseHeaderWithException(InputStream inputStream) throws IOException {
     return parseHeader(new MyXMLReader(inputStream));
   }
 
-  @Nonnull
   public static XmlFileHeader parseHeader(Reader reader) {
     return parseHeader(new MyXMLReader(reader));
   }
 
-  @Nonnull
   private static XmlFileHeader parseHeader(MyXMLReader r) {
     RootTagInfoBuilder builder = new RootTagInfoBuilder();
     parse(r, builder);
@@ -261,7 +255,7 @@ public class NanoXmlUtil {
     private String publicId;
     private String systemId;
 
-    MyXMLReader(@Nonnull Reader documentReader) {
+    MyXMLReader(Reader documentReader) {
       super(documentReader);
     }
 

@@ -17,9 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIteratorBase;
-import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -40,7 +38,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         add(element);
     }
 
-    public SmartList(@Nonnull Collection<? extends E> elements) {
+    public SmartList(Collection<? extends E> elements) {
         int size = elements.size();
         if (size == 1) {
             E element = elements instanceof List ? (E) ((List) elements).get(0) : elements.iterator().next();
@@ -52,7 +50,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
-    public SmartList(@Nonnull E... elements) {
+    public SmartList(E... elements) {
         if (elements.length == 1) {
             add(elements[0]);
         }
@@ -201,7 +199,6 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         return oldValue;
     }
 
-    @Nonnull
     @Override
     public Iterator<E> iterator() {
         if (mySize == 0) {
@@ -246,14 +243,12 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
-    @TestOnly
     int getModificationCount() {
         return modCount;
     }
 
-    @Nonnull
     @Override
-    public <T> T[] toArray(@Nonnull T[] a) {
+    public <T> T[] toArray(T[] a) {
         int aLength = a.length;
         if (mySize == 1) {
             if (aLength != 0) {

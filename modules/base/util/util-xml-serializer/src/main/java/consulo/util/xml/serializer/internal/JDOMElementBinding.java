@@ -19,8 +19,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.XmlSerializationException;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import java.util.List;
 class JDOMElementBinding extends Binding implements MultiNodeBinding {
   private final String myTagName;
 
-  public JDOMElementBinding(@Nonnull MutableAccessor accessor) {
+  public JDOMElementBinding(MutableAccessor accessor) {
     super(accessor);
 
     Tag tag = myAccessor.getAnnotation(Tag.class);
@@ -43,7 +42,7 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
   }
 
   @Override
-  public Object serialize(@Nonnull Object o, Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -67,7 +66,7 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object deserializeList(Object context, @Nonnull List<Element> elements) {
+  public Object deserializeList(Object context, List<Element> elements) {
     if (myAccessor.getValueClass().isArray()) {
       myAccessor.set(context, elements.toArray(new Element[elements.size()]));
     }
@@ -84,13 +83,13 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(Object context, Element element) {
     myAccessor.set(context, element);
     return context;
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element element) {
+  public boolean isBoundTo(Element element) {
     return element.getName().equals(myTagName);
   }
 }

@@ -1,6 +1,5 @@
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class NioPathUtil {
         return ourSupportPosixFilePermissions;
     }
 
-    public static void setPosixFilePermissions(@Nonnull Path path, @Nonnull Set<PosixFilePermission> posixFilePermissions) {
+    public static void setPosixFilePermissions(Path path, Set<PosixFilePermission> posixFilePermissions) {
         if (isSupportPosixFilePermissions()) {
             try {
                 Files.setPosixFilePermissions(path, posixFilePermissions);
@@ -37,7 +36,6 @@ public class NioPathUtil {
         }
     }
 
-    @Nonnull
     public static Set<PosixFilePermission> convertModeToFilePermissions(int mode) {
         int mask = 1;
         Set<PosixFilePermission> perms = EnumSet.noneOf(PosixFilePermission.class);

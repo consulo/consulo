@@ -4,7 +4,6 @@ package consulo.util.collection.impl.set;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -21,7 +20,7 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   private static class MyRef<T> extends WeakReference<T> {
     private final int myHashCode;
 
-    MyRef(@Nonnull T referent, ReferenceQueue<? super T> q) {
+    MyRef(T referent, ReferenceQueue<? super T> q) {
       super(referent, q);
       myHashCode = referent.hashCode();
     }
@@ -45,7 +44,7 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   }
 
   private static class HardRef<T> extends MyRef<T> {
-    HardRef(@Nonnull T referent) {
+    HardRef(T referent) {
       super(referent, null);
     }
   }
@@ -61,21 +60,21 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   }
 
   @Override
-  public boolean add(@Nonnull T t) {
+  public boolean add(T t) {
     processQueue();
     MyRef<T> ref = new MyRef<>(t, queue);
     return set.add(ref);
   }
 
   @Override
-  public boolean remove(@Nonnull Object o) {
+  public boolean remove(Object o) {
     processQueue();
     //noinspection unchecked
     return set.remove(new HardRef<>((T)o));
   }
 
   @Override
-  public boolean contains(@Nonnull Object o) {
+  public boolean contains(Object o) {
     processQueue();
     //noinspection unchecked
     return set.contains(new HardRef<>((T)o));

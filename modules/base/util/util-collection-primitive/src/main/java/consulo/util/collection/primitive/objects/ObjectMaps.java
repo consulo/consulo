@@ -19,7 +19,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,28 +27,23 @@ import jakarta.annotation.Nonnull;
 public final class ObjectMaps {
   private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
 
-  @Nonnull
   public static <K> ObjectIntMap<K> newObjectIntHashMap() {
     return newObjectIntHashMap(CollectionFactory.UNKNOWN_CAPACITY, HashingStrategy.canonical());
   }
 
-  @Nonnull
   public static <K> ObjectIntMap<K> newObjectIntHashMap(int capacity) {
     return newObjectIntHashMap(capacity, HashingStrategy.canonical());
   }
 
-  @Nonnull
-  public static <K> ObjectIntMap<K> newObjectIntHashMap(@Nonnull HashingStrategy<K> strategy) {
+  public static <K> ObjectIntMap<K> newObjectIntHashMap(HashingStrategy<K> strategy) {
     return newObjectIntHashMap(CollectionFactory.UNKNOWN_CAPACITY, strategy);
   }
 
-  @Nonnull
-  public static <K> ObjectIntMap<K> newObjectIntHashMap(int capacity, @Nonnull HashingStrategy<K> strategy) {
+  public static <K> ObjectIntMap<K> newObjectIntHashMap(int capacity, HashingStrategy<K> strategy) {
     return ourFactory.newObjectIntHashMap(capacity, strategy);
   }
 
-  @Nonnull
-  public static <K> ObjectIntMap<K> unmodified(@Nonnull ObjectIntMap<K> map) {
+  public static <K> ObjectIntMap<K> unmodified(ObjectIntMap<K> map) {
     return new UnmodifiedObjectIntMap<>(map);
   }
 

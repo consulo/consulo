@@ -4,8 +4,7 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.DonePromise;
 import consulo.util.concurrent.internal.InternalPromiseUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -39,7 +38,6 @@ public interface Promise<T> {
    * @deprecated Use Promises.resolvedPromise
    */
   @Deprecated
-  @Nonnull
   static <T> Promise<T> resolve(@Nullable T result) {
     if (result == null) {
       //noinspection unchecked
@@ -61,8 +59,7 @@ public interface Promise<T> {
    * }
    * </pre>
    */
-  @Nonnull
-  <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<? super T, ? extends SUB_RESULT> done);
+  <SUB_RESULT> Promise<SUB_RESULT> then(Function<? super T, ? extends SUB_RESULT> done);
 
   /**
    * The same as {@link #then(Function)}, but handler can be asynchronous.
@@ -76,44 +73,38 @@ public interface Promise<T> {
    * }
    * </pre>
    */
-  @Nonnull
-  <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull Function<? super T, Promise<SUB_RESULT>> done);
+  <SUB_RESULT> Promise<SUB_RESULT> thenAsync(Function<? super T, Promise<SUB_RESULT>> done);
 
   /**
    * Execute passed handler on promise resolve.
    */
-  @Nonnull
-  Promise<T> onSuccess(@Nonnull Consumer<? super T> handler);
+  Promise<T> onSuccess(Consumer<? super T> handler);
 
 
   /**
    * Execute passed handler on promise reject.
    */
-  @Nonnull
-  Promise<T> onError(@Nonnull Consumer<Throwable> rejected);
+  Promise<T> onError(Consumer<Throwable> rejected);
 
   /**
    * Resolve or reject passed promise as soon as this promise resolved or rejected.
    */
-  @Nonnull
-  Promise<T> processed(@Nonnull Promise<? super T> child);
+  Promise<T> processed(Promise<? super T> child);
 
   /**
    * Execute passed handler on promise resolve (result value will be passed),
    * or on promise reject (null as result value will be passed).
    */
-  @Nonnull
-  Promise<T> onProcessed(@Nonnull Consumer<? super T> processed);
+  Promise<T> onProcessed(Consumer<? super T> processed);
 
 
   /**
    * Get promise state.
    */
-  @Nonnull
   State getState();
 
   @Nullable
-  T blockingGet(int timeout, @Nonnull TimeUnit timeUnit) throws TimeoutException, ExecutionException;
+  T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException;
 
   @Nullable
   default T blockingGet(int timeout) throws TimeoutException, ExecutionException {

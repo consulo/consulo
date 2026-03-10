@@ -22,8 +22,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.net.*;
@@ -64,14 +63,14 @@ public class URLUtil {
     // external URLs.)
     private static final Pattern ourExternalPrefix = Pattern.compile("^[\\w\\+\\.\\-]{2,}:");
 
-    public static boolean isAbsoluteURL(@Nonnull String url) {
+    public static boolean isAbsoluteURL(String url) {
         return ourExternalPrefix.matcher(url.toLowerCase()).find();
     }
 
     /**
      * @return if false, then the line contains no URL; if true, then more heavy {@link #URL_PATTERN} check should be used.
      */
-    public static boolean canContainUrl(@Nonnull String line) {
+    public static boolean canContainUrl(String line) {
         return line.contains("mailto:") || line.contains("://") || line.contains("www.");
     }
 
@@ -80,8 +79,7 @@ public class URLUtil {
      * separate method is needed, since jar URLs open jars via JarFactory and thus keep them
      * mapped into memory.
      */
-    @Nonnull
-    public static InputStream openStream(@Nonnull URL url) throws IOException {
+    public static InputStream openStream(URL url) throws IOException {
         String protocol = url.getProtocol();
         return protocol.equals(JAR_PROTOCOL) ? openJarStream(url) : url.openStream();
     }
@@ -95,7 +93,7 @@ public class URLUtil {
      * Please note that the first part is platform-dependent - see UrlUtilTest.testJarUrlSplitter() for examples.
      */
     @Nullable
-    public static Couple<String> splitJarUrl(@Nonnull String url) {
+    public static Couple<String> splitJarUrl(String url) {
         int pivot = url.indexOf(JAR_SEPARATOR);
         if (pivot < 0) {
             return null;
@@ -126,12 +124,11 @@ public class URLUtil {
         return Couple.of(jarPath, resourcePath);
     }
 
-    public static boolean containsScheme(@Nonnull String url) {
+    public static boolean containsScheme(String url) {
         return url.contains(SCHEME_SEPARATOR);
     }
 
-    @Nonnull
-    public static File urlToFile(@Nonnull URL url) {
+    public static File urlToFile(URL url) {
         try {
             return new File(url.toURI().getSchemeSpecificPart());
         }
@@ -140,8 +137,7 @@ public class URLUtil {
         }
     }
 
-    @Nonnull
-    private static InputStream openJarStream(@Nonnull URL url) throws IOException {
+    private static InputStream openJarStream(URL url) throws IOException {
         Couple<String> paths = splitJarUrl(url.getFile());
         if (paths == null) {
             throw new MalformedURLException(url.getFile());
@@ -163,19 +159,16 @@ public class URLUtil {
         };
     }
 
-    @Nonnull
-    public static URL getJarEntryURL(@Nonnull File file, @Nonnull String pathInJar) throws MalformedURLException {
+    public static URL getJarEntryURL(File file, String pathInJar) throws MalformedURLException {
         return getJarEntryURL(file.toURI(), pathInJar);
     }
 
-    @Nonnull
-    public static URL getJarEntryURL(@Nonnull URI file, @Nonnull String pathInJar) throws MalformedURLException {
+    public static URL getJarEntryURL(URI file, String pathInJar) throws MalformedURLException {
         String fileURL = StringUtil.replace(file.toASCIIString(), "!", "%21");
         return new URL("jar" + ':' + fileURL + "!/" + StringUtil.trimLeading(pathInJar, '/'));
     }
 
-    @Nonnull
-    public static InputStream openResourceStream(@Nonnull URL url) throws IOException {
+    public static InputStream openResourceStream(URL url) throws IOException {
         try {
             return openStream(url);
         }
@@ -201,8 +194,7 @@ public class URLUtil {
         }
     }
 
-    @Nonnull
-    public static String unescapePercentSequences(@Nonnull String s) {
+    public static String unescapePercentSequences(String s) {
         if (s.indexOf('%') == -1) {
             return s;
         }
@@ -241,7 +233,7 @@ public class URLUtil {
         return decoded.toString();
     }
 
-    public static URL internProtocol(@Nonnull URL url) {
+    public static URL internProtocol(URL url) {
         try {
             String protocol = url.getProtocol();
             if ("file".equals(protocol) || "jar".equals(protocol)) {
@@ -255,8 +247,7 @@ public class URLUtil {
         }
     }
 
-    @Nonnull
-    public static String parseHostFromSshUrl(@Nonnull String sshUrl) {
+    public static String parseHostFromSshUrl(String sshUrl) {
         // [ssh://]git@github.com:user/project.git
         String host = sshUrl;
         int at = host.lastIndexOf('@');
@@ -296,13 +287,11 @@ public class URLUtil {
         return -1;
     }
 
-    @Nonnull
-    public static String toIdeaUrl(@Nonnull String url) {
+    public static String toIdeaUrl(String url) {
         return toIdeaUrl(url, true);
     }
 
-    @Nonnull
-    public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
+    public static String toIdeaUrl(String url, boolean removeLocalhostPrefix) {
         int index = url.indexOf(":/");
         if (index < 0 || (index + 2) >= url.length()) {
             return url;
@@ -350,8 +339,7 @@ public class URLUtil {
      * @param s a component of a URI
      * @return a new string representing the provided string encoded as a URI component
      */
-    @Nonnull
-    public static String encodeURIComponent(@Nonnull String s) {
+    public static String encodeURIComponent(String s) {
         return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20")
             .replace("%21", "!")
             .replace("%27", "'")

@@ -19,7 +19,6 @@ package consulo.util.collection.primitive.ints.impl.map;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
@@ -33,7 +32,7 @@ public class ConcurrentIntKeyWeakValueHashMap<V> extends ConcurrentIntKeyRefValu
     private final int hash;
     private final int key;
 
-    private MyRef(int key, @Nonnull V referent, @Nonnull ReferenceQueue<V> queue) {
+    private MyRef(int key, V referent, ReferenceQueue<V> queue) {
       super(referent, queue);
       this.key = key;
       hash = referent.hashCode();
@@ -61,9 +60,8 @@ public class ConcurrentIntKeyWeakValueHashMap<V> extends ConcurrentIntKeyRefValu
     }
   }
 
-  @Nonnull
   @Override
-  protected IntReference<V> createReference(int key, @Nonnull V value, @Nonnull ReferenceQueue<V> queue) {
+  protected IntReference<V> createReference(int key, V value, ReferenceQueue<V> queue) {
     return new MyRef<>(key, value, queue);
   }
 }

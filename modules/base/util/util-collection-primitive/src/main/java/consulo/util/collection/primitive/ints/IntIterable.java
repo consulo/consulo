@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
@@ -25,7 +24,6 @@ import java.util.function.IntConsumer;
  * @since 10/02/2021
  */
 public interface IntIterable {
-  @Nonnull
   PrimitiveIterator.OfInt iterator();
 
   default void forEach(IntConsumer action) {

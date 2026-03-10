@@ -15,8 +15,7 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -26,11 +25,11 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
   private transient int hash;
   private final byte[] myChars;
 
-  public ByteArrayCharSequence(@Nonnull byte[] chars) {
+  public ByteArrayCharSequence(byte[] chars) {
     this(chars, 0, chars.length);
   }
 
-  public ByteArrayCharSequence(@Nonnull byte[] chars, int start, int end) {
+  public ByteArrayCharSequence(byte[] chars, int start, int end) {
     myChars = chars;
     myStart = start;
     myEnd = end;
@@ -55,14 +54,12 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
     return (char)(myChars[index + myStart] & 0xff);
   }
 
-  @Nonnull
   @Override
   public CharSequence subSequence(int start, int end) {
     return start == 0 && end == length() ? this : new CharSequenceSubSequence(this, start, end);
   }
 
   @Override
-  @Nonnull
   public String toString() {
     return new String(myChars, myStart, length(), StandardCharsets.ISO_8859_1);
   }
@@ -71,8 +68,7 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
    * @deprecated use {@link #convertToBytesIfPossible(CharSequence)} instead
    */
   @Deprecated
-  @Nonnull
-  public static CharSequence convertToBytesIfAsciiString(@Nonnull String name) {
+  public static CharSequence convertToBytesIfAsciiString(String name) {
     return convertToBytesIfPossible(name);
   }
 
@@ -80,18 +76,16 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
    * @return instance of {@link ByteArrayCharSequence} if the supplied string can be stored internally
    * as a byte array of 8-bit code points (for more compact representation); its {@code string} argument otherwise
    */
-  @Nonnull
-  public static CharSequence convertToBytesIfPossible(@Nonnull CharSequence string) {
+  public static CharSequence convertToBytesIfPossible(CharSequence string) {
     return string;
   }
 
-  @Nonnull
   byte[] getBytes() {
     return myStart == 0 && myEnd == myChars.length ? myChars : Arrays.copyOfRange(myChars, myStart, myEnd);
   }
 
   @Nullable
-  static byte[] toBytesIfPossible(@Nonnull CharSequence seq) {
+  static byte[] toBytesIfPossible(CharSequence seq) {
     if (seq instanceof ByteArrayCharSequence) {
       return ((ByteArrayCharSequence)seq).getBytes();
     }

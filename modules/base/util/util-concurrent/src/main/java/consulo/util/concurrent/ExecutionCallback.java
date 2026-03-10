@@ -15,7 +15,6 @@
  */
 package consulo.util.concurrent;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +57,7 @@ class ExecutionCallback {
   }
 
   private static class CompositeRunnable extends ArrayList<Runnable> implements Runnable {
-    private CompositeRunnable(@Nonnull Collection<? extends Runnable> c) {
+    private CompositeRunnable(Collection<? extends Runnable> c) {
       super(c);
     }
 
@@ -70,7 +69,7 @@ class ExecutionCallback {
     }
   }
 
-  final void doWhenExecuted(@Nonnull Runnable runnable) {
+  final void doWhenExecuted(Runnable runnable) {
     Runnable toRun;
     synchronized (this) {
       if (isExecuted()) {

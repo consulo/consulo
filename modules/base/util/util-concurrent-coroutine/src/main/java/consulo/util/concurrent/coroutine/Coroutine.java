@@ -17,7 +17,6 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -401,8 +400,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         return name;
     }
 
-    @Nonnull
-    public Coroutine<I, O> withName(@Nonnull String name) {
+    public Coroutine<I, O> withName(String name) {
         this.name = name;
         return this;
     }

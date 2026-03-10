@@ -17,8 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -54,9 +53,8 @@ public class ArrayUtil {
     private ArrayUtil() {
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static byte[] realloc(@Nonnull byte[] array, int newSize) {
+    public static byte[] realloc(byte[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_BYTE_ARRAY;
         }
@@ -71,9 +69,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static short[] realloc(@Nonnull short[] array, int newSize) {
+    public static short[] realloc(short[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_SHORT_ARRAY;
         }
@@ -82,9 +79,8 @@ public class ArrayUtil {
         return oldSize == newSize ? array : Arrays.copyOf(array, newSize);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static boolean[] realloc(@Nonnull boolean[] array, int newSize) {
+    public static boolean[] realloc(boolean[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_BOOLEAN_ARRAY;
         }
@@ -99,9 +95,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static long[] realloc(@Nonnull long[] array, int newSize) {
+    public static long[] realloc(long[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_LONG_ARRAY;
         }
@@ -116,9 +111,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] realloc(@Nonnull int[] array, int newSize) {
+    public static int[] realloc(int[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_INT_ARRAY;
         }
@@ -133,9 +127,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] realloc(@Nonnull T[] array, int newSize, @Nonnull ArrayFactory<T> factory) {
+    public static <T> T[] realloc(T[] array, int newSize, ArrayFactory<T> factory) {
         int oldSize = array.length;
         if (oldSize == newSize) {
             return array;
@@ -150,25 +143,22 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static long[] append(@Nonnull long[] array, long value) {
+    public static long[] append(long[] array, long value) {
         array = realloc(array, array.length + 1);
         array[array.length - 1] = value;
         return array;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] append(@Nonnull int[] array, int value) {
+    public static int[] append(int[] array, int value) {
         array = realloc(array, array.length + 1);
         array[array.length - 1] = value;
         return array;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] insert(@Nonnull T[] array, int index, T value) {
+    public static <T> T[] insert(T[] array, int index, T value) {
         T[] result = newArray(getComponentType(array), array.length + 1);
         System.arraycopy(array, 0, result, 0, index);
         result[index] = value;
@@ -176,9 +166,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] insert(@Nonnull int[] array, int index, int value) {
+    public static int[] insert(int[] array, int index, int value) {
         int[] result = new int[array.length + 1];
         System.arraycopy(array, 0, result, 0, index);
         result[index] = value;
@@ -186,25 +175,22 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static byte[] append(@Nonnull byte[] array, byte value) {
+    public static byte[] append(byte[] array, byte value) {
         array = realloc(array, array.length + 1);
         array[array.length - 1] = value;
         return array;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static boolean[] append(@Nonnull boolean[] array, boolean value) {
+    public static boolean[] append(boolean[] array, boolean value) {
         array = realloc(array, array.length + 1);
         array[array.length - 1] = value;
         return array;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static char[] realloc(@Nonnull char[] array, int newSize) {
+    public static char[] realloc(char[] array, int newSize) {
         if (newSize == 0) {
             return EMPTY_CHAR_ARRAY;
         }
@@ -219,25 +205,22 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] toObjectArray(@Nonnull Collection<? extends T> collection, @Nonnull Class<T> aClass) {
+    public static <T> T[] toObjectArray(Collection<? extends T> collection, Class<T> aClass) {
         T[] array = newArray(aClass, collection.size());
         return collection.toArray(array);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] toObjectArray(@Nonnull Class<T> aClass, @Nonnull Object... source) {
+    public static <T> T[] toObjectArray(Class<T> aClass, Object... source) {
         T[] array = newArray(aClass, source.length);
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(source, 0, array, 0, array.length);
         return array;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static Object[] toObjectArray(@Nonnull Collection<?> collection) {
+    public static Object[] toObjectArray(Collection<?> collection) {
         if (collection.isEmpty()) {
             return EMPTY_OBJECT_ARRAY;
         }
@@ -245,9 +228,8 @@ public class ArrayUtil {
         return collection.toArray(new Object[collection.size()]);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] toIntArray(@Nonnull Collection<Integer> list) {
+    public static int[] toIntArray(Collection<Integer> list) {
         int[] ret = newIntArray(list.size());
         int i = 0;
         for (Integer e : list) {
@@ -256,9 +238,8 @@ public class ArrayUtil {
         return ret;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] toIntArray(@Nonnull byte[] byteArray) {
+    public static int[] toIntArray(byte[] byteArray) {
         int[] ret = newIntArray(byteArray.length);
         for (int i = 0; i < byteArray.length; i++) {
             ret[i] = byteArray[i];
@@ -267,9 +248,8 @@ public class ArrayUtil {
     }
 
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] mergeArrays(@Nonnull T[] a1, @Nonnull T[] a2) {
+    public static <T> T[] mergeArrays(T[] a1, T[] a2) {
         if (a1.length == 0) {
             return a2;
         }
@@ -287,12 +267,11 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T> T[] mergeCollections(
-        @Nonnull Collection<? extends T> c1,
-        @Nonnull Collection<? extends T> c2,
-        @Nonnull ArrayFactory<T> factory
+        Collection<? extends T> c1,
+        Collection<? extends T> c2,
+        ArrayFactory<T> factory
     ) {
         T[] res = factory.create(c1.size() + c2.size());
 
@@ -309,9 +288,8 @@ public class ArrayUtil {
         return res;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] mergeArrays(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull ArrayFactory<T> factory) {
+    public static <T> T[] mergeArrays(T[] a1, T[] a2, ArrayFactory<T> factory) {
         if (a1.length == 0) {
             return a2;
         }
@@ -324,15 +302,13 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static String[] mergeArrays(@Nonnull String[] a1, @Nonnull String... a2) {
+    public static String[] mergeArrays(String[] a1, String... a2) {
         return mergeArrays(a1, a2, STRING_ARRAY_FACTORY);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] mergeArrays(@Nonnull int[] a1, @Nonnull int[] a2) {
+    public static int[] mergeArrays(int[] a1, int[] a2) {
         if (a1.length == 0) {
             return a2;
         }
@@ -345,9 +321,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static byte[] mergeArrays(@Nonnull byte[] a1, @Nonnull byte[] a2) {
+    public static byte[] mergeArrays(byte[] a1, byte[] a2) {
         if (a1.length == 0) {
             return a2;
         }
@@ -369,12 +344,11 @@ public class ArrayUtil {
      * @param factory    array factory used to create destination array of type {@code T}
      * @return destination array
      */
-    @Nonnull
     @Contract(pure = true)
     public static <T> T[] mergeArrayAndCollection(
-        @Nonnull T[] array,
-        @Nonnull Collection<T> collection,
-        @Nonnull ArrayFactory<T> factory
+        T[] array,
+        Collection<T> collection,
+        ArrayFactory<T> factory
     ) {
         if (collection.isEmpty()) {
             return array;
@@ -406,23 +380,20 @@ public class ArrayUtil {
      * @param element object to be appended to the end of {@code src} array.
      * @return new array
      */
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] append(@Nonnull T[] src, @Nullable T element) {
+    public static <T> T[] append(T[] src, @Nullable T element) {
         //noinspection unchecked
         return append(src, element, (Class<T>)src.getClass().getComponentType());
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] prepend(T element, @Nonnull T[] array) {
+    public static <T> T[] prepend(T element, T[] array) {
         //noinspection unchecked
         return prepend(element, array, (Class<T>)array.getClass().getComponentType());
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] prepend(T element, @Nonnull T[] array, @Nonnull Class<T> type) {
+    public static <T> T[] prepend(T element, T[] array, Class<T> type) {
         int length = array.length;
         T[] result = newArray(type, length + 1);
         System.arraycopy(array, 0, result, 1, length);
@@ -430,9 +401,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] prepend(T element, @Nonnull T[] src, @Nonnull ArrayFactory<T> factory) {
+    public static <T> T[] prepend(T element, T[] src, ArrayFactory<T> factory) {
         int length = src.length;
         T[] result = factory.create(length + 1);
         System.arraycopy(src, 0, result, 1, length);
@@ -440,9 +410,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static byte[] prepend(byte element, @Nonnull byte[] array) {
+    public static byte[] prepend(byte element, byte[] array) {
         int length = array.length;
         byte[] result = new byte[length + 1];
         result[0] = element;
@@ -450,9 +419,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] append(@Nonnull T[] src, T element, @Nonnull ArrayFactory<T> factory) {
+    public static <T> T[] append(T[] src, T element, ArrayFactory<T> factory) {
         int length = src.length;
         T[] result = factory.create(length + 1);
         System.arraycopy(src, 0, result, 0, length);
@@ -460,9 +428,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] append(@Nonnull T[] src, @Nullable T element, @Nonnull Class<T> componentType) {
+    public static <T> T[] append(T[] src, @Nullable T element, Class<T> componentType) {
         int length = src.length;
         T[] result = newArray(componentType, length + 1);
         System.arraycopy(src, 0, result, 0, length);
@@ -477,9 +444,8 @@ public class ArrayUtil {
      * @param idx index of element to be removed.
      * @return modified array.
      */
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] remove(@Nonnull T[] src, int idx) {
+    public static <T> T[] remove(T[] src, int idx) {
         int length = src.length;
         if (idx < 0 || idx >= length) {
             throw new IllegalArgumentException("invalid index: " + idx);
@@ -490,15 +456,13 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
-    public static <T> T[] newArray(@Nonnull Class<T> type, int length) {
+    public static <T> T[] newArray(Class<T> type, int length) {
         //noinspection unchecked
         return (T[])Array.newInstance(type, length);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] remove(@Nonnull T[] src, int idx, @Nonnull IntFunction<T[]> factory) {
+    public static <T> T[] remove(T[] src, int idx, IntFunction<T[]> factory) {
         int length = src.length;
         if (idx < 0 || idx >= length) {
             throw new IllegalArgumentException("invalid index: " + idx);
@@ -509,23 +473,20 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] remove(@Nonnull T[] src, T element) {
+    public static <T> T[] remove(T[] src, T element) {
         int idx = find(src, element);
         return idx == -1 ? src : remove(src, idx);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] remove(@Nonnull T[] src, T element, @Nonnull IntFunction<T[]> factory) {
+    public static <T> T[] remove(T[] src, T element, IntFunction<T[]> factory) {
         int idx = find(src, element);
         return idx == -1 ? src : remove(src, idx, factory);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] remove(@Nonnull int[] src, int idx) {
+    public static int[] remove(int[] src, int idx) {
         int length = src.length;
         if (idx < 0 || idx >= length) {
             throw new IllegalArgumentException("invalid index: " + idx);
@@ -536,9 +497,8 @@ public class ArrayUtil {
         return result;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static short[] remove(@Nonnull short[] src, int idx) {
+    public static short[] remove(short[] src, int idx) {
         int length = src.length;
         if (idx < 0 || idx >= length) {
             throw new IllegalArgumentException("invalid index: " + idx);
@@ -550,12 +510,12 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int find(@Nonnull int[] src, int obj) {
+    public static int find(int[] src, int obj) {
         return indexOf(src, obj);
     }
 
     @Contract(pure = true)
-    public static <T> int find(@Nonnull T[] src, T obj) {
+    public static <T> int find(T[] src, T obj) {
         for (int i = 0; i < src.length; i++) {
             T o = src[i];
             if (o == null) {
@@ -571,7 +531,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static boolean startsWith(@Nonnull byte[] array, @Nonnull byte[] prefix) {
+    public static boolean startsWith(byte[] array, byte[] prefix) {
         //noinspection ArrayEquality
         if (array == prefix) {
             return true;
@@ -591,7 +551,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <E> boolean startsWith(@Nonnull E[] array, @Nonnull E[] subArray) {
+    public static <E> boolean startsWith(E[] array, E[] subArray) {
         //noinspection ArrayEquality
         if (array == subArray) {
             return true;
@@ -611,7 +571,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static boolean startsWith(@Nonnull byte[] array, int start, @Nonnull byte[] subArray) {
+    public static boolean startsWith(byte[] array, int start, byte[] subArray) {
         int length = subArray.length;
         if (array.length - start < length) {
             return false;
@@ -627,7 +587,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull HashingStrategy<? super T> comparator) {
+    public static <T> boolean equals(T[] a1, T[] a2, HashingStrategy<? super T> comparator) {
         //noinspection ArrayEquality
         if (a1 == a2) {
             return true;
@@ -647,7 +607,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull Comparator<? super T> comparator) {
+    public static <T> boolean equals(T[] a1, T[] a2, Comparator<? super T> comparator) {
         //noinspection ArrayEquality
         if (a1 == a2) {
             return true;
@@ -665,9 +625,8 @@ public class ArrayUtil {
         return true;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> T[] reverseArray(@Nonnull T[] array) {
+    public static <T> T[] reverseArray(T[] array) {
         T[] newArray = array.clone();
         for (int i = 0; i < array.length; i++) {
             newArray[array.length - i - 1] = array[i];
@@ -675,9 +634,8 @@ public class ArrayUtil {
         return newArray;
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static int[] reverseArray(@Nonnull int[] array) {
+    public static int[] reverseArray(int[] array) {
         int[] newArray = array.clone();
         for (int i = 0; i < array.length; i++) {
             newArray[array.length - i - 1] = array[i];
@@ -686,7 +644,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int lexicographicCompare(@Nonnull int[] obj1, @Nonnull int[] obj2) {
+    public static int lexicographicCompare(int[] obj1, int[] obj2) {
         for (int i = 0; i < Math.min(obj1.length, obj2.length); i++) {
             int res = Integer.compare(obj1[i], obj2[i]);
             if (res != 0) {
@@ -697,7 +655,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int lexicographicCompare(@Nonnull String[] obj1, @Nonnull String[] obj2) {
+    public static int lexicographicCompare(String[] obj1, String[] obj2) {
         for (int i = 0; i < Math.max(obj1.length, obj2.length); i++) {
             String o1 = i < obj1.length ? obj1[i] : null;
             String o2 = i < obj2.length ? obj2[i] : null;
@@ -717,7 +675,7 @@ public class ArrayUtil {
 
     //must be Comparables
     @Contract(pure = true)
-    public static <T> int lexicographicCompare(@Nonnull T[] obj1, @Nonnull T[] obj2) {
+    public static <T> int lexicographicCompare(T[] obj1, T[] obj2) {
         for (int i = 0; i < Math.max(obj1.length, obj2.length); i++) {
             T o1 = i < obj1.length ? obj1[i] : null;
             T o2 = i < obj2.length ? obj2[i] : null;
@@ -736,49 +694,49 @@ public class ArrayUtil {
         return 0;
     }
 
-    public static <T> void swap(@Nonnull T[] array, int i1, int i2) {
+    public static <T> void swap(T[] array, int i1, int i2) {
         T t = array[i1];
         array[i1] = array[i2];
         array[i2] = t;
     }
 
-    public static void swap(@Nonnull int[] array, int i1, int i2) {
+    public static void swap(int[] array, int i1, int i2) {
         int t = array[i1];
         array[i1] = array[i2];
         array[i2] = t;
     }
 
-    public static void swap(@Nonnull boolean[] array, int i1, int i2) {
+    public static void swap(boolean[] array, int i1, int i2) {
         boolean t = array[i1];
         array[i1] = array[i2];
         array[i2] = t;
     }
 
-    public static void swap(@Nonnull char[] array, int i1, int i2) {
+    public static void swap(char[] array, int i1, int i2) {
         char t = array[i1];
         array[i1] = array[i2];
         array[i2] = t;
     }
 
-    public static <T> void rotateLeft(@Nonnull T[] array, int i1, int i2) {
+    public static <T> void rotateLeft(T[] array, int i1, int i2) {
         T t = array[i1];
         System.arraycopy(array, i1 + 1, array, i1, i2 - i1);
         array[i2] = t;
     }
 
-    public static <T> void rotateRight(@Nonnull T[] array, int i1, int i2) {
+    public static <T> void rotateRight(T[] array, int i1, int i2) {
         T t = array[i2];
         System.arraycopy(array, i1, array, i1 + 1, i2 - i1);
         array[i1] = t;
     }
 
     @Contract(pure = true)
-    public static int indexOf(@Nonnull Object[] objects, @Nullable Object object) {
+    public static int indexOf(Object[] objects, @Nullable Object object) {
         return indexOf(objects, object, 0, objects.length);
     }
 
     @Contract(pure = true)
-    public static int indexOf(@Nonnull Object[] objects, Object object, int start, int end) {
+    public static int indexOf(Object[] objects, Object object, int start, int end) {
         if (object == null) {
             for (int i = start; i < end; i++) {
                 if (objects[i] == null) {
@@ -797,7 +755,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull HashingStrategy<T> comparator) {
+    public static <T> int indexOf(List<T> objects, T object, HashingStrategy<T> comparator) {
         for (int i = 0, n = objects.size(); i < n; i++) {
             if (comparator.equals(objects.get(i), object)) {
                 return i;
@@ -807,7 +765,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Comparator<T> comparator) {
+    public static <T> int indexOf(List<T> objects, T object, Comparator<T> comparator) {
         for (int i = 0, n = objects.size(); i < n; i++) {
             if (comparator.compare(objects.get(i), object) == 0) {
                 return i;
@@ -817,7 +775,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull HashingStrategy<T> comparator) {
+    public static <T> int indexOf(T[] objects, T object, HashingStrategy<T> comparator) {
         for (int i = 0, n = objects.length; i < n; i++) {
             if (comparator.equals(objects[i], object)) {
                 return i;
@@ -827,7 +785,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int indexOf(@Nonnull long[] ints, long value) {
+    public static int indexOf(long[] ints, long value) {
         for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
@@ -838,7 +796,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int indexOf(@Nonnull int[] ints, int value) {
+    public static int indexOf(int[] ints, int value) {
         for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
@@ -849,7 +807,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int indexOf(@Nonnull short[] ints, short value) {
+    public static int indexOf(short[] ints, short value) {
         for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
@@ -860,7 +818,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int lastIndexOf(@Nonnull T[] src, T obj) {
+    public static <T> int lastIndexOf(T[] src, T obj) {
         for (int i = src.length - 1; i >= 0; i--) {
             T o = src[i];
             if (o == null) {
@@ -876,7 +834,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int lastIndexOf(@Nonnull int[] src, int obj) {
+    public static int lastIndexOf(int[] src, int obj) {
         for (int i = src.length - 1; i >= 0; i--) {
             int o = src[i];
             if (o == obj) {
@@ -887,7 +845,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int lastIndexOf(@Nonnull T[] src, T obj, @Nonnull HashingStrategy<? super T> comparator) {
+    public static <T> int lastIndexOf(T[] src, T obj, HashingStrategy<? super T> comparator) {
         for (int i = src.length - 1; i >= 0; i--) {
             T o = src[i];
             if (comparator.equals(obj, o)) {
@@ -898,7 +856,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> int lastIndexOf(@Nonnull List<T> src, T obj, @Nonnull HashingStrategy<? super T> comparator) {
+    public static <T> int lastIndexOf(List<T> src, T obj, HashingStrategy<? super T> comparator) {
         for (int i = src.size() - 1; i >= 0; i--) {
             T o = src.get(i);
             if (comparator.equals(obj, o)) {
@@ -909,7 +867,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int lastIndexOfNot(@Nonnull int[] src, int obj) {
+    public static int lastIndexOfNot(int[] src, int obj) {
         for (int i = src.length - 1; i >= 0; i--) {
             int o = src[i];
             if (o != obj) {
@@ -920,12 +878,12 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> boolean contains(@Nullable T o, @Nonnull T... objects) {
+    public static <T> boolean contains(@Nullable T o, T... objects) {
         return indexOf(objects, o) >= 0;
     }
 
     @Contract(pure = true)
-    public static boolean contains(@Nullable String s, @Nonnull String... strings) {
+    public static boolean contains(@Nullable String s, String... strings) {
         if (s == null) {
             for (String str : strings) {
                 if (str == null) {
@@ -944,39 +902,33 @@ public class ArrayUtil {
         return false;
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static int[] newIntArray(int count) {
         return count == 0 ? EMPTY_INT_ARRAY : new int[count];
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static byte[] newByteArray(int count) {
         return count == 0 ? EMPTY_BYTE_ARRAY : new byte[count];
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static long[] newLongArray(int count) {
         return count == 0 ? EMPTY_LONG_ARRAY : new long[count];
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static String[] newStringArray(int count) {
         return count == 0 ? EMPTY_STRING_ARRAY : new String[count];
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static Object[] newObjectArray(int count) {
         return count == 0 ? EMPTY_OBJECT_ARRAY : new Object[count];
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <E> E[] ensureExactSize(int count, @Nonnull E[] sample) {
+    public static <E> E[] ensureExactSize(int count, E[] sample) {
         return count == sample.length ? sample : newArray(getComponentType(sample), count);
     }
 
@@ -1002,13 +954,12 @@ public class ArrayUtil {
         return array == null || array.length == 0;
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static String[] toStringArray(@Nullable Collection<String> collection) {
         return collection == null || collection.isEmpty() ? EMPTY_STRING_ARRAY : collection.toArray(new String[collection.size()]);
     }
 
-    public static <T> void copy(@Nonnull Collection<? extends T> src, @Nonnull T[] dst, int dstOffset) {
+    public static <T> void copy(Collection<? extends T> src, T[] dst, int dstOffset) {
         int i = dstOffset;
         for (T t : src) {
             dst[i++] = t;
@@ -1033,12 +984,11 @@ public class ArrayUtil {
         return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
-    @Nonnull
-    public static <T> T[] stripTrailingNulls(@Nonnull T[] array) {
+    public static <T> T[] stripTrailingNulls(T[] array) {
         return array.length != 0 && array[array.length - 1] == null ? Arrays.copyOf(array, trailingNullsIndex(array)) : array;
     }
 
-    private static <T> int trailingNullsIndex(@Nonnull T[] array) {
+    private static <T> int trailingNullsIndex(T[] array) {
         for (int i = array.length - 1; i >= 0; i--) {
             if (array[i] != null) {
                 return i + 1;
@@ -1048,7 +998,7 @@ public class ArrayUtil {
     }
 
     // calculates average of the median values in the selected part of the array. E.g. for part=3 returns average in the middle third.
-    public static long averageAmongMedians(@Nonnull long[] time, int part) {
+    public static long averageAmongMedians(long[] time, int part) {
         assert part >= 1;
         int n = time.length;
         Arrays.sort(time);
@@ -1060,7 +1010,7 @@ public class ArrayUtil {
         return middlePartLength == 0 ? 0 : total / middlePartLength;
     }
 
-    public static long averageAmongMedians(@Nonnull int[] time, int part) {
+    public static long averageAmongMedians(int[] time, int part) {
         assert part >= 1;
         int n = time.length;
         Arrays.sort(time);
@@ -1092,8 +1042,7 @@ public class ArrayUtil {
         return max;
     }
 
-    @Nonnull
-    public static <T> Class<T> getComponentType(@Nonnull T[] collection) {
+    public static <T> Class<T> getComponentType(T[] collection) {
         //noinspection unchecked
         return (Class<T>)collection.getClass().getComponentType();
     }

@@ -9,7 +9,6 @@ import consulo.util.socketConnection.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
 
   private Future<?> myTimeoutTask;
 
-  public ResponseProcessor(@Nonnull ScheduledExecutorService executor, @Nonnull SocketConnection<?, R> connection) {
+  public ResponseProcessor(ScheduledExecutorService executor, SocketConnection<?, R> connection) {
     myScheduledExecutorService = executor;
   }
 
@@ -117,13 +116,13 @@ public class ResponseProcessor<R extends AbstractResponse> {
     }
   }
 
-  public <T extends R> void registerHandler(@Nonnull Class<T> responseClass, @Nonnull AbstractResponseHandler<T> handler) {
+  public <T extends R> void registerHandler(Class<T> responseClass, AbstractResponseHandler<T> handler) {
     synchronized (myLock) {
       myClassHandlers.put(responseClass, handler);
     }
   }
 
-  public void registerHandler(int id, @Nonnull AbstractResponseToRequestHandler<?> handler) {
+  public void registerHandler(int id, AbstractResponseToRequestHandler<?> handler) {
     synchronized (myLock) {
       myHandlers.put(id, handler);
     }

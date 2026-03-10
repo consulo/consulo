@@ -16,14 +16,13 @@
 
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 public class Range<T extends Comparable<T>> {
 
   private final T myFrom;
   private final T myTo;
 
-  public Range(@Nonnull T from, @Nonnull T to) {
+  public Range(T from, T to) {
     myFrom = from;
     myTo = to;
   }

@@ -15,8 +15,7 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -26,8 +25,7 @@ public class ExceptionUtil {
   private ExceptionUtil() {
   }
 
-  @Nonnull
-  public static Throwable getRootCause(@Nonnull Throwable e) {
+  public static Throwable getRootCause(Throwable e) {
     while (true) {
       if (e.getCause() == null) return e;
       e = e.getCause();
@@ -46,8 +44,7 @@ public class ExceptionUtil {
     return findCause(e, clazz) != null;
   }
 
-  @Nonnull
-  public static Throwable makeStackTraceRelative(@Nonnull Throwable th, @Nonnull Throwable relativeTo) {
+  public static Throwable makeStackTraceRelative(Throwable th, Throwable relativeTo) {
     StackTraceElement[] trace = th.getStackTrace();
     StackTraceElement[] rootTrace = relativeTo.getStackTrace();
     for (int i = 0, len = Math.min(trace.length, rootTrace.length); i < len; i++) {
@@ -59,21 +56,18 @@ public class ExceptionUtil {
     return th;
   }
 
-  @Nonnull
   public static String currentStackTrace() {
     return getThrowableText(new Throwable());
   }
 
-  @Nonnull
-  public static String getThrowableText(@Nonnull Throwable aThrowable) {
+  public static String getThrowableText(Throwable aThrowable) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     aThrowable.printStackTrace(writer);
     return stringWriter.getBuffer().toString();
   }
 
-  @Nonnull
-  public static String getThrowableText(@Nonnull Throwable aThrowable, @Nonnull String stackFrameSkipPattern) {
+  public static String getThrowableText(Throwable aThrowable, String stackFrameSkipPattern) {
     final String prefix = "\tat ";
     final String prefixProxy = prefix + "$Proxy";
     final String prefixRemoteUtil = prefix + "consulo.util.rmi.RemoteUtil";
@@ -115,7 +109,7 @@ public class ExceptionUtil {
   }
 
   @Nullable
-  public static String getMessage(@Nonnull Throwable e) {
+  public static String getMessage(Throwable e) {
     String result = e.getMessage();
     String exceptionPattern = "Exception: ";
     String errorPattern = "Error: ";
@@ -133,8 +127,7 @@ public class ExceptionUtil {
     return result;
   }
 
-  @Nonnull
-  private static String extractMessage(@Nonnull String result, @Nonnull String errorPattern) {
+  private static String extractMessage(String result, String errorPattern) {
     if (result.lastIndexOf(errorPattern) >= 0) {
       result = result.substring(result.lastIndexOf(errorPattern) + errorPattern.length());
     }
@@ -174,8 +167,7 @@ public class ExceptionUtil {
     }
   }
 
-  @Nonnull
-  public static String getNonEmptyMessage(@Nonnull Throwable t, @Nonnull String defaultMessage) {
+  public static String getNonEmptyMessage(Throwable t, String defaultMessage) {
     String message = t.getMessage();
     return !StringUtil.isEmptyOrSpaces(message) ? message : defaultMessage;
   }

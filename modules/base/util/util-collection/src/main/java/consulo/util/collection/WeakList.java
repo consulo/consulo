@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,7 +34,7 @@ public class WeakList<T> extends UnsafeWeakList<T> {
   }
 
   // For testing only
-  WeakList(@Nonnull WeakReferenceArray<T> array) {
+  WeakList(WeakReferenceArray<T> array) {
     super(array);
   }
 
@@ -131,7 +130,6 @@ public class WeakList<T> extends UnsafeWeakList<T> {
   }
 
   @Override
-  @Nonnull
   public Iterator<T> iterator() {
     return new MySyncIterator();
   }

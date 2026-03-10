@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
@@ -30,23 +29,20 @@ import java.util.function.Predicate;
  * @since 2025-06-21
  */
 public class Iterables {
-    @Nonnull
     @Contract(pure = true)
-    public static <T> Iterable<T> iterate(@Nonnull T[] arrays, @Nonnull Predicate<? super T> condition) {
+    public static <T> Iterable<T> iterate(T[] arrays, Predicate<? super T> condition) {
         return iterate(Arrays.asList(arrays), condition);
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T> Iterable<T> iterate(
-        @Nonnull Collection<? extends T> collection,
-        @Nonnull Predicate<? super T> condition
+        Collection<? extends T> collection,
+        Predicate<? super T> condition
     ) {
         if (collection.isEmpty()) {
             return List.of();
         }
         return new Iterable<>() {
-            @Nonnull
             @Override
             public Iterator<T> iterator() {
                 return new Iterator<>() {

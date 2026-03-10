@@ -19,8 +19,7 @@ import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +43,7 @@ public class PatternUtil {
     }
   }
 
-  @Nonnull
-  public static String convertToRegex(@Nonnull String mask) {
+  public static String convertToRegex(String mask) {
     List<String> strings = StringUtil.split(mask, "\\");
     StringBuilder pattern = new StringBuilder();
     String separator = "";
@@ -62,8 +60,7 @@ public class PatternUtil {
     return pattern.toString();
   }
 
-  @Nonnull
-  public static Pattern fromMask(@Nonnull String mask) {
+  public static Pattern fromMask(String mask) {
     try {
       return Pattern.compile(convertToRegex(mask));
     }

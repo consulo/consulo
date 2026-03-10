@@ -15,7 +15,6 @@
  */
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ public interface CopyableUserDataHolder extends UserDataHolder {
 
     <T> T getCopyableUserData(Key<T> key);
 
-    void copyCopyableDataTo(@Nonnull CopyableUserDataHolder clone);
+    void copyCopyableDataTo(CopyableUserDataHolder clone);
 }

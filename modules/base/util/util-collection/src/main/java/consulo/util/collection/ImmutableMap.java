@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param key a key to exclude from the result
      * @return an {@code ImmutableMap} which contains all the entries as this map except the supplied key.
      */
-    ImmutableMap<K, V> without(@Nonnull K key);
+    ImmutableMap<K, V> without(K key);
 
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map plus the supplied mapping.</p>
@@ -44,7 +43,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param value a value to associate with the key
      * @return an {@code ImmutableMap} which contains all the entries as this map plus the supplied mapping.
      */
-    ImmutableMap<K, V> with(@Nonnull K key, @Nullable V value);
+    ImmutableMap<K, V> with(K key, @Nullable V value);
 
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map plus all the mappings of the supplied map.</p>
@@ -56,9 +55,8 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param map to add entries from
      * @return an {@code ImmutableMap} which contains all the entries as this map plus all the mappings of the supplied map.
      */
-    ImmutableMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map);
+    ImmutableMap<K, V> withAll(Map<? extends K, ? extends V> map);
 
-    @Nonnull
     HashingStrategy<K> getStrategy();
 
     @Override
@@ -92,7 +90,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      */
     @Deprecated
     @Override
-    default void putAll(@Nonnull Map<? extends K, ? extends V> m) {
+    default void putAll(Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
 

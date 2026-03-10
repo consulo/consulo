@@ -20,8 +20,7 @@ import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class UrlImpl implements Url {
   private final String scheme;
@@ -39,7 +38,7 @@ public final class UrlImpl implements Url {
     this(null, null, path, null);
   }
 
-  public UrlImpl(@Nonnull String scheme, @Nullable String authority, @Nullable String path) {
+  public UrlImpl(String scheme, @Nullable String authority, @Nullable String path) {
     this(scheme, authority, path, null);
   }
 
@@ -50,7 +49,6 @@ public final class UrlImpl implements Url {
     this.parameters = StringUtil.nullize(parameters);
   }
 
-  @Nonnull
   @Override
   public String getPath() {
     if (decodedPath == null) {
@@ -106,7 +104,6 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @Nonnull
   public String toExternalForm() {
     if (externalForm != null) {
       return externalForm;
@@ -127,7 +124,6 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @Nonnull
   public Url trimParameters() {
     if (parameters == null) {
       return this;

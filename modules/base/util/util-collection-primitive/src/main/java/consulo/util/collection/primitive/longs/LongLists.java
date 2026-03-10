@@ -17,19 +17,16 @@ package consulo.util.collection.primitive.longs;
 
 import consulo.util.collection.primitive.longs.impl.list.LongArrayList;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10/06/2021
  */
 public class LongLists {
-  @Nonnull
   public static LongList newArrayList() {
     return new LongArrayList();
   }
 
-  @Nonnull
   public static LongList newArrayList(int capacity) {
     return new LongArrayList(capacity);
   }

@@ -3,8 +3,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.SingletonIteratorBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -28,7 +27,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
     super(initialCapacity, loadFactor);
   }
 
-  public SmartHashSet(@Nonnull Collection<? extends T> collection) {
+  public SmartHashSet(Collection<? extends T> collection) {
     super(collection.size() == 1 ? Collections.emptyList() : collection);
     if (collection.size() == 1) {
       T element = collection.iterator().next();
@@ -41,7 +40,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean contains(@Nonnull Object obj) {
+  public boolean contains(Object obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       return Objects.equals(obj, theElement);
@@ -50,7 +49,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean add(@Nonnull T obj) {
+  public boolean add(T obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       if (Objects.equals(obj, theElement)) {
@@ -103,7 +102,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean remove(@Nonnull Object obj) {
+  public boolean remove(Object obj) {
     T theElement = this.theElement;
     if (theElement == null) {
       return super.remove(obj);
@@ -118,7 +117,6 @@ public final class SmartHashSet<T> extends HashSet<T> {
 
   @Override
   public
-  @Nonnull
   Iterator<T> iterator() {
     if (theElement == null) {
       return super.iterator();
@@ -157,7 +155,6 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  @Nonnull
   public Object[] toArray() {
     T theElement = this.theElement;
     if (theElement == null) {
@@ -167,8 +164,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  @Nonnull
-  public <O> O[] toArray(@Nonnull O[] a) {
+  public <O> O[] toArray(O[] a) {
     @SuppressWarnings("unchecked") O theElement = (O)this.theElement;
     if (theElement == null) {
       //noinspection SuspiciousToArrayCall

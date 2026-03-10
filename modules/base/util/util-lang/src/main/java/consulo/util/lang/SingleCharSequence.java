@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 public class SingleCharSequence implements CharSequence {
   private final char myCh;
@@ -47,7 +46,6 @@ public class SingleCharSequence implements CharSequence {
   }
 
   @Override
-  @Nonnull
   public String toString() {
     return String.valueOf(myCh);
   }

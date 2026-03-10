@@ -3,7 +3,6 @@ package consulo.util.collection;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -59,19 +58,16 @@ public interface HashingStrategy<T> {
         return Objects.equals(o1, o2);
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> canonical() {
         return (HashingStrategy<T>)CanonicalHashingStrategy.INSTANCE;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> identity() {
         return (HashingStrategy<T>)IdentityHashingStrategy.INSTANCE;
     }
 
-    @Nonnull
     static HashingStrategy<String> caseInsensitive() {
         return CaseInsensitiveStringHashingStrategy.INSTANCE;
     }

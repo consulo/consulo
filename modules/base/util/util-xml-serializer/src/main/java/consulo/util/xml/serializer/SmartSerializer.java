@@ -20,7 +20,6 @@ import consulo.util.xml.serializer.internal.BeanBinding;
 import consulo.util.xml.serializer.internal.XmlSerializerImpl;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -35,13 +34,13 @@ public final class SmartSerializer {
     mySerializationFilter = useSkipEmptySerializationFilter ?
                             new SkipEmptySerializationFilter() {
                               @Override
-                              protected ThreeState accepts(@Nonnull String name, @Nonnull Object beanValue) {
+                              protected ThreeState accepts(String name, Object beanValue) {
                                 return mySerializedAccessorNameTracker != null && mySerializedAccessorNameTracker.contains(name) ? ThreeState.YES : ThreeState.UNSURE;
                               }
                             } :
                             new SkipDefaultValuesSerializationFilters() {
                               @Override
-                              public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
+                              public boolean accepts(Accessor accessor, Object bean) {
                                 if (mySerializedAccessorNameTracker != null && mySerializedAccessorNameTracker.contains(accessor.getName())) {
                                   return true;
                                 }
@@ -54,12 +53,11 @@ public final class SmartSerializer {
     this(true, false);
   }
 
-  @Nonnull
   public static SmartSerializer skipEmptySerializer() {
     return new SmartSerializer(true, true);
   }
 
-  public void readExternal(@Nonnull Object bean, @Nonnull Element element) {
+  public void readExternal(Object bean, Element element) {
     if (mySerializedAccessorNameTracker != null) {
       mySerializedAccessorNameTracker.clear();
       myOrderedBindings = null;
@@ -73,11 +71,11 @@ public final class SmartSerializer {
     }
   }
 
-  public void writeExternal(@Nonnull Object bean, @Nonnull Element element) {
+  public void writeExternal(Object bean, Element element) {
     writeExternal(bean, element, true);
   }
 
-  public void writeExternal(@Nonnull Object bean, @Nonnull Element element, boolean preserveCompatibility) {
+  public void writeExternal(Object bean, Element element, boolean preserveCompatibility) {
     BeanBinding binding = getBinding(bean);
     if (preserveCompatibility && myOrderedBindings != null) {
       binding.sortBindings(myOrderedBindings);
@@ -98,8 +96,7 @@ public final class SmartSerializer {
     }
   }
 
-  @Nonnull
-  private static BeanBinding getBinding(@Nonnull Object bean) {
+  private static BeanBinding getBinding(Object bean) {
     return (BeanBinding)XmlSerializerImpl.getBinding(bean.getClass());
   }
 }

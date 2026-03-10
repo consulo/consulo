@@ -17,8 +17,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
@@ -99,7 +98,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   @Override
-  public V put(K key, @Nonnull V value) {
+  public V put(K key, V value) {
     Entry<K, V>[] table = this.table;
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
@@ -173,19 +172,16 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return e.value;
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return new KeySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     return new Values();
   }
 
-  @Nonnull
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return new EntrySet();
@@ -340,7 +336,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
 
-    @Nonnull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new LinkedHashIterator<Map.Entry<K, V>>() {
@@ -383,7 +378,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class KeySet extends AbstractSet<K> {
 
-    @Nonnull
     @Override
     public Iterator<K> iterator() {
       return new LinkedHashIterator<K>() {
@@ -417,7 +411,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class Values extends AbstractCollection<V> {
 
-    @Nonnull
     @Override
     public Iterator<V> iterator() {
       return new LinkedHashIterator<V>() {

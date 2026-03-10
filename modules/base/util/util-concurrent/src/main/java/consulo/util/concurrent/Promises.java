@@ -20,8 +20,7 @@ import consulo.util.concurrent.internal.InternalPromiseUtil;
 import consulo.util.lang.ControlFlowException;
 import org.slf4j.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,27 +58,22 @@ public class Promises {
     return promise.getState() == Promise.State.PENDING;
   }
 
-  @Nonnull
   public static <T> Promise<T> rejectedPromise() {
     return REJECTED.get();
   }
 
-  @Nonnull
   public static <T> Promise<T> rejectedPromise(String error) {
     return new DonePromise(InternalPromiseUtil.PromiseValue.createRejected(createError(error, true)));
   }
 
-  @Nonnull
   public static <T> Promise<T> resolvedPromise() {
     return (Promise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
   }
 
-  @Nonnull
   public static <T> Promise<T> resolvedPromise(@Nullable T result) {
     return resolvedCancellablePromise(result);
   }
 
-  @Nonnull
   public static <T> CancellablePromise<T> resolvedCancellablePromise(@Nullable T result) {
     if (result == null) {
       return (CancellablePromise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
@@ -107,7 +101,6 @@ public class Promises {
     return false;
   }
 
-  @Nonnull
   public static <T> Promise<List<T>> collectResults(Collection<Promise<T>> thisValue, boolean ignoreErrors) {
     if (thisValue.isEmpty()) {
       return resolvedPromise(Collections.emptyList());
@@ -155,7 +148,6 @@ public class Promises {
     return result;
   }
 
-  @Nonnull
   public static Promise<?> all(Collection<? extends Promise<?>> promises) {
     if (promises.size() == 1) {
       return promises.iterator().next();
@@ -165,12 +157,10 @@ public class Promises {
     }
   }
 
-  @Nonnull
   public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult) {
     return all(promises, totalResult, false);
   }
 
-  @Nonnull
   public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult, boolean ignoreErrors) {
     if (promises.isEmpty()) {
       return resolvedPromise();
@@ -188,7 +178,6 @@ public class Promises {
     return totalPromise;
   }
 
-  @Nonnull
   public static ActionCallback toActionCallback(Promise<?> promise) {
     ActionCallback result = new ActionCallback();
     promise.onSuccess(o -> result.setDone());
@@ -196,7 +185,6 @@ public class Promises {
     return result;
   }
 
-  @Nonnull
   public static AsyncResult<Void> toAsyncResult(Promise<?> promise) {
     AsyncResult<Void> result = AsyncResult.undefined();
     promise.onSuccess(o -> result.setDone());
@@ -204,7 +192,6 @@ public class Promises {
     return result;
   }
 
-  @Nonnull
   public static Promise<Object> toPromise(ActionCallback callback) {
     AsyncPromise<Object> promise = new AsyncPromise<>();
     callback.doWhenDone(() -> promise.setResult(null));
