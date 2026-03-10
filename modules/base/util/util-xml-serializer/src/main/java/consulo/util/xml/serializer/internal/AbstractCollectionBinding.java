@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.*;
 
-abstract class AbstractCollectionBinding extends Binding implements MultiNodeBinding {
+abstract class AbstractCollectionBinding extends NullableAccessorBinding implements MultiNodeBinding {
   @Nullable
   private Map<Class<?>, Binding> itemBindings;
 
@@ -204,7 +204,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
 
   @Override
   public Object deserialize(@Nullable Object context, Element element) {
-    assert context != null;
+    Objects.requireNonNull(context);
     Collection result;
     if (getTagName(context) == null) {
       if (context instanceof Collection collection) {

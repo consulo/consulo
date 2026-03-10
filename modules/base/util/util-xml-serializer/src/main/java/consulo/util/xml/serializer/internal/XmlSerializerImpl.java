@@ -63,8 +63,7 @@ public class XmlSerializerImpl {
     @Nullable
     public static Element serializeIfNotDefault(Object object, SerializationFilter filter) {
         Class<?> aClass = object.getClass();
-        Binding binding = getClassBinding(aClass, aClass, null);
-        assert binding != null;
+        Binding binding = Objects.requireNonNull(getClassBinding(aClass, aClass, null));
         return (Element) binding.serialize(object, null, filter);
     }
 
@@ -136,8 +135,7 @@ public class XmlSerializerImpl {
     private static Binding getNonCachedClassBinding(Class<?> aClass, @Nullable MutableAccessor accessor, Type originalType) {
         if (aClass.isArray()) {
             if (Element.class.isAssignableFrom(aClass.getComponentType())) {
-                assert accessor != null;
-                return new JDOMElementBinding(accessor);
+                return new JDOMElementBinding(Objects.requireNonNull(accessor));
             }
             else {
                 return new ArrayBinding(aClass, accessor);

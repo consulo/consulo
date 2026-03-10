@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class JDOMElementBinding extends Binding implements MultiNodeBinding {
+class JDOMElementBinding extends NonNullAccessorBinding implements MultiNodeBinding {
   private final String myTagName;
 
   public JDOMElementBinding(MutableAccessor accessor) {
@@ -45,7 +45,6 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
   @Nullable
   @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
-    assert myAccessor != null;
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -70,7 +69,6 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
   @Nullable
   @Override
   public Object deserializeList(Object context, List<Element> elements) {
-    assert myAccessor != null;
     if (myAccessor.getValueClass().isArray()) {
       myAccessor.set(context, elements.toArray(new Element[elements.size()]));
     }
@@ -88,8 +86,7 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
   @Override
   @Nullable
   public Object deserialize(@Nullable Object context, Element element) {
-    assert myAccessor != null && context != null;
-    myAccessor.set(context, element);
+    myAccessor.set(Objects.requireNonNull(context), element);
     return context;
   }
 

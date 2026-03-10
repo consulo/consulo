@@ -31,7 +31,7 @@ import org.jdom.Element;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class BeanBinding extends Binding {
+public class BeanBinding extends NullableAccessorBinding {
     private static final Map<Class, List<MutableAccessor>> ourAccessorCache = ContainerUtil.createConcurrentSoftValueMap();
 
     private final String myTagName;
@@ -75,8 +75,7 @@ public class BeanBinding extends Binding {
 
     @Nullable
     public Element serializeInto(Object o, @Nullable Element element, SerializationFilter filter) {
-        assert myBindings != null;
-        for (Binding binding : myBindings) {
+        for (Binding binding : Objects.requireNonNull(myBindings)) {
             Accessor accessor = Objects.requireNonNull(binding.getAccessor());
 
             if (filter instanceof SkipDefaultsSerializationFilter) {
@@ -140,8 +139,7 @@ public class BeanBinding extends Binding {
     }
 
     public boolean equalByFields(Object currentValue, Object defaultValue, SkipDefaultsSerializationFilter filter) {
-        assert myBindings != null;
-        for (Binding binding : myBindings) {
+        for (Binding binding : Objects.requireNonNull(myBindings)) {
             Accessor accessor = Objects.requireNonNull(binding.getAccessor());
             if (!filter.equal(binding, accessor.read(currentValue), accessor.read(defaultValue))) {
                 return false;
@@ -151,17 +149,17 @@ public class BeanBinding extends Binding {
     }
 
     public Map<String, Float> computeBindingWeights(Set<String> accessorNameTracker) {
-        assert myBindings != null;
+        Binding[] bindings = Objects.requireNonNull(myBindings);
         Map<String, Float> weights = new HashMap<>(accessorNameTracker.size());
         float weight = 0;
-        float step = (float) myBindings.length / (float) accessorNameTracker.size();
+        float step = (float) bindings.length / (float) accessorNameTracker.size();
         for (String name : accessorNameTracker) {
             weights.put(name, weight);
             weight += step;
         }
 
         weight = 0;
-        for (Binding binding : myBindings) {
+        for (Binding binding : bindings) {
             String name = Objects.requireNonNull(binding.getAccessor()).getName();
             if (!weights.containsKey(name)) {
                 weights.put(name, weight);
@@ -173,8 +171,7 @@ public class BeanBinding extends Binding {
     }
 
     public void sortBindings(Map<String, Float> weights) {
-        assert myBindings != null;
-        Arrays.sort(myBindings, (o1, o2) -> {
+        Arrays.sort(Objects.requireNonNull(myBindings), (o1, o2) -> {
             MutableAccessor a1 = o1.getAccessor();
             MutableAccessor a2 = o2.getAccessor();
             Float w1 = ObjectUtil.notNull(weights.get(a1 != null ? a1.getName() : null), 0f);
@@ -184,11 +181,11 @@ public class BeanBinding extends Binding {
     }
 
     public void deserializeIntoObject(Object result, Element element, @Nullable Set<String> accessorNameTracker) {
-        assert myBindings != null;
+        Binding[] bindings = Objects.requireNonNull(myBindings);
         nextAttribute:
         for (org.jdom.Attribute attribute : element.getAttributes()) {
             if (StringUtil.isEmpty(attribute.getNamespaceURI())) {
-                for (Binding binding : myBindings) {
+                for (Binding binding : bindings) {
                     if (binding instanceof AttributeBinding attrBinding && attrBinding.myName.equals(attribute.getName())) {
                         if (accessorNameTracker != null) {
                             MutableAccessor accessor = binding.getAccessor();
@@ -210,7 +207,7 @@ public class BeanBinding extends Binding {
                 continue;
             }
 
-            for (Binding binding : myBindings) {
+            for (Binding binding : bindings) {
                 if (content instanceof org.jdom.Text) {
                     if (binding instanceof TextBinding) {
                         ((TextBinding) binding).set(result, content.getValue());

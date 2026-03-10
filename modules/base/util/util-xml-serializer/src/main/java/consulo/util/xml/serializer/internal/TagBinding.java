@@ -24,6 +24,7 @@ import org.jdom.Text;
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   private final String myTextIfEmpty;
@@ -37,7 +38,6 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   @Nullable
   @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
-    assert myAccessor != null;
     Object value = myAccessor.read(o);
     Element serialized = new Element(myName);
     if (value == null) {
@@ -84,7 +84,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   @Override
   @Nullable
   public Object deserialize(@Nullable Object context, Element element) {
-    assert myAccessor != null && context != null;
+    Objects.requireNonNull(context);
     if (myBinding == null) {
       String value = XmlSerializerImpl.getTextValue(element, myTextIfEmpty);
       XmlSerializerImpl.doSet(context, value, myAccessor, XmlSerializerImpl.typeToClass(myAccessor.getGenericType()));
@@ -96,7 +96,6 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   }
 
   private void deserialize(Object o, List<Element> children) {
-    assert myAccessor != null;
     if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
       beanBinding.deserializeIntoObject(o, children.get(0), null);
     }

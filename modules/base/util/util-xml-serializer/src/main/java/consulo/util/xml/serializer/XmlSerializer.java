@@ -125,8 +125,12 @@ public class XmlSerializer {
     }
     try {
       Binding binding = XmlSerializerImpl.getBinding(bean.getClass());
-      assert binding instanceof BeanBinding;
-      ((BeanBinding)binding).serializeInto(bean, element, filter);
+      if (binding instanceof BeanBinding beanBinding) {
+        beanBinding.serializeInto(bean, element, filter);
+      }
+      else {
+        throw new RuntimeException("Expected BeanBinding, got" + binding);
+      }
     }
     catch (XmlSerializationException e) {
       throw e;

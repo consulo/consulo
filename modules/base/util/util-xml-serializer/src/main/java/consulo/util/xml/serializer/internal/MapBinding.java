@@ -29,7 +29,7 @@ import java.util.*;
 
 import static consulo.util.xml.serializer.Constants.*;
 
-class MapBinding extends Binding implements MultiNodeBinding {
+class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
   private static final Comparator<Object> KEY_COMPARATOR = new Comparator<Object>() {
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
@@ -129,12 +129,11 @@ class MapBinding extends Binding implements MultiNodeBinding {
 
   @Override
   public Object deserialize(@Nullable Object context, Element element) {
-    assert context != null;
     if (myMapAnnotation == null || myMapAnnotation.surroundWithTag()) {
-      return deserialize(context, element.getChildren());
+      return deserialize(Objects.requireNonNull(context), element.getChildren());
     }
     else {
-      return deserialize(context, Collections.singletonList(element));
+      return deserialize(Objects.requireNonNull(context), Collections.singletonList(element));
     }
   }
 
@@ -142,7 +141,8 @@ class MapBinding extends Binding implements MultiNodeBinding {
     Map map = (Map)context;
     map.clear();
 
-    assert keyClass != null && valueClass != null;
+    Class<?> keyClass = Objects.requireNonNull(this.keyClass);
+    Class<?> valueClass = Objects.requireNonNull(this.valueClass);
 
     for (Element childNode : childNodes) {
       if (!childNode.getName().equals(getEntryAttributeName())) {
@@ -187,7 +187,7 @@ class MapBinding extends Binding implements MultiNodeBinding {
       return XmlSerializerImpl.convert(attribute.getValue(), valueClass);
     }
     else if (myMapAnnotation != null && !myMapAnnotation.surroundKeyWithTag()) {
-      assert binding != null;
+      Objects.requireNonNull(binding);
       for (Element element : entry.getChildren()) {
         if (binding.isBoundTo(element)) {
           return binding.deserialize(context, element);
@@ -201,8 +201,7 @@ class MapBinding extends Binding implements MultiNodeBinding {
         return null;
       }
       else {
-        assert binding != null;
-        return Binding.deserializeList(binding, context, children);
+        return Binding.deserializeList(Objects.requireNonNull(binding), context, children);
       }
     }
     return null;

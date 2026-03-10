@@ -25,19 +25,10 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public abstract class Binding {
-    public static final Logger LOG = LoggerFactory.getLogger(Binding.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Binding.class);
 
     @Nullable
-    protected final MutableAccessor myAccessor;
-
-    protected Binding(@Nullable MutableAccessor accessor) {
-        myAccessor = accessor;
-    }
-
-    @Nullable
-    public MutableAccessor getAccessor() {
-        return myAccessor;
-    }
+    public abstract MutableAccessor getAccessor();
 
     @Nullable
     public abstract Object serialize(Object o, @Nullable Object context, SerializationFilter filter);
