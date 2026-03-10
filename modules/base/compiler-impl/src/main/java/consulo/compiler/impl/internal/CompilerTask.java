@@ -20,27 +20,25 @@ import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ExitStatus;
 import consulo.component.ProcessCanceledException;
-import consulo.document.util.TextRange;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.localize.LocalizeValue;
-import consulo.navigation.Navigatable;
-import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author Eugene Zhuravlev
@@ -50,15 +48,14 @@ public class CompilerTask extends Task.Backgroundable {
     private static final String APP_ICON_ID = "compiler";
 
     private final boolean myWaitForPreviousSession;
-    private int myErrorCount = 0;
-    private int myWarningCount = 0;
 
     private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
-    private Runnable myCompileWork;
+    private Consumer<BuildProgress<BuildProgressDescriptor>> myCompileWork;
     private final boolean myCompilationStartedAutomatically;
+    private final CompileCounters myCounters;
     private final UUID mySessionId;
 
-    private final BuildViewService myBuildViewService;
+    private final BuildViewServiceImpl myBuildViewService;
     private long myEndCompilationStamp;
     private ExitStatus myExitStatus;
 
@@ -66,14 +63,15 @@ public class CompilerTask extends Task.Backgroundable {
         @Nonnull Project project,
         @Nonnull LocalizeValue contentName,
         boolean waitForPreviousSession,
-        boolean compilationStartedAutomatically
+        boolean compilationStartedAutomatically,
+        CompileCounters counters
     ) {
         super(project, contentName);
         myWaitForPreviousSession = waitForPreviousSession;
         myCompilationStartedAutomatically = compilationStartedAutomatically;
+        myCounters = counters;
         mySessionId = UUID.randomUUID();
-        myBuildViewService = project.getApplication().getInstance(BuildViewServiceFactory.class)
-            .createBuildViewService(project, mySessionId, contentName.get());
+        myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName.get(), counters);
     }
 
     @Nonnull
@@ -89,10 +87,13 @@ public class CompilerTask extends Task.Backgroundable {
     @Nullable
     @Override
     public NotificationInfo getNotificationInfo() {
+        int errors = myCounters.get(CompilerMessageCategory.ERROR);
+        int warnings = myCounters.get(CompilerMessageCategory.WARNING);
+
         return new NotificationInfo(
-            myErrorCount > 0 ? LocalizeValue.localizeTODO("Compiler (errors)") : LocalizeValue.localizeTODO("Compiler (success)"),
+            errors > 0 ? LocalizeValue.localizeTODO("Compiler (errors)") : LocalizeValue.localizeTODO("Compiler (success)"),
             LocalizeValue.localizeTODO("Compilation Finished"),
-            LocalizeValue.localizeTODO(myErrorCount + " Errors, " + myWarningCount + " Warnings"),
+            LocalizeValue.localizeTODO(errors + " Errors, " + warnings + " Warnings"),
             true
         );
     }
@@ -129,7 +130,7 @@ public class CompilerTask extends Task.Backgroundable {
             if (!isHeadless()) {
                 addIndicatorDelegate();
             }
-            myCompileWork.run();
+            myCompileWork.accept(myBuildViewService.getBuildProgress());
         }
         catch (ProcessCanceledException ignored) {
         }
@@ -169,8 +170,10 @@ public class CompilerTask extends Task.Backgroundable {
                 UIUtil.invokeLaterIfNeeded(() -> {
                     AppIcon appIcon = AppIcon.getInstance();
                     if (appIcon.hideProgress(myProject, APP_ICON_ID)) {
-                        if (myErrorCount > 0) {
-                            appIcon.setErrorBadge(myProject, String.valueOf(myErrorCount));
+                        int errors = myCounters.get(CompilerMessageCategory.ERROR);
+
+                        if (errors > 0) {
+                            appIcon.setErrorBadge(myProject, String.valueOf(errors));
                             appIcon.requestAttention(myProject, true);
                         }
                         else if (!myCompilationStartedAutomatically) {
@@ -198,46 +201,11 @@ public class CompilerTask extends Task.Backgroundable {
     }
 
     public void addMessage(CompilerMessage message) {
-        CompilerMessageCategory messageCategory = message.getCategory();
-        if (CompilerMessageCategory.WARNING.equals(messageCategory)) {
-            myWarningCount += 1;
-        }
-        else if (CompilerMessageCategory.ERROR.equals(messageCategory)) {
-            myErrorCount += 1;
-            informWolf(message);
-        }
-
         myBuildViewService.addMessage(mySessionId, message);
     }
 
-    private void informWolf(CompilerMessage message) {
-        WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project) myProject);
-        VirtualFile file = getVirtualFile(message);
-        wolf.queue(file);
-    }
-
-    public void start(Runnable compileWork) {
+    public void start(Consumer<BuildProgress<BuildProgressDescriptor>> compileWork) {
         myCompileWork = compileWork;
         queue();
-    }
-
-    private static VirtualFile getVirtualFile(CompilerMessage message) {
-        VirtualFile virtualFile = message.getVirtualFile();
-        if (virtualFile == null) {
-            Navigatable navigatable = message.getNavigatable();
-            if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
-                virtualFile = openFileDescriptor.getFile();
-            }
-        }
-        return virtualFile;
-    }
-
-    public static TextRange getTextRange(CompilerMessage message) {
-        Navigatable navigatable = message.getNavigatable();
-        if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
-            int offset = openFileDescriptor.getOffset();
-            return new TextRange(offset, offset);
-        }
-        return TextRange.EMPTY_RANGE;
     }
 }

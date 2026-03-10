@@ -3,12 +3,12 @@ package consulo.language.impl.file;
 
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
@@ -17,7 +17,7 @@ import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.plain.PsiPlainTextFileImpl;
 import consulo.language.impl.psi.*;
-import consulo.language.psi.PsiFileEx;
+import consulo.language.internal.FileViewProviderInternal;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -35,10 +35,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -49,7 +49,6 @@ import java.util.function.Consumer;
 
 public abstract class AbstractFileViewProvider extends UserDataHolderBase implements FileViewProvider {
   private static final Logger LOG = Logger.getInstance(AbstractFileViewProvider.class);
-  public static final Key<Object> FREE_THREADED = Key.create("FREE_THREADED");
   private static final Key<Set<AbstractFileViewProvider>> KNOWN_COPIES = Key.create("KNOWN_COPIES");
   @Nonnull
   private final PsiManagerEx myManager;
@@ -67,7 +66,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     myEventSystemEnabled = eventSystemEnabled;
     setContent(new VirtualFileContent());
     myPhysical = isEventSystemEnabled() && !(virtualFile instanceof LightVirtualFile) && !(virtualFile.getFileSystem() instanceof NonPhysicalFileSystem);
-    virtualFile.putUserData(FREE_THREADED, isFreeThreaded(this));
+    virtualFile.putUserData(FileViewProviderInternal.FREE_THREADED, isFreeThreaded(this));
     if (virtualFile instanceof VirtualFileWindow && !(this instanceof FreeThreadedFileViewProvider) && !isFreeThreaded(this)) {
       throw new IllegalArgumentException("Must not create " + getClass() + " for injected file " + virtualFile + "; InjectedFileViewProvider must be used instead");
     }

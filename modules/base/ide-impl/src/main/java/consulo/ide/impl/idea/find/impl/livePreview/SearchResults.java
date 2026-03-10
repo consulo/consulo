@@ -1,8 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl.livePreview;
 
-
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.util.BombedStringUtil;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -19,9 +18,11 @@ import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.Pair;
@@ -69,8 +70,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         DOWN
     }
 
-
-    private final List<SearchResultsListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    private final List<SearchResultsListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
     @Nullable
     private FindResult myCursor;
@@ -109,6 +109,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         mySelectionManager = new SelectionManager(this); // important to initialize last for accessing other fields
     }
 
+    @RequiredUIAccess
     public void setNotFoundState(boolean isForward) {
         myNotFoundState = true;
         FindModel findModel = new FindModel();
@@ -215,6 +216,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return myEditor;
     }
 
+    @RequiredUIAccess
     public void clear() {
         searchCompleted(new ArrayList<>(), getEditor(), null, false, null, getStamp());
     }
@@ -233,7 +235,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         getSelection(editor, startsRef, endsRef);
 
         List<FindResult> results = new ArrayList<>();
-        ApplicationManager.getApplication().runReadAction(() -> {
+        ReadAction.run(() -> {
             Project project = getProject();
             if (myDisposed || project != null && project.isDisposed()) {
                 return;
@@ -283,7 +285,7 @@ public class SearchResults implements DocumentListener, CaretListener {
     }
 
     private static void getSelection(Editor editor, CompletableFuture<int[]> starts, CompletableFuture<int[]> ends) {
-        if (ApplicationManager.getApplication().isDispatchThread()) {
+        if (UIAccess.isUIThread()) {
             SelectionModel selection = editor.getSelectionModel();
             starts.complete(selection.getBlockSelectionStarts());
             ends.complete(selection.getBlockSelectionEnds());
@@ -301,10 +303,16 @@ public class SearchResults implements DocumentListener, CaretListener {
         }
     }
 
-    private void findInRange(@Nonnull TextRange range, @Nonnull Editor editor, @Nonnull FindModel findModel, @Nonnull List<? super FindResult> results) {
+    private void findInRange(
+        @Nonnull TextRange range,
+        @Nonnull Editor editor,
+        @Nonnull FindModel findModel,
+        @Nonnull List<? super FindResult> results
+    ) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(editor.getDocument());
 
-        // Document can change even while we're holding read lock (example case - console), so we're taking an immutable snapshot of text here
+        // Document can change even while we're holding read lock (example case - console),
+        // so we're taking an immutable snapshot of text here
         CharSequence charSequence = editor.getDocument().getImmutableCharSequence();
 
         int offset = range.getStartOffset();
@@ -352,7 +360,15 @@ public class SearchResults implements DocumentListener, CaretListener {
         myEditor.getDocument().removeDocumentListener(this);
     }
 
-    private void searchCompleted(@Nonnull List<FindResult> occurrences, @Nonnull Editor editor, @Nullable FindModel findModel, boolean toChangeSelection, @Nullable TextRange next, int stamp) {
+    @RequiredUIAccess
+    private void searchCompleted(
+        @Nonnull List<FindResult> occurrences,
+        @Nonnull Editor editor,
+        @Nullable FindModel findModel,
+        boolean toChangeSelection,
+        @Nullable TextRange next,
+        int stamp
+    ) {
         if (stamp < myLastUpdatedStamp) {
             return;
         }
@@ -410,6 +426,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         myExcluded.removeAll(invalid);
     }
 
+    @RequiredUIAccess
     private void updateCursor(@Nullable TextRange oldCursorRange, @Nullable TextRange next) {
         boolean justReplaced = next != null;
         boolean toPush = true;
@@ -419,13 +436,11 @@ public class SearchResults implements DocumentListener, CaretListener {
                     if (oldCursorRange != null && !myFindModel.isGlobal()) {
                         myCursor = firstOccurrenceAfterOffset(oldCursorRange.getEndOffset());
                     }
+                    else if (justReplaced) {
+                        nextOccurrence(false, next, false, true, false);
+                    }
                     else {
-                        if (justReplaced) {
-                            nextOccurrence(false, next, false, true, false);
-                        }
-                        else {
-                            myCursor = oldCursorRange == null ? firstOccurrenceAtOrAfterCaret() : firstOccurrenceAfterCaret();
-                        }
+                        myCursor = oldCursorRange == null ? firstOccurrenceAtOrAfterCaret() : firstOccurrenceAfterCaret();
                     }
                 }
                 else {
@@ -595,6 +610,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return null;
     }
 
+    @RequiredUIAccess
     public void prevOccurrence(boolean findSelected) {
         if (findSelected) {
             if (mySelectionManager.removeCurrentSelection()) {
@@ -643,6 +659,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         myCursorPositions.push(Pair.create(myFindModel, myCursor));
     }
 
+    @RequiredUIAccess
     public void nextOccurrence(boolean retainOldSelection) {
         if (myFindModel == null) {
             return;
@@ -651,7 +668,14 @@ public class SearchResults implements DocumentListener, CaretListener {
         push();
     }
 
-    private void nextOccurrence(boolean processFromTheBeginning, TextRange cursor, boolean toNotify, boolean justReplaced, boolean retainOldSelection) {
+    @RequiredUIAccess
+    private void nextOccurrence(
+        boolean processFromTheBeginning,
+        TextRange cursor,
+        boolean toNotify,
+        boolean justReplaced,
+        boolean retainOldSelection
+    ) {
         if (myNotFoundState) {
             myNotFoundState = false;
             processFromTheBeginning = true;

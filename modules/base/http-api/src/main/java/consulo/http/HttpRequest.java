@@ -23,7 +23,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Map;
 
 public interface HttpRequest {
@@ -36,7 +38,17 @@ public interface HttpRequest {
     String statusMessage() throws IOException;
 
     @Nonnull
-    Map<String, String> responseHeaders() throws IOException;
+    Map<String, List<String>> responseHeaders() throws IOException;
+
+    @Nonnull
+    HttpVersion version();
+
+    @Nullable
+    default String headerValue(@Nonnull String header) throws IOException {
+        Map<String, List<String>> map = responseHeaders();
+        List<String> headers = map.get(header);
+        return headers == null || headers.isEmpty() ? null : headers.getFirst();
+    }
 
     @Nullable
     String getContentEncoding() throws IOException;
@@ -56,7 +68,11 @@ public interface HttpRequest {
     /**
      * @deprecated Called automatically on open connection. Use {@link HttpRequestBuilder#tryConnect()} to get response code
      */
-    boolean isSuccessful() throws IOException;
+    default boolean isSuccessful() throws IOException {
+        int code = statusCode();
+        // zero mean it's not http connection
+        return code == 0 ||code == HttpURLConnection.HTTP_OK;
+    }
 
     @Nonnull
     default File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {

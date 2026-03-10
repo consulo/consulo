@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Data element in the GML Structure.
@@ -19,11 +20,11 @@ public class mxGraphMlNode {
 
   private mxGraphMlData nodeData;
 
-  private List<mxGraphMlGraph> nodeGraphList = new ArrayList<mxGraphMlGraph>();
+  private List<mxGraphMlGraph> nodeGraphList = new ArrayList<>();
 
-  private HashMap<String, mxGraphMlData> nodeDataMap = new HashMap<String, mxGraphMlData>();
+  private Map<String, mxGraphMlData> nodeDataMap = new HashMap<>();
 
-  private HashMap<String, mxGraphMlPort> nodePortMap = new HashMap<String, mxGraphMlPort>();
+  private Map<String, mxGraphMlPort> nodePortMap = new HashMap<>();
 
   /**
    * Construct a node with Id and one data element
@@ -79,11 +80,11 @@ public class mxGraphMlNode {
     this.nodeId = nodeId;
   }
 
-  public HashMap<String, mxGraphMlData> getNodeDataMap() {
+  public Map<String, mxGraphMlData> getNodeDataMap() {
     return nodeDataMap;
   }
 
-  public void setNodeDataMap(HashMap<String, mxGraphMlData> nodeDataMap) {
+  public void setNodeDataMap(Map<String, mxGraphMlData> nodeDataMap) {
     this.nodeDataMap = nodeDataMap;
   }
 
@@ -95,11 +96,11 @@ public class mxGraphMlNode {
     this.nodeGraphList = nodeGraph;
   }
 
-  public HashMap<String, mxGraphMlPort> getNodePort() {
+  public Map<String, mxGraphMlPort> getNodePort() {
     return nodePortMap;
   }
 
-  public void setNodePort(HashMap<String, mxGraphMlPort> nodePort) {
+  public void setNodePort(Map<String, mxGraphMlPort> nodePort) {
     this.nodePortMap = nodePort;
   }
 

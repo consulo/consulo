@@ -20,7 +20,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.StringEscapeUtil;
 import consulo.versionControlSystem.change.patch.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -267,7 +267,7 @@ public class PatchReader {
                     if (sb.length() > 0) {
                         sb.append("\n");
                     }
-                    sb.append(StringUtil.unescapeStringCharacters(line.substring(UnifiedDiffWriter.ADD_INFO_LINE_START.length())));
+                    StringEscapeUtil.unescape(line, UnifiedDiffWriter.ADD_INFO_LINE_START.length(), line.length(), sb);
                 }
             }
         }

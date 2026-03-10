@@ -34,6 +34,7 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.event;
     exports consulo.ui.ex.awtUnsafe;
     exports consulo.ui.ex.keymap;
+    exports consulo.ui.ex.coroutine;
     exports consulo.ui.ex.keymap.localize;
     exports consulo.ui.ex.keymap.event;
     exports consulo.ui.ex.keymap.util;

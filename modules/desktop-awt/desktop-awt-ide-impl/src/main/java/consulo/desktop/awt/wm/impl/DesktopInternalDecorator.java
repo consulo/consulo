@@ -19,18 +19,18 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.actions.*;
+import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
-import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.action.ResizeToolWindowDownAction;
 import consulo.project.ui.impl.internal.wm.action.ResizeToolWindowLeftAction;
 import consulo.project.ui.impl.internal.wm.action.ResizeToolWindowRightAction;
@@ -140,7 +140,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         JPanel innerPanel = new JPanel(new BorderLayout());
         JComponent toolWindowComponent = myToolWindow.getComponent();
         if (!dumbAware) {
-            toolWindowComponent = DumbService.getInstance(myProject).wrapGently(toolWindowComponent, myProject);
+            toolWindowComponent = DumbUnawareHider.wrapGently(myProject, toolWindowComponent, myProject);
         }
         innerPanel.add(toolWindowComponent, BorderLayout.CENTER);
 

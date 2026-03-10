@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.codeInspection.ex.LocalDescriptorsUtil;
 import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -68,6 +67,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -754,7 +754,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         LocalizeValue tooltip = LocalizeValue.empty();
         if (descriptor.showTooltip()) {
             tooltip = message.map(text -> XmlStringUtil.wrapInHtml(
-                (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeString(text)) + link
+                (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeText(text)) + link
             ));
         }
         HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element);

@@ -40,7 +40,6 @@ public final class CoroutineContext extends CoroutineEnvironment {
 
     private CountDownLatch scopesFinishedSignal = new CountDownLatch(1);
 
-
     /**
      * Creates a new instance with a specific coroutine executor and scheduler.
      * The latter will be used to execute timed coroutine steps.
@@ -51,6 +50,12 @@ public final class CoroutineContext extends CoroutineEnvironment {
     public CoroutineContext(Executor executor, ScheduledExecutorService scheduler) {
         this.executor = executor;
         this.scheduler = scheduler;
+    }
+
+    public CoroutineContext copy() {
+        CoroutineContext context = new CoroutineContext(executor, scheduler);
+        copyCopyableDataTo(context);
+        return context;
     }
 
     /**

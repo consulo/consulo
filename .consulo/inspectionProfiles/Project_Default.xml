@@ -1,6 +1,7 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="AssertJAssertionsConverter" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConstantConditions" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="REPORT_CONSTANT_REFERENCE_VALUES" value="false" />
     </inspection_tool>

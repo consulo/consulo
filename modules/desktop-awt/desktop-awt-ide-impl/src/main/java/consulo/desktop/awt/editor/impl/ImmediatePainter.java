@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.awt.hacking.SunVolatileImageHacking;
@@ -21,11 +20,11 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awt.ImageUtil;
@@ -35,6 +34,7 @@ import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
+import consulo.util.collection.Lists;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +45,7 @@ import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author Pavel Fatin
@@ -101,22 +102,24 @@ class ImmediatePainter {
         return false;
     }
 
+    @RequiredUIAccess
     private static boolean canPaintImmediately(DesktopEditorImpl editor) {
         CaretModel caretModel = editor.getCaretModel();
         Caret caret = caretModel.getPrimaryCaret();
         Document document = editor.getDocument();
 
-        return document instanceof DocumentImpl &&
-            editor.getHighlighter() instanceof LexerEditorHighlighter &&
-            !(editor.getComponent().getParent() instanceof EditorTextField) &&
-            editor.myView.getTopOverhang() <= 0 && editor.myView.getBottomOverhang() <= 0 &&
-            !editor.getSelectionModel().hasSelection() &&
-            caretModel.getCaretCount() == 1 &&
-            !isInVirtualSpace(editor, caret) &&
-            !isInsertion(document, caret.getOffset()) &&
-            !caret.isAtRtlLocation() &&
-            !caret.isAtBidiRunBoundary() &&
-            noBorderEffectPainted(editor, caret);
+        return document instanceof DocumentImpl
+            && editor.getHighlighter() instanceof LexerEditorHighlighter
+            && !(editor.getComponent().getParent() instanceof EditorTextField)
+            && editor.myView.getTopOverhang() <= 0
+            && editor.myView.getBottomOverhang() <= 0
+            && !editor.getSelectionModel().hasSelection()
+            && caretModel.getCaretCount() == 1
+            && !isInVirtualSpace(editor, caret)
+            && !isInsertion(document, caret.getOffset())
+            && !caret.isAtRtlLocation()
+            && !caret.isAtBidiRunBoundary()
+            && noBorderEffectPainted(editor, caret);
     }
 
     private static boolean noBorderEffectPainted(EditorEx editor, Caret caret) {
@@ -137,6 +140,7 @@ class ImmediatePainter {
         return offset < document.getTextLength() && document.getCharsSequence().charAt(offset) != '\n';
     }
 
+    @RequiredUIAccess
     private void paintImmediately(Graphics2D g, int offset, char c2) {
         DesktopEditorImpl editor = myEditor;
         Document document = editor.getDocument();
@@ -156,9 +160,11 @@ class ImmediatePainter {
             attributes = highlighter.getAttributesForPreviousAndTypedChars(document, offset, c2);
         }
         catch (Exception e) {
-            throw new RuntimeException("Error calculating attributes, highlighter: " + highlighter + ", offset: " + offset + ", document length" +
-                document.getTextLength() + ", highlighter's last offset:" + highlighter.getSegments().getLastValidOffset(),
-                e);
+            throw new RuntimeException(
+                "Error calculating attributes, highlighter: " + highlighter + ", offset: " + offset + ", document length" +
+                    document.getTextLength() + ", highlighter's last offset:" + highlighter.getSegments().getLastValidOffset(),
+                e
+            );
         }
         updateAttributes(editor, offset, attributes);
 
@@ -186,7 +192,8 @@ class ImmediatePainter {
             : JBUIScale.scale(caret.getVisualAttributes().getWidth(settings.getLineCursorWidth()));
         float caretShift = isBlockCursor ? 0 : caretWidth <= 1 ? 0 : 1 / JBUIScale.sysScale(g);
         Rectangle2D caretRectangle = new Rectangle2D.Float(p2x + width2 - caretShift, p2y - topOverhang,
-            caretWidth, caretHeight);
+            caretWidth, caretHeight
+        );
 
         float rectangle2Start = (float) PaintUtil.alignToInt(p2x, g, PaintUtil.RoundingMode.FLOOR);
         float rectangle2End = (float) PaintUtil.alignToInt(p2x + width2 + caretWidth - caretShift, g, PaintUtil.RoundingMode.CEIL);
@@ -209,9 +216,11 @@ class ImmediatePainter {
         Shape originalClip = g.getClip();
 
         float clipStartX = (float) PaintUtil.alignToInt(p2x > editor.getContentComponent().getInsets().left ? p2x - caretShift : p2x,
-            g, PaintUtil.RoundingMode.FLOOR);
+            g, PaintUtil.RoundingMode.FLOOR
+        );
         float clipEndX = (float) PaintUtil.alignToInt(p2x + width2 - caretShift + caretWidth,
-            g, PaintUtil.RoundingMode.CEIL);
+            g, PaintUtil.RoundingMode.CEIL
+        );
         if (clipEndX > editor.getContentComponent().getWidth()) {
             // we cannot paint beyond component bounds (this will go beyond dev clip in graphics anyway)
             return;
@@ -256,7 +265,7 @@ class ImmediatePainter {
     }
 
     private void createOrUpdateImageBuffer(JComponent component, Graphics2D graphics, Dimension size) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             if (myImage == null || !isLargeEnough(myImage, size)) {
                 int width = (int) Math.ceil(PaintUtil.alignToInt(size.width, graphics, PaintUtil.RoundingMode.CEIL));
                 int height = (int) Math.ceil(PaintUtil.alignToInt(size.height, graphics, PaintUtil.RoundingMode.CEIL));
@@ -319,7 +328,7 @@ class ImmediatePainter {
         List<RangeHighlighterEx> list1 = new ArrayList<>();
         List<RangeHighlighterEx> list2 = new ArrayList<>();
 
-        Processor<RangeHighlighterEx> processor = highlighter -> {
+        Predicate<RangeHighlighterEx> processor = highlighter -> {
             if (!highlighter.isValid()) {
                 return true;
             }
@@ -330,7 +339,9 @@ class ImmediatePainter {
                 list1.add(highlighter);
             }
 
-            if (isLineHighlighter || highlighter.getEndOffset() > offset || (highlighter.getEndOffset() == offset && (highlighter.isGreedyToRight()))) {
+            if (isLineHighlighter
+                || highlighter.getEndOffset() > offset
+                || (highlighter.getEndOffset() == offset && highlighter.isGreedyToRight())) {
                 list2.add(highlighter);
             }
 
@@ -345,11 +356,15 @@ class ImmediatePainter {
     }
 
     // TODO Unify with consulo.ide.impl.idea.openapi.editor.impl.view.IterationState.setAttributes
-    private static void updateAttributes(DesktopEditorImpl editor, TextAttributes attributes, List<? extends RangeHighlighterEx> highlighters) {
+    private static void updateAttributes(
+        DesktopEditorImpl editor,
+        TextAttributes attributes,
+        List<? extends RangeHighlighterEx> highlighters
+    ) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
 
         if (highlighters.size() > 1) {
-            ContainerUtil.quickSort(highlighters, IterationState.createByLayerThenByAttributesComparator(colorsScheme));
+            Lists.quickSort(highlighters, IterationState.createByLayerThenByAttributesComparator(colorsScheme));
         }
 
         TextAttributes syntax = attributes;

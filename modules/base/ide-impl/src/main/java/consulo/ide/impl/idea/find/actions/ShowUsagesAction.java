@@ -33,6 +33,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.internal.AsyncEditorLoader;
 import consulo.find.FindManager;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesHandler;
@@ -44,7 +45,6 @@ import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
@@ -52,7 +52,6 @@ import consulo.ide.impl.idea.usages.impl.GroupNode;
 import consulo.ide.impl.idea.usages.impl.UsageNode;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.LangDataKeys;
@@ -97,6 +96,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -1066,7 +1066,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
         data.addAll(visibleNodes);
         if (data.isEmpty()) {
-            String progressText = StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(presentation));
+            String progressText = XmlStringUtil.escapeText(UsageViewManagerImpl.getProgressTitle(presentation));
             data.add(createStringNode(progressText));
         }
         Collections.sort(data, USAGE_NODE_COMPARATOR);
@@ -1328,6 +1328,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                 HintManager.getInstance().showInformationHint(editor, label);
             }
         };
+
         if (editor == null) {
             runnable.run();
         }

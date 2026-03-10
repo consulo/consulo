@@ -148,7 +148,7 @@ public class BeanBinding extends Binding {
         return true;
     }
 
-    public Map<String, Float> computeBindingWeights(LinkedHashSet<String> accessorNameTracker) {
+    public Map<String, Float> computeBindingWeights(Set<String> accessorNameTracker) {
         Map<String, Float> weights = new HashMap<>(accessorNameTracker.size());
         float weight = 0;
         float step = (float) myBindings.length / (float) accessorNameTracker.size();

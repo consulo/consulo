@@ -23,6 +23,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -352,7 +353,7 @@ public class MultiLineLabelUI extends BasicLabelUI {
     }
     myString = convertTabs(str, 2);
 
-    ArrayList list = new ArrayList();
+    List list = new ArrayList();
     StringTokenizer st = new StringTokenizer(str, "\n\r");
     while (st.hasMoreTokens()) {
       list.add(st.nextToken());

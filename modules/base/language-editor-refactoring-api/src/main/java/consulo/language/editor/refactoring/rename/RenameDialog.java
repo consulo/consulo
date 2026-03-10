@@ -92,7 +92,7 @@ public class RenameDialog extends RefactoringDialog {
         createNewNameComponent();
         init();
 
-        myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(getLabelText(), false)));
+        myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(getLabelText())));
         boolean toSearchInComments = isToSearchInCommentsForRename();
         myCbSearchInComments.setValue(toSearchInComments);
 

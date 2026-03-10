@@ -29,6 +29,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
@@ -65,18 +66,18 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
 
     private void init() {
         if (myCompound == null) {
-            myCompound = new SettingsEditorGroup<RunnerAndConfigurationSettings>();
+            myCompound = new SettingsEditorGroup<>();
             Disposer.register(this, myCompound);
             if (myConfigurationEditor instanceof SettingsEditorGroup) {
                 SettingsEditorGroup<RunConfiguration> group = (SettingsEditorGroup<RunConfiguration>) myConfigurationEditor;
-                List<Pair<String, SettingsEditor<RunConfiguration>>> editors = group.getEditors();
-                for (Pair<String, SettingsEditor<RunConfiguration>> pair : editors) {
+                List<Pair<LocalizeValue, SettingsEditor<RunConfiguration>>> editors = group.getEditors();
+                for (Pair<LocalizeValue, SettingsEditor<RunConfiguration>> pair : editors) {
                     myCompound.addEditor(pair.getFirst(), new ConfigToSettingsWrapper(pair.getSecond()));
                 }
             }
             else {
                 myCompound.addEditor(
-                    ExecutionLocalize.runConfigurationConfigurationTabTitle().get(),
+                    ExecutionLocalize.runConfigurationConfigurationTabTitle(),
                     new ConfigToSettingsWrapper(myConfigurationEditor)
                 );
             }
@@ -99,7 +100,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
 
             if (myRunnerEditors.size() > 0) {
                 myCompound.addEditor(
-                    ExecutionLocalize.runConfigurationStartupConnectionRabTitle().get(),
+                    ExecutionLocalize.runConfigurationStartupConnectionRabTitle(),
                     new CompositeSettingsEditor<>(getFactory()) {
                         @Override
                         public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {

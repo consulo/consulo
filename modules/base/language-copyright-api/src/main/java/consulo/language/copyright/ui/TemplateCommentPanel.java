@@ -93,7 +93,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   private Project myProject;
 
   public TemplateCommentPanel(@Nonnull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
-    this(fileType.getName(), fileType, parentPanel, project);
+    this(fileType.getId(), fileType, parentPanel, project);
     myAllowBlock = FileTypeUtil.hasBlockComment(fileType);
     myCommenter = FileTypeUtil.getCommenter(fileType);
     myAllowSeparator = UpdateCopyrightsProvider.forFileType(fileType).isAllowSeparator();

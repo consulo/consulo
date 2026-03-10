@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.script;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.Maps;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,39 +29,39 @@ import java.io.Writer;
 import java.util.Map;
 
 public class IDE {
-  public final Application application = ApplicationManager.getApplication();
-  public final Project project;
+    public final Application application = ApplicationManager.getApplication();
+    public final Project project;
 
-  private final Map<Object, Object> bindings = ContainerUtil.newConcurrentMap();
-  private final IdeScriptEngine myEngine;
+    private final Map<Object, Object> bindings = Maps.newConcurrentHashMap();
+    private final IdeScriptEngine myEngine;
 
-  public IDE(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
-    this.project = project;
-    myEngine = engine;
-  }
-
-  public void print(Object o) {
-    print(myEngine.getStdOut(), o);
-  }
-
-  public void error(Object o) {
-    print(myEngine.getStdErr(), o);
-  }
-
-  public Object put(Object key, Object value) {
-    return value == null ? bindings.remove(key) : bindings.put(key, value);
-  }
-
-  public Object get(Object key) {
-    return bindings.get(key);
-  }
-
-  private static void print(Writer writer, Object o) {
-    try {
-      writer.append(String.valueOf(o)).append("\n");
+    public IDE(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
+        this.project = project;
+        myEngine = engine;
     }
-    catch (IOException e) {
-      throw new RuntimeException(e);
+
+    public void print(Object o) {
+        print(myEngine.getStdOut(), o);
     }
-  }
+
+    public void error(Object o) {
+        print(myEngine.getStdErr(), o);
+    }
+
+    public Object put(Object key, Object value) {
+        return value == null ? bindings.remove(key) : bindings.put(key, value);
+    }
+
+    public Object get(Object key) {
+        return bindings.get(key);
+    }
+
+    private static void print(Writer writer, Object o) {
+        try {
+            writer.append(String.valueOf(o)).append("\n");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

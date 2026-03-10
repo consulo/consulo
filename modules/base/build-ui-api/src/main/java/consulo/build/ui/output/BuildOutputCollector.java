@@ -21,7 +21,6 @@ import jakarta.annotation.Nullable;
 import java.util.Deque;
 import java.util.LinkedList;
 
-// from kotlin
 public class BuildOutputCollector implements BuildOutputInstantReader {
   private final BuildOutputInstantReader myReader;
 

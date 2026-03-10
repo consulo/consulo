@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scopeView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -23,7 +24,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
@@ -42,6 +42,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -49,13 +50,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -65,9 +63,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @ExtensionImpl
 public class ScopeViewPane extends AbstractProjectViewPane {
     private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
-    private LinkedHashMap<String, NamedScopeFilter> myFilters;
+    private SequencedMap<String, NamedScopeFilter> myFilters;
 
-    @NonNls
     public static final String ID = "Scope";
     private final ProjectView myProjectView;
     private ScopeTreeViewPanel myViewPanel;
@@ -167,7 +164,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     @Override
     @Nonnull
     public String[] getSubIds() {
-        LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+        SequencedMap<String, NamedScopeFilter> map = myFilters;
         if (map == null || map.isEmpty()) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
@@ -202,12 +199,14 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
+    @RequiredReadAction
     public void select(Object element, VirtualFile file, boolean requestFocus) {
         if (file == null) {
             return;
         }
-        PsiFileSystemItem psiFile =
-            file.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(file) : PsiManager.getInstance(myProject).findFile(file);
+        PsiFileSystemItem psiFile = file.isDirectory()
+            ? PsiManager.getInstance(myProject).findDirectory(file)
+            : PsiManager.getInstance(myProject).findFile(file);
         if (psiFile == null) {
             return;
         }
@@ -215,7 +214,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
             return;
         }
 
-        List<NamedScope> allScopes = new ArrayList<NamedScope>();
+        List<NamedScope> allScopes = new ArrayList<>();
         ContainerUtil.addAll(allScopes, myDependencyValidationManager.getScopes());
         ContainerUtil.addAll(allScopes, myNamedScopeManager.getScopes());
         for (int i = 0; i < allScopes.size(); i++) {
@@ -314,13 +313,13 @@ public class ScopeViewPane extends AbstractProjectViewPane {
 
     @Nullable
     NamedScopeFilter getFilter(@Nullable String subId) {
-        LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+        Map<String, NamedScopeFilter> map = myFilters;
         return map == null || subId == null ? null : map.get(subId);
     }
 
     @Nonnull
-    private static LinkedHashMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
-        LinkedHashMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
+    private static SequencedMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
+        SequencedMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
         for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {
             NamedScopeFilter old = map.put(filter.toString(), filter);
             if (old != null) {

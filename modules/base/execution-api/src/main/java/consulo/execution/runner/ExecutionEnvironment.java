@@ -32,202 +32,205 @@ import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
-  public static final Key<ExecutionEnvironment> KEY = Key.create("executionEnvironment");
+    public static final Key<ExecutionEnvironment> KEY = Key.create("executionEnvironment");
 
-  private static final AtomicLong myIdHolder = new AtomicLong(1L);
+    private static final AtomicLong myIdHolder = new AtomicLong(1L);
 
-  @Nonnull
-  private final Project myProject;
+    @Nonnull
+    private final Project myProject;
 
-  @Nonnull
-  private RunProfile myRunProfile;
-  @Nonnull
-  private final Executor myExecutor;
-  @Nonnull
-  private ExecutionTarget myTarget;
+    @Nonnull
+    private RunProfile myRunProfile;
+    @Nonnull
+    private final Executor myExecutor;
+    @Nonnull
+    private ExecutionTarget myTarget;
 
-  @Nullable
-  private RunnerSettings myRunnerSettings;
-  @Nullable
-  private ConfigurationPerRunnerSettings myConfigurationSettings;
-  @Nullable
-  private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
-  @Nullable
-  private RunContentDescriptor myContentToReuse;
-  private final ProgramRunner<?> myRunner;
-  private long myExecutionId = 0;
-  @Nullable
-  private DataContext myDataContext;
+    @Nullable
+    private RunnerSettings myRunnerSettings;
+    @Nullable
+    private ConfigurationPerRunnerSettings myConfigurationSettings;
+    @Nullable
+    private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
+    @Nullable
+    private RunContentDescriptor myContentToReuse;
+    private final ProgramRunner<?> myRunner;
+    private long myExecutionId = 0;
+    @Nullable
+    private DataContext myDataContext;
+    @Nullable
+    private  ProgramRunner.Callback myCallback;
 
-  @TestOnly
-  public ExecutionEnvironment() {
-    myProject = null;
-    myContentToReuse = null;
-    myRunnerAndConfigurationSettings = null;
-    myExecutor = null;
-    myRunner = null;
-  }
 
-  public ExecutionEnvironment(@Nonnull Executor executor, @Nonnull ProgramRunner runner, @Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Project project) {
-    this(configuration.getConfiguration(), executor, DefaultExecutionTarget.INSTANCE, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, null,
-         runner);
-  }
-
-  /**
-   * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
-   * to remove in IDEA 14
-   */
-  @TestOnly
-  public ExecutionEnvironment(@Nonnull Executor executor,
-                              @Nonnull ProgramRunner runner,
-                              @Nonnull ExecutionTarget target,
-                              @Nonnull RunnerAndConfigurationSettings configuration,
-                              @Nonnull Project project) {
-    this(configuration.getConfiguration(), executor, target, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, configuration, runner);
-  }
-
-  /**
-   * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironment(@Nonnull RunProfile runProfile, @Nonnull Executor executor, @Nonnull Project project, @Nullable RunnerSettings runnerSettings) {
-    //noinspection ConstantConditions
-    this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile));
-  }
-
-  ExecutionEnvironment(@Nonnull RunProfile runProfile,
-                       @Nonnull Executor executor,
-                       @Nonnull ExecutionTarget target,
-                       @Nonnull Project project,
-                       @Nullable RunnerSettings runnerSettings,
-                       @Nullable ConfigurationPerRunnerSettings configurationSettings,
-                       @Nullable RunContentDescriptor contentToReuse,
-                       @Nullable RunnerAndConfigurationSettings settings,
-                       @Nonnull ProgramRunner<?> runner) {
-    myExecutor = executor;
-    myTarget = target;
-    myRunProfile = runProfile;
-    myRunnerSettings = runnerSettings;
-    myConfigurationSettings = configurationSettings;
-    myProject = project;
-    setContentToReuse(contentToReuse);
-    myRunnerAndConfigurationSettings = settings;
-
-    myRunner = runner;
-  }
-
-  @Override
-  public void dispose() {
-    myContentToReuse = null;
-  }
-
-  @Nonnull
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Nonnull
-  public ExecutionTarget getExecutionTarget() {
-    return myTarget;
-  }
-
-  @Nonnull
-  public RunProfile getRunProfile() {
-    return myRunProfile;
-  }
-
-  @Nullable
-  public RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
-    return myRunnerAndConfigurationSettings;
-  }
-
-  @Nullable
-  public RunContentDescriptor getContentToReuse() {
-    return myContentToReuse;
-  }
-
-  public void setContentToReuse(@Nullable RunContentDescriptor contentToReuse) {
-    myContentToReuse = contentToReuse;
-
-    if (contentToReuse != null) {
-      Disposer.register(contentToReuse, this);
+    public ExecutionEnvironment(@Nonnull Executor executor, @Nonnull ProgramRunner runner, @Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Project project) {
+        this(configuration.getConfiguration(), executor, DefaultExecutionTarget.INSTANCE, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, null,
+            runner);
     }
-  }
 
-  @Nullable
-  @Deprecated
-  /**
-   * Use {@link #getRunner()} instead
-   * to remove in IDEA 15
-   */ public String getRunnerId() {
-    return myRunner.getRunnerId();
-  }
-
-  @Nonnull
-  public ProgramRunner<?> getRunner() {
-    return myRunner;
-  }
-
-  @Nullable
-  public RunnerSettings getRunnerSettings() {
-    return myRunnerSettings;
-  }
-
-  @Nullable
-  public ConfigurationPerRunnerSettings getConfigurationSettings() {
-    return myConfigurationSettings;
-  }
-
-  @Nullable
-  public RunProfileState getState() throws ExecutionException {
-    return myRunProfile.getState(myExecutor, this);
-  }
-
-  public long assignNewExecutionId() {
-    myExecutionId = myIdHolder.incrementAndGet();
-    return myExecutionId;
-  }
-
-  public void setExecutionId(long executionId) {
-    myExecutionId = executionId;
-  }
-
-  public long getExecutionId() {
-    return myExecutionId;
-  }
-
-  @Nonnull
-  public Executor getExecutor() {
-    return myExecutor;
-  }
-
-  @Override
-  public String toString() {
-    if (myRunnerAndConfigurationSettings != null) {
-      return myRunnerAndConfigurationSettings.getName();
+    /**
+     * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
+     * to remove in IDEA 14
+     */
+    @TestOnly
+    public ExecutionEnvironment(@Nonnull Executor executor,
+                                @Nonnull ProgramRunner runner,
+                                @Nonnull ExecutionTarget target,
+                                @Nonnull RunnerAndConfigurationSettings configuration,
+                                @Nonnull Project project) {
+        this(configuration.getConfiguration(), executor, target, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, configuration, runner);
     }
-    else if (myRunProfile != null) {
-      return myRunProfile.getName();
-    }
-    else if (myContentToReuse != null) {
-      return myContentToReuse.getDisplayName();
-    }
-    return super.toString();
-  }
 
-  public void setDataContext(@Nonnull DataContext dataContext) {
-    myDataContext = ExecutionDataContextCacher.getInstance().getCachedContext(dataContext);
-  }
+    /**
+     * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
+     * to remove in IDEA 15
+     */
+    public ExecutionEnvironment(@Nonnull RunProfile runProfile, @Nonnull Executor executor, @Nonnull Project project, @Nullable RunnerSettings runnerSettings) {
+        //noinspection ConstantConditions
+        this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile));
+    }
 
-  @Nullable
-  public DataContext getDataContext() {
-    return myDataContext;
-  }
+    ExecutionEnvironment(@Nonnull RunProfile runProfile,
+                         @Nonnull Executor executor,
+                         @Nonnull ExecutionTarget target,
+                         @Nonnull Project project,
+                         @Nullable RunnerSettings runnerSettings,
+                         @Nullable ConfigurationPerRunnerSettings configurationSettings,
+                         @Nullable RunContentDescriptor contentToReuse,
+                         @Nullable RunnerAndConfigurationSettings settings,
+                         @Nonnull ProgramRunner<?> runner) {
+        myExecutor = executor;
+        myTarget = target;
+        myRunProfile = runProfile;
+        myRunnerSettings = runnerSettings;
+        myConfigurationSettings = configurationSettings;
+        myProject = project;
+        setContentToReuse(contentToReuse);
+        myRunnerAndConfigurationSettings = settings;
+
+        myRunner = runner;
+    }
+
+    @Override
+    public void dispose() {
+        myContentToReuse = null;
+    }
+
+    @Nonnull
+    public Project getProject() {
+        return myProject;
+    }
+
+    @Nonnull
+    public ExecutionTarget getExecutionTarget() {
+        return myTarget;
+    }
+
+    @Nonnull
+    public RunProfile getRunProfile() {
+        return myRunProfile;
+    }
+
+    @Nullable
+    public RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
+        return myRunnerAndConfigurationSettings;
+    }
+
+    @Nullable
+    public RunContentDescriptor getContentToReuse() {
+        return myContentToReuse;
+    }
+
+    public void setContentToReuse(@Nullable RunContentDescriptor contentToReuse) {
+        myContentToReuse = contentToReuse;
+
+        if (contentToReuse != null) {
+            Disposer.register(contentToReuse, this);
+        }
+    }
+
+    @Nullable
+    @Deprecated
+    /**
+     * Use {@link #getRunner()} instead
+     * to remove in IDEA 15
+     */ public String getRunnerId() {
+        return myRunner.getRunnerId();
+    }
+
+    @Nonnull
+    public ProgramRunner<?> getRunner() {
+        return myRunner;
+    }
+
+    @Nullable
+    public RunnerSettings getRunnerSettings() {
+        return myRunnerSettings;
+    }
+
+    @Nullable
+    public ConfigurationPerRunnerSettings getConfigurationSettings() {
+        return myConfigurationSettings;
+    }
+
+    @Nullable
+    public RunProfileState getState() throws ExecutionException {
+        return myRunProfile.getState(myExecutor, this);
+    }
+
+    public long assignNewExecutionId() {
+        myExecutionId = myIdHolder.incrementAndGet();
+        return myExecutionId;
+    }
+
+    public void setExecutionId(long executionId) {
+        myExecutionId = executionId;
+    }
+
+    public long getExecutionId() {
+        return myExecutionId;
+    }
+
+    @Nonnull
+    public Executor getExecutor() {
+        return myExecutor;
+    }
+
+    public void setCallback(@Nullable ProgramRunner.Callback callback) {
+        myCallback = callback;
+    }
+
+    @Nullable
+    public ProgramRunner.Callback getCallback() {
+        return myCallback;
+    }
+
+    @Override
+    public String toString() {
+        if (myRunnerAndConfigurationSettings != null) {
+            return myRunnerAndConfigurationSettings.getName();
+        }
+        else if (myRunProfile != null) {
+            return myRunProfile.getName();
+        }
+        else if (myContentToReuse != null) {
+            return myContentToReuse.getDisplayName();
+        }
+        return super.toString();
+    }
+
+    public void setDataContext(@Nonnull DataContext dataContext) {
+        myDataContext = ExecutionDataContextCacher.getInstance().getCachedContext(dataContext);
+    }
+
+    @Nullable
+    public DataContext getDataContext() {
+        return myDataContext;
+    }
 }

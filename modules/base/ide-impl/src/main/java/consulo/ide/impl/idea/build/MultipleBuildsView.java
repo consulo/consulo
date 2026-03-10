@@ -12,7 +12,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.project.Project;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -161,7 +161,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
                 }
 
                 BuildView view = myViewMap.computeIfAbsent(buildInfo, info -> {
-                    String selectionStateKey = "build.toolwindow." + myViewManager.getViewName() + ".selection.state";
+                    String selectionStateKey = "build.toolwindow." + myViewManager.getViewId() + ".selection.state";
                     BuildView buildView = new BuildView(myProject, buildInfo, selectionStateKey, myViewManager);
                     Disposer.register(this, buildView);
                     if (contentDescriptor != null) {
@@ -280,7 +280,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
                         ));
                     consoleComponent.add(tb.getComponent(), BorderLayout.WEST);
 
-                    myContent = ContentFactory.getInstance().createContent(consoleComponent, myViewManager.getViewName(), true);
+                    myContent = ContentFactory.getInstance().createContent(consoleComponent, myViewManager.getViewName().get(), true);
                     Disposer.register(myContent, () -> Disposer.dispose(MultipleBuildsView.this));
                     Disposer.register(myContent, () -> myViewManager.onBuildsViewRemove(MultipleBuildsView.this));
                     Image contentIcon = myViewManager.getContentIcon();

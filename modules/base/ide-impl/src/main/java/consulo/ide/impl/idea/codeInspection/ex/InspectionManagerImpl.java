@@ -70,7 +70,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
             protected ContentManager compute() {
                 ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
                 ToolWindow toolWindow =
-                    toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
+                    toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project, true);
                 ContentManager contentManager = toolWindow.getContentManager();
                 toolWindow.setIcon(PlatformIconGroup.toolwindowsProblems());
                 ContentManagerWatcher.watchContentManager(toolWindow, contentManager);

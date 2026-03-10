@@ -34,6 +34,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
@@ -292,16 +293,19 @@ public class InjectorUtils {
         });
     }
 
-    private static final Pattern MAP_ENTRY_PATTERN = Pattern.compile("([\\S&&[^=]]+)=(\"(?:[^\"]|\\\\\")*\"|\\S*)");
+    private static final Pattern MAP_ENTRY_PATTERN = Pattern.compile("([^\\s=]++)=(\"(?:[^\"\\\\]|\\\\.)*+\"|\\S*)");
 
     public static Map<String, String> decodeMap(CharSequence charSequence) {
         if (StringUtil.isEmpty(charSequence)) {
             return Collections.emptyMap();
         }
         Matcher matcher = MAP_ENTRY_PATTERN.matcher(charSequence);
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        Map<String, String> map = new LinkedHashMap<>();
         while (matcher.find()) {
-            map.put(StringUtil.unescapeStringCharacters(matcher.group(1)), StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2))));
+            map.put(
+                StringEscapeUtil.unescape(charSequence, matcher.start(1), matcher.end(1)),
+                StringEscapeUtil.unquote(charSequence, matcher.start(2), matcher.end(2), '"')
+            );
         }
         return map;
     }

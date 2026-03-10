@@ -71,7 +71,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.ide.impl.idea.util.ArrayUtil.toObjectArray;
+import static consulo.util.collection.ArrayUtil.toObjectArray;
 
 /**
  * @author Konstantin Bulenkov

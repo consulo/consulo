@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
+import consulo.fileEditor.internal.TextEditorComponentContainer;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

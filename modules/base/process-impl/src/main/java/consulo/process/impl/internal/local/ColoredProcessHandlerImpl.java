@@ -17,7 +17,7 @@ package consulo.process.impl.internal.local;
 
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 

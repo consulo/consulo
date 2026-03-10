@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
@@ -32,245 +32,253 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class OrderPanel<T> extends JPanel{
-  private String CHECKBOX_COLUMN_NAME;
+public abstract class OrderPanel<T> extends JPanel {
+    private String CHECKBOX_COLUMN_NAME;
 
-  private final Class<T> myEntryClass;
-  private final JTable myEntryTable;
+    private final Class<T> myEntryClass;
+    private final JTable myEntryTable;
 
-  private final List<OrderPanelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    private final List<OrderPanelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  private boolean myEntryEditable = false;
+    private boolean myEntryEditable = false;
 
-  protected OrderPanel(Class<T> entryClass) {
-    this(entryClass, true);
-  }
-
-  protected OrderPanel(Class<T> entryClass, boolean showCheckboxes) {
-    super(new BorderLayout());
-
-    myEntryClass = entryClass;
-
-    myEntryTable = new JBTable(new MyTableModel(showCheckboxes));
-    myEntryTable.setShowGrid(false);
-    myEntryTable.setDragEnabled(false);
-    myEntryTable.setShowHorizontalLines(false);
-    myEntryTable.setShowVerticalLines(false);
-    myEntryTable.setIntercellSpacing(new Dimension(0, 0));
-
-    myEntryTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-    myEntryTable.registerKeyboardAction(
-      e -> {
-        if(getCheckboxColumn() == -1) return;
-
-        int[] selectedRows = myEntryTable.getSelectedRows();
-        boolean currentlyMarked = true;
-        for (int idx = 0; idx < selectedRows.length; idx++) {
-          int selectedRow = selectedRows[idx];
-          if (selectedRow < 0 || !myEntryTable.isCellEditable(selectedRow, getCheckboxColumn())) {
-            return;
-          }
-          currentlyMarked &= ((Boolean)myEntryTable.getValueAt(selectedRow, getCheckboxColumn())).booleanValue();
-        }
-        for (int idx = 0; idx < selectedRows.length; idx++) {
-          myEntryTable.setValueAt(currentlyMarked? Boolean.FALSE : Boolean.TRUE, selectedRows[idx], getCheckboxColumn());
-        }
-      },
-      KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
-      JComponent.WHEN_FOCUSED
-    );
-
-    add(ScrollPaneFactory.createScrollPane(myEntryTable), BorderLayout.CENTER);
-
-    if (myEntryTable.getRowCount() > 0) {
-      myEntryTable.getSelectionModel().setSelectionInterval(0,0);
-    }
-  }
-
-  public void setEntriesEditable(boolean entryEditable) {
-    myEntryEditable = entryEditable;
-  }
-
-  public void setCheckboxColumnName(String name) {
-    int width;
-    if (StringUtil.isEmpty(name)) {
-      CHECKBOX_COLUMN_NAME = "";
-      width = new JCheckBox().getPreferredSize().width;
-    }
-    else {
-      CHECKBOX_COLUMN_NAME = name;
-      FontMetrics fontMetrics = myEntryTable.getFontMetrics(myEntryTable.getFont());
-      width = fontMetrics.stringWidth(" " + name + " ") + 4;
+    protected OrderPanel(Class<T> entryClass) {
+        this(entryClass, true);
     }
 
-    TableColumn checkboxColumn = myEntryTable.getColumnModel().getColumn(getCheckboxColumn());
-    checkboxColumn.setWidth(width);
-    checkboxColumn.setPreferredWidth(width);
-    checkboxColumn.setMaxWidth(width);
-    checkboxColumn.setMinWidth(width);
-  }
+    protected OrderPanel(Class<T> entryClass, boolean showCheckboxes) {
+        super(new BorderLayout());
 
-  public void moveSelectedItemsUp() {
-    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
-    try {
-      myInsideMove++;
-      TableUtil.moveSelectedItemsUp(myEntryTable);
-    }
-    finally {
-      myInsideMove--;
-    }
-    for (OrderPanelListener orderPanelListener : myListeners) {
-      orderPanelListener.entryMoved();
-    }
-  }
+        myEntryClass = entryClass;
 
-  public void moveSelectedItemsDown() {
-    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
-    try {
-      myInsideMove++;
-      TableUtil.moveSelectedItemsDown(myEntryTable);
-    }
-    finally {
-      myInsideMove--;
-    }
-    for (OrderPanelListener orderPanelListener : myListeners) {
-      orderPanelListener.entryMoved();
-    }
-  }
+        myEntryTable = new JBTable(new MyTableModel(showCheckboxes));
+        myEntryTable.setShowGrid(false);
+        myEntryTable.setDragEnabled(false);
+        myEntryTable.setShowHorizontalLines(false);
+        myEntryTable.setShowVerticalLines(false);
+        myEntryTable.setIntercellSpacing(new Dimension(0, 0));
 
-  private int myInsideMove = 0;
+        myEntryTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-  private boolean isInsideMove() {
-    return myInsideMove != 0;
-  }
+        myEntryTable.registerKeyboardAction(
+            e -> {
+                if (getCheckboxColumn() == -1) {
+                    return;
+                }
 
-  public void addListener(OrderPanelListener listener) {
-    myListeners.add(listener);
-  }
+                int[] selectedRows = myEntryTable.getSelectedRows();
+                boolean currentlyMarked = true;
+                for (int selectedRow : selectedRows) {
+                    if (selectedRow < 0 || !myEntryTable.isCellEditable(selectedRow, getCheckboxColumn())) {
+                        return;
+                    }
+                    currentlyMarked &= (Boolean) myEntryTable.getValueAt(selectedRow, getCheckboxColumn());
+                }
+                for (int selectedRow : selectedRows) {
+                    myEntryTable.setValueAt(currentlyMarked ? Boolean.FALSE : Boolean.TRUE, selectedRow, getCheckboxColumn());
+                }
+            },
+            KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+            JComponent.WHEN_FOCUSED
+        );
 
-  public void removeListener(OrderPanelListener listener) {
-    myListeners.remove(listener);
-  }
+        add(ScrollPaneFactory.createScrollPane(myEntryTable), BorderLayout.CENTER);
 
-  public JTable getEntryTable() {
-    return myEntryTable;
-  }
-
-  public void clear() {
-    MyTableModel model = ((MyTableModel)myEntryTable.getModel());
-    while(model.getRowCount() > 0){
-      model.removeRow(0);
-    }
-  }
-
-  public void remove(T orderEntry) {
-    MyTableModel model = ((MyTableModel)myEntryTable.getModel());
-    int rowCount = model.getRowCount();
-    for (int i = 0; i < rowCount; i++) {
-        if(getValueAt(i) == orderEntry) {
-          model.removeRow(i);
-          return;
+        if (myEntryTable.getRowCount() > 0) {
+            myEntryTable.getSelectionModel().setSelectionInterval(0, 0);
         }
     }
-  }
 
-  public void add(T orderEntry) {
-    MyTableModel model = ((MyTableModel)myEntryTable.getModel());
-    if(getCheckboxColumn() == -1) {
-      model.addRow(new Object[]{orderEntry});
-    }
-    else {
-      model.addRow(new Object[]{isChecked(orderEntry) ? Boolean.TRUE : Boolean.FALSE, orderEntry});
-    }
-  }
-
-  protected int getEntryColumn() {
-    return ((MyTableModel)myEntryTable.getModel()).getEntryColumn();
-  }
-
-  private int getCheckboxColumn() {
-    return ((MyTableModel)myEntryTable.getModel()).getCheckboxColumn();
-  }
-
-  private class MyTableModel extends DefaultTableModel {
-    private final boolean myShowCheckboxes;
-
-    public MyTableModel(boolean showCheckboxes) {
-      myShowCheckboxes = showCheckboxes;
+    public void setEntriesEditable(boolean entryEditable) {
+        myEntryEditable = entryEditable;
     }
 
-    private int getEntryColumn() {
-      return getColumnCount() - 1;
+    public void setCheckboxColumnName(String name) {
+        int width;
+        if (StringUtil.isEmpty(name)) {
+            CHECKBOX_COLUMN_NAME = "";
+            width = new JCheckBox().getPreferredSize().width;
+        }
+        else {
+            CHECKBOX_COLUMN_NAME = name;
+            FontMetrics fontMetrics = myEntryTable.getFontMetrics(myEntryTable.getFont());
+            width = fontMetrics.stringWidth(" " + name + " ") + 4;
+        }
+
+        TableColumn checkboxColumn = myEntryTable.getColumnModel().getColumn(getCheckboxColumn());
+        checkboxColumn.setWidth(width);
+        checkboxColumn.setPreferredWidth(width);
+        checkboxColumn.setMaxWidth(width);
+        checkboxColumn.setMinWidth(width);
+    }
+
+    public void moveSelectedItemsUp() {
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
+        try {
+            myInsideMove++;
+            TableUtil.moveSelectedItemsUp(myEntryTable);
+        }
+        finally {
+            myInsideMove--;
+        }
+        for (OrderPanelListener orderPanelListener : myListeners) {
+            orderPanelListener.entryMoved();
+        }
+    }
+
+    public void moveSelectedItemsDown() {
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
+        try {
+            myInsideMove++;
+            TableUtil.moveSelectedItemsDown(myEntryTable);
+        }
+        finally {
+            myInsideMove--;
+        }
+        for (OrderPanelListener orderPanelListener : myListeners) {
+            orderPanelListener.entryMoved();
+        }
+    }
+
+    private int myInsideMove = 0;
+
+    private boolean isInsideMove() {
+        return myInsideMove != 0;
+    }
+
+    public void addListener(OrderPanelListener listener) {
+        myListeners.add(listener);
+    }
+
+    public void removeListener(OrderPanelListener listener) {
+        myListeners.remove(listener);
+    }
+
+    public JTable getEntryTable() {
+        return myEntryTable;
+    }
+
+    public void clear() {
+        MyTableModel model = ((MyTableModel) myEntryTable.getModel());
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+    }
+
+    public void remove(T orderEntry) {
+        MyTableModel model = ((MyTableModel) myEntryTable.getModel());
+        int rowCount = model.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            if (getValueAt(i) == orderEntry) {
+                model.removeRow(i);
+                return;
+            }
+        }
+    }
+
+    public void add(T orderEntry) {
+        MyTableModel model = ((MyTableModel) myEntryTable.getModel());
+        if (getCheckboxColumn() == -1) {
+            model.addRow(new Object[]{orderEntry});
+        }
+        else {
+            model.addRow(new Object[]{isChecked(orderEntry) ? Boolean.TRUE : Boolean.FALSE, orderEntry});
+        }
+    }
+
+    protected int getEntryColumn() {
+        return ((MyTableModel) myEntryTable.getModel()).getEntryColumn();
     }
 
     private int getCheckboxColumn() {
-      return getColumnCount() - 2;
+        return ((MyTableModel) myEntryTable.getModel()).getCheckboxColumn();
     }
 
-    public String getColumnName(int column) {
-      if (column == getEntryColumn()) {
-        return "";
-      }
-      if (column == getCheckboxColumn()) {
-        return getCheckboxColumnName();
-      }
-      return null;
+    private class MyTableModel extends DefaultTableModel {
+        private final boolean myShowCheckboxes;
+
+        public MyTableModel(boolean showCheckboxes) {
+            myShowCheckboxes = showCheckboxes;
+        }
+
+        private int getEntryColumn() {
+            return getColumnCount() - 1;
+        }
+
+        private int getCheckboxColumn() {
+            return getColumnCount() - 2;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            if (column == getEntryColumn()) {
+                return "";
+            }
+            if (column == getCheckboxColumn()) {
+                return getCheckboxColumnName();
+            }
+            return null;
+        }
+
+        @Override
+        public Class getColumnClass(int column) {
+            if (column == getEntryColumn()) {
+                return myEntryClass;
+            }
+            if (column == getCheckboxColumn()) {
+                return Boolean.class;
+            }
+            return super.getColumnClass(column);
+        }
+
+        @Override
+        public int getColumnCount() {
+            return myShowCheckboxes ? 2 : 1;
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            if (column == getCheckboxColumn()) {
+                return isCheckable(OrderPanel.this.getValueAt(row));
+            }
+            return myEntryEditable;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int row, int column) {
+            super.setValueAt(aValue, row, column);
+            if (!isInsideMove() && column == getCheckboxColumn()) {
+                setChecked(OrderPanel.this.getValueAt(row), (Boolean) aValue);
+            }
+        }
     }
 
-    public Class getColumnClass(int column) {
-      if (column == getEntryColumn()) {
-        return myEntryClass;
-      }
-      if (column == getCheckboxColumn()) {
-        return Boolean.class;
-      }
-      return super.getColumnClass(column);
+    public T getValueAt(int row) {
+        //noinspection unchecked
+        return (T) myEntryTable.getModel().getValueAt(row, getEntryColumn());
     }
 
-    public int getColumnCount() {
-      return myShowCheckboxes ? 2 : 1;
+    public abstract boolean isCheckable(T entry);
+
+    public abstract boolean isChecked(T entry);
+
+    public abstract void setChecked(T entry, boolean checked);
+
+    public String getCheckboxColumnName() {
+        if (CHECKBOX_COLUMN_NAME == null) {
+            CHECKBOX_COLUMN_NAME = UILocalize.orderEntriesPanelExportColumnName().get();
+        }
+        return CHECKBOX_COLUMN_NAME;
     }
 
-    public boolean isCellEditable(int row, int column) {
-      if (column == getCheckboxColumn()) {
-        return isCheckable(OrderPanel.this.getValueAt(row));
-      }
-      return myEntryEditable;
+    public List<T> getEntries() {
+        TableModel model = myEntryTable.getModel();
+        int size = model.getRowCount();
+        List<T> result = new ArrayList<>(size);
+        for (int idx = 0; idx < size; idx++) {
+            result.add(getValueAt(idx));
+        }
+
+        return result;
     }
-
-    public void setValueAt(Object aValue, int row, int column) {
-      super.setValueAt(aValue, row, column);
-      if (!isInsideMove() && column == getCheckboxColumn()) {
-        setChecked(OrderPanel.this.getValueAt(row), ((Boolean)aValue).booleanValue());
-      }
-    }
-  }
-
-  public T getValueAt(int row) {
-    //noinspection unchecked
-    return (T)myEntryTable.getModel().getValueAt(row, getEntryColumn());
-  }
-
-  public abstract boolean isCheckable(T entry);
-  public abstract boolean isChecked  (T entry);
-  public abstract void    setChecked (T entry, boolean checked);
-
-  public String getCheckboxColumnName() {
-    if (CHECKBOX_COLUMN_NAME == null) {
-      CHECKBOX_COLUMN_NAME = UILocalize.orderEntriesPanelExportColumnName().get();
-    }
-    return CHECKBOX_COLUMN_NAME;
-  }
-
-  public List<T> getEntries() {
-    TableModel model = myEntryTable.getModel();
-    int size = model.getRowCount();
-    List<T> result = new ArrayList<>(size);
-    for (int idx = 0; idx < size; idx++) {
-      result.add(getValueAt(idx));
-    }
-
-    return result;
-  }
 }

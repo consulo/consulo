@@ -59,9 +59,9 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     private final CompilerConfiguration myCompilerConfiguration;
 
     @Inject
-    public ModuleCompilerPathsManagerImpl(Module module) {
+    public ModuleCompilerPathsManagerImpl(Module module, CompilerConfiguration compilerConfiguration) {
         myModule = module;
-        myCompilerConfiguration = CompilerConfiguration.getInstance(module.getProject());
+        myCompilerConfiguration = compilerConfiguration;
     }
 
     @Override

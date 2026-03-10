@@ -7,6 +7,10 @@ module consulo.file.editor.impl {
     requires consulo.project.ui.view.api;
     requires consulo.find.api;
 
+    requires consulo.code.editor.impl;
+
+    requires consulo.language.editor.impl;
+
     requires static consulo.task.api;
 
     requires com.google.common;
@@ -17,6 +21,10 @@ module consulo.file.editor.impl {
 
     exports consulo.fileEditor.impl.internal.search to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 
+    exports consulo.fileEditor.impl.internal.text to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+
     // TODO remove in future
     requires java.desktop;
+
+    requires forms.rt;
 }

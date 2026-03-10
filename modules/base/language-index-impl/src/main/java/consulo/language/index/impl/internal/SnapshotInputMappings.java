@@ -162,7 +162,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
   @Nonnull
   private String getContentDebugData(Input input) {
     FileContentImpl content = (FileContentImpl)input;
-    return "[" + content.getFile().getPath() + ";" + content.getFileType().getName() + ";" + content.getCharset() + "]";
+    return "[" + content.getFile().getPath() + ";" + content.getFileType().getId() + ";" + content.getCharset() + "]";
   }
 
   private int getHashId(@Nullable Input content) throws IOException {

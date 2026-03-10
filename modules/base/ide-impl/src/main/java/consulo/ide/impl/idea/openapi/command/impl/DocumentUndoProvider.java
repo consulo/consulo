@@ -9,7 +9,7 @@ import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
-import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.internal.FileViewProviderInternal;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.undoRedo.ApplicationUndoManager;
@@ -17,10 +17,9 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.Objects;
 
@@ -112,7 +111,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
 
     VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
     if (vFile == null) return true;
-    return !Objects.equals(vFile.getUserData(AbstractFileViewProvider.FREE_THREADED), Boolean.TRUE)
+    return !Objects.equals(vFile.getUserData(FileViewProviderInternal.FREE_THREADED), Boolean.TRUE)
         && !Objects.equals(vFile.getUserData(UndoConstants.DONT_RECORD_UNDO), Boolean.TRUE);
   }
 

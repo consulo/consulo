@@ -22,7 +22,6 @@ import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
 import consulo.localize.LocalizeValue;
@@ -47,6 +46,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -97,6 +97,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         if (state) {
             if (myInspector == null) {
@@ -1364,12 +1365,10 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         public Object getValueAt(int row, int column) {
             PropertyBean bean = myProperties.get(row);
             if (bean != null) {
-                switch (column) {
-                    case 0:
-                        return bean.propertyName;
-                    default:
-                        return bean.propertyValue;
-                }
+                return switch (column) {
+                    case 0 -> bean.propertyName;
+                    default -> bean.propertyValue;
+                };
             }
 
             return null;

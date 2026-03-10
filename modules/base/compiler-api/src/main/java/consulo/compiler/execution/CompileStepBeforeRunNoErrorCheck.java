@@ -16,21 +16,16 @@
 package consulo.compiler.execution;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.compiler.CompilerRunner;
-import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
-import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -40,7 +35,7 @@ import jakarta.inject.Inject;
  * @author Vassiliy.Kudryashov
  */
 @ExtensionImpl(id = "compileBeforeRunNoErrorCheck", order = "after compileBeforeRun")
-public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
+public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
     public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {
         private MakeBeforeRunTaskNoErrorCheck() {
             super(ID);
@@ -48,12 +43,10 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
     }
 
     public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
-    @Nonnull
-    private final Project myProject;
 
     @Inject
     public CompileStepBeforeRunNoErrorCheck(@Nonnull Project project) {
-        myProject = project;
+        super(project);
     }
 
     @Nonnull
@@ -68,36 +61,10 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
         return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
     }
 
-    @Override
-    public Image getIcon() {
-        ExtensionPoint<CompilerRunner> point = myProject.getExtensionPoint(CompilerRunner.class);
-        CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
-        if (runner != null) {
-            return runner.getBuildIcon();
-        }
-        return PlatformIconGroup.actionsCompile();
-    }
-
-    @Override
-    public Image getTaskIcon(MakeBeforeRunTaskNoErrorCheck task) {
-        return getIcon();
-    }
 
     @Override
     public MakeBeforeRunTaskNoErrorCheck createTask(RunConfiguration runConfiguration) {
         return runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption ? new MakeBeforeRunTaskNoErrorCheck() : null;
-    }
-
-    @Nonnull
-    @Override
-    @RequiredUIAccess
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, MakeBeforeRunTaskNoErrorCheck task) {
-        return AsyncResult.rejected();
-    }
-
-    @Override
-    public boolean isConfigurable() {
-        return false;
     }
 
     @Nonnull
@@ -115,6 +82,6 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
         ExecutionEnvironment env,
         MakeBeforeRunTaskNoErrorCheck task
     ) {
-        return CompileStepBeforeRun.doMake(uiAccess, myProject, configuration, true);
+        return CompileStepBeforeRun.doMake(uiAccess, myProject, configuration, env, true);
     }
 }

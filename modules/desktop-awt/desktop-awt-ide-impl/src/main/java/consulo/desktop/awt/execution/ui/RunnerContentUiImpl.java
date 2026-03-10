@@ -36,7 +36,6 @@ import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
@@ -64,6 +63,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -1340,6 +1340,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return (ActionGroup) myActionManager.getAction(LAYOUT);
     }
 
+    @RequiredUIAccess
     public void updateActionsImmediately(UIAccess uiAccess) {
         if (myToolbar.getTargetComponent() instanceof ActionToolbar toolbar) {
             toolbar.updateActionsAsync();
@@ -1595,9 +1596,8 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             }
 
             ContentManager originalContentManager = myOriginal == null ? null : myOriginal.getContentManager();
-            JComponent originalContentComponent = originalContentManager == null ? null : originalContentManager.getComponent();
-            if (originalContentComponent instanceof DataProvider) {
-                return ((DataProvider) originalContentComponent).getData(dataId);
+            if (originalContentManager != null && originalContentManager.getComponent() instanceof DataProvider dataProvider) {
+                return dataProvider.getData(dataId);
             }
             return null;
         }
@@ -1914,10 +1914,10 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             AnAction[] kids = myLeftToolbarActions.getChildren(null);
             ContainerUtil.addAll(result, kids);
         }
-//    if (myTopLeftActions != null && UIExperiment.isNewDebuggerUIEnabled()) {
-//      AnAction[] kids = myTopLeftActions.getChildren(null);
-//      ContainerUtil.addAll(result, kids);
-//    }
+//      if (myTopLeftActions != null && UIExperiment.isNewDebuggerUIEnabled()) {
+//          AnAction[] kids = myTopLeftActions.getChildren(null);
+//          ContainerUtil.addAll(result, kids);
+//      }
         return result;
     }
 

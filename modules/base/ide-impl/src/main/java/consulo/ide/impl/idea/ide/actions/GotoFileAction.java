@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
@@ -35,6 +34,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -131,7 +131,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
         @Override
         protected String textForFilterValue(@Nonnull FileType value) {
-            return value.getName();
+            return value.getDisplayName().get();
         }
 
         @Override
@@ -174,7 +174,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
             if (!o1.isBinary() && o2.isBinary()) {
                 return -1;
             }
-            return o1.getName().compareToIgnoreCase(o2.getName());
+            return o1.getDisplayName().compareTo(o2.getDisplayName());
         }
     }
 }

@@ -94,7 +94,7 @@ public class OptionsEditorContext {
     }
 
     if (myErrors.containsKey(configurable)) {
-      HashMap<Configurable, ConfigurationException> newErrors = new HashMap<>();
+      Map<Configurable, ConfigurationException> newErrors = new HashMap<>();
       newErrors.remove(configurable);
       fireErrorsChanged(newErrors, null);
     }

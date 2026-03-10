@@ -195,7 +195,7 @@ public final class StartUpMeasurer {
   }
 
   // @ApiStatus.Internal
-  public static void addTimings(@Nonnull LinkedHashMap<String, Long> timings, @Nonnull String groupName) {
+  public static void addTimings(@Nonnull Map<String, Long> timings, @Nonnull String groupName) {
     if (!items.isEmpty()) {
       throw new IllegalStateException("addTimings must be not called if some events were already added using API");
     }

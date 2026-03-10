@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
@@ -25,8 +25,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
-import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,119 +36,126 @@ import java.util.List;
 import java.util.Set;
 
 public class GotoClassModel2 extends FilteringGotoByModel<Language> {
-  private String[] mySeparators;
+    private String[] mySeparators;
 
-  public GotoClassModel2(@Nonnull Project project) {
-    super(project, project.getApplication().getExtensionList(GotoClassOrTypeContributor.class));
-  }
-
-  @Override
-  protected Language filterValueFor(NavigationItem item) {
-    return item instanceof PsiElement ? ((PsiElement) item).getLanguage() : null;
-  }
-
-  @Override
-  protected synchronized Collection<Language> getFilterItems() {
-    Collection<Language> result = super.getFilterItems();
-    if (result == null) {
-      return null;
-    }
-    Collection<Language> items = new HashSet<>(result);
-    items.add(Language.ANY);
-    return items;
-  }
-
-  @Override
-  @Nullable
-  public String getPromptText() {
-    return IdeLocalize.promptGotoclassEnterClassName().get();
-  }
-
-  @Override
-  public LocalizeValue getCheckBoxName() {
-    return IdeLocalize.checkboxIncludeNonProjectClasses();
-  }
-
-  @Override
-  public String getNotInMessage() {
-    return IdeLocalize.labelNoMatchesFoundInProject().get();
-  }
-
-  @Override
-  public String getNotFoundMessage() {
-    return IdeLocalize.labelNoMatchesFound().get();
-  }
-
-  @Override
-  public boolean loadInitialCheckBoxState() {
-    PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
-    return Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.toSaveIncludeLibraries")) &&
-           Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.includeLibraries"));
-  }
-
-  @Override
-  public void saveInitialCheckBoxState(boolean state) {
-    PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
-    if (Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.toSaveIncludeLibraries"))){
-      propertiesComponent.setValue("GoToClass.includeLibraries", Boolean.toString(state));
-    }
-  }
-
-  @Override
-  public String getFullName(Object element) {
-    if (element instanceof PsiElement && !((PsiElement)element).isValid()) {
-      return null;
+    public GotoClassModel2(@Nonnull Project project) {
+        super(project, project.getApplication().getExtensionList(GotoClassOrTypeContributor.class));
     }
 
-    for (ChooseByNameContributor c : getContributorList()) {
-      if (c instanceof GotoClassOrTypeContributor) {
-        String result = ((GotoClassOrTypeContributor)c).getQualifiedName((NavigationItem)element);
-        if (result != null) return result;
-      }
+    @Override
+    @RequiredReadAction
+    protected Language filterValueFor(NavigationItem item) {
+        return item instanceof PsiElement element ? element.getLanguage() : null;
     }
 
-    return getElementName(element);
-  }
-
-  @Override
-  @Nonnull
-  public String[] getSeparators() {
-    if (mySeparators == null) {
-      mySeparators = getSeparatorsFromContributors(getContributorList());
+    @Override
+    protected synchronized Collection<Language> getFilterItems() {
+        Collection<Language> result = super.getFilterItems();
+        if (result == null) {
+            return null;
+        }
+        Collection<Language> items = new HashSet<>(result);
+        items.add(Language.ANY);
+        return items;
     }
-    return mySeparators;
-  }
 
-  public static String[] getSeparatorsFromContributors(List<? extends ChooseByNameContributor> contributors) {
-    Set<String> separators = new HashSet<>();
-    separators.add(".");
-    for(ChooseByNameContributor c: contributors) {
-      if (c instanceof GotoClassOrTypeContributor) {
-        ContainerUtil.addIfNotNull(separators, ((GotoClassOrTypeContributor)c).getQualifiedNameSeparator());
-      }
+    @Override
+    @Nullable
+    public String getPromptText() {
+        return IdeLocalize.promptGotoclassEnterClassName().get();
     }
-    return separators.toArray(new String[separators.size()]);
-  }
 
-  @Override
-  public String getHelpId() {
-    return "procedures.navigating.goto.class";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getCheckBoxName() {
+        return IdeLocalize.checkboxIncludeNonProjectClasses();
+    }
 
-  @Nonnull
-  @Override
-  public String removeModelSpecificMarkup(@Nonnull String pattern) {
-    if (pattern.startsWith("@")) return pattern.substring(1);
-    return pattern;
-  }
+    @Override
+    public String getNotInMessage() {
+        return IdeLocalize.labelNoMatchesFoundInProject().get();
+    }
 
-  @Override
-  public boolean willOpenEditor() {
-    return true;
-  }
+    @Override
+    public String getNotFoundMessage() {
+        return IdeLocalize.labelNoMatchesFound().get();
+    }
 
-  @Override
-  public boolean sameNamesForProjectAndLibraries() {
-    return !FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
-  }
+    @Override
+    public boolean loadInitialCheckBoxState() {
+        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
+        return Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.toSaveIncludeLibraries"))
+            && Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.includeLibraries"));
+    }
+
+    @Override
+    public void saveInitialCheckBoxState(boolean state) {
+        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
+        if (Boolean.TRUE.toString().equals(propertiesComponent.getValue("GoToClass.toSaveIncludeLibraries"))) {
+            propertiesComponent.setValue("GoToClass.includeLibraries", Boolean.toString(state));
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public String getFullName(Object element) {
+        if (element instanceof PsiElement psiElem && !psiElem.isValid()) {
+            return null;
+        }
+
+        for (ChooseByNameContributor c : getContributorList()) {
+            if (c instanceof GotoClassOrTypeContributor gotoClassOrTypeContributor) {
+                String result = gotoClassOrTypeContributor.getQualifiedName((NavigationItem) element);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+        return getElementName(element);
+    }
+
+    @Override
+    @Nonnull
+    public String[] getSeparators() {
+        if (mySeparators == null) {
+            mySeparators = getSeparatorsFromContributors(getContributorList());
+        }
+        return mySeparators;
+    }
+
+    public static String[] getSeparatorsFromContributors(List<? extends ChooseByNameContributor> contributors) {
+        Set<String> separators = new HashSet<>();
+        separators.add(".");
+        for (ChooseByNameContributor c : contributors) {
+            if (c instanceof GotoClassOrTypeContributor gotoClassOrTypeContributor) {
+                ContainerUtil.addIfNotNull(separators, gotoClassOrTypeContributor.getQualifiedNameSeparator());
+            }
+        }
+        return separators.toArray(new String[separators.size()]);
+    }
+
+    @Override
+    public String getHelpId() {
+        return "procedures.navigating.goto.class";
+    }
+
+    @Nonnull
+    @Override
+    public String removeModelSpecificMarkup(@Nonnull String pattern) {
+        if (pattern.startsWith("@")) {
+            return pattern.substring(1);
+        }
+        return pattern;
+    }
+
+    @Override
+    public boolean willOpenEditor() {
+        return true;
+    }
+
+    @Override
+    public boolean sameNamesForProjectAndLibraries() {
+        return !FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
+    }
 }

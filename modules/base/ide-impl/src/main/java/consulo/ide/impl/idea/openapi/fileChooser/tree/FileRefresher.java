@@ -16,20 +16,17 @@
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.application.Application;
-import consulo.disposer.Disposable;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.UIAccessScheduler;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileSystem;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.RefreshSession;
-import consulo.ide.impl.idea.util.NotNullProducer;
+import consulo.virtualFileSystem.*;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -42,9 +39,9 @@ public class FileRefresher implements Disposable {
   private static final Logger LOG = Logger.getInstance(FileRefresher.class);
   private final boolean recursive;
   private final long delay;
-  private final NotNullProducer<? extends IdeaModalityState> producer;
-  private final ArrayList<Object> watchers = new ArrayList<>();
-  private final ArrayList<VirtualFile> files = new ArrayList<>();
+  private final Supplier<? extends IdeaModalityState> producer;
+  private final List<Object> watchers = new ArrayList<>();
+  private final List<VirtualFile> files = new ArrayList<>();
   private final AtomicBoolean scheduled = new AtomicBoolean();
   private final AtomicBoolean launched = new AtomicBoolean();
   private final AtomicBoolean paused = new AtomicBoolean();
@@ -57,7 +54,7 @@ public class FileRefresher implements Disposable {
    * @param producer  a provider for modality state that can be invoked on background thread
    * @throws IllegalArgumentException if the specified delay is not positive
    */
-  public FileRefresher(boolean recursive, long delay, @Nonnull NotNullProducer<? extends IdeaModalityState> producer) {
+  public FileRefresher(boolean recursive, long delay, @Nonnull Supplier<? extends IdeaModalityState> producer) {
     if (delay <= 0) throw new IllegalArgumentException("delay");
     this.recursive = recursive;
     this.delay = delay;
@@ -153,7 +150,7 @@ public class FileRefresher implements Disposable {
     RefreshSession session;
     synchronized (files) {
       if (this.session != null || files.isEmpty()) return;
-      IdeaModalityState state = producer.produce();
+      IdeaModalityState state = producer.get();
       LOG.debug("modality state ", state);
       session = RefreshQueue.getInstance().createSession(true, recursive, this::finish, state);
       session.addAllFiles(files);

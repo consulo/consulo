@@ -16,7 +16,7 @@
 
 package consulo.ide.action;
 
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;

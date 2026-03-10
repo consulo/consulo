@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @author Konstantin Bulenkov
  */
 @FunctionalInterface
+@Deprecated
 public interface AnActionButtonRunnable {
     @RequiredUIAccess
     void run(AnActionButton button);

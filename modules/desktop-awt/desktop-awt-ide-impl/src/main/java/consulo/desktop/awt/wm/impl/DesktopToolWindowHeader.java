@@ -19,7 +19,6 @@ import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
-import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
@@ -38,15 +37,16 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Supplier;
 
 /**
  * @author pegov
  */
 public abstract class DesktopToolWindowHeader extends JPanel implements Disposable {
     private class GearAction extends DumbAwareAction {
-        private NotNullProducer<ActionGroup> myGearProducer;
+        private Supplier<ActionGroup> myGearProducer;
 
-        public GearAction(NotNullProducer<ActionGroup> gearProducer) {
+        public GearAction(Supplier<ActionGroup> gearProducer) {
             super("Options", null, PlatformIconGroup.actionsMorevertical());
             myGearProducer = gearProducer;
         }
@@ -55,16 +55,17 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
             InputEvent inputEvent = e.getInputEvent();
-            ActionPopupMenu popupMenu =
-                ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
-                    myGearProducer.produce(),
-                    new MenuItemPresentationFactory(true));
+            ActionPopupMenu popupMenu = ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(
+                DesktopToolWindowContentUi.POPUP_PLACE,
+                myGearProducer.get(),
+                new MenuItemPresentationFactory(true)
+            );
 
             int x = 0;
             int y = 0;
-            if (inputEvent instanceof MouseEvent) {
-                x = ((MouseEvent) inputEvent).getX();
-                y = ((MouseEvent) inputEvent).getY();
+            if (inputEvent instanceof MouseEvent mouseEvent) {
+                x = mouseEvent.getX();
+                y = mouseEvent.getY();
             }
 
             popupMenu.getComponent().show(inputEvent.getComponent(), x, y);
@@ -98,7 +99,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private final JPanel myWestPanel;
 
     @RequiredUIAccess
-    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull NotNullProducer<ActionGroup> gearProducer) {
+    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull Supplier<ActionGroup> gearProducer) {
         super(new BorderLayout());
 
         myToolWindow = toolWindow;
@@ -112,11 +113,13 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
 
         myToolbar = ActionManager.getInstance()
-            .createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE,
+            .createActionToolbar(
+                ActionPlaces.TOOLWINDOW_TITLE,
                 ActionGroup.newImmutableBuilder()
                     .addAll(myActionGroup, new GearAction(gearProducer), new HideAction())
                     .build(),
-                true);
+                true
+            );
         myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
 
         JComponent component = myToolbar.getComponent();

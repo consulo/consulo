@@ -19,4 +19,9 @@ module consulo.build.ui.api {
     exports consulo.build.ui.progress;
     exports consulo.build.ui.quickFix;
     exports consulo.build.ui.localize;
+
+    exports consulo.build.ui.internal to
+        consulo.external.system.api,
+        consulo.language.editor.problem.view.impl,
+        consulo.ide.impl;
 }

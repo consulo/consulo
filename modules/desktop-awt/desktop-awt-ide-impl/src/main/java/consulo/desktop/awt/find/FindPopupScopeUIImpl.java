@@ -9,7 +9,6 @@ import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.ide.impl.idea.find.impl.FindUIHelper;
-import consulo.ide.impl.idea.util.Functions;
 import consulo.language.psi.PsiBundle;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
@@ -33,6 +32,7 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 class FindPopupScopeUIImpl implements FindPopupScopeUI {
@@ -81,7 +81,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         myModuleComboBox = new ComboBox<>(names);
         ComboBoxStyle.makeBorderInline(myModuleComboBox);
         myModuleComboBox.setMinimumAndPreferredWidth(JBUIScale.scale(300)); // as ScopeChooser
-        myModuleComboBox.setRenderer(SimpleListCellRenderer.create("", Functions.id()));
+        myModuleComboBox.setRenderer(SimpleListCellRenderer.create("", Function.identity()));
 
         ActionListener restartSearchListener = e -> scheduleResultsUpdate();
         myModuleComboBox.addActionListener(restartSearchListener);

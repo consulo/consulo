@@ -17,19 +17,26 @@ package consulo.externalSystem.model.task;
 
 /**
  * @author Vladislav.Soroka
- * @since 10/2/13
  */
 public enum ProgressExecutionMode {
-  /**
-   * Perform synchronously using modal window without option to sent to background
-   */
-  MODAL_SYNC,
-  /**
-   * Perform asynchronously using background mode
-   */
-  IN_BACKGROUND_ASYNC,
-  /**
-   * Perform asynchronously using foreground window with option to sent to background
-   */
-  START_IN_FOREGROUND_ASYNC
+    /**
+     * Perform synchronously w/o progress indicator
+     */
+    NO_PROGRESS_SYNC,
+    /**
+     * Perform synchronously using modal window without option to sent to background
+     */
+    MODAL_SYNC,
+    /**
+     * Perform asynchronously w/o progress indicator
+     */
+    NO_PROGRESS_ASYNC,
+    /**
+     * Perform asynchronously using background mode
+     */
+    IN_BACKGROUND_ASYNC,
+    /**
+     * Perform asynchronously using foreground window with option to sent to background
+     */
+    START_IN_FOREGROUND_ASYNC
 }

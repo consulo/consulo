@@ -35,6 +35,7 @@ import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.internal.PomAspectGuard;
 import consulo.language.pom.*;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.pom.event.PomModelListener;

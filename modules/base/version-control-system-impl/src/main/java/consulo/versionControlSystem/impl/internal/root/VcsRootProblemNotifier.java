@@ -19,6 +19,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
@@ -33,7 +34,6 @@ import java.util.*;
 import java.util.function.Function;
 
 import static consulo.ui.ex.awt.UIUtil.BR;
-import static consulo.util.lang.StringUtil.escapeXmlEntities;
 import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 
 /**
@@ -180,7 +180,6 @@ public final class VcsRootProblemNotifier {
                     ShowConfigurableService configurableService = Application.get().getInstance(ShowConfigurableService.class);
 
                     configurableService.showAndSelect(myProject, StandardConfigurableIds.VCS_GROUP).whenComplete((o, throwable) -> {
-
                         BackgroundTaskUtil.executeOnPooledThread(myProject, () -> {
                             Collection<VcsRootError> errorsAfterPossibleFix = new VcsRootProblemNotifier(myProject).scan();
                             if (errorsAfterPossibleFix.isEmpty() && !notification.isExpired()) {
@@ -203,11 +202,9 @@ public final class VcsRootProblemNotifier {
 
     private boolean isUnderOrAboveProjectDir(@Nonnull VcsDirectoryMapping mapping) {
         String projectDir = Objects.requireNonNull(myProject.getBasePath());
-        return mapping.isDefaultMapping() || FileUtil.isAncestor(
-            projectDir,
-            mapping.getDirectory(),
-            false
-        ) || FileUtil.isAncestor(mapping.getDirectory(), projectDir, false);
+        return mapping.isDefaultMapping()
+            || FileUtil.isAncestor(projectDir, mapping.getDirectory(), false)
+            || FileUtil.isAncestor(mapping.getDirectory(), projectDir, false);
     }
 
     private boolean isIgnoredOrExcludedPath(@Nonnull VcsDirectoryMapping mapping) {
@@ -282,15 +279,18 @@ public final class VcsRootProblemNotifier {
 
     @Nonnull
     private String joinRootsForPresentation(@Nonnull Collection<? extends VcsRootError> errors) {
-        List<? extends VcsRootError> sortedRoots = ContainerUtil.sorted(errors, (root1, root2) -> {
-            if (root1.getMapping().isDefaultMapping()) {
-                return -1;
+        List<? extends VcsRootError> sortedRoots = ContainerUtil.sorted(
+            errors,
+            (root1, root2) -> {
+                if (root1.getMapping().isDefaultMapping()) {
+                    return -1;
+                }
+                if (root2.getMapping().isDefaultMapping()) {
+                    return 1;
+                }
+                return root1.getMapping().getDirectory().compareTo(root2.getMapping().getDirectory());
             }
-            if (root2.getMapping().isDefaultMapping()) {
-                return 1;
-            }
-            return root1.getMapping().getDirectory().compareTo(root2.getMapping().getDirectory());
-        });
+        );
         return StringUtil.join(sortedRoots, ROOT_TO_PRESENTABLE, BR);
     }
 
@@ -376,6 +376,6 @@ public final class VcsRootProblemNotifier {
         if (presentablePath == null) {
             presentablePath = UserHomeFileUtil.getLocationRelativeToUserHome(FileUtil.toSystemDependentName(mapping));
         }
-        return escapeXmlEntities(presentablePath);
+        return XmlStringUtil.escapeText(presentablePath);
     }
 }

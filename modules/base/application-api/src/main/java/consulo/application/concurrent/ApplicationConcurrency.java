@@ -33,6 +33,8 @@ import java.util.concurrent.ScheduledExecutorService;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationConcurrency {
     @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer Application#coroutineContext()")
     CoroutineContext coroutineContext();
 
     @Nonnull

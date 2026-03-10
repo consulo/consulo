@@ -53,7 +53,6 @@ public interface CompileContext extends UserDataHolder {
      * @param lineNum     a line number, -1 if not available.
      * @param columnNum   a column number, -1 if not available.
      * @param navigatable the navigatable pointing to the error location.
-     * @since 6.0
      */
     void addMessage(
         CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum,
@@ -61,20 +60,12 @@ public interface CompileContext extends UserDataHolder {
     );
 
     /**
-     * Returns all messages of the specified category added during the current compile session.
-     *
-     * @param category the category for which messages are requested.
-     * @return all compiler messages of the specified category
-     */
-    CompilerMessage[] getMessages(CompilerMessageCategory category);
-
-    /**
      * Returns the count of messages of the specified category added during the current compile session.
      *
      * @param category the category for which messages are requested.
      * @return the number of messages of the specified category
      */
-    int getMessageCount(CompilerMessageCategory category);
+    int getMessageCount(@Nullable CompilerMessageCategory category);
 
     /**
      * Returns the progress indicator of the compilation process.

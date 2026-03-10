@@ -19,13 +19,13 @@ import consulo.application.ui.UIFontManager;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

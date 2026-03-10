@@ -7,7 +7,6 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -26,6 +25,7 @@ import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -459,13 +459,13 @@ public final class SystemShortcuts {
         void addMutedAction(@Nonnull String actId) {
             init();
             myMutedActions.add(actId);
-            PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtilRt.toStringArray(myMutedActions));
+            PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtil.toStringArray(myMutedActions));
         }
 
         void removeMutedAction(@Nonnull String actId) {
             init();
             myMutedActions.remove(actId);
-            PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtilRt.toStringArray(myMutedActions));
+            PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtil.toStringArray(myMutedActions));
         }
 
         public boolean isMutedAction(@Nonnull String actionId) {

@@ -11,6 +11,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface BuildProgress<T extends BuildProgressDescriptor> {
+    void addListener(BuildProgressListener listener);
+ 
     @Nonnull
     Object getId();
 

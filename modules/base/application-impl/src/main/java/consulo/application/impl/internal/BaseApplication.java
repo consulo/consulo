@@ -63,6 +63,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -208,6 +209,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         myProgressManager = getInjectingContainer().getInstance(ProgressManager.class);
 
         super.initNotLazyServices();
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public CoroutineContext coroutineContext() {
+        return getInstance(ApplicationConcurrency.class).coroutineContext();
     }
 
     @Nonnull

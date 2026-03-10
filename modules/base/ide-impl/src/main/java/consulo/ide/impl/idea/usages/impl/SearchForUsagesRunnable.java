@@ -37,7 +37,6 @@ import consulo.find.FindManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
@@ -56,6 +55,7 @@ import consulo.usage.*;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -68,6 +68,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -327,7 +328,7 @@ class SearchForUsagesRunnable implements Runnable {
         findUsagesStartedBalloon.addRequest(
             () -> {
                 notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
-                    Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation)))
+                    Collections.singletonList(XmlStringUtil.escapeText(UsageViewManagerImpl.getProgressTitle(myPresentation)))
                 );
                 findStartedBalloonShown.set(true);
             },
@@ -423,7 +424,7 @@ class SearchForUsagesRunnable implements Runnable {
 
                         if (notFoundActions.isEmpty()) {
                             List<String> lines = new ArrayList<>();
-                            lines.add(StringUtil.escapeXml(message.get()));
+                            lines.add(message.map((Function<String, String>) XmlStringUtil::escapeText).get());
                             if (myOutOfScopeUsages.get() != 0) {
                                 lines.add(UsageViewManagerImpl.outOfScopeMessage(
                                     myOutOfScopeUsages.get(),

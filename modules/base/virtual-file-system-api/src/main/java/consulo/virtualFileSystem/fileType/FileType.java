@@ -40,21 +40,7 @@ public interface FileType {
      * @return The file type id.
      */
     @Nonnull
-    default String getId() {
-        return getName();
-    }
-
-    /**
-     * Returns the name of the file type. The name must be unique among all file types registered in the system.
-     *
-     * @return The file type name.
-     */
-    @Nonnull
-    @Deprecated
-    @DeprecationInfo(value = "Use #getId(), and implement #getId()")
-    default String getName() {
-        return getId();
-    }
+    String getId();
 
     @Nonnull
     default LocalizeValue getDisplayName() {
@@ -67,6 +53,8 @@ public interface FileType {
      * @return The file type description.
      */
     @Nonnull
+    @Deprecated
+    @DeprecationInfo("Override #getDisplayName()")
     LocalizeValue getDescription();
 
     /**

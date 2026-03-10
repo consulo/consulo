@@ -143,7 +143,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
   }
 
   public void setOptions(@Nonnull FileType fileType, @Nonnull CopyrightFileConfig options) {
-    myConfigs.put(fileType.getName(), new ValidLoadedOption(options));
+    myConfigs.put(fileType.getId(), new ValidLoadedOption(options));
   }
 
   @Nonnull

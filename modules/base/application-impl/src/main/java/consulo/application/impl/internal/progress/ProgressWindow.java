@@ -41,7 +41,7 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ProgressWindow extends ProgressIndicatorBase implements BlockingProgressIndicator, Disposable {
+public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgressIndicator, BlockingProgressIndicator, Disposable {
     private static final Logger LOG = Logger.getInstance(ProgressWindow.class);
 
     /**
@@ -64,6 +64,8 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     protected boolean myBackgrounded;
     protected int myDelayInMillis = DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS;
     private boolean myModalityEntered;
+
+    private boolean myUnsafeIndicator;
 
     public ProgressWindow(boolean shouldShowCancel, Project project) {
         this(shouldShowCancel, false, project);
@@ -349,6 +351,16 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
         if (myDialog != null) {
             myDialog.enableCancelButtonIfNeeded(enable);
         }
+    }
+
+    @Override
+    public boolean isUnsafeIndicator() {
+        return myUnsafeIndicator;
+    }
+
+    @Override
+    public void markAsUnsafeIndicator() {
+        myUnsafeIndicator = true;
     }
 
     @Override

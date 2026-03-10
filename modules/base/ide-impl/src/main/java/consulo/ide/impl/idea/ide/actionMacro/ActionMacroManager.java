@@ -240,7 +240,7 @@ public class ActionMacroManager implements Disposable {
 
     public void registerActions(ActionMacro[] macros) {
         unregisterActions();
-        HashSet<String> registeredIds = new HashSet<>(); // to prevent exception if 2 or more targets have the same name
+        Set<String> registeredIds = new HashSet<>(); // to prevent exception if 2 or more targets have the same name
 
         for (ActionMacro macro : macros) {
             String actionId = macro.getActionId();

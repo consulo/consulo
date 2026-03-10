@@ -24,6 +24,8 @@ import consulo.application.util.Semaphore;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.build.ui.BuildContentManager;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.*;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
@@ -44,6 +46,7 @@ import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.PsiDocumentManager;
@@ -83,9 +86,11 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -187,14 +192,16 @@ public class CompileDriverImpl implements CompileDriver {
         }
         scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
+        CompileCounters counters = new CompileCounters();
         CompilerTask task = new CompilerTask(
             myProject,
             LocalizeValue.localizeTODO("Classes up-to-date check"),
             false,
-            isCompilationStartedAutomatically(scope)
+            isCompilationStartedAutomatically(scope),
+            counters
         );
         CompositeDependencyCache cache = createDependencyCache();
-        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false, counters);
 
         checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
         if (compileContext.isRebuildRequested()) {
@@ -215,13 +222,12 @@ public class CompileDriverImpl implements CompileDriver {
 
         SimpleReference<ExitStatus> result = new SimpleReference<>();
 
-        @RequiredReadAction
-        Runnable compileWork = () -> {
+        Consumer<BuildProgress<BuildProgressDescriptor>> compileWork = (buildProgress) -> {
             try {
                 myAllOutputDirectories = getAllOutputDirectories(compileContext);
                 // need this for updating zip archives experiment, uncomment if the feature is turned on
                 //myOutputFinder = new OutputPathFinder(myAllOutputDirectories);
-                ExitStatus status = doCompile(compileContext, false, false, true);
+                ExitStatus status = doCompile(compileContext, buildProgress, false, false, true);
 
                 result.set(status);
 
@@ -440,18 +446,19 @@ public class CompileDriverImpl implements CompileDriver {
 
         ProblemsView.getInstance(myProject).clearOldMessages();
 
-        LocalizeValue contentName =
-            forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
+        CompileCounters counters = new CompileCounters();
+        LocalizeValue contentName = forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
         Application application = myProject.getApplication();
         boolean isUnitTestMode = application.isUnitTestMode();
-        CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
+
+        CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope), counters);
 
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         FileDocumentManager.getInstance().saveAllDocuments();
 
         CompositeDependencyCache dependencyCache = createDependencyCache();
         CompileContextImpl compileContext =
-            new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild);
+            new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild, counters);
 
         for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
@@ -463,8 +470,7 @@ public class CompileDriverImpl implements CompileDriver {
         }
         attachAnnotationProcessorsOutputDirectories(compileContext);
 
-        @RequiredReadAction
-        Runnable compileWork = () -> {
+        Consumer<BuildProgress<BuildProgressDescriptor>> compileWork = (buildProgress) -> {
             if (compileContext.getProgressIndicator().isCanceled()) {
                 if (callback != null) {
                     callback.finished(true, 0, 0, compileContext);
@@ -486,7 +492,7 @@ public class CompileDriverImpl implements CompileDriver {
                 TranslatingCompilerFilesMonitor.getInstance()
                     .ensureInitializationCompleted(myProject, compileContext.getProgressIndicator());
 
-                ExitStatus status = doCompile(compileContext, isRebuild, forceCompile, callback, checkCachesVersion);
+                ExitStatus status = doCompile(compileContext, buildProgress, isRebuild, forceCompile, callback, checkCachesVersion);
 
                 compileTask.setEndCompilationStamp(status, System.currentTimeMillis());
             }
@@ -498,9 +504,9 @@ public class CompileDriverImpl implements CompileDriver {
         compileTask.start(compileWork);
     }
 
-    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextImpl compileContext,
+        BuildProgress<BuildProgressDescriptor> buildProgress,
         boolean isRebuild,
         boolean forceCompile,
         CompileStatusNotification callback,
@@ -522,7 +528,7 @@ public class CompileDriverImpl implements CompileDriver {
             }
 
             myAllOutputDirectories = getAllOutputDirectories(compileContext);
-            status = doCompile(compileContext, isRebuild, forceCompile, false);
+            status = doCompile(compileContext, buildProgress, isRebuild, forceCompile, false);
         }
         catch (Throwable ex) {
             if (myProject.getApplication().isUnitTestMode()) {
@@ -630,10 +636,12 @@ public class CompileDriverImpl implements CompileDriver {
                         ToolWindowManager.getInstance(myProject)
                             .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
                     }
+
                     NotificationService.getInstance()
                         .newOfType(CompilerManager.NOTIFICATION_GROUP, messageType)
                         .content(LocalizeValue.localizeTODO(statusMessage))
                         .notify(myProject);
+
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
                         compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage, null, -1, -1);
                     }
@@ -692,9 +700,9 @@ public class CompileDriverImpl implements CompileDriver {
         return message;
     }
 
-    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextEx context,
+        BuildProgress<BuildProgressDescriptor> buildProgress,
         boolean isRebuild,
         boolean forceCompile,
         boolean onlyCheckStatus
@@ -708,10 +716,8 @@ public class CompileDriverImpl implements CompileDriver {
                     clearAffectedOutputPathsIfPossible(context);
                 }
             }
+
             if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
-                if (LOG.isDebugEnabled()) {
-                    logErrorMessages(context);
-                }
                 return ExitStatus.ERRORS;
             }
 
@@ -819,9 +825,11 @@ public class CompileDriverImpl implements CompileDriver {
             boolean didSomething = false;
 
             try {
+                DataContext dataContext = createDataContextOverCompileScope(context.getCompileScope());
+
                 for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
-                    if (compilerRunner.isAvailable()) {
-                        didSomething = compilerRunner.build(this, context, isRebuild, forceCompile, onlyCheckStatus);
+                    if (compilerRunner.checkAvailable(dataContext) instanceof CompilerRunner.YesResult) {
+                        didSomething = compilerRunner.build(this, context, buildProgress, isRebuild, forceCompile, onlyCheckStatus);
                         break;
                     }
                 }
@@ -839,7 +847,7 @@ public class CompileDriverImpl implements CompileDriver {
                 VirtualFile[] allOutputDirs = context.getAllOutputDirectories();
 
                 if (didSomething && GENERATE_CLASSPATH_INDEX) {
-                    CompilerUtil.runInContext(context, "Generating classpath index...", () -> {
+                    CompilerUtil.runInContext(context, LocalizeValue.localizeTODO("Generating classpath index..."), () -> {
                         int count = 0;
                         for (VirtualFile file : allOutputDirs) {
                             context.getProgressIndicator().setFraction((double) ++count / allOutputDirs.length);
@@ -910,20 +918,14 @@ public class CompileDriverImpl implements CompileDriver {
         if (!scopeOutputs.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
-                CompilerLocalize.progressClearingOutput().get(),
+                CompilerLocalize.progressClearingOutput(),
                 () -> CompilerUtil.clearOutputDirectories(scopeOutputs)
             );
         }
     }
 
     private static void logErrorMessages(CompileContext context) {
-        CompilerMessage[] errors = context.getMessages(CompilerMessageCategory.ERROR);
-        if (errors.length > 0) {
-            LOG.debug("Errors reported: ");
-            for (CompilerMessage error : errors) {
-                LOG.debug("\t" + error.getMessage());
-            }
-        }
+
     }
 
     private static void walkChildren(VirtualFile from, CompileContext context) {
@@ -969,21 +971,33 @@ public class CompileDriverImpl implements CompileDriver {
 
     @Override
     public void dropDependencyCache(CompileContextEx context) {
-        CompilerUtil.runInContext(context, CompilerLocalize.progressSavingCaches().get(), () -> context.getDependencyCache().resetState());
+        CompilerUtil.runInContext(context, CompilerLocalize.progressSavingCaches(), () -> context.getDependencyCache().resetState());
+    }
+
+    private DataContext createDataContextOverCompileScope(CompileScope compileScope) {
+        return new DataContext() {
+            @Nullable
+            @Override
+            public <T> T getData(@Nonnull Key<T> key) {
+                return compileScope.getUserData(key);
+            }
+        };
     }
 
     private void deleteAll(CompileContextEx context) {
         CompilerUtil.runInContext(
             context,
-            CompilerLocalize.progressClearingOutput().get(),
+            CompilerLocalize.progressClearingOutput(),
             () -> {
                 if (myShouldClearOutputDirectory) {
                     CompilerUtil.clearOutputDirectories(myAllOutputDirectories);
                 }
                 else { // refresh is still required
                     try {
+                        DataContext dataContext = createDataContextOverCompileScope(context.getCompileScope());
+
                         for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
-                            if (compilerRunner.isAvailable()) {
+                            if (compilerRunner.checkAvailable(dataContext) instanceof CompilerRunner.YesResult) {
                                 compilerRunner.cleanUp(this, context);
                                 break;
                             }
@@ -1041,7 +1055,6 @@ public class CompileDriverImpl implements CompileDriver {
         return isEmpty;
     }
 
-    @RequiredReadAction
     private Set<File> getAllOutputDirectories(CompileContext context) {
         Set<File> outputDirs = new OrderedSet<>();
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
@@ -1153,20 +1166,23 @@ public class CompileDriverImpl implements CompileDriver {
     public void executeCompileTask(
         CompileTask compileTask,
         CompileScope scope,
-        String contentName,
+        @Nonnull LocalizeValue contentName,
         Runnable onTaskFinished
     ) {
+        CompileCounters counters = new CompileCounters();
+
         CompilerTask task = new CompilerTask(
             myProject,
-            LocalizeValue.localizeTODO(contentName),
+            contentName,
             true,
-            isCompilationStartedAutomatically(scope)
+            isCompilationStartedAutomatically(scope),
+            counters
         );
-        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false, counters);
 
         FileDocumentManager.getInstance().saveAllDocuments();
 
-        task.start(() -> {
+        task.start((buildProgress) -> {
             try {
                 compileTask.execute(compileContext);
             }

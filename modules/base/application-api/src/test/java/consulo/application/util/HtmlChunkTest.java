@@ -17,11 +17,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @SuppressWarnings("deprecation")
 public class HtmlChunkTest {
-
     @Test
     void text() {
         assertThat(HtmlChunk.text("foo")).hasToString("foo");
-        assertThat(HtmlChunk.text("<a href=\"hello\">")).hasToString("&lt;a href=&quot;hello&quot;&gt;");
+        assertThat(HtmlChunk.text("<a href=\"hello\">")).hasToString("&lt;a href=\"hello\"&gt;");
 
         HtmlChunk.Element p = HtmlChunk.p();
         assertThat(p.addText(loc("<foo>"))).hasToString("<p>&lt;foo&gt;</p>");
@@ -38,6 +37,7 @@ public class HtmlChunkTest {
         assertThat(p.addRaw("<foo>")).hasToString("<p><foo></p>");
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     void htmlEntity() {
         assertThat(HtmlChunk.htmlEntity("&foo;")).hasToString("&foo;");
@@ -104,12 +104,12 @@ public class HtmlChunkTest {
 
     @Test
     void link() {
-        assertThat(HtmlChunk.link("target", loc("<Click here>")))
-            .hasToString("<a href=\"target\">&lt;Click here&gt;</a>");
-        assertThat(HtmlChunk.link("target", "<Click here>"))
-            .hasToString("<a href=\"target\">&lt;Click here&gt;</a>");
-        assertThat(HtmlChunk.link("target", HtmlChunk.text("<Click here>")))
-            .hasToString("<a href=\"target\">&lt;Click here&gt;</a>");
+        assertThat(HtmlChunk.link("target", loc("<Click & me>")))
+            .hasToString("<a href=\"target\">&lt;Click &amp; me&gt;</a>");
+        assertThat(HtmlChunk.link("target", "<Click & me>"))
+            .hasToString("<a href=\"target\">&lt;Click &amp; me&gt;</a>");
+        assertThat(HtmlChunk.link("target", HtmlChunk.text("<Click & me>")))
+            .hasToString("<a href=\"target\">&lt;Click &amp; me&gt;</a>");
     }
 
     @Test

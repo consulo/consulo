@@ -28,7 +28,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.favoritesTreeView.actions.*;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;

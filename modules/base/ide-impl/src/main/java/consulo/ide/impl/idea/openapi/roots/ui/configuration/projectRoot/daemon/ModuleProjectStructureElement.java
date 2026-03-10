@@ -18,7 +18,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
                 }
                 else {
                     problemsHolder.registerProblem(
-                        ProjectLocalize.projectRootsLibraryProblemMessage(StringUtil.escapeXml(entry.getPresentableName())).get(),
+                        ProjectLocalize.projectRootsLibraryProblemMessage(XmlStringUtil.escapeText(entry.getPresentableName())).get(),
                         null,
                         ProjectStructureProblemType.error("invalid-module-dependency"),
                         createPlace(entry),

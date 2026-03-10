@@ -95,7 +95,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
   }
 
   public void copyFrom(@Nonnull UserFileType newType) {
-    myName = newType.getName();
+    myName = newType.getId();
     myDescription = newType.getDescription().get();
   }
 

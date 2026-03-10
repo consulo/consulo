@@ -151,7 +151,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     Object value = token;
     String text = matcherElement.getText();
     if (text != null && processInnerText) {
-      text = StringUtil.unescapeStringCharacters(matcherElement.getText());
+      text = StringUtil.unescapeStringCharacters(text);
       if (!StringUtil.isEmpty(text)) {
         value = text;
       }

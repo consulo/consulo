@@ -23,13 +23,15 @@ package consulo.codeEditor.event;
  */
 public interface SoftWrapChangeListener {
 
-  /**
-   * This method is called if soft wraps have been added or removed during recalculation.
-   */
-  void softWrapsChanged();
+    /**
+     * This method is called if soft wraps have been added or removed during recalculation.
+     */
+    default void softWrapsChanged() {
+    }
 
-  /**
-   * Is called when soft wraps recalculation is finished.
-   */
-  void recalculationEnds();
+    /**
+     * Is called when soft wraps recalculation is finished.
+     */
+    default void recalculationEnds() {
+    }
 }

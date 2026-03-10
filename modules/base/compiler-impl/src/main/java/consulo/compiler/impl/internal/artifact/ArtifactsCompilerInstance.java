@@ -315,7 +315,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         Set<ArtifactCompilerCompileItem> processedItems = new HashSet<>();
         CompilerUtil.runInContext(
             myContext,
-            "Copying files",
+            LocalizeValue.localizeTODO("Copying files"),
             () -> built.set(doBuild(target.getArtifact(), changedItems, processedItems, writtenPaths, deletedJars))
         );
         if (!built.get()) {

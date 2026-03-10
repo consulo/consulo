@@ -27,6 +27,7 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -193,8 +194,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                     }
                     line = line.replaceAll("[\\\\]{1}", "\\\\\\\\");
                     parsed.add(new EnvironmentVariable(
-                        StringUtil.unescapeStringCharacters(line.substring(0, pos)),
-                        StringUtil.unescapeStringCharacters(line.substring(pos + 1)),
+                        StringEscapeUtil.unescape(line, 0, pos),
+                        StringEscapeUtil.unescape(line, pos + 1, line.length()),
                         false
                     ));
                 }
@@ -250,8 +251,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                 }
                 pair = pair.replaceAll("[\\\\]", "\\\\\\\\");
                 result.put(
-                    StringUtil.unescapeStringCharacters(pair.substring(0, pos)).trim(),
-                    StringUtil.unescapeStringCharacters(pair.substring(pos + 1))
+                    StringEscapeUtil.unescape(pair, 0, pos).trim(),
+                    StringEscapeUtil.unescape(pair, pos + 1, pair.length())
                 );
             }
         }

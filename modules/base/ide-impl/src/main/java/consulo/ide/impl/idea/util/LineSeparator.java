@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
@@ -31,6 +32,8 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Kirill Likhodedov
  */
+@Deprecated
+@DeprecationInfo("Use from platform LineSeparator")
 public enum LineSeparator {
     LF("\n"),
     CRLF("\r\n"),

@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.function.Function;
 
 public class GraphColorManagerImpl implements GraphColorManager<Integer> {
@@ -76,7 +77,7 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
     private final Function<Integer, Hash> myHashGetter;
 
     @Nonnull
-    private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
+    private final SequencedMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
         return size() > 100;

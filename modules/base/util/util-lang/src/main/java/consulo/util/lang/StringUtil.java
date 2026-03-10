@@ -15,12 +15,16 @@
  */
 package consulo.util.lang;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.internal.NaturalComparator;
+import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -85,7 +89,7 @@ public final class StringUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
-    private static final String[] ourEmptyStringArray = new String[0];
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private static final String[] MN_QUOTED = {"&&", "__"};
     private static final String[] MN_CHARS = {"&", "_"};
@@ -93,10 +97,8 @@ public final class StringUtil {
     private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
     private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
-    private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
     private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
     private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
-    private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
     private static final String VOWELS = "aeiouy";
 
@@ -104,12 +106,198 @@ public final class StringUtil {
 
     public static final Function<String, String> SINGLE_QUOTER = s -> "'" + s + "'";
 
+    public static List<String> getWordsInStringLongestFirst(String find) {
+        List<String> words = getWordsIn(find);
+        if (words.isEmpty()) {
+            return words;
+        }
+
+        // hope long words are rare
+        words.sort((o1, o2) -> o2.length() - o1.length());
+        return words;
+    }
+
+    public static String escapePattern(String text) {
+        return replace(replace(text, "'", "''"), "{", "'{'");
+    }
+
+    public static String replace(String text, String oldS, String newS) {
+        return replace(text, oldS, newS, false);
+    }
+
+    public static String replaceIgnoreCase(String text, String oldS, String newS) {
+        return replace(text, oldS, newS, true);
+    }
+
+    public static String replace(String text, String oldS, String newS, boolean ignoreCase) {
+        if (text.length() < oldS.length()) {
+            return text;
+        }
+
+        StringBuilder newText = null;
+        int i = 0;
+
+        while (i < text.length()) {
+            int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
+            if (index < 0) {
+                if (i == 0) {
+                    return text;
+                }
+
+                newText.append(text, i, text.length());
+                break;
+            }
+            else {
+                if (newText == null) {
+                    if (text.length() == oldS.length()) {
+                        return newS;
+                    }
+                    newText = new StringBuilder(text.length() - i);
+                }
+
+                newText.append(text, i, index);
+                newText.append(newS);
+                i = index + oldS.length();
+            }
+        }
+        return newText != null ? newText.toString() : "";
+    }
+
+    @Deprecated
+    public static String replaceChar(String buffer, char oldChar, char newChar) {
+        return buffer.replace(oldChar, newChar);
+    }
+
+    public static String replace(String text, String[] from, String[] to) {
+        return replace(text, Arrays.asList(from), Arrays.asList(to));
+    }
+
+    public static String replace(String text, List<String> from, List<String> to) {
+        assert from.size() == to.size();
+        StringBuilder result = new StringBuilder(text.length());
+        replace:
+        for (int i = 0, n = text.length(); i < n; i++) {
+            for (int j = 0, m = from.size(); j < m; j++) {
+                String toReplace = from.get(j);
+                String replaceWith = to.get(j);
+
+                int len = toReplace.length();
+                if (text.regionMatches(i, toReplace, 0, len)) {
+                    result.append(replaceWith);
+                    i += len - 1;
+                    continue replace;
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        return result.toString();
+    }
+
+    public static int indexOfIgnoreCase(String where, String what, int fromIndex) {
+        return indexOfIgnoreCase((CharSequence) where, what, fromIndex);
+    }
+
+    /**
+     * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case-insensitive
+     */
+    public static int indexOfIgnoreCase(CharSequence where, CharSequence what, int fromIndex) {
+        int targetCount = what.length();
+        int sourceCount = where.length();
+
+        if (fromIndex >= sourceCount) {
+            return targetCount == 0 ? sourceCount : -1;
+        }
+
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+
+        if (targetCount == 0) {
+            return fromIndex;
+        }
+
+        char first = what.charAt(0);
+        int max = sourceCount - targetCount;
+
+        for (int i = fromIndex; i <= max; i++) {
+            /* Look for the first character. */
+            if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+                //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
+                while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) {
+                }
+            }
+
+            /* Found first character, now look at the rest of v2 */
+            if (i <= max) {
+                int j = i + 1;
+                int end = j + targetCount - 1;
+                //noinspection StatementWithEmptyBody
+                for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) {
+                }
+
+                if (j == end) {
+                    /* Found whole string. */
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public static int indexOfIgnoreCase(String where, char what, int fromIndex) {
+        int sourceCount = where.length();
+
+        if (fromIndex >= sourceCount) {
+            return -1;
+        }
+
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+
+        for (int i = fromIndex; i < sourceCount; i++) {
+            if (charsEqualIgnoreCase(where.charAt(i), what)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static int lastIndexOfIgnoreCase(String where, char c, int fromIndex) {
+        for (int i = Math.min(fromIndex, where.length() - 1); i >= 0; i--) {
+            if (charsEqualIgnoreCase(where.charAt(i), c)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static boolean containsIgnoreCase(String where, String what) {
+        return indexOfIgnoreCase(where, what, 0) >= 0;
+    }
+
+    public static String stripHtml(String html, boolean convertBreaks) {
+        if (convertBreaks) {
+            html = html.replaceAll("<br/?>", "\n\n");
+        }
+
+        return html.replaceAll("<(.|\n)*?>", "");
+    }
+
+
     public static boolean isAscii(String str) {
         return isAscii((CharSequence) str);
     }
 
     public static String htmlEmphasize(String text) {
-        return "<b><code>" + escapeXml(text) + "</code></b>";
+        StringBuilder builder = new StringBuilder(text.length() + 20);
+        builder.append("<b><code>");
+        XmlStringUtil.escapeText(text, builder);
+        builder.append("</code></b>");
+        return builder.toString();
     }
 
     public static boolean isAscii(CharSequence str) {
@@ -125,57 +313,8 @@ public final class StringUtil {
         return c < 128;
     }
 
-    public static String replaceChar(String buffer, char oldChar, char newChar) {
-        StringBuilder newBuffer = null;
-        for (int i = 0; i < buffer.length(); i++) {
-            char c = buffer.charAt(i);
-            if (c == oldChar) {
-                if (newBuffer == null) {
-                    newBuffer = new StringBuilder(buffer.length());
-                    newBuffer.append(buffer, 0, i);
-                }
-
-                newBuffer.append(newChar);
-            }
-            else if (newBuffer != null) {
-                newBuffer.append(c);
-            }
-        }
-        return newBuffer == null ? buffer : newBuffer.toString();
-    }
-
     public static String defaultIfEmpty(@Nullable String value, String defaultValue) {
         return isEmpty(value) ? defaultValue : value;
-    }
-
-    public static String escapePattern(String text) {
-        return replace(replace(text, "'", "''"), "{", "'{'");
-    }
-
-    public static String capitalizeWords(String text, boolean allWords) {
-        return capitalizeWords(text, " \t\n\r\f", allWords, false);
-    }
-
-    public static String capitalizeWords(
-        String text,
-        String tokenizerDelim,
-        boolean allWords,
-        boolean leaveOriginalDelims
-    ) {
-        StringTokenizer tokenizer = new StringTokenizer(text, tokenizerDelim, leaveOriginalDelims);
-        StringBuilder out = new StringBuilder(text.length());
-        boolean toCapitalize = true;
-        while (tokenizer.hasMoreTokens()) {
-            String word = tokenizer.nextToken();
-            if (!leaveOriginalDelims && out.length() > 0) {
-                out.append(' ');
-            }
-            out.append(toCapitalize ? capitalize(word) : word);
-            if (!allWords) {
-                toCapitalize = false;
-            }
-        }
-        return out.toString();
     }
 
     public static String firstLast(String text, int length) {
@@ -202,62 +341,6 @@ public final class StringUtil {
         }
 
         return false;
-    }
-
-    public static int indexOfIgnoreCase(String where, char what, int fromIndex) {
-        int sourceCount = where.length();
-
-        if (fromIndex >= sourceCount) {
-            return -1;
-        }
-
-        if (fromIndex < 0) {
-            fromIndex = 0;
-        }
-
-        for (int i = fromIndex; i < sourceCount; i++) {
-            if (charsEqualIgnoreCase(where.charAt(i), what)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    public static String pluralize(String base, int n) {
-        if (n == 1) {
-            return base;
-        }
-        return pluralize(base);
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    public static String pluralize(String suggestion) {
-        if (suggestion.endsWith("Child") || suggestion.endsWith("child")) {
-            return suggestion + "ren";
-        }
-
-        if (suggestion.equals("this")) {
-            return "these";
-        }
-        if (suggestion.equals("This")) {
-            return "These";
-        }
-
-        if (endsWithIgnoreCase(suggestion, "es")) {
-            return suggestion;
-        }
-
-        if (endsWithIgnoreCase(suggestion, "s") || endsWithIgnoreCase(suggestion, "x") || endsWithIgnoreCase(suggestion, "ch")) {
-            return suggestion + "es";
-        }
-
-        int len = suggestion.length();
-        if (endsWithIgnoreCase(suggestion, "y") && len > 1 && !isVowel(toLowerCase(suggestion.charAt(len - 2)))) {
-            return suggestion.substring(0, len - 1) + "ies";
-        }
-
-        return suggestion + "s";
     }
 
     /**
@@ -321,21 +404,24 @@ public final class StringUtil {
         return VOWELS.indexOf(c) >= 0;
     }
 
+    /**
+     * @see #getPackageName(String, char)
+     */
     public static String getPackageName(String fqName) {
         return getPackageName(fqName, '.');
     }
 
     /**
-     * Given a fqName returns the package name for the type or the containing type.
+     * Given a fqName returns the package name for the type <i>or the containing type</i>.
      * <p/>
      * <ul>
-     * <li><code>java.lang.String</code> -> <code>java.lang</code></li>
-     * <li><code>java.util.Map.Entry</code> -> <code>java.util.Map</code></li>
+     * <li>{@code java.lang.String} -> {@code java.lang}</li>
+     * <li>{@code java.util.Map.Entry} -> {@code java.util.Map}</li>
      * </ul>
      *
      * @param fqName    a fully qualified type name. Not supposed to contain any type arguments
-     * @param separator the separator to use. Typically '.'
-     * @return the package name of the type or the declarator of the type. The empty string if the given fqName is unqualified
+     * @param separator the separator to use. Typically, '.'
+     * @return the package name of the type or the declarator of the type. The empty string if the given {@code fqName} is unqualified
      */
     public static String getPackageName(String fqName, char separator) {
         int lastPointIdx = fqName.lastIndexOf(separator);
@@ -346,18 +432,18 @@ public final class StringUtil {
     }
 
     public static boolean equalsIgnoreCase(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
         }
-
-        if (s1.length() != s2.length()) {
+        if (s1 == null || s2 == null) {
             return false;
         }
-        for (int i = 0; i < s1.length(); i++) {
+
+        int n = s1.length();
+        if (n != s2.length()) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
             if (!charsMatch(s1.charAt(i), s2.charAt(i), true)) {
                 return false;
             }
@@ -376,7 +462,9 @@ public final class StringUtil {
             return beginning + replacement + ending;
         }
         catch (StringIndexOutOfBoundsException e) {
-            throw new StringIndexOutOfBoundsException("Can't replace " + startOffset + ":" + endOffset + " range from '" + original + "' with '" + replacement + "'");
+            throw new StringIndexOutOfBoundsException(
+                "Can't replace " + startOffset + ":" + endOffset + " range from '" + original + "' with '" + replacement + "'"
+            );
         }
     }
 
@@ -410,85 +498,241 @@ public final class StringUtil {
         return indexOf(sequence, infix, 0);
     }
 
-    public static String unescapeStringCharacters(String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        unescapeStringCharacters(s.length(), s, buffer);
-        return buffer.toString();
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    public static String escapeStringCharacters(CharSequence s) {
+        return StringEscapeUtil.escape(s, '"');
     }
 
-    private static void unescapeStringCharacters(int length, String s, StringBuilder buffer) {
-        boolean escaped = false;
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    public static StringBuilder escapeStringCharacters(CharSequence s, StringBuilder buffer) {
+        return StringEscapeUtil.escape(s, '"', buffer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    @SuppressWarnings("deprecation")
+    public static void escapeStringCharacters(int length, String s, StringBuilder buffer) {
+        StringEscapeUtil.escape(s, 0, length, '"', buffer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    @SuppressWarnings("deprecation")
+    public static StringBuilder escapeStringCharacters(
+        int length,
+        String str,
+        @Nullable String additionalChars,
+        StringBuilder buffer
+    ) {
+        return escapeStringCharacters(length, str, additionalChars, true, buffer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    @SuppressWarnings("deprecation")
+    public static StringBuilder escapeStringCharacters(
+        int length,
+        String str,
+        @Nullable String additionalChars,
+        boolean escapeSlash,
+        StringBuilder buffer
+    ) {
+        return escapeStringCharacters(length, str, additionalChars, escapeSlash, true, buffer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    public static StringBuilder escapeStringCharacters(
+        int length,
+        String str,
+        @Nullable String additionalChars,
+        boolean escapeSlash,
+        boolean escapeUnicode,
+        StringBuilder buffer
+    ) {
+        char prev = 0;
         for (int idx = 0; idx < length; idx++) {
-            char ch = s.charAt(idx);
-            if (!escaped) {
-                if (ch == '\\') {
-                    escaped = true;
-                }
-                else {
-                    buffer.append(ch);
-                }
-            }
-            else {
-                switch (ch) {
-                    case 'n':
-                        buffer.append('\n');
-                        break;
+            char ch = str.charAt(idx);
+            switch (ch) {
+                case '\b' -> buffer.append("\\b");
+                case '\f' -> buffer.append("\\f");
+                case '\n' -> buffer.append("\\n");
+                case '\r' -> buffer.append("\\r");
+                case '\t' -> buffer.append("\\t");
 
-                    case 'r':
-                        buffer.append('\r');
-                        break;
-
-                    case 'b':
-                        buffer.append('\b');
-                        break;
-
-                    case 't':
-                        buffer.append('\t');
-                        break;
-
-                    case 'f':
-                        buffer.append('\f');
-                        break;
-
-                    case '\'':
-                        buffer.append('\'');
-                        break;
-
-                    case '\"':
-                        buffer.append('\"');
-                        break;
-
-                    case '\\':
-                        buffer.append('\\');
-                        break;
-
-                    case 'u':
-                        if (idx + 4 < length) {
-                            try {
-                                int code = Integer.parseInt(s.substring(idx + 1, idx + 5), 16);
-                                idx += 4;
-                                buffer.append((char) code);
-                            }
-                            catch (NumberFormatException e) {
-                                buffer.append("\\u");
-                            }
-                        }
-                        else {
-                            buffer.append("\\u");
-                        }
-                        break;
-
-                    default:
+                case '\\' -> {
+                    if (escapeSlash) {
+                        buffer.append("\\\\");
+                    }
+                    else {
                         buffer.append(ch);
-                        break;
+                    }
                 }
-                escaped = false;
+
+                default -> {
+                    if (additionalChars != null && additionalChars.indexOf(ch) > -1 && (escapeSlash || prev != '\\')) {
+                        buffer.append("\\").append(ch);
+                    }
+                    else if (escapeUnicode && !isPrintableUnicode(ch)) {
+                        buffer.append("\\u");
+                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
+                        for (int paddingCount = 4 - hexCode.length(); --paddingCount >= 0; ) {
+                            buffer.append('0');
+                        }
+                        buffer.append(hexCode);
+                    }
+                    else {
+                        buffer.append(ch);
+                    }
+                }
             }
+            prev = ch;
+        }
+        return buffer;
+    }
+
+    public static boolean isPrintableUnicode(char c) {
+        int t = Character.getType(c);
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
+        return t != Character.UNASSIGNED
+            && t != Character.LINE_SEPARATOR
+            && t != Character.PARAGRAPH_SEPARATOR
+            && t != Character.CONTROL
+            && t != Character.FORMAT
+            && t != Character.PRIVATE_USE
+            && t != Character.SURROGATE
+            && block != Character.UnicodeBlock.VARIATION_SELECTORS
+            && block != Character.UnicodeBlock.VARIATION_SELECTORS_SUPPLEMENT;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#escape")
+    public static String escapeCharCharacters(CharSequence s) {
+        return StringEscapeUtil.escape(s, '\'');
+    }
+
+    private static boolean isQuoteAt(String s, int ind) {
+        char ch = s.charAt(ind);
+        return ch == '\'' || ch == '\"';
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#isQuoted with specific quote sign")
+    public static boolean isQuotedString(String s) {
+        return s.length() > 1 && isQuoteAt(s, 0) && s.charAt(0) == s.charAt(s.length() - 1);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
+    public static String unquoteString(String s) {
+        if (isQuotedString(s)) {
+            return s.substring(1, s.length() - 1);
+        }
+        return s;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unquote (it unescapes as well)")
+    public static String unquoteString(String s, char quotationChar) {
+        if (s.length() > 1 && quotationChar == s.charAt(0) && quotationChar == s.charAt(s.length() - 1)) {
+            return s.substring(1, s.length() - 1);
+        }
+        return s;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
+    public static String unescapeStringCharacters(CharSequence s) {
+        return StringEscapeUtil.unescape(s);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use StringEscapeUtil#unescape")
+    public static void unescapeStringCharacters(int length, String s, StringBuilder buffer) {
+        StringEscapeUtil.unescape(s, 0, length, buffer);
+    }
+
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    public static String pluralize(String word) {
+        if (word.endsWith("Child") || word.endsWith("child")) {
+            return word + "ren";
         }
 
-        if (escaped) {
-            buffer.append('\\');
+        if (word.equals("this")) {
+            return "these";
         }
+        if (word.equals("This")) {
+            return "These";
+        }
+
+        if (endsWithIgnoreCase(word, "es")) {
+            return word;
+        }
+
+        if (endsWithIgnoreCase(word, "s") || endsWithIgnoreCase(word, "x") || endsWithIgnoreCase(word, "ch")) {
+            return word + "es";
+        }
+
+        int len = word.length();
+        if (endsWithIgnoreCase(word, "y") && len > 1 && !isVowel(toLowerCase(word.charAt(len - 2)))) {
+            return word.substring(0, len - 1) + "ies";
+        }
+
+        return word + "s";
+    }
+
+    public static String capitalizeWords(String text, boolean allWords) {
+        return capitalizeWords(text, " \t\n\r\f", allWords, false);
+    }
+
+    public static String capitalizeWords(String text, String tokenizerDelim, boolean allWords, boolean leaveOriginalDelims) {
+        StringTokenizer tokenizer = new StringTokenizer(text, tokenizerDelim, leaveOriginalDelims);
+        StringBuilder out = new StringBuilder(text.length());
+        boolean toCapitalize = true;
+        while (tokenizer.hasMoreTokens()) {
+            String word = tokenizer.nextToken();
+            if (!leaveOriginalDelims && out.length() > 0) {
+                out.append(' ');
+            }
+            out.append(toCapitalize ? capitalize(word) : word);
+            if (!allWords) {
+                toCapitalize = false;
+            }
+        }
+        return out.toString();
+    }
+
+    public static String decapitalize(@Nullable String s) {
+        if (isEmpty(s)) {
+            return s;
+        }
+        if (s.length() > 1 && Character.isUpperCase(s.charAt(1)) && Character.isUpperCase(s.charAt(0))) {
+            return s;
+        }
+        char chars[] = s.toCharArray();
+        chars[0] = Character.toLowerCase(chars[0]);
+        return new String(chars);
+    }
+
+    public static String capitalize(String s) {
+        if (s.isEmpty()) {
+            return s;
+        }
+        if (s.length() == 1) {
+            return toUpperCase(s);
+        }
+
+        // Optimization
+        if (Character.isUpperCase(s.charAt(0))) {
+            return s;
+        }
+        return toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    public static boolean isCapitalized(@Nullable String s) {
+        return s != null && !s.isEmpty() && Character.isUpperCase(s.charAt(0));
     }
 
     public static String escapeToRegexp(String text) {
@@ -552,14 +796,13 @@ public final class StringUtil {
     }
 
     public static List<Pair<String, Integer>> getWordsWithOffset(String s) {
-        List<Pair<String, Integer>> res = new ArrayList<>();
-        s += " ";
+        List<Pair<String, Integer>> result = new ArrayList<>();
         StringBuilder name = new StringBuilder();
         int startInd = -1;
         for (int i = 0; i < s.length(); i++) {
             if (Character.isWhitespace(s.charAt(i))) {
-                if (name.length() > 0) {
-                    res.add(Pair.create(name.toString(), startInd));
+                if (!name.isEmpty()) {
+                    result.add(Pair.create(name.toString(), startInd));
                     name.setLength(0);
                     startInd = -1;
                 }
@@ -571,20 +814,21 @@ public final class StringUtil {
                 name.append(s.charAt(i));
             }
         }
-        return res;
+        if (!name.isEmpty()) {
+            result.add(Pair.create(name.toString(), startInd));
+        }
+        return result;
     }
 
     public static int parseInt(@Nullable String string, int defaultValue) {
-        if (string == null) {
-            return defaultValue;
+        if (string != null) {
+            try {
+                return Integer.parseInt(string);
+            }
+            catch (NumberFormatException ignored) {
+            }
         }
-
-        try {
-            return Integer.parseInt(string);
-        }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return defaultValue;
     }
 
     public static long parseLong(@Nullable String string, long defaultValue) {
@@ -598,22 +842,20 @@ public final class StringUtil {
         return defaultValue;
     }
 
-    public static double parseDouble(String string, double defaultValue) {
-        try {
-            return Double.parseDouble(string);
+    public static double parseDouble(@Nullable String string, double defaultValue) {
+        if (string != null) {
+            try {
+                return Double.parseDouble(string);
+            }
+            catch (NumberFormatException ignored) {
+            }
         }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return defaultValue;
     }
 
+    @Deprecated
     public static boolean parseBoolean(String string, boolean defaultValue) {
-        try {
-            return Boolean.parseBoolean(string);
-        }
-        catch (Exception e) {
-            return defaultValue;
-        }
+        return Boolean.parseBoolean(string);
     }
 
     public static boolean startsWithIgnoreCase(String str, String prefix) {
@@ -625,14 +867,19 @@ public final class StringUtil {
     public static StringBuilder escapeToRegexp(CharSequence text, StringBuilder builder) {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
-            if (c == ' ' || Character.isLetter(c) || Character.isDigit(c) || c == '_') {
-                builder.append(c);
-            }
-            else if (c == '\n') {
+            if (c == '\n') {
                 builder.append("\\n");
             }
-            else {
+            else if (c == '\r') {
+                builder.append("\\r");
+            }
+            else if (".$|()[]{}^?*+\\".indexOf(c) >= 0) {
+                // escaping ']' and '}' is not required for most regex dialects,
+                // but we do it for maximum compatibility
                 builder.append('\\').append(c);
+            }
+            else {
+                builder.append(c);
             }
         }
 
@@ -644,7 +891,7 @@ public final class StringUtil {
     }
 
     public static String trimMiddle(String text, int maxLength, boolean useEllipsisSymbol) {
-        return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, useEllipsisSymbol);
+        return shortenTextWithEllipsis(text, maxLength, useEllipsisSymbol ? maxLength >> 1 : (maxLength >> 1) - 1, useEllipsisSymbol);
     }
 
     public static String trimMiddle(String text, int maxLength) {
@@ -656,33 +903,6 @@ public final class StringUtil {
      */
     public static String convertLineSeparators(String text) {
         return convertLineSeparators(text, false);
-    }
-
-    public static String join(@Nullable String... strings) {
-        if (strings == null || strings.length == 0) {
-            return "";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            builder.append(string);
-        }
-        return builder.toString();
-    }
-
-    public static String join(String[] strings, String separator) {
-        return join(strings, 0, strings.length, separator);
-    }
-
-    public static String join(String[] strings, int startIndex, int endIndex, String separator) {
-        StringBuilder result = new StringBuilder();
-        for (int i = startIndex; i < endIndex; i++) {
-            if (i > startIndex) {
-                result.append(separator);
-            }
-            result.append(strings[i]);
-        }
-        return result.toString();
     }
 
     public static String trimLog(String text, int limit) {
@@ -742,7 +962,14 @@ public final class StringUtil {
         int textLength = text.length();
         if (textLength > maxLength) {
             int prefixLength = maxLength - suffixLength - symbol.length();
-            assert prefixLength > 0;
+            if (prefixLength <= 0) {
+                throw new IllegalArgumentException(
+                    "prefixLength = " + prefixLength +
+                        " for given textLength = " + textLength +
+                        ", maxLength = " + maxLength +
+                        " and suffixLength = " + suffixLength
+                );
+            }
             return text.substring(0, prefixLength) + symbol + text.substring(textLength - suffixLength);
         }
         else {
@@ -815,13 +1042,11 @@ public final class StringUtil {
                     shiftOffsets(offsetsToKeep, buffer.length(), 1, newSeparator.length());
                 }
             }
+            else if (buffer == null) {
+                intactLength++;
+            }
             else {
-                if (buffer == null) {
-                    intactLength++;
-                }
-                else {
-                    buffer.append(c);
-                }
+                buffer.append(c);
             }
         }
         return buffer == null ? text : buffer;
@@ -844,12 +1069,18 @@ public final class StringUtil {
     }
 
     public static List<String> splitHonorQuotes(String s, char separator) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         StringBuilder builder = new StringBuilder(s.length());
-        boolean inQuotes = false;
+        char quote = 0;
+        boolean isEscaped = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (c == separator && !inQuotes) {
+            boolean isSeparator = c == separator;
+            boolean isQuote = c == '"' || c == '\'';
+            boolean isQuoted = quote != 0;
+            boolean isEscape = c == '\\';
+
+            if (!isQuoted && isSeparator) {
                 if (builder.length() > 0) {
                     result.add(builder.toString());
                     builder.setLength(0);
@@ -857,12 +1088,14 @@ public final class StringUtil {
                 continue;
             }
 
-            if ((c == '"' || c == '\'') && !(i > 0 && s.charAt(i - 1) == '\\')) {
-                inQuotes = !inQuotes;
+            if (!isEscaped && isQuote && (quote == 0 || quote == c)) {
+                quote = isQuoted ? 0 : c;
             }
+
+            isEscaped = isEscape && !isEscaped;
+
             builder.append(c);
         }
-
         if (builder.length() > 0) {
             result.add(builder.toString());
         }
@@ -897,8 +1130,17 @@ public final class StringUtil {
         return count;
     }
 
+    public static String pluralize(String base, int count) {
+        if (count == 1) {
+            return base;
+        }
+        return pluralize(base);
+    }
+
     public static void repeatSymbol(Appendable buffer, char symbol, int times) {
-        assert times >= 0 : times;
+        if (times < 0) {
+            throw new IllegalArgumentException("Negative count: " + times);
+        }
         try {
             for (int i = 0; i < times; i++) {
                 buffer.append(symbol);
@@ -922,7 +1164,12 @@ public final class StringUtil {
     }
 
     public static int indexOfAny(CharSequence s, String chars, int start, int end) {
-        for (int i = start; i < end; i++) {
+        if (chars.isEmpty()) {
+            return -1;
+        }
+
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (containsChar(chars, s.charAt(i))) {
                 return i;
             }
@@ -941,7 +1188,9 @@ public final class StringUtil {
     }
 
     public static String repeat(String s, int count) {
-        assert count >= 0 : count;
+        if (count < 0) {
+            throw new IllegalArgumentException("Negative count: " + count);
+        }
         StringBuilder sb = new StringBuilder(s.length() * count);
         for (int i = 0; i < count; i++) {
             sb.append(s);
@@ -950,14 +1199,14 @@ public final class StringUtil {
     }
 
     public static boolean isDecimalDigit(char c) {
-        return c >= '0' && c <= '9';
+        return '0' <= c && c <= '9';
     }
 
     public static boolean isNotNegativeNumber(@Nullable CharSequence s) {
         if (s == null) {
             return false;
         }
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (!isDecimalDigit(s.charAt(i))) {
                 return false;
             }
@@ -1044,31 +1293,10 @@ public final class StringUtil {
     /**
      * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
      */
+    @Deprecated
+    @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
     public static String escapeXmlEntities(String text) {
         return replace(text, REPLACES_DISP, REPLACES_REFS);
-    }
-
-    private static boolean isQuoteAt(String s, int ind) {
-        char ch = s.charAt(ind);
-        return ch == '\'' || ch == '\"';
-    }
-
-    public static boolean isQuotedString(String s) {
-        return s.length() > 1 && isQuoteAt(s, 0) && s.charAt(0) == s.charAt(s.length() - 1);
-    }
-
-    public static String unquoteString(String s) {
-        if (isQuotedString(s)) {
-            return s.substring(1, s.length() - 1);
-        }
-        return s;
-    }
-
-    public static String unquoteString(String s, char quotationChar) {
-        if (s.length() > 1 && quotationChar == s.charAt(0) && quotationChar == s.charAt(s.length() - 1)) {
-            return s.substring(1, s.length() - 1);
-        }
-        return s;
     }
 
     public static String escapeMnemonics(@Nullable String text) {
@@ -1078,20 +1306,29 @@ public final class StringUtil {
         return replace(text, MN_CHARS, MN_QUOTED);
     }
 
-    public static boolean containsIgnoreCase(String where, String what) {
-        return indexOfIgnoreCase(where, what, 0) >= 0;
-    }
-
     public static String first(String text, int maxLength, boolean appendEllipsis) {
-        return text.length() > maxLength ? text.substring(0, maxLength) + (appendEllipsis ? "..." : "") : text;
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        String cropped = text.substring(0, maxLength);
+        return appendEllipsis ? cropped + "..." : cropped;
     }
 
-    public static CharSequence first(CharSequence text, int length, boolean appendEllipsis) {
-        return text.length() > length ? text.subSequence(0, length) + (appendEllipsis ? "..." : "") : text;
+    public static CharSequence first(CharSequence text, int maxLength, boolean appendEllipsis) {
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        CharSequence cropped = text.subSequence(0, maxLength);
+        return appendEllipsis ? cropped + "..." : cropped;
     }
 
-    public static CharSequence last(CharSequence text, int length, boolean prependEllipsis) {
-        return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+    public static CharSequence last(CharSequence text, int maxLength, boolean prependEllipsis) {
+        int length = text.length();
+        if (length <= maxLength) {
+            return text;
+        }
+        CharSequence cropped = text.subSequence(length - maxLength, length);
+        return prependEllipsis ? "..." + cropped : cropped;
     }
 
     public static String trim(@Nullable String s) {
@@ -1195,65 +1432,183 @@ public final class StringUtil {
         return () -> tokenizer;
     }
 
-    public static Iterable<String> tokenize(final StringTokenizer tokenizer) {
-        return new Iterable<>() {
+    public static Iterable<String> tokenize(StringTokenizer tokenizer) {
+        return () -> new Iterator<>() {
             @Override
-            public Iterator<String> iterator() {
-                return new Iterator<>() {
-                    @Override
-                    public boolean hasNext() {
-                        return tokenizer.hasMoreTokens();
-                    }
+            public boolean hasNext() {
+                return tokenizer.hasMoreTokens();
+            }
 
-                    @Override
-                    public String next() {
-                        return tokenizer.nextToken();
-                    }
+            @Override
+            public String next() {
+                return tokenizer.nextToken();
+            }
 
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
         };
     }
 
-    public static <T> String join(
-        Collection<? extends T> items,
-        Function<? super T, String> f,
-        String separator
-    ) {
-        if (items.isEmpty()) {
+    public static String join(@Nullable String... strings) {
+        int length = strings == null ? 0 : strings.length;
+        if (length == 0) {
             return "";
         }
-        return join((Iterable<? extends T>) items, f, separator);
+        else if (length == 1) {
+            return String.valueOf(strings[0]);
+        }
+
+        return join(new StringBuilder(), strings).toString();
     }
 
-    public static void join(Collection<String> strings, String separator, StringBuilder result) {
-        boolean isFirst = true;
-        for (String string : strings) {
-            if (string != null) {
-                if (isFirst) {
-                    isFirst = false;
-                }
-                else {
-                    result.append(separator);
-                }
+    public static StringBuilder join(StringBuilder result, @Nullable String... strings) {
+        if (strings != null) {
+            for (String string : strings) {
                 result.append(string);
             }
         }
+        return result;
+    }
+
+    public static String join(String[] strings, String separator) {
+        return join(strings, 0, strings.length, separator);
+    }
+
+    public static StringBuilder join(String[] strings, String separator, StringBuilder result) {
+        return join(strings, 0, strings.length, separator, result);
+    }
+
+    public static String join(String[] strings, int startIndex, int endIndex, String separator) {
+        if (endIndex == startIndex) {
+            return "";
+        }
+        else if (endIndex == startIndex + 1) {
+            return String.valueOf(strings[startIndex]);
+        }
+        return join(strings, startIndex, endIndex, separator, new StringBuilder()).toString();
+    }
+
+    public static StringBuilder join(String[] strings, int startIndex, int endIndex, String separator, StringBuilder result) {
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i > startIndex) {
+                result.append(separator);
+            }
+            result.append(strings[i]);
+        }
+        return result;
+    }
+
+    public static <T> String join(T[] items, Function<T, String> f, String separator) {
+        int length = items.length;
+        if (length == 0) {
+            return "";
+        }
+        else if (length == 1) {
+            return notNullize(f.apply(items[0]));
+        }
+        return join(items, f, separator, new StringBuilder()).toString();
+    }
+
+    public static <T> StringBuilder join(
+        T[] items,
+        Function<T, String> f,
+        String separator,
+        StringBuilder result
+    ) {
+        return join(Arrays.asList(items), f, separator, result);
+    }
+
+    public static String join(Collection<String> strings, String separator) {
+        if (strings.isEmpty()) {
+            return "";
+        }
+        else if (strings.size() == 1) {
+            String item = strings instanceof List<String> list ? list.get(0) : strings.iterator().next();
+            return notNullize(item);
+        }
+        return join(strings, separator, new StringBuilder()).toString();
+    }
+
+    public static StringBuilder join(Collection<String> strings, String separator, StringBuilder result) {
+        boolean isFirst = true;
+        for (String string : strings) {
+            if (string == null) {
+                continue;
+            }
+
+            if (isFirst) {
+                isFirst = false;
+            }
+            else {
+                result.append(separator);
+            }
+            result.append(string);
+        }
+        return result;
+    }
+
+    public static <T> String join(Collection<? extends T> items, Function<? super T, String> f, String separator) {
+        if (items.isEmpty()) {
+            return "";
+        }
+        else if (items.size() == 1) {
+            T item = items instanceof List<? extends T> list ? list.get(0) : items.iterator().next();
+            return notNullize(f.apply(item));
+        }
+        return join(items, f, separator, new StringBuilder()).toString();
+    }
+
+    public static <T> StringBuilder join(
+        Collection<? extends T> items,
+        Function<? super T, String> f,
+        String separator,
+        StringBuilder result
+    ) {
+        return join((Iterable<? extends T>) items, f, separator, result);
     }
 
     public static String join(Iterable<?> items, String separator) {
-        StringBuilder result = new StringBuilder();
+        return join(items, separator, new StringBuilder()).toString();
+    }
+
+    public static StringBuilder join(Iterable<?> items, String separator, StringBuilder result) {
         for (Object item : items) {
             result.append(item).append(separator);
         }
         if (result.length() > 0) {
             result.setLength(result.length() - separator.length());
         }
-        return result.toString();
+        return result;
+    }
+
+    public static <T> String join(Iterable<? extends T> items, Function<? super T, String> f, String separator) {
+        return join(items, f, separator, new StringBuilder()).toString();
+    }
+
+    public static <T> StringBuilder join(
+        Iterable<? extends T> items,
+        Function<? super T, String> f,
+        String separator,
+        StringBuilder result
+    ) {
+        boolean isFirst = true;
+        for (T item : items) {
+            String string = f.apply(item);
+            if (isEmpty(string)) {
+                continue;
+            }
+
+            if (isFirst) {
+                isFirst = false;
+            }
+            else {
+                result.append(separator);
+            }
+            result.append(string);
+        }
+        return result;
     }
 
     /**
@@ -1275,37 +1630,6 @@ public final class StringUtil {
         return '0' <= c && c <= '9' || 'a' <= c && c <= 'f' || 'A' <= c && c <= 'F';
     }
 
-    public static String capitalize(String s) {
-        if (s.isEmpty()) {
-            return s;
-        }
-        if (s.length() == 1) {
-            return toUpperCase(s).toString();
-        }
-
-        // Optimization
-        if (Character.isUpperCase(s.charAt(0))) {
-            return s;
-        }
-        return toUpperCase(s.charAt(0)) + s.substring(1);
-    }
-
-    public static boolean isCapitalized(@Nullable String s) {
-        return s != null && !s.isEmpty() && Character.isUpperCase(s.charAt(0));
-    }
-
-    public static String decapitalize(@Nullable String name) {
-        if (isEmpty(name)) {
-            return name;
-        }
-        if (name.length() > 1 && Character.isUpperCase(name.charAt(1)) && Character.isUpperCase(name.charAt(0))) {
-            return name;
-        }
-        char chars[] = name.toCharArray();
-        chars[0] = Character.toLowerCase(chars[0]);
-        return new String(chars);
-    }
-
     public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
         return s != null && s.length() != 0 && s.charAt(0) == prefix;
     }
@@ -1324,19 +1648,7 @@ public final class StringUtil {
     }
 
     public static int stringHashCode(CharSequence chars, int from, int to) {
-        int h = 0;
-        for (int off = from; off < to; off++) {
-            h = 31 * h + chars.charAt(off);
-        }
-        return h;
-    }
-
-    public static int stringHashCode(char[] chars, int from, int to) {
-        int h = 0;
-        for (int off = from; off < to; off++) {
-            h = 31 * h + chars[off];
-        }
-        return h;
+        return stringHashCode(chars, from, to, 0);
     }
 
     public static int stringHashCode(CharSequence chars, int from, int to, int prefixHash) {
@@ -1347,12 +1659,24 @@ public final class StringUtil {
         return h;
     }
 
-    public static int stringHashCodeInsensitive(char[] chars, int from, int to) {
+    public static int stringHashCode(char[] chars) {
+        return stringHashCode(chars, 0, chars.length);
+    }
+
+    public static int stringHashCode(char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            h = 31 * h + toLowerCase(chars[off]);
+            h = 31 * h + chars[off];
         }
         return h;
+    }
+
+    public static int stringHashCodeInsensitive(CharSequence chars) {
+        return stringHashCodeInsensitive(chars, 0, chars.length());
+    }
+
+    public static int stringHashCodeInsensitive(CharSequence chars, int from, int to) {
+        return stringHashCodeInsensitive(chars, from, to, 0);
     }
 
     public static int stringHashCodeInsensitive(CharSequence chars, int from, int to, int prefixHash) {
@@ -1363,22 +1687,26 @@ public final class StringUtil {
         return h;
     }
 
-    public static int stringHashCodeInsensitive(CharSequence chars, int from, int to) {
+    public static int stringHashCodeInsensitive(char[] chars) {
+        return stringHashCodeInsensitive(chars, 0, chars.length);
+    }
+
+    public static int stringHashCodeInsensitive(char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            h = 31 * h + toLowerCase(chars.charAt(off));
+            h = 31 * h + toLowerCase(chars[off]);
         }
         return h;
     }
 
-    public static int stringHashCodeInsensitive(CharSequence chars) {
-        return stringHashCodeInsensitive(chars, 0, chars.length());
+    public static int stringHashCodeIgnoreWhitespaces(CharSequence chars) {
+        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
     }
 
-    public static int stringHashCodeIgnoreWhitespaces(char[] chars, int from, int to) {
+    public static int stringHashCodeIgnoreWhitespaces(CharSequence chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            char c = chars[off];
+            char c = chars.charAt(off);
             if (!isWhiteSpace(c)) {
                 h = 31 * h + c;
             }
@@ -1386,10 +1714,14 @@ public final class StringUtil {
         return h;
     }
 
-    public static int stringHashCodeIgnoreWhitespaces(CharSequence chars, int from, int to) {
+    public static int stringHashCodeIgnoreWhitespaces(char[] chars) {
+        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length);
+    }
+
+    public static int stringHashCodeIgnoreWhitespaces(char[] chars, int from, int to) {
         int h = 0;
         for (int off = from; off < to; off++) {
-            char c = chars.charAt(off);
+            char c = chars[off];
             if (!isWhiteSpace(c)) {
                 h = 31 * h + c;
             }
@@ -1404,54 +1736,7 @@ public final class StringUtil {
      * @return <code>true</code> if given symbol is white space, tabulation or line feed; <code>false</code> otherwise
      */
     public static boolean isWhiteSpace(char c) {
-        return c == '\n' || c == '\t' || c == ' ';
-    }
-
-    public static int stringHashCodeIgnoreWhitespaces(CharSequence chars) {
-        return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
-    }
-
-    public static <T> String join(
-        T[] items,
-        java.util.function.Function<T, String> f,
-        String separator
-    ) {
-        return join(Arrays.asList(items), f, separator);
-    }
-
-    public static <T> void join(
-        Iterable<? extends T> items,
-        java.util.function.Function<? super T, String> f,
-        String separator,
-        StringBuilder result
-    ) {
-        boolean isFirst = true;
-        for (T item : items) {
-            String string = f.apply(item);
-            if (!isEmpty(string)) {
-                if (isFirst) {
-                    isFirst = false;
-                }
-                else {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-    }
-
-    public static <T> String join(Iterable<? extends T> items, Function<? super T, String> f, String separator) {
-        StringBuilder result = new StringBuilder();
-        for (T item : items) {
-            String string = f.apply(item);
-            if (string != null && !string.isEmpty()) {
-                if (result.length() != 0) {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-        return result.toString();
+        return c == '\t' || c == '\r' || c == '\n' || c == ' ';
     }
 
     public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
@@ -1462,19 +1747,20 @@ public final class StringUtil {
             return false;
         }
 
-        if (s1.length() != s2.length()) {
+        int n = s1.length();
+        if (s2.length() != n) {
             return false;
         }
 
         if (caseSensitive) {
-            for (int i = 0; i < s1.length(); i++) {
+            for (int i = 0; i < n; i++) {
                 if (s1.charAt(i) != s2.charAt(i)) {
                     return false;
                 }
             }
         }
         else {
-            for (int i = 0; i < s1.length(); i++) {
+            for (int i = 0; i < n; i++) {
                 if (!charsEqualIgnoreCase(s1.charAt(i), s2.charAt(i))) {
                     return false;
                 }
@@ -1485,18 +1771,18 @@ public final class StringUtil {
     }
 
     public static boolean equals(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
         }
-
-        if (s1.length() != s2.length()) {
+        if (s1 == null || s2 == null) {
             return false;
         }
-        for (int i = 0; i < s1.length(); i++) {
+
+        int n = s1.length();
+        if (n != s2.length()) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
             if (s1.charAt(i) != s2.charAt(i)) {
                 return false;
             }
@@ -1508,8 +1794,8 @@ public final class StringUtil {
         return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
-    public static String toUpperCase(String s) {
-        return toUpperCase((CharSequence) s).toString();
+    public static String toUpperCase(@Nullable String s) {
+        return s == null ? null : s.toUpperCase(Locale.US);
     }
 
     public static CharSequence toUpperCase(CharSequence s) {
@@ -1520,7 +1806,7 @@ public final class StringUtil {
             char upcased = toUpperCase(c);
             if (answer == null && upcased != c) {
                 answer = new StringBuilder(s.length());
-                answer.append(s.subSequence(0, i));
+                answer.append(s, 0, i);
             }
 
             if (answer != null) {
@@ -1542,7 +1828,6 @@ public final class StringUtil {
     }
 
     public static String toLowerCase(@Nullable String str) {
-        //noinspection ConstantConditions
         return str == null ? null : str.toLowerCase(Locale.US);
     }
 
@@ -1558,30 +1843,57 @@ public final class StringUtil {
         return Character.toLowerCase(a);
     }
 
+    @Nullable
+    public static String getPropertyName(String methodName) {
+        if (methodName.startsWith("get")) {
+            return decapitalize(methodName.substring(3));
+        }
+        if (methodName.startsWith("is")) {
+            return decapitalize(methodName.substring(2));
+        }
+        if (methodName.startsWith("set")) {
+            return decapitalize(methodName.substring(3));
+        }
+        return null;
+    }
+
     public static boolean isJavaIdentifierStart(char c) {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || Character.isJavaIdentifierStart(c);
+        return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || Character.isJavaIdentifierStart(c);
     }
 
     public static boolean isJavaIdentifierPart(char c) {
-        return c >= '0' && c <= '9' || isJavaIdentifierStart(c);
+        return '0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || Character.isJavaIdentifierPart(c);
     }
 
+    private static boolean isJavaIdentifierStart(int cp) {
+        return 'a' <= cp && cp <= 'z' || 'A' <= cp && cp <= 'Z' || Character.isJavaIdentifierStart(cp);
+    }
+
+    private static boolean isJavaIdentifierPart(int cp) {
+        return cp >= '0' && cp <= '9' || cp >= 'a' && cp <= 'z' || cp >= 'A' && cp <= 'Z' || Character.isJavaIdentifierPart(cp);
+    }
+
+    /**
+     * @return true iff the string is a valid java identifier (according to JLS 3.8)
+     */
     public static boolean isJavaIdentifier(String text) {
         int len = text.length();
         if (len == 0) {
             return false;
         }
-
-        if (!isJavaIdentifierStart(text.charAt(0))) {
+        int point = text.codePointAt(0);
+        if (!isJavaIdentifierStart(point)) {
             return false;
         }
+        int i = Character.charCount(point);
 
-        for (int i = 1; i < len; i++) {
-            if (!isJavaIdentifierPart(text.charAt(i))) {
+        while (i < len) {
+            point = text.codePointAt(i);
+            if (!isJavaIdentifierPart(point)) {
                 return false;
             }
+            i += Character.charCount(point);
         }
-
         return true;
     }
 
@@ -1624,16 +1936,11 @@ public final class StringUtil {
     @Nullable
     public static String nullize(@Nullable String s, boolean nullizeSpaces) {
         if (nullizeSpaces) {
-            if (isEmptyOrSpaces(s)) {
-                return null;
-            }
+            return isEmptyOrSpaces(s) ? null : s;
         }
         else {
-            if (isEmpty(s)) {
-                return null;
-            }
+            return isEmpty(s) ? null : s;
         }
-        return s;
     }
 
     // we need to keep this method to preserve backward compatibility
@@ -1645,7 +1952,7 @@ public final class StringUtil {
         if (isEmpty(s)) {
             return true;
         }
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (s.charAt(i) > ' ') {
                 return false;
             }
@@ -1666,8 +1973,8 @@ public final class StringUtil {
             return 1;
         }
 
-        String[] part1 = v1.split("[\\.\\_\\-]");
-        String[] part2 = v2.split("[\\.\\_\\-]");
+        String[] part1 = v1.split("[._\\-]");
+        String[] part2 = v2.split("[._\\-]");
 
         int idx = 0;
         for (; idx < part1.length && idx < part2.length; idx++) {
@@ -1686,10 +1993,7 @@ public final class StringUtil {
             }
         }
 
-        if (part1.length == part2.length) {
-            return 0;
-        }
-        else {
+        if (part1.length != part2.length) {
             boolean left = part1.length > idx;
             String[] parts = left ? part1 : part2;
 
@@ -1706,12 +2010,96 @@ public final class StringUtil {
                     return left ? cmp : -cmp;
                 }
             }
-            return 0;
+        }
+        return 0;
+    }
+
+    public static int getOccurrenceCount(String text, char c) {
+        int res = 0;
+        int i = 0;
+        while (i < text.length()) {
+            i = text.indexOf(c, i);
+            if (i >= 0) {
+                res++;
+                i++;
+            }
+            else {
+                break;
+            }
+        }
+        return res;
+    }
+
+    public static int getOccurrenceCount(String text, String s) {
+        int res = 0;
+        for (int i = 0, n = text.length(); i < n; i++, res++) {
+            i = text.indexOf(s, i);
+            if (i < 0) {
+                break;
+            }
+        }
+        return res;
+    }
+
+    public static String fixVariableNameDerivedFromPropertyName(String name) {
+        if (isEmptyOrSpaces(name)) {
+            return name;
+        }
+        char c = name.charAt(0);
+        if (isVowel(c)) {
+            return "an" + Character.toUpperCase(c) + name.substring(1);
+        }
+        return "a" + Character.toUpperCase(c) + name.substring(1);
+    }
+
+    public static String sanitizeJavaIdentifier(String name) {
+        int n = name.length();
+        StringBuilder result = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+            char ch = name.charAt(i);
+            if (Character.isJavaIdentifierPart(ch)) {
+                if (result.isEmpty() && !Character.isJavaIdentifierStart(ch)) {
+                    result.append("_");
+                }
+                result.append(ch);
+            }
+        }
+
+        return result.toString();
+    }
+
+    public static void assertValidSeparators(CharSequence s) {
+        char[] chars = CharArrayUtil.fromSequenceWithoutCopying(s);
+        int slashRIndex = -1;
+
+        if (chars != null) {
+            for (int i = 0, len = s.length(); i < len; ++i) {
+                if (chars[i] == '\r') {
+                    slashRIndex = i;
+                    break;
+                }
+            }
+        }
+        else {
+            for (int i = 0, len = s.length(); i < len; i++) {
+                if (s.charAt(i) == '\r') {
+                    slashRIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (slashRIndex != -1) {
+            String context =
+                String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
+            LOG.error("Wrong line separators: " + StringEscapeUtil.quote(context, '"') + " at offset " + slashRIndex);
         }
     }
 
     public static int indexOf(CharSequence s, char c, int start, int end, boolean caseSensitive) {
-        for (int i = start; i < end; i++) {
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (charsMatch(s.charAt(i), c, !caseSensitive)) {
                 return i;
             }
@@ -1720,8 +2108,10 @@ public final class StringUtil {
     }
 
     public static int indexOf(char[] s, char c, int start, int end, boolean caseSensitive) {
-        for (int i = start; i < end; i++) {
-            if (charsMatch(s[i], c, !caseSensitive)) {
+        end = Math.min(end, s.length);
+        for (int i = Math.max(start, 0); i < end; i++) {
+            boolean ignoreCase = !caseSensitive;
+            if (charsMatch(s[i], c, ignoreCase)) {
                 return i;
             }
         }
@@ -1737,7 +2127,8 @@ public final class StringUtil {
     }
 
     public static int indexOf(CharSequence s, char c, int start, int end) {
-        for (int i = start; i < end; i++) {
+        end = Math.min(end, s.length());
+        for (int i = Math.max(start, 0); i < end; i++) {
             if (s.charAt(i) == c) {
                 return i;
             }
@@ -1765,210 +2156,13 @@ public final class StringUtil {
         }
     }
 
-    public static void escapeStringCharacters(int length, String str, StringBuilder buffer) {
-        escapeStringCharacters(length, str, "\"", buffer);
-    }
-
-    public static StringBuilder escapeStringCharacters(
-        int length,
-        String str,
-        @Nullable String additionalChars,
-        StringBuilder buffer
-    ) {
-        return escapeStringCharacters(length, str, additionalChars, true, buffer);
-    }
-
-    public static StringBuilder escapeStringCharacters(
-        int length,
-        String str,
-        @Nullable String additionalChars,
-        boolean escapeSlash,
-        StringBuilder buffer
-    ) {
-        char prev = 0;
-        for (int idx = 0; idx < length; idx++) {
-            char ch = str.charAt(idx);
-            switch (ch) {
-                case '\b':
-                    buffer.append("\\b");
-                    break;
-
-                case '\t':
-                    buffer.append("\\t");
-                    break;
-
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-
-                case '\f':
-                    buffer.append("\\f");
-                    break;
-
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-
-                default:
-                    if (escapeSlash && ch == '\\') {
-                        buffer.append("\\\\");
-                    }
-                    else if (additionalChars != null && additionalChars.indexOf(ch) > -1 && (escapeSlash || prev != '\\')) {
-                        buffer.append("\\").append(ch);
-                    }
-                    else if (!isPrintableUnicode(ch)) {
-                        CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
-                        buffer.append("\\u");
-                        int paddingCount = 4 - hexCode.length();
-                        while (paddingCount-- > 0) {
-                            buffer.append(0);
-                        }
-                        buffer.append(hexCode);
-                    }
-                    else {
-                        buffer.append(ch);
-                    }
-            }
-            prev = ch;
-        }
-        return buffer;
-    }
-
     public static String trimExtension(String name) {
         int index = name.lastIndexOf('.');
         return index < 0 ? name : name.substring(0, index);
     }
 
-    public static boolean isPrintableUnicode(char c) {
-        int t = Character.getType(c);
-        return t != Character.UNASSIGNED &&
-            t != Character.LINE_SEPARATOR &&
-            t != Character.PARAGRAPH_SEPARATOR &&
-            t != Character.CONTROL &&
-            t != Character.FORMAT &&
-            t != Character.PRIVATE_USE &&
-            t != Character.SURROGATE;
-    }
-
-    public static String replace(String text, String oldS, String newS) {
-        return replace(text, oldS, newS, false);
-    }
-
-    public static String replace(String text, String[] from, String[] to) {
-        return replace(text, Arrays.asList(from), Arrays.asList(to));
-    }
-
-    public static String replace(String text, List<String> from, List<String> to) {
-        assert from.size() == to.size();
-        StringBuilder result = new StringBuilder(text.length());
-        replace:
-        for (int i = 0; i < text.length(); i++) {
-            for (int j = 0; j < from.size(); j += 1) {
-                String toReplace = from.get(j);
-                String replaceWith = to.get(j);
-
-                int len = toReplace.length();
-                if (text.regionMatches(i, toReplace, 0, len)) {
-                    result.append(replaceWith);
-                    i += len - 1;
-                    continue replace;
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        return result.toString();
-    }
-
     public static String internEmptyString(String s) {
         return s == null ? null : s.isEmpty() ? "" : s;
-    }
-
-    public static String replaceIgnoreCase(String text, String oldS, String newS) {
-        return replace(text, oldS, newS, true);
-    }
-
-    public static String replace(String text, String oldS, String newS, boolean ignoreCase) {
-        if (text.length() < oldS.length()) {
-            return text;
-        }
-
-        StringBuilder newText = null;
-        int i = 0;
-
-        while (i < text.length()) {
-            int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
-            if (index < 0) {
-                if (i == 0) {
-                    return text;
-                }
-
-                newText.append(text, i, text.length());
-                break;
-            }
-            else {
-                if (newText == null) {
-                    if (text.length() == oldS.length()) {
-                        return newS;
-                    }
-                    newText = new StringBuilder(text.length() - i);
-                }
-
-                newText.append(text, i, index);
-                newText.append(newS);
-                i = index + oldS.length();
-            }
-        }
-        return newText != null ? newText.toString() : "";
-    }
-
-    public static int indexOfIgnoreCase(String where, String what, int fromIndex) {
-        return indexOfIgnoreCase((CharSequence) where, what, fromIndex);
-    }
-
-    /**
-     * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
-     */
-    public static int indexOfIgnoreCase(CharSequence where, CharSequence what, int fromIndex) {
-        int targetCount = what.length();
-        int sourceCount = where.length();
-
-        if (fromIndex >= sourceCount) {
-            return targetCount == 0 ? sourceCount : -1;
-        }
-
-        if (fromIndex < 0) {
-            fromIndex = 0;
-        }
-
-        if (targetCount == 0) {
-            return fromIndex;
-        }
-
-        char first = what.charAt(0);
-        int max = sourceCount - targetCount;
-
-        for (int i = fromIndex; i <= max; i++) {
-            /* Look for first character. */
-            if (!charsEqualIgnoreCase(where.charAt(i), first)) {
-                //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
-                while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
-            }
-
-            /* Found first character, now look at the rest of v2 */
-            if (i <= max) {
-                int j = i + 1;
-                int end = j + targetCount - 1;
-                //noinspection StatementWithEmptyBody
-                for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
-
-                if (j == end) {
-                    /* Found whole string. */
-                    return i;
-                }
-            }
-        }
-
-        return -1;
     }
 
     public static String trimLeading(String string) {
@@ -2036,7 +2230,8 @@ public final class StringUtil {
      * <code>-1</code> otherwise
      */
     public static int lastIndexOf(CharSequence s, char c, int start, int end) {
-        for (int i = end - 1; i >= start; i--) {
+        start = Math.max(start, 0);
+        for (int i = Math.min(end, s.length()) - 1; i >= start; i--) {
             if (s.charAt(i) == c) {
                 return i;
             }
@@ -2100,7 +2295,11 @@ public final class StringUtil {
     }
 
     public static boolean startsWith(CharSequence text, int startIndex, CharSequence prefix) {
-        int l1 = text.length() - startIndex;
+        int tl = text.length();
+        if (startIndex < 0 || startIndex > tl) {
+            throw new IllegalArgumentException("Index is out of bounds: " + startIndex + ", length: " + tl);
+        }
+        int l1 = tl - startIndex;
         int l2 = prefix.length();
         if (l1 < l2) {
             return false;
@@ -2111,7 +2310,6 @@ public final class StringUtil {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -2131,22 +2329,7 @@ public final class StringUtil {
         );
     }
 
-    public static List<String> getWordsInStringLongestFirst(String find) {
-        List<String> words = getWordsIn(find);
-        if (words.isEmpty()) {
-            return List.of();
-        }
-
-        // hope long words are rare
-        words.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o2.length() - o1.length();
-            }
-        });
-        return words;
-    }
-
+    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isEscapedBackslash(CharSequence text, int startOffset, int backslashOffset) {
         if (text.charAt(backslashOffset) != '\\') {
             return true;
@@ -2163,6 +2346,7 @@ public final class StringUtil {
         return escaped;
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isEscapedBackslash(char[] chars, int startOffset, int backslashOffset) {
         if (chars[backslashOffset] != '\\') {
             return true;
@@ -2179,41 +2363,7 @@ public final class StringUtil {
         return escaped;
     }
 
-    public static void assertValidSeparators(CharSequence s) {
-        char[] chars = CharArrayUtil.fromSequenceWithoutCopying(s);
-        int slashRIndex = -1;
-
-        if (chars != null) {
-            for (int i = 0, len = s.length(); i < len; ++i) {
-                if (chars[i] == '\r') {
-                    slashRIndex = i;
-                    break;
-                }
-            }
-        }
-        else {
-            for (int i = 0, len = s.length(); i < len; i++) {
-                if (s.charAt(i) == '\r') {
-                    slashRIndex = i;
-                    break;
-                }
-            }
-        }
-
-        if (slashRIndex != -1) {
-            String context =
-                String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
-            context = escapeStringCharacters(context);
-            LOG.error("Wrong line separators: '" + context + "' at offset " + slashRIndex);
-        }
-    }
-
-    public static String escapeStringCharacters(String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        escapeStringCharacters(s.length(), s, "\"", buffer);
-        return buffer.toString();
-    }
-
+    // TODO: process all escapes
     public static String unescapeXml(@Nullable String text) {
         if (text == null) {
             return null;
@@ -2221,6 +2371,8 @@ public final class StringUtil {
         return replace(text, REPLACES_REFS, REPLACES_DISP);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
     public static String escapeXml(@Nullable String text) {
         if (text == null) {
             return null;
@@ -2230,19 +2382,15 @@ public final class StringUtil {
 
     public static int getLineBreakCount(CharSequence text) {
         int count = 0;
-        for (int i = 0; i < text.length(); i++) {
+        for (int i = 0, n = text.length(); i < n; i++) {
             char c = text.charAt(i);
             if (c == '\n') {
                 count++;
             }
             else if (c == '\r') {
-                if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
-                    //noinspection AssignmentToForLoopParameter
+                count++;
+                if (i + 1 < n && text.charAt(i + 1) == '\n') {
                     i++;
-                    count++;
-                }
-                else {
-                    count++;
                 }
             }
         }
@@ -2254,14 +2402,10 @@ public final class StringUtil {
     }
 
     public static int commonSuffixLength(CharSequence s1, CharSequence s2) {
-        int s1Length = s1.length();
-        int s2Length = s2.length();
-        if (s1Length == 0 || s2Length == 0) {
-            return 0;
-        }
-        int i;
-        for (i = 0; i < s1Length && i < s2Length; i++) {
-            if (s1.charAt(s1Length - i - 1) != s2.charAt(s2Length - i - 1)) {
+        int i, l1 = s1.length(), l2 = s2.length();
+        int minLength = Math.min(l1, l2);
+        for (i = 0; i < minLength; i++) {
+            if (s1.charAt(l1 - i - 1) != s2.charAt(l2 - i - 1)) {
                 break;
             }
         }
@@ -2289,20 +2433,21 @@ public final class StringUtil {
     }
 
     public static String formatDuration(long duration) {
-        return formatDuration(duration, null);
+        return formatDuration(duration, " ");
     }
 
     public static String formatDuration(long duration, String spaceBeforeUnits) {
         return formatValue(
             duration,
             " ",
-            new String[]{"ms", "s", "m", "h", "d", "w", "mo", "yr", "c", "ml", "ep"},
-            new long[]{1000, 60, 60, 24, 7, 4, 12, 100, 10, 10000},
+            new String[]{"ms", "s", "m", "h", "d"},
+            new long[]{1000, 60, 60, 24},
             spaceBeforeUnits
         );
     }
 
     private static String formatValue(long value, String partSeparator, String[] units, long[] multipliers, String spaceBeforeUnits) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.US));
         StringBuilder sb = new StringBuilder();
         long count = value;
         long remainder = 0;
@@ -2330,7 +2475,7 @@ public final class StringUtil {
             sb.insert(0, count);
         }
         else if (remainder > 0) {
-            sb.append(String.format(Locale.US, "%.2f", count + (double) remainder / multipliers[i - 1]));
+            sb.append(decimalFormat.format(count + (double) remainder / multipliers[i - 1]));
             if (spaceBeforeUnits != null) {
                 sb.append(spaceBeforeUnits);
             }
@@ -2396,18 +2541,14 @@ public final class StringUtil {
     }
 
     public static String escapeLineBreak(String text) {
-        StringBuilder buffer = new StringBuilder(text.length());
-        for (int i = 0; i < text.length(); i++) {
+        int n = text.length();
+        StringBuilder buffer = new StringBuilder(n);
+        for (int i = 0; i < n; i++) {
             char c = text.charAt(i);
             switch (c) {
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-                default:
-                    buffer.append(c);
+                case '\n' -> buffer.append("\\n");
+                case '\r' -> buffer.append("\\r");
+                default -> buffer.append(c);
             }
         }
         return buffer.toString();
@@ -2419,10 +2560,9 @@ public final class StringUtil {
     }
 
     public static int lineColToOffset(CharSequence text, int line, int col) {
-        int curLine = 0;
-        int offset = 0;
+        int curLine = 0, offset = 0, length = text.length();
         while (line != curLine) {
-            if (offset == text.length()) {
+            if (offset == length) {
                 return -1;
             }
             char c = text.charAt(offset);
@@ -2431,7 +2571,7 @@ public final class StringUtil {
             }
             else if (c == '\r') {
                 curLine++;
-                if (offset < text.length() - 1 && text.charAt(offset + 1) == '\n') {
+                if (offset + 1 < length && text.charAt(offset + 1) == '\n') {
                     offset++;
                 }
             }
@@ -2441,10 +2581,9 @@ public final class StringUtil {
     }
 
     public static int offsetToLineNumber(CharSequence text, int offset) {
-        int curLine = 0;
-        int curOffset = 0;
+        int curLine = 0, curOffset = 0, length = text.length();
         while (curOffset < offset) {
-            if (curOffset == text.length()) {
+            if (curOffset == length) {
                 return -1;
             }
             char c = text.charAt(curOffset);
@@ -2453,7 +2592,7 @@ public final class StringUtil {
             }
             else if (c == '\r') {
                 curLine++;
-                if (curOffset < text.length() - 1 && text.charAt(curOffset + 1) == '\n') {
+                if (curOffset + 1 < length && text.charAt(curOffset + 1) == '\n') {
                     curOffset++;
                 }
             }
@@ -2470,25 +2609,66 @@ public final class StringUtil {
      * @since 5.0.1
      */
     public static String formatFileSize(long fileSize) {
-        return formatFileSize(fileSize, null);
+        return formatFileSize(fileSize, " ", -1);
     }
 
     /**
      * Formats the specified file size as a string.
      *
-     * @param fileSize         the size to format.
-     * @param spaceBeforeUnits space to be used between counts and measurement units
+     * @param fileSize      the size to format.
+     * @param unitSeparator space to be used between counts and measurement units
      * @return the size formatted as a string.
      * @since 5.0.1
      */
-    public static String formatFileSize(long fileSize, String spaceBeforeUnits) {
-        return formatValue(
-            fileSize,
-            null,
-            new String[]{"B", "K", "M", "G", "T", "P", "E"},
-            new long[]{1000, 1000, 1000, 1000, 1000, 1000},
-            spaceBeforeUnits
-        );
+    public static String formatFileSize(long fileSize, String unitSeparator) {
+        return formatFileSize(fileSize, unitSeparator, -1);
+    }
+
+    /**
+     * Formats the specified file size as a string.
+     *
+     * @param fileSize      the size to format.
+     * @param unitSeparator space to be used between counts and measurement units
+     * @param rank          preferred rank. 0 - bytes, 1 - kilobytes, ..., 6 - exabytes. If less than 0 then picked automatically
+     * @return the size formatted as a string.
+     * @since 5.0.1
+     */
+    public static String formatFileSize(long fileSize, String unitSeparator, int rank) {
+        return formatFileSize(fileSize, unitSeparator, rank, false);
+    }
+
+    /**
+     * @param fileSize               - size of the file in bytes
+     * @param unitSeparator          - separator inserted between value and unit
+     * @param rank                   - preferred rank. 0 - bytes, 1 - kilobytes, ..., 6 - exabytes. If less than 0 then picked automatically
+     * @param fixedFractionPrecision - keep the fraction precision. if true, a number like 5.50 will be kept as it is, otherwise it will be
+     *                               rounded to 5.5
+     * @return string with formatted file size
+     */
+    public static String formatFileSize(long fileSize, String unitSeparator, int rank, boolean fixedFractionPrecision) {
+        if (fileSize < 0) {
+            throw new IllegalArgumentException("Invalid value: " + fileSize);
+        }
+        if (fileSize == 0) {
+            return '0' + unitSeparator + 'B';
+        }
+        if (rank < 0) {
+            rank = rankForFileSize(fileSize);
+        }
+        double value = fileSize / Math.pow(1000, rank);
+        String[] units = {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+        DecimalFormat decimalFormat = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.US));
+        if (fixedFractionPrecision) {
+            decimalFormat.setMinimumFractionDigits(2);
+        }
+        return decimalFormat.format(value) + unitSeparator + units[rank];
+    }
+
+    public static int rankForFileSize(long fileSize) {
+        if (fileSize < 0) {
+            throw new IllegalArgumentException("Invalid value: " + fileSize);
+        }
+        return (int) ((Math.log10(fileSize) + 0.0000021714778384307465) / 3);  // (3 - Math.log10(999.995))
     }
 
     /**
@@ -2508,12 +2688,15 @@ public final class StringUtil {
         return -1;
     }
 
-    private static final String[] ourPrepositions =
-        {"a", "an", "and", "as", "at", "but", "by", "down", "for", "from", "if", "in", "into", "not", "of", "on", "onto", "or", "out", "over", "per", "nor", "the", "to", "up", "upon", "via",
-            "with"};
+    private static final String[] PREPOSITIONS = {
+        "a", "an", "and", "as", "at", "but", "by", "down",
+        "for", "from", "if", "in", "into", "not", "of", "on",
+        "onto", "or", "out", "over", "per", "nor", "the", "to",
+        "up", "upon", "via", "with"
+    };
 
     public static boolean isPreposition(String s, int firstChar, int lastChar) {
-        return isPreposition(s, firstChar, lastChar, ourPrepositions);
+        return isPreposition(s, firstChar, lastChar, PREPOSITIONS);
     }
 
     public static boolean isPreposition(String s, int firstChar, int lastChar, String[] prepositions) {
@@ -2543,11 +2726,11 @@ public final class StringUtil {
     }
 
     public static String wordsToBeginFromUpperCase(String s) {
-        return fixCapitalization(s, ourPrepositions, true);
+        return fixCapitalization(s, PREPOSITIONS, true);
     }
 
     public static String wordsToBeginFromLowerCase(String s) {
-        return fixCapitalization(s, ourPrepositions, false);
+        return fixCapitalization(s, PREPOSITIONS, false);
     }
 
     public static String toTitleCase(String s) {
@@ -2605,21 +2788,21 @@ public final class StringUtil {
     }
 
     /**
-     * @return list containing all words in {@code text}, or {@link ContainerUtil#emptyList()} if there are none.
+     * @return list containing all words in {@code text}, or {@link List#of()} if there are none.
      * The <b>word</b> here means the maximum sub-string consisting entirely of characters which are <code>Character.isJavaIdentifierPart(c)</code>.
      */
     public static List<String> getWordsIn(String text) {
         List<String> result = null;
         int start = -1;
-        for (int i = 0; i < text.length(); i++) {
+        for (int i = 0, n = text.length(); i < n; i++) {
             char c = text.charAt(i);
             boolean isIdentifierPart = Character.isJavaIdentifierPart(c);
             if (isIdentifierPart && start == -1) {
                 start = i;
             }
-            if (isIdentifierPart && i == text.length() - 1 && start != -1) {
+            if (isIdentifierPart && i == n - 1 && start != -1) {
                 if (result == null) {
-                    result = new ArrayList<>();
+                    result = new ArrayList<>(1);
                 }
                 result.add(text.substring(start, i + 1));
             }
@@ -2649,49 +2832,6 @@ public final class StringUtil {
         escapeChar(buf, '/');
     }
 
-    @Nullable
-    public static String getPropertyName(String methodName) {
-        if (methodName.startsWith("get")) {
-            return decapitalize(methodName.substring(3));
-        }
-        else if (methodName.startsWith("is")) {
-            return decapitalize(methodName.substring(2));
-        }
-        else if (methodName.startsWith("set")) {
-            return decapitalize(methodName.substring(3));
-        }
-        else {
-            return null;
-        }
-    }
-
-    public static String fixVariableNameDerivedFromPropertyName(String name) {
-        if (isEmptyOrSpaces(name)) {
-            return name;
-        }
-        char c = name.charAt(0);
-        if (isVowel(c)) {
-            return "an" + Character.toUpperCase(c) + name.substring(1);
-        }
-        return "a" + Character.toUpperCase(c) + name.substring(1);
-    }
-
-    public static String sanitizeJavaIdentifier(String name) {
-        StringBuilder result = new StringBuilder(name.length());
-
-        for (int i = 0; i < name.length(); i++) {
-            char ch = name.charAt(i);
-            if (Character.isJavaIdentifierPart(ch)) {
-                if (result.length() == 0 && !Character.isJavaIdentifierStart(ch)) {
-                    result.append("_");
-                }
-                result.append(ch);
-            }
-        }
-
-        return result.toString();
-    }
-
     public static String capitalizeWithJavaBeanConvention(String s) {
         if (s.length() > 1 && Character.isUpperCase(s.charAt(1))) {
             return s;
@@ -2707,19 +2847,12 @@ public final class StringUtil {
     }
 
     public static boolean containsLineBreak(CharSequence text) {
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (isLineBreak(c)) {
+        for (int i = 0, n = text.length(); i < n; i++) {
+            if (isLineBreak(text.charAt(i))) {
                 return true;
             }
         }
         return false;
-    }
-
-    public static String escapeCharCharacters(String s) {
-        StringBuilder buffer = new StringBuilder(s.length());
-        escapeStringCharacters(s.length(), s, "\'", buffer);
-        return buffer.toString();
     }
 
     public static String unescapeSlashes(String str) {
@@ -2758,9 +2891,8 @@ public final class StringUtil {
      * @return true if the string has an uppercase character, false if not.
      */
     public static boolean hasUpperCaseChar(String s) {
-        char[] chars = s.toCharArray();
-        for (char c : chars) {
-            if (Character.isUpperCase(c)) {
+        for (int i = 0, n = s.length(); i < n; i++) {
+            if (Character.isUpperCase(s.charAt(i))) {
                 return true;
             }
         }
@@ -2774,9 +2906,8 @@ public final class StringUtil {
      * @return true if the string has a lowercase character, false if not.
      */
     public static boolean hasLowerCaseChar(String s) {
-        char[] chars = s.toCharArray();
-        for (char c : chars) {
-            if (Character.isLowerCase(c)) {
+        for (int i = 0, n = s.length(); i < n; i++) {
+            if (Character.isLowerCase(s.charAt(i))) {
                 return true;
             }
         }
@@ -2788,7 +2919,7 @@ public final class StringUtil {
             return false;
         }
 
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0, n = s.length(); i < n; i++) {
             if (Character.isWhitespace(s.charAt(i))) {
                 return true;
             }
@@ -2813,36 +2944,49 @@ public final class StringUtil {
         return text.substring(0, i);
     }
 
-    public static String stripHtml(String html, boolean convertBreaks) {
-        if (convertBreaks) {
-            html = html.replaceAll("<br/?>", "\n\n");
-        }
-
-        return html.replaceAll("<(.|\n)*?>", "");
-    }
-
-    private static final Pattern UNICODE_CHAR = Pattern.compile("\\\\u[0-9a-eA-E]{4}");
-
     public static String replaceUnicodeEscapeSequences(String text) {
         if (text == null) {
             return null;
         }
-
-        Matcher matcher = UNICODE_CHAR.matcher(text);
-        if (!matcher.find()) {
-            return text; // fast path
-        }
-
-        matcher.reset();
-        int lastEnd = 0;
+        int length = text.length();
         StringBuilder sb = new StringBuilder(text.length());
-        while (matcher.find()) {
-            sb.append(text.substring(lastEnd, matcher.start()));
-            char c = (char) Integer.parseInt(matcher.group().substring(2), 16);
-            sb.append(c);
-            lastEnd = matcher.end();
+        outer:
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+            if (c == '\\') {
+                int j = i + 1;
+                boolean escape = true;
+                while (j < length && (c = text.charAt(j)) == '\\') {
+                    escape = !escape;
+                    j++;
+                }
+                if (!escape || c != 'u') {
+                    sb.append(text, i, j);
+                    i = j - 1;
+                    continue;
+                }
+                while (j < length && text.charAt(j) == 'u') j++;
+                if (j > length - 4) {
+                    sb.append(text, i, j);
+                    i = j - 1;
+                    continue;
+                }
+                for (int k = 0; k < 4; k++) {
+                    if (!isHexDigit(text.charAt(j + k))) {
+                        sb.append(text, i, j + k);
+                        i = j + k - 1;
+                        continue outer;
+                    }
+                }
+                char d = (char) Integer.parseInt(text.substring(j, j + 4), 16);
+                sb.append(d);
+                i = j + 3;
+            }
+            else {
+                sb.append(c);
+            }
         }
-        sb.append(text.substring(lastEnd, text.length()));
+
         return sb.toString();
     }
 
@@ -2863,47 +3007,14 @@ public final class StringUtil {
         return false;
     }
 
-    public static int getOccurrenceCount(String text, char c) {
-        int res = 0;
-        int i = 0;
-        while (i < text.length()) {
-            i = text.indexOf(c, i);
-            if (i >= 0) {
-                res++;
-                i++;
-            }
-            else {
-                break;
-            }
-        }
-        return res;
-    }
-
-    public static int getOccurrenceCount(String text, String s) {
-        int res = 0;
-        int i = 0;
-        while (i < text.length()) {
-            i = text.indexOf(s, i);
-            if (i >= 0) {
-                res++;
-                i++;
-            }
-            else {
-                break;
-            }
-        }
-        return res;
-    }
-
     public static String[] surround(String[] strings1, String prefix, String suffix) {
-        String[] result = strings1.length == 0 ? ourEmptyStringArray : new String[strings1.length];
+        String[] result = strings1.length == 0 ? EMPTY_STRING_ARRAY : new String[strings1.length];
         for (int i = 0; i < result.length; i++) {
             result[i] = prefix + strings1[i] + suffix;
         }
 
         return result;
     }
-
 
     /**
      * Escape property name or key in property file. Unicode characters are escaped as well.
@@ -2983,12 +3094,11 @@ public final class StringUtil {
     }
 
     public static boolean equalsIgnoreWhitespaces(@Nullable CharSequence s1, @Nullable CharSequence s2) {
-        if (s1 == null ^ s2 == null) {
-            return false;
-        }
-
-        if (s1 == null) {
+        if (s1 == s2) {
             return true;
+        }
+        if (s1 == null || s2 == null) {
+            return false;
         }
 
         int len1 = s1.length();
@@ -3121,13 +3231,18 @@ public final class StringUtil {
     }
 
     public static boolean endsWith(CharSequence text, int start, int end, CharSequence suffix) {
+        if (start < 0 || end > text.length()) {
+            throw new IllegalArgumentException("Invalid offsets: start=" + start + "; end=" + end + "; text.length()=" + text.length());
+        }
+
         int suffixLen = suffix.length();
-        if (end < suffixLen) {
+        int delta = end - suffixLen;
+        if (delta < start) {
             return false;
         }
 
-        for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
-            if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) {
+        for (int i = 0; i < suffixLen; i++) {
+            if (text.charAt(delta + i) != suffix.charAt(i)) {
                 return false;
             }
         }

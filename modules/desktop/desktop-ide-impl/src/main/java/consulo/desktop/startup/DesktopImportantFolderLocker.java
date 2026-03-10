@@ -21,7 +21,6 @@ import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtinWebServer.impl.http.MessageDecoder;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
-import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationService;
@@ -50,6 +49,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -143,7 +143,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
             myToken = UUID.randomUUID().toString();
             String[] lockedPaths = {myConfigPath, mySystemPath};
             int workerCount = 1;
-            NotNullProducer<ChannelHandler> handler = () -> new MyChannelInboundHandler(lockedPaths, myActivateListener, myToken);
+            Supplier<ChannelHandler> handler = () -> new MyChannelInboundHandler(lockedPaths, myActivateListener, myToken);
             myServer = BuiltInServer.startNioOrOio(workerCount, 6942, 50, false, handler);
 
             byte[] portBytes = Integer.toString(myServer.getPort()).getBytes(StandardCharsets.UTF_8);

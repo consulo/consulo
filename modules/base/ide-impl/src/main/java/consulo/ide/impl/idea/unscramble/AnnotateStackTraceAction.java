@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.unscramble;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -21,10 +20,10 @@ import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -36,6 +35,7 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.annotate.AnnotationSource;
@@ -59,8 +59,8 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
     private boolean myIsLoading = false;
 
     public AnnotateStackTraceAction(@Nonnull ConsoleView consoleView) {
-        super("Show files modification info", null, AllIcons.Actions.Annotate);
-        myHyperlinks = ((ConsoleViewImpl)consoleView).getHyperlinks();
+        super("Show files modification info", null, PlatformIconGroup.actionsAnnotate());
+        myHyperlinks = ((ConsoleViewImpl) consoleView).getHyperlinks();
         myEditor = consoleView.getEditor();
     }
 
@@ -147,7 +147,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 }
 
                 if (myGutter == null) {
-                    myGutter = new MyActiveAnnotationGutter((Project)getProject(), myHyperlinks, indicator);
+                    myGutter = new MyActiveAnnotationGutter((Project) getProject(), myHyperlinks, indicator);
                     myEditor.getGutter().registerTextAnnotation(myGutter, myGutter);
                 }
 
@@ -157,7 +157,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 }
 
                 myGutter.updateData(revisionsCopy);
-                ((EditorGutterComponentEx)myEditor.getGutter()).revalidateMarkup();
+                ((EditorGutterComponentEx) myEditor.getGutter()).revalidateMarkup();
             }
 
             @Nullable
@@ -331,10 +331,10 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
         public LocalizeValue getToolTipValue(int line, Editor editor) {
             LastRevision revision = myRevisions.get(line);
             if (revision != null) {
-                return LocalizeValue.of(
-                    XmlStringUtil.escapeString(revision.getAuthor() + " " + DateFormatUtil.formatDateTime(revision.getDate()) + "\n" +
-                        VcsUtil.trimCommitMessageToSaneSize(revision.getMessage()))
-                );
+                return LocalizeValue.of(XmlStringUtil.escapeText(
+                    revision.getAuthor() + " " + DateFormatUtil.formatDateTime(revision.getDate()) + "\n" +
+                        VcsUtil.trimCommitMessageToSaneSize(revision.getMessage())
+                ));
             }
             return LocalizeValue.empty();
         }

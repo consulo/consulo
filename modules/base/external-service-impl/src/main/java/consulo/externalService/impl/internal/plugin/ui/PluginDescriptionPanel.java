@@ -154,9 +154,9 @@ public class PluginDescriptionPanel {
         }
 
         if (noPermissions) {
-            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">")
-                .append(XmlStringUtil.escapeString("<no special permissions>"))
-                .append("</span><br>");
+            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">");
+            XmlStringUtil.escapeText("<no special permissions>", sb);
+            sb.append("</span><br>");
         }
 
         sb.append("<br>");
@@ -166,7 +166,9 @@ public class PluginDescriptionPanel {
             sb.append(description);
         }
         else {
-            sb.append("<span style=\"color: gray\">").append(XmlStringUtil.escapeString("<description not provided>")).append("</span>");
+            sb.append("<span style=\"color: gray\">");
+            XmlStringUtil.escapeText("<description not provided>", sb);
+            sb.append("</span>");
         }
 
         String changeNotes = plugin.getChangeNotes();

@@ -283,7 +283,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         for (int i = namePattern.length(); i > 0; i--) {
             char c = namePattern.charAt(i - 1);
             if (Character.isLetterOrDigit(c)) {
-                namePos = consulo.ide.impl.idea.openapi.util.text.StringUtil.lastIndexOfIgnoreCase(candidateName, c, namePos - 1);
+                namePos = StringUtil.lastIndexOfIgnoreCase(candidateName, c, namePos - 1);
                 if (namePos < 0) {
                     return i;
                 }

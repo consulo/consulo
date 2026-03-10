@@ -30,6 +30,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
@@ -218,7 +219,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
     @Override
     @RequiredReadAction
-    public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName, Runnable onTaskFinished) {
+    public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, @Nonnull LocalizeValue contentName, Runnable onTaskFinished) {
         CompileDriverImpl compileDriver = new CompileDriverImpl(myProject);
         compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
     }

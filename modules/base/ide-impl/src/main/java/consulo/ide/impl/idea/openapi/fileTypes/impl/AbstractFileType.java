@@ -9,11 +9,11 @@ import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.language.Commenter;
 import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.custom.SyntaxTable;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
@@ -84,15 +84,15 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         mySyntaxTable = syntaxTable;
     }
 
-    @Override
-    public AbstractFileType clone() {
-        return (AbstractFileType)super.clone();
-    }
-
     @Nonnull
     @Override
     public String getName() {
         return getId();
+    }
+
+    @Override
+    public AbstractFileType clone() {
+        return (AbstractFileType)super.clone();
     }
 
     @Override
@@ -289,7 +289,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
             return null;
         }
         Element keywordsElement = new Element(tagName);
-        String[] strings = ArrayUtilRt.toStringArray(keywords);
+        String[] strings = ArrayUtil.toStringArray(keywords);
         Arrays.sort(strings);
         StringBuilder keywordsAttribute = new StringBuilder();
 

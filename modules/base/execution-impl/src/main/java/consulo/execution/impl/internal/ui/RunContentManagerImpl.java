@@ -516,7 +516,6 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     public void moveContent(Executor executor, RunContentDescriptor descriptor) {
-        throw new UnsupportedOperationException();
         // TODO IMPL!
 //    var content = descriptor.getAttachedContent();
 //    if (content == null) {

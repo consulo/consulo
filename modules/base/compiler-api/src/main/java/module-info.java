@@ -9,6 +9,7 @@ module consulo.compiler.api {
     requires transitive consulo.module.content.api;
     requires transitive consulo.navigation.api;
     requires transitive consulo.project.ui.api;
+    requires transitive consulo.build.ui.api;
 
     exports consulo.compiler;
     exports consulo.compiler.action;

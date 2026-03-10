@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.filters.impl;
 
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
@@ -29,8 +29,6 @@ import consulo.execution.ui.console.HyperlinkInfoFactory;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
@@ -38,6 +36,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,107 +46,116 @@ import java.util.ArrayList;
 import java.util.List;
 
 class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperlinkInfo {
-  private final List<? extends VirtualFile> myVirtualFiles;
-  private final int myLineNumber;
-  private final Project myProject;
-  private final HyperlinkInfoFactory.HyperlinkHandler myAction;
+    private final List<? extends VirtualFile> myVirtualFiles;
+    private final int myLineNumber;
+    private final Project myProject;
+    private final HyperlinkInfoFactory.HyperlinkHandler myAction;
 
-  MultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> virtualFiles, int lineNumber, @Nonnull Project project) {
-    this(virtualFiles, lineNumber, project, null);
-  }
-
-  MultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> virtualFiles, int lineNumber, @Nonnull Project project, @Nullable HyperlinkInfoFactory.HyperlinkHandler action) {
-    myVirtualFiles = virtualFiles;
-    myLineNumber = lineNumber;
-    myProject = project;
-    myAction = action;
-  }
-
-  @Override
-  public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
-    List<PsiFile> currentFiles = new ArrayList<>();
-    Editor originalEditor;
-    if (hyperlinkLocationPoint != null) {
-      DataManager dataManager = DataManager.getInstance();
-      DataContext dataContext = dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent());
-      originalEditor = dataContext.getData(Editor.KEY);
-    }
-    else {
-      originalEditor = null;
+    MultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> virtualFiles, int lineNumber, @Nonnull Project project) {
+        this(virtualFiles, lineNumber, project, null);
     }
 
-    Application.get().runReadAction(() -> {
-      for (VirtualFile file : myVirtualFiles) {
-        if (!file.isValid()) continue;
+    MultipleFilesHyperlinkInfo(
+        @Nonnull List<? extends VirtualFile> virtualFiles,
+        int lineNumber,
+        @Nonnull Project project,
+        @Nullable HyperlinkInfoFactory.HyperlinkHandler action
+    ) {
+        myVirtualFiles = virtualFiles;
+        myLineNumber = lineNumber;
+        myProject = project;
+        myAction = action;
+    }
 
-        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-        if (psiFile != null) {
-          PsiElement navigationElement = psiFile.getNavigationElement(); // Sources may be downloaded.
-          if (navigationElement instanceof PsiFile) {
-            currentFiles.add((PsiFile)navigationElement);
-            continue;
-          }
-          currentFiles.add(psiFile);
+    @Override
+    public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+        List<PsiFile> currentFiles = new ArrayList<>();
+        Editor originalEditor;
+        if (hyperlinkLocationPoint != null) {
+            DataManager dataManager = DataManager.getInstance();
+            DataContext dataContext = dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent());
+            originalEditor = dataContext.getData(Editor.KEY);
         }
-      }
-    });
-
-    if (currentFiles.isEmpty()) return;
-
-    if (currentFiles.size() == 1) {
-      open(currentFiles.get(0).getVirtualFile(), originalEditor);
-    }
-    else {
-      JFrame frame = WindowManager.getInstance().getFrame(project);
-      int width = frame != null ? frame.getSize().width : 200;
-      JBPopup popup = JBPopupFactory.getInstance()
-        .createPopupChooserBuilder(currentFiles)
-        .setRenderer(new GotoFileCellRenderer(width))
-        .setTitle(ExecutionLocalize.popupTitleChooseTargetFile().get())
-        .setItemChosenCallback(file -> open(file.getVirtualFile(), originalEditor))
-        .createPopup();
-      if (hyperlinkLocationPoint != null) {
-        popup.show(hyperlinkLocationPoint);
-      }
-      else {
-        popup.showInFocusCenter();
-      }
-    }
-  }
-
-  private void open(@Nonnull VirtualFile file, Editor originalEditor) {
-    Document document = FileDocumentManager.getInstance().getDocument(file);
-    int offset = 0;
-    if (document != null && myLineNumber >= 0 && myLineNumber < document.getLineCount()) {
-      offset = document.getLineStartOffset(myLineNumber);
-    }
-    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, offset);
-    Editor editor = FileEditorManager.getInstance(myProject).openTextEditor(descriptor, true);
-    if (myAction != null && editor != null) {
-      if (editor instanceof EditorEx) {
-        ((EditorEx)editor).setCaretEnabled(false);
-        try {
-          myAction.onLinkFollowed(myProject, file, editor, originalEditor);
+        else {
+            originalEditor = null;
         }
-        finally {
-          ((EditorEx)editor).setCaretEnabled(true);
+
+        ReadAction.run(() -> {
+            for (VirtualFile file : myVirtualFiles) {
+                if (!file.isValid()) {
+                    continue;
+                }
+
+                PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+                if (psiFile != null) {
+                    // Sources may be downloaded.
+                    if (psiFile.getNavigationElement() instanceof PsiFile navFile) {
+                        currentFiles.add(navFile);
+                        continue;
+                    }
+                    currentFiles.add(psiFile);
+                }
+            }
+        });
+
+        if (currentFiles.isEmpty()) {
+            return;
         }
-      }
-      else {
-        myAction.onLinkFollowed(myProject, file, editor, originalEditor);
-      }
+
+        if (currentFiles.size() == 1) {
+            open(currentFiles.get(0).getVirtualFile(), originalEditor);
+        }
+        else {
+            JFrame frame = WindowManager.getInstance().getFrame(project);
+            int width = frame != null ? frame.getSize().width : 200;
+            JBPopup popup = JBPopupFactory.getInstance()
+                .createPopupChooserBuilder(currentFiles)
+                .setRenderer(new GotoFileCellRenderer(width))
+                .setTitle(ExecutionLocalize.popupTitleChooseTargetFile().get())
+                .setItemChosenCallback(file -> open(file.getVirtualFile(), originalEditor))
+                .createPopup();
+            if (hyperlinkLocationPoint != null) {
+                popup.show(hyperlinkLocationPoint);
+            }
+            else {
+                popup.showInFocusCenter();
+            }
+        }
     }
-  }
 
-  @Nullable
-  @Override
-  public OpenFileDescriptorImpl getDescriptor() {
-    VirtualFile file = getPreferredFile();
-    return file != null ? new OpenFileDescriptorImpl(myProject, file, myLineNumber, 0) : null;
-  }
+    private void open(@Nonnull VirtualFile file, Editor originalEditor) {
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+        int offset = 0;
+        if (document != null && myLineNumber >= 0 && myLineNumber < document.getLineCount()) {
+            offset = document.getLineStartOffset(myLineNumber);
+        }
+        OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, offset);
+        Editor editor = FileEditorManager.getInstance(myProject).openTextEditor(descriptor, true);
+        if (myAction != null && editor != null) {
+            if (editor instanceof EditorEx editorEx) {
+                editorEx.setCaretEnabled(false);
+                try {
+                    myAction.onLinkFollowed(myProject, file, editor, originalEditor);
+                }
+                finally {
+                    editorEx.setCaretEnabled(true);
+                }
+            }
+            else {
+                myAction.onLinkFollowed(myProject, file, editor, originalEditor);
+            }
+        }
+    }
 
-  @Nullable
-  private VirtualFile getPreferredFile() {
-    return ContainerUtil.getFirstItem(myVirtualFiles);
-  }
+    @Nullable
+    @Override
+    public OpenFileDescriptorImpl getDescriptor() {
+        VirtualFile file = getPreferredFile();
+        return file != null ? new OpenFileDescriptorImpl(myProject, file, myLineNumber, 0) : null;
+    }
+
+    @Nullable
+    private VirtualFile getPreferredFile() {
+        return ContainerUtil.getFirstItem(myVirtualFiles);
+    }
 }

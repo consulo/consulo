@@ -151,7 +151,7 @@ public class UnifiedDiffWriter {
             for (Map.Entry<String, CharSequence> entry : additionalMap.entrySet()) {
                 writer.write(ADD_INFO_HEADER + entry.getKey());
                 writer.write(lineSeparator);
-                String value = StringUtil.escapeStringCharacters(entry.getValue().toString());
+                String value = StringUtil.escapeStringCharacters(entry.getValue());
                 List<String> lines = StringUtil.split(value, "\n");
                 for (String line : lines) {
                     writer.write(ADD_INFO_LINE_START);

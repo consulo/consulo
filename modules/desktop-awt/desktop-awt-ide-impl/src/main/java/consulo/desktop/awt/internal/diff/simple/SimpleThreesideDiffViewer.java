@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.simple;
 
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
@@ -43,11 +43,11 @@ import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -63,7 +63,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     private final List<SimpleThreesideDiffChange> myInvalidDiffChanges = new ArrayList<>();
 
     public SimpleThreesideDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-        super(context, (ContentDiffRequest)request);
+        super(context, (ContentDiffRequest) request);
     }
 
     @Nonnull
@@ -120,20 +120,21 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         myInitialScrollHelper.onSlowRediff();
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
             List<DiffContent> contents = myRequest.getContents();
-            List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent)content).getDocument());
+            List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent) content).getDocument());
 
             ThrowableComputable<List<CharSequence>, RuntimeException> action2 = () -> {
                 indicator.checkCanceled();
                 return ContainerUtil.map(documents, Document::getImmutableCharSequence);
             };
-            List<CharSequence> sequences = AccessRule.read(action2);
+            List<CharSequence> sequences = ReadAction.compute(action2);
 
             ComparisonPolicy comparisonPolicy = getIgnorePolicy().getComparisonPolicy();
 
@@ -142,11 +143,13 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
                 comparisonPolicy, indicator
             );
 
-            ThrowableComputable<List<MergeConflictType>, RuntimeException> action1 = () -> {
+            List<MergeConflictType> conflictTypes = ReadAction.compute(() -> {
                 indicator.checkCanceled();
-                return ContainerUtil.map(lineFragments, (fragment) -> DiffImplUtil.getLineMergeType(fragment, documents, comparisonPolicy));
-            };
-            List<MergeConflictType> conflictTypes = AccessRule.read(action1);
+                return ContainerUtil.map(
+                    lineFragments,
+                    (fragment) -> DiffImplUtil.getLineMergeType(fragment, documents, comparisonPolicy)
+                );
+            });
 
             List<MergeInnerDifferences> innerFragments = null;
             if (getHighlightPolicy().isFineFragments()) {
@@ -165,7 +168,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
                             return getChunkContent(fragment, documents, side);
                         });
                     };
-                    List<CharSequence> chunks = AccessRule.read(action);
+                    List<CharSequence> chunks = ReadAction.compute(action);
 
                     innerFragments.add(DiffImplUtil.compareThreesideInner(chunks, comparisonPolicy, indicator));
                 }
@@ -340,7 +343,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         @Nonnull
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
-            ArrayList<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
+            List<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
             settings.remove(IgnorePolicy.IGNORE_WHITESPACES_CHUNKS);
             return settings;
         }

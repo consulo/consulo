@@ -62,13 +62,13 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     private static final String ATTRIBUTE_ICON = "icon";
     private static final String GROUP = "group";
 
-    private final Map<String, String> myIconCustomizations = new HashMap<>();
+    private final HashMap<String, String> myIconCustomizations = new HashMap<>();
 
     private ArrayList<ActionUrl> myActions = new ArrayList<>();
 
     private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
-    private final Map<String, LocalizeValue> myIdToNameList = new HashMap<>();
+    private final HashMap<String, LocalizeValue> myIdToNameList = new HashMap<>();
 
     private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
 

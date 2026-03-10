@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.filter;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.profile.codeInspection.ui.LevelChooserAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
@@ -29,9 +27,11 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
@@ -43,17 +43,14 @@ import java.util.TreeSet;
  * @author Dmitry Batkovich
  */
 public class InspectionFilterAction extends DefaultActionGroup implements Toggleable, DumbAware {
-
     private final SeverityRegistrarImpl mySeverityRegistrar;
     private final InspectionsFilter myInspectionsFilter;
 
-    public InspectionFilterAction(InspectionProfileImpl profile,
-                                  InspectionsFilter inspectionsFilter,
-                                  Project project) {
+    public InspectionFilterAction(InspectionProfileImpl profile, InspectionsFilter inspectionsFilter, Project project) {
         super("Filter Inspections", true);
         myInspectionsFilter = inspectionsFilter;
         mySeverityRegistrar = (SeverityRegistrarImpl) ((SeverityProvider) profile.getProfileManager()).getOwnSeverityRegistrar();
-        getTemplatePresentation().setIcon(AllIcons.General.Filter);
+        getTemplatePresentation().setIcon(PlatformIconGroup.generalFilter());
         tune(profile, project);
     }
 
@@ -120,29 +117,30 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myInspectionsFilter.isShowOnlyCleanupInspections();
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myInspectionsFilter.setShowOnlyCleanupInspections(state);
         }
     }
 
     private class ShowAvailableOnlyOnAnalyzeInspectionsAction extends ToggleAction implements DumbAware {
-
         public ShowAvailableOnlyOnAnalyzeInspectionsAction() {
             super(LocalizeValue.localizeTODO("Show Only \"Available only for Analyze | Inspect Code\""));
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myInspectionsFilter.isAvailableOnlyForAnalyze();
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myInspectionsFilter.setAvailableOnlyForAnalyze(state);
         }
     }
@@ -152,20 +150,22 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         private final HighlightSeverity mySeverity;
 
         private ShowWithSpecifiedSeverityInspectionsAction(HighlightSeverity severity) {
-            super(SingleInspectionProfilePanel.renderSeverity(severity),
+            super(
+                SingleInspectionProfilePanel.renderSeverity(severity),
                 null,
-                HighlightDisplayLevel.find(severity).getIcon());
+                HighlightDisplayLevel.find(severity).getIcon()
+            );
             mySeverity = severity;
         }
 
-
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myInspectionsFilter.containsSeverity(mySeverity);
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             if (state) {
                 myInspectionsFilter.addSeverity(mySeverity);
             }
@@ -176,7 +176,6 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
     }
 
     private class ShowEnabledOrDisabledInspectionsAction extends ToggleAction implements DumbAware {
-
         private final Boolean myShowEnabledActions;
 
         public ShowEnabledOrDisabledInspectionsAction(boolean showEnabledActions) {
@@ -186,19 +185,19 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return Objects.equals(myInspectionsFilter.getSuitableInspectionsStates(), myShowEnabledActions);
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             boolean previousState = isSelected(e);
             myInspectionsFilter.setSuitableInspectionsStates(previousState ? null : myShowEnabledActions);
         }
     }
 
     private class LanguageFilterAction extends consulo.ui.ex.action.CheckboxAction implements DumbAware {
-
         private final Language myLanguage;
 
         public LanguageFilterAction(Language language) {
@@ -207,12 +206,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myInspectionsFilter.containsLanguage(myLanguage);
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             if (state) {
                 myInspectionsFilter.addLanguage(myLanguage);
             }

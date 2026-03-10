@@ -13,6 +13,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import static consulo.ui.ex.awt.UIExAWTDataKey.CONTEXT_COMPONENT;
@@ -71,7 +72,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
    */
   //@ApiStatus.Experimental
   public static void configureMapping(@Nonnull JComponent base, @Nonnull JComponent dependant, @Nonnull String... actions) {
-    HashMap<String, JComponent> map = new HashMap<>();
+    Map<String, JComponent> map = new HashMap<>();
     for (String action : actions) map.put(action, dependant);
     configureMapping(base, map::get);
   }
