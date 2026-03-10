@@ -17,15 +17,13 @@ package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewElementAction;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.ImageEffects;
 import jakarta.annotation.Nonnull;

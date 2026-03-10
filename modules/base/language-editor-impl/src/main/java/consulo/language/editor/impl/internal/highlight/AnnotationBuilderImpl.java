@@ -33,7 +33,7 @@ import java.util.function.Function;
 
 class AnnotationBuilderImpl implements AnnotationBuilder {
     private static final Function<String, String> TOOLTIP_ESCAPE =
-        message -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+        message -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(message));
 
     @Nonnull
     private final AnnotationHolderImpl myHolder;

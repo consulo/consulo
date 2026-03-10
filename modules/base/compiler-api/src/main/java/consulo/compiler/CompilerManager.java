@@ -209,7 +209,9 @@ public abstract class CompilerManager {
      * @param onTaskFinished a runnable to be executed when the task finishes, null if nothing should be executed.
      */
     public abstract void executeTask(
-        @Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName,
+        @Nonnull CompileTask task,
+        @Nonnull CompileScope scope,
+        @Nonnull LocalizeValue contentName,
         @Nullable Runnable onTaskFinished
     );
 

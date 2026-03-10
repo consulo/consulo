@@ -15,7 +15,6 @@
  */
 package consulo.logging.internal;
 
-import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.logging.attachment.AttachmentFactory;
 
 import java.util.ServiceLoader;
@@ -25,9 +24,11 @@ import java.util.ServiceLoader;
  * @since 2019-08-10
  */
 public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = PlatformServiceLoader.findImplementation(AttachmentFactory.class, ServiceLoader::load);
+    private static final AttachmentFactory ourInstance = ServiceLoader.load(AttachmentFactory.class, AttachmentFactory.class.getClassLoader())
+        .findFirst()
+        .get();
 
-  public static AttachmentFactory get() {
-    return ourInstance;
-  }
+    public static AttachmentFactory get() {
+        return ourInstance;
+    }
 }

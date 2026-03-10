@@ -2,7 +2,6 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
-import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.internal.*;
 import consulo.application.localize.ApplicationLocalize;
@@ -28,6 +27,8 @@ import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
@@ -435,8 +436,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
         CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
             Function<ProgressIndicator, V> task = progressIndicator -> {
-                ApplicationConcurrency ac = myApplication.getInstance(ApplicationConcurrency.class);
-
                 Coroutine<?, ?> coroutine = pipelineBuilder
                     .apply(Coroutine.first(CodeExecution.consume((v, continuation) -> {
                         continuation.scope().putCopyableUserData(UIAccess.KEY, uiAccess);
@@ -451,8 +450,12 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     })))
                     .then(CodeExecution.setScopeParameter(VALUE));
 
+                CoroutineContext coroutineContext = project instanceof CoroutineContextOwner owner
+                    ? owner.coroutineContext()
+                    : myApplication.coroutineContext();
+
                 CoroutineScope.ScopeFuture<V> scopeFuture = CoroutineScope.produce(
-                    ac.coroutineContext(),
+                    coroutineContext,
                     scope -> (V) scope.getUserData(VALUE),
                     rScope -> coroutine.runAsync(rScope, null)
                 );

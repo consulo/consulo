@@ -16,10 +16,7 @@ import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -28,7 +25,7 @@ import java.util.List;
 public class ComboBoxWithHistory extends JComboBox {
     private final String myHistoryId;
     private Project myProject;
-    private final HashMap<Object, Long> myWeights = new HashMap<>();
+    private final Map<Object, Long> myWeights = new HashMap<>();
     private boolean myAutoSave = true;
 
     public ComboBoxWithHistory(@Nullable Project project, String historyId, Object[] items) {
@@ -120,7 +117,7 @@ public class ComboBoxWithHistory extends JComboBox {
         load();
     }
 
-    private static Object[] sort(Object[] items, HashMap<Object, Long> weights) {
+    private static Object[] sort(Object[] items, Map<Object, Long> weights) {
         Arrays.sort(items, new LastUsedComparator(weights, Arrays.asList(items)));
         return items;
     }
@@ -142,10 +139,10 @@ public class ComboBoxWithHistory extends JComboBox {
     }
 
     private static class LastUsedComparator implements Comparator<Object> {
-        private final HashMap<Object, Long> myWeights;
+        private final Map<Object, Long> myWeights;
         private final List<Object> myInitialPositions;
 
-        private LastUsedComparator(HashMap<Object, Long> weights, List<Object> initialPositions) {
+        private LastUsedComparator(Map<Object, Long> weights, List<Object> initialPositions) {
             myWeights = weights;
             myInitialPositions = initialPositions;
         }

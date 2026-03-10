@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
+import consulo.application.Application;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.Entry;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.UpdateResult;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.ui.ex.awt.tree.Identifiable;
 import consulo.ui.ex.util.InvokerSupplier;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -43,7 +44,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
 import static consulo.util.lang.StringUtil.naturalCompare;
@@ -67,7 +67,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
             register(this, refresher);
         }
         state = new State(descriptor, refresher, sortDirectories, sortArchives);
-        getApplication().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkFileListener() {
+        Application.get().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
             public void after(@Nonnull List<? extends VFileEvent> events) {
                 invoker.invoke(() -> process(events));
@@ -464,7 +464,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
             if (state.refresher != null && state.refresher.isRecursive()) {
                 state.refresher.register(file);
             }
-            tree = new MapBasedTree<>(false, node -> node.getFile(), state.path);
+            tree = new MapBasedTree<>(false, FileNode::getFile, state.path);
             tree.onInsert(node -> markDirtyInternal(node.getFile()));
             tree.updateRoot(Pair.create(this, state.isLeaf(file)));
         }

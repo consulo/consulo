@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.codeEditor.Editor;
 import consulo.component.util.ComparableObject;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.awt.hint.TooltipEvent;
@@ -12,7 +13,6 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;

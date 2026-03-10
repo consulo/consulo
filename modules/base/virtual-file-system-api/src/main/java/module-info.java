@@ -33,6 +33,7 @@ module consulo.virtual.file.system.api {
 
     exports consulo.virtualFileSystem.internal to
         consulo.document.api,
+        consulo.file.editor.impl,
         consulo.virtual.file.system.impl,
         consulo.ide.impl,
         consulo.component.store.impl,

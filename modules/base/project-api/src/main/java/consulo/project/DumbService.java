@@ -304,15 +304,6 @@ public abstract class DumbService {
     public abstract void completeJustSubmittedTasks();
 
     /**
-     * Replaces given component temporarily with "Not available until indices are built" label during dumb mode.
-     *
-     * @return Wrapped component.
-     */
-    public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
-        throw new AbstractMethodError("AWT/Swing Dependency");
-    }
-
-    /**
      * Disables given component temporarily during dumb mode.
      */
     public void makeDumbAware(@Nonnull final JComponent componentToDisable, @Nonnull Disposable parentDisposable) {

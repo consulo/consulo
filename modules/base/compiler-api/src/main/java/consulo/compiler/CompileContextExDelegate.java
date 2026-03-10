@@ -106,11 +106,6 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public CompilerMessage[] getMessages(CompilerMessageCategory category) {
-        return myDelegate.getMessages(category);
-    }
-
-    @Override
     public int getMessageCount(CompilerMessageCategory category) {
         return myDelegate.getMessageCount(category);
     }

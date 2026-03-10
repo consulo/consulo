@@ -9,6 +9,7 @@ import consulo.application.HeavyProcessLatch;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.internal.NoAccessDuringPsiEventsService;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.NotNullLazyValue;
@@ -36,7 +37,6 @@ import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.language.index.impl.internal.hash.FileContentHashIndex;
 import consulo.language.index.impl.internal.hash.FileContentHashIndexExtension;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
@@ -257,7 +257,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                         Set<String> removedExtensions = new HashSet<>(strings);
                         removedExtensions.removeAll(newTypeToExtensionsMap.get(fileType));
                         rebuildAllIndices(
-                            fileType.getName() + " is no longer associated with extension(s) " + String.join(",", removedExtensions)
+                            fileType.getDisplayName() + " is no longer associated with extension(s) " + String.join(",", removedExtensions)
                         );
                         return;
                     }
@@ -805,7 +805,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         getChangedFilesCollector().ensureUpToDate();
         myApplication.assertReadAccessAllowed();
 
-        NoAccessDuringPsiEvents.checkCallContext();
+        NoAccessDuringPsiEventsService.getInstance().checkCallContext();
 
         if (!needsFileContentLoading(indexId)) {
             return; //indexed eagerly in foreground while building unindexed file list

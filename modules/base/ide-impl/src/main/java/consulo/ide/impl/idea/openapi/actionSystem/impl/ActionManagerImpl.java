@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -35,7 +36,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -43,6 +43,7 @@ import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -152,11 +153,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private final Semaphore myInitializeLocker;
 
     @Inject
-    ActionManagerImpl(Application application,
-                      Provider<ActionToolbarFactory> toolbarFactory,
-                      Provider<ActionPopupMenuFactory> popupMenuFactory,
-                      ComponentBinding componentBinding,
-                      KeymapManager keymapManager) {
+    ActionManagerImpl(
+        Application application,
+        Provider<ActionToolbarFactory> toolbarFactory,
+        Provider<ActionPopupMenuFactory> popupMenuFactory,
+        ComponentBinding componentBinding,
+        KeymapManager keymapManager
+    ) {
         myApplication = application;
         myToolbarFactory = toolbarFactory;
         myPopupMenuFactory = popupMenuFactory;
@@ -186,7 +189,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
         StatCollector injectStat = new StatCollector();
         injectStat.markWith("register", () -> {
-            InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
+            InjectingBindingHolder holder =
+                myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
 
             String actionGroupClassName = ActionGroup.class.getName();
             for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
@@ -401,7 +405,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return localizeHelper.getValue(key);
     }
 
-    private static boolean checkRelativeToAction(String relativeToActionId, @Nonnull Anchor anchor, @Nonnull String actionName, @Nullable PluginId pluginId) {
+    private static boolean checkRelativeToAction(
+        String relativeToActionId,
+        @Nonnull Anchor anchor,
+        @Nonnull String actionName,
+        @Nullable PluginId pluginId
+    ) {
         if ((Anchor.BEFORE == anchor || Anchor.AFTER == anchor) && relativeToActionId == null) {
             reportActionError(pluginId, actionName + ": \"relative-to-action\" cannot be null if anchor is \"after\" or \"before\"");
             return false;
@@ -428,12 +437,20 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return Anchor.AFTER;
         }
         else {
-            reportActionError(pluginId, actionName + ": anchor should be one of the following constants: \"first\", \"last\", \"before\" or \"after\"");
+            reportActionError(
+                pluginId,
+                actionName + ": anchor should be one of the following constants: \"first\", \"last\", \"before\" or \"after\""
+            );
             return null;
         }
     }
 
-    private static void processMouseShortcutNode(SimpleXmlElement element, String actionId, PluginId pluginId, @Nonnull KeymapManager keymapManager) {
+    private static void processMouseShortcutNode(
+        SimpleXmlElement element,
+        String actionId,
+        PluginId pluginId,
+        @Nonnull KeymapManager keymapManager
+    ) {
         String keystrokeString = element.getAttributeValue(KEYSTROKE_ATTR_NAME);
         if (keystrokeString == null || keystrokeString.trim().isEmpty()) {
             reportActionError(pluginId, "\"keystroke\" attribute must be specified for action with id=" + actionId);
@@ -557,7 +574,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     @Nonnull
-    public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
+    public ActionPopupMenu createActionPopupMenu(
+        @Nonnull String place,
+        @Nonnull ActionGroup group,
+        @Nullable PresentationFactory presentationFactory
+    ) {
         return myPopupMenuFactory.get().createActionPopupMenu(place, group, presentationFactory);
     }
 
@@ -573,7 +594,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Nonnull
     @Override
     public ActionToolbar createActionToolbar(@Nonnull String place, @Nonnull ActionGroup group, boolean horizontal) {
-        return myToolbarFactory.get().createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
+        return myToolbarFactory.get()
+            .createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
     }
 
     public void registerPluginActions(@Nonnull PluginDescriptor plugin, LocalizeHelper localizeHelper) {
@@ -678,7 +700,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
      * @return instance of ActionGroup or ActionStub. The method never returns real subclasses of {@code AnAction}.
      */
     @Nullable
-    private AnAction processActionElement(@Nonnull SimpleXmlElement element, @Nonnull PluginDescriptor plugin, @Nonnull LocalizeHelper localizeHelper) {
+    private AnAction processActionElement(
+        @Nonnull SimpleXmlElement element,
+        @Nonnull PluginDescriptor plugin,
+        @Nonnull LocalizeHelper localizeHelper
+    ) {
         PluginId pluginId = plugin.getPluginId();
 
         String className = element.getAttributeValue(CLASS_ATTR_NAME);
@@ -738,7 +764,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return StringUtil.isEmpty(id) ? StringUtil.getShortName(className) : id;
     }
 
-    private void registerOrReplaceActionInner(@Nonnull SimpleXmlElement element, @Nonnull String id, @Nonnull AnAction action, @Nullable PluginId pluginId) {
+    private void registerOrReplaceActionInner(
+        @Nonnull SimpleXmlElement element,
+        @Nonnull String id,
+        @Nonnull AnAction action,
+        @Nullable PluginId pluginId
+    ) {
         synchronized (myLock) {
             if (Boolean.parseBoolean(element.getAttributeValue(OVERRIDES_ATTR_NAME))) {
                 if (getActionOrStub(id) == null) {
@@ -759,7 +790,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    private AnAction processGroupElement(@Nonnull SimpleXmlElement element, @Nonnull PluginDescriptor plugin, @Nonnull LocalizeHelper localizeHelper) {
+    private AnAction processGroupElement(
+        @Nonnull SimpleXmlElement element,
+        @Nonnull PluginDescriptor plugin,
+        @Nonnull LocalizeHelper localizeHelper
+    ) {
         PluginId pluginId = plugin.getPluginId();
         ClassLoader pluginClassLoader = plugin.getPluginClassLoader();
 
@@ -769,7 +804,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
         String className = element.getAttributeValue(CLASS_ATTR_NAME);
         if (className == null) { // use default group if class isn't specified
-            className = "true".equals(element.getAttributeValue(COMPACT_ATTR_NAME)) ? DefaultCompactActionGroup.class.getName() : DefaultActionGroup.class.getName();
+            className =
+                "true".equals(element.getAttributeValue(COMPACT_ATTR_NAME)) ? DefaultCompactActionGroup.class.getName() : DefaultActionGroup.class.getName();
         }
         try {
             String id = element.getAttributeValue(ID_ATTR_NAME);
@@ -791,12 +827,19 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 Object obj = Application.get().getInjectingContainer().getUnbindedInstance(aClass);
 
                 if (!(obj instanceof ActionGroup)) {
-                    reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());
+                    reportActionError(
+                        pluginId,
+                        "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName()
+                    );
                     return null;
                 }
                 if (element.getChildren().size() != element.getChildren(ADD_TO_GROUP_ELEMENT_NAME).size()) {  //
                     if (!(obj instanceof DefaultActionGroup)) {
-                        reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + DefaultActionGroup.class.getName() + " because there are children specified");
+                        reportActionError(
+                            pluginId,
+                            "class with name \"" + className + "\" should be instance of " + DefaultActionGroup.class.getName() +
+                                " because there are children specified"
+                        );
                         return null;
                     }
                 }
@@ -842,11 +885,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             else if (iconPath != null) {
                 if (iconPath.contains("@")) {
                     String[] groupIdAndImageId = iconPath.split("@");
-                    group.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
+                    group.getTemplatePresentation()
+                        .setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
                 }
                 else {
                     LOG.warn("Wrong icon path: " + iconPath);
-                    group.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
+                    group.getTemplatePresentation()
+                        .setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
                 }
             }
 
@@ -968,7 +1013,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
         AnAction parentGroup = getActionImpl(groupId, true);
         if (parentGroup == null) {
-            reportActionError(pluginId, actionName + ": group with id \"" + groupId + "\" isn't registered; action will be added to the \"Other\" group");
+            reportActionError(
+                pluginId,
+                actionName + ": group with id \"" + groupId + "\" isn't registered; action will be added to the \"Other\" group"
+            );
             parentGroup = getActionImpl(IdeActions.GROUP_OTHER_MENU, true);
         }
         if (!(parentGroup instanceof DefaultActionGroup)) {
@@ -1005,7 +1053,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    private static void processKeyboardShortcutNode(SimpleXmlElement element, String actionId, PluginId pluginId, @Nonnull KeymapManagerEx keymapManager) {
+    private static void processKeyboardShortcutNode(
+        SimpleXmlElement element,
+        String actionId,
+        PluginId pluginId,
+        @Nonnull KeymapManagerEx keymapManager
+    ) {
         String firstStrokeString = element.getAttributeValue(FIRST_KEYSTROKE_ATTR_NAME);
         if (firstStrokeString == null) {
             reportActionError(pluginId, "\"first-keystroke\" attribute must be specified for action with id=" + actionId);
@@ -1041,7 +1094,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         processRemoveAndReplace(element, actionId, keymap, shortcut);
     }
 
-    private static void processRemoveAndReplace(@Nonnull SimpleXmlElement element, String actionId, @Nonnull Keymap keymap, @Nonnull Shortcut shortcut) {
+    private static void processRemoveAndReplace(
+        @Nonnull SimpleXmlElement element,
+        String actionId,
+        @Nonnull Keymap keymap,
+        @Nonnull Shortcut shortcut
+    ) {
         boolean remove = Boolean.parseBoolean(element.getAttributeValue(REMOVE_SHORTCUT_ATTR_NAME));
         boolean replace = Boolean.parseBoolean(element.getAttributeValue(REPLACE_SHORTCUT_ATTR_NAME));
         if (remove) {
@@ -1085,7 +1143,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return action;
     }
 
-    private void processActionsChildElement(@Nonnull PluginDescriptor plugin, @Nonnull SimpleXmlElement child, LocalizeHelper localizeHelper) {
+    private void processActionsChildElement(
+        @Nonnull PluginDescriptor plugin,
+        @Nonnull SimpleXmlElement child,
+        LocalizeHelper localizeHelper
+    ) {
         String name = child.getName();
         if (ACTION_ELEMENT_NAME.equals(name)) {
             AnAction action = processActionElement(child, plugin, localizeHelper);
@@ -1116,7 +1178,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return true;
         }
         for (SimpleXmlElement element : elements) {
-            if (!element.getName().equals(ACTION_ELEMENT_NAME) && !(element.getName().equals(GROUP_ELEMENT_NAME) && element.getAttributeValue(ID_ATTR_NAME) != null)) {
+            if (!element.getName().equals(ACTION_ELEMENT_NAME) && !(element.getName()
+                .equals(GROUP_ELEMENT_NAME) && element.getAttributeValue(ID_ATTR_NAME) != null)) {
                 LOG.info("Plugin " + pluginDescriptor.getPluginId() + " is not unload-safe because of action element " + element.getName());
                 return false;
             }
@@ -1152,7 +1215,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 return;
             }
             if (myAction2Id.containsKey(action)) {
-                reportActionError(pluginId, "action was already registered for another ID. ID is " + myAction2Id.get(action) + getPluginInfo(pluginId));
+                reportActionError(
+                    pluginId,
+                    "action was already registered for another ID. ID is " + myAction2Id.get(action) + getPluginInfo(pluginId)
+                );
                 return;
             }
             myId2Index.put(actionId, myRegisteredActionsCount++);
@@ -1309,6 +1375,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
+    @RequiredReadAction
     public void fireBeforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         myPrevPerformedActionId = myLastPreformedActionId;
         myLastPreformedActionId = getId(action);
@@ -1348,7 +1415,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         if (action == null) {
             return null;
         }
-        
+
         ShortcutSet shortcutSet = action.getShortcutSet();
         Shortcut[] shortcuts = shortcutSet.getShortcuts();
         for (Shortcut shortcut : shortcuts) {
@@ -1394,7 +1461,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Override
     public void preloadActions(@Nonnull ProgressIndicator indicator) {
         List<String> ids = new ArrayList<>(myId2Action.keySet());
-        
+
         for (String id : ids) {
             indicator.checkCanceled();
 
@@ -1407,7 +1474,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Nonnull
     @Override
-    public ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent, @Nullable String place, boolean now) {
+    @RequiredUIAccess
+    public ActionCallback tryToExecute(
+        @Nonnull AnAction action,
+        @Nonnull InputEvent inputEvent,
+        @Nullable Component contextComponent,
+        @Nullable String place,
+        boolean now
+    ) {
         UIAccess.assertIsUIThread();
 
         ActionCallback result = new ActionCallback();
@@ -1424,62 +1498,84 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return result;
     }
 
-    private void tryToExecuteNow(@Nonnull AnAction action, InputEvent inputEvent, Component contextComponent, String place, ActionCallback result) {
+    @RequiredReadAction
+    private void tryToExecuteNow(
+        @Nonnull AnAction action,
+        InputEvent inputEvent,
+        Component contextComponent,
+        String place,
+        ActionCallback result
+    ) {
         Presentation presentation = action.getTemplatePresentation().clone();
 
-        IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown((() -> {
-            DataContext context = getContextBy(contextComponent);
+        IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(
+            () -> {
+                DataContext context = getContextBy(contextComponent);
 
-            AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());
+                AnActionEvent event = new AnActionEvent(
+                    inputEvent,
+                    context,
+                    place != null ? place : ActionPlaces.UNKNOWN,
+                    presentation,
+                    this,
+                    inputEvent.getModifiersEx()
+                );
 
-            ActionImplUtil.performDumbAwareUpdate(action, event, false);
-            if (!event.getPresentation().isEnabled()) {
-                result.setRejected();
-                return;
-            }
-
-            ActionImplUtil.lastUpdateAndCheckDumb(action, event, false);
-            if (!event.getPresentation().isEnabled()) {
-                result.setRejected();
-                return;
-            }
-
-            Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            if (component != null && !component.isShowing() && !ActionPlaces.TOUCHBAR_GENERAL.equals(place)) {
-                result.setRejected();
-                return;
-            }
-
-            fireBeforeActionPerformed(action, context, event);
-
-            Disposable eventListenerDisposable = Disposable.newDisposable("tryToExecuteNow");
-            result.doWhenProcessed(() -> Disposer.dispose(eventListenerDisposable));
-
-            UIUtil.addAwtListener(event1 -> {
-                if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
-                    if (!result.isProcessed()) {
-                        WindowEvent we = (WindowEvent) event1;
-                        IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
-                    }
+                ActionImplUtil.performDumbAwareUpdate(action, event, false);
+                if (!event.getPresentation().isEnabled()) {
+                    result.setRejected();
+                    return;
                 }
-            }, AWTEvent.WINDOW_EVENT_MASK, eventListenerDisposable);
 
-            ActionImplUtil.performActionDumbAware(action, event);
-            result.setDone();
-            queueActionPerformedEvent(action, context, event);
-        }), IdeaModalityState.defaultModalityState());
+                ActionImplUtil.lastUpdateAndCheckDumb(action, event, false);
+                if (!event.getPresentation().isEnabled()) {
+                    result.setRejected();
+                    return;
+                }
+
+                Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                if (component != null && !component.isShowing() && !ActionPlaces.TOUCHBAR_GENERAL.equals(place)) {
+                    result.setRejected();
+                    return;
+                }
+
+                fireBeforeActionPerformed(action, context, event);
+
+                Disposable eventListenerDisposable = Disposable.newDisposable("tryToExecuteNow");
+                result.doWhenProcessed(() -> Disposer.dispose(eventListenerDisposable));
+
+                UIUtil.addAwtListener(
+                    event1 -> {
+                        if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
+                            if (!result.isProcessed()) {
+                                WindowEvent we = (WindowEvent) event1;
+                                IdeFocusManager.findInstanceByComponent(we.getWindow())
+                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
+                            }
+                        }
+                    },
+                    AWTEvent.WINDOW_EVENT_MASK,
+                    eventListenerDisposable
+                );
+
+                ActionImplUtil.performActionDumbAware(action, event);
+                result.setDone();
+                queueActionPerformedEvent(action, context, event);
+            },
+            IdeaModalityState.defaultModalityState()
+        );
     }
 
     private class MyTimer extends Timer implements ActionListener {
-        private final List<TimerListener> myTimerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-        private final List<TimerListener> myTransparentTimerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+        private final List<TimerListener> myTimerListeners = Lists.newLockFreeCopyOnWriteList();
+        private final List<TimerListener> myTransparentTimerListeners = Lists.newLockFreeCopyOnWriteList();
         private int myLastTimePerformed;
 
         private MyTimer() {
             super(TIMER_DELAY, null);
             addActionListener(this);
             setRepeats(true);
-            MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
+            MessageBusConnection connection = Application.get().getMessageBus().connect();
             connection.subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
                 @Override
                 public void applicationActivated(@Nonnull IdeFrame ideFrame) {

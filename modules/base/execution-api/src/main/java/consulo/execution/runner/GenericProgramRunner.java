@@ -17,28 +17,27 @@
 package consulo.execution.runner;
 
 import consulo.execution.ExecutionManager;
-import consulo.execution.RunProfileStarter;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public abstract class GenericProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
-  @Override
-  protected void execute(@Nonnull ExecutionEnvironment environment, @Nullable final ProgramRunner.Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
-    ExecutionManager.getInstance(environment.getProject()).startRunProfile(new RunProfileStarter() {
-      @Override
-      public RunContentDescriptor execute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
-        return BaseProgramRunner.postProcess(environment, doExecute(state, environment), callback);
-      }
-    }, state, environment);
-  }
+import java.util.concurrent.CompletableFuture;
 
-  @Nullable
-  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
-    return null;
-  }
+public abstract class GenericProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
+    @RequiredUIAccess
+    @Override
+    protected void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException {
+        ExecutionManager.getInstance(environment.getProject()).startRunProfile((s, e) -> {
+            return CompletableFuture.completedFuture(BaseProgramRunner.postProcess(environment, doExecute(state, environment)));
+        }, state, environment);
+    }
+
+    @Nullable
+    protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+        return null;
+    }
 }

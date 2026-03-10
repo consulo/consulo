@@ -553,7 +553,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         Pair<VirtualFile, FileType> old = FILE_TYPE_FIXED_TEMPORARILY.get();
         FILE_TYPE_FIXED_TEMPORARILY.set(Pair.create(file, fileType));
         if (toLog()) {
-            log("F: freezeFileTypeTemporarilyIn(" + file.getName() + ") to " + fileType.getName() + " in " + Thread.currentThread());
+            log("F: freezeFileTypeTemporarilyIn(" + file.getName() + ") to " + fileType.getId() + " in " + Thread.currentThread());
         }
         try {
             runnable.run();
@@ -610,7 +610,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         if (fixedType != null && fixedType.getFirst().equals(file)) {
             FileType fileType = fixedType.getSecond();
             if (toLog()) {
-                log("F: getByFile(" + file.getName() + ") was frozen to " + fileType.getName() + " in " + Thread.currentThread());
+                log("F: getByFile(" + file.getName() + ") was frozen to " + fileType.getId() + " in " + Thread.currentThread());
             }
             return fileType;
         }
@@ -625,7 +625,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         for (FileTypeIdentifiableByVirtualFile type : mySpecialFileTypes) {
             if (type.isMyFileType(file)) {
                 if (toLog()) {
-                    log("F: getByFile(" + file.getName() + "): Special file type: " + type.getName());
+                    log("F: getByFile(" + file.getName() + "): Special file type: " + type.getId());
                 }
                 return type;
             }
@@ -636,7 +636,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             fileType = null;
         }
         if (toLog()) {
-            log("F: getByFile(" + file.getName() + ") By name file type: " + (fileType == null ? null : fileType.getName()));
+            log("F: getByFile(" + file.getName() + ") By name file type: " + (fileType == null ? null : fileType.getId()));
         }
         return fileType;
     }
@@ -664,7 +664,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 FileType type = textOrBinaryFromCachedFlags(flags);
                 if (toLog()) {
                     log("F: getOrDetectFromContent(" + file.getName() + "):" +
-                        " cached type = " + (type == null ? null : type.getName()) +
+                        " cached type = " + (type == null ? null : type.getId()) +
                         "; packedFlags.get(id):" + readableFlags(flags) +
                         "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
                         file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
@@ -678,7 +678,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         if (toLog()) {
             log(
                 "F: getOrDetectFromContent(" + file.getName() + "): " +
-                    "getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) = " + (fileType == null ? null : fileType.getName())
+                    "getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) = " + (fileType == null ? null : fileType.getId())
             );
         }
         if (fileType == null) {
@@ -692,7 +692,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
 
         if (toLog()) {
-            log("F: getOrDetectFromContent(" + file.getName() + "): getFileType after detect run = " + fileType.getName());
+            log("F: getOrDetectFromContent(" + file.getName() + "): getFileType after detect run = " + fileType.getId());
         }
 
         return fileType;
@@ -789,7 +789,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 if (toLog()) {
                     log(
                         "F: cacheAutoDetectedFileType(" + file.getName() + ") " +
-                            "cached to " + fileType.getName() +
+                            "cached to " + fileType.getId() +
                             " flags = " + readableFlags(flags) +
                             "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY)
                     );
@@ -801,7 +801,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         if (toLog()) {
             log(
                 "F: cacheAutoDetectedFileType(" + file.getName() + ") " +
-                    "cached to " + fileType.getName() +
+                    "cached to " + fileType.getId() +
                     " flags = " + readableFlags(flags) +
                     "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY)
             );
@@ -813,9 +813,9 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         FileType type = getStdFileType(fileTypeName);
         // TODO: Abstract file types are not std one, so need to be restored specially,
         // currently there are 6 of them and restoration does not happen very often so just iteration is enough
-        if (type == PlainTextFileType.INSTANCE && !fileTypeName.equals(type.getName())) {
+        if (type == PlainTextFileType.INSTANCE && !fileTypeName.equals(type.getId())) {
             for (FileType fileType : mySchemeManager.getAllSchemes()) {
-                if (fileTypeName.equals(fileType.getName())) {
+                if (fileTypeName.equals(fileType.getId())) {
                     return fileType;
                 }
             }
@@ -891,7 +891,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                         int n2 = newStream.read(buffer2, 0, buffer2.length);
                         log(
                             "F: detectFromContentAndCache(" + file.getName() +
-                                "): result: " + fileType.getName() +
+                                "): result: " + fileType.getId() +
                                 "; stream: " + streamInfo(inputStream) +
                                 "; newStream: " + streamInfo(newStream) +
                                 "; read: " + n2 +
@@ -903,7 +903,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug(file + "; type=" + fileType.getDescription() + "; " + counterAutoDetect);
+            LOG.debug(file + "; type=" + fileType.getId() + "; " + counterAutoDetect);
         }
         return fileType;
     }
@@ -956,7 +956,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                             log(
                                 "F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "):" +
                                     " detector " + detector +
-                                    " type as " + detected.getName()
+                                    " type as " + detected.getId()
                             );
                         }
                         break;
@@ -968,7 +968,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                     if (toLog()) {
                         log(
                             "F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "): " +
-                                "no detector was able to detect. assigned " + detected.getName()
+                                "no detector was able to detect. assigned " + detected.getId()
                         );
                     }
                 }
@@ -1319,7 +1319,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 if (PlainTextFileType.INSTANCE == type) {
                     FileType newFileType = myPatternsTable.findAssociatedFileType(matcher);
                     if (newFileType != null && newFileType != PlainTextFileType.INSTANCE && newFileType != UnknownFileType.INSTANCE) {
-                        myRemovedMappingTracker.add(matcher, newFileType.getName(), false);
+                        myRemovedMappingTracker.add(matcher, newFileType.getId(), false);
                     }
                 }
                 associate(type, matcher, false);
@@ -1413,14 +1413,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         for (FileNameMatcher matcher : associations) {
             boolean isDefaultAssociationContains = defaultAssociations.remove(matcher);
             if (!isDefaultAssociationContains && shouldSave(type)) {
-                Element content = AbstractFileType.writeMapping(type.getName(), matcher, specifyTypeName);
+                Element content = AbstractFileType.writeMapping(type.getId(), matcher, specifyTypeName);
                 if (content != null) {
                     map.addContent(content);
                 }
             }
         }
 
-        myRemovedMappingTracker.saveRemovedMappingsForFileType(map, type.getName(), defaultAssociations, specifyTypeName);
+        myRemovedMappingTracker.saveRemovedMappingsForFileType(map, type.getId(), defaultAssociations, specifyTypeName);
     }
 
     // -------------------------------------------------------------------------
@@ -1484,13 +1484,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     private void bindUnresolvedMappings(@Nonnull FileType fileType) {
         for (FileNameMatcher matcher : new HashSet<>(myUnresolvedMappings.keySet())) {
             String name = myUnresolvedMappings.get(matcher);
-            if (Comparing.equal(name, fileType.getName())) {
+            if (Comparing.equal(name, fileType.getId())) {
                 myPatternsTable.addAssociation(matcher, fileType);
                 myUnresolvedMappings.remove(matcher);
             }
         }
 
-        for (FileNameMatcher matcher : myRemovedMappingTracker.getMappingsForFileType(fileType.getName())) {
+        for (FileNameMatcher matcher : myRemovedMappingTracker.getMappingsForFileType(fileType.getId())) {
             removeAssociation(fileType, matcher, false);
         }
     }

@@ -199,6 +199,8 @@
     <module>modules/base/credential-storage-impl</module>
     <module>modules/base/tips-of-day-impl</module>
     <module>modules/base/search-everywhere-api</module>
+    <module>modules/base/language-editor-problem-view-api</module>
+    <module>modules/base/language-editor-problem-view-impl</module>
 
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>

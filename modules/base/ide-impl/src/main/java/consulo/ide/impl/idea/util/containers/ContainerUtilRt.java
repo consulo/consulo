@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.Stack;
 import org.jetbrains.annotations.Contract;
@@ -316,7 +316,7 @@ public class ContainerUtilRt {
         @Nonnull
         @Override
         public Object[] toArray() {
-            return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
+            return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
         @Nonnull

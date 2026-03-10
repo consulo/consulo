@@ -36,7 +36,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;

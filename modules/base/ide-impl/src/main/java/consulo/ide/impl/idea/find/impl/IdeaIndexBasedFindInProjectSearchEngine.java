@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.function.Processors;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.cacheBuilder.CacheManager;
 import consulo.language.internal.TrigramIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -17,6 +17,7 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,26 +28,21 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSearchEngine {
-    @Override
-    public
     @Nullable
-    FindInProjectSearcher createSearcher(@Nonnull FindModel findModel, @Nonnull Project project) {
+    @Override
+    public FindInProjectSearcher createSearcher(@Nonnull FindModel findModel, @Nonnull Project project) {
         return new MyFindInProjectSearcher(project, findModel);
     }
 
     private static class MyFindInProjectSearcher implements FindInProjectSearcher {
-        private
         @Nonnull
-        final ProjectFileIndex myFileIndex;
-        private
+        private final ProjectFileIndex myFileIndex;
         @Nonnull
-        final FileBasedIndex myFileBasedIndex;
-        private
+        private final FileBasedIndex myFileBasedIndex;
         @Nonnull
-        final Project myProject;
-        private
+        private final Project myProject;
         @Nonnull
-        final FindModel myFindModel;
+        private final FindModel myFindModel;
 
         private final boolean myHasTrigrams;
         private final String myStringToFindInIndices;
@@ -67,18 +63,19 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
             myHasTrigrams = hasTrigrams(myStringToFindInIndices);
         }
 
-        @Override
-        public
         @Nonnull
-        Collection<VirtualFile> searchForOccurrences() {
+        @Override
+        @RequiredReadAction
+        public Collection<VirtualFile> searchForOccurrences() {
             String stringToFind = getStringToFindInIndexes(myFindModel, myProject);
 
-            if (stringToFind.isEmpty() || (DumbService.getInstance(myProject).isDumb() && !FileBasedIndex.isIndexAccessDuringDumbModeEnabled())) {
+            if (stringToFind.isEmpty()
+                || (DumbService.getInstance(myProject).isDumb() && !FileBasedIndex.isIndexAccessDuringDumbModeEnabled())) {
                 return Collections.emptySet();
             }
 
-
-            GlobalSearchScope scope = GlobalSearchScopeUtil.toGlobalSearchScope(FindInProjectUtil.getScopeFromModel(myProject, myFindModel), myProject);
+            GlobalSearchScope scope =
+                GlobalSearchScopeUtil.toGlobalSearchScope(FindInProjectUtil.getScopeFromModel(myProject, myFindModel), myProject);
 
             final Set<Integer> keys = new HashSet<>();
             TrigramBuilder.processTrigrams(stringToFind, new TrigramBuilder.TrigramProcessor() {
@@ -91,9 +88,15 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
 
             if (!keys.isEmpty()) {
                 List<VirtualFile> hits = new ArrayList<>();
-                FileBasedIndex.getInstance().ignoreDumbMode(() -> {
-                    FileBasedIndex.getInstance().getFilesWithKey(TrigramIndex.INDEX_ID, keys, Processors.cancelableCollectProcessor(hits), scope);
-                }, DumbModeAccessType.RAW_INDEX_DATA_ACCEPTABLE);
+                FileBasedIndex.getInstance().ignoreDumbMode(
+                    () -> FileBasedIndex.getInstance().getFilesWithKey(
+                        TrigramIndex.INDEX_ID,
+                        keys,
+                        Processors.cancelableCollectProcessor(hits),
+                        scope
+                    ),
+                    DumbModeAccessType.RAW_INDEX_DATA_ACCEPTABLE
+                );
 
                 return Collections.unmodifiableCollection(hits);
             }
@@ -101,14 +104,21 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
             Set<VirtualFile> resultFiles = new HashSet<>();
 
             PsiSearchHelper helper = PsiSearchHelper.getInstance(myProject);
-            helper.processCandidateFilesForText(scope, UsageSearchContext.ANY, myFindModel.isCaseSensitive(), stringToFind, file -> {
-                ContainerUtil.addIfNotNull(resultFiles, file);
-                return true;
-            });
+            helper.processCandidateFilesForText(
+                scope,
+                UsageSearchContext.ANY,
+                myFindModel.isCaseSensitive(),
+                stringToFind,
+                file -> {
+                    ContainerUtil.addIfNotNull(resultFiles, file);
+                    return true;
+                }
+            );
 
             // in case our word splitting is incorrect
             CacheManager cacheManager = CacheManager.getInstance(myProject);
-            VirtualFile[] filesWithWord = cacheManager.getVirtualFilesWithWord(stringToFind, UsageSearchContext.ANY, scope, myFindModel.isCaseSensitive());
+            VirtualFile[] filesWithWord =
+                cacheManager.getVirtualFilesWithWord(stringToFind, UsageSearchContext.ANY, scope, myFindModel.isCaseSensitive());
             return Collections.unmodifiableCollection(Arrays.asList(filesWithWord));
         }
 
@@ -129,7 +139,8 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
 
             // $ is used to separate words when indexing plain-text files but not when indexing
             // Java identifiers, so we can't consistently break a string containing $ characters into words
-            return myFindModel.isWholeWordsOnly() && myStringToFindInIndices.indexOf('$') < 0 && !StringUtil.getWordsIn(myStringToFindInIndices).isEmpty();
+            return myFindModel.isWholeWordsOnly() && myStringToFindInIndices.indexOf('$') < 0
+                && !StringUtil.getWordsIn(myStringToFindInIndices).isEmpty();
         }
 
         @Override

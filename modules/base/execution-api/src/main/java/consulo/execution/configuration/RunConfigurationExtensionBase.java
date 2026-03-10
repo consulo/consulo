@@ -18,6 +18,7 @@ package consulo.execution.configuration;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.runner.ProgramRunner;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -26,6 +27,8 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.Map;
 
 /**
  * Allows a plugin to extend a run configuration created by another plugin.
@@ -68,20 +71,10 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * in the Run/Debug Configurations dialog.
    *
    * @param configuration the configuration being edited.
-   * @return the editor component, or null if this extension doesn't provide any UI for editing the settings.
+   * @return pair of the editor component (and title), or null if this extension doesn't provide any UI for editing the settings.
    */
   @Nullable
-  protected <P extends T> SettingsEditor<P> createEditor(@Nonnull P configuration) {
-    return null;
-  }
-
-  /**
-   * Returns the title of the tab in which the settings editor is displayed.
-   *
-   * @return the editor tab title, or null if this extension doesn't provide any UI for editing the settings.
-   */
-  @Nullable
-  protected String getEditorTitle() {
+  protected <P extends T> Map.Entry<LocalizeValue, SettingsEditor<P>> createEditor(@Nonnull P configuration) {
     return null;
   }
 

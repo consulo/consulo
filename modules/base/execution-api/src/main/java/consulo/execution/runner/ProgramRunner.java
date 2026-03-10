@@ -18,14 +18,13 @@ package consulo.execution.runner;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.execution.ExecutionResult;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,44 +39,48 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProgramRunner<Settings extends RunnerSettings> {
-  ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create(ProgramRunner.class);
+    ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create(ProgramRunner.class);
 
-  interface Callback {
-    void processStarted(RunContentDescriptor descriptor);
-  }
+    interface Callback {
+        void processStarted(RunContentDescriptor descriptor);
+    }
 
-  /**
-   * Returns the unique ID of this runner. This ID is used to store settings and must not change between plugin versions.
-   *
-   * @return the program runner ID.
-   */
-  @Nonnull
-  String getRunnerId();
+    /**
+     * Returns the unique ID of this runner. This ID is used to store settings and must not change between plugin versions.
+     *
+     * @return the program runner ID.
+     */
+    @Nonnull
+    String getRunnerId();
 
-  /**
-   * Checks if the program runner is capable of running the specified configuration with the specified executor.
-   *
-   * @param executorId ID of the {@link Executor} with which the user is trying to run the configuration.
-   * @param profile    the configuration being run.
-   * @return true if the runner can handle it, false otherwise.
-   */
-  boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile);
+    /**
+     * Checks if the program runner is capable of running the specified configuration with the specified executor.
+     *
+     * @param executorId ID of the {@link Executor} with which the user is trying to run the configuration.
+     * @param profile    the configuration being run.
+     * @return true if the runner can handle it, false otherwise.
+     */
+    boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile);
 
-  /**
-   * Creates a block of per-configuration settings used by this program runner.
-   *
-   * @param settingsProvider source of assorted information about the configuration being edited.
-   * @return the per-runner settings, or null if this runner doesn't use any per-runner settings.
-   */
-  @Nullable
-  Settings createConfigurationData(ConfigurationInfoProvider settingsProvider);
+    /**
+     * Creates a block of per-configuration settings used by this program runner.
+     *
+     * @param settingsProvider source of assorted information about the configuration being edited.
+     * @return the per-runner settings, or null if this runner doesn't use any per-runner settings.
+     */
+    @Nullable
+    default Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
+        return null;
+    }
 
-  void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException;
+    default void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
+    }
 
-  @Nullable
-  SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration);
+    @Nullable
+    default SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
+        return null;
+    }
 
-  void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException;
-
-  void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException;
+    @RequiredUIAccess
+    void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException;
 }

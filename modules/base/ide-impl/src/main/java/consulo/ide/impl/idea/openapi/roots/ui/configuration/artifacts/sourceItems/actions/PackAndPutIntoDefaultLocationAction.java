@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
     String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
     Presentation presentation = e.getPresentation();
     if (jarName != null && pathForJars != null) {
-      presentation.setText("Pack Into " + DeploymentUtil.appendToPath(pathForJars, jarName + ".jar"));
+      presentation.setText("Pack Into " + ArtifactUtil.appendToPath(pathForJars, jarName + ".jar"));
       presentation.setVisible(true);
     }
     else {
@@ -64,8 +64,8 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
     String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
     String jarName = suggestJarName();
     if (pathForJars != null) {
-      myArtifactEditor.getLayoutTreeComponent().packInto(mySourceItemsTree.getSelectedItems(), 
-                                                         DeploymentUtil.appendToPath(pathForJars, jarName + ".jar"));
+      myArtifactEditor.getLayoutTreeComponent().packInto(mySourceItemsTree.getSelectedItems(),
+          ArtifactUtil.appendToPath(pathForJars, jarName + ".jar"));
     }
   }
 }

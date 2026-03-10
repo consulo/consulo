@@ -65,11 +65,6 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
-    public CompilerMessage[] getMessages(CompilerMessageCategory category) {
-        return CompilerMessage.EMPTY_ARRAY;
-    }
-
-    @Override
     public int getMessageCount(CompilerMessageCategory category) {
         return 0;
     }

@@ -20,6 +20,7 @@ module consulo.module.api {
 
     exports consulo.module.internal to
         consulo.module.impl,
+        consulo.project.impl,
         consulo.module.content.impl,
         consulo.language.index.impl,
         consulo.ide.impl;

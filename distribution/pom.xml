@@ -440,6 +440,11 @@
             <artifactId>consulo-local-history-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-problem-view-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.formdev</groupId>

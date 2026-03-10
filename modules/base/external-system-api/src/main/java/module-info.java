@@ -11,6 +11,7 @@ module consulo.external.system.api {
     requires transitive consulo.module.content.api;
     requires transitive consulo.execution.api;
     requires transitive consulo.execution.debug.api;
+    requires transitive consulo.build.ui.api;
 
     requires transitive consulo.external.system.rt;
 
@@ -36,6 +37,7 @@ module consulo.external.system.api {
     exports consulo.externalSystem.service;
     exports consulo.externalSystem.setting;
     exports consulo.externalSystem.task;
+    exports consulo.externalSystem.issue;
     exports consulo.externalSystem.model.project;
     exports consulo.externalSystem.service.module.extension;
     exports consulo.externalSystem.scope;

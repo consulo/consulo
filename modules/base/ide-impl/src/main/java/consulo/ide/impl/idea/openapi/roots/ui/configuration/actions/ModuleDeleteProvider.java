@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.TitledHandler;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.language.editor.LangDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
@@ -36,6 +34,7 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -75,7 +74,7 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
                 for (Module module : modules) {
                     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
                     for (Module otherModule : currentModules) {
-                        if (otherModule == module || ArrayUtilRt.find(modules, otherModule) != -1) {
+                        if (otherModule == module || ArrayUtil.find(modules, otherModule) != -1) {
                             continue;
                         }
                         if (!otherModuleRootModels.containsKey(otherModule)) {

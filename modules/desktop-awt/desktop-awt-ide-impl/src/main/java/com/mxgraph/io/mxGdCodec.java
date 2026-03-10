@@ -10,6 +10,7 @@ import com.mxgraph.view.mxGraph;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Parses a GD .txt file and imports it in the given graph.<br/>
@@ -27,7 +28,7 @@ public class mxGdCodec {
   /**
    * Map with the vertex cells added in the addNode method.
    */
-  protected static HashMap<String, Object> cellsMap = new HashMap<String, Object>();
+  protected static Map<String, Object> cellsMap = new HashMap<>();
 
   /**
    * Parses simple GD format and populate the specified graph

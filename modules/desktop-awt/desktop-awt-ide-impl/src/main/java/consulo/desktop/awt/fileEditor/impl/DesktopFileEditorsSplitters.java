@@ -29,7 +29,7 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.*;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
+import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.PathUtil;

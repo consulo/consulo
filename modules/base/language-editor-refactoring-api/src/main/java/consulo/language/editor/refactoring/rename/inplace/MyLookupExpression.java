@@ -29,6 +29,8 @@ import consulo.language.psi.PsiNamedElement;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.SequencedSet;
+import java.util.Set;
 
 /**
  * @author anna
@@ -41,7 +43,7 @@ public class MyLookupExpression extends Expression {
 
     public MyLookupExpression(
         String name,
-        LinkedHashSet<String> names,
+        SequencedSet<String> names,
         PsiNamedElement elementToRename,
         PsiElement nameSuggestionContext,
         boolean shouldSelectAll,
@@ -53,7 +55,7 @@ public class MyLookupExpression extends Expression {
     }
 
     private static LookupElement[] initLookupItems(
-        LinkedHashSet<String> names,
+        SequencedSet<String> names,
         PsiNamedElement elementToRename,
         PsiElement nameSuggestionContext,
         boolean shouldSelectAll

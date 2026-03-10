@@ -6,7 +6,6 @@ import consulo.dataContext.DataManager;
 import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.DropTargetNode;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
@@ -23,6 +22,7 @@ import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.dnd.DnDAction;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -71,7 +71,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
 
     TreePath[] sources = getSourcePaths(event.getAttachedObject());
     if (sources != null) {
-      if (ArrayUtilRt.find(sources, target) != -1) return false;//TODO???? nodes
+      if (ArrayUtil.find(sources, target) != -1) return false;//TODO???? nodes
       if (!handler.isValidSource(sources, target)) return false;
       if (Stream.of(sources).allMatch(source -> handler.isDropRedundant(source, target))) return false;
     }

@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-
+import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -33,62 +32,62 @@ import java.util.List;
  * @author max
  */
 class UsageModelTracker implements Disposable {
-  @FunctionalInterface
-  public interface UsageModelTrackerListener {
-    void modelChanged(boolean isPropertyChange);
-  }
-
-  private final List<UsageModelTrackerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-  UsageModelTracker(@Nonnull Project project) {
-    PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
-      @Override
-      public void childAdded(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, false);
-      }
-
-      @Override
-      public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, false);
-      }
-
-      @Override
-      public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, false);
-      }
-
-      @Override
-      public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, false);
-      }
-
-      @Override
-      public void childMoved(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, false);
-      }
-
-      @Override
-      public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
-        doFire(event, true);
-      }
-    };
-    PsiManager.getInstance(project).addPsiTreeChangeListener(myPsiListener, this);
-  }
-
-  private void doFire(@Nonnull PsiTreeChangeEvent event, boolean propertyChange) {
-    if (!(event.getFile() instanceof PsiCodeFragment)) {
-      for (UsageModelTrackerListener listener : myListeners) {
-        listener.modelChanged(propertyChange);
-      }
+    @FunctionalInterface
+    public interface UsageModelTrackerListener {
+        void modelChanged(boolean isPropertyChange);
     }
-  }
 
-  @Override
-  public void dispose() {
-  }
+    private final List<UsageModelTrackerListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  void addListener(@Nonnull UsageModelTrackerListener listener, @Nonnull Disposable parent) {
-    myListeners.add(listener);
-    Disposer.register(parent, () -> myListeners.remove(listener));
-  }
+    UsageModelTracker(@Nonnull Project project) {
+        PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
+            @Override
+            public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, false);
+            }
+
+            @Override
+            public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, false);
+            }
+
+            @Override
+            public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, false);
+            }
+
+            @Override
+            public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, false);
+            }
+
+            @Override
+            public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, false);
+            }
+
+            @Override
+            public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+                doFire(event, true);
+            }
+        };
+        PsiManager.getInstance(project).addPsiTreeChangeListener(myPsiListener, this);
+    }
+
+    private void doFire(@Nonnull PsiTreeChangeEvent event, boolean propertyChange) {
+        if (!(event.getFile() instanceof PsiCodeFragment)) {
+            for (UsageModelTrackerListener listener : myListeners) {
+                listener.modelChanged(propertyChange);
+            }
+        }
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    void addListener(@Nonnull UsageModelTrackerListener listener, @Nonnull Disposable parent) {
+        myListeners.add(listener);
+        Disposer.register(parent, () -> myListeners.remove(listener));
+    }
 }

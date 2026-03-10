@@ -11,6 +11,7 @@ import java.awt.geom.*;
 import java.text.AttributedString;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.Stack;
 
 /**
@@ -132,7 +133,7 @@ public class mxGraphicsCanvas2D implements mxICanvas2D {
    * Caches parsed colors.
    */
   @SuppressWarnings("serial")
-  protected transient LinkedHashMap<String, Color> colorCache = new LinkedHashMap<String, Color>() {
+  protected transient SequencedMap<String, Color> colorCache = new LinkedHashMap<>() {
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, Color> eldest) {
       return size() > COLOR_CACHE_SIZE;

@@ -17,59 +17,41 @@
 package consulo.execution.runner;
 
 import consulo.execution.RunManager;
-import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.executor.Executor;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
-  @Override
-  @Nullable
-  public Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
-    return null;
-  }
+public abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
+    @RequiredUIAccess
+    @Override
+    public void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException {
+        RunProfileState state = environment.getState();
+        if (state == null) {
+            return;
+        }
 
-  @Override
-  public void checkConfiguration(RunnerSettings settings, ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
-  }
-
-  @Override
-  @Nullable
-  public SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
-    return null;
-  }
-
-  @Override
-  public void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException {
-    execute(environment, null);
-  }
-
-  @Override
-  public void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException {
-    RunProfileState state = environment.getState();
-    if (state == null) {
-      return;
+        RunManager.getInstance(environment.getProject()).refreshUsagesList(environment.getRunProfile());
+        
+        execute(environment, state);
     }
 
-    RunManager.getInstance(environment.getProject()).refreshUsagesList(environment.getRunProfile());
-    execute(environment, callback, state);
-  }
+    @RequiredUIAccess
+    protected abstract void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException;
 
-  protected abstract void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback, @Nonnull RunProfileState state)
-          throws ExecutionException;
+    @Nullable
+    static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor) {
+        if (descriptor != null) {
+            descriptor.setExecutionId(environment.getExecutionId());
+        }
 
-  @Nullable
-  static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor, @Nullable Callback callback) {
-    if (descriptor != null) {
-      descriptor.setExecutionId(environment.getExecutionId());
+        Callback callback = environment.getCallback();
+        if (callback != null) {
+            callback.processStarted(descriptor);
+        }
+        return descriptor;
     }
-    if (callback != null) {
-      callback.processStarted(descriptor);
-    }
-    return descriptor;
-  }
 }

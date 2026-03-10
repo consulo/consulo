@@ -16,12 +16,10 @@
 package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.JBIterator;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Functions;
 import consulo.util.collection.JBIterable;
+import consulo.util.collection.JBIterator;
 import consulo.util.collection.Maps;
-
+import consulo.util.lang.Pair;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -212,7 +210,7 @@ public class TreeTraverser<T> {
                     iterator.next();
                     return iterator;
                 }
-            }.transform(Functions.<T>pairFirst()).filter(Predicates.notNull());
+            }.transform(pair -> Pair.getFirst(pair)).filter(Predicates.notNull());
         }
     }
 

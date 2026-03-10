@@ -26,8 +26,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
   private final static int SCOPE_COLUMN = 0;
   private final static int SEVERITY_COLUMN = 1;
 
-  public ScopesAndSeveritiesHintTable(LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
+  public ScopesAndSeveritiesHintTable(SequencedMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
     super(new MyModel(scopeToAverageSeverityMap, defaultScopeName));
 
     getColumnModel().getColumn(SCOPE_COLUMN).setCellRenderer(new DefaultTableCellRenderer() {
@@ -90,11 +89,11 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
 
   private final static class MyModel extends AbstractTableModel {
 
-    private final LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap;
+    private final SequencedMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap;
     private final String myDefaultScopeName;
     private final List<String> myScopes;
 
-    public MyModel(LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
+    public MyModel(SequencedMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
       myScopeToAverageSeverityMap = scopeToAverageSeverityMap;
       myDefaultScopeName = defaultScopeName;
       myScopes = new ArrayList<String>(myScopeToAverageSeverityMap.keySet());

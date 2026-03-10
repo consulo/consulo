@@ -43,6 +43,7 @@ import consulo.usage.*;
 import consulo.usage.rule.UsageInFile;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -268,9 +269,9 @@ public class ReplaceInProjectManager {
                 FindLocalize.findReplaceAllConfirmationTitle().get(),
                 FindLocalize.findReplaceAllConfirmation(
                     usagesCount,
-                    StringUtil.escapeXmlEntities(stringToFind),
+                    XmlStringUtil.escapeText(stringToFind),
                     filesCount,
-                    StringUtil.escapeXmlEntities(stringToReplace)
+                    XmlStringUtil.escapeText(stringToReplace)
                 ).get()
             )
             .yesText(FindLocalize.findReplaceCommand().get())

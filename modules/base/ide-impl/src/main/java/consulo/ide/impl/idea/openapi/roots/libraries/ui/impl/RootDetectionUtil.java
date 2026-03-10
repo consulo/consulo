@@ -25,7 +25,6 @@ import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsDetector;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -33,6 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -92,7 +92,7 @@ public class RootDetectionUtil {
                         }
                         else {
                             for (DetectedLibraryRoot root : roots) {
-                                HashMap<LibraryRootType, String> names = new HashMap<>();
+                                Map<LibraryRootType, String> names = new HashMap<>();
                                 for (LibraryRootType type : root.getTypes()) {
                                     String typeName = detector.getRootTypeName(type);
                                     LOG.assertTrue(

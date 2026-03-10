@@ -37,7 +37,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   protected static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTaskProvider.class);
 
   @Override
-  public Image getIcon() {
+  public Image getIcon(RunConfiguration configuration) {
     return PlatformIconGroup.generalExternaltools();
   }
 

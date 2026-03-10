@@ -22,8 +22,6 @@ module consulo.localization.api {
     requires transitive consulo.annotation;
     requires transitive consulo.disposer.api;
 
-    requires consulo.container.api;
-
     exports consulo.localization;
 
     uses consulo.localization.LocalizationManager;

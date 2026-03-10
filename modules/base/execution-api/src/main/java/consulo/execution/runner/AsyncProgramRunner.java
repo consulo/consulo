@@ -22,55 +22,47 @@ import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-import consulo.util.concurrent.AsyncResult;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 05-May-17
- * <p>
- * from kotlin platform\lang-api\src\com\intellij\execution\runners\GenericProgramRunner.kt
  */
 public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
-  @Override
-  protected void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
-    startRunProfile(environment, state, callback, runProfileStarter(() -> execute(environment, state)));
-  }
-
-  @Nonnull
-  protected abstract AsyncResult<RunContentDescriptor> execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException;
-
-
-  protected static void startRunProfile(ExecutionEnvironment environment,
-                                        RunProfileState state,
-                                        ProgramRunner.Callback callback,
-                                        @Nullable RunProfileStarter starter) {
-
-    ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> func = () -> {
-      AsyncResult<RunContentDescriptor> promise = starter == null ? AsyncResult.done(null) : starter.executeAsync(state, environment);
-      return promise.doWhenDone(it -> BaseProgramRunner.postProcess(environment, it, callback));
-    };
-
-    ExecutionManager.getInstance(environment.getProject()).startRunProfile(runProfileStarter(func), state, environment);
-  }
-
-  private static RunProfileStarter runProfileStarter(ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter) {
-    return new RunProfileStarterImpl(starter);
-  }
-
-  private static class RunProfileStarterImpl extends RunProfileStarter {
-    private final ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter;
-
-    private RunProfileStarterImpl(ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter) {
-      this.starter = starter;
-    }
-
+    @RequiredUIAccess
     @Override
-    public AsyncResult<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
-      return starter.compute();
+    protected final void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException {
+        startRunProfile(environment, state, this::executeImpl);
     }
-  }
+
+    @Nonnull
+    protected abstract CompletableFuture<RunContentDescriptor> executeImpl(
+        @Nonnull RunProfileState state,
+        @Nonnull ExecutionEnvironment environment
+    ) throws ExecutionException;
+
+    @RequiredUIAccess
+    protected static void startRunProfile(ExecutionEnvironment environment,
+                                          RunProfileState state,
+                                          @Nullable RunProfileStarter starter) {
+
+        ThrowableComputable<CompletableFuture<RunContentDescriptor>, ExecutionException> func = () -> {
+            CompletableFuture<RunContentDescriptor> future = starter == null
+                ? CompletableFuture.completedFuture(null)
+                : starter.executeAsync(state, environment);
+
+            return future.whenComplete((runContentDescriptor, throwable) -> {
+                if (throwable == null) {
+                    BaseProgramRunner.postProcess(environment, runContentDescriptor);
+                }
+            });
+        };
+
+        ExecutionManager.getInstance(environment.getProject()).startRunProfile((s, e) -> func.get(), state, environment);
+    }
 }
 

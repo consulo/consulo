@@ -15,7 +15,7 @@
  */
 package consulo.execution.test;
 
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessOutputTypes;

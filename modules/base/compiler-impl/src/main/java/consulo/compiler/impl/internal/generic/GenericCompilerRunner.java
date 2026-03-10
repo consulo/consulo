@@ -26,6 +26,7 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.util.CompilerUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.index.io.KeyDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -121,7 +122,7 @@ public class GenericCompilerRunner {
                 List<Key> keys = new ArrayList<>();
                 CompilerUtil.runInContext(
                     myContext,
-                    "Processing obsolete targets...",
+                    LocalizeValue.localizeTODO("Processing obsolete targets..."),
                     () -> {
                         cache.processSources(id, new CommonProcessors.CollectProcessor<>(keys));
                         List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteSources = new ArrayList<>();
@@ -269,7 +270,7 @@ public class GenericCompilerRunner {
 
         CompilerUtil.runInContext(
             myContext,
-            CompilerLocalize.progressUpdatingCaches().get(),
+            CompilerLocalize.progressUpdatingCaches(),
             () -> {
                 for (Key key : toRemove) {
                     cache.remove(targetId, key);

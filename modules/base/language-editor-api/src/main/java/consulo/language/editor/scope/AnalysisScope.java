@@ -620,7 +620,7 @@ public class AnalysisScope {
   @Nonnull
   public AnalysisScope getNarrowedComplementaryScope(@Nonnull Project defaultProject) {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(defaultProject).getFileIndex();
-    HashSet<Module> modules = new HashSet<>();
+    Set<Module> modules = new HashSet<>();
     if (myType == FILE || myType == DIRECTORY) {
       VirtualFile vFile = ((PsiFileSystemItem)myElement).getVirtualFile();
       modules.addAll(getAllInterestingModules(fileIndex, vFile));
@@ -635,7 +635,7 @@ public class AnalysisScope {
   }
 
   @Nonnull
-  protected static AnalysisScope collectScopes(@Nonnull Project defaultProject, @Nonnull HashSet<Module> modules) {
+  protected static AnalysisScope collectScopes(@Nonnull Project defaultProject, @Nonnull Set<Module> modules) {
     if (modules.isEmpty()) {
       return new AnalysisScope(defaultProject);
     }
@@ -677,8 +677,8 @@ public class AnalysisScope {
   }
 
   @Nonnull
-  protected static HashSet<Module> getAllInterestingModules(@Nonnull ProjectFileIndex fileIndex, @Nonnull VirtualFile vFile) {
-    HashSet<Module> modules = new HashSet<>();
+  protected static Set<Module> getAllInterestingModules(@Nonnull ProjectFileIndex fileIndex, @Nonnull VirtualFile vFile) {
+    Set<Module> modules = new HashSet<>();
     if (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)) {
       for (OrderEntry orderEntry : fileIndex.getOrderEntriesForFile(vFile)) {
         modules.add(orderEntry.getOwnerModule());

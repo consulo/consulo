@@ -230,7 +230,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   @Override
   public CharSequence getContentAsText() {
     if (myFileType.isBinary()) {
-      throw new IllegalDataException("Cannot obtain text for binary file type : " + myFileType.getDescription());
+      throw new IllegalDataException("Cannot obtain text for binary file type : " + myFileType.getId());
     }
     CharSequence content = getUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY);
     if (content != null) {

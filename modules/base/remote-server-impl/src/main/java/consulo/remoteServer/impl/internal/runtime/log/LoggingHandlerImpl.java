@@ -2,7 +2,7 @@
 package consulo.remoteServer.impl.internal.runtime.log;
 
 import consulo.disposer.Disposer;
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.execution.ui.console.*;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;

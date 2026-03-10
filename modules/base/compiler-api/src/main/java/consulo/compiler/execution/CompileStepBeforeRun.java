@@ -16,16 +16,13 @@
 package consulo.compiler.execution;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerManager;
-import consulo.compiler.CompilerRunner;
 import consulo.compiler.scope.CompileScope;
-import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
-import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
@@ -34,12 +31,9 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -50,7 +44,7 @@ import jakarta.inject.Inject;
  * @author spleaner
  */
 @ExtensionImpl(id = "compileBeforeRun")
-public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBeforeRun.MakeBeforeRunTask> {
+public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBeforeRun.MakeBeforeRunTask> {
     /**
      * Marked for disable adding CompileStepBeforeRun
      */
@@ -62,11 +56,9 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
     protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
-    private final Project myProject;
-
     @Inject
     public CompileStepBeforeRun(@Nonnull Project project) {
-        myProject = project;
+        super(project);
     }
 
     @Nonnull
@@ -88,21 +80,6 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     }
 
     @Override
-    public Image getIcon() {
-        ExtensionPoint<CompilerRunner> point = myProject.getExtensionPoint(CompilerRunner.class);
-        CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
-        if (runner != null) {
-            return runner.getBuildIcon();
-        }
-        return PlatformIconGroup.actionsCompile();
-    }
-
-    @Override
-    public Image getTaskIcon(MakeBeforeRunTask task) {
-        return getIcon();
-    }
-
-    @Override
     public MakeBeforeRunTask createTask(RunConfiguration configuration) {
         MakeBeforeRunTask task = null;
 
@@ -116,13 +93,6 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     }
 
     @Nonnull
-    @RequiredUIAccess
-    @Override
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, MakeBeforeRunTask task) {
-        return AsyncResult.rejected();
-    }
-
-    @Nonnull
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,
@@ -131,13 +101,14 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
         ExecutionEnvironment env,
         MakeBeforeRunTask task
     ) {
-        return doMake(uiAccess, myProject, configuration, false);
+        return doMake(uiAccess, myProject, configuration, env, false);
     }
 
     static AsyncResult<Void> doMake(
         UIAccess uiAccess,
         Project myProject,
         RunConfiguration configuration,
+        ExecutionEnvironment env,
         boolean ignoreErrors
     ) {
         if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption runConfiguration)) {
@@ -171,7 +142,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             CompilerManager compilerManager = CompilerManager.getInstance(myProject);
             if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
                 // user explicitly requested whole-project make
-                scope = AccessRule.read(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
+                scope = ReadAction.computeNotNull(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
             }
             else {
                 Module[] modules = runConfiguration.getModules();
@@ -184,10 +155,10 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
                             );
                         }
                     }
-                    scope = AccessRule.read(() -> compilerManager.createModulesCompileScope(modules, true, isTestCompile[0]));
+                    scope = ReadAction.computeNotNull(() -> compilerManager.createModulesCompileScope(modules, true, isTestCompile[0]));
                 }
                 else if (runConfiguration.isBuildProjectOnEmptyModuleList()) {
-                    scope = AccessRule.read(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
+                    scope = ReadAction.computeNotNull(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
                 }
                 else {
                     result.setDone();
@@ -196,6 +167,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             }
 
             scope.putUserData(RunConfiguration.KEY, configuration);
+            scope.putUserData(ExecutionEnvironment.KEY, env);
 
             uiAccess.give(() -> compilerManager.make(scope, callback));
         }

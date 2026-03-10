@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Graph element in the GML Structure.
@@ -22,7 +23,7 @@ public class mxGraphMlGraph {
   /**
    * Map with the vertex cells added in the addNode method.
    */
-  private static HashMap<String, Object> cellsMap = new HashMap<String, Object>();
+  private static Map<String, Object> cellsMap = new HashMap<>();
 
   private String id = "";
 
@@ -131,7 +132,7 @@ public class mxGraphMlGraph {
    */
   public static mxGraphMlData dataNodeKey(mxGraphMlNode node) {
     String keyId = "";
-    HashMap<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
+    Map<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
 
     for (mxGraphMlKey key : keyMap.values()) {
       if (key.getKeyName().equals(mxGraphMlConstants.KEY_NODE_NAME)) {
@@ -140,7 +141,7 @@ public class mxGraphMlGraph {
     }
 
     mxGraphMlData data = null;
-    HashMap<String, mxGraphMlData> nodeDataMap = node.getNodeDataMap();
+    Map<String, mxGraphMlData> nodeDataMap = node.getNodeDataMap();
     data = nodeDataMap.get(keyId);
 
     return data;
@@ -155,7 +156,7 @@ public class mxGraphMlGraph {
    */
   public static mxGraphMlData dataEdgeKey(mxGraphMlEdge edge) {
     String keyId = "";
-    HashMap<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
+    Map<String, mxGraphMlKey> keyMap = mxGraphMlKeyManager.getInstance().getKeyMap();
     for (mxGraphMlKey key : keyMap.values()) {
       if (key.getKeyName().equals(mxGraphMlConstants.KEY_EDGE_NAME)) {
         keyId = key.getKeyId();
@@ -163,7 +164,7 @@ public class mxGraphMlGraph {
     }
 
     mxGraphMlData data = null;
-    HashMap<String, mxGraphMlData> nodeDataMap = edge.getEdgeDataMap();
+    Map<String, mxGraphMlData> nodeDataMap = edge.getEdgeDataMap();
     data = nodeDataMap.get(keyId);
 
     return data;

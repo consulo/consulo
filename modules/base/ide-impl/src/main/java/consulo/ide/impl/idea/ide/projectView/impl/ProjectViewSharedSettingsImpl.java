@@ -27,12 +27,14 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.SequencedMap;
 
 /**
+ * from kotlin
+ * @author Konstantin Bulenkov
  * @author VISTALL
- * <p>
- * from kotlin by @author Konstantin Bulenkov
  */
 @Singleton
 @ServiceImpl

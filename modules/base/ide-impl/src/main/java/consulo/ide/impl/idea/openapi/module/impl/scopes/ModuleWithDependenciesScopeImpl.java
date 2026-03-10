@@ -15,24 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
-import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.ModuleRootsProcessor;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.scope.ModuleWithDependenciesScope;
-import consulo.module.content.internal.ModuleRootsProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Comparing;
@@ -45,188 +42,210 @@ import org.jetbrains.annotations.TestOnly;
 import java.util.*;
 
 public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implements ModuleWithDependenciesScope {
-  public static final int COMPILE = 0x01;
-  public static final int LIBRARIES = 0x02;
-  public static final int MODULES = 0x04;
-  public static final int TESTS = 0x08;
-  public static final int RUNTIME = 0x10;
-  public static final int CONTENT = 0x20;
+    public static final int COMPILE = 0x01;
+    public static final int LIBRARIES = 0x02;
+    public static final int MODULES = 0x04;
+    public static final int TESTS = 0x08;
+    public static final int RUNTIME = 0x10;
+    public static final int CONTENT = 0x20;
 
-  @MagicConstant(flags = {COMPILE, LIBRARIES, MODULES, TESTS, RUNTIME, CONTENT})
-  public @interface ScopeConstant {}
-
-  private final Module myModule;
-  @ScopeConstant
-  private final int myOptions;
-
-  private final ProjectFileIndex myProjectFileIndex;
-
-  private final Set<Module> myModules;
-  private final ObjectIntMap<VirtualFile> myRoots = ObjectMaps.newObjectIntHashMap();
-
-  private ModuleRootsProcessor myRootsProcessor;
-  private ModuleRootManager myModuleRootManager;
-
-  public ModuleWithDependenciesScopeImpl(@Nonnull Module module, @ScopeConstant int options) {
-    super(module.getProject());
-    myModule = module;
-    myOptions = options;
-
-    myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
-
-    myModuleRootManager = ModuleRootManager.getInstance(module);
-    myRootsProcessor = ModuleRootsProcessor.findRootsProcessor(myModuleRootManager);
-    OrderEnumerator en = myModuleRootManager.orderEntries();
-    en.recursively();
-
-    if (hasOption(COMPILE)) {
-      en.exportedOnly().compileOnly();
+    @MagicConstant(flags = {COMPILE, LIBRARIES, MODULES, TESTS, RUNTIME, CONTENT})
+    public @interface ScopeConstant {
     }
-    if (hasOption(RUNTIME)) {
-      en.runtimeOnly();
-    }
-    if (!hasOption(LIBRARIES)) en.withoutLibraries().withoutSdk();
-    if (!hasOption(MODULES)) en.withoutDepModules();
-    if (!hasOption(TESTS)) en.productionOnly();
 
-    LinkedHashSet<Module> modules = new LinkedHashSet<>();
+    private final Module myModule;
+    @ScopeConstant
+    private final int myOptions;
 
-    en.forEach(each -> {
-      if (each instanceof ModuleOrderEntry moduleOrderEntry) {
-        ContainerUtil.addIfNotNull(modules, moduleOrderEntry.getModule());
-      }
-      else if (each instanceof ModuleSourceOrderEntry) {
-        ContainerUtil.addIfNotNull(modules, each.getOwnerModule());
-      }
-      return true;
-    });
+    private final ProjectFileIndex myProjectFileIndex;
 
-    myModules = new HashSet<>(modules);
+    private final Set<Module> myModules;
+    private final ObjectIntMap<VirtualFile> myRoots = ObjectMaps.newObjectIntHashMap();
 
-    LinkedHashSet<VirtualFile> roots = new LinkedHashSet<>();
+    private ModuleRootsProcessor myRootsProcessor;
+    private ModuleRootManager myModuleRootManager;
 
-    if (hasOption(CONTENT)) {
-      for (Module m : modules) {
-        for (ContentEntry entry : ModuleRootManager.getInstance(m).getContentEntries()) {
-          ContainerUtil.addIfNotNull(entry.getFile(), roots);
+    public ModuleWithDependenciesScopeImpl(@Nonnull Module module, @ScopeConstant int options) {
+        super(module.getProject());
+        myModule = module;
+        myOptions = options;
+
+        myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
+
+        myModuleRootManager = ModuleRootManager.getInstance(module);
+        myRootsProcessor = ModuleRootsProcessor.findRootsProcessor(myModuleRootManager);
+        OrderEnumerator en = myModuleRootManager.orderEntries();
+        en.recursively();
+
+        if (hasOption(COMPILE)) {
+            en.exportedOnly().compileOnly();
         }
-      }
-    }
-    else {
-      Collections.addAll(roots, en.roots(new NotNullFunction<>() {
-        @Nonnull
-        @Override
-        public OrderRootType apply(OrderEntry entry) {
-          return entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry
-            ? SourcesOrderRootType.getInstance() : BinariesOrderRootType.getInstance();
+        if (hasOption(RUNTIME)) {
+            en.runtimeOnly();
         }
-      }).getRoots());
+        if (!hasOption(LIBRARIES)) {
+            en.withoutLibraries().withoutSdk();
+        }
+        if (!hasOption(MODULES)) {
+            en.withoutDepModules();
+        }
+        if (!hasOption(TESTS)) {
+            en.productionOnly();
+        }
+
+        LinkedHashSet<Module> modules = new LinkedHashSet<>();
+
+        en.forEach(each -> {
+            if (each instanceof ModuleOrderEntry moduleOrderEntry) {
+                ContainerUtil.addIfNotNull(modules, moduleOrderEntry.getModule());
+            }
+            else if (each instanceof ModuleSourceOrderEntry) {
+                ContainerUtil.addIfNotNull(modules, each.getOwnerModule());
+            }
+            return true;
+        });
+
+        myModules = new HashSet<>(modules);
+
+        Set<VirtualFile> roots = new LinkedHashSet<>();
+
+        if (hasOption(CONTENT)) {
+            for (Module m : modules) {
+                for (ContentEntry entry : ModuleRootManager.getInstance(m).getContentEntries()) {
+                    ContainerUtil.addIfNotNull(roots, entry.getFile());
+                }
+            }
+        }
+        else {
+            Collections.addAll(
+                roots,
+                en.roots(
+                    entry -> entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry
+                        ? SourcesOrderRootType.getInstance()
+                        : BinariesOrderRootType.getInstance()
+                ).getRoots()
+            );
+        }
+
+        int i = 1;
+        for (VirtualFile root : roots) {
+            myRoots.putInt(root, i++);
+        }
     }
 
-    int i = 1;
-    for (VirtualFile root : roots) {
-      myRoots.putInt(root, i++);
+    @Nonnull
+    @Override
+    public Module getModule() {
+        return myModule;
     }
-  }
 
-  @Nonnull
-  public Module getModule() {
-    return myModule;
-  }
-
-  private boolean hasOption(@ScopeConstant int option) {
-    return (myOptions & option) != 0;
-  }
-
-  @Nonnull
-  @Override
-  public String getDisplayName() {
-    return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
-                              : PsiBundle.message("search.scope.module.runtime", myModule.getName());
-  }
-
-  @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
-    return myModules.contains(aModule);
-  }
-
-  @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
-    return isSearchInModuleContent(aModule) && (hasOption(TESTS) || !testSources);
-  }
-
-  @Override
-  public boolean isSearchInLibraries() {
-    return hasOption(LIBRARIES);
-  }
-
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    if (hasOption(CONTENT)) {
-      return myRoots.containsKey(myProjectFileIndex.getContentRootForFile(file));
+    private boolean hasOption(@ScopeConstant int option) {
+        return (myOptions & option) != 0;
     }
-    if (myProjectFileIndex.isInContent(file)) {
-      if (myRootsProcessor != null && myRootsProcessor.containsFile(myRoots, file)
-        || myRoots.containsKey(myProjectFileIndex.getSourceRootForFile(file))) {
-        return true;
-      }
+
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
+            : PsiBundle.message("search.scope.module.runtime", myModule.getName());
     }
-    return myRoots.containsKey(myProjectFileIndex.getClassRootForFile(file));
-  }
 
-  @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-    VirtualFile r1 = getFileRoot(file1);
-    VirtualFile r2 = getFileRoot(file2);
-    if (Comparing.equal(r1, r2)) return 0;
-
-    if (r1 == null) return -1;
-    if (r2 == null) return 1;
-
-    int i1 = myRoots.getInt(r1);
-    int i2 = myRoots.getInt(r2);
-    if (i1 == 0 && i2 == 0) return 0;
-    if (i1 > 0 && i2 > 0) return i2 - i1;
-    return i1 > 0 ? 1 : -1;
-  }
-
-  @Nullable
-  private VirtualFile getFileRoot(@Nonnull VirtualFile file) {
-    if (myProjectFileIndex.isInContent(file)) {
-      return myProjectFileIndex.getSourceRootForFile(file);
+    @Override
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+        return myModules.contains(aModule);
     }
-    return myProjectFileIndex.getClassRootForFile(file);
-  }
 
-  @TestOnly
-  public Collection<VirtualFile> getRoots() {
-    //noinspection unchecked
-    List<VirtualFile> result = new ArrayList<>(myRoots.size());
-    myRoots.forEach((virtualFile, value) -> result.add(virtualFile));
-    Collections.sort(result, (o1, o2) -> myRoots.getInt(o1) - myRoots.getInt(o2));
-    return result;
-  }
+    @Override
+    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+        return isSearchInModuleContent(aModule) && (hasOption(TESTS) || !testSources);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean isSearchInLibraries() {
+        return hasOption(LIBRARIES);
+    }
 
-    ModuleWithDependenciesScopeImpl that = (ModuleWithDependenciesScopeImpl)o;
-    return myOptions == that.myOptions && myModule.equals(that.myModule);
-  }
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        if (hasOption(CONTENT)) {
+            return myRoots.containsKey(myProjectFileIndex.getContentRootForFile(file));
+        }
+        if (myProjectFileIndex.isInContent(file)) {
+            if (myRootsProcessor != null && myRootsProcessor.containsFile(myRoots, file)
+                || myRoots.containsKey(myProjectFileIndex.getSourceRootForFile(file))) {
+                return true;
+            }
+        }
+        return myRoots.containsKey(myProjectFileIndex.getClassRootForFile(file));
+    }
 
-  @Override
-  public int hashCode() {
-    return 31 * myModule.hashCode() + myOptions;
-  }
+    @Override
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+        VirtualFile r1 = getFileRoot(file1);
+        VirtualFile r2 = getFileRoot(file2);
+        if (Comparing.equal(r1, r2)) {
+            return 0;
+        }
 
-  @Override
-  public String toString() {
-    return "Module with dependencies:" + myModule.getName() +
-           " compile:" + hasOption(COMPILE) +
-           " include libraries:" + hasOption(LIBRARIES) +
-           " include other modules:" + hasOption(MODULES) +
-           " include tests:" + hasOption(TESTS);
-  }
+        if (r1 == null) {
+            return -1;
+        }
+        if (r2 == null) {
+            return 1;
+        }
+
+        int i1 = myRoots.getInt(r1);
+        int i2 = myRoots.getInt(r2);
+        if (i1 == 0 && i2 == 0) {
+            return 0;
+        }
+        if (i1 > 0 && i2 > 0) {
+            return i2 - i1;
+        }
+        return i1 > 0 ? 1 : -1;
+    }
+
+    @Nullable
+    private VirtualFile getFileRoot(@Nonnull VirtualFile file) {
+        if (myProjectFileIndex.isInContent(file)) {
+            return myProjectFileIndex.getSourceRootForFile(file);
+        }
+        return myProjectFileIndex.getClassRootForFile(file);
+    }
+
+    @TestOnly
+    public Collection<VirtualFile> getRoots() {
+        //noinspection unchecked
+        List<VirtualFile> result = new ArrayList<>(myRoots.size());
+        myRoots.forEach((virtualFile, value) -> result.add(virtualFile));
+        Collections.sort(result, (o1, o2) -> myRoots.getInt(o1) - myRoots.getInt(o2));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ModuleWithDependenciesScopeImpl that = (ModuleWithDependenciesScopeImpl) o;
+        return myOptions == that.myOptions && myModule.equals(that.myModule);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * myModule.hashCode() + myOptions;
+    }
+
+    @Override
+    public String toString() {
+        return "Module with dependencies:" + myModule.getName() +
+            " compile:" + hasOption(COMPILE) +
+            " include libraries:" + hasOption(LIBRARIES) +
+            " include other modules:" + hasOption(MODULES) +
+            " include tests:" + hasOption(TESTS);
+    }
 }

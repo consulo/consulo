@@ -47,11 +47,18 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     Map<String, String> myHeaders = new LinkedHashMap<>();
     HttpVersion myHttpVersion;
     byte[] myBody;
+    boolean myAllowErrorCodes;
 
     HttpRequestBuilderImpl(@Nonnull Application application, @Nonnull String url, HttpMethod httpMethod) {
         myApplication = application;
         myUrl = url;
         myHttpMethod = httpMethod;
+    }
+
+    @Override
+    public HttpRequestBuilder allowErrorCodes(boolean allowErrorCodes) {
+        myAllowErrorCodes = allowErrorCodes;
+        return this;
     }
 
     @Override

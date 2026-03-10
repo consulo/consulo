@@ -25,6 +25,7 @@ import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,122 +35,128 @@ import jakarta.annotation.Nullable;
  * @since 2018-08-25
  */
 public class LightProject extends BaseComponentManager implements Project {
-  @Nonnull
-  private final Application myApplication;
-  @Nonnull
-  private final String myName;
-  @Nonnull
-  private final LightExtensionRegistrator myRegistrator;
+    @Nonnull
+    private final Application myApplication;
+    @Nonnull
+    private final String myName;
+    @Nonnull
+    private final LightExtensionRegistrator myRegistrator;
 
-  public LightProject(@Nonnull Application application,
-                      @Nonnull String name,
-                      ComponentBinding componentBinding,
-                      @Nonnull LightExtensionRegistrator registrator) {
-    super(application, name, ComponentScope.PROJECT, componentBinding, false);
-    myApplication = application;
-    myName = name;
-    myRegistrator = registrator;
+    public LightProject(@Nonnull Application application,
+                        @Nonnull String name,
+                        ComponentBinding componentBinding,
+                        @Nonnull LightExtensionRegistrator registrator) {
+        super(application, name, ComponentScope.PROJECT, componentBinding, false);
+        myApplication = application;
+        myName = name;
+        myRegistrator = registrator;
 
-    buildInjectingContainer();
-  }
+        buildInjectingContainer();
+    }
 
-  @Override
-  public int getProfiles() {
-    return ComponentProfiles.LIGHT_TEST;
-  }
+    @Override
+    public int getProfiles() {
+        return ComponentProfiles.LIGHT_TEST;
+    }
 
-  @Nonnull
-  @Override
-  public Application getApplication() {
-    return myApplication;
-  }
+    @Nonnull
+    @Override
+    public Application getApplication() {
+        return myApplication;
+    }
 
-  @Override
-  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
-  }
+    @Override
+    protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
+    }
 
-  @Nonnull
-  @Override
-  protected InjectingContainer findRootContainer() {
-    return InjectingContainer.root(getClass().getClassLoader());
-  }
+    @Nonnull
+    @Override
+    protected InjectingContainer findRootContainer() {
+        return InjectingContainer.root(getClass().getClassLoader());
+    }
 
-  @Override
-  protected void registerServices(InjectingContainerBuilder builder) {
-    myRegistrator.registerServices(builder);
-  }
+    @Override
+    protected void registerServices(InjectingContainerBuilder builder) {
+        myRegistrator.registerServices(builder);
+    }
 
-  @Override
-  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
-    super.bootstrapInjectingContainer(builder);
+    @Override
+    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+        super.bootstrapInjectingContainer(builder);
 
-    builder.bind(Project.class).to(this);
-  }
+        builder.bind(Project.class).to(this);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getBaseDir() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public VirtualFile getBaseDir() {
+        return null;
+    }
 
-  @Override
-  public String getBasePath() {
-    return null;
-  }
+    @Override
+    public String getBasePath() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getProjectFile() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public VirtualFile getProjectFile() {
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public String getProjectFilePath() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public String getProjectFilePath() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public String getPresentableUrl() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getPresentableUrl() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getWorkspaceFile() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public VirtualFile getWorkspaceFile() {
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public String getLocationHash() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public String getLocationHash() {
+        return null;
+    }
 
-  @Override
-  public void save() {
+    @Override
+    public void save() {
 
-  }
+    }
 
-  @Override
-  public boolean isOpen() {
-    return true;
-  }
+    @Override
+    public boolean isOpen() {
+        return true;
+    }
 
-  @Override
-  public boolean isInitialized() {
-    return true;
-  }
+    @Override
+    public boolean isInitialized() {
+        return true;
+    }
 
-  @Override
-  public boolean isDefault() {
-    return false;
-  }
+    @Override
+    public boolean isDefault() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public CoroutineContext coroutineContext() {
+        throw new UnsupportedOperationException();
+    }
 }

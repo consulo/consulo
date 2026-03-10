@@ -85,7 +85,7 @@ public class SwitchedFileHolder implements FileHolder {
   }
 
   public Map<VirtualFile, String> getFilesMapCopy() {
-    HashMap<VirtualFile, String> result = new HashMap<>();
+    Map<VirtualFile, String> result = new HashMap<>();
     for (VirtualFile vf : myMap.keySet()) {
       result.put(vf, myMap.get(vf).getSecond());
     }

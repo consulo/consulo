@@ -19,10 +19,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -69,11 +69,11 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     private void addToCache(FilteringNode node, boolean duplicate) {
         Object delegate = node.getDelegate();
         Object[] delegates = myBaseStructure.getChildElements(delegate);
-        if (delegates == null || delegates.length == 0 || duplicate) {
+        if (delegates.length == 0 || duplicate) {
             myLeaves.add(node);
         }
         else {
-            ArrayList<FilteringNode> nodes = new ArrayList<>(delegates.length);
+            List<FilteringNode> nodes = new ArrayList<>(delegates.length);
             for (Object d : delegates) {
                 boolean isDuplicate = myDescriptors2Nodes.containsKey(d);
                 if (!isDuplicate) {

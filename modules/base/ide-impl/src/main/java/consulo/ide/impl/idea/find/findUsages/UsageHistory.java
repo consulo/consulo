@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.find.findUsages;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.usage.ConfigurableUsageTarget;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class UsageHistory {
     // the last element is the most recent
-    private final List<ConfigurableUsageTarget> myHistory = ContainerUtil.createLockFreeCopyOnWriteList();
+    private final List<ConfigurableUsageTarget> myHistory = Lists.newLockFreeCopyOnWriteList();
 
     public void add(@Nonnull ConfigurableUsageTarget usageTarget) {
         String descriptiveName = usageTarget.getLongDescriptiveName();

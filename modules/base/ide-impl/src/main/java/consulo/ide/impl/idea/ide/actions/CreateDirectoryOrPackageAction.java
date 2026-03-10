@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
 import consulo.ide.impl.actions.CreateDirectoryOrPackageType;

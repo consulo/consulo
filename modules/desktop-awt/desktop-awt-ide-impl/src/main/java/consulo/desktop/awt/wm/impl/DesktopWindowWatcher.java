@@ -15,21 +15,21 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
 import consulo.application.Application;
-import consulo.project.Project;
-import consulo.ui.ex.awt.util.FocusWatcher;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.FocusWatcher;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.Maps;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -47,289 +47,289 @@ import java.util.Set;
  * @author Vladimir Kondratyev
  */
 public final class DesktopWindowWatcher implements PropertyChangeListener {
-  private static final Logger LOG = Logger.getInstance(DesktopWindowWatcher.class);
+    private static final Logger LOG = Logger.getInstance(DesktopWindowWatcher.class);
 
-  @NonNls
-  protected static final String FOCUSED_WINDOW_PROPERTY = "focusedWindow";
+    protected static final String FOCUSED_WINDOW_PROPERTY = "focusedWindow";
 
-  private final Object myLock = new Object();
+    private final Object myLock = new Object();
 
-  private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = ContainerUtil.createWeakMap();
-  private final Application myApplication;
-  private final DataManager myDataManager;
-  /**
-   * Currenly focused window (window which has focused component). Can be <code>null</code> if there is no focused
-   * window at all.
-   */
-  private consulo.ui.Window myFocusedWindow;
-  /**
-   * Contains last focused window for each project.
-   */
-  private final Set<consulo.ui.Window> myFocusedWindows = new HashSet<>();
+    private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = Maps.newWeakHashMap();
+    private final Application myApplication;
+    private final DataManager myDataManager;
+    /**
+     * Currently focused window (window which has focused component). Can be <code>null</code> if there is no focused
+     * window at all.
+     */
+    private consulo.ui.Window myFocusedWindow;
+    /**
+     * Contains last focused window for each project.
+     */
+    private final Set<consulo.ui.Window> myFocusedWindows = new HashSet<>();
 
-  public DesktopWindowWatcher(Application application, DataManager dataManager) {
-    myApplication = application;
-    myDataManager = dataManager;
-  }
-
-  /**
-   * This method should get notifications abount changes of focused window.
-   * Only <code>focusedWindow</code> property is acceptable.
-   *
-   * @throws IllegalArgumentException if property name isn't <code>focusedWindow</code>.
-   */
-  @Override
-  public final void propertyChange(PropertyChangeEvent e) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: propertyChange(" + e + ")");
+    public DesktopWindowWatcher(Application application, DataManager dataManager) {
+        myApplication = application;
+        myDataManager = dataManager;
     }
-    if (!FOCUSED_WINDOW_PROPERTY.equals(e.getPropertyName())) {
-      throw new IllegalArgumentException("unknown property name: " + e.getPropertyName());
-    }
-    synchronized (myLock) {
-      consulo.ui.Window window = TargetAWT.from((Window)e.getNewValue());
-      if (window == null || myApplication.isDisposed()) {
-        return;
-      }
-      if (!myWindow2Info.containsKey(window)) {
+
+    /**
+     * This method should get notifications about changes of focused window.
+     * Only <code>focusedWindow</code> property is acceptable.
+     *
+     * @throws IllegalArgumentException if property name isn't <code>focusedWindow</code>.
+     */
+    @Override
+    public final void propertyChange(PropertyChangeEvent e) {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Added watcher for window " + e.getNewValue());
+            LOG.debug("enter: propertyChange(" + e + ")");
         }
-        myWindow2Info.put(window, new WindowInfo(window, true));
-      }
-      myFocusedWindow = window;
-      Project project = myDataManager.getDataContext(myFocusedWindow).getData(Project.KEY);
-      for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
-        consulo.ui.Window w = i.next();
-        DataContext dataContext = myDataManager.getDataContext(TargetAWT.to(w));
-        if (project == dataContext.getData(Project.KEY)) {
-          i.remove();
+        if (!FOCUSED_WINDOW_PROPERTY.equals(e.getPropertyName())) {
+            throw new IllegalArgumentException("unknown property name: " + e.getPropertyName());
         }
-      }
-      myFocusedWindows.add(myFocusedWindow);
-      // Set new root frame
-      IdeFrame frame = IdeFrameUtil.findRootIdeFrame(window);
+        synchronized (myLock) {
+            consulo.ui.Window window = TargetAWT.from((Window) e.getNewValue());
+            if (window == null || myApplication.isDisposed()) {
+                return;
+            }
+            if (!myWindow2Info.containsKey(window)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Added watcher for window " + e.getNewValue());
+                }
+                myWindow2Info.put(window, new WindowInfo(window, true));
+            }
+            myFocusedWindow = window;
+            Project project = myDataManager.getDataContext(myFocusedWindow).getData(Project.KEY);
+            for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
+                consulo.ui.Window w = i.next();
+                DataContext dataContext = myDataManager.getDataContext(TargetAWT.to(w));
+                if (project == dataContext.getData(Project.KEY)) {
+                    i.remove();
+                }
+            }
+            myFocusedWindows.add(myFocusedWindow);
+            // Set new root frame
+            IdeFrame frame = IdeFrameUtil.findRootIdeFrame(window);
 
-      if (frame != null) {
-        JOptionPane.setRootFrame((Frame)TargetAWT.to(frame.getWindow()));
-      }
-    }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("exit: propertyChange()");
-    }
-  }
-
-  final void dispatchComponentEvent(ComponentEvent e) {
-    int id = e.getID();
-    if (WindowEvent.WINDOW_CLOSED == id || (ComponentEvent.COMPONENT_HIDDEN == id && e.getSource() instanceof Window)) {
-      dispatchHiddenOrClosed(TargetAWT.from((Window)e.getSource()));
-    }
-    // Clear obsolete reference on root frame
-    if (WindowEvent.WINDOW_CLOSED == id) {
-      Window window = (Window)e.getSource();
-
-      if (JOptionPane.getRootFrame() == window) {
-        JOptionPane.setRootFrame(null);
-      }
-    }
-  }
-
-  private void dispatchHiddenOrClosed(consulo.ui.Window window) {
-    LOG.debug("enter: dispatchClosed(" + TargetAWT.to(window) + ")");
-
-    synchronized (myLock) {
-      WindowInfo info = myWindow2Info.get(window);
-      if (info != null) {
-        FocusWatcher focusWatcher = info.myFocusWatcherRef.get();
-        if (focusWatcher != null) {
-          focusWatcher.deinstall(TargetAWT.to(window));
+            if (frame != null) {
+                JOptionPane.setRootFrame((Frame) TargetAWT.to(frame.getWindow()));
+            }
         }
-        myWindow2Info.remove(window);
-      }
-    }
-    // Now, we have to recalculate focused window if currently focused
-    // window is being closed.
-    if (myFocusedWindow == window) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("currently active window should be closed");
-      }
-      myFocusedWindow = myFocusedWindow.getParent();
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("new active window is " + myFocusedWindow);
-      }
-    }
-    for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
-      consulo.ui.Window activeWindow = i.next();
-      if (activeWindow == window) {
-        consulo.ui.Window newActiveWindow = activeWindow.getParent();
-        i.remove();
-        if (newActiveWindow != null) {
-          myFocusedWindows.add(newActiveWindow);
-        }
-        break;
-      }
-    }
-    // Remove invalid infos for garbage collected windows
-    for (Iterator i = myWindow2Info.values().iterator(); i.hasNext(); ) {
-      WindowInfo info = (WindowInfo)i.next();
-      if (info.myFocusWatcherRef.get() == null) {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("remove collected info");
+            LOG.debug("exit: propertyChange()");
         }
-        i.remove();
-      }
     }
-  }
 
-  public final consulo.ui.Window getFocusedWindow() {
-    synchronized (myLock) {
-      return myFocusedWindow;
+    final void dispatchComponentEvent(ComponentEvent e) {
+        int id = e.getID();
+        if (WindowEvent.WINDOW_CLOSED == id || (ComponentEvent.COMPONENT_HIDDEN == id && e.getSource() instanceof Window)) {
+            dispatchHiddenOrClosed(TargetAWT.from((Window) e.getSource()));
+        }
+        // Clear obsolete reference on root frame
+        if (WindowEvent.WINDOW_CLOSED == id) {
+            Window window = (Window) e.getSource();
+
+            if (JOptionPane.getRootFrame() == window) {
+                JOptionPane.setRootFrame(null);
+            }
+        }
     }
-  }
 
-  @Nullable
-  public final Component getFocusedComponent(@Nullable Project project) {
-    synchronized (myLock) {
-      Window window = getFocusedWindowForProject(project);
-      if (window == null) {
-        return null;
-      }
-      return getFocusedComponent(window);
+    private void dispatchHiddenOrClosed(consulo.ui.Window window) {
+        LOG.debug("enter: dispatchClosed(" + TargetAWT.to(window) + ")");
+
+        synchronized (myLock) {
+            WindowInfo info = myWindow2Info.get(window);
+            if (info != null) {
+                FocusWatcher focusWatcher = info.myFocusWatcherRef.get();
+                if (focusWatcher != null) {
+                    focusWatcher.deinstall(TargetAWT.to(window));
+                }
+                myWindow2Info.remove(window);
+            }
+        }
+        // Now, we have to recalculate focused window if currently focused
+        // window is being closed.
+        if (myFocusedWindow == window) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("currently active window should be closed");
+            }
+            myFocusedWindow = myFocusedWindow.getParent();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("new active window is " + myFocusedWindow);
+            }
+        }
+        for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
+            consulo.ui.Window activeWindow = i.next();
+            if (activeWindow == window) {
+                consulo.ui.Window newActiveWindow = activeWindow.getParent();
+                i.remove();
+                if (newActiveWindow != null) {
+                    myFocusedWindows.add(newActiveWindow);
+                }
+                break;
+            }
+        }
+        // Remove invalid infos for garbage collected windows
+        for (Iterator i = myWindow2Info.values().iterator(); i.hasNext(); ) {
+            WindowInfo info = (WindowInfo) i.next();
+            if (info.myFocusWatcherRef.get() == null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("remove collected info");
+                }
+                i.remove();
+            }
+        }
     }
-  }
 
-
-  public final Component getFocusedComponent(@Nonnull Window window) {
-    synchronized (myLock) {
-      WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
-      if (info == null) { // it means that we don't manage this window, so just return standard focus owner
-        // return window.getFocusOwner();
-        // TODO[vova,anton] usage of getMostRecentFocusOwner is experimental. But it seems suitable here.
-        return window.getMostRecentFocusOwner();
-      }
-      FocusWatcher focusWatcher = info.myFocusWatcherRef.get();
-      if (focusWatcher != null) {
-        Component focusedComponent = focusWatcher.getFocusedComponent();
-        if (focusedComponent != null && focusedComponent.isShowing()) {
-          return focusedComponent;
+    public final consulo.ui.Window getFocusedWindow() {
+        synchronized (myLock) {
+            return myFocusedWindow;
         }
-        else {
-          return null;
-        }
-      }
-      else {
-        // info isn't valid, i.e. window was garbage collected, so we need the remove invalid info
-        // and return null
-        myWindow2Info.remove(TargetAWT.from(window));
-        return null;
-      }
     }
-  }
 
-  @Nullable
-  public FocusWatcher getFocusWatcherFor(Component c) {
-    Window window = SwingUtilities.getWindowAncestor(c);
-    WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
-    return info == null ? null : info.myFocusWatcherRef.get();
-  }
+    @Nullable
+    public final Component getFocusedComponent(@Nullable Project project) {
+        synchronized (myLock) {
+            Window window = getFocusedWindowForProject(project);
+            if (window == null) {
+                return null;
+            }
+            return getFocusedComponent(window);
+        }
+    }
 
-  /**
-   * @param project may be null (for example, if no projects are opened)
-   */
-  @Nullable
-  public final consulo.ui.Window suggestParentWindow(@Nullable Project project) {
-    synchronized (myLock) {
-      Window window = getFocusedWindowForProject(project);
-      if (window == null) {
-        if (project != null) {
-          IdeFrame frameFor = WindowManagerEx.getInstanceEx().findFrameFor(project);
-          return frameFor == null ? null : frameFor.getWindow();
-        }
-        else {
-          return null;
-        }
-      }
 
-      LOG.assertTrue(window.isDisplayable());
-      LOG.assertTrue(window.isShowing());
+    public final Component getFocusedComponent(@Nonnull Window window) {
+        synchronized (myLock) {
+            WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
+            if (info == null) { // it means that we don't manage this window, so just return standard focus owner
+                // return window.getFocusOwner();
+                // TODO[vova,anton] usage of getMostRecentFocusOwner is experimental. But it seems suitable here.
+                return window.getMostRecentFocusOwner();
+            }
+            FocusWatcher focusWatcher = info.myFocusWatcherRef.get();
+            if (focusWatcher != null) {
+                Component focusedComponent = focusWatcher.getFocusedComponent();
+                if (focusedComponent != null && focusedComponent.isShowing()) {
+                    return focusedComponent;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                // info isn't valid, i.e. window was garbage collected, so we need the remove invalid info
+                // and return null
+                myWindow2Info.remove(TargetAWT.from(window));
+                return null;
+            }
+        }
+    }
 
-      while (window != null) {
-        // skip all windows until found forst dialog or frame
-        if (!(window instanceof Dialog) && !(window instanceof Frame)) {
-          window = window.getOwner();
-          continue;
-        }
-        // skip not visible and disposed/not shown windows
-        if (!window.isDisplayable() || !window.isShowing()) {
-          window = window.getOwner();
-          continue;
-        }
-        // skip windows that have not associated WindowInfo
+    @Nullable
+    public FocusWatcher getFocusWatcherFor(Component c) {
+        Window window = SwingUtilities.getWindowAncestor(c);
         WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
-        if (info == null) {
-          window = window.getOwner();
-          continue;
+        return info == null ? null : info.myFocusWatcherRef.get();
+    }
+
+    /**
+     * @param project may be null (for example, if no projects are opened)
+     */
+    @Nullable
+    @RequiredUIAccess
+    public final consulo.ui.Window suggestParentWindow(@Nullable Project project) {
+        synchronized (myLock) {
+            Window window = getFocusedWindowForProject(project);
+            if (window == null) {
+                if (project != null) {
+                    IdeFrame frameFor = WindowManagerEx.getInstanceEx().findFrameFor(project);
+                    return frameFor == null ? null : frameFor.getWindow();
+                }
+                else {
+                    return null;
+                }
+            }
+
+            LOG.assertTrue(window.isDisplayable());
+            LOG.assertTrue(window.isShowing());
+
+            while (window != null) {
+                // skip all windows until found first dialog or frame
+                if (!(window instanceof Dialog) && !(window instanceof Frame)) {
+                    window = window.getOwner();
+                    continue;
+                }
+                // skip not visible and disposed/not shown windows
+                if (!window.isDisplayable() || !window.isShowing()) {
+                    window = window.getOwner();
+                    continue;
+                }
+                // skip windows that have not associated WindowInfo
+                WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
+                if (info == null) {
+                    window = window.getOwner();
+                    continue;
+                }
+                if (info.mySuggestAsParent) {
+                    return TargetAWT.from(window);
+                }
+                else {
+                    window = window.getOwner();
+                }
+            }
+            return null;
         }
-        if (info.mySuggestAsParent) {
-          return TargetAWT.from(window);
+    }
+
+    public final void doNotSuggestAsParent(consulo.ui.Window window) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("enter: doNotSuggestAsParent(" + window + ")");
         }
-        else {
-          window = window.getOwner();
+        synchronized (myLock) {
+            WindowInfo info = myWindow2Info.get(window);
+            if (info == null) {
+                myWindow2Info.put(window, new WindowInfo(window, false));
+            }
+            else {
+                info.mySuggestAsParent = false;
+            }
         }
-      }
-      return null;
     }
-  }
 
-  public final void doNotSuggestAsParent(consulo.ui.Window window) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: doNotSuggestAsParent(" + window + ")");
-    }
-    synchronized (myLock) {
-      WindowInfo info = myWindow2Info.get(window);
-      if (info == null) {
-        myWindow2Info.put(window, new WindowInfo(window, false));
-      }
-      else {
-        info.mySuggestAsParent = false;
-      }
-    }
-  }
+    /**
+     * @return active window for specified <code>project</code>. There is only one window
+     * for project can be at any point of time.
+     */
+    @Nullable
+    private Window getFocusedWindowForProject(@Nullable Project project) {
+        //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
+        outer:
+        for (consulo.ui.Window window : myFocusedWindows) {
+            Window awtWindow = TargetAWT.to(window);
 
-  /**
-   * @return active window for specified <code>project</code>. There is only one window
-   * for project can be at any point of time.
-   */
-  @Nullable
-  private Window getFocusedWindowForProject(@Nullable Project project) {
-    //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
-    outer:
-    for (consulo.ui.Window window : myFocusedWindows) {
-      Window awtWindow = TargetAWT.to(window);
-
-      while (!awtWindow.isDisplayable() || !awtWindow.isShowing()) { // if window isn't visible then gets its first visible ancestor
-        awtWindow = awtWindow.getOwner();
-        if (awtWindow == null) {
-          continue outer;
+            while (!awtWindow.isDisplayable() || !awtWindow.isShowing()) { // if window isn't visible then gets its first visible ancestor
+                awtWindow = awtWindow.getOwner();
+                if (awtWindow == null) {
+                    continue outer;
+                }
+            }
+            DataContext dataContext = myDataManager.getDataContext(awtWindow);
+            if (project == dataContext.getData(Project.KEY)) {
+                return awtWindow;
+            }
         }
-      }
-      DataContext dataContext = myDataManager.getDataContext(awtWindow);
-      if (project == dataContext.getData(Project.KEY)) {
-        return awtWindow;
-      }
+        return null;
     }
-    return null;
-  }
 
-  private static final class WindowInfo {
-    public final WeakReference<FocusWatcher> myFocusWatcherRef;
-    public boolean mySuggestAsParent;
+    private static final class WindowInfo {
+        public final WeakReference<FocusWatcher> myFocusWatcherRef;
+        public boolean mySuggestAsParent;
 
-    public WindowInfo(consulo.ui.Window window, boolean suggestAsParent) {
-      FocusWatcher focusWatcher = new FocusWatcher();
-      focusWatcher.install(TargetAWT.to(window));
-      myFocusWatcherRef = new WeakReference<>(focusWatcher);
-      mySuggestAsParent = suggestAsParent;
+        public WindowInfo(consulo.ui.Window window, boolean suggestAsParent) {
+            FocusWatcher focusWatcher = new FocusWatcher();
+            focusWatcher.install(TargetAWT.to(window));
+            myFocusWatcherRef = new WeakReference<>(focusWatcher);
+            mySuggestAsParent = suggestAsParent;
+        }
     }
-  }
 }

@@ -18,6 +18,7 @@ package consulo.ide.impl.fileEditor.text;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.internal.TextEditorComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.layout.DockLayout;
 

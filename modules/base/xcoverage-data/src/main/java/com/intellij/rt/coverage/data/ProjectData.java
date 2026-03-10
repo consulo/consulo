@@ -411,7 +411,7 @@ public class ProjectData implements CoverageData, Serializable {
     private static class ClassesMap {
         private static final int POOL_SIZE = 1000;
         private IdentityClassData[] myIdentityArray = new IdentityClassData[POOL_SIZE];
-        private final Map myClasses = new HashMap(1000);
+        private final Map<String, ClassData> myClasses = new HashMap<>(1000);
 
         public ClassData get(String name) {
             int idx = Math.abs(name.hashCode() % POOL_SIZE);
@@ -423,7 +423,7 @@ public class ProjectData implements CoverageData, Serializable {
                 }
             }
 
-            ClassData data = (ClassData)myClasses.get(name);
+            ClassData data = myClasses.get(name);
             myIdentityArray[idx] = new IdentityClassData(name, data);
             return data;
         }
@@ -432,8 +432,8 @@ public class ProjectData implements CoverageData, Serializable {
             myClasses.put(name, data);
         }
 
-        public HashMap asMap() {
-            return new HashMap(myClasses);
+        public Map asMap() {
+            return new HashMap<>(myClasses);
         }
 
         public Collection names() {

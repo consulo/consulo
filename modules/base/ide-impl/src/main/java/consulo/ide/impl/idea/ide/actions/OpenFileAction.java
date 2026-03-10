@@ -26,7 +26,7 @@ import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;

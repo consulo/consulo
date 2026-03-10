@@ -28,7 +28,6 @@ import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.packageDependencies.*;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesHandler;
 import consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesHandler;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
@@ -66,6 +65,7 @@ import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -160,7 +160,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
                 return;
             }
             for (TreePath path : paths) {
-                PackageDependenciesNode selectedNode = (PackageDependenciesNode)path.getLastPathComponent();
+                PackageDependenciesNode selectedNode = (PackageDependenciesNode) path.getLastPathComponent();
                 traverseToLeaves(selectedNode, denyRules, allowRules);
             }
         });
@@ -238,7 +238,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     private void traverseToLeaves(PackageDependenciesNode treeNode, StringBuffer denyRules, StringBuffer allowRules) {
         Enumeration enumeration = treeNode.breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
-            PsiElement childPsiElement = ((PackageDependenciesNode)enumeration.nextElement()).getPsiElement();
+            PsiElement childPsiElement = ((PackageDependenciesNode) enumeration.nextElement()).getPsiElement();
             if (myIllegalDependencies.containsKey(childPsiElement)) {
                 Map<DependencyRule, Set<PsiFile>> illegalDeps = myIllegalDependencies.get(childPsiElement);
                 for (DependencyRule rule : illegalDeps.keySet()) {
@@ -366,11 +366,11 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     private static void expandFirstLevel(Tree tree) {
-        PackageDependenciesNode root = (PackageDependenciesNode)tree.getModel().getRoot();
+        PackageDependenciesNode root = (PackageDependenciesNode) tree.getModel().getRoot();
         int count = root.getChildCount();
         if (count < 10) {
             for (int i = 0; i < count; i++) {
-                PackageDependenciesNode child = (PackageDependenciesNode)root.getChildAt(i);
+                PackageDependenciesNode child = (PackageDependenciesNode) root.getChildAt(i);
                 expandNodeIfNotTooWide(tree, child);
             }
         }
@@ -395,7 +395,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
         Set<PsiFile> result = new HashSet<>();
         for (TreePath path : paths) {
-            PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
+            PackageDependenciesNode node = (PackageDependenciesNode) path.getLastPathComponent();
             node.fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);
         }
         return result;
@@ -445,7 +445,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             int row,
             boolean hasFocus
         ) {
-            PackageDependenciesNode node = (PackageDependenciesNode)value;
+            PackageDependenciesNode node = (PackageDependenciesNode) value;
             if (node.isValid()) {
                 setIcon(node.getIcon());
             }
@@ -777,7 +777,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             if (paths == null || paths.length != 1) {
                 return null;
             }
-            return (PackageDependenciesNode)paths[0].getLastPathComponent();
+            return (PackageDependenciesNode) paths[0].getLastPathComponent();
         }
     }
 
@@ -810,17 +810,25 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             Dimension dimension = pane.getPreferredSize();
             scrollPane.setMinimumSize(new Dimension(dimension.width, dimension.height + 20));
             scrollPane.setPreferredSize(new Dimension(dimension.width, dimension.height + 20));
-            JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, pane).setTitle("Dependencies")
-                .setMovable(true).createPopup().showInBestPositionFor(e.getDataContext());
+            JBPopupFactory.getInstance()
+                .createComponentPopupBuilder(scrollPane, pane)
+                .setTitle("Dependencies")
+                .setMovable(true)
+                .createPopup()
+                .showInBestPositionFor(e.getDataContext());
         }
 
         @Override
         public void update(@Nonnull AnActionEvent e) {
             boolean[] direct = new boolean[]{true};
-            processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), path -> {
-                direct[0] = false;
-                return false;
-            });
+            processDependencies(
+                getSelectedScope(myLeftTree),
+                getSelectedScope(myRightTree),
+                path -> {
+                    direct[0] = false;
+                    return false;
+                }
+            );
             e.getPresentation().setEnabled(!direct[0]);
         }
     }
@@ -892,7 +900,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         private AnalysisScope getScope() {
             Set<PsiFile> selectedScope = getSelectedScope(myRightTree);
             Set<PsiFile> result = new HashSet<>();
-            ((PackageDependenciesNode)myLeftTree.getModel().getRoot()).fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);
+            ((PackageDependenciesNode) myLeftTree.getModel().getRoot()).fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);
             selectedScope.removeAll(result);
             if (selectedScope.isEmpty()) {
                 return null;
@@ -947,12 +955,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     private void selectElementInLeftTree(PsiElement elt) {
         PsiManager manager = PsiManager.getInstance(myProject);
 
-        PackageDependenciesNode root = (PackageDependenciesNode)myLeftTree.getModel().getRoot();
+        PackageDependenciesNode root = (PackageDependenciesNode) myLeftTree.getModel().getRoot();
         Enumeration enumeration = root.breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
-            PackageDependenciesNode child = (PackageDependenciesNode)enumeration.nextElement();
+            PackageDependenciesNode child = (PackageDependenciesNode) enumeration.nextElement();
             if (manager.areElementsEquivalent(child.getPsiElement(), elt)) {
-                myLeftTree.setSelectionPath(new TreePath(((DefaultTreeModel)myLeftTree.getModel()).getPathToRoot(child)));
+                myLeftTree.setSelectionPath(new TreePath(((DefaultTreeModel) myLeftTree.getModel()).getPathToRoot(child)));
                 break;
             }
         }

@@ -27,8 +27,5 @@ public interface NullableFunction<Param, Result> extends Function<Param, Result>
   @Nullable
   Result apply(Param param);
 
-  /**
-   * @see FunctionUtil#nullConstant()
-   */
   NullableFunction NULL = o -> null;
 }

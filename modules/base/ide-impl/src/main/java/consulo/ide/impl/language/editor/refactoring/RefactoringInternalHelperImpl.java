@@ -17,7 +17,7 @@ package consulo.ide.impl.language.editor.refactoring;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.psi.PsiDirectory;

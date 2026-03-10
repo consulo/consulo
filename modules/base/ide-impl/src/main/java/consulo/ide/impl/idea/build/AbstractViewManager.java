@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.build;
 import consulo.application.util.AtomicClearableLazyValue;
 import consulo.build.ui.*;
 import consulo.build.ui.event.*;
+import consulo.build.ui.internal.BuildProgressObservableListener;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -47,251 +48,263 @@ import static consulo.ide.impl.idea.build.ExecutionNodeImpl.getEventResultIcon;
  * @author Vladislav.Soroka
  */
 public abstract class AbstractViewManager implements ViewManager, BuildProgressListener, BuildProgressObservable, Disposable {
-  private static final Logger LOG = Logger.getInstance(ViewManager.class);
-  private static final Key<Boolean> PINNED_EXTRACTED_CONTENT = new Key<>("PINNED_EXTRACTED_CONTENT");
+    private static final Logger LOG = Logger.getInstance(ViewManager.class);
+    private static final Key<Boolean> PINNED_EXTRACTED_CONTENT = new Key<>("PINNED_EXTRACTED_CONTENT");
 
-  protected final Project myProject;
-  protected final BuildContentManager myBuildContentManager;
-  private final AtomicClearableLazyValue<MultipleBuildsView> myBuildsViewValue;
-  private final Set<MultipleBuildsView> myPinnedViews;
-  private final AtomicBoolean isDisposed = new AtomicBoolean(false);
-  private final DisposableWrapperList<BuildProgressListener> myListeners = new DisposableWrapperList<>();
+    protected final Project myProject;
+    protected final BuildContentManager myBuildContentManager;
+    private final AtomicClearableLazyValue<MultipleBuildsView> myBuildsViewValue;
+    private final Set<MultipleBuildsView> myPinnedViews;
+    private final AtomicBoolean isDisposed = new AtomicBoolean(false);
+    private final DisposableWrapperList<BuildProgressListener> myListeners = new DisposableWrapperList<>();
 
-  public AbstractViewManager(Project project, BuildContentManager buildContentManager) {
-    myProject = project;
-    myBuildContentManager = buildContentManager;
-    myBuildsViewValue = new AtomicClearableLazyValue<MultipleBuildsView>() {
-      @Override
-      @Nonnull
-      protected MultipleBuildsView compute() {
-        MultipleBuildsView buildsView = new MultipleBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
-        Disposer.register(AbstractViewManager.this, buildsView);
-        return buildsView;
-      }
-    };
-    myPinnedViews = ContainerUtil.newConcurrentSet();
-    //@Nullable BuildViewProblemsService buildViewProblemsService = project.getService(BuildViewProblemsService.class);
-    //if (buildViewProblemsService != null) {
-    //  buildViewProblemsService.listenToBuildView(this);
-    //}
-  }
+    public AbstractViewManager(Project project, BuildContentManager buildContentManager) {
+        myProject = project;
+        myBuildContentManager = buildContentManager;
+        myBuildsViewValue = new AtomicClearableLazyValue<>() {
+            @Override
+            @Nonnull
+            protected MultipleBuildsView compute() {
+                MultipleBuildsView buildsView = new MultipleBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
+                Disposer.register(AbstractViewManager.this, buildsView);
+                return buildsView;
+            }
+        };
+        myPinnedViews = ContainerUtil.newConcurrentSet();
 
-  @Override
-  public boolean isConsoleEnabledByDefault() {
-    return false;
-  }
-
-  @Override
-  public boolean isBuildContentView() {
-    return true;
-  }
-
-  @Override
-  //@ApiStatus.Experimental
-  public void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable) {
-    myListeners.add(listener, disposable);
-  }
-
-  @Nonnull
-  protected abstract String getViewName();
-
-  protected Map<BuildDescriptor, BuildView> getBuildsMap() {
-    return myBuildsViewValue.getValue().getBuildsMap();
-  }
-
-  @Override
-  public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
-    if (isDisposed.get()) return;
-
-    MultipleBuildsView buildsView;
-    if (event instanceof StartBuildEvent) {
-      configurePinnedContent();
-      buildsView = myBuildsViewValue.getValue();
-    }
-    else {
-      buildsView = getMultipleBuildsView(buildId);
-    }
-    if (buildsView != null) {
-      buildsView.onEvent(buildId, event);
+        BuildProgressObservableListener.listen(myProject, this);
     }
 
-    for (BuildProgressListener listener : myListeners) {
-      try {
-        listener.onEvent(buildId, event);
-      }
-      catch (Exception e) {
-        LOG.warn(e);
-      }
-    }
-  }
+    @Nonnull
+    public abstract String getViewId();
 
-  private
-  @Nullable
-  MultipleBuildsView getMultipleBuildsView(@Nonnull Object buildId) {
-    MultipleBuildsView buildsView = myBuildsViewValue.getValue();
-    if (!buildsView.shouldConsume(buildId)) {
-      buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));
-    }
-    return buildsView;
-  }
+    @Nonnull
+    protected abstract LocalizeValue getViewName();
 
-  //@ApiStatus.Internal
-  @Nullable
-  public BuildView getBuildView(@Nonnull Object buildId) {
-    MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
-    if (buildsView == null) return null;
-
-    return buildsView.getBuildView(buildId);
-  }
-
-  void configureToolbar(@Nonnull DefaultActionGroup toolbarActions, @Nonnull MultipleBuildsView buildsView, @Nonnull BuildView view) {
-    toolbarActions.removeAll();
-    toolbarActions.addAll(view.createConsoleActions());
-    toolbarActions.add(new PinBuildViewAction(buildsView));
-    toolbarActions.add(BuildTreeFilters.createFilteringActionsGroup(view));
-  }
-
-  @Nullable
-  protected Image getContentIcon() {
-    return null;
-  }
-
-  protected void onBuildStart(BuildDescriptor buildDescriptor) {
-  }
-
-  protected void onBuildFinish(BuildDescriptor buildDescriptor) {
-    BuildInfo buildInfo = (BuildInfo)buildDescriptor;
-    if (buildInfo.result instanceof FailureResult) {
-      boolean activate = buildInfo.isActivateToolWindowWhenFailed();
-      myBuildContentManager.setSelectedContent(buildInfo.content, false, false, activate, null);
-      List<? extends Failure> failures = ((FailureResult)buildInfo.result).getFailures();
-      if (failures.isEmpty()) return;
-      Failure failure = failures.get(0);
-      Notification notification = failure.getNotification();
-      if (notification != null) {
-        String title = notification.getTitle();
-        String content = notification.getContent();
-        SystemNotifications.getInstance().notify(UIBundle.message("tool.window.name.build"), title, content);
-      }
-    }
-  }
-
-  @Override
-  public void dispose() {
-    isDisposed.set(true);
-    myPinnedViews.clear();
-    myBuildsViewValue.drop();
-  }
-
-  void onBuildsViewRemove(@Nonnull MultipleBuildsView buildsView) {
-    if (isDisposed.get()) return;
-
-    if (myBuildsViewValue.getValue() == buildsView) {
-      myBuildsViewValue.drop();
-    }
-    else {
-      myPinnedViews.remove(buildsView);
-    }
-  }
-
-  static class BuildInfo extends DefaultBuildDescriptor {
-    @BuildEventsNls.Message String message;
-    @BuildEventsNls.Message String statusMessage;
-    long endTime = -1;
-    EventResult result;
-    Content content;
-
-    BuildInfo(@Nonnull BuildDescriptor descriptor) {
-      super(descriptor);
+    @Override
+    public boolean isConsoleEnabledByDefault() {
+        return false;
     }
 
-    public Image getIcon() {
-      return getEventResultIcon(result);
+    @Override
+    public boolean isBuildContentView() {
+        return true;
     }
 
-    public boolean isRunning() {
-      return endTime == -1;
+    @Override
+    public void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable) {
+        myListeners.add(listener, disposable);
     }
-  }
 
-  private void configurePinnedContent() {
-    MultipleBuildsView buildsView = myBuildsViewValue.getValue();
-    Content content = buildsView.getContent();
-    if (content != null && content.isPinned()) {
-      String tabName = getPinnedTabName(buildsView);
-      UIUtil.invokeLaterIfNeeded(() -> {
-        content.setPinnable(false);
-        if (content.getIcon() == null) {
-          content.setIcon(Image.empty(8));
+    protected Map<BuildDescriptor, BuildView> getBuildsMap() {
+        return myBuildsViewValue.getValue().getBuildsMap();
+    }
+
+    @Override
+    public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+        if (isDisposed.get()) {
+            return;
         }
-        content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
-        ((BuildContentManagerImpl)myBuildContentManager).updateTabDisplayName(content, tabName);
-      });
-      myPinnedViews.add(buildsView);
-      myBuildsViewValue.drop();
-      content.putUserData(PINNED_EXTRACTED_CONTENT, Boolean.TRUE);
+
+        MultipleBuildsView buildsView;
+        if (event instanceof StartBuildEvent) {
+            configurePinnedContent();
+            buildsView = myBuildsViewValue.getValue();
+        }
+        else {
+            buildsView = getMultipleBuildsView(buildId);
+        }
+        if (buildsView != null) {
+            buildsView.onEvent(buildId, event);
+        }
+
+        for (BuildProgressListener listener : myListeners) {
+            try {
+                listener.onEvent(buildId, event);
+            }
+            catch (Exception e) {
+                LOG.warn(e);
+            }
+        }
     }
-  }
 
-  private String getPinnedTabName(MultipleBuildsView buildsView) {
-    Map<BuildDescriptor, BuildView> buildsMap = buildsView.getBuildsMap();
-
-    BuildDescriptor buildInfo = buildsMap.keySet().stream().reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2).orElse(null);
-    if (buildInfo != null) {
-      @BuildEventsNls.Title String title = buildInfo.getTitle();
-      String viewName = getViewName().split(" ")[0];
-      String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
-      if (buildsMap.size() > 1) {
-        return LanguageLocalize.tabTitleMore(tabName, buildsMap.size() - 1).get();
-      }
-      return tabName;
+    private
+    @Nullable
+    MultipleBuildsView getMultipleBuildsView(@Nonnull Object buildId) {
+        MultipleBuildsView buildsView = myBuildsViewValue.getValue();
+        if (!buildsView.shouldConsume(buildId)) {
+            buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));
+        }
+        return buildsView;
     }
-    return getViewName();
-  }
 
-  private static class PinBuildViewAction extends DumbAwareAction implements Toggleable {
-    private final Content myContent;
+    //@ApiStatus.Internal
+    @Nullable
+    public BuildView getBuildView(@Nonnull Object buildId) {
+        MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
+        if (buildsView == null) {
+            return null;
+        }
 
-    PinBuildViewAction(MultipleBuildsView buildsView) {
-      super(PlatformIconGroup.generalPin_tab());
-      myContent = buildsView.getContent();
+        return buildsView.getBuildView(buildId);
+    }
+
+    void configureToolbar(@Nonnull DefaultActionGroup toolbarActions, @Nonnull MultipleBuildsView buildsView, @Nonnull BuildView view) {
+        toolbarActions.removeAll();
+        toolbarActions.addAll(view.createConsoleActions());
+        toolbarActions.add(new PinBuildViewAction(buildsView));
+        toolbarActions.add(BuildTreeFilters.createFilteringActionsGroup(view));
+    }
+
+    @Nullable
+    protected Image getContentIcon() {
+        return null;
+    }
+
+    protected void onBuildStart(BuildDescriptor buildDescriptor) {
+    }
+
+    protected void onBuildFinish(BuildDescriptor buildDescriptor) {
+        BuildInfo buildInfo = (BuildInfo) buildDescriptor;
+        if (buildInfo.result instanceof FailureResult) {
+            boolean activate = buildInfo.isActivateToolWindowWhenFailed();
+            myBuildContentManager.setSelectedContent(buildInfo.content, false, false, activate, null);
+            List<? extends Failure> failures = ((FailureResult) buildInfo.result).getFailures();
+            if (failures.isEmpty()) {
+                return;
+            }
+            Failure failure = failures.get(0);
+            Notification notification = failure.getNotification();
+            if (notification != null) {
+                String title = notification.getTitle();
+                String content = notification.getContent();
+                SystemNotifications.getInstance().notify(UIBundle.message("tool.window.name.build"), title, content);
+            }
+        }
     }
 
     @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      boolean selected = !myContent.isPinned();
-      if (selected) {
-        myContent.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
-      }
-      myContent.setPinned(selected);
-      Toggleable.setSelected(e.getPresentation(), selected);
+    public void dispose() {
+        isDisposed.set(true);
+        myPinnedViews.clear();
+        myBuildsViewValue.drop();
     }
 
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-      if (!myContent.isValid()) return;
-      Boolean isPinnedAndExtracted = myContent.getUserData(PINNED_EXTRACTED_CONTENT);
-      if (Objects.equals(isPinnedAndExtracted, Boolean.TRUE)) {
-        e.getPresentation().setEnabledAndVisible(false);
-        return;
-      }
+    void onBuildsViewRemove(@Nonnull MultipleBuildsView buildsView) {
+        if (isDisposed.get()) {
+            return;
+        }
 
-      ContentManager contentManager = myContent.getManager();
-      boolean isActiveTab = contentManager != null && contentManager.getSelectedContent() == myContent;
-      boolean selected = myContent.isPinned();
-
-      Toggleable.setSelected(e.getPresentation(), selected);
-
-      LocalizeValue text;
-      if (!isActiveTab) {
-        text = selected ? IdeLocalize.actionUnpinActiveTab() : IdeLocalize.actionPinActiveTab();
-      }
-      else {
-        text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
-      }
-      e.getPresentation().setTextValue(text);
-      e.getPresentation().setEnabledAndVisible(true);
+        if (myBuildsViewValue.getValue() == buildsView) {
+            myBuildsViewValue.drop();
+        }
+        else {
+            myPinnedViews.remove(buildsView);
+        }
     }
-  }
+
+    static class BuildInfo extends DefaultBuildDescriptor {
+        @BuildEventsNls.Message
+        String message;
+        @BuildEventsNls.Message
+        String statusMessage;
+        long endTime = -1;
+        EventResult result;
+        Content content;
+
+        BuildInfo(@Nonnull BuildDescriptor descriptor) {
+            super(descriptor);
+        }
+
+        public Image getIcon() {
+            return getEventResultIcon(result);
+        }
+
+        public boolean isRunning() {
+            return endTime == -1;
+        }
+    }
+
+    private void configurePinnedContent() {
+        MultipleBuildsView buildsView = myBuildsViewValue.getValue();
+        Content content = buildsView.getContent();
+        if (content != null && content.isPinned()) {
+            String tabName = getPinnedTabName(buildsView);
+            UIUtil.invokeLaterIfNeeded(() -> {
+                content.setPinnable(false);
+                if (content.getIcon() == null) {
+                    content.setIcon(Image.empty(8));
+                }
+                content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
+                ((BuildContentManagerImpl) myBuildContentManager).updateTabDisplayName(content, tabName);
+            });
+            myPinnedViews.add(buildsView);
+            myBuildsViewValue.drop();
+            content.putUserData(PINNED_EXTRACTED_CONTENT, Boolean.TRUE);
+        }
+    }
+
+    private String getPinnedTabName(MultipleBuildsView buildsView) {
+        Map<BuildDescriptor, BuildView> buildsMap = buildsView.getBuildsMap();
+
+        BuildDescriptor buildInfo = buildsMap.keySet().stream().reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2).orElse(null);
+        if (buildInfo != null) {
+            String title = buildInfo.getTitle();
+            String viewName = getViewName().get().split(" ")[0];
+            String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
+            if (buildsMap.size() > 1) {
+                return LanguageLocalize.tabTitleMore(tabName, buildsMap.size() - 1).get();
+            }
+            return tabName;
+        }
+        return getViewName().get();
+    }
+
+    private static class PinBuildViewAction extends DumbAwareAction implements Toggleable {
+        private final Content myContent;
+
+        PinBuildViewAction(MultipleBuildsView buildsView) {
+            super(PlatformIconGroup.generalPin_tab());
+            myContent = buildsView.getContent();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            boolean selected = !myContent.isPinned();
+            if (selected) {
+                myContent.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
+            }
+            myContent.setPinned(selected);
+            Toggleable.setSelected(e.getPresentation(), selected);
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            if (!myContent.isValid()) {
+                return;
+            }
+            Boolean isPinnedAndExtracted = myContent.getUserData(PINNED_EXTRACTED_CONTENT);
+            if (Objects.equals(isPinnedAndExtracted, Boolean.TRUE)) {
+                e.getPresentation().setEnabledAndVisible(false);
+                return;
+            }
+
+            ContentManager contentManager = myContent.getManager();
+            boolean isActiveTab = contentManager != null && contentManager.getSelectedContent() == myContent;
+            boolean selected = myContent.isPinned();
+
+            Toggleable.setSelected(e.getPresentation(), selected);
+
+            LocalizeValue text;
+            if (!isActiveTab) {
+                text = selected ? IdeLocalize.actionUnpinActiveTab() : IdeLocalize.actionPinActiveTab();
+            }
+            else {
+                text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
+            }
+            e.getPresentation().setTextValue(text);
+            e.getPresentation().setEnabledAndVisible(true);
+        }
+    }
 }

@@ -84,6 +84,7 @@ module consulo.language.api {
         consulo.language.inject.advanced.api,
         consulo.language.inject.advanced.impl,
         consulo.language.index.impl,
+        consulo.file.editor.impl,
         consulo.usage.api;
 
     exports consulo.language.internal.psi to

@@ -16,21 +16,19 @@
 package consulo.ide.impl.idea.openapi.fileTypes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.CollectUsagesException;
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,40 +37,36 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector {
-  @Nonnull
-  @Override
-  public String getGroupId() {
-    return "consulo.platform.base:file.type";
-  }
-
-  @Nonnull
-  @Override
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) throws CollectUsagesException {
-    final Set<FileType> usedFileTypes = new HashSet<FileType>();
-    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();
-    for (final FileType fileType : registeredFileTypes) {
-      if (project.isDisposed()) {
-        throw new CollectUsagesException("Project is disposed");
-      }
-      ApplicationManager.getApplication().runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          FileBasedIndex.getInstance().processValues(
-            FileTypeIndex.NAME,
-            fileType,
-            null,
-            new FileBasedIndex.ValueProcessor<Void>() {
-              @Override
-              public boolean process(VirtualFile file, Void value) {
-                usedFileTypes.add(fileType);
-                return false;
-              }
-            }, GlobalSearchScope.projectScope(project));
-        }
-      });
+    @Nonnull
+    @Override
+    public String getGroupId() {
+        return "consulo.platform.base:file.type";
     }
-    usedFileTypes.add(UnknownFileType.INSTANCE);
-    return ContainerUtil.map2Set(usedFileTypes, fileType -> new UsageDescriptor(fileType.getId(), 1));
-  }
+
+    @Nonnull
+    @Override
+    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
+        Set<FileType> usedFileTypes = new HashSet<>();
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();
+        for (FileType fileType : registeredFileTypes) {
+            if (project.isDisposed()) {
+                throw new CollectUsagesException("Project is disposed");
+            }
+            project.getApplication().runReadAction(() -> {
+                FileBasedIndex.getInstance().processValues(
+                    FileTypeIndex.NAME,
+                    fileType,
+                    null,
+                    (file, value) -> {
+                        usedFileTypes.add(fileType);
+                        return false;
+                    },
+                    GlobalSearchScope.projectScope(project)
+                );
+            });
+        }
+        usedFileTypes.add(UnknownFileType.INSTANCE);
+        return ContainerUtil.map2Set(usedFileTypes, fileType -> new UsageDescriptor(fileType.getId(), 1));
+    }
 }

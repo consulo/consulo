@@ -20,6 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public interface AnActionButtonUpdater {
   boolean isEnabled(AnActionEvent e);
 }

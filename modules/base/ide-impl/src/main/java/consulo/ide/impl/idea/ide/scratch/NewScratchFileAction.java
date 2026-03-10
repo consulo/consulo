@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.scratch;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.util.NotNullLazyValue;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
 import consulo.language.Language;
 import consulo.language.scratch.ScratchFileCreationHelper;

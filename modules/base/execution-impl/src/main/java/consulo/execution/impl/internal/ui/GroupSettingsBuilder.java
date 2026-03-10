@@ -17,6 +17,8 @@ package consulo.execution.impl.internal.ui;
 
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.execution.configuration.ui.CompositeSettingsBuilder;
@@ -41,9 +43,9 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
   @Nonnull
   @Override
   public Collection<SettingsEditor<T>> getEditors() {
-    List<SettingsEditor<T>> result = new ArrayList<SettingsEditor<T>>();
-    List<Pair<String,SettingsEditor<T>>> editors = myGroup.getEditors();
-    for (Pair<String, SettingsEditor<T>> editor : editors) {
+    List<SettingsEditor<T>> result = new ArrayList<>();
+    List<Pair<LocalizeValue,SettingsEditor<T>>> editors = myGroup.getEditors();
+    for (Pair<LocalizeValue, SettingsEditor<T>> editor : editors) {
       result.add(editor.getSecond());
     }
     return result;
@@ -59,16 +61,17 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
   }
 
   @Nonnull
+  @RequiredUIAccess
   private JComponent doCreateComponent(@Nonnull Disposable disposable) {
-    List<Pair<String,SettingsEditor<T>>> editors = myGroup.getEditors();
+    List<Pair<LocalizeValue,SettingsEditor<T>>> editors = myGroup.getEditors();
     if (editors.size() == 0) return new JPanel();
     if (editors.size() == 1) return editors.get(0).getSecond().getComponent();
 
     TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(disposable);
-    for (Pair<String, SettingsEditor<T>> pair : editors) {
+    for (Pair<LocalizeValue, SettingsEditor<T>> pair : editors) {
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(pair.getSecond().getComponent(), BorderLayout.CENTER);
-      tabbedPaneWrapper.addTab(pair.getFirst(), panel);
+      tabbedPaneWrapper.addTab(pair.getFirst().get(), panel);
     }
     return tabbedPaneWrapper.getComponent();
   }

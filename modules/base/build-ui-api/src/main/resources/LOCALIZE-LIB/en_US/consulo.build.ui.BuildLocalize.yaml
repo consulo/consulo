@@ -1,52 +1,58 @@
-build.status.finished:
-  text: finished
-build.status.failed:
-  text: failed
-build.status.cancelled:
-  text: cancelled
-build.status.running:
-  text: running...
-build.messages.finished:
-  text: '{0} finished'
-build.messages.failed:
-  text: '{0} failed'
-build.messages.cancelled:
-  text: '{0} cancelled'
-build.event.message.successful:
-  text: successful
-build.event.message.syncing:
-  text: syncing...
-tab.title.build.output:
-  text: Build Output
-build.event.title.build.issues:
-  text: Build Issues
-build.event.message.up.to.date:
-  text: UP-TO-DATE
-build.event.title.other.messages:
-  text: Other Messages
 action.filters.text:
-  text: Filters
-build.event.message.at:
-  text: At {0}
+    text: Filters
 build.event.message.0.at.1:
-  text: '{0} at {1}'
-build.event.title.kotlin.compiler:
-  text: Kotlin Compiler
-build.tree.filters.show.succesful:
-  text: Show Successful Steps
-build.tree.filters.show.warnings:
-  text: Show Warnings
+    text: '{0} at {1}'
+build.event.message.at:
+    text: At {0}
 build.event.message.errors:
-  text: '{0} {0,choice, 1#error|2#errors}'
-build.event.message.warnings:
-  text: '{0} {0,choice, 1#warning|2#warnings}'
-build.event.message.with:
-  text: '{0} with {1}'
-tab.title.more:
-  text: '{0} and {1} More'
-sync.view.title:
-  text: Sync
+    text: '{0} {0,choice, 1#error|2#errors}'
 build.event.message.out.memory:
-  text: Out of memory.
+    text: Out of memory.
+build.event.message.successful:
+    text: successful
+build.event.message.syncing:
+    text: syncing...
+build.event.message.up.to.date:
+    text: UP-TO-DATE
+build.event.message.warnings:
+    text: '{0} {0,choice, 1#warning|2#warnings}'
+build.event.message.with:
+    text: '{0} with {1}'
+build.event.title.build.issues:
+    text: Build Issues
+build.event.title.kotlin.compiler:
+    text: Kotlin Compiler
+build.event.title.other.messages:
+    text: Other Messages
+build.messages.cancelled:
+    text: '{0} cancelled'
+build.messages.failed:
+    text: '{0} failed'
+build.messages.finished:
+    text: '{0} finished'
+build.status.cancelled:
+    text: cancelled
+build.status.failed:
+    text: failed
+build.status.finished:
+    text: finished
+build.status.running:
+    text: running...
+build.tree.filters.show.succesful:
+    text: Show Successful Steps
+build.tree.filters.show.warnings:
+    text: Show Warnings
+error.can.t.append.to.closed.stream:
+    text: 'Can''''t append to closed stream the following line: {0}'
+error.can.t.read.from.closed.stream:
+    text: Can't read from closed stream
+sync.view.title:
+    text: Sync
 tab.title.build:
-  text: Build
+    text: Build
+tab.title.build.output:
+    text: Build Output
+tab.title.more:
+    text: '{0} and {1} More'
+thread.name.reader.thread.for.buildoutputinstantreaderimpl.0:
+    text: Reader thread for BuildOutputInstantReaderImpl@{0}

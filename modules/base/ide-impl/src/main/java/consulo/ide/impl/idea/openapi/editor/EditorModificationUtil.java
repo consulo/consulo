@@ -19,7 +19,6 @@ import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.util.Producer;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,6 +31,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class EditorModificationUtil {
   private EditorModificationUtil() {
@@ -66,7 +66,7 @@ public class EditorModificationUtil {
     return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
   }
 
-  public static void pasteTransferableAsBlock(Editor editor, @Nullable Producer<Transferable> producer) {
+  public static void pasteTransferableAsBlock(Editor editor, @Nullable Supplier<Transferable> producer) {
     Transferable content = getTransferable(producer);
     if (content == null) return;
     String text = getStringContent(content);
@@ -104,10 +104,10 @@ public class EditorModificationUtil {
     return null;
   }
 
-  private static Transferable getTransferable(Producer<Transferable> producer) {
+  private static Transferable getTransferable(Supplier<Transferable> producer) {
     Transferable content = null;
     if (producer != null) {
-      content = producer.produce();
+      content = producer.get();
     }
     else {
       CopyPasteManager manager = CopyPasteManager.getInstance();

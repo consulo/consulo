@@ -4,18 +4,22 @@ package consulo.build.ui.output;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.io.Closeable;
+
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildOutputInstantReader {
-  @Nonnull
-  Object getParentEventId();
+    interface Primary extends BuildOutputInstantReader, Closeable, Appendable {
+    }
 
-  @Nullable
-  //@NlsSafe
-  String readLine();
+    @Nonnull
+    Object getParentEventId();
 
-  void pushBack();
+    @Nullable
+    String readLine();
 
-  void pushBack(int numberOfLines);
+    void pushBack();
+
+    void pushBack(int numberOfLines);
 }

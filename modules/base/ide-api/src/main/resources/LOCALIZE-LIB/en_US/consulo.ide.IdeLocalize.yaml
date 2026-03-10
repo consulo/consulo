@@ -783,8 +783,6 @@ dom.elements.tree.childs.contain.errors:
     text: Children contain errors
 double.ctrl.or.shift.shortcut:
     text: Double {0}
-dumb.service.indexing.paused.due.to:
-    text: Indexing paused due to {0}
 eap.configurable.name:
     text: Experimental Features
 eap.configurable.warning.text:
@@ -1763,20 +1761,12 @@ progress.downloading.plugin:
     text: Downloading plugin ''{0}''
 progress.extracting.platform:
     text: Extracting platform
-progress.indexing:
-    text: Updating indices...
-progress.indexing.scanning:
-    text: Scanning files to index...
-progress.indexing.updating:
-    text: Indexing...
 progress.installing.plugins:
     text: Installing plugins...
 progress.locate.file.text:
     text: Locating ''{0}''...
 progress.looking.for.todos:
     text: Looking for TODOs...
-progress.performing.indexing.tasks:
-    text: Performing indexing tasks
 progress.searching:
     text: searching...
 progress.searching.for.sources:

@@ -77,18 +77,18 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   }
 
   @Override
-  public Image getIcon() {
+  public Image getIcon(RunConfiguration configuration) {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public Image getTaskIcon(AbstractArtifactsBeforeRunTask task) {
+  public Image getTaskIcon(RunConfiguration configuration, AbstractArtifactsBeforeRunTask task) {
     List<ArtifactPointer> pointers = task.getArtifactPointers();
     if (pointers == null || pointers.isEmpty())
-      return getIcon();
+      return getIcon(configuration);
     Artifact artifact = pointers.get(0).get();
     if (artifact == null)
-      return getIcon();
+      return getIcon(configuration);
     return artifact.getArtifactType().getIcon();
   }
 

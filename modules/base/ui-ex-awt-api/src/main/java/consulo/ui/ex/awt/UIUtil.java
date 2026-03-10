@@ -52,6 +52,7 @@ import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
@@ -3711,7 +3712,7 @@ public class UIUtil {
     public static <T> T htmlInjectionGuard(T toRender) {
         if (toRender instanceof String strToRender && StringUtil.toLowerCase(strToRender).startsWith("<html>")) {
             //noinspection unchecked
-            return (T)("<html>" + StringUtil.escapeXmlEntities(strToRender));
+            return (T)("<html>" + XmlStringUtil.escapeText(strToRender));
         }
         return toRender;
     }

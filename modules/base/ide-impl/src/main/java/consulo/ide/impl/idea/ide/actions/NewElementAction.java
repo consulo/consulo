@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeView;
+import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;

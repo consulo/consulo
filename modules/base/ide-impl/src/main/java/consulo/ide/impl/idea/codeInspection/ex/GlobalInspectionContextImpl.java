@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.SensitiveProgressWrapper;
@@ -37,7 +38,6 @@ import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
@@ -89,6 +89,7 @@ import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.TripleFunction;
@@ -900,7 +901,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                 presentation = new DefaultInspectionToolPresentation(toolWrapper, this);
             }
 
-            presentation = ConcurrencyUtil.cacheOrGet(myPresentationMap, toolWrapper, presentation);
+            presentation = Maps.cacheOrGet(myPresentationMap, toolWrapper, presentation);
         }
         return presentation;
     }
@@ -947,7 +948,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         final TextRange range;
         if (searchScope instanceof LocalSearchScope localSearchScope) {
             PsiElement[] elements = localSearchScope.getScope();
-            range = elements.length == 1 ? Application.get().runReadAction((Supplier<TextRange>)() -> elements[0].getTextRange()) : null;
+            range = elements.length == 1 ? ReadAction.compute(elements[0]::getTextRange) : null;
         }
         else {
             range = null;
@@ -989,9 +990,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                         true,
                         HighlightInfoProcessor.getEmpty()
                     );
-                    Runnable runnable =
-                        () -> pass.doInspectInBatch(GlobalInspectionContextImpl.this, InspectionManager.getInstance(project), lTools);
-                    Application.get().runReadAction(runnable);
+                    ReadAction.run(
+                        () -> pass.doInspectInBatch(GlobalInspectionContextImpl.this, InspectionManager.getInstance(project), lTools)
+                    );
                     List<HighlightInfo> infos = pass.getInfos();
                     if (searchScope instanceof LocalSearchScope localSearchScope) {
                         for (Iterator<HighlightInfo> iterator = infos.iterator(); iterator.hasNext(); ) {
@@ -1036,10 +1037,11 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                 .name(LocalizeValue.ofNullable(commandName))
                 .inGlobalUndoActionIf(commandName != null)
                 .inLater()
+                .inWriteAction()
                 .run(() -> {
-                    Application.get().runWriteAction(() -> ProgressManager.getInstance().run(progressTask));
+                    ProgressManager.getInstance().run(progressTask);
                     if (postRunnable != null) {
-                        Application.get().invokeLater(postRunnable);
+                        project.getApplication().invokeLater(postRunnable);
                     }
                 });
         };

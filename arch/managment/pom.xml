@@ -1018,7 +1018,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin}</version>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <enableAssertions>true</enableAssertions>
                 </configuration>
             </plugin>
             <plugin>

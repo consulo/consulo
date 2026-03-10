@@ -20,7 +20,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.compiler.CompileDriver;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.*;
 import consulo.compiler.generic.GenericCompiler;
 import consulo.compiler.impl.internal.generic.GenericCompilerRunner;
@@ -31,6 +32,7 @@ import consulo.compiler.scope.FileSetCompileScope;
 import consulo.compiler.util.CompilerUtil;
 import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -38,7 +40,6 @@ import consulo.module.ModuleManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.image.Image;
 import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
@@ -78,7 +79,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
 
-    private boolean ourDebugMode = false;
+    private static final YesResult ALWAYS_YES = new YesResult(PlatformIconGroup.actionsCompile());
 
     @Nonnull
     private final Project myProject;
@@ -92,19 +93,14 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     @Nonnull
     @Override
-    public LocalizeValue getName() {
-        return LocalizeValue.localizeTODO("BuiltIn");
+    public Result checkAvailable(@Nonnull DataContext dataContext) {
+        return ALWAYS_YES;
     }
 
     @Nonnull
     @Override
-    public Image getBuildIcon() {
-        return PlatformIconGroup.actionsCompile();
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return true;
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("BuiltIn");
     }
 
     @Override
@@ -151,6 +147,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
     public boolean build(
         CompileDriver compileDriver,
         CompileContextEx context,
+        BuildProgress<BuildProgressDescriptor> buildProgress,
         boolean isRebuild,
         boolean forceCompile,
         boolean onlyCheckStatus
@@ -406,7 +403,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
                         boolean hasUnprocessedTraverseRoots = context.getDependencyCache().hasUnprocessedTraverseRoots();
                         if (!isRebuild && (compiledSomethingForThisChunk || hasUnprocessedTraverseRoots)) {
-                            Set<VirtualFile> compiledWithErrors = CacheUtils.getFilesCompiledWithErrors(context);
+                            CompileCounters counters = context.getUserData(CompileCounters.KEY);
+                            Set<VirtualFile> compiledWithErrors = counters == null ? Set.of() : counters.getErrorFiles();
                             filesToRecompile.removeAll(sink.getCompiledSources());
                             filesToRecompile.addAll(compiledWithErrors);
 
@@ -418,17 +416,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                     if (module != null && processedModules.contains(module)) {
                                         it.remove();
                                     }
-                                }
-                            }
-
-                            if (ourDebugMode) {
-                                if (!dependentFiles.isEmpty()) {
-                                    for (VirtualFile dependentFile : dependentFiles) {
-                                        System.out.println("FOUND TO RECOMPILE: " + dependentFile.getPresentableUrl());
-                                    }
-                                }
-                                else {
-                                    System.out.println("NO FILES TO RECOMPILE");
                                 }
                             }
 
@@ -596,7 +583,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 if (toDelete.isEmpty() && toCompile.isEmpty()) {
                     return false;
                 }
-                if (LOG.isDebugEnabled() || ourDebugMode) {
+
+                if (LOG.isDebugEnabled()) {
                     if (!toDelete.isEmpty()) {
                         StringBuilder message = new StringBuilder();
                         message.append("Found items to delete, compiler ").append(compiler.getDescription());
@@ -604,16 +592,10 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             message.append("\n").append(trinity.getFirst());
                         }
                         LOG.debug(message.toString());
-                        if (ourDebugMode) {
-                            System.out.println(message);
-                        }
                     }
                     if (!toCompile.isEmpty()) {
                         String message = "Found items to compile, compiler " + compiler.getDescription();
                         LOG.debug(message);
-                        if (ourDebugMode) {
-                            System.out.println(message);
-                        }
                     }
                 }
                 throw new ExitException(ExitStatus.CANCELLED);
@@ -652,7 +634,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         boolean[] wereFilesDeleted = {false};
         CompilerUtil.runInContext(
             context,
-            CompilerLocalize.progressSynchronizingOutputDirectory().get(),
+            CompilerLocalize.progressSynchronizingOutputDirectory(),
             () -> {
                 long start = System.currentTimeMillis();
                 try {
@@ -825,7 +807,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             if (!pathsToRemove.isEmpty()) {
                 CompilerUtil.runInContext(
                     context,
-                    CompilerLocalize.progressSynchronizingOutputDirectory().get(),
+                    CompilerLocalize.progressSynchronizingOutputDirectory(),
                     () -> {
                         for (File file : pathsToRemove) {
                             boolean result = compileDriver.deleteFile(file);
@@ -848,7 +830,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             ModuleCompilerUtil.sortModules(myProject, modules);
 
             for (Module module : modules) {
-                CompilerUtil.runInContext(context, "Generating output from " + compiler.getDescription(), () -> {
+                CompilerUtil.runInContext(context, LocalizeValue.localizeTODO("Generating output from " + compiler.getDescription()), () -> {
                     Set<GeneratingCompiler.GenerationItem> items = moduleToItemMap.get(module);
                     if (items != null && !items.isEmpty()) {
                         GeneratingCompiler.GenerationItem[][] productionAndTestItems = splitGenerationItems(items);
@@ -861,7 +843,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
                             CompilerUtil.runInContext(
                                 context,
-                                CompilerLocalize.progressUpdatingCaches().get(),
+                                CompilerLocalize.progressUpdatingCaches(),
                                 () -> {
                                     if (successfullyGenerated.length > 0) {
                                         affectedModules.add(module);
@@ -991,7 +973,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         if (!files.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
-                CompilerLocalize.progressProcessingOutdatedFiles().get(),
+                CompilerLocalize.progressProcessingOutdatedFiles(),
                 () -> {
                     Application.get().runReadAction(() -> {
                         for (File file : files) {
@@ -1046,7 +1028,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
         CompilerUtil.runInContext(
             context,
-            CompilerLocalize.progressUpdatingCaches().get(),
+            CompilerLocalize.progressUpdatingCaches(),
             () -> {
                 //List<File> vFiles = new ArrayList<>(processed.length);
                 for (FileProcessingCompiler.ProcessingItem aProcessed : processed) {

@@ -36,7 +36,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
+import consulo.fileEditor.impl.internal.text.TextEditorImpl;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
@@ -111,17 +111,6 @@ public final class EditorUtil {
         int yPos = caretLocation.y;
         yPos -= viewArea.height * proportion;
         editor.getScrollingModel().scrollVertically(yPos);
-    }
-
-    public static int calcRelativeCaretPosition(@Nonnull Editor editor) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
-        return caretY - viewAreaPosition;
-    }
-
-    public static void setRelativeCaretPosition(@Nonnull Editor editor, int position) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        editor.getScrollingModel().scrollVertically(caretY - position);
     }
 
     public static void fillVirtualSpaceUntilCaret(@Nonnull Editor editor) {

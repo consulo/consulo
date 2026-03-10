@@ -37,6 +37,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;

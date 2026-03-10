@@ -17,16 +17,11 @@ package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NonProjectFileWritingAccessExtension {
-    ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME =
-        ExtensionPointName.create(NonProjectFileWritingAccessExtension.class);
-
     /**
      * @return true if the file should not be protected from accidental writing. false to use default logic.
      */

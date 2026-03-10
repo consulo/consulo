@@ -213,15 +213,14 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         @Nullable MasterDetailsComponent rootConfigurable,
         boolean addedOnly
     ) throws ConfigurationException {
-
-        LinkedHashMap<Sdk, Sdk> sdks = new LinkedHashMap<>(mySdks);
+        Map<Sdk, Sdk> sdks = new LinkedHashMap<>(mySdks);
         if (addedOnly) {
             Sdk[] allSdks = mySdkTableProvider.get().getAllSdks();
             for (Sdk sdk : allSdks) {
                 sdks.remove(sdk);
             }
         }
-        ArrayList<String> allNames = new ArrayList<>();
+        List<String> allNames = new ArrayList<>();
         Sdk itemWithError = null;
         for (Sdk currItem : sdks.values()) {
             String currName = currItem.getName();

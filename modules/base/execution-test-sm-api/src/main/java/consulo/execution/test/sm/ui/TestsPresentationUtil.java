@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.sm.ui;
 
-import consulo.process.internal.AnsiEscapeDecoder;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.execution.test.*;
 import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTestProxy;

@@ -94,7 +94,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
 
 
         SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
-        group.addEditor(RemoteServerLocalize.deploytoserverrunconfigurationTabTitleDeployment().get(), commonEditor);
+        group.addEditor(RemoteServerLocalize.deploytoserverrunconfigurationTabTitleDeployment(), commonEditor);
         DeployToServerRunConfigurationExtensionsManager.getInstance().appendEditors(this, group);
         commonEditor.addSettingsEditorListener(e -> group.bulkUpdate(() -> {
         }));
