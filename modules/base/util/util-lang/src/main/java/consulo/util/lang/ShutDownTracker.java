@@ -15,6 +15,7 @@
  */
 package consulo.util.lang;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,8 +125,9 @@ public class ShutDownTracker implements Runnable {
   public synchronized void unregisterShutdownTask(Runnable task) {
     myShutdownTasks.remove(task);
   }
-  
+
+  @Nullable
   private synchronized <T> T removeLast(LinkedList<T> list) {
-    return list.isEmpty()? null : list.removeLast();
+    return list.isEmpty() ? null : list.removeLast();
   }
 }

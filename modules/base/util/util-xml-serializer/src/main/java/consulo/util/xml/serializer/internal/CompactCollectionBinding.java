@@ -23,17 +23,18 @@ import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @see CollectionBean
  */
-class CompactCollectionBinding extends Binding {
+class CompactCollectionBinding extends NonNullAccessorBinding {
   private final String name;
 
   protected CompactCollectionBinding(MutableAccessor accessor) {
     super(accessor);
 
-    name = myAccessor.getName();
+    name = accessor.getName();
   }
 
   @Nullable
@@ -54,9 +55,9 @@ class CompactCollectionBinding extends Binding {
 
   @Nullable
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
     @SuppressWarnings("unchecked")
-    List<String> list = (List<String>)context;
+    List<String> list = (List<String>) Objects.requireNonNull(context);
     list.clear();
     if (element.getName().equals(name)) {
       for (Element item : element.getChildren("item")) {

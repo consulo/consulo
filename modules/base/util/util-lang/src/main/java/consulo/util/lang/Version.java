@@ -117,7 +117,7 @@ public class Version {
     return doCompare(this.bugfix, bugfix);
   }
 
-  private static int doCompare(Integer l, Integer r) {
+  private static int doCompare(@Nullable Integer l, @Nullable Integer r) {
     if (l == null || r == null) return 0;
     return l - r;
   }

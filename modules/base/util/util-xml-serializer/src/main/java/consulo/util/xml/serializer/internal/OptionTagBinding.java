@@ -25,6 +25,7 @@ import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 class OptionTagBinding extends BasePrimitiveBinding {
   private final String myTagName;
@@ -45,14 +46,14 @@ class OptionTagBinding extends BasePrimitiveBinding {
 
       String tagName = optionTag.tag();
       if (StringUtil.isEmpty(myNameAttribute) && Constants.OPTION.equals(tagName)) {
-        tagName = myAccessor.getName();
+        tagName = accessor.getName();
       }
       myTagName = tagName;
     }
   }
 
-  @Override
   @Nullable
+  @Override
   public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     Element targetElement = new Element(myTagName);
@@ -69,8 +70,8 @@ class OptionTagBinding extends BasePrimitiveBinding {
       if (myBinding == null) {
         targetElement.setAttribute(myValueAttribute, XmlSerializerImpl.convertToString(value));
       }
-      else if (myBinding instanceof BeanBinding && myValueAttribute.isEmpty()) {
-        ((BeanBinding)myBinding).serializeInto(value, targetElement, filter);
+      else if (myBinding instanceof BeanBinding beanBinding && myValueAttribute.isEmpty()) {
+        beanBinding.serializeInto(value, targetElement, filter);
       }
       else {
         Object node = myBinding.serialize(value, targetElement, filter);
@@ -86,12 +87,12 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    Objects.requireNonNull(context);
     Attribute valueAttribute = element.getAttribute(myValueAttribute);
     if (valueAttribute == null) {
       if (myValueAttribute.isEmpty()) {
-        assert myBinding != null;
-        myAccessor.set(context, myBinding.deserialize(context, element));
+        myAccessor.set(context, Objects.requireNonNull(myBinding).deserialize(context, element));
       }
       else {
         List<Element> children = element.getChildren();
@@ -99,8 +100,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
           myAccessor.set(context, null);
         }
         else {
-          assert myBinding != null;
-          myAccessor.set(context, Binding.deserializeList(myBinding, myAccessor.read(context), children));
+          myAccessor.set(context, Binding.deserializeList(Objects.requireNonNull(myBinding), myAccessor.read(context), children));
         }
       }
     }

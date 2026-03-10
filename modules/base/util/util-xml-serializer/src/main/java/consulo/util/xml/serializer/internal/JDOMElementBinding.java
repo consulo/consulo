@@ -24,39 +24,41 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-class JDOMElementBinding extends Binding implements MultiNodeBinding {
+class JDOMElementBinding extends NonNullAccessorBinding implements MultiNodeBinding {
   private final String myTagName;
 
   public JDOMElementBinding(MutableAccessor accessor) {
     super(accessor);
 
-    Tag tag = myAccessor.getAnnotation(Tag.class);
+    Tag tag = accessor.getAnnotation(Tag.class);
     assert tag != null : "jdom.Element property without @Tag annotation: " + accessor;
 
     String tagName = tag.value();
     if (StringUtil.isEmpty(tagName)) {
-      tagName = myAccessor.getName();
+      tagName = accessor.getName();
     }
     myTagName = tagName;
   }
 
+  @Nullable
   @Override
-  public Object serialize(Object o, Object context, SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
     }
 
-    if (value instanceof Element) {
-      Element targetElement = ((Element)value).clone();
+    if (value instanceof Element element) {
+      Element targetElement = element.clone();
       assert targetElement != null;
       targetElement.setName(myTagName);
       return targetElement;
     }
-    if (value instanceof Element[]) {
-      ArrayList<Element> result = new ArrayList<Element>();
-      for (Element element : ((Element[])value)) {
+    if (value instanceof Element[] elements) {
+      List<Element> result = new ArrayList<>();
+      for (Element element : elements) {
         result.add(element.clone().setName(myTagName));
       }
       return result;
@@ -83,8 +85,8 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, Element element) {
-    myAccessor.set(context, element);
+  public Object deserialize(@Nullable Object context, Element element) {
+    myAccessor.set(Objects.requireNonNull(context), element);
     return context;
   }
 

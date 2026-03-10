@@ -19,12 +19,16 @@ import consulo.util.lang.ThreeState;
 import consulo.util.xml.serializer.internal.BeanBinding;
 import consulo.util.xml.serializer.internal.XmlSerializerImpl;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 
 public final class SmartSerializer {
+  @Nullable
   private LinkedHashSet<String> mySerializedAccessorNameTracker;
+  @Nullable
   private Map<String, Float> myOrderedBindings;
   private final SerializationFilter mySerializationFilter;
 
@@ -63,7 +67,7 @@ public final class SmartSerializer {
       myOrderedBindings = null;
     }
 
-    BeanBinding beanBinding = getBinding(bean);
+    BeanBinding beanBinding = Objects.requireNonNull(getBinding(bean));
     beanBinding.deserializeIntoObject(bean, element, mySerializedAccessorNameTracker);
 
     if (mySerializedAccessorNameTracker != null) {
@@ -76,7 +80,7 @@ public final class SmartSerializer {
   }
 
   public void writeExternal(Object bean, Element element, boolean preserveCompatibility) {
-    BeanBinding binding = getBinding(bean);
+    BeanBinding binding = Objects.requireNonNull(getBinding(bean));
     if (preserveCompatibility && myOrderedBindings != null) {
       binding.sortBindings(myOrderedBindings);
     }
@@ -96,6 +100,7 @@ public final class SmartSerializer {
     }
   }
 
+  @Nullable
   private static BeanBinding getBinding(Object bean) {
     return (BeanBinding)XmlSerializerImpl.getBinding(bean.getClass());
   }

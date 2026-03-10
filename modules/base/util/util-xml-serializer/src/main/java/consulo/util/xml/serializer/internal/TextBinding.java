@@ -19,7 +19,7 @@ import consulo.util.xml.serializer.SerializationFilter;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Text;
 
-class TextBinding extends Binding {
+class TextBinding extends NonNullAccessorBinding {
   private final Class<?> valueClass;
 
   public TextBinding(MutableAccessor accessor) {

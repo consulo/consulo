@@ -290,31 +290,26 @@ public class DefaultJDOMExternalizer {
   }
 
   public static int toInt(String value) throws InvalidDataException {
-    int i;
     try {
-      i = Integer.parseInt(value);
+      return Integer.parseInt(value);
     }
     catch (NumberFormatException ex) {
       throw new InvalidDataException(value, ex);
     }
-    return i;
   }
 
+  @Nullable
   public static Color toColor(@Nullable String value) throws InvalidDataException {
-    Color color;
     if (value == null) {
-      color = null;
+      return null;
     }
-    else {
-      try {
-        int rgb = Integer.parseInt(value, 16);
-        color = new Color(rgb);
-      }
-      catch (NumberFormatException ex) {
-        LOG.debug("Wrong color value: " + value, ex);
-        throw new InvalidDataException("Wrong color value: " + value, ex);
-      }
+    try {
+      int rgb = Integer.parseInt(value, 16);
+      return new Color(rgb);
     }
-    return color;
+    catch (NumberFormatException ex) {
+      LOG.debug("Wrong color value: " + value, ex);
+      throw new InvalidDataException("Wrong color value: " + value, ex);
+    }
   }
 }

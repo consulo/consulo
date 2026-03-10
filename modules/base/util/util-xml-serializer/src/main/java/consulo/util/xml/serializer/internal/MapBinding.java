@@ -29,7 +29,7 @@ import java.util.*;
 
 import static consulo.util.xml.serializer.Constants.*;
 
-class MapBinding extends Binding implements MultiNodeBinding {
+class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
   private static final Comparator<Object> KEY_COMPARATOR = new Comparator<Object>() {
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
@@ -45,10 +45,14 @@ class MapBinding extends Binding implements MultiNodeBinding {
 
   private final MapAnnotation myMapAnnotation;
 
+  @Nullable
   private Class<?> keyClass;
+  @Nullable
   private Class<?> valueClass;
 
+  @Nullable
   private Binding keyBinding;
+  @Nullable
   private Binding valueBinding;
 
   public MapBinding(MutableAccessor accessor) {
@@ -124,18 +128,21 @@ class MapBinding extends Binding implements MultiNodeBinding {
   }
 
   @Override
-  public Object deserialize(Object context, Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
     if (myMapAnnotation == null || myMapAnnotation.surroundWithTag()) {
-      return deserialize(context, element.getChildren());
+      return deserialize(Objects.requireNonNull(context), element.getChildren());
     }
     else {
-      return deserialize(context, Collections.singletonList(element));
+      return deserialize(Objects.requireNonNull(context), Collections.singletonList(element));
     }
   }
 
   private Map deserialize(Object context, List<Element> childNodes) {
     Map map = (Map)context;
     map.clear();
+
+    Class<?> keyClass = Objects.requireNonNull(this.keyClass);
+    Class<?> valueClass = Objects.requireNonNull(this.valueClass);
 
     for (Element childNode : childNodes) {
       if (!childNode.getName().equals(getEntryAttributeName())) {
@@ -173,13 +180,14 @@ class MapBinding extends Binding implements MultiNodeBinding {
     }
   }
 
+  @Nullable
   private Object deserializeKeyOrValue(Element entry, String attributeName, Object context, @Nullable Binding binding, Class<?> valueClass) {
     Attribute attribute = entry.getAttribute(attributeName);
     if (attribute != null) {
       return XmlSerializerImpl.convert(attribute.getValue(), valueClass);
     }
     else if (myMapAnnotation != null && !myMapAnnotation.surroundKeyWithTag()) {
-      assert binding != null;
+      Objects.requireNonNull(binding);
       for (Element element : entry.getChildren()) {
         if (binding.isBoundTo(element)) {
           return binding.deserialize(context, element);
@@ -193,8 +201,7 @@ class MapBinding extends Binding implements MultiNodeBinding {
         return null;
       }
       else {
-        assert binding != null;
-        return Binding.deserializeList(binding, context, children);
+        return Binding.deserializeList(Objects.requireNonNull(binding), context, children);
       }
     }
     return null;

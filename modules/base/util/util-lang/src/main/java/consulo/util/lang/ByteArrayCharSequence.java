@@ -84,8 +84,7 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
     return myStart == 0 && myEnd == myChars.length ? myChars : Arrays.copyOfRange(myChars, myStart, myEnd);
   }
 
-  @Nullable
-  static byte[] toBytesIfPossible(CharSequence seq) {
+  static byte @Nullable [] toBytesIfPossible(CharSequence seq) {
     if (seq instanceof ByteArrayCharSequence) {
       return ((ByteArrayCharSequence)seq).getBytes();
     }

@@ -37,6 +37,7 @@ public class Ref<T> extends SimpleReference<T> {
     return super.isNull();
   }
 
+  @Nullable
   @Override
   public T get() {
     return super.get();

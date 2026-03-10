@@ -25,23 +25,16 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public abstract class Binding {
-    public static final Logger LOG = LoggerFactory.getLogger(Binding.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Binding.class);
 
-    protected final MutableAccessor myAccessor;
-
-    protected Binding(MutableAccessor accessor) {
-        myAccessor = accessor;
-    }
-
-    public MutableAccessor getAccessor() {
-        return myAccessor;
-    }
+    @Nullable
+    public abstract MutableAccessor getAccessor();
 
     @Nullable
     public abstract Object serialize(Object o, @Nullable Object context, SerializationFilter filter);
 
     @Nullable
-    public Object deserialize(Object context, Element element) {
+    public Object deserialize(@Nullable Object context, Element element) {
         return context;
     }
 
@@ -53,22 +46,20 @@ public abstract class Binding {
         // called (and make sense) only if MainBinding
     }
 
-    @SuppressWarnings("CastToIncompatibleInterface")
     @Nullable
+    @SuppressWarnings("CastToIncompatibleInterface")
     public static Object deserializeList(Binding binding, Object context, List<Element> nodes) {
-        if (binding instanceof MultiNodeBinding) {
-            return ((MultiNodeBinding) binding).deserializeList(context, nodes);
+        if (binding instanceof MultiNodeBinding multiNodeBinding) {
+            return multiNodeBinding.deserializeList(context, nodes);
+        }
+        else if (nodes.size() == 1) {
+            return binding.deserialize(context, nodes.get(0));
+        }
+        else if (nodes.isEmpty()) {
+            return null;
         }
         else {
-            if (nodes.size() == 1) {
-                return binding.deserialize(context, nodes.get(0));
-            }
-            else if (nodes.isEmpty()) {
-                return null;
-            }
-            else {
-                throw new AssertionError("Duplicate data for " + binding + " will be ignored");
-            }
+            throw new AssertionError("Duplicate data for " + binding + " will be ignored");
         }
     }
 }

@@ -39,10 +39,12 @@ public class XmlSerializer {
   /**
    * Consider to use {@link SkipDefaultValuesSerializationFilters}
    */
+  @Nullable
   public static Element serialize(Object object) throws XmlSerializationException {
     return serialize(object, TRUE_FILTER);
   }
 
+  @Nullable
   public static Element serialize(Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
     return XmlSerializerImpl.serialize(object, filter == null ? TRUE_FILTER : filter);
   }
@@ -61,7 +63,8 @@ public class XmlSerializer {
   @SuppressWarnings({"unchecked"})
   public static <T> T deserialize(Element element, Class<T> aClass) throws XmlSerializationException {
     try {
-      return (T)XmlSerializerImpl.getBinding(aClass).deserialize(null, element);
+      Binding binding = XmlSerializerImpl.getBinding(aClass);
+      return binding == null ? null : (T) binding.deserialize(null, element);
     }
     catch (XmlSerializationException e) {
       throw e;
@@ -88,10 +91,7 @@ public class XmlSerializer {
       Element rootElement = JDOMUtil.loadDocument(url).detachRootElement();
       return deserialize(rootElement, aClass);
     }
-    catch (IOException e) {
-      throw new XmlSerializationException(e);
-    }
-    catch (JDOMException e) {
+    catch (IOException | JDOMException e) {
       throw new XmlSerializationException(e);
     }
   }
@@ -102,7 +102,10 @@ public class XmlSerializer {
 
   public static void deserializeInto(Object bean, Element element, @Nullable Set<String> accessorNameTracker) {
     try {
-      ((BeanBinding)XmlSerializerImpl.getBinding(bean.getClass())).deserializeIntoObject(bean, element, accessorNameTracker);
+      BeanBinding binding = (BeanBinding) XmlSerializerImpl.getBinding(bean.getClass());
+      if (binding != null) {
+        binding.deserializeIntoObject(bean, element, accessorNameTracker);
+      }
     }
     catch (XmlSerializationException e) {
       throw e;
@@ -122,8 +125,12 @@ public class XmlSerializer {
     }
     try {
       Binding binding = XmlSerializerImpl.getBinding(bean.getClass());
-      assert binding instanceof BeanBinding;
-      ((BeanBinding)binding).serializeInto(bean, element, filter);
+      if (binding instanceof BeanBinding beanBinding) {
+        beanBinding.serializeInto(bean, element, filter);
+      }
+      else {
+        throw new RuntimeException("Expected BeanBinding, got" + binding);
+      }
     }
     catch (XmlSerializationException e) {
       throw e;

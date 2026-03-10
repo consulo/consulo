@@ -52,6 +52,7 @@ public class JDOMExternalizerUtil {
     return null;
   }
 
+  @Nullable
   public static Element getOption(Element parent, String fieldName) {
     for (Element element : JDOMUtil.getChildren(parent, "option")) {
       String childName = element.getAttributeValue("name");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.lang;
-
+package consulo.util.xml.serializer.internal;
 
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author Konstantin Bulenkov
+ * @author UNV
+ * @since 2026-03-10
  */
-public class Couple<T> extends Pair<T, T> {
-  private static final Couple EMPTY_COUPLE = of(null, null);
+public abstract class NullableAccessorBinding extends Binding {
+    @Nullable
+    protected final MutableAccessor myAccessor;
 
-  public Couple(@Nullable T first, @Nullable T second) {
-    super(first, second);
-  }
+    public NullableAccessorBinding(@Nullable MutableAccessor accessor) {
+        myAccessor = accessor;
+    }
 
-  public static <T> Couple<T> of(@Nullable T first, @Nullable T second) {
-    return new Couple<>(first, second);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> Couple<T> of() {
-    return EMPTY_COUPLE;
-  }
+    @Override
+    public @Nullable MutableAccessor getAccessor() {
+        return myAccessor;
+    }
 }
