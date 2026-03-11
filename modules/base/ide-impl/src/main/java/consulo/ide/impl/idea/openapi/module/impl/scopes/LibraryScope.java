@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.library.Library;
 import consulo.language.internal.LibraryScopeBase;
 import consulo.project.Project;
+import consulo.util.io.PathUtil;
 
 /**
  * @author nik

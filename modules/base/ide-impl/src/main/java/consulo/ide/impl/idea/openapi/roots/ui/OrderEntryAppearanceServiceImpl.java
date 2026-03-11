@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPre
 import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;
 import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
@@ -45,6 +44,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.io.PathUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
