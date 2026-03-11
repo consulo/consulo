@@ -1192,7 +1192,7 @@ public class FileUtil {
             char c = path.charAt(i);
             if (c == '/') {
                 if (!separator) {
-                    if (!processDots(result, dots, start, Objects.requireNonNull(resolver))) {
+                    if (!processDots(result, dots, start, resolver)) {
                         return resolver.resolveSymlinksAndCanonicalize(path, separatorChar, removeLastSlash);
                     }
                     dots = 0;
@@ -1283,7 +1283,7 @@ public class FileUtil {
     }
 
     @Contract("_, _, _, null -> true")
-    private static boolean processDots(StringBuilder result, int dots, int start, SymlinkResolver symlinkResolver) {
+    private static boolean processDots(StringBuilder result, int dots, int start, @Nullable SymlinkResolver symlinkResolver) {
         if (dots == 2) {
             int pos = -1;
             if (!StringUtil.endsWith(result, "/../") && !"../".contentEquals(result)) {
