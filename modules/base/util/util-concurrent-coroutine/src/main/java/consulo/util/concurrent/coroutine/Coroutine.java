@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -210,9 +211,10 @@ import java.util.function.Function;
  * @author eso
  */
 public class Coroutine<I, O> extends UserDataHolderBase {
-
+    @Nullable
     private StepChain<I, ?, O> code;
 
+    @Nullable
     private String name;
 
     /**
@@ -238,7 +240,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @param other The coroutine to copy the definition from
      */
     private Coroutine(Coroutine<I, O> other) {
-        init(other.code, other);
+        init(other.getRequiredCode(), other);
     }
 
     /**
@@ -251,7 +253,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
     private <T> Coroutine(Coroutine<I, T> other, CoroutineStep<T, O> nextStep) {
         Objects.requireNonNull(nextStep);
 
-        init(other.code.then(nextStep), other);
+        init(other.getRequiredCode().then(nextStep), other);
     }
 
     /**
@@ -305,13 +307,13 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @return A {@link Continuation} that provides access to the execution
      * result
      */
-    public Continuation<O> runAsync(CoroutineScope scope, I input) {
+    public Continuation<O> runAsync(CoroutineScope scope, @Nullable I input) {
         Coroutine<I, O> aRunCoroutine = new Coroutine<>(this);
         Continuation<O> aContinuation = new Continuation<>(scope, aRunCoroutine);
 
         CompletableFuture<I> fExecution = CompletableFuture.supplyAsync(() -> input, aContinuation);
 
-        aRunCoroutine.code.runAsync(fExecution, null, aContinuation);
+        aRunCoroutine.getRequiredCode().runAsync(fExecution, null, aContinuation);
 
         return aContinuation;
     }
@@ -334,11 +336,11 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @return A {@link Continuation} that provides access to the execution
      * result
      */
-    public Continuation<O> runBlocking(CoroutineScope scope, I input) {
+    public Continuation<O> runBlocking(CoroutineScope scope, @Nullable I input) {
         Coroutine<I, O> aRunCoroutine = new Coroutine<>(this);
         Continuation<O> aContinuation = new Continuation<>(scope, aRunCoroutine);
 
-        aRunCoroutine.code.runBlocking(input, aContinuation);
+        aRunCoroutine.getRequiredCode().runBlocking(input, aContinuation);
 
         return aContinuation;
     }
@@ -396,6 +398,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         return String.format("%s[%s]", name, code);
     }
 
+    @Nullable
     public String getName() {
         return name;
     }
@@ -409,8 +412,17 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * Returns the {@link StepChain} object containing the code of this
      * coroutine.
      */
+    @Nullable
     StepChain<I, ?, O> getCode() {
         return code;
+    }
+
+    /**
+     * Returns the {@link StepChain} object containing the code of this
+     * coroutine.
+     */
+    StepChain<I, ?, O> getRequiredCode() {
+        return Objects.requireNonNull(code);
     }
 
     /**
@@ -420,7 +432,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @param other Another coroutine to copy configuration data from or NULL
      *              for none
      */
-    void init(StepChain<I, ?, O> code, Coroutine<?, ?> other) {
+    void init(StepChain<I, ?, O> code, @Nullable Coroutine<?, ?> other) {
         this.code = code;
 
         name = getClass().getSimpleName();
@@ -439,9 +451,8 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      */
     void terminate(Continuation<?> continuation) {
-        code.getLastStep()
-            .runAsync(CompletableFuture.supplyAsync(() -> null, continuation),
-                null, continuation);
+        Objects.requireNonNull(getRequiredCode().getLastStep())
+            .runAsync(CompletableFuture.supplyAsync(() -> null, continuation), null, continuation);
     }
 
     /**
@@ -455,9 +466,10 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         /**
          * {@inheritDoc}
          */
+        @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        protected T execute(T input, Continuation<?> continuation) {
+        protected T execute(@Nullable T input, Continuation<?> continuation) {
             // as this is the finish step, it must have the same type T as the
             // continuation result
             ((Continuation<T>) continuation).finish(input);
@@ -476,6 +488,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
 
         CoroutineStep<I, T> step;
 
+        @Nullable
         CoroutineStep<T, O> next;
 
         /**
@@ -484,7 +497,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
          * @param step The first execution
          * @param next The second execution
          */
-        private StepChain(CoroutineStep<I, T> step, CoroutineStep<T, O> next) {
+        private StepChain(CoroutineStep<I, T> step, @Nullable CoroutineStep<T, O> next) {
             this.step = step;
             this.next = next;
         }
@@ -493,8 +506,11 @@ public class Coroutine<I, O> extends UserDataHolderBase {
          * {@inheritDoc}
          */
         @Override
-        public void runAsync(CompletableFuture<I> previousExecution,
-                             CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+        public void runAsync(
+            CompletableFuture<I> previousExecution,
+            @Nullable CoroutineStep<O, ?> nextStep,
+            Continuation<?> continuation
+        ) {
             if (!continuation.isCancelled()) {
                 try {
                     continuation.trace(step);
@@ -521,8 +537,9 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         /**
          * {@inheritDoc}
          */
+        @Nullable
         @Override
-        protected O execute(I input, Continuation<?> continuation) {
+        protected O execute(@Nullable I input, Continuation<?> continuation) {
             if (continuation.isCancelled()) {
                 return null;
             }
@@ -530,8 +547,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
                 try {
                     continuation.trace(step);
 
-                    return next.execute(step.execute(input, continuation),
-                        continuation);
+                    return Objects.requireNonNull(next).execute(step.execute(input, continuation), continuation);
                 }
                 catch (Throwable e) {
                     continuation.fail(e);
@@ -546,6 +562,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
          *
          * @return The last step
          */
+        @Nullable
         CoroutineStep<?, ?> getLastStep() {
             if (next instanceof StepChain) {
                 return ((StepChain<?, ?, ?>) next).getLastStep();

@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.*;
 
@@ -216,8 +217,9 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    protected O execute(I input, Continuation<?> continuation) {
+    protected O execute(@Nullable I input, Continuation<?> continuation) {
         return code.apply(input, continuation);
     }
 }

@@ -19,8 +19,8 @@ package consulo.util.concurrent.coroutine.step;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -39,6 +39,7 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 
 	private final CoroutineStep<I, O> rRunIfTrue;
 
+	@Nullable
 	private final CoroutineStep<I, O> rRunIfFalse;
 
 	//~ Constructors -----------------------------------------------------------
@@ -50,11 +51,11 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 	 * @param rRunIfTrue  The step to run if the condition is TRUE
 	 * @param rRunIfFalse The step to run if the condition is FALSE
 	 */
-	public Condition(BiPredicate<? super I, Continuation<?>> pCondition,
-		CoroutineStep<I, O> rRunIfTrue, CoroutineStep<I, O> rRunIfFalse) {
-		Objects.requireNonNull(pCondition);
-		Objects.requireNonNull(rRunIfTrue);
-
+	public Condition(
+		BiPredicate<? super I, Continuation<?>> pCondition,
+		CoroutineStep<I, O> rRunIfTrue,
+		@Nullable CoroutineStep<I, O> rRunIfFalse
+	) {
 		this.pCondition = pCondition;
 		this.rRunIfTrue = rRunIfTrue;
 		this.rRunIfFalse = rRunIfFalse;
@@ -173,8 +174,11 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<I> previousExecution,
-		CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<I> previousExecution,
+		@Nullable CoroutineStep<O, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution, i -> {
 			CoroutineStep<I, O> rStep =
 				pCondition.test(i, continuation) ? rRunIfTrue : rRunIfFalse;
@@ -191,16 +195,15 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected O execute(I input, Continuation<?> continuation) {
-		O rResult = null;
-
+	protected O execute(@Nullable I input, Continuation<?> continuation) {
 		if (pCondition.test(input, continuation)) {
-			rResult = rRunIfTrue.runBlocking(input, continuation);
+			return rRunIfTrue.runBlocking(input, continuation);
 		} else if (rRunIfFalse != null) {
-			rResult = rRunIfFalse.runBlocking(input, continuation);
+			return rRunIfFalse.runBlocking(input, continuation);
 		}
 
-		return rResult;
+		return null;
 	}
 }

@@ -22,6 +22,7 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -47,8 +48,9 @@ public final class WriteLock<I, O> extends CoroutineStep<I, O> {
         myFunction = function;
     }
 
+    @Nullable
     @Override
-    protected O execute(I input, Continuation<?> continuation) {
+    protected O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess.assetIsNotUIThread();
 
         ApplicationWithIntentWriteLock application =

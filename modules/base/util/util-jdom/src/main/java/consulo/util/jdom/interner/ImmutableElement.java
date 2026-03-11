@@ -19,6 +19,7 @@ import consulo.util.lang.Comparing;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ class ImmutableElement extends Element {
     List<Attribute> originAttributes = origin.getAttributes();
     String[] nameValues = new String[originAttributes.size() * 2];
     AttributeType type = AttributeType.UNDECLARED;
-    Namespace namespace = null;
+    Namespace namespace = Namespace.NO_NAMESPACE;
     for (int i = 0; i < originAttributes.size(); i++) {
       Attribute origAttribute = originAttributes.get(i);
       if (type == AttributeType.UNDECLARED) {
@@ -58,9 +59,15 @@ class ImmutableElement extends Element {
       newAttributes = EMPTY_LIST;
     }
     else if (type == AttributeType.UNDECLARED) {
-      newAttributes = Collections.unmodifiableList(ContainerUtil.map(originAttributes,
-                                                                     attribute -> new ImmutableAttribute(interner.internString(attribute.getName()), interner.internString(attribute.getValue()),
-                                                                                                         attribute.getAttributeType(), attribute.getNamespace())));
+      newAttributes = Collections.unmodifiableList(ContainerUtil.map(
+        originAttributes,
+        attribute -> new ImmutableAttribute(
+          interner.internString(attribute.getName()),
+          interner.internString(attribute.getValue()),
+          attribute.getAttributeType(),
+          attribute.getNamespace()
+        )
+      ));
     }
     else {
       newAttributes = new ImmutableSameTypeAttributeList(nameValues, type, namespace);
@@ -134,6 +141,7 @@ class ImmutableElement extends Element {
     return getContent(new ElementFilter(name, ns));
   }
 
+  @Nullable
   @Override
   public Element getChild(String name, Namespace ns) {
     List<Element> children = getChildren(name, ns);
@@ -194,14 +202,14 @@ class ImmutableElement extends Element {
     return myAttributes;
   }
 
+  @Nullable
   @Override
   public Attribute getAttribute(String name, Namespace ns) {
     if (myAttributes instanceof ImmutableSameTypeAttributeList) {
       return ((ImmutableSameTypeAttributeList)myAttributes).get(name, ns);
     }
     String uri = namespace.getURI();
-    for (int i = 0; i < myAttributes.size(); i++) {
-      Attribute a = myAttributes.get(i);
+    for (Attribute a : myAttributes) {
       String oldURI = a.getNamespaceURI();
       String oldName = a.getName();
       if (oldURI.equals(uri) && oldName.equals(name)) {

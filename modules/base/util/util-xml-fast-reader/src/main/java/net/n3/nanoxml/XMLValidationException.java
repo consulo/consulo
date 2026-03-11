@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An XMLValidationException is thrown when the XML passed to the XML parser is
  * well-formed but not valid.
@@ -97,18 +99,21 @@ public class XMLValidationException
    /**
     * The name of the element where the exception occurred.
     */
+   @Nullable
    private String elementName;
 
 
    /**
     * The name of the attribute where the exception occurred.
     */
+   @Nullable
    private String attributeName;
 
 
    /**
     * The value of the attribute where the exception occurred.
     */
+   @Nullable
    private String attributeValue;
 
 
@@ -127,9 +132,9 @@ public class XMLValidationException
    public XMLValidationException(int    errorType,
                                  String systemID,
                                  int    lineNr,
-                                 String elementName,
-                                 String attributeName,
-                                 String attributeValue,
+                                 @Nullable String elementName,
+                                 @Nullable String attributeName,
+                                 @Nullable String attributeValue,
                                  String msg)
    {
       super(systemID, lineNr, null,
@@ -146,22 +151,10 @@ public class XMLValidationException
 
 
    /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.elementName = null;
-      this.attributeName = null;
-      this.attributeValue = null;
-      super.finalize();
-   }
-
-
-   /**
     * Returns the name of the element in which the validation is violated.
     * If there is no current element, null is returned.
     */
+   @Nullable
    public String getElementName()
    {
       return this.elementName;
@@ -172,6 +165,7 @@ public class XMLValidationException
     * Returns the name of the attribute in which the validation is violated.
     * If there is no current attribute, null is returned.
     */
+   @Nullable
    public String getAttributeName()
    {
       return this.attributeName;
@@ -182,6 +176,7 @@ public class XMLValidationException
     * Returns the value of the attribute in which the validation is violated.
     * If there is no current attribute, null is returned.
     */
+   @Nullable
    public String getAttributeValue()
    {
       return this.attributeValue;
