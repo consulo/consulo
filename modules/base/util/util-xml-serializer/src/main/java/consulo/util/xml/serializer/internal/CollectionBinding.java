@@ -27,14 +27,17 @@ class CollectionBinding extends AbstractCollectionBinding {
   }
 
   @Override
-  Object processResult(Collection result, Object target) {
+  Object processResult(Collection result, @Nullable Object target) {
     if (myAccessor == null) {
       return result;
     }
 
-    assert target != null: "Null target in " + myAccessor;
-    assert target instanceof Collection : "Wrong target: " + target.getClass() + " in " + myAccessor;
-    Collection c = (Collection)target;
+    if (!(target instanceof Collection c)) {
+      if (target == null) {
+        throw new NullPointerException("Null target in " + myAccessor);
+      }
+      throw new IllegalArgumentException("Wrong target: " + target.getClass() + " in " + myAccessor);
+    }
     c.clear();
     //noinspection unchecked
     c.addAll(result);
