@@ -34,7 +34,7 @@ class ArrayBinding extends AbstractCollectionBinding {
 
   @Override
   @SuppressWarnings({"unchecked"})
-  Object processResult(Collection result, Object target) {
+  Object processResult(Collection result, @Nullable Object target) {
     return result.toArray((Object[])Array.newInstance(itemType, result.size()));
   }
 

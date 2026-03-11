@@ -94,7 +94,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     return null;
   }
 
-  abstract Object processResult(Collection result, Object target);
+  abstract Object processResult(Collection result, @Nullable Object target);
 
   abstract Collection<Object> getIterable(Object o);
 
@@ -204,7 +204,6 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
 
   @Override
   public Object deserialize(@Nullable Object context, Element element) {
-    Objects.requireNonNull(context);
     Collection result;
     if (getTagName(context) == null) {
       if (context instanceof Collection collection) {
@@ -228,7 +227,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     return processResult(result, context);
   }
 
-  private Collection deserializeSingle(Object context, Element node) {
+  private Collection deserializeSingle(@Nullable Object context, Element node) {
     Collection result = createCollection(node.getName());
     for (Element child : node.getChildren()) {
       //noinspection unchecked
