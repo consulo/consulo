@@ -30,7 +30,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
             if (oldValue.equals(value)) {
                 return oldValue;
             }
-            List<K> array = myValueToKeysMap.get(oldValue);
+            List<K> array = Objects.requireNonNull(myValueToKeysMap.get(oldValue));
             array.remove(key);
         }
 
@@ -80,6 +80,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
         return myValueToKeysMap.containsKey(value);
     }
 
+    @Nullable
     @Override
     public V get(Object key) {
         return myKeyToValueMap.get(key);

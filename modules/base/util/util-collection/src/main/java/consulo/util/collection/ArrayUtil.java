@@ -736,7 +736,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static int indexOf(Object[] objects, Object object, int start, int end) {
+    public static int indexOf(Object[] objects, @Nullable Object object, int start, int end) {
         if (object == null) {
             for (int i = start; i < end; i++) {
                 if (objects[i] == null) {
@@ -966,21 +966,18 @@ public class ArrayUtil {
         }
     }
 
-    @Nullable
     @Contract("null -> null; !null -> !null")
-    public static <T> T[] copyOf(@Nullable T[] original) {
+    public static <T> T @Nullable [] copyOf(T @Nullable [] original) {
         return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
-    @Nullable
     @Contract("null -> null; !null -> !null")
-    public static boolean[] copyOf(@Nullable boolean[] original) {
+    public static boolean @Nullable [] copyOf(boolean @Nullable [] original) {
         return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
-    @Nullable
     @Contract("null -> null; !null -> !null")
-    public static int[] copyOf(@Nullable int[] original) {
+    public static int @Nullable [] copyOf(int @Nullable [] original) {
         return original == null ? null : Arrays.copyOf(original, original.length);
     }
 

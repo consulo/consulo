@@ -466,8 +466,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
   }
 
   // null means not found
-  @Nullable
-  private static Object[] createArrayRemove(Object[] elements, Object o) {
+  private static Object @Nullable [] createArrayRemove(Object[] elements, Object o) {
     int len = elements.length;
     if (len == 0) {
       return null;
@@ -608,8 +607,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
   }
 
   // null means not found
-  @Nullable
-  private static Object[] createArrayRemoveAll(Object[] elements, Collection<?> c) {
+  private static Object @Nullable [] createArrayRemoveAll(Object[] elements, Collection<?> c) {
     int len = elements.length;
     if (len == 0) {
       return null;
@@ -654,8 +652,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
     }
   }
 
-  @Nullable
-  private static Object[] createArrayRetainAll(Object[] elements, Collection<?> c) {
+  private static Object @Nullable [] createArrayRetainAll(Object[] elements, Collection<?> c) {
     int len = elements.length;
     if (len == 0) {
       return null;

@@ -18,6 +18,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -34,7 +35,8 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
   }
 
   private static class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    private volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
+    @Nullable
+    private volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private WeakValue(V value, ReferenceQueue<? super V> queue) {
       super(value, queue);
@@ -52,6 +54,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
       return v != null && thatV != null && v.equals(thatV);
     }
 
+    @Nullable
     @Override
     public KeyReference<K, V> getKeyReference() {
       return myKeyReference;

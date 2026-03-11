@@ -16,6 +16,8 @@
 
 package consulo.util.collection.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.function.Predicate;
 
 /**
@@ -68,6 +70,7 @@ public class WalkingState<T> {
     }
   }
 
+  @Nullable
   public T next(T element, T root, boolean isDown) {
     if (isDown) {
       T child = myWalker.getFirstChild(element);

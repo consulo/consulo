@@ -15,11 +15,14 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class ListWithSelection<E> extends ArrayList<E> {
-  private E mySelection;
+  @Nullable
+  private E mySelection = null;
 
   public ListWithSelection(Collection<E> collection) {
     super(collection);
@@ -41,6 +44,7 @@ public class ListWithSelection<E> extends ArrayList<E> {
     return true;
   }
 
+  @Nullable
   public E getSelection(){
     return mySelection;
   }

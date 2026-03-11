@@ -18,6 +18,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -45,6 +46,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   public interface KeyReference<K, V> extends Supplier<K> {
+    @Nullable
     @Override
     K get();
 
@@ -59,6 +61,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   public interface ValueReference<K, V> extends Supplier<V> {
+    @Nullable
     KeyReference<K, V> getKeyReference(); // no strong references
 
     @Override
@@ -100,7 +103,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   public static class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K, V> {
-    protected volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
+    @Nullable
+    protected volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private SoftValue(V value, ReferenceQueue<? super V> queue) {
       super(value, queue);
@@ -118,6 +122,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       return v != null && v.equals(thatV);
     }
 
+    @Nullable
     @Override
     public KeyReference<K, V> getKeyReference() {
       return myKeyReference;
@@ -155,8 +160,9 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
   /////////////////////////////
   private static class HardKey<K, V> implements KeyReference<K, V> {
-    private K myKey;
-    private int myHash;
+    @Nullable
+    private K myKey = null;
+    private int myHash = 0;
 
     private void set(K key, int hash) {
       myKey = key;
@@ -167,6 +173,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       myKey = null;
     }
 
+    @Nullable
     @Override
     public K get() {
       return myKey;
@@ -199,6 +206,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
 ///////////////////////////////////
 
+  @Nullable
   @Override
   public V get(Object key) {
     HardKey<K, V> hardKey = createHardKey(key);
@@ -218,6 +226,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     throw RefValueHashMap.pointlessContainsValue();
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     processQueues();
@@ -235,6 +244,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     processQueues();
@@ -278,6 +288,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     throw new UnsupportedOperationException();
   }
 
+  @Nullable
   @Override
   public boolean remove(Object key, Object value) {
     processQueues();
@@ -291,6 +302,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     return result;
   }
 
+  @Nullable
   @Override
   public V putIfAbsent(K key, V value) {
     KeyReference<K, V> keyRef = createKeyReference(key, value);
@@ -309,6 +321,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
+  @Nullable
   @Override
   public boolean replace(K key, V oldValue, V newValue) {
     processQueues();
@@ -320,6 +333,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     return myMap.replace(oldKeyReference, oldValueReference, newValueReference);
   }
 
+  @Nullable
   @Override
   public V replace(K key, V value) {
     processQueues();

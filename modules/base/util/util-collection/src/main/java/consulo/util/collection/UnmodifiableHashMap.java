@@ -24,11 +24,15 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     private final HashingStrategy<K> strategy;
     private final Object[] data;
+    @Nullable
     private final K k1, k2, k3;
+    @Nullable
     private final V v1, v2, v3;
     private final int size;
-    private Set<K> keySet;
-    private Collection<V> values;
+    @Nullable
+    private transient Set<K> keySet = null;
+    @Nullable
+    private transient Collection<V> values = null;
 
     /**
      * Returns an empty {@code UnmodifiableHashMap} with canonical equals/hashCode strategy.
@@ -321,7 +325,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null, newSize);
     }
 
-    private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
+    private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         insertPos = ~insertPos;
         assert insertPos >= 0;
@@ -329,7 +333,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         data[insertPos + 1] = v;
     }
 
-    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
+    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         boolean replacing = insertPos >= 0;
         insertPos = replacing ? insertPos : ~insertPos;
@@ -401,6 +405,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return false;
     }
 
+    @Nullable
     @Override
     public V getOrDefault(Object key, V defaultValue) {
         if (key == null) {
@@ -541,6 +546,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             }
         }
 
+        @Nullable
         @Override
         public E next() {
             if (!hasNext()) {
@@ -556,8 +562,10 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             return tableElement(offset);
         }
 
+        @Nullable
         abstract E fieldElement(int offset);
 
+        @Nullable
         abstract E tableElement(int offset);
     }
 
@@ -570,7 +578,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
                     return new MyIterator<K>() {
                         @Override
                         K fieldElement(int offset) {
-                            return offset == 0 ? k1 : offset == 1 ? k2 : k3;
+                            return Objects.requireNonNull(offset == 0 ? k1 : offset == 1 ? k2 : k3);
                         }
 
                         @Override
@@ -622,11 +630,13 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
                 @Override
                 public Iterator<V> iterator() {
                     return new MyIterator<V>() {
+                        @Nullable
                         @Override
                         V fieldElement(int offset) {
                             return offset == 0 ? v1 : offset == 1 ? v2 : v3;
                         }
 
+                        @Nullable
                         @Override
                         @SuppressWarnings("unchecked")
                         V tableElement(int offset) {

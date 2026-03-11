@@ -20,7 +20,9 @@ public class MultiMap<K, V> implements Serializable {
   private static final long serialVersionUID = -2632269270151455493L;
 
   protected final Map<K, Collection<V>> myMap;
-  private Collection<V> values;
+
+  @Nullable
+  private Collection<V> values = null;
 
   public MultiMap() {
     myMap = new HashMap<>();
@@ -141,7 +143,7 @@ public class MultiMap<K, V> implements Serializable {
     return collection;
   }
 
-  public final Collection<V> getModifiable(K key) {
+  public final Collection<V> getModifiable(@Nullable K key) {
     return myMap.computeIfAbsent(key, __ -> createCollection());
   }
 

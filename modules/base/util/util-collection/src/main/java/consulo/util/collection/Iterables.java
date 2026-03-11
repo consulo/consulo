@@ -47,6 +47,8 @@ public class Iterables {
             public Iterator<T> iterator() {
                 return new Iterator<>() {
                     private final Iterator<? extends T> impl = collection.iterator();
+
+                    @Nullable
                     private T next = findNext();
 
                     @Override
@@ -54,6 +56,7 @@ public class Iterables {
                         return next != null;
                     }
 
+                    @Nullable
                     @Override
                     public T next() {
                         T result = next;

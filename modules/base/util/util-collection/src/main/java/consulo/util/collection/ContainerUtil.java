@@ -156,6 +156,7 @@ public class ContainerUtil {
     }
 
     @Contract(pure = true)
+    @Nullable
     public static <T, U extends T> U findInstance(Iterable<? extends T> iterable, Class<? extends U> aClass) {
         return findInstance(iterable.iterator(), aClass);
     }
@@ -166,6 +167,7 @@ public class ContainerUtil {
         return findInstance(Arrays.asList(array), aClass);
     }
 
+    @Nullable
     public static <T, U extends T> U findInstance(Iterator<? extends T> iterator, Class<? extends U> aClass) {
         //noinspection unchecked
         return (U)find(iterator, FilteringIterator.instanceOf(aClass));
@@ -890,12 +892,12 @@ public class ContainerUtil {
     }
 
     @Contract(value = "null -> true", pure = true)
-    public static <T> boolean isEmpty(Collection<T> collection) {
+    public static <T> boolean isEmpty(@Nullable Collection<T> collection) {
         return collection == null || collection.isEmpty();
     }
 
     @Contract(value = "null -> true", pure = true)
-    public static boolean isEmpty(Map map) {
+    public static boolean isEmpty(@Nullable Map map) {
         return map == null || map.isEmpty();
     }
 
@@ -932,7 +934,9 @@ public class ContainerUtil {
         Predicate<? super T> filter
     ) {
         return new Iterator<>() {
-            T next;
+            @Nullable
+            T next = null;
+
             boolean hasNext;
 
             {
@@ -956,6 +960,7 @@ public class ContainerUtil {
                 }
             }
 
+            @Nullable
             @Override
             public T next() {
                 T result;
@@ -1169,6 +1174,7 @@ public class ContainerUtil {
     }
 
     @Contract(pure = true)
+    @Nullable
     public static <T> T getFirstItem(@Nullable Collection<T> items, @Nullable T defaultResult) {
         return items == null || items.isEmpty() ? defaultResult : items.iterator().next();
     }
@@ -1407,11 +1413,13 @@ public class ContainerUtil {
      * @return the only collection element or null
      */
     @Contract(pure = true)
+    @Nullable
     public static <T> T getOnlyItem(@Nullable Collection<? extends T> items) {
         return getOnlyItem(items, null);
     }
 
     @Contract(pure = true)
+    @Nullable
     public static <T> T getOnlyItem(@Nullable Collection<? extends T> items, @Nullable T defaultResult) {
         return items == null || items.size() != 1 ? defaultResult : items.iterator().next();
     }

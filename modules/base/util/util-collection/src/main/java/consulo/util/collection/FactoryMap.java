@@ -32,6 +32,7 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use map#computeIfAbsent() method")
 public abstract class FactoryMap<K, V> implements Map<K, V> {
+  @Nullable
   private Map<K, V> myMap;
 
   /**
@@ -52,6 +53,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   @Nullable
   protected abstract V create(K key);
 
+  @Nullable
   @Override
   public V get(Object key) {
     Map<K, V> map = getMap();
@@ -78,13 +80,13 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return (T)ObjectUtil.NULL;
   }
 
-  private static <T> T notNull(Object key) {
+  private static <T> T notNull(@Nullable Object key) {
     //noinspection unchecked
     return key == null ? FAKE_NULL() : (T)key;
   }
 
   @Nullable
-  private static <T> T nullize(T value) {
+  private static <T> T nullize(@Nullable T value) {
     return value == FAKE_NULL() ? null : value;
   }
 
@@ -93,6 +95,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return getMap().containsKey(notNull(key));
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     K k = notNull(key);
@@ -101,6 +104,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return nullize(v);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     V v = getMap().remove(key);
@@ -112,7 +116,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     Set<K> ts = getMap().keySet();
     K nullKey = FAKE_NULL();
     if (ts.contains(nullKey)) {
-      java.util.HashSet<K> hashSet = new HashSet<>(ts);
+      Set<K> hashSet = new HashSet<>(ts);
       hashSet.remove(nullKey);
       hashSet.add(null);
       return hashSet;

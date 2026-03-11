@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,6 +40,7 @@ public class WeakList<T> extends UnsafeWeakList<T> {
     super(array);
   }
 
+  @Nullable
   @Override
   public T get(int index) {
     synchronized (myArray) {
@@ -46,49 +49,50 @@ public class WeakList<T> extends UnsafeWeakList<T> {
   }
 
   @Override
-  public boolean add(T element) {
+  public boolean add(@Nullable T element) {
     synchronized (myArray) {
       return super.add(element);
     }
   }
 
   @Override
-  public boolean contains(Object o) {
+  public boolean contains(@Nullable Object o) {
     synchronized (myArray) {
       return super.contains(o);
     }
   }
 
   @Override
-  public boolean addIfAbsent(T element) {
+  public boolean addIfAbsent(@Nullable T element) {
     synchronized (myArray) {
       return super.addIfAbsent(element);
     }
   }
 
   @Override
-  public void add(int index, T element) {
+  public void add(int index, @Nullable T element) {
     synchronized (myArray) {
       super.add(index, element);
     }
   }
 
+  @Nullable
   @Override
-  public T set(int index, T element) {
+  public T set(int index, @Nullable T element) {
     synchronized (myArray) {
       return super.set(index, element);
     }
   }
 
   @Override
-  public int indexOf(Object o) {
+  public int indexOf(@Nullable Object o) {
     synchronized (myArray) {
       return super.indexOf(o);
     }
   }
 
   @Override
-  public int lastIndexOf(Object o) {
+  public int lastIndexOf(@Nullable Object o) {
     synchronized (myArray) {
       return super.lastIndexOf(o);
     }
@@ -115,6 +119,7 @@ public class WeakList<T> extends UnsafeWeakList<T> {
     }
   }
 
+  @Nullable
   @Override
   public T remove(int index) {
     synchronized (myArray) {

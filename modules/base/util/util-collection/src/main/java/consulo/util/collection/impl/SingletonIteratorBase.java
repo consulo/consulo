@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.impl;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -26,6 +28,7 @@ public abstract class SingletonIteratorBase<T> implements Iterator<T> {
     return !myVisited;
   }
 
+  @Nullable
   @Override
   public final T next() {
     if (myVisited) {
@@ -38,5 +41,6 @@ public abstract class SingletonIteratorBase<T> implements Iterator<T> {
 
   protected abstract void checkCoModification();
 
+  @Nullable
   protected abstract T getElement();
 }

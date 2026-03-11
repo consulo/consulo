@@ -2180,8 +2180,8 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
      * Advances if possible, returning next valid node, or null if none.
      */
     final Node<V> advance() {
-      Node<V> e;
-      if ((e = next) != null) {
+      Node<V> e = next;
+      if (e != null) {
         e = e.next;
       }
       for (; ; ) {

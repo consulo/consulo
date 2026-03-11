@@ -18,6 +18,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.Maps;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -51,6 +52,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return processed;
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
@@ -58,6 +60,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return ref.get();
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     processQueue();
@@ -67,6 +70,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
 
   public abstract ValueReference<K, V> createValueReference(K key, V value);
 
+  @Nullable
   @Override
   public V putIfAbsent(K key, V value) {
     ValueReference<K, V> newRef = createValueReference(key, value);
@@ -91,12 +95,14 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return myMap.remove(key, createValueReference((K)key, (V)value));
   }
 
+  @Nullable
   @Override
   public boolean replace(K key, V oldValue, V newValue) {
     processQueue();
     return myMap.replace(key, createValueReference(key, oldValue), createValueReference(key, newValue));
   }
 
+  @Nullable
   @Override
   public V replace(K key, V value) {
     processQueue();
@@ -104,6 +110,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return ref == null ? null : ref.get();
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     processQueue();

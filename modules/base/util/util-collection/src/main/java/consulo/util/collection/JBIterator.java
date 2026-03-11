@@ -20,10 +20,7 @@ import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -60,6 +57,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
 
   static <E> JBIterator<E> wrap(final Iterator<E> it) {
     return new JBIterator<E>() {
+      @Nullable
       @Override
       protected E nextImpl() {
         return it.hasNext() ? it.next() : stop();
@@ -77,6 +75,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   /**
    * Returns the next element if any; otherwise calls stop() or skip().
    */
+  @Nullable
   protected abstract E nextImpl();
 
   /**
@@ -137,7 +136,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     if (myCurrent == Do.INIT) {
       throw new NoSuchElementException();
     }
-    return (E)myCurrent;
+    return (E) Objects.requireNonNull(myCurrent);
   }
 
   private void peekNext() {
@@ -150,14 +149,14 @@ public abstract class JBIterator<E> implements Iterator<E> {
         o = myNext = Do.INIT;
         if (op.impl == null) {
           // rollback all prepended takeWhile conditions if nextImpl() votes SKIP
-          for (Op op2 = myFirstOp; op2.impl instanceof CountDown; op2 = op2.nextOp) {
+          for (Op op2 = myFirstOp; op2 != null && op2.impl instanceof CountDown; op2 = op2.nextOp) {
             ((CountDown)op2.impl).cur ++;
           }
         }
         op = null;
       }
     }
-    myNext = o;
+    myNext = Objects.requireNonNull(o);
   }
 
   public final <T> JBIterator<T> map(Function<? super E, T> function) {
@@ -240,14 +239,18 @@ public abstract class JBIterator<E> implements Iterator<E> {
   };
 
   private static class Op<T> {
+    @Nullable
     final T impl;
-    Op nextOp;
 
-    public Op(T impl) {
+    @Nullable
+    Op nextOp = null;
+
+    public Op(@Nullable T impl) {
       this.impl = impl;
     }
 
-    Object apply(Object o) {
+    @Nullable
+    Object apply(@Nullable Object o) {
       throw new UnsupportedOperationException();
     }
 
@@ -275,9 +278,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(function);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.apply((E)o);
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).apply((E)o);
     }
   }
 
@@ -286,20 +290,22 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.test((E)o) ? o : skip();
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).test((E)o) ? o : skip();
     }
   }
 
   private class WhileOp<E> extends Op<Predicate<? super E>> {
-
     WhileOp(Predicate<? super E> condition) {
       super(condition);
     }
+
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.test((E)o) ? o : stop();
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).test((E)o) ? o : stop();
     }
   }
 
@@ -310,9 +316,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      if (active && impl.test((E)o)) return skip();
+    Object apply(@Nullable Object o) {
+      if (active && Objects.requireNonNull(impl).test((E)o)) return skip();
       active = false;
       return o;
     }
@@ -323,8 +330,9 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
+    Object apply(@Nullable Object o) {
       return o;
     }
   }
@@ -336,9 +344,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      JBIterator<?> it = (JBIterator<?>)o;
+    Object apply(@Nullable Object o) {
+      JBIterator<?> it = (JBIterator<?>)Objects.requireNonNull(o);
       return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
     }
 
