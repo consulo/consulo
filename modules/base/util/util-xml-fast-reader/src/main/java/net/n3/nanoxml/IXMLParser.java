@@ -29,7 +29,8 @@
 package net.n3.nanoxml;
 
 
-import java.io.IOException;
+import org.jspecify.annotations.Nullable;
+
 
 
 /**
@@ -54,6 +55,7 @@ public interface IXMLParser
     *
     * @return the reader.
     */
+   @Nullable
    public IXMLReader getReader();
 
 
@@ -70,6 +72,7 @@ public interface IXMLParser
     *
     * @return the builder.
     */
+   @Nullable
    public IXMLBuilder getBuilder();
 
 
@@ -86,6 +89,7 @@ public interface IXMLParser
     *
     * @return the validator.
     */
+   @Nullable
    public IXMLValidator getValidator();
 
 
@@ -118,6 +122,7 @@ public interface IXMLParser
     * @throws net.n3.nanoxml.XMLException
     *		if an error occurred reading or parsing the data
     */
+   @Nullable
    public Object parse()
       throws XMLException;
 

@@ -99,6 +99,7 @@ public class ValidatorPlugin
     *
     * @return the entity resolver.
     */
+   @Nullable
    public IXMLEntityResolver getParameterEntityResolver()
    {
       return this.getRequiredDelegate().getParameterEntityResolver();

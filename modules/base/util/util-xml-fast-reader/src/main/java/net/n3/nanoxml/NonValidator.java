@@ -29,13 +29,11 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Reader;
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Stack;
+import java.util.*;
 
 
 /**
@@ -96,6 +94,7 @@ public class NonValidator
     *
     * @return the entity resolver.
     */
+   @Nullable
    public IXMLEntityResolver getParameterEntityResolver()
    {
       return this.parameterEntityResolver;
@@ -511,7 +510,7 @@ public class NonValidator
       }
 
       if (systemID != null) {
-         entityResolver.addExternalEntity(key, publicID, systemID);
+         entityResolver.addExternalEntity(key, Objects.requireNonNull(publicID), systemID);
       }
    }
 

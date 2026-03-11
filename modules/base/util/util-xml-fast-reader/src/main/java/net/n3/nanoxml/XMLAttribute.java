@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An attribute in an XML element. This is an internal class.
  *
@@ -55,6 +57,7 @@ class XMLAttribute
    /**
     * The namespace URI of the attribute.
     */
+   @Nullable
    private String namespace;
 
 
@@ -81,7 +84,7 @@ class XMLAttribute
     */
    XMLAttribute(String fullName,
                 String name,
-                String namespace,
+                @Nullable String namespace,
                 String value,
                 String type)
    {
@@ -114,6 +117,7 @@ class XMLAttribute
    /**
     * Returns the namespace of the attribute.
     */
+   @Nullable
    String getNamespace()
    {
       return this.namespace;

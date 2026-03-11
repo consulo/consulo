@@ -175,13 +175,15 @@ public class NanoXmlUtil {
   }
 
   public static class EmptyValidator extends NonValidator {
-    private IXMLEntityResolver myParameterEntityResolver;
+    @Nullable
+    private IXMLEntityResolver myParameterEntityResolver = null;
 
     @Override
     public void setParameterEntityResolver(IXMLEntityResolver resolver) {
       myParameterEntityResolver = resolver;
     }
 
+    @Nullable
     @Override
     public IXMLEntityResolver getParameterEntityResolver() {
       return myParameterEntityResolver;
@@ -240,6 +242,7 @@ public class NanoXmlUtil {
     public void addExternalEntity(String name, String publicID, String systemID) {
     }
 
+    @Nullable
     @Override
     public Reader getEntity(IXMLReader xmlReader, String name) {
       return new StringReader("");
@@ -302,36 +305,39 @@ public class NanoXmlUtil {
     }
 
     @Override
-    public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
+    public void startElement(String name, @Nullable String nsPrefix, @Nullable String nsURI, String systemID, int lineNr) throws Exception {
       myRootTagName = name;
       myNamespace = nsURI;
       throw ParserStoppedXmlException.INSTANCE;
     }
 
     @Override
-    public void addAttribute(String key, String nsPrefix, String nsURI, String value, String type) {
+    public void addAttribute(String key, @Nullable String nsPrefix, @Nullable String nsURI, String value, String type) {
     }
 
     @Override
-    public void elementAttributesProcessed(String name, String nsPrefix, String nsURI) {
+    public void elementAttributesProcessed(String name, @Nullable String nsPrefix, @Nullable String nsURI) {
     }
 
     @Override
-    public void endElement(String name, String nsPrefix, String nsURI) {
+    public void endElement(String name, @Nullable String nsPrefix, @Nullable String nsURI) {
     }
 
     @Override
     public void addPCData(Reader reader, String systemID, int lineNr) {
     }
 
+    @Nullable
     public String getNamespace() {
       return myNamespace;
     }
 
+    @Nullable
     public String getRootTagName() {
       return myRootTagName;
     }
 
+    @Nullable
     @Override
     public String getResult() {
       return myRootTagName;

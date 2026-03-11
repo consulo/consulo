@@ -19,12 +19,14 @@ import consulo.util.socketConnection.AbstractRequest;
 import consulo.util.socketConnection.AbstractResponse;
 import consulo.util.socketConnection.ConnectionStatus;
 import consulo.util.socketConnection.RequestResponseExternalizerFactory;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -33,7 +35,8 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class ServerSocketConnectionImpl<Request extends AbstractRequest, Response extends AbstractResponse> extends SocketConnectionBase<Request, Response> {
   private static final Logger LOG = LoggerFactory.getLogger(ServerSocketConnectionImpl.class);
-  private ServerSocket myServerSocket;
+  @Nullable
+  private ServerSocket myServerSocket = null;
   private final int myDefaultPort;
   private final int myConnectionAttempts;
   private final Executor myExecutor;
@@ -75,6 +78,7 @@ public class ServerSocketConnectionImpl<Request extends AbstractRequest, Respons
   }
 
   private void waitForConnection() throws IOException {
+    Objects.requireNonNull(myServerSocket);
     addThreadToInterrupt();
     try {
       setStatus(ConnectionStatus.WAITING_FOR_CONNECTION, null);
