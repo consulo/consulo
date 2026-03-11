@@ -29,11 +29,10 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 
 /**
@@ -62,48 +61,54 @@ public class XMLElement implements IXMLElement, Serializable {
     /**
      * The parent element.
      */
+    @Nullable
     private IXMLElement parent;
 
 
     /**
      * The attributes of the element.
      */
-    private Vector attributes;
+    private final Vector attributes = new Vector();
 
 
     /**
      * The child elements.
      */
-    private Vector children;
+    private final Vector children = new Vector(8);
 
 
     /**
      * The name of the element.
      */
+    @Nullable
     private String name;
 
 
     /**
      * The full name of the element.
      */
+    @Nullable
     private String fullName;
 
 
     /**
      * The namespace URI.
      */
+    @Nullable
     private String namespace;
 
 
     /**
      * The content of the element.
      */
+    @Nullable
     private String content;
 
 
     /**
      * The system ID of the source data where this element is located.
      */
+    @Nullable
     private String systemID;
 
 
@@ -165,17 +170,17 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param systemID  the system ID of the XML data where the element starts.
      * @param lineNr    the line in the XML data where the element starts.
      */
-    public XMLElement(String fullName,
-                      String namespace,
-                      String systemID,
-                      int    lineNr) {
-        this.attributes = new Vector();
-        this.children = new Vector(8);
+    public XMLElement(
+        @Nullable String fullName,
+        @Nullable String namespace,
+        @Nullable String systemID,
+        int lineNr
+    ) {
         this.fullName = fullName;
         if (namespace == null) {
             this.name = fullName;
         } else {
-            int index = fullName.indexOf(':');
+            int index = Objects.requireNonNull(fullName).indexOf(':');
             if (index >= 0) {
                 this.name = fullName.substring(index + 1);
             } else {
@@ -247,23 +252,6 @@ public class XMLElement implements IXMLElement, Serializable {
                                      String systemID,
                                      int    lineNr) {
         return new XMLElement(fullName, namespace, systemID, lineNr);
-    }
-
-
-    /**
-     * Cleans up the object when it's destroyed.
-     */
-    protected void finalize() throws Throwable {
-        this.attributes.clear();
-        this.attributes = null;
-        this.children = null;
-        this.fullName = null;
-        this.name = null;
-        this.namespace = null;
-        this.content = null;
-        this.systemID = null;
-        this.parent = null;
-        super.finalize();
     }
 
 

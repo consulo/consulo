@@ -18,6 +18,9 @@ package consulo.util.concurrent.coroutine.internal;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,6 +30,8 @@ import java.util.function.Consumer;
  * @since 2026-01-29
  */
 public class AutoClosableRegister {
+    private static final Logger LOG = LoggerFactory.getLogger(AutoClosableRegister.class);
+
     public static final Key<AutoClosableRegister> KEY = Key.create(AutoClosableRegister.class);
 
     private List<AutoCloseable> myCloseables = Lists.newLockFreeCopyOnWriteList();
@@ -40,13 +45,18 @@ public class AutoClosableRegister {
         register.myCloseables.add(autoCloseable);
     }
 
-    public void closeAll(Consumer<Throwable> errorHandler) {
+    public void closeAll(@Nullable Consumer<Throwable> errorHandler) {
         for (AutoCloseable closeable : myCloseables) {
             try {
                 closeable.close();
             }
             catch (Exception e) {
-                errorHandler.accept(e);
+                if (errorHandler != null) {
+                    errorHandler.accept(e);
+                }
+                else {
+                    LOG.error("Exception while closing", e);
+                }
             }
         }
     }

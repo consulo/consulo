@@ -19,7 +19,9 @@ package consulo.util.concurrent.coroutine.step;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -104,8 +106,11 @@ public class Loop<T> extends CoroutineStep<T, T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<T> previousExecution,
-		CoroutineStep<T, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<T> previousExecution,
+		@Nullable CoroutineStep<T, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution,
 			i -> loopAsync(i, nextStep, continuation));
 	}
@@ -113,8 +118,9 @@ public class Loop<T> extends CoroutineStep<T, T> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected T execute(T input, Continuation<?> continuation) {
+	protected T execute(@Nullable T input, Continuation<?> continuation) {
 		while (pCondition.test(input, continuation)) {
 			input = rLoopedStep.runBlocking(input, continuation);
 		}
@@ -131,8 +137,7 @@ public class Loop<T> extends CoroutineStep<T, T> {
 	 *                      FALSE
 	 * @param rContinuation The continuation of the execution
 	 */
-	private void loopAsync(T rInput, CoroutineStep<T, ?> rNextStep,
-		Continuation<?> rContinuation) {
+	private void loopAsync(T rInput, @Nullable CoroutineStep<T, ?> rNextStep, Continuation<?> rContinuation) {
 		if (pCondition.test(rInput, rContinuation)) {
 			CompletableFuture<T> fLoopIteration =
 				CompletableFuture.supplyAsync(() -> rInput, rContinuation);

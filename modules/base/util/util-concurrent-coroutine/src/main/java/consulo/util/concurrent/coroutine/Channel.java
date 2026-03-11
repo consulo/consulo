@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -200,7 +201,7 @@ public class Channel<T> implements AutoCloseable {
 	 *
 	 * @param value The value to send
 	 */
-	public void sendBlocking(T value) {
+	public void sendBlocking(@Nullable T value) {
 		accessLock.runLocked(() -> {
 			checkClosed();
 

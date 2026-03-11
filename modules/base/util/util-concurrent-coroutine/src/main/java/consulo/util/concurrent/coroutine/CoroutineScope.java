@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -475,7 +476,8 @@ public class CoroutineScope extends CoroutineEnvironment {
 
         private final Function<? super CoroutineScope, T> getResult;
 
-        private Exception scopeCodeError;
+        @Nullable
+        private Exception scopeCodeError = null;
 
         /**
          * Creates a new instance for a certain scope.
@@ -509,6 +511,7 @@ public class CoroutineScope extends CoroutineEnvironment {
             return terminated;
         }
 
+        @Nullable
         @Override
         public T get() {
             scope.await();
@@ -516,6 +519,7 @@ public class CoroutineScope extends CoroutineEnvironment {
             return getImpl();
         }
 
+        @Nullable
         @Override
         public T get(long timeout, TimeUnit unit) {
             scope.await(timeout, unit);
@@ -538,6 +542,7 @@ public class CoroutineScope extends CoroutineEnvironment {
          *
          * @return The scope result
          */
+        @Nullable
         private T getImpl() {
             if (scopeCodeError != null) {
                 throw new CoroutineScopeException(scopeCodeError,

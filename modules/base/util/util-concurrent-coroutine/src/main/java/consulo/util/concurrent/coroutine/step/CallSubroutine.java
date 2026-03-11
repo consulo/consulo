@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.concurrent.coroutine.Subroutine;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -60,8 +61,11 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<I> previousExecution,
-		CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<I> previousExecution,
+		@Nullable CoroutineStep<O, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		// subroutine needs to be created on invocation because the return step
 		// may change between invocations
 		new Subroutine<>(coroutine, nextStep).runAsync(previousExecution,
@@ -71,8 +75,9 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected O execute(I input, Continuation<?> continuation) {
+	protected O execute(@Nullable I input, Continuation<?> continuation) {
 		return new Subroutine<>(coroutine,
 			apply(Function.identity())).runBlocking(input, continuation);
 	}

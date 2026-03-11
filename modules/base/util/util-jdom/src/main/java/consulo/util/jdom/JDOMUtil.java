@@ -232,6 +232,7 @@ public class JDOMUtil {
   }
 
   private static class EmptyTextFilter extends AbstractFilter<Content> {
+    @Nullable
     @Override
     public Content filter(Object obj) {
       if (obj instanceof Text && CharArrayUtil.containsOnlyWhiteSpaces(((Text)obj).getText())) {
@@ -345,16 +346,19 @@ public class JDOMUtil {
   }
 
   @Contract("null -> null; !null -> !null")
+  @Nullable
   public static Element load(Reader reader) throws JDOMException, IOException {
     return reader == null ? null : loadDocument(reader).detachRootElement();
   }
 
   @Contract("null -> null; !null -> !null")
+  @Nullable
   public static Element load(URL url) throws JDOMException, IOException {
     return url == null ? null : loadDocument(url).detachRootElement();
   }
 
   @Contract("null -> null; !null -> !null")
+  @Nullable
   public static Element load(InputStream stream) throws JDOMException, IOException {
     return stream == null ? null : loadDocument(stream).detachRootElement();
   }
