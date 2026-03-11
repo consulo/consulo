@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 
 import java.util.*;
 
+import consulo.util.jdom.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
