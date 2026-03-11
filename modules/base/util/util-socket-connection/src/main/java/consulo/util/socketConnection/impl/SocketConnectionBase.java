@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
@@ -144,7 +145,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   @Override
   public ConnectionState getState() {
     synchronized (myLock) {
-      return myState.get();
+      return Objects.requireNonNull(myState.get());
     }
   }
 

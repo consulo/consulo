@@ -29,6 +29,8 @@
 package consulo.util.xml.fastReader;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Reader;
 
 
@@ -87,7 +89,7 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    * @see #endElement
    */
-  public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception;
+  public void startElement(String name, @Nullable String nsPrefix, @Nullable String nsURI, String systemID, int lineNr) throws Exception;
 
 
   /**
@@ -105,7 +107,7 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    *                 "CDATA" is returned.
    * @throws java.lang.Exception If an exception occurred while processing the event.
    */
-  public void addAttribute(String key, String nsPrefix, String nsURI, String value, String type) throws Exception;
+  public void addAttribute(String key, @Nullable String nsPrefix, @Nullable String nsURI, String value, String type) throws Exception;
 
 
   /**
@@ -122,7 +124,7 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @see #startElement
    * @see #addAttribute
    */
-  public void elementAttributesProcessed(String name, String nsPrefix, String nsURI) throws Exception;
+  public void elementAttributesProcessed(String name, @Nullable String nsPrefix, @Nullable String nsURI) throws Exception;
 
 
   /**
@@ -137,7 +139,7 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    * @see #startElement
    */
-  public void endElement(String name, String nsPrefix, String nsURI) throws Exception;
+  public void endElement(String name, @Nullable String nsPrefix, @Nullable String nsURI) throws Exception;
 
 
   /**
@@ -166,6 +168,7 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    * @see net.n3.nanoxml.IXMLParser#parse
    */
+  @Nullable
   public Object getResult() throws Exception;
 
 }

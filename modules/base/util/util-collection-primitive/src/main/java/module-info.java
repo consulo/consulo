@@ -1,9 +1,11 @@
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
+@NullMarked
 module consulo.util.collection.primitive {
   requires consulo.util.collection;
   requires consulo.util.lang;

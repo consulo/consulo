@@ -29,9 +29,12 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Hashtable;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Map;
 
 
 /**
@@ -47,33 +50,13 @@ public class XMLEntityResolver
    /**
     * The entities.
     */
-   private Hashtable entities;
-
-
-   /**
-    * Initializes the resolver.
-    */
-   public XMLEntityResolver()
-   {
-      this.entities = new Hashtable();
-      this.entities.put("amp", "&#38;");
-      this.entities.put("quot", "&#34;");
-      this.entities.put("apos", "&#39;");
-      this.entities.put("lt", "&#60;");
-      this.entities.put("gt", "&#62;");
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.entities.clear();
-      this.entities = null;
-      super.finalize();
-   }
+   private final Hashtable entities = new Hashtable(Map.of(
+       "amp", "&#38;",
+       "quot", "&#34;",
+       "apos", "&#39;",
+       "lt", "&#60;",
+       "gt", "&#62;"
+   ));
 
 
    /**
@@ -116,6 +99,7 @@ public class XMLEntityResolver
     *
     * @return the reader, or null if the entity could not be resolved.
     */
+   @Nullable
    public Reader getEntity(IXMLReader xmlReader,
                            String     name)
       throws XMLParseException

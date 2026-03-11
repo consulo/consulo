@@ -17,6 +17,7 @@ package consulo.util.io;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.SLRUMap;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
     //}
   }
 
+  @Nullable
   public Handle<T> getIfCached(K key) {
     synchronized (myCacheLock) {
       Handle<T> value = myCache.get(key);

@@ -172,6 +172,7 @@ public class StdXMLParser implements IXMLParser
     * @throws net.n3.nanoxml.XMLException
     *		if an error occurred reading or parsing the data
     */
+   @Nullable
    public Object parse()
       throws XMLException
    {
@@ -244,7 +245,7 @@ public class StdXMLParser implements IXMLParser
     *     if something went wrong
     */
    protected void scanSomeTag(boolean    allowCDATA,
-                              String     defaultNamespace,
+                              @Nullable String defaultNamespace,
                               Properties namespaces)
       throws Exception
    {
@@ -344,18 +345,15 @@ public class StdXMLParser implements IXMLParser
    protected void processCDATA()
       throws Exception
    {
-      if (! XMLUtil.checkLiteral(this.reader, "CDATA[")) {
-         XMLUtil.errorExpectedInput(reader.getSystemID(),
-                                    reader.getLineNr(),
-                                    "<![[CDATA[");
+      @Nullable IXMLReader reader = Objects.requireNonNull(this.reader);
+      if (! XMLUtil.checkLiteral(reader, "CDATA[")) {
+         XMLUtil.errorExpectedInput(reader.getSystemID(), reader.getLineNr(), "<![[CDATA[");
       }
 
-      this.validator.PCDataAdded(this.reader.getSystemID(),
-                                 this.reader.getLineNr());
-      Reader reader = new CDATAReader(this.reader);
-      this.builder.addPCData(reader, this.reader.getSystemID(),
-                             this.reader.getLineNr());
-      reader.close();
+      Objects.requireNonNull(this.validator).PCDataAdded(reader.getSystemID(), reader.getLineNr());
+      Reader readerStream = new CDATAReader(reader);
+      Objects.requireNonNull(this.builder).addPCData(readerStream, reader.getSystemID(), reader.getLineNr());
+      readerStream.close();
    }
 
 
@@ -421,7 +419,7 @@ public class StdXMLParser implements IXMLParser
     * @throws java.lang.Exception
     *     if something went wrong
     */
-   protected void processElement(String     defaultNamespace,
+   protected void processElement(@Nullable String defaultNamespace,
                                  Properties namespaces)
       throws Exception
    {

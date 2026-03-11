@@ -143,7 +143,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param systemID the system ID of the XML data where the element starts.
      * @param lineNr   the line in the XML data where the element starts.
      */
-    public XMLElement(String fullName,
+    public XMLElement(@Nullable String fullName,
                       String systemID,
                       int    lineNr) {
         this(fullName, null, systemID, lineNr);
@@ -157,7 +157,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param namespace the namespace URI.
      */
     public XMLElement(String fullName,
-                      String namespace) {
+                      @Nullable String namespace) {
         this(fullName, namespace, null, NO_LINE);
     }
 
@@ -220,7 +220,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param systemID the system ID of the XML data where the element starts.
      * @param lineNr   the line in the XML data where the element starts.
      */
-    public IXMLElement createElement(String fullName,
+    public IXMLElement createElement(@Nullable String fullName,
                                      String systemID,
                                      int    lineNr) {
         return new XMLElement(fullName, systemID, lineNr);
@@ -234,7 +234,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param namespace the namespace URI.
      */
     public IXMLElement createElement(String fullName,
-                                     String namespace) {
+                                     @Nullable String namespace) {
         return new XMLElement(fullName, namespace);
     }
 
@@ -248,7 +248,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param lineNr    the line in the XML data where the element starts.
      */
     public IXMLElement createElement(String fullName,
-                                     String namespace,
+                                     @Nullable String namespace,
                                      String systemID,
                                      int    lineNr) {
         return new XMLElement(fullName, namespace, systemID, lineNr);
@@ -259,6 +259,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * Returns the parent element. This method returns null for the root
      * element.
      */
+    @Nullable
     public IXMLElement getParent() {
         return this.parent;
     }
@@ -270,6 +271,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the name, or null if the element only contains #PCDATA.
      */
+    @Nullable
     public String getFullName() {
         return this.fullName;
     }
@@ -280,6 +282,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the name, or null if the element only contains #PCDATA.
      */
+    @Nullable
     public String getName() {
         return this.name;
     }
@@ -291,6 +294,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @return the namespace, or null if no namespace is associated with the
      *         element.
      */
+    @Nullable
     public String getNamespace() {
         return this.namespace;
     }
@@ -316,7 +320,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param namespace the namespace URI, which may be null.
      */
     public void setName(String fullName,
-                        String namespace) {
+                        @Nullable String namespace) {
         int index = fullName.indexOf(':');
         if ((namespace == null) || (index < 0)) {
             this.name = fullName;
@@ -357,7 +361,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param child the non-null child to add.
      * @param index where to put the child.
      */
-    public void insertChild(IXMLElement child,
+    public void insertChild(@Nullable IXMLElement child,
                             int         index) {
         if (child == null) {
             throw new IllegalArgumentException("child must not be null");
@@ -471,6 +475,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the child element, or null if no such child was found.
      */
+    @Nullable
     public IXMLElement getFirstChildNamed(String name) {
         Enumeration<?> children = this.children.elements();
         while (children.hasMoreElements()) {
@@ -492,19 +497,14 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the child element, or null if no such child was found.
      */
+    @Nullable
     public IXMLElement getFirstChildNamed(String name,
-                                          String namespace) {
+                                          @Nullable String namespace) {
         Enumeration<?> children = this.children.elements();
         while (children.hasMoreElements()) {
             IXMLElement child = (IXMLElement) children.nextElement();
-            String str = child.getName();
-            boolean found = (str != null) && (str.equals(name));
-            str = child.getNamespace();
-            if (str == null) {
-                found &= (name == null);
-            } else {
-                found &= str.equals(namespace);
-            }
+            String childName = child.getName();
+            boolean found = childName != null && childName.equals(name) && Objects.equals(child.getNamespace(), namespace);
             if (found) {
                 return child;
             }
@@ -542,7 +542,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the non-null vector of child elements.
      */
-    public Vector getChildrenNamed(String name,
+    public Vector getChildrenNamed(@Nullable String name,
                                    String namespace) {
         Vector result = new Vector(this.children.size());
         Enumeration<?> children = this.children.elements();
@@ -572,6 +572,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the attribute, or null if the attribute does not exist.
      */
+    @Nullable
     private XMLAttribute findAttribute(String fullName) {
         Enumeration<?> c = this.attributes.elements();
         while (c.hasMoreElements()) {
@@ -592,8 +593,9 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the attribute, or null if the attribute does not exist.
      */
+    @Nullable
     private XMLAttribute findAttribute(String name,
-                                       String namespace) {
+                                       @Nullable String namespace) {
         Enumeration c = this.attributes.elements();
         while (c.hasMoreElements()) {
             XMLAttribute attr = (XMLAttribute) c.nextElement();
@@ -629,6 +631,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the value, or null if the attribute does not exist.
      */
+    @Nullable
     public String getAttribute(String name) {
         return this.getAttribute(name, null);
     }
@@ -642,8 +645,9 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the value, or defaultValue if the attribute does not exist.
      */
+    @Nullable
     public String getAttribute(String name,
-                               String defaultValue) {
+                               @Nullable String defaultValue) {
         XMLAttribute attr = this.findAttribute(name);
         if (attr == null) {
             return defaultValue;
@@ -662,9 +666,10 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the value, or defaultValue if the attribute does not exist.
      */
+    @Nullable
     public String getAttribute(String name,
-                               String namespace,
-                               String defaultValue) {
+                               @Nullable String namespace,
+                               @Nullable String defaultValue) {
         XMLAttribute attr = this.findAttribute(name, namespace);
         if (attr == null) {
             return defaultValue;
@@ -699,7 +704,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @return the value, or defaultValue if the attribute does not exist.
      */
     public int getAttribute(String name,
-                            String namespace,
+                            @Nullable String namespace,
                             int    defaultValue) {
         String value = this.getAttribute(name, namespace,
                                          Integer.toString(defaultValue));
@@ -714,6 +719,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the type, or null if the attribute does not exist.
      */
+    @Nullable
     public String getAttributeType(String name) {
         XMLAttribute attr = this.findAttribute(name);
         if (attr == null) {
@@ -731,6 +737,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the namespace, or null if there is none associated.
      */
+    @Nullable
     public String getAttributeNamespace(String name) {
         XMLAttribute attr = this.findAttribute(name);
         if (attr == null) {
@@ -749,8 +756,9 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the type, or null if the attribute does not exist.
      */
+    @Nullable
     public String getAttributeType(String name,
-                                   String namespace) {
+                                   @Nullable String namespace) {
         XMLAttribute attr = this.findAttribute(name, namespace);
         if (attr == null) {
             return null;
@@ -786,7 +794,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param value the non-null value of the attribute.
      */
     public void setAttribute(String fullName,
-                             String namespace,
+                             @Nullable String namespace,
                              String value) {
         int index = fullName.indexOf(':');
         String name = fullName.substring(index + 1);
@@ -823,15 +831,11 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param namespace the namespace URI of the attribute, which may be null.
      */
     public void removeAttribute(String name,
-                                String namespace) {
+                                @Nullable String namespace) {
         for (int i = 0; i < this.attributes.size(); i++) {
             XMLAttribute attr = (XMLAttribute) this.attributes.elementAt(i);
-            boolean found = attr.getName().equals(name);
-            if (namespace == null) {
-                found &= (attr.getNamespace() == null);
-            } else {
-                found &= attr.getNamespace().equals(namespace);
-            }
+            boolean found = attr.getName().equals(name)
+                & Objects.equals(attr.getNamespace(), namespace);
 
             if (found) {
                 this.attributes.removeElementAt(i);
@@ -873,7 +877,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @return true if the attribute exists.
      */
     public boolean hasAttribute(String name,
-                                String namespace) {
+                                @Nullable String namespace) {
         return this.findAttribute(name, namespace) != null;
     }
 
@@ -927,6 +931,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @see #getLineNr
      */
+    @Nullable
     public String getSystemID() {
         return this.systemID;
     }
@@ -953,6 +958,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @return the content.
      */
+    @Nullable
     public String getContent() {
         return this.content;
     }
@@ -964,7 +970,7 @@ public class XMLElement implements IXMLElement, Serializable {
      *
      * @param content the (possibly null) content.
      */
-    public void setContent(String content) {
+    public void setContent(@Nullable String content) {
         this.content = content;
     }
 
@@ -989,7 +995,7 @@ public class XMLElement implements IXMLElement, Serializable {
      * @param rawElement the element to compare to
      */
     public boolean equalsXMLElement(IXMLElement elt) {
-        if (! this.name.equals(elt.getName())) {
+        if (!Objects.equals(this.name, elt.getName())) {
             return false;
         }
         if (this.attributes.size() != elt.getAttributeCount()) {

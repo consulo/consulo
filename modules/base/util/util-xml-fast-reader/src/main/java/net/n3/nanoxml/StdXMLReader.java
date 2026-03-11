@@ -197,6 +197,7 @@ public class StdXMLReader
     *
     * @return the encoding, or null if no encoding has been specified.
     */
+   @Nullable
    protected String getEncoding(String str)
    {
       if (! str.startsWith("<?xml")) {
@@ -575,7 +576,7 @@ public class StdXMLReader
    public void setSystemID(String systemID)
       throws MalformedURLException
    {
-      this.currentReader.systemId = new URL(this.currentReader.systemId,
+      this.currentReader.systemId = new URL(Objects.requireNonNull(this.currentReader.systemId),
                                             systemID);
    }
 
@@ -596,7 +597,7 @@ public class StdXMLReader
     */
    public String getSystemID()
    {
-      return this.currentReader.systemId.toString();
+      return Objects.requireNonNull(this.currentReader.systemId).toString();
    }
 
 
@@ -605,7 +606,7 @@ public class StdXMLReader
     */
    public String getPublicID()
    {
-      return this.currentReader.publicId;
+      return Objects.requireNonNull(this.currentReader.publicId);
    }
 
 }

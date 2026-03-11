@@ -194,6 +194,7 @@ public class XMLException extends Exception
     * Returns the system ID of the XML data where the exception occurred.
     * If there is no system ID known, null is returned.
     */
+   @Nullable
    public String getSystemID()
    {
       return this.systemID;
@@ -214,6 +215,7 @@ public class XMLException extends Exception
     * Returns the encapsulated exception, or null if no exception is
     * encapsulated.
     */
+   @Nullable
    public Exception getException()
    {
       return this.encapsulatedException;
