@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
@@ -91,6 +90,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.TripleFunction;
 import consulo.virtualFileSystem.VirtualFile;
