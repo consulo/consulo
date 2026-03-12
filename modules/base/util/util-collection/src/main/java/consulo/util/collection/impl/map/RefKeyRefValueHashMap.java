@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.impl.map;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 
@@ -32,7 +34,8 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     V get();
   }
 
-  protected V dereference(ValueReference<K, ? extends V> reference) {
+  @Nullable
+  protected V dereference(@Nullable ValueReference<K, ? extends V> reference) {
     return reference == null ? null : reference.get();
   }
 
@@ -51,12 +54,14 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     return processed;
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
     return dereference(ref);
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     processQueue();
@@ -66,6 +71,7 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     return dereference(oldRef);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     processQueue();

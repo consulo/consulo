@@ -59,6 +59,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
 
     HashingStrategy<K> getStrategy();
 
+    @Nullable
     @Override
     default V get(Object key) {
         return getOrDefault(key, null);
@@ -69,8 +70,9 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * {@code ImmutableMap} with an additional element.
      */
     @Deprecated
+    @Nullable
     @Override
-    default V put(K key, V value) {
+    default V put(K key, @Nullable V value) {
         throw new UnsupportedOperationException();
     }
 
@@ -79,6 +81,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * {@code ImmutableMap} without some element.
      */
     @Deprecated
+    @Nullable
     @Override
     default V remove(Object key) {
         throw new UnsupportedOperationException();

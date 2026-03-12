@@ -3,6 +3,7 @@ package consulo.util.collection.impl.set;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -20,7 +21,7 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   private static class MyRef<T> extends WeakReference<T> {
     private final int myHashCode;
 
-    MyRef(T referent, ReferenceQueue<? super T> q) {
+    MyRef(T referent, @Nullable ReferenceQueue<? super T> q) {
       super(referent, q);
       myHashCode = referent.hashCode();
     }

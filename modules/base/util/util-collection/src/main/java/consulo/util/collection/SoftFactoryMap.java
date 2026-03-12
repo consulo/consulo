@@ -17,6 +17,7 @@
 package consulo.util.collection;
 
 import consulo.util.lang.ObjectUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,9 +27,10 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class SoftFactoryMap<T, V> {
   private final ConcurrentMap<T, V> myMap = Maps.newConcurrentWeakKeySoftValueHashMap();
 
-  protected abstract V create(T key);
+  protected abstract V create(@Nullable T key);
 
-  public final V get(T key) {
+  @Nullable
+  public final V get(@Nullable T key) {
     V v = myMap.get(key);
     if (v != null) {
       return v == ObjectUtil.NULL ? null : v;

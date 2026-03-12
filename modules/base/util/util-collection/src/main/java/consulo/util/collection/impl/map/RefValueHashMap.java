@@ -4,6 +4,7 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ref.SoftReference;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -50,12 +51,14 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
     }
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     MyReference<K, V> ref = myMap.get(key);
     return SoftReference.deref(ref);
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     processQueue();
@@ -64,6 +67,7 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
     return SoftReference.deref(oldRef);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     processQueue();

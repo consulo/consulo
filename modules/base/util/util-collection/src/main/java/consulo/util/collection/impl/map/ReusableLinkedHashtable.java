@@ -70,6 +70,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     protected final int[] myNextPosAndHash;
     private int mySize, myEndPos = -1;
 
+    @Nullable
     private Range myLargestRange = null;
 
     protected abstract class MyIterator<E> implements Iterator<E> {
@@ -234,7 +235,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public ReusableLinkedHashtable<K, V> copyRangeWithout(
         int maxSize,
         ReusableLinkedHashtableRange range,
-        Set<? extends K> excludeKeys,
+        @Nullable Set<? extends K> excludeKeys,
         int excludePos
     ) {
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
@@ -398,7 +399,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
      *
      * <p>Must be called only from hash-table recreation!</p>
      */
-    public ReusableLinkedHashtable<K, V> setValueAtPos(int keyPos, V value) {
+    public ReusableLinkedHashtable<K, V> setValueAtPos(int keyPos, @Nullable V value) {
         myData[keyPos + 1] = value;
 
         if (mySize == 1 || myEndPos == keyPos) {
@@ -553,7 +554,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         protected Range myPrevious, myNext;
         public final int myStartPos, myEndPos, mySize;
 
-        protected Range(ReusableLinkedHashtableUser referent, Range next, int size, int startPos, int endPos) {
+        protected Range(ReusableLinkedHashtableUser referent, @Nullable Range next, int size, int startPos, int endPos) {
             super(referent, QUEUE);
 
             synchronized (ReusableLinkedHashtable.this) {
@@ -641,7 +642,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
 
         @SuppressWarnings("unchecked")
-        public ReusableLinkedHashtable<K, V> copyWithout(int maxSize, Set<? extends K> excludeKeys, int excludePos) {
+        public ReusableLinkedHashtable<K, V> copyWithout(int maxSize, @Nullable Set<? extends K> excludeKeys, int excludePos) {
             return copyRangeWithout(maxSize, this, excludeKeys, excludePos);
         }
 

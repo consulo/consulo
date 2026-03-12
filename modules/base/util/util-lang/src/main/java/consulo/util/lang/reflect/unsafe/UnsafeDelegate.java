@@ -15,6 +15,7 @@
  */
 package consulo.util.lang.reflect.unsafe;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
@@ -80,11 +81,11 @@ public class UnsafeDelegate {
     return myUnsafe.getAndAddInt(o, offset, delta);
   }
 
-  public final boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) {
+  public final boolean compareAndSwapObject(Object o, long offset, @Nullable Object expected, Object x) {
     return myUnsafe.compareAndSwapObject(o, offset, expected, x);
   }
 
-  public void putObjectVolatile(Object o, long offset, Object x) {
+  public void putObjectVolatile(Object o, long offset, @Nullable Object x) {
     myUnsafe.putObjectVolatile(o, offset, x);
   }
 

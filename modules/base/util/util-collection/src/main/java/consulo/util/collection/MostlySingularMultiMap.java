@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -91,7 +92,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   }
 
   @SuppressWarnings("unchecked")
-  private boolean processValue(Predicate<? super V> p, Object v) {
+  private boolean processValue(Predicate<? super V> p, @Nullable Object v) {
     if (v instanceof MostlySingularMultiMap.ValueList) {
       for (Object o : (ValueList)v) {
         if (!p.test((V)o)) return false;
@@ -133,7 +134,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   }
 
   @SuppressWarnings("unchecked")
-  protected List<V> rawValueToCollection(Object value) {
+  protected List<V> rawValueToCollection(@Nullable Object value) {
     if (value == null) return Collections.emptyList();
 
     if (value instanceof MostlySingularMultiMap.ValueList) {

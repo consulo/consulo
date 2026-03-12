@@ -17,6 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIteratorBase;
+import org.jspecify.annotations.Nullable;
 
 
 import java.lang.reflect.Array;
@@ -29,12 +30,14 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     private int mySize;
+
+    @Nullable
     private Object myElem; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
 
     public SmartList() {
     }
 
-    public SmartList(E element) {
+    public SmartList(@Nullable E element) {
         add(element);
     }
 
@@ -50,7 +53,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
-    public SmartList(E... elements) {
+    public SmartList(@Nullable E... elements) {
         if (elements.length == 1) {
             add(elements[0]);
         }
@@ -60,6 +63,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
+    @Nullable
     @Override
     public E get(int index) {
         if (index < 0 || index >= mySize) {
@@ -68,11 +72,12 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         if (mySize == 1) {
             return (E) myElem;
         }
-        return (E) ((Object[]) myElem)[index];
+        Object[] array = (Object[]) Objects.requireNonNull(myElem);
+        return (E) array[index];
     }
 
     @Override
-    public boolean add(E e) {
+    public boolean add(@Nullable E e) {
         if (mySize == 0) {
             myElem = e;
         }
@@ -83,7 +88,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myElem = array;
         }
         else {
-            Object[] array = (Object[]) myElem;
+            Object[] array = (Object[]) Objects.requireNonNull(myElem);
             int oldCapacity = array.length;
             if (mySize >= oldCapacity) {
                 // have to resize
@@ -105,7 +110,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public void add(int index, E e) {
+    public void add(int index, @Nullable E e) {
         if (index < 0 || index > mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -149,8 +154,9 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         modCount++;
     }
 
+    @Nullable
     @Override
-    public E set(int index, E element) {
+    public E set(int index, @Nullable E element) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -161,13 +167,14 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myElem = element;
         }
         else {
-            Object[] array = (Object[]) myElem;
+            Object[] array = (Object[]) Objects.requireNonNull(myElem);
             oldValue = (E) array[index];
             array[index] = element;
         }
         return oldValue;
     }
 
+    @Nullable
     @Override
     public E remove(int index) {
         if (index < 0 || index >= mySize) {
@@ -180,7 +187,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myElem = null;
         }
         else {
-            Object[] array = (Object[]) myElem;
+            Object[] array = (Object[]) Objects.requireNonNull(myElem);
             oldValue = (E) array[index];
 
             if (mySize == 2) {
@@ -217,6 +224,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myInitialModCount = modCount;
         }
 
+        @Nullable
         @Override
         protected E getElement() {
             return (E) myElem;
@@ -283,7 +291,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         if (mySize < 2) {
             return;
         }
-        Object[] array = (Object[]) myElem;
+        Object[] array = (Object[]) Objects.requireNonNull(myElem);
         int oldCapacity = array.length;
         if (mySize < oldCapacity) {
             modCount++;
@@ -305,7 +313,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             }
         }
 
-        Object[] array = (Object[]) myElem;
+        Object[] array = (Object[]) Objects.requireNonNull(myElem);
         if (o == null) {
             for (int i = 0; i < mySize; i++) {
                 if (array[i] == null) {

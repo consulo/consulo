@@ -17,6 +17,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -35,7 +36,8 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private final ReferenceQueue<K> myReferenceQueue = new ReferenceQueue<>();
   private final HardKey myHardKeyInstance = new HardKey(); // "singleton"
   private final HashingStrategy<? super K> myStrategy;
-  private Set<Entry<K, V>> entrySet;
+  @Nullable
+  private transient Set<Entry<K, V>> entrySet = null;
   private boolean processingQueue;
 
   public RefHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
@@ -70,20 +72,23 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     return processingQueue;
   }
 
-  public static <K> boolean keyEqual(K k1, K k2, HashingStrategy<? super K> strategy) {
+  public static <K> boolean keyEqual(@Nullable K k1, @Nullable K k2, HashingStrategy<? super K> strategy) {
     return k1 == k2 || strategy.equals(k1, k2);
   }
 
   public interface Key<T> {
+    @Nullable
     T get();
   }
 
   protected abstract <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q);
 
   private class HardKey implements Key<K> {
-    private K myObject;
+    @Nullable
+    private K myObject = null;
     private int myHash;
 
+    @Nullable
     @Override
     public K get() {
       return myObject;
@@ -169,6 +174,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     throw RefValueHashMap.pointlessContainsValue();
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     if (key == null) return null;
@@ -254,7 +260,8 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     public Iterator<Entry<K, V>> iterator() {
       return new Iterator<Entry<K, V>>() {
         private final Iterator<Entry<Key<K>, V>> hashIterator = hashEntrySet.iterator();
-        private MyEntry<K, V> next;
+        @Nullable
+        private MyEntry<K, V> next = null;
 
         @Override
         public boolean hasNext() {
@@ -272,12 +279,13 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
           return false;
         }
 
+        @Nullable
         @Override
         public Entry<K, V> next() {
-          if (next == null && !hasNext()) {
+          Entry<K, V> e = next;
+          if (e == null && !hasNext()) {
             throw new NoSuchElementException();
           }
-          Entry<K, V> e = next;
           next = null;
           return e;
         }

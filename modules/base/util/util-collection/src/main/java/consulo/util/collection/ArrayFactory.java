@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.function.IntFunction;
 
 /**
@@ -24,7 +26,7 @@ import java.util.function.IntFunction;
 public interface ArrayFactory<T> extends IntFunction<T[]> {
   static <K> ArrayFactory<K> of(IntFunction<K[]> factory) {
     return new ArrayFactory<>() {
-      private K[] myEmptyArray;
+      private K @Nullable [] myEmptyArray = null;
 
       @Override
       public K[] create(int count) {

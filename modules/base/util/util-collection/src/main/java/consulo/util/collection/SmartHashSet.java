@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  * Null keys are NOT PERMITTED.
  */
 public final class SmartHashSet<T> extends HashSet<T> {
+  @Nullable
   private T theElement; // contains the only element if size() == 1
 
   public SmartHashSet() {
@@ -40,7 +41,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean contains(Object obj) {
+  public boolean contains(@Nullable Object obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       return Objects.equals(obj, theElement);
@@ -116,8 +117,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public
-  Iterator<T> iterator() {
+  public Iterator<T> iterator() {
     if (theElement == null) {
       return super.iterator();
     }
@@ -130,6 +130,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
         }
       }
 
+      @Nullable
       @Override
       protected T getElement() {
         return theElement;
