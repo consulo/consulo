@@ -29,6 +29,7 @@ public interface Tree<E> extends Component {
   static <E> Tree<E> create(TreeModel<E> model, Disposable disposable) {
     return create(null, model, disposable);
   }
+
   static <E> Tree<E> create(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
     return UIInternal.get()._Components_tree(rootValue, model, disposable);
   }
@@ -37,6 +38,7 @@ public interface Tree<E> extends Component {
   TreeNode<E> getSelectedNode();
 
   void expand(TreeNode<E> node);
+
   @SuppressWarnings("unchecked")
   default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
     return addListener((Class) TreeSelectEvent.class, listener);

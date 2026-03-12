@@ -37,9 +37,11 @@ public interface ComboBox<E> extends ValueComponent<E> {
     static <E> ComboBox<E> create(E... elements) {
         return UIInternal.get()._Components_comboBox(ListModel.create(Arrays.asList(elements)));
     }
+
     static <E> ComboBox<E> create(Collection<E> elements) {
         return UIInternal.get()._Components_comboBox(ListModel.create(elements));
     }
+
     static <E> ComboBox<E> create(ListModel<E> model) {
         return UIInternal.get()._Components_comboBox(model);
     }
@@ -53,25 +55,30 @@ public interface ComboBox<E> extends ValueComponent<E> {
             myValues.put(key, LocalizeValue.of(value));
             return this;
         }
+
         public Builder<K> add(K key, LocalizeValue value) {
             myValues.put(key, value);
             return this;
         }
+
         public Builder<K> add(K[] iterable, Function<K, String> map) {
             for (K k : iterable) {
                 add(k, map.apply(k));
             }
             return this;
         }
+
         public Builder<K> add(Iterable<? extends K> iterable, Function<K, String> map) {
             for (K k : iterable) {
                 add(k, map.apply(k));
             }
             return this;
         }
+
         public Builder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
             return fillByEnum(clazz, k -> true, presentation);
         }
+
         public Builder<K> fillByEnum(Class<? extends K> clazz, Predicate<K> tester, Function<K, String> presentation) {
             if (!clazz.isEnum()) {
                 throw new IllegalArgumentException("Accepts enums only");
@@ -86,6 +93,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
             }
             return this;
         }
+
         public Builder<K> fillByEnumLocalized(Class<? extends K> clazz, Function<K, LocalizeValue> presentation) {
             if (!clazz.isEnum()) {
                 throw new IllegalArgumentException("Accepts enums only");
@@ -96,19 +104,20 @@ public interface ComboBox<E> extends ValueComponent<E> {
             }
             return this;
         }
+
         @SuppressWarnings("unchecked")
         public ComboBox<K> build() {
             K[] objects = (K[]) myValues.keySet().toArray();
             ComboBox<K> comboBox = ComboBox.create(objects);
-            comboBox.setRenderer(
-                (renderer, index, item) -> renderer.append(item == null ? LocalizeValue.empty() : myValues.get(item))
-            );
+            comboBox.setTextRenderer(item -> myValues.getOrDefault(item, LocalizeValue.empty()));
             return comboBox;
         }
     }
+
     static <K> Builder<K> builder() {
         return new Builder<>();
     }
+
     ListModel<E> getListModel();
 
     @RequiredUIAccess

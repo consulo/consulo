@@ -19,10 +19,11 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
   @Deprecated
@@ -30,29 +31,33 @@ public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
   static RadioButton create(String text) {
     return create(text, false);
   }
+
   @Deprecated
   @DeprecationInfo("Use with LocalizeValue parameter")
   static RadioButton create(String text, boolean selected) {
     return create(LocalizeValue.of(text), selected);
   }
+
   static RadioButton create(LocalizeValue textValue) {
     return create(textValue, false);
   }
+
   static RadioButton create(LocalizeValue textValue, boolean selected) {
     return UIInternal.get()._Components_radioButton(textValue, selected);
   }
+
   @Override
   Boolean getValue();
 
   @Override
   @RequiredUIAccess
-  default void setValue(Boolean value) {
+  default void setValue(@Nullable Boolean value) {
     setValue(value, true);
   }
 
   @Override
   @RequiredUIAccess
-  void setValue(Boolean value, boolean fireListeners);
+  void setValue(@Nullable Boolean value, boolean fireListeners);
   LocalizeValue getLabelText();
 
   @RequiredUIAccess

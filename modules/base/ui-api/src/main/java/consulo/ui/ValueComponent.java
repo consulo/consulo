@@ -26,7 +26,7 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface ValueComponent<V> extends Component {
     @SuppressWarnings("unchecked")
@@ -36,17 +36,18 @@ public interface ValueComponent<V> extends Component {
 
     @Nullable
     V getValue();
+
     default V getValueOrError() {
         return Objects.requireNonNull(getValue(), "value required");
     }
 
     @RequiredUIAccess
-    default void setValue(V value) {
+    default void setValue(@Nullable V value) {
         setValue(value, true);
     }
 
     @RequiredUIAccess
-    void setValue(V value, boolean fireListeners);
+    void setValue(@Nullable V value, boolean fireListeners);
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")

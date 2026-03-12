@@ -116,7 +116,7 @@ public abstract class UIInternal {
 
     public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
         throw new UnsupportedOperationException();
     }
 
@@ -208,12 +208,12 @@ public abstract class UIInternal {
 
     public abstract boolean _UIAccess_isUIThread();
 
-    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
+    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(@Nullable Image editButtonImage,
                                                                                 String dialogTitle,
                                                                                 Function<String, List<String>> parser,
                                                                                 Function<List<String>, String> joiner);
 
-    public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
+    public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(@Nullable String text);
 
     public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {

@@ -24,7 +24,7 @@ import consulo.localization.LocalizationManager;
 public abstract class CachingLocalizedValue extends AbstractLocalizedValue {
     protected final LocalizationManager myLocalizationManager;
 
-    private String myText;
+    private String myText = "";
     private int myHashCode = -1;
 
     private byte myModificationCount = -1;
@@ -49,6 +49,7 @@ public abstract class CachingLocalizedValue extends AbstractLocalizedValue {
         myModificationCount = myLocalizationManager.getModificationCount();
         return newText;
     }
+
     protected abstract String calcValue();
 
     @Override

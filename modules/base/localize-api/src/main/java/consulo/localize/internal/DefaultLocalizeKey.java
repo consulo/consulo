@@ -17,6 +17,7 @@ package consulo.localize.internal;
 
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,20 +27,24 @@ public final class DefaultLocalizeKey implements LocalizeKey {
     private final String myLocalizeId;
     private final String myKey;
 
-    private LocalizeValue myDefaultValue;
+    @Nullable
+    private LocalizeValue myDefaultValue = null;
 
     public DefaultLocalizeKey(String localizeId, String key) {
         myLocalizeId = localizeId;
         myKey = key;
     }
+
     @Override
     public String getLocalizeId() {
         return myLocalizeId;
     }
+
     @Override
     public String getKey() {
         return myKey;
     }
+
     @Override
     public LocalizeValue getValue() {
         LocalizeValue defaultValue = myDefaultValue;
@@ -51,6 +56,7 @@ public final class DefaultLocalizeKey implements LocalizeKey {
         myDefaultValue = defaultValue;
         return defaultValue;
     }
+
     @Override
     public LocalizeValue getValue(Object[] args) {
         return new DefaultLocalizeValue(this, args);

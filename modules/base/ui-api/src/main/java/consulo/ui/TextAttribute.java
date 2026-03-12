@@ -45,7 +45,9 @@ public final class TextAttribute {
   public static final TextAttribute GRAY = new TextAttribute(STYLE_PLAIN, StandardColors.GRAY);
 
   private final int myStyle;
+  @Nullable
   private final ColorValue myBackgroundColor;
+  @Nullable
   private final ColorValue myForegroundColor;
 
   public TextAttribute(int style, @Nullable ColorValue foregroundColor) {

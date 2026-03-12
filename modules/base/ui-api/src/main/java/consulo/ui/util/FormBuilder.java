@@ -26,6 +26,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +43,15 @@ public class FormBuilder {
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
 
-  private Component myBottomComponent;
+  @Nullable
+  private Component myBottomComponent = null;
   private List<Component> myBottomComponents = new ArrayList<>();
 
   private FormBuilder() {
   }
-  @RequiredUIAccess
+
   @Deprecated
+  @RequiredUIAccess
   public FormBuilder addLabeled(String labelText, Component component) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
@@ -65,6 +68,7 @@ public class FormBuilder {
     myLineCount++;
     return this;
   }
+
   @RequiredUIAccess
   public FormBuilder addLabeled(LocalizeValue labelText, Component component) {
     if(!myBottomComponents.isEmpty()) {
@@ -80,6 +84,7 @@ public class FormBuilder {
     myLineCount++;
     return this;
   }
+
   @RequiredUIAccess
   public FormBuilder addLabeled(Component label, Component component) {
     if (!myBottomComponents.isEmpty()) {
@@ -110,6 +115,7 @@ public class FormBuilder {
 
     myBottomComponents.add(component);
   }
+
   @RequiredUIAccess
   public Component build() {
     if(myBottomComponents.isEmpty() && myBottomComponent == null) {

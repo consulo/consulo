@@ -35,6 +35,7 @@ public interface TextBoxWithExtensions extends TextBox {
         private final Image myIcon;
         private final Image myHoveredIcon;
 
+        @Nullable
         private ComponentEventListener<Component, ClickEvent> myClickListener;
 
         public Extension(boolean left, Image icon, @Nullable Image hoveredIcon) {
