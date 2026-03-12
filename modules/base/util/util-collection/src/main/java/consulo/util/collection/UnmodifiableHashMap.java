@@ -359,9 +359,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     @Override
     public boolean containsKey(Object key) {
-        if (key == null) {
-            return false;
-        }
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (data.length > 0 && tablePos(strategy, data, typedKey) >= 0) {
             return true;
@@ -408,9 +405,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
     @Nullable
     @Override
     public V getOrDefault(Object key, V defaultValue) {
-        if (key == null) {
-            return defaultValue;
-        }
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (k1 != null) {
             if (strategy.equals(k1, typedKey)) {
@@ -451,7 +445,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         }
     }
 
-    private static <K> K ensureKeyIsNotNull(K key) {
+    private static <K> K ensureKeyIsNotNull(@Nullable K key) {
         if (key == null) {
             throw new IllegalArgumentException("Null keys are not supported");
         }
