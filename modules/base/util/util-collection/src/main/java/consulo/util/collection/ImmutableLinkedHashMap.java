@@ -211,7 +211,7 @@ public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> imp
     @Override
     @SuppressWarnings("unchecked")
     public boolean containsKey(Object key) {
-        return key != null && myTable.getPos((K)key) >= 0;
+        return myTable.getPos((K)key) >= 0;
     }
 
     @Override
@@ -222,10 +222,6 @@ public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> imp
     @Override
     @SuppressWarnings("unchecked")
     public V getOrDefault(Object key, V defaultValue) {
-        if (key == null) {
-            return defaultValue;
-        }
-
         ReusableLinkedHashtable<K, V> table = myTable;
         int keyPos = table.getPos((K)key);
         return keyPos < 0 ? defaultValue : (V)table.getValue(keyPos);

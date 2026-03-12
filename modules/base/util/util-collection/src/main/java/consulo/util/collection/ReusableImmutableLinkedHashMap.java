@@ -250,9 +250,6 @@ public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K
     @Override
     @SuppressWarnings("unchecked")
     public boolean containsKey(Object key) {
-        if (key == null) {
-            return false;
-        }
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
         int keyPos = table.getPos((K)key);
@@ -274,10 +271,6 @@ public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K
     @Override
     @SuppressWarnings("unchecked")
     public V getOrDefault(Object key, V defaultValue) {
-        if (key == null) {
-            return defaultValue;
-        }
-
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
         int keyPos = table.getPos((K)key);
