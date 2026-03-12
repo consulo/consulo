@@ -18,18 +18,13 @@ package consulo.ui;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
 public interface ImageBox extends Component {
-  @Nonnull
-  static ImageBox create(@Nonnull Image image) {
+  static ImageBox create(Image image) {
     return UIInternal.get()._Components_imageBox(image);
   }
-
-  @Nonnull
   Image getImage();
 }

@@ -18,7 +18,6 @@ package consulo.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -26,7 +25,6 @@ import java.util.function.Consumer;
  * @since 12/10/2021
  */
 public interface AdvancedLabel extends Component {
-  @Nonnull
   static AdvancedLabel create() {
     return UIInternal.get()._Components_advancedLabel();
   }
@@ -35,6 +33,5 @@ public interface AdvancedLabel extends Component {
    * Refresh presentation of label, fully reset state of label
    * @return this
    */
-  @Nonnull
-  AdvancedLabel updatePresentation(@RequiredUIAccess  @Nonnull Consumer<TextItemPresentation> consumer);
+  AdvancedLabel updatePresentation(@RequiredUIAccess  Consumer<TextItemPresentation> consumer);
 }

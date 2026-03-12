@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -26,19 +25,19 @@ import java.util.function.Function;
  * @since 12-Sep-17
  */
 public interface TreeModel<N> {
-  void buildChildren(@Nonnull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
+  void buildChildren(Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 
   /**
    * If return true - children will be build for current node, and node will be marked as leaf (if not children)
    */
-  default boolean isNeedBuildChildrenBeforeOpen(@Nonnull TreeNode<N> node) {
+  default boolean isNeedBuildChildrenBeforeOpen(TreeNode<N> node) {
     return false;
   }
 
   /**
    * @return expand on double click
    */
-  default boolean onDoubleClick(@Nonnull Tree<N> tree, @Nonnull TreeNode<N> node) {
+  default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node) {
     return true;
   }
 

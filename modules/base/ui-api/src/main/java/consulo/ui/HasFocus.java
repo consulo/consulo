@@ -19,14 +19,13 @@ import consulo.disposer.Disposable;
 import consulo.ui.event.BlurEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.FocusEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-11-09
  */
 public interface HasFocus extends Component {
-    static boolean hasFocus(@Nonnull Component component) {
+    static boolean hasFocus(Component component) {
         return component instanceof HasFocus f && f.hasFocus();
     }
 
@@ -37,14 +36,10 @@ public interface HasFocus extends Component {
     void setFocusable(boolean focusable);
 
     boolean isFocusable();
-
-    @Nonnull
-    default Disposable addFocusListener(@Nonnull ComponentEventListener<HasFocus, FocusEvent> listener) {
+    default Disposable addFocusListener(ComponentEventListener<HasFocus, FocusEvent> listener) {
         return addListener(FocusEvent.class, listener);
     }
-
-    @Nonnull
-    default Disposable addBlurListener(@Nonnull ComponentEventListener<HasFocus, BlurEvent> listener) {
+    default Disposable addBlurListener(ComponentEventListener<HasFocus, BlurEvent> listener) {
         return addListener(BlurEvent.class, listener);
     }
 }

@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 03/05/2021
@@ -24,15 +22,11 @@ import jakarta.annotation.Nonnull;
 public abstract class ComponentOptions {
   protected static abstract class ComponentOptionsBuilder<B extends ComponentOptionsBuilder<B>> {
     protected boolean myBackgroundPaint = true;
-
-    @Nonnull
     @SuppressWarnings("unchecked")
     public B backgroundPaint(boolean value) {
       myBackgroundPaint = value;
       return (B)this;
     }
-
-    @Nonnull
     public abstract ComponentOptions build();
   }
 

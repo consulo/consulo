@@ -15,8 +15,7 @@
  */
 package consulo.disposer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Traces creation and disposal by storing corresponding stacktraces.
@@ -30,9 +29,9 @@ public interface TraceableDisposable {
 
   void kill(@Nullable String msg);
 
-  void killExceptionally(@Nonnull Throwable throwable);
+  void killExceptionally(Throwable throwable);
 
-  void throwObjectNotDisposedError(@Nonnull String msg);
+  void throwObjectNotDisposedError(String msg);
 
   void throwDisposalError(String msg) throws RuntimeException;
 

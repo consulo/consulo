@@ -17,7 +17,6 @@ package consulo.ui.image.internal;
 
 import consulo.ui.image.IconLibraryDescriptor;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  * @since 15/01/2022
  */
 public class IconLibraryDescriptorLoader {
-  public static List<IconLibraryDescriptor> getAll(@Nonnull ClassLoader classLoader) {
+  public static List<IconLibraryDescriptor> getAll(ClassLoader classLoader) {
     return ServiceLoader.load(IconLibraryDescriptor.class, classLoader).stream().map(ServiceLoader.Provider::get).collect(Collectors.toList());
   }
 }

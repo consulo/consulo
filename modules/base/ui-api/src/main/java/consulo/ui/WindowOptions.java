@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,20 +29,14 @@ public final class WindowOptions extends ComponentOptions {
 
     private Builder() {
     }
-
-    @Nonnull
     public Builder owner(@Nullable Window owner) {
       myOwner = owner;
       return this;
     }
-
-    @Nonnull
     public Builder disableResize() {
       myResizable = false;
       return this;
     }
-
-    @Nonnull
     public Builder disableClose() {
       myClosable = false;
       return this;
@@ -53,8 +46,6 @@ public final class WindowOptions extends ComponentOptions {
       return new WindowOptions(myOwner, myClosable, myResizable);
     }
   }
-
-  @Nonnull
   public static WindowOptions.Builder builder() {
     return new Builder();
   }

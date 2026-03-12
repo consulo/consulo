@@ -2,6 +2,9 @@
  * @author VISTALL
  * @since 2020-10-24
  */
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.ui.api {
     requires consulo.util.lang;
     requires consulo.util.collection;

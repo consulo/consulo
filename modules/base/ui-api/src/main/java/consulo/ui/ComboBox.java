@@ -21,8 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
 
-import jakarta.annotation.Nonnull;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -35,19 +33,14 @@ import java.util.function.Predicate;
  * @since 2016-06-09
  */
 public interface ComboBox<E> extends ValueComponent<E> {
-    @Nonnull
     @SafeVarargs
-    static <E> ComboBox<E> create(@Nonnull E... elements) {
+    static <E> ComboBox<E> create(E... elements) {
         return UIInternal.get()._Components_comboBox(ListModel.create(Arrays.asList(elements)));
     }
-
-    @Nonnull
-    static <E> ComboBox<E> create(@Nonnull Collection<E> elements) {
+    static <E> ComboBox<E> create(Collection<E> elements) {
         return UIInternal.get()._Components_comboBox(ListModel.create(elements));
     }
-
-    @Nonnull
-    static <E> ComboBox<E> create(@Nonnull ListModel<E> model) {
+    static <E> ComboBox<E> create(ListModel<E> model) {
         return UIInternal.get()._Components_comboBox(model);
     }
 
@@ -56,40 +49,29 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        @Nonnull
         public Builder<K> add(K key, String value) {
             myValues.put(key, LocalizeValue.of(value));
             return this;
         }
-
-        @Nonnull
-        public Builder<K> add(@Nonnull K key, @Nonnull LocalizeValue value) {
+        public Builder<K> add(K key, LocalizeValue value) {
             myValues.put(key, value);
             return this;
         }
-
-        @Nonnull
         public Builder<K> add(K[] iterable, Function<K, String> map) {
             for (K k : iterable) {
                 add(k, map.apply(k));
             }
             return this;
         }
-
-        @Nonnull
         public Builder<K> add(Iterable<? extends K> iterable, Function<K, String> map) {
             for (K k : iterable) {
                 add(k, map.apply(k));
             }
             return this;
         }
-
-        @Nonnull
         public Builder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
             return fillByEnum(clazz, k -> true, presentation);
         }
-
-        @Nonnull
         public Builder<K> fillByEnum(Class<? extends K> clazz, Predicate<K> tester, Function<K, String> presentation) {
             if (!clazz.isEnum()) {
                 throw new IllegalArgumentException("Accepts enums only");
@@ -104,8 +86,6 @@ public interface ComboBox<E> extends ValueComponent<E> {
             }
             return this;
         }
-
-        @Nonnull
         public Builder<K> fillByEnumLocalized(Class<? extends K> clazz, Function<K, LocalizeValue> presentation) {
             if (!clazz.isEnum()) {
                 throw new IllegalArgumentException("Accepts enums only");
@@ -116,8 +96,6 @@ public interface ComboBox<E> extends ValueComponent<E> {
             }
             return this;
         }
-
-        @Nonnull
         @SuppressWarnings("unchecked")
         public ComboBox<K> build() {
             K[] objects = (K[]) myValues.keySet().toArray();
@@ -128,13 +106,9 @@ public interface ComboBox<E> extends ValueComponent<E> {
             return comboBox;
         }
     }
-
-    @Nonnull
     static <K> Builder<K> builder() {
         return new Builder<>();
     }
-
-    @Nonnull
     ListModel<E> getListModel();
 
     @RequiredUIAccess
@@ -146,9 +120,9 @@ public interface ComboBox<E> extends ValueComponent<E> {
         }
     }
 
-    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
+    void setRenderer(TextItemRenderer<E> renderer);
 
-    default void setTextRenderer(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
+    default void setTextRenderer(Function<E, LocalizeValue> localizeValueFunction) {
         setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
     }
 
@@ -156,7 +130,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
     void setValueByIndex(int index);
 
     @RequiredUIAccess
-    default void setValueByCondition(@Nonnull Predicate<E> predicate) {
+    default void setValueByCondition(Predicate<E> predicate) {
         for (E e : getListModel()) {
             if (predicate.test(e)) {
                 setValue(e);

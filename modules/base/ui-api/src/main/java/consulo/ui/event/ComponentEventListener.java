@@ -17,7 +17,6 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -28,5 +27,5 @@ import java.util.EventListener;
 @FunctionalInterface
 public interface ComponentEventListener<C extends Component, E extends ComponentEvent<C>> extends EventListener {
     @RequiredUIAccess
-    void onEvent(@Nonnull E event);
+    void onEvent(E event);
 }

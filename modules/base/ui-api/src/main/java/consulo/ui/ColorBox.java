@@ -18,15 +18,13 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-06-09
  */
 public interface ColorBox extends ValueComponent<ColorValue> {
-  @Nonnull
   static ColorBox create() {
     return create(null);
   }

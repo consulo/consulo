@@ -17,7 +17,6 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,25 +27,18 @@ import java.util.Collection;
  */
 public interface ListBox<E> extends ValueComponent<E> {
     @SafeVarargs
-    @Nonnull
-    static <E> ListBox<E> create(@Nonnull E... elements) {
+    static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
     }
-
-    @Nonnull
-    static <E> ListBox<E> create(@Nonnull Collection<E> elements) {
+    static <E> ListBox<E> create(Collection<E> elements) {
         return UIInternal.get()._Components_listBox(ListModel.create(elements));
     }
-
-    @Nonnull
-    static <E> ListBox<E> create(@Nonnull ListModel<E> model) {
+    static <E> ListBox<E> create(ListModel<E> model) {
         return UIInternal.get()._Components_listBox(model);
     }
-
-    @Nonnull
     ListModel<E> getListModel();
 
-    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
+    void setRenderer(TextItemRenderer<E> renderer);
 
     void setValueByIndex(int index);
 }

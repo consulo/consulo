@@ -22,39 +22,31 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-05-11
  */
 public interface Hyperlink extends Component {
-  @Nonnull
-  static Hyperlink create(@Nonnull LocalizeValue text) {
+  static Hyperlink create(LocalizeValue text) {
     return UIInternal.get()._Components_hyperlink(text);
   }
-
-  @Nonnull
-  static Hyperlink create(@Nonnull LocalizeValue text, @Nonnull @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
+  static Hyperlink create(LocalizeValue text, @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
     Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
     hyperlink.addHyperlinkListener(listener);
     return hyperlink;
   }
-
-  @Nonnull
   LocalizeValue getText();
 
   @RequiredUIAccess
-  void setText(@Nonnull LocalizeValue text);
+  void setText(LocalizeValue text);
 
   void setIcon(@Nullable Image icon);
 
   @Nullable
   Image getIcon();
-
-  @Nonnull
-  default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+  default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
     return addListener(HyperlinkEvent.class, hyperlinkListener);
   }
 }

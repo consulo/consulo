@@ -15,8 +15,6 @@
  */
 package consulo.ui.font;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-06-04
@@ -27,14 +25,8 @@ public interface Font {
   int STYLE_PLAIN = 1 << 0;
   int STYLE_BOLD = 1 << 1;
   int STYLE_ITALIC = 1 << 2;
-
-  @Nonnull
   String getName();
-
-  @Nonnull
   String getFontName();
-
-  @Nonnull
   String getFamily();
 
   int getFontStyle();
@@ -44,6 +36,5 @@ public interface Font {
   /**
    * @return new font with newSize
    */
-  @Nonnull
   Font buildNewFont(int newSize);
 }

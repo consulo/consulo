@@ -15,7 +15,6 @@
  */
 package consulo.ui.color;
 
-import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -23,22 +22,17 @@ import java.io.Serializable;
  * @since 21-Jun-16
  */
 public final class RGBColor implements Serializable, ColorValue {
-  @Nonnull
   public static RGBColor fromFloatValues(float r, float g, float b) {
     return fromFloatValues(r, g, b, 1f);
   }
-
-  @Nonnull
   public static RGBColor fromFloatValues(float r, float g, float b, float a) {
     return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), (int)(b * 255 + 0.5));
   }
-
-  @Nonnull
   public static RGBColor fromRGBValue(int rgb) {
     return new RGBColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
   }
 
-  public static int toRGBValue(@Nonnull RGBColor rgbColor) {
+  public static int toRGBValue(RGBColor rgbColor) {
     int b = rgbColor.getBlue();
     int r = rgbColor.getRed();
     int g = rgbColor.getGreen();
@@ -58,8 +52,7 @@ public final class RGBColor implements Serializable, ColorValue {
    *                               octal, or hexadecimal integer.
    * @see Integer#decode
    */
-  @Nonnull
-  public static RGBColor decode(@Nonnull String nm) {
+  public static RGBColor decode(String nm) {
     int i = Integer.decode(nm);
     return fromRGBValue(i);
   }
@@ -99,8 +92,6 @@ public final class RGBColor implements Serializable, ColorValue {
     values[3] = ((float)getAlpha()) / 255f;
     return values;
   }
-
-  @Nonnull
   @Override
   public RGBColor toRGB() {
     return this;
@@ -121,8 +112,6 @@ public final class RGBColor implements Serializable, ColorValue {
   public int getAlpha() {
     return myAlpha;
   }
-
-  @Nonnull
   @Override
   public ColorValue withAlpha(int value) {
     return new RGBColor(getRed(), getGreen(), getBlue(), value);

@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -25,7 +24,7 @@ import java.util.function.BiConsumer;
  * @since 2017-09-13
  */
 public interface TreeNode<T> {
-    void setRenderer(@Nonnull BiConsumer<T, TextItemPresentation> renderer);
+    void setRenderer(BiConsumer<T, TextItemPresentation> renderer);
 
     void setLeaf(boolean leaf);
 

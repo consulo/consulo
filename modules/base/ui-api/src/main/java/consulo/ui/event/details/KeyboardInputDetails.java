@@ -16,7 +16,6 @@
 package consulo.ui.event.details;
 
 import consulo.ui.Point2D;
-import jakarta.annotation.Nonnull;
 
 import java.util.EnumSet;
 
@@ -25,18 +24,15 @@ import java.util.EnumSet;
  * @since 2024-09-12
  */
 public class KeyboardInputDetails extends ModifiedInputDetails {
-    @Nonnull
     private final KeyCode myKeyCode;
 
-    public KeyboardInputDetails(@Nonnull Point2D position,
-                                @Nonnull Point2D positionOnScreen,
-                                @Nonnull EnumSet<Modifier> modifiers,
-                                @Nonnull KeyCode keyCode) {
+    public KeyboardInputDetails(Point2D position,
+                                Point2D positionOnScreen,
+                                EnumSet<Modifier> modifiers,
+                                KeyCode keyCode) {
         super(position, positionOnScreen, modifiers);
         myKeyCode = keyCode;
     }
-
-    @Nonnull
     public KeyCode getKeyCode() {
         return myKeyCode;
     }

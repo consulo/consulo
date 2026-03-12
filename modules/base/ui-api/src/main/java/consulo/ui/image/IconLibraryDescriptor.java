@@ -16,21 +16,17 @@
 package consulo.ui.image;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-10-08
  */
 public interface IconLibraryDescriptor {
-    @Nonnull
     String getLibraryId();
 
     @Nullable
     String getBaseLibraryId();
-
-    @Nonnull
     LocalizeValue getName();
 
     default boolean isDark() {

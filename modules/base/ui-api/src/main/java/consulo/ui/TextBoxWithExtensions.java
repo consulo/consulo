@@ -21,8 +21,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,12 +37,12 @@ public interface TextBoxWithExtensions extends TextBox {
 
         private ComponentEventListener<Component, ClickEvent> myClickListener;
 
-        public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon) {
+        public Extension(boolean left, Image icon, @Nullable Image hoveredIcon) {
             this(left, icon, hoveredIcon, null);
         }
 
         public Extension(boolean left,
-                         @Nonnull Image icon,
+                         Image icon,
                          @Nullable Image hoveredIcon,
                          @Nullable ComponentEventListener<Component, ClickEvent> clickListener) {
             myLeft = left;
@@ -60,40 +59,24 @@ public interface TextBoxWithExtensions extends TextBox {
         public boolean isLeft() {
             return myLeft;
         }
-
-        @Nonnull
         public Image getIcon() {
             return myIcon;
         }
-
-        @Nonnull
         public Image getHoveredIcon() {
             return myHoveredIcon;
         }
     }
-
-    @Nonnull
     static TextBoxWithExtensions create() {
         return create(null);
     }
-
-    @Nonnull
     static TextBoxWithExtensions create(@Nullable String text) {
         return UIInternal.get()._Components_textBoxWithExtensions(text);
     }
-
-    @Nonnull
-    TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions);
-
-    @Nonnull
+    TextBoxWithExtensions setExtensions(Extension... extensions);
     @Deprecated
-    default TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+    default TextBoxWithExtensions addExtension(Extension extension) {
         return addLastExtension(extension);
     }
-
-    @Nonnull
-    TextBoxWithExtensions addLastExtension(@Nonnull Extension extension);
-
-    @Nonnull
-    TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension);
+    TextBoxWithExtensions addLastExtension(Extension extension);
+    TextBoxWithExtensions addFirstExtension(Extension extension);
 }

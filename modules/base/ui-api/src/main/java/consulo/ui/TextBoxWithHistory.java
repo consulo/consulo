@@ -17,8 +17,7 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,21 +26,14 @@ import java.util.List;
  * @since 2020-08-24
  */
 public interface TextBoxWithHistory extends TextBox {
-  @Nonnull
   static TextBoxWithHistory create() {
     return create("");
   }
-
-  @Nonnull
   static TextBoxWithHistory create(@Nullable String text) {
     return UIInternal.get()._Components_textBoxWithHistory(text == null ? "" : text);
   }
-
-  @Nonnull
-  default TextBoxWithHistory setHistory(@Nonnull String... history) {
+  default TextBoxWithHistory setHistory(String... history) {
     return setHistory(Arrays.asList(history));
   }
-
-  @Nonnull
-  TextBoxWithHistory setHistory(@Nonnull List<String> history);
+  TextBoxWithHistory setHistory(List<String> history);
 }

@@ -17,7 +17,6 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @since 2021-09-24
  */
 public final class JoinedLocalizedValue extends AbstractJoinedLocalizedValue {
-    public JoinedLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizedValue[] values) {
+    public JoinedLocalizedValue(LocalizationManager manager, LocalizedValue[] values) {
         super(manager, values);
     }
 

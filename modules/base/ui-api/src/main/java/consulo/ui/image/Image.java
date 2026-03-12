@@ -18,7 +18,6 @@ package consulo.ui.image;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Size2D;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,65 +39,44 @@ public interface Image {
     PNG,
     SVG
   }
-
-  @Nonnull
   @Deprecated
-  static Image create(@Nonnull URL url) throws IOException {
+  static Image create(URL url) throws IOException {
     return fromUrl(url);
   }
-
-  @Nonnull
-  static Image fromUrl(@Nonnull URL url) throws IOException {
+  static Image fromUrl(URL url) throws IOException {
     return UIInternal.get()._Image_fromUrl(url);
   }
 
   /**
    * Return image from bytes. JPG, PNG only
    */
-  @Nonnull
   @Deprecated
-  static Image fromBytes(@Nonnull byte[] bytes, int width, int height) throws IOException {
+  static Image fromBytes(byte[] bytes, int width, int height) throws IOException {
     return fromBytes(ImageType.PNG, bytes);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Image#fromBytes(imageType, bytes) - width&height ignored")
-  static Image fromBytes(@Nonnull ImageType imageType, @Nonnull byte[] bytes, int width, int height) throws IOException {
+  static Image fromBytes(ImageType imageType, byte[] bytes, int width, int height) throws IOException {
     return fromBytes(imageType, bytes);
   }
-
-  @Nonnull
-  static Image fromBytes(@Nonnull ImageType imageType, @Nonnull byte[] bytes) throws IOException {
+  static Image fromBytes(ImageType imageType, byte[] bytes) throws IOException {
     return fromStream(imageType, new ByteArrayInputStream(bytes));
   }
-
-  @Nonnull
-  static Image fromStream(@Nonnull ImageType imageType, @Nonnull InputStream stream) throws IOException {
+  static Image fromStream(ImageType imageType, InputStream stream) throws IOException {
     return UIInternal.get()._Image_fromStream(imageType, stream);
   }
-
-  @Nonnull
-  static Image lazy(@Nonnull Supplier<Image> imageSupplier) {
+  static Image lazy(Supplier<Image> imageSupplier) {
     return UIInternal.get()._Image_lazy(imageSupplier);
   }
-
-  @Nonnull
-  static <S> Image stated(@Nonnull ImageState<S> state, @Nonnull Function<S, Image> funcCall) {
+  static <S> Image stated(ImageState<S> state, Function<S, Image> funcCall) {
     return UIInternal.get()._Image_stated(state, funcCall);
   }
-
-  @Nonnull
   static EmptyImage empty() {
     return empty(0);
   }
-
-  @Nonnull
   static EmptyImage empty(int widthAndHeight) {
     return UIInternal.get()._ImageEffects_empty(widthAndHeight, widthAndHeight);
   }
-
-  @Nonnull
   static EmptyImage empty(int width, int height) {
     return UIInternal.get()._ImageEffects_empty(width, height);
   }
@@ -106,8 +84,6 @@ public interface Image {
   int getHeight();
 
   int getWidth();
-
-  @Nonnull
   default Size2D getSize() {
     return new Size2D(getWidth(), getHeight());
   }

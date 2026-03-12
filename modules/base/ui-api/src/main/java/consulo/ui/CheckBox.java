@@ -19,60 +19,48 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
 public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic, HasComponentStyle<CheckBoxStyle> {
-    @Nonnull
     @RequiredUIAccess
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Please don't use not localize text")
-    static CheckBox create(@Nonnull String label) {
+    static CheckBox create(String label) {
         return create(LocalizeValue.of(label));
     }
-
-    @Nonnull
     @RequiredUIAccess
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Please don't use not localize text")
-    static CheckBox create(@Nonnull String label, boolean selected) {
+    static CheckBox create(String label, boolean selected) {
         return create(LocalizeValue.of(label), selected);
     }
-
-    @Nonnull
     @RequiredUIAccess
-    static CheckBox create(@Nonnull LocalizeValue label) {
+    static CheckBox create(LocalizeValue label) {
         return create(label, false);
     }
-
-    @Nonnull
     @RequiredUIAccess
-    static CheckBox create(@Nonnull LocalizeValue label, boolean selected) {
+    static CheckBox create(LocalizeValue label, boolean selected) {
         CheckBox box = UIInternal.get()._Components_checkBox();
         box.setLabelText(label);
         box.setValue(selected);
         return box;
     }
-
-    @Nonnull
     @Override
     Boolean getValue();
 
     @Override
     @RequiredUIAccess
-    default void setValue(@Nonnull Boolean value) {
+    default void setValue(Boolean value) {
         setValue(value, true);
     }
 
     @RequiredUIAccess
-    void setValue(@Nonnull Boolean value, boolean fireListeners);
-
-    @Nonnull
+    void setValue(Boolean value, boolean fireListeners);
     LocalizeValue getLabelText();
 
     @RequiredUIAccess
-    void setLabelText(@Nonnull LocalizeValue labelText);
+    void setLabelText(LocalizeValue labelText);
 }

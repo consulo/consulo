@@ -18,8 +18,6 @@ package consulo.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-11-26
@@ -29,26 +27,21 @@ import jakarta.annotation.Nonnull;
  * Read for example {@linkplain https://docs.microsoft.com/ru-ru/windows/uwp/design/controls-and-patterns/toggles}
  */
 public interface ToggleSwitch extends ValueComponent<Boolean> {
-  @Nonnull
   static ToggleSwitch create() {
     return create(false);
   }
-
-  @Nonnull
   static ToggleSwitch create(boolean enabled) {
     return UIInternal.get()._Components_toggleSwitch(enabled);
   }
-
-  @Nonnull
   @Override
   Boolean getValue();
 
   @Override
   @RequiredUIAccess
-  default void setValue(@Nonnull Boolean value) {
+  default void setValue(Boolean value) {
     setValue(value, true);
   }
 
   @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireListeners);
+  void setValue(Boolean value, boolean fireListeners);
 }

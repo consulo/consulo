@@ -24,8 +24,6 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 05-Nov-16
@@ -34,12 +32,12 @@ import jakarta.annotation.Nonnull;
 @DeprecationInfo("See LabeledBuilder")
 public class LabeledComponents {
   @RequiredUIAccess
-  public static Component left(@Nonnull String text, @Nonnull Component component) {
+  public static Component left(String text, Component component) {
     return left(text, () -> component);
   }
 
   @RequiredUIAccess
-  public static Component left(@Nonnull String text, @Nonnull PseudoComponent component) {
+  public static Component left(String text, PseudoComponent component) {
     if (!StringUtil.endsWithChar(text, ':')) {
       text += ": ";
     }
@@ -51,12 +49,12 @@ public class LabeledComponents {
   }
 
   @RequiredUIAccess
-  public static Component leftFilled(@Nonnull String text, @Nonnull Component component) {
+  public static Component leftFilled(String text, Component component) {
     return leftFilled(text, () -> component);
   }
 
   @RequiredUIAccess
-  public static Component leftFilled(@Nonnull String text, @Nonnull PseudoComponent component) {
+  public static Component leftFilled(String text, PseudoComponent component) {
     if (!StringUtil.endsWithChar(text, ':')) {
       text += ": ";
     }
@@ -68,12 +66,12 @@ public class LabeledComponents {
   }
 
   @RequiredUIAccess
-  public static Component leftWithRight(@Nonnull String text, @Nonnull Component component) {
+  public static Component leftWithRight(String text, Component component) {
     return leftWithRight(text, () -> component);
   }
 
   @RequiredUIAccess
-  public static Component leftWithRight(@Nonnull String text, @Nonnull PseudoComponent component) {
+  public static Component leftWithRight(String text, PseudoComponent component) {
     DockLayout dock = DockLayout.create();
     dock.left(Label.create(text));
     dock.right(component);

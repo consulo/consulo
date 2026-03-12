@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 import java.util.Objects;
@@ -30,16 +29,13 @@ import java.util.Objects;
  * @since 13-Jun-16
  */
 public interface ValueComponent<V> extends Component {
-    @Nonnull
     @SuppressWarnings("unchecked")
-    default Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
+    default Disposable addValueListener(ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
         return addListener((Class)ValueComponentEvent.class, valueListener);
     }
 
     @Nullable
     V getValue();
-
-    @Nonnull
     default V getValueOrError() {
         return Objects.requireNonNull(getValue(), "value required");
     }

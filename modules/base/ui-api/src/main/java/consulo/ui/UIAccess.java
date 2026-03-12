@@ -22,7 +22,6 @@ import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -43,7 +42,6 @@ public interface UIAccess extends Executor {
     }
 
     @RequiredUIAccess
-    @Nonnull
     @Deprecated
     static UIAccess get() {
         return current();
@@ -55,7 +53,6 @@ public interface UIAccess extends Executor {
      * @return ui access - or throw exception
      */
     @RequiredUIAccess
-    @Nonnull
     static UIAccess current() {
         assertIsUIThread();
 
@@ -71,7 +68,7 @@ public interface UIAccess extends Executor {
         ThreadAssertion.assertTrue(isUIThread(), "Call must be called outside UI thread");
     }
 
-    static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    static void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         UIInternal.get().addModalityStateListener(listener, parentDisposable);
     }
 
@@ -94,9 +91,7 @@ public interface UIAccess extends Executor {
     default boolean isValid() {
         return true;
     }
-
-    @Nonnull
-    default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
+    default AsyncResult<Void> give(@RequiredUIAccess Runnable runnable) {
         return give(() -> {
             runnable.run();
             return null;
@@ -106,32 +101,27 @@ public interface UIAccess extends Executor {
     /**
      * prefer {@link #giveAsync(Supplier)}
      */
-    @Nonnull
-    <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
-
-    @Nonnull
-    default CompletableFuture<?> giveAsync(@RequiredUIAccess @Nonnull Runnable runnable) {
+    <T> AsyncResult<T> give(@RequiredUIAccess Supplier<T> supplier);
+    default CompletableFuture<?> giveAsync(@RequiredUIAccess Runnable runnable) {
         return giveAsync(() -> {
             runnable.run();
             return null;
         });
     }
+    <T> CompletableFuture<T> giveAsync(@RequiredUIAccess Supplier<T> supplier);
 
-    @Nonnull
-    <T> CompletableFuture<T> giveAsync(@RequiredUIAccess @Nonnull Supplier<T> supplier);
-
-    default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
+    default void giveAndWait(@RequiredUIAccess Runnable runnable) {
         give(runnable).getResultSync();
     }
 
     @SuppressWarnings("unchecked")
-    default <T> T giveAndWaitIfNeed(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
+    default <T> T giveAndWaitIfNeed(@RequiredUIAccess Supplier<T> supplier) {
         Object[] value = new Object[1];
         giveAndWaitIfNeed((Runnable) () -> value[0] = supplier.get());
         return (T) value[0];
     }
 
-    default void giveIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
+    default void giveIfNeed(@RequiredUIAccess Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
         }
@@ -140,7 +130,7 @@ public interface UIAccess extends Executor {
         }
     }
 
-    default void giveAndWaitIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
+    default void giveAndWaitIfNeed(@RequiredUIAccess Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
         }
@@ -158,10 +148,8 @@ public interface UIAccess extends Executor {
     }
 
     @Override
-    default void execute(@RequiredUIAccess @Nonnull Runnable command) {
+    default void execute(@RequiredUIAccess Runnable command) {
         give(command);
     }
-
-    @Nonnull
     UIAccessScheduler getScheduler();
 }

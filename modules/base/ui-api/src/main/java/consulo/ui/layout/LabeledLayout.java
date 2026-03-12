@@ -21,48 +21,36 @@ import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
 public interface LabeledLayout extends Layout<LayoutConstraint> {
-    @Nonnull
     @Deprecated
     @DeprecationInfo("Use with LocalizeValue parameter")
-    static LabeledLayout create(@Nonnull String label) {
+    static LabeledLayout create(String label) {
         return create(LocalizeValue.of(label));
     }
-
-    @Nonnull
     @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use with LocalizeValue parameter")
-    static LabeledLayout create(@Nonnull String label, @Nonnull Component component) {
+    static LabeledLayout create(String label, Component component) {
         return create(LocalizeValue.of(label), component);
     }
-
-    @Nonnull
-    static LabeledLayout create(@Nonnull LocalizeValue label) {
+    static LabeledLayout create(LocalizeValue label) {
         return UIInternal.get()._Layouts_labeled(label);
     }
-
-    @Nonnull
     @RequiredUIAccess
-    static LabeledLayout create(@Nonnull LocalizeValue label, @Nonnull Component component) {
+    static LabeledLayout create(LocalizeValue label, Component component) {
         return UIInternal.get()._Layouts_labeled(label).set(component);
     }
-
-    @Nonnull
     @RequiredUIAccess
-    default LabeledLayout set(@Nonnull PseudoComponent component) {
+    default LabeledLayout set(PseudoComponent component) {
         return set(component.getComponent());
     }
-
-    @Nonnull
     @RequiredUIAccess
-    default LabeledLayout set(@Nonnull Component component) {
+    default LabeledLayout set(Component component) {
         return (LabeledLayout) add(component, LayoutConstraint.NONE);
     }
 }

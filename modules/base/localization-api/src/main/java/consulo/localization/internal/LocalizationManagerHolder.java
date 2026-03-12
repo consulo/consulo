@@ -16,7 +16,6 @@
 package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.ServiceLoader;
 
@@ -28,8 +27,6 @@ public class LocalizationManagerHolder {
     private static LocalizationManager ourInstance = ServiceLoader.load(LocalizationManager.class, LocalizationManager.class.getClassLoader())
         .findFirst()
         .get();
-
-    @Nonnull
     public static LocalizationManager get() {
         return ourInstance;
     }

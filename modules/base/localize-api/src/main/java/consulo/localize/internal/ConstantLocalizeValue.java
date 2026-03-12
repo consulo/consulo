@@ -16,7 +16,6 @@
 package consulo.localize.internal;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -35,14 +34,10 @@ public final class ConstantLocalizeValue implements LocalizeValue {
     public ConstantLocalizeValue(String value) {
         myValue = value;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return '"' + myValue + '"';
     }
-
-    @Nonnull
     @Override
     public String getValue() {
         return myValue;

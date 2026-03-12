@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +24,5 @@ import java.util.concurrent.TimeUnit;
  * @since 14/09/2023
  */
 public interface UIAccessScheduler extends ScheduledExecutorService {
-  @Nonnull
-  ScheduledFuture<?> schedule(@Nonnull Runnable command, @Nonnull ModalityState modalityState, long delay, TimeUnit unit);
+  ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit);
 }

@@ -17,7 +17,6 @@ package consulo.localize.internal;
 
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 import java.util.Map;
@@ -30,8 +29,6 @@ public abstract class BaseJoinedLocalizeValue extends BaseLocalizeValue {
     protected BaseJoinedLocalizeValue(LocalizeValue[] values) {
         super(values);
     }
-
-    @Nonnull
     @Override
     public String getId() {
         StringBuilder sb = new StringBuilder().append('[');
@@ -43,14 +40,10 @@ public abstract class BaseJoinedLocalizeValue extends BaseLocalizeValue {
         }
         return sb.append("]->join").toString();
     }
-
-    @Nonnull
     @Override
-    protected final Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    protected final Map.Entry<Locale, String> getUnformattedText(LocalizeManager localizeManager) {
         throw new UnsupportedOperationException("This method should never be called");
     }
-
-    @Nonnull
     @Override
     protected String calcValue(LocalizeManager manager) {
         StringBuilder builder = new StringBuilder();

@@ -16,7 +16,6 @@
 package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 import java.util.Date;
 
@@ -25,12 +24,9 @@ import java.util.Date;
  * @since 2024-12-13
  */
 public interface DatePicker extends ValueComponent<Date> {
-    @Nonnull
-    static DatePicker create(@Nonnull String datePattern) {
+    static DatePicker create(String datePattern) {
         return UIInternal.get()._Components_datePicker(datePattern);
     }
-
-    @Nonnull
     static DatePicker create() {
         return UIInternal.get()._Components_datePicker(null);
     }

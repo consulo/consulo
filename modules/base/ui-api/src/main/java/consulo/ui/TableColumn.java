@@ -17,7 +17,6 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -26,11 +25,10 @@ import java.util.function.Function;
  */
 public interface TableColumn<Value, Item> {
   class Builder<Value, Item> {
-    @Nonnull
     private final String myName;
     private final Function<Item, Value> myConverter;
 
-    public Builder(@Nonnull String name, @Nonnull Function<Item, Value> converter) {
+    public Builder(String name, Function<Item, Value> converter) {
       myName = name;
       myConverter = converter;
     }
@@ -39,9 +37,7 @@ public interface TableColumn<Value, Item> {
       return UIInternal.get()._Components_tableColumBuild(myName, myConverter);
     }
   }
-
-  @Nonnull
-  static <Value1, Item1> Builder<Value1, Item1> create(@Nonnull String name, @Nonnull Function<Item1, Value1> converter) {
+  static <Value1, Item1> Builder<Value1, Item1> create(String name, Function<Item1, Value1> converter) {
     return new Builder<>(name, converter);
   }
 }
