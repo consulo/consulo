@@ -2297,7 +2297,9 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         throw new IllegalStateException();
       }
       lastReturned = null;
-      map.replaceNode(p.key, null, null);
+      // IJ patched:
+      // see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8078645
+      map.replaceNode(p.key, null, p.val);
     }
   }
 

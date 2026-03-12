@@ -3115,7 +3115,9 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       Node<K, V> p = lastReturned;
       if (p == null) throw new IllegalStateException();
       lastReturned = null;
-      map.replaceNode(Objects.requireNonNull(p.key), null, null);
+      // IJ patched:
+      // see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8078645
+      map.replaceNode(Objects.requireNonNull(p.key), null, p.val);
     }
   }
 
