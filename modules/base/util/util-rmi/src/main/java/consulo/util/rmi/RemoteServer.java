@@ -15,7 +15,8 @@
  */
 package consulo.util.rmi;
 
-import org.jspecify.annotations.Nullable;
+import jakarta.annotation.Nullable;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
