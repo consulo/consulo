@@ -20,8 +20,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -30,21 +29,20 @@ import java.util.List;
 public class JDOMExternalizerUtil {
   private static final String VALUE_ATTR_NAME = "value";
 
-  public static void writeField(@Nonnull Element root, @Nonnull String fieldName, String value) {
+  public static void writeField(Element root, String fieldName, String value) {
     Element element = new Element("option");
     element.setAttribute("name", fieldName);
     element.setAttribute("value", value == null ? "" : value);
     root.addContent(element);
   }
 
-  @Nonnull
-  public static String readField(@Nonnull Element parent, @Nonnull String fieldName, @Nonnull String defaultValue) {
+  public static String readField(Element parent, String fieldName, String defaultValue) {
     String val = readField(parent, fieldName);
     return val == null ? defaultValue : val;
   }
 
   @Nullable
-  public static String readField(@Nonnull Element parent, @Nonnull String fieldName) {
+  public static String readField(Element parent, String fieldName) {
     for (Element element : JDOMUtil.getChildren(parent, "option")) {
       String childName = element.getAttributeValue("name");
       if (Comparing.strEqual(childName, fieldName)) {
@@ -54,7 +52,8 @@ public class JDOMExternalizerUtil {
     return null;
   }
 
-  public static Element getOption(@Nonnull Element parent, @Nonnull String fieldName) {
+  @Nullable
+  public static Element getOption(Element parent, String fieldName) {
     for (Element element : JDOMUtil.getChildren(parent, "option")) {
       String childName = element.getAttributeValue("name");
       if (Comparing.strEqual(childName, fieldName)) {
@@ -64,16 +63,14 @@ public class JDOMExternalizerUtil {
     return null;
   }
 
-  @Nonnull
-  public static Element writeOption(@Nonnull Element root, @Nonnull String fieldName) {
+  public static Element writeOption(Element root, String fieldName) {
     Element element = new Element("option");
     element.setAttribute("name", fieldName);
     root.addContent(element);
     return element;
   }
 
-  @Nonnull
-  public static Element addElementWithValueAttribute(@Nonnull Element parent, @Nonnull String childTagName, @Nullable String attrValue) {
+  public static Element addElementWithValueAttribute(Element parent, String childTagName, @Nullable String attrValue) {
     Element element = new Element(childTagName);
     if (attrValue != null) {
       element.setAttribute(VALUE_ATTR_NAME, attrValue);
@@ -83,7 +80,7 @@ public class JDOMExternalizerUtil {
   }
 
   @Nullable
-  public static String getFirstChildValueAttribute(@Nonnull Element parent, @Nonnull String childTagName) {
+  public static String getFirstChildValueAttribute(Element parent, String childTagName) {
     Element first = parent.getChild(childTagName);
     if (first != null) {
       return first.getAttributeValue(VALUE_ATTR_NAME);
@@ -91,8 +88,7 @@ public class JDOMExternalizerUtil {
     return null;
   }
 
-  @Nonnull
-  public static List<String> getChildrenValueAttributes(@Nonnull Element parent, @Nonnull String childTagName) {
+  public static List<String> getChildrenValueAttributes(Element parent, String childTagName) {
     List<Element> children = parent.getChildren(childTagName);
     if (children.isEmpty()) {
       return Collections.emptyList();
@@ -112,7 +108,7 @@ public class JDOMExternalizerUtil {
   }
 
   @SuppressWarnings("Duplicates")
-  public static void addChildrenWithValueAttribute(@Nonnull Element parent, @Nonnull String childTagName, @Nonnull List<String> attrValues) {
+  public static void addChildrenWithValueAttribute(Element parent, String childTagName, List<String> attrValues) {
     for (String value : attrValues) {
       if (value != null) {
         Element child = new Element(childTagName);
@@ -123,7 +119,7 @@ public class JDOMExternalizerUtil {
   }
 
   @SuppressWarnings({"deprecation", "Duplicates"})
-  public static void addChildren(@Nonnull Element parent, @Nonnull String childElementName, @Nonnull Collection<? extends JDOMExternalizable> children)
+  public static void addChildren(Element parent, String childElementName, Collection<? extends JDOMExternalizable> children)
           throws WriteExternalException {
     for (JDOMExternalizable child : children) {
       if (child != null) {

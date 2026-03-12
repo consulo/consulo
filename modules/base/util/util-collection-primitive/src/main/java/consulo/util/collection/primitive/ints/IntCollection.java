@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
@@ -75,12 +74,10 @@ public interface IntCollection extends IntIterable {
 
   void clear();
 
-  @Nonnull
   default IntStream stream() {
     return StreamSupport.intStream(splitterator(), false);
   }
 
-  @Nonnull
   default Spliterator.OfInt splitterator() {
     return Spliterators.spliterator(iterator(), size(), 0);
   }

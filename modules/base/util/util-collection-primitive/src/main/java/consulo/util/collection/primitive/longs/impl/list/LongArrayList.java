@@ -18,7 +18,6 @@ package consulo.util.collection.primitive.longs.impl.list;
 import consulo.util.collection.primitive.longs.LongList;
 import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 
-import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 public class LongArrayList implements Cloneable, LongList {
@@ -192,7 +191,6 @@ public class LongArrayList implements Cloneable, LongList {
     }
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfLong iterator() {
     return new PrimitiveIterator.OfLong() {

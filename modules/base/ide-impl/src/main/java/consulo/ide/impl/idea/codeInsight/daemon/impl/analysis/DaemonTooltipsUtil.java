@@ -23,7 +23,7 @@ public class DaemonTooltipsUtil {
             ).get();
         }
         return XmlStringUtil.wrapInHtml(
-            (message.startsWith("<html>") ? XmlStringUtil.stripHtml(message) : XmlStringUtil.escapeString(message)) + link
+            (message.startsWith("<html>") ? XmlStringUtil.stripHtml(message) : XmlStringUtil.escapeText(message)) + link
         );
     }
 }

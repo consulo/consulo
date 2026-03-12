@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.lang.LoggerAssert;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Objects;
 
 public class WeakReferenceArray<T> {
   private static final Logger LOG = LoggerFactory.getLogger(WeakReferenceArray.class);
@@ -41,6 +43,7 @@ public class WeakReferenceArray<T> {
     myReferences = new MyWeakReference[size];
   }
 
+  @Nullable
   public T remove(int index) {
     checkRange(index);
     T result = getImpl(index);
@@ -69,13 +72,13 @@ public class WeakReferenceArray<T> {
     }
   }
 
-  public void add(T object) {
+  public void add(@Nullable T object) {
     ensureCapacity(mySize + 1);
     MyWeakReference.createAt(myReferences, mySize, object, myQueue);
     mySize++;
   }
 
-  public void add(int index, T element) {
+  public void add(int index, @Nullable T element) {
     ensureCapacity(mySize + 1);
     if (index < 0 || index > mySize) {
       throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
@@ -143,7 +146,7 @@ public class WeakReferenceArray<T> {
       else {
         LoggerAssert.assertTrue(LOG, validIndex == i);
       }
-      aliveReference.moveTo(myReferences, references, validIndex);
+      Objects.requireNonNull(aliveReference).moveTo(myReferences, references, validIndex);
       validIndex++;
     }
 
@@ -178,6 +181,7 @@ public class WeakReferenceArray<T> {
     return size();
   }
 
+  @Nullable
   private T getImpl(int index) {
     MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
     return reference == null ? null : reference.get();
@@ -187,6 +191,7 @@ public class WeakReferenceArray<T> {
     return myReferences.length;
   }
 
+  @Nullable
   public T get(int index) {
     checkRange(index);
     return getImpl(index);
@@ -238,14 +243,15 @@ public class WeakReferenceArray<T> {
   private static class MyWeakReference<E> extends WeakReference<E> {
     private int myIndex = -1;
 
-    private MyWeakReference(E e, ReferenceQueue<E> referenceQueue) {
+    private MyWeakReference(@Nullable E e, ReferenceQueue<E> referenceQueue) {
       super(e, referenceQueue);
     }
 
-    public static <E> void createAt(MyWeakReference[] array, int index, E element, ReferenceQueue<E> queue) {
+    public static <E> void createAt(MyWeakReference[] array, int index, @Nullable E element, ReferenceQueue<E> queue) {
       new MyWeakReference<E>(element, queue).putTo(array, index);
     }
 
+    @Nullable
     public static <E> MyWeakReference<E> getFrom(MyWeakReference[] array, int index) {
       MyWeakReference<E> reference = array[index];
       if (reference == null) {

@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static consulo.ide.impl.idea.openapi.util.io.FileUtil.MEGABYTE;
+import static consulo.util.io.FileUtil.MEGABYTE;
 
 public final class MemoryUsagePanel extends JButton implements CustomStatusBarWidget, UISettingsListener, Activatable {
     private static final int INDENT = 6;

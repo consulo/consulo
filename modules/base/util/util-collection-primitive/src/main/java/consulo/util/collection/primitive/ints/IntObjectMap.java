@@ -15,8 +15,7 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -27,20 +26,19 @@ public interface IntObjectMap<V> {
   interface IntObjectEntry<V1> {
     int getKey();
 
+    @Nullable
     V1 getValue();
   }
 
-  @Nonnull
   IntSet keySet();
 
-  @Nonnull
   int[] keys();
 
   /**
    * @return old value by key
    */
   @Nullable
-  V put(int key, V value);
+  V put(int key, @Nullable V value);
 
   @Nullable
   V get(int key);
@@ -49,12 +47,11 @@ public interface IntObjectMap<V> {
 
   boolean containsValue(V value);
 
+  @Nullable
   V remove(int key);
 
-  @Nonnull
   Set<IntObjectEntry<V>> entrySet();
 
-  @Nonnull
   Collection<V> values();
 
   int size();
@@ -80,7 +77,8 @@ public interface IntObjectMap<V> {
     }
   }
 
-  default V putIfAbsent(int key, V value) {
+  @Nullable
+  default V putIfAbsent(int key, @Nullable V value) {
     V v = get(key);
     if (v == null) {
       v = put(key, value);

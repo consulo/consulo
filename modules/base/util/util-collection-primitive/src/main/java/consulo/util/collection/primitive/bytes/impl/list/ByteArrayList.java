@@ -21,6 +21,7 @@ package consulo.util.collection.primitive.bytes.impl.list;
 import consulo.util.collection.primitive.bytes.ByteList;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.IntPredicate;
 
@@ -492,7 +493,7 @@ public class ByteArrayList implements ByteList, Cloneable {
     catch (CloneNotSupportedException e) {
       // it's supported
     } // end of try-catch
-    return clone;
+    return Objects.requireNonNull(clone);
   }
 
   /**

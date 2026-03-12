@@ -15,22 +15,20 @@
  */
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public interface UserDataHolder {
     @Nullable
-    <T> T getUserData(@Nonnull Key<T> key);
+    <T> T getUserData(Key<T> key);
 
-    <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
+    <T> void putUserData(Key<T> key, @Nullable T value);
 
     /**
      * @return written value
      */
-    @Nonnull
-    default <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
+    default <T> T putUserDataIfAbsent(Key<T> key, T value) {
         T oldValue = getUserData(key);
         if (oldValue == null) {
             putUserData(key, value);
@@ -47,7 +45,7 @@ public interface UserDataHolder {
      * @return true if old value got replaced, false otherwise
      * @see ConcurrentMap#replace(Object, Object, Object)
      */
-    default <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+    default <T> boolean replace(Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
         T data = getUserData(key);
 
         if (!Objects.equals(data, oldValue)) {

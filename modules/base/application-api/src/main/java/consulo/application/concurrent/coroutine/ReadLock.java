@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -40,8 +41,9 @@ public final class ReadLock<I, O> extends CoroutineStep<I, O> {
         myFunction = function;
     }
 
+    @Nullable
     @Override
-    protected O execute(I input, Continuation<?> continuation) {
+    protected O execute(@Nullable I input, Continuation<?> continuation) {
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
         return application.runReadAction((Supplier<O>) () -> myFunction.apply(input));
     }

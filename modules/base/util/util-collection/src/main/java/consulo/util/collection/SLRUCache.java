@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -30,11 +29,9 @@ public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
     super(protectedQueueSize, probationalQueueSize, hashingStrategy);
   }
 
-  @Nonnull
   public abstract V createValue(K key);
 
   @Override
-  @Nonnull
   public V get(K key) {
     V value = super.get(key);
     if (value != null) {

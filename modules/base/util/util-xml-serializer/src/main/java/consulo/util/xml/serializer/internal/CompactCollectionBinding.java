@@ -21,25 +21,25 @@ import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.CollectionBean;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @see CollectionBean
  */
-class CompactCollectionBinding extends Binding {
+class CompactCollectionBinding extends NonNullAccessorBinding {
   private final String name;
 
-  protected CompactCollectionBinding(@Nonnull MutableAccessor accessor) {
+  protected CompactCollectionBinding(MutableAccessor accessor) {
     super(accessor);
 
-    name = myAccessor.getName();
+    name = accessor.getName();
   }
 
   @Nullable
   @Override
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Element result = new Element(name);
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>)o;
@@ -55,9 +55,9 @@ class CompactCollectionBinding extends Binding {
 
   @Nullable
   @Override
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
     @SuppressWarnings("unchecked")
-    List<String> list = (List<String>)context;
+    List<String> list = (List<String>) Objects.requireNonNull(context);
     list.clear();
     if (element.getName().equals(name)) {
       for (Element item : element.getChildren("item")) {
@@ -81,7 +81,7 @@ class CompactCollectionBinding extends Binding {
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element element) {
+  public boolean isBoundTo(Element element) {
     String elementName = element.getName();
     if (isNameEqual(elementName)) {
       return true;

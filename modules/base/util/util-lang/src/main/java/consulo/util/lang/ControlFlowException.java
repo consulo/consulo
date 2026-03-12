@@ -15,13 +15,11 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A marker interface for exceptions that should never be logged.
  */
 public interface ControlFlowException {
-    @Nonnull
     public static RuntimeException rethrow(Throwable t) {
         if (!(t instanceof ControlFlowException)) {
             throw new IllegalArgumentException(t.getClass() + " is not ControlFlowException");

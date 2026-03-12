@@ -15,10 +15,9 @@ package consulo.util.jdom.interner;
 
 import org.jdom.*;
 
-import jakarta.annotation.Nonnull;
 
 class ImmutableAttribute extends Attribute {
-  ImmutableAttribute(@Nonnull String name, @Nonnull String value, AttributeType type, @Nonnull Namespace namespace) {
+  ImmutableAttribute(String name, String value, AttributeType type, Namespace namespace) {
     super.setName(name);
     super.setValue(value);
     super.setNamespace(namespace);
@@ -49,7 +48,7 @@ class ImmutableAttribute extends Attribute {
   }
 
   @Override
-  public Attribute setName(@Nonnull String name) {
+  public Attribute setName(String name) {
     throw ImmutableElement.immutableError(this);
   }
 
@@ -59,7 +58,7 @@ class ImmutableAttribute extends Attribute {
   }
 
   @Override
-  public Attribute setValue(@Nonnull String value) {
+  public Attribute setValue(String value) {
     throw ImmutableElement.immutableError(this);
   }
 

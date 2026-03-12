@@ -16,6 +16,7 @@
 package consulo.util.collection.impl.list;
 
 import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -25,6 +26,8 @@ import java.util.*;
 public class SortedList<T> extends AbstractList<T>{
   private final SortedMap<T, List<T>> myMap;
   private final Comparator<T> myComparator;
+
+  @Nullable
   private List<T> myDelegate = null;
 
   public SortedList(Comparator<T> comparator) {
@@ -41,7 +44,7 @@ public class SortedList<T> extends AbstractList<T>{
     _addToMap(element);
   }
 
-  private void _addToMap(T element) {
+  private void _addToMap(@Nullable T element) {
     List<T> group = myMap.get(element);
     if (group == null) {
       myMap.put(element, group = new ArrayList<T>());
@@ -51,11 +54,12 @@ public class SortedList<T> extends AbstractList<T>{
   }
 
   @Override
-  public boolean add(T t) {
+  public boolean add(@Nullable T t) {
     _addToMap(t);
     return true;
   }
 
+  @Nullable
   @Override
   public T remove(int index) {
     T value = get(index);
@@ -64,7 +68,7 @@ public class SortedList<T> extends AbstractList<T>{
   }
 
   @Override
-  public boolean remove(Object value) {
+  public boolean remove(@Nullable Object value) {
     List<T> group = myMap.remove(value);
     if (group == null) return false;
 
@@ -76,9 +80,10 @@ public class SortedList<T> extends AbstractList<T>{
     return true;
   }
 
+  @Nullable
+  @Override
   public T get(int index) {
-    ensureLinearized();
-    return myDelegate.get(index);
+    return ensureLinearized().get(index);
   }
 
   private List<T> ensureLinearized() {
@@ -94,8 +99,8 @@ public class SortedList<T> extends AbstractList<T>{
     myDelegate = null;
   }
 
+  @Override
   public int size() {
-    ensureLinearized();
-    return myDelegate.size();
+    return ensureLinearized().size();
   }
 }

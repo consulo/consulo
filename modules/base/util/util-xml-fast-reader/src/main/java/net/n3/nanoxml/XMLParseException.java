@@ -29,6 +29,8 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An XMLParseException is thrown when the XML passed to the XML parser is not
  * well-formed.
@@ -59,7 +61,7 @@ public class XMLParseException
     *                 occurred.
     * @param msg      the message of the exception.
     */
-   public XMLParseException(String systemID,
+   public XMLParseException(@Nullable String systemID,
                             int    lineNr,
                             String msg)
    {

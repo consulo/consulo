@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A sequence of bytes.
@@ -25,9 +24,7 @@ public interface ByteSequence {
 
   byte byteAt(int index);
 
-  @Nonnull
   ByteSequence subSequence(int start, int end);
 
-  @Nonnull
   byte[] toBytes();
 }

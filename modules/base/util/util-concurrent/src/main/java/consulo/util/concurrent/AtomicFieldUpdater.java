@@ -16,7 +16,6 @@
 package consulo.util.concurrent;
 
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -34,28 +33,24 @@ public class AtomicFieldUpdater<T,V> {
 
   private final long offset;
 
-  @Nonnull
-  public static <T, V> AtomicFieldUpdater<T, V> forFieldOfType(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
+  public static <T, V> AtomicFieldUpdater<T, V> forFieldOfType(Class<T> ownerClass, Class<V> fieldType) {
     return new AtomicFieldUpdater<T, V>(ownerClass, fieldType);
   }
 
-  @Nonnull
-  public static <T> AtomicFieldUpdater<T, Long> forLongFieldIn(@Nonnull Class<T> ownerClass) {
+  public static <T> AtomicFieldUpdater<T, Long> forLongFieldIn(Class<T> ownerClass) {
     return new AtomicFieldUpdater<T, Long>(ownerClass, long.class);
   }
 
-  @Nonnull
-  public static <T> AtomicFieldUpdater<T, Integer> forIntFieldIn(@Nonnull Class<T> ownerClass) {
+  public static <T> AtomicFieldUpdater<T, Integer> forIntFieldIn(Class<T> ownerClass) {
     return new AtomicFieldUpdater<T, Integer>(ownerClass, int.class);
   }
 
-  private AtomicFieldUpdater(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
+  private AtomicFieldUpdater(Class<T> ownerClass, Class<V> fieldType) {
     Field found = getTheOnlyVolatileFieldOfClass(ownerClass, fieldType);
     offset = unsafe.objectFieldOffset(found);
   }
 
-  @Nonnull
-  private static <T,V> Field getTheOnlyVolatileFieldOfClass(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
+  private static <T,V> Field getTheOnlyVolatileFieldOfClass(Class<T> ownerClass, Class<V> fieldType) {
     Field[] declaredFields = ownerClass.getDeclaredFields();
     Field found = null;
     for (Field field : declaredFields) {
@@ -81,23 +76,23 @@ public class AtomicFieldUpdater<T,V> {
     return found;
   }
 
-  public boolean compareAndSet(@Nonnull T owner, V expected, V newValue) {
+  public boolean compareAndSet(T owner, V expected, V newValue) {
     return unsafe.compareAndSwapObject(owner, offset, expected, newValue);
   }
 
-  public boolean compareAndSetLong(@Nonnull T owner, long expected, long newValue) {
+  public boolean compareAndSetLong(T owner, long expected, long newValue) {
     return unsafe.compareAndSwapLong(owner, offset, expected, newValue);
   }
 
-  public boolean compareAndSetInt(@Nonnull T owner, int expected, int newValue) {
+  public boolean compareAndSetInt(T owner, int expected, int newValue) {
     return unsafe.compareAndSwapInt(owner, offset, expected, newValue);
   }
 
-  public void set(@Nonnull T owner, V newValue) {
+  public void set(T owner, V newValue) {
     unsafe.putObjectVolatile(owner, offset, newValue);
   }
 
-  public V get(@Nonnull T owner) {
+  public V get(T owner) {
     //noinspection unchecked
     return (V)unsafe.getObjectVolatile(owner, offset);
   }

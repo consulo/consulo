@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,5 +39,5 @@ public interface ConcurrentList<E> extends List<E> {
    * @throws NullPointerException if the specified collection is null
    * @see #addIfAbsent(Object)
    */
-  int addAllAbsent(@Nonnull Collection<? extends E> c);
+  int addAllAbsent(Collection<? extends E> c);
 }

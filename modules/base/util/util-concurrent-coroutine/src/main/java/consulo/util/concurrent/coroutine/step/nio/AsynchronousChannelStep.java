@@ -18,6 +18,7 @@ package consulo.util.concurrent.coroutine.step.nio;
 
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.Buffer;
@@ -68,6 +69,7 @@ public abstract class AsynchronousChannelStep<I, O> extends CoroutineStep<I, O> 
      * @param continuation The channel group
      * @return The channel group
      */
+    @Nullable
     protected AsynchronousChannelGroup getChannelGroup(
         Continuation<?> continuation) {
         AsynchronousChannelGroup channelGroup = continuation.getUserData(CHANNEL_GROUP);

@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.ChannelId;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -79,8 +80,11 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<Void> previousExecution,
-		CoroutineStep<T, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<Void> previousExecution,
+		@Nullable CoroutineStep<T, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution,
 			nothing -> getChannel(continuation).receiveSuspending(
 				continuation.suspend(this, nextStep)));
@@ -89,8 +93,9 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected T execute(Void input, Continuation<?> continuation) {
+	protected T execute(@Nullable Void input, Continuation<?> continuation) {
 		return getChannel(continuation).receiveBlocking();
 	}
 }

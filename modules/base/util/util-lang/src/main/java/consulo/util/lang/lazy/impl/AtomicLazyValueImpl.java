@@ -16,19 +16,19 @@
 package consulo.util.lang.lazy.impl;
 
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 10/01/2022
+ * @since 2022-01-10
  */
- public class AtomicLazyValueImpl<T> implements LazyValue<T> {
+public class AtomicLazyValueImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
-  protected volatile T myValue;
+  @Nullable
+  protected volatile T myValue = null;
 
   public AtomicLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;
@@ -40,7 +40,6 @@ import java.util.function.Supplier;
     return myValue;
   }
 
-  @Nonnull
   @Override
   public T get() {
     T value = myValue;

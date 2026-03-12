@@ -19,8 +19,7 @@ import consulo.util.lang.lazy.impl.AtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
 import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
@@ -30,23 +29,19 @@ import java.util.function.Supplier;
  * @since 03/01/2022
  */
 public interface LazyValue<T> extends Supplier<T> {
-  @Nonnull
-  static <K> LazyValue<K> atomicNotNull(@Nonnull Supplier<K> factory) {
+  static <K> LazyValue<K> atomicNotNull(Supplier<K> factory) {
     return new AtomicLazyValueImpl<>(factory);
   }
 
-  @Nonnull
-  static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
+  static <K> LazyValue<K> notNull(Supplier<K> factory) {
     return new DefaultLazyValueImpl<>(factory);
   }
 
-  @Nonnull
-  static <K> LazyValue<K> notNullWithModCount(@Nonnull Supplier<K> factory, @Nonnull LongSupplier modCount) {
+  static <K> LazyValue<K> notNullWithModCount(Supplier<K> factory, LongSupplier modCount) {
     return new NonNullLazyValueWithModCountImpl<>(factory, modCount);
   }
 
-  @Nonnull
-  static <K> LazyValue<K> nullable(@Nonnull Supplier<K> factory) {
+  static <K> LazyValue<K> nullable(Supplier<K> factory) {
     return new NullableLazyValueImpl<>(factory);
   }
 

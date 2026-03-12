@@ -15,7 +15,8 @@
  */
 package consulo.util.collection.impl.map;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
+
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 
@@ -23,23 +24,22 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
   private final RefHashMap<K, ValueReference<K, V>> myMap;
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
-  public RefKeyRefValueHashMap(@Nonnull RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
+  public RefKeyRefValueHashMap(RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
     myMap = weakKeyMap;
   }
 
   protected interface ValueReference<K, V> {
-    @Nonnull
     RefHashMap.Key<K> getKey();
 
     V get();
   }
 
-  protected V dereference(ValueReference<K, ? extends V> reference) {
+  @Nullable
+  protected V dereference(@Nullable ValueReference<K, ? extends V> reference) {
     return reference == null ? null : reference.get();
   }
 
-  @Nonnull
-  protected abstract ValueReference<K, V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
+  protected abstract ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
 
   // returns true if some refs were tossed
   boolean processQueue() {
@@ -54,12 +54,14 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     return processed;
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
     return dereference(ref);
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     processQueue();
@@ -69,6 +71,7 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     return dereference(oldRef);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     processQueue();
@@ -77,7 +80,7 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
+  public void putAll(Map<? extends K, ? extends V> t) {
     throw new UnsupportedOperationException();
   }
 
@@ -107,13 +110,11 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     throw RefValueHashMap.pointlessContainsValue();
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return myMap.keySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<>();
@@ -127,7 +128,6 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     return result;
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     throw new UnsupportedOperationException();

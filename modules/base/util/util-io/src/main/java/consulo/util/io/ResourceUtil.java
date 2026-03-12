@@ -15,9 +15,7 @@
  */
 package consulo.util.io;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +34,7 @@ public class ResourceUtil {
   private ResourceUtil() {
   }
 
-  public static URL getResource(@Nonnull ClassLoader classLoader, @NonNls @Nonnull String basePath, @NonNls @Nonnull String fileName) {
+  public static URL getResource(ClassLoader classLoader, String basePath, String fileName) {
     if (basePath.endsWith("/")) basePath = basePath.substring(0, basePath.length() - 1);
 
     List<String> bundles = calculateBundleNames(basePath, Locale.getDefault());
@@ -57,7 +55,7 @@ public class ResourceUtil {
     return classLoader.getResource(basePath + "/" + fileName);
   }
 
-  public static URL getResource(@Nonnull Class loaderClass, @NonNls @Nonnull String basePath, @NonNls @Nonnull String fileName) {
+  public static URL getResource(Class loaderClass, String basePath, String fileName) {
     return getResource(loaderClass.getClassLoader(), basePath, fileName);
   }
 
@@ -107,8 +105,7 @@ public class ResourceUtil {
     return result;
   }
 
-  @Nonnull
-  public static String loadText(@Nonnull URL url) throws IOException {
+  public static String loadText(URL url) throws IOException {
     InputStream inputStream = new BufferedInputStream(URLUtil.openStream(url));
 
     try (InputStreamReader reader = new InputStreamReader(inputStream, ENCODING_UTF_8)) {

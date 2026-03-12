@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
+import consulo.document.Document;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import consulo.document.Document;
 import consulo.project.Project;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 
 /**
  * @author msk
  */
 public abstract class HighlightHandlerBase {
-  static void setupFindModel(Project project) {
-    FindManager findManager = FindManager.getInstance(project);
-    FindModel model = findManager.getFindNextModel();
-    if (model == null) {
-      model = findManager.getFindInFileModel();
+    static void setupFindModel(Project project) {
+        FindManager findManager = FindManager.getInstance(project);
+        FindModel model = findManager.getFindNextModel();
+        if (model == null) {
+            model = findManager.getFindInFileModel();
+        }
+        model.setSearchHighlighters(true);
+        findManager.setFindWasPerformed();
+        findManager.setFindNextModel(model);
     }
-    model.setSearchHighlighters(true);
-    findManager.setFindWasPerformed();
-    findManager.setFindNextModel(model);
-  }
 
-  public static String getLineTextErrorStripeTooltip(Document document, int offset, boolean escape) {
-    int lineNumber = document.getLineNumber(offset);
-    int lineStartOffset = document.getLineStartOffset(lineNumber);
-    int lineEndOffset = document.getLineEndOffset(lineNumber);
-    int lineFragmentEndOffset = Math.min(lineStartOffset + 140, lineEndOffset);
-    String lineText = document.getText().substring(lineStartOffset, lineFragmentEndOffset);
-    if (lineFragmentEndOffset != lineEndOffset) {
-      lineText = lineText.trim() + "...";
+    public static String getLineTextErrorStripeTooltip(Document document, int offset, boolean escape) {
+        int lineNumber = document.getLineNumber(offset);
+        int lineStartOffset = document.getLineStartOffset(lineNumber);
+        int lineEndOffset = document.getLineEndOffset(lineNumber);
+        int lineFragmentEndOffset = Math.min(lineStartOffset + 140, lineEndOffset);
+        String lineText = document.getText().substring(lineStartOffset, lineFragmentEndOffset);
+        if (lineFragmentEndOffset != lineEndOffset) {
+            lineText = lineText.trim() + "...";
+        }
+        return "  " + (escape ? XmlStringUtil.escapeText(lineText.trim()) : lineText.trim()) + "  ";
     }
-    return "  " + (escape ? StringUtil.escapeXml(lineText.trim()) : lineText.trim()) + "  ";
-  }
 }

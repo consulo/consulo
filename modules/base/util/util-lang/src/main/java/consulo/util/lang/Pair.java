@@ -15,43 +15,44 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
+
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
 
 public class Pair<A, B> implements Map.Entry<A, B> {
+  @Nullable
   public final A first;
+  @Nullable
   public final B second;
 
-  @Nonnull
-  public static <A, B> Pair<A, B> create(A first, B second) {
+  public static <A, B> Pair<A, B> create(@Nullable A first, @Nullable B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
   }
 
-  @Nonnull
-  public static <A, B> NonNull<A, B> createNonNull(@Nonnull A first, @Nonnull B second) {
+  public static <A, B> NonNull<A, B> createNonNull(A first, B second) {
     return new NonNull<A, B>(first, second);
   }
 
-  @Nonnull
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
   public static <A, B> Pair<A, B> pair(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
   }
 
-  @Nonnull
   public static <A, B> Function<A, Pair<A, B>> createFunction(B value) {
     return a -> create(a, value);
   }
 
+  @Nullable
   public static <T> T getFirst(Pair<T, ?> pair) {
     return pair != null ? pair.first : null;
   }
 
+  @Nullable
   public static <T> T getSecond(Pair<?, T> pair) {
     return pair != null ? pair.second : null;
   }
@@ -64,31 +65,36 @@ public class Pair<A, B> implements Map.Entry<A, B> {
     return EMPTY;
   }
 
-  public Pair(A first, B second) {
+  public Pair(@Nullable A first, @Nullable B second) {
     this.first = first;
     this.second = second;
   }
 
+  @Nullable
   public final A getFirst() {
     return first;
   }
 
+  @Nullable
   public final B getSecond() {
     return second;
   }
 
   @Override
+  @Nullable
   public A getKey() {
     return getFirst();
   }
 
   @Override
+  @Nullable
   public B getValue() {
     return getSecond();
   }
 
   @Override
-  public B setValue(B value) {
+  @Nullable
+  public B setValue(@Nullable B value) {
     throw new UnsupportedOperationException();
   }
 
@@ -110,7 +116,7 @@ public class Pair<A, B> implements Map.Entry<A, B> {
   }
 
   public static class NonNull<A, B> extends Pair<A, B> {
-    public NonNull(@Nonnull A first, @Nonnull B second) {
+    public NonNull(A first, B second) {
       super(first, second);
     }
   }
@@ -121,7 +127,7 @@ public class Pair<A, B> implements Map.Entry<A, B> {
    * @return a comparator that compares pair values by first value
    */
   public static <A extends Comparable<? super A>, B> Comparator<Pair<A, B>> comparingByFirst() {
-    return (o1, o2) -> o1.first.compareTo(o2.first);
+    return (o1, o2) -> Comparing.compare(o1.first, o2.first);
   }
 
   /**
@@ -130,6 +136,6 @@ public class Pair<A, B> implements Map.Entry<A, B> {
    * @return a comparator that compares pair values by second value
    */
   public static <A, B extends Comparable<? super B>> Comparator<Pair<A, B>> comparingBySecond() {
-    return (o1, o2) -> o1.second.compareTo(o2.second);
+    return (o1, o2) -> Comparing.compare(o1.second, o2.second);
   }
 }

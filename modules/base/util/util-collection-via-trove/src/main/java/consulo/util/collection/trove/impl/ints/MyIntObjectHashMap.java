@@ -22,21 +22,22 @@ import gnu.trove.TIntHashingStrategy;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 import gnu.trove.TObjectHash;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntObjectMap<V> {
-  private static record IntObjectEntryRecord<V1>(int key, V1 value) implements IntObjectEntry<V1> {
+  private static record IntObjectEntryRecord<V1>(int key, @Nullable V1 value) implements IntObjectEntry<V1> {
     @Override
     public int getKey() {
       return key();
     }
 
+    @Nullable
     @Override
     public V1 getValue() {
       return value();
@@ -67,7 +68,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
 
   private class MyEntrySet extends AbstractSet<IntObjectEntry<V>> {
 
-    @Nonnull
     @Override
     public Iterator<IntObjectEntry<V>> iterator() {
       return new MyEntryIterator<>(MyIntObjectHashMap.this.iterator());
@@ -91,6 +91,7 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
       return myIterator.hasNext();
     }
 
+    @Nullable
     @Override
     public V1 next() {
       myIterator.advance();
@@ -101,7 +102,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
 
   private class MyValues extends AbstractCollection<V> {
 
-    @Nonnull
     @Override
     public Iterator<V> iterator() {
       return new MyValuesIterator<>(MyIntObjectHashMap.this.iterator());
@@ -138,7 +138,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
   }
 
   private class MyKeySet extends AbstractIntSet {
-    @Nonnull
     @Override
     public PrimitiveIterator.OfInt iterator() {
       return new MyKeySetIterator(MyIntObjectHashMap.this.iterator());
@@ -150,6 +149,7 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     }
   }
 
+  @Nullable
   @SuppressWarnings("unchecked")
   private static <T> T nullize(Object value) {
     if(value == TObjectHash.NULL) {
@@ -158,9 +158,12 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return (T)value;
   }
 
-  private Set<IntObjectEntry<V>> myEntrySet;
-  private Collection<V> myValues;
-  private IntSet myKeySet;
+  @Nullable
+  private Set<IntObjectEntry<V>> myEntrySet = null;
+  @Nullable
+  private Collection<V> myValues = null;
+  @Nullable
+  private IntSet myKeySet = null;
 
   public MyIntObjectHashMap() {
   }
@@ -190,7 +193,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return super.put(key, value);
   }
 
-  @Nonnull
   @Override
   public Set<IntObjectEntry<V>> entrySet() {
     if(myEntrySet == null) {
@@ -199,7 +201,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return myEntrySet;
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     if(myValues == null) {
@@ -208,7 +209,6 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return myValues;
   }
 
-  @Nonnull
   @Override
   public IntSet keySet() {
     if(myKeySet == null) {

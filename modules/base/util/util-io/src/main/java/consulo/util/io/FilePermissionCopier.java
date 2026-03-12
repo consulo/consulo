@@ -16,7 +16,6 @@
 package consulo.util.io;
 
 import consulo.util.io.internal.OSInfo;
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,5 +59,5 @@ public interface FilePermissionCopier {
     return true;
   };
 
-  boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean execOnly) throws IOException;
+  boolean clonePermissions(String source, String target, boolean execOnly) throws IOException;
 }

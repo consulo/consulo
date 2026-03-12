@@ -16,6 +16,8 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.CompletionException;
 
 /**
@@ -33,7 +35,7 @@ public class CoroutineException extends CompletionException {
 	 *
 	 * @param cause The causing exception
 	 */
-	public CoroutineException(Throwable cause) {
+	public CoroutineException(@Nullable Throwable cause) {
 		super(cause);
 	}
 
@@ -53,7 +55,7 @@ public class CoroutineException extends CompletionException {
 	 * @param message The error message
 	 * @param cause   The causing exception
 	 */
-	public CoroutineException(String message, Throwable cause) {
+	public CoroutineException(String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 }

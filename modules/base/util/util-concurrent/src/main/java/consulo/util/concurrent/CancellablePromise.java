@@ -4,30 +4,25 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.DonePromise;
 import consulo.util.concurrent.internal.InternalPromiseUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public interface CancellablePromise<T> extends Promise<T>, Future<T> {
-  @Nonnull
   @Override
-  CancellablePromise<T> onSuccess(@Nonnull Consumer<? super T> handler);
+  CancellablePromise<T> onSuccess(Consumer<? super T> handler);
 
-  @Nonnull
   @Override
-  CancellablePromise<T> onError(@Nonnull Consumer<Throwable> rejected);
+  CancellablePromise<T> onError(Consumer<Throwable> rejected);
 
-  @Nonnull
   @Override
-  CancellablePromise<T> onProcessed(@Nonnull Consumer<? super T> processed);
+  CancellablePromise<T> onProcessed(Consumer<? super T> processed);
 
   void cancel();
 
   /**
    * Create a promise that is resolved with the given value.
    */
-  @Nonnull
   static <T> CancellablePromise<T> resolve(@Nullable T result) {
     if (result == null) {
       //noinspection unchecked

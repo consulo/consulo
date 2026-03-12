@@ -20,7 +20,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.ConcurrentRefHashMap;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -35,7 +34,7 @@ public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V
   public ConcurrentSoftHashMap() {
   }
 
-  public ConcurrentSoftHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentSoftHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
@@ -43,7 +42,7 @@ public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
     private final HashingStrategy<? super K> myStrategy;
 
-    private SoftKey(@Nonnull K k, int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
+    private SoftKey(K k, int hash, HashingStrategy<? super K> strategy, ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = hash;
@@ -66,9 +65,8 @@ public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V
     }
   }
 
-  @Nonnull
   @Override
-  protected KeyReference<K> createKeyReference(@Nonnull K key, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  protected KeyReference<K> createKeyReference(K key, HashingStrategy<? super K> hashingStrategy) {
     return new SoftKey<>(key, hashingStrategy.hashCode(key), hashingStrategy, myReferenceQueue);
   }
 }

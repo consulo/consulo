@@ -22,9 +22,9 @@ import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 

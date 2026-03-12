@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import java.util.zip.GZIPInputStream;
 public class CountingGZIPInputStream extends GZIPInputStream {
   private final CountingInputStream myInputStream;
 
-  private CountingGZIPInputStream(@Nonnull CountingInputStream inputStream) throws IOException {
+  private CountingGZIPInputStream(CountingInputStream inputStream) throws IOException {
     super(inputStream);
     myInputStream = inputStream;
   }
@@ -39,8 +38,7 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     return myInputStream.myBytesRead;
   }
 
-  @Nonnull
-  public static CountingGZIPInputStream create(@Nonnull InputStream inputStream) throws IOException {
+  public static CountingGZIPInputStream create(InputStream inputStream) throws IOException {
     return new CountingGZIPInputStream(new CountingInputStream(inputStream));
   }
 
@@ -48,7 +46,7 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     private final InputStream myInputStream;
     private long myBytesRead = 0;
 
-    public CountingInputStream(@Nonnull InputStream inputStream) {
+    public CountingInputStream(InputStream inputStream) {
       myInputStream = inputStream;
     }
 
@@ -59,14 +57,14 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     }
 
     @Override
-    public int read(@Nonnull byte[] b) throws IOException {
+    public int read(byte[] b) throws IOException {
       int bytesRead = myInputStream.read(b);
       myBytesRead += bytesRead;
       return bytesRead;
     }
 
     @Override
-    public int read(@Nonnull byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int len) throws IOException {
       int bytesRead = myInputStream.read(b, off, len);
       myBytesRead += bytesRead;
       return bytesRead;

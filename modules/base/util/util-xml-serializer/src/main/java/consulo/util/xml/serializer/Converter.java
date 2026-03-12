@@ -15,13 +15,11 @@
  */
 package consulo.util.xml.serializer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class Converter<T> {
   @Nullable
-  public abstract T fromString(@Nonnull String value);
+  public abstract T fromString(String value);
 
-  @Nonnull
-  public abstract String toString(@Nonnull T t);
+  public abstract String toString(T t);
 }

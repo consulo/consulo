@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A char sequence that supports fast copying of its full or partial contents to a char array. May be useful for performance optimizations
@@ -33,5 +32,5 @@ public interface CharArrayExternalizable extends CharSequence {
    * @param dest    the array to put characters into
    * @param destPos the index where to put the characters in the dest array
    */
-  void getChars(int start, int end, @Nonnull char[] dest, int destPos);
+  void getChars(int start, int end, char[] dest, int destPos);
 }

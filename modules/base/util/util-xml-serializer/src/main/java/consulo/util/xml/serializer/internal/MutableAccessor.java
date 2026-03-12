@@ -16,21 +16,20 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.Accessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface MutableAccessor extends Accessor {
-  void set(@Nonnull Object host, @Nullable Object value);
+  void set(Object host, @Nullable Object value);
 
-  void setBoolean(@Nonnull Object host, boolean value);
+  void setBoolean(Object host, boolean value);
 
-  void setInt(@Nonnull Object host, int value);
+  void setInt(Object host, int value);
 
-  void setShort(@Nonnull Object host, short value);
+  void setShort(Object host, short value);
 
-  void setLong(@Nonnull Object host, long value);
+  void setLong(Object host, long value);
 
-  void setDouble(@Nonnull Object host, double value);
+  void setDouble(Object host, double value);
 
-  void setFloat(@Nonnull Object host, float value);
+  void setFloat(Object host, float value);
 }

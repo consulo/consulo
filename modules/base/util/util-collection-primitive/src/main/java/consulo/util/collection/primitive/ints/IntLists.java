@@ -18,7 +18,6 @@ package consulo.util.collection.primitive.ints;
 import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.impl.list.IntArrayList;
 
-import jakarta.annotation.Nonnull;
 import java.util.RandomAccess;
 
 /**
@@ -29,22 +28,19 @@ import java.util.RandomAccess;
 public class IntLists {
   private static final int REVERSE_THRESHOLD = 18;
 
-  @Nonnull
   public static IntList newArrayList() {
     return new IntArrayList();
   }
 
-  @Nonnull
   public static IntList newArrayList(int[] values) {
     return new IntArrayList(values);
   }
 
-  @Nonnull
   public static IntList newArrayList(int capacity) {
     return new IntArrayList(capacity);
   }
 
-  public static void trimToSize(@Nonnull IntList list) {
+  public static void trimToSize(IntList list) {
     if (list instanceof IntArrayList intArrayList) {
       intArrayList.trimToSize();
     }

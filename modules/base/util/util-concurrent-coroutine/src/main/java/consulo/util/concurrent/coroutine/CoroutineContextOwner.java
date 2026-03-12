@@ -15,13 +15,11 @@
  */
 package consulo.util.concurrent.coroutine;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2026-02-02
  */
 public interface CoroutineContextOwner {
-    @Nonnull
     CoroutineContext coroutineContext();
 }

@@ -2,7 +2,6 @@
 package consulo.util.lang.xml;
 
 import consulo.util.lang.internal.Verifier;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,7 +77,6 @@ public class XmlStringUtilTest {
             .isEqualTo("<![CDATA[123<![CDATA[wow<&>]]]><![CDATA[]>]]]><![CDATA[]><![CDATA[123]]>");
     }
 
-    @Nonnull
     private static StringBuilder sb() {
         return new StringBuilder();
     }

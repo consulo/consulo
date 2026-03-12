@@ -18,7 +18,6 @@ package consulo.util.concurrent.internal;
 import consulo.util.concurrent.AsyncFutureResult;
 import consulo.util.concurrent.ResultConsumer;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 
 /**
@@ -64,7 +63,7 @@ public class AsyncFutureResultImpl<V> implements AsyncFutureResult<V> {
   }
 
   @Override
-  public V get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     return myFuture.get(timeout, unit);
   }
 

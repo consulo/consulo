@@ -15,8 +15,8 @@
  */
 package consulo.util.rmi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.*;
 import java.rmi.Remote;
 import java.rmi.ServerError;
@@ -34,7 +34,6 @@ public class RemoteUtil {
 
   private static final ConcurrentMap<Map.Entry<Class<?>, Class<?>>, Map<Method, Method>> ourRemoteToLocalMap = new ConcurrentHashMap<Map.Entry<Class<?>, Class<?>>, Map<Method, Method>>();
 
-  @Nonnull
   private static Map<Method, Method> getOrCreateRemoteToLocal(Map.Entry<Class<?>, Class<?>> key) {
     Map<Method, Method> methods = ourRemoteToLocalMap.get(key);
     if (methods != null) {
@@ -180,8 +179,7 @@ public class RemoteUtil {
    * @param e exception to process
    * @return extracted 'real exception' if any; given exception otherwise
    */
-  @Nonnull
-  public static Throwable unwrap(@Nonnull Throwable e) {
+  public static Throwable unwrap(Throwable e) {
     for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
       Class<? extends Throwable> clazz = candidate.getClass();
       if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {

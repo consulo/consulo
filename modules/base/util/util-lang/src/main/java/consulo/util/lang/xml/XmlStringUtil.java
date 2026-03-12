@@ -20,8 +20,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.internal.Verifier;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.xml.CommonXmlStrings.*;
 
@@ -32,8 +31,7 @@ public class XmlStringUtil {
     private XmlStringUtil() {
     }
 
-    @Nonnull
-    public static String wrapInCDATA(@Nonnull String str) {
+    public static String wrapInCDATA(String str) {
         StringBuilder sb = new StringBuilder();
         int cur = 0, len = str.length();
         while (cur < len) {
@@ -55,8 +53,7 @@ public class XmlStringUtil {
      * @param value a text to escape.
      * @return      the text with escapes.
      */
-    @Nonnull
-    public static String escapeText(@Nonnull CharSequence value) {
+    public static String escapeText(CharSequence value) {
         return escapeText(value, 0, value.length());
     }
 
@@ -74,8 +71,7 @@ public class XmlStringUtil {
      * @return          the text with escapes.
      */
     @Contract(pure = true)
-    @Nonnull
-    public static String escapeText(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+    public static String escapeText(CharSequence value, int fromIndex, int toIndex) {
         if (!needsTextEscapes(value, fromIndex, toIndex)) {
             return value.subSequence(fromIndex, toIndex).toString();
         }
@@ -95,8 +91,7 @@ public class XmlStringUtil {
      * @return        the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
      */
     @Contract(mutates = "param2")
-    @Nonnull
-    public static StringBuilder escapeText(@Nonnull CharSequence value, @Nonnull StringBuilder builder) {
+    public static StringBuilder escapeText(CharSequence value, StringBuilder builder) {
         return escapeText(value, 0, value.length(), builder);
     }
 
@@ -115,8 +110,7 @@ public class XmlStringUtil {
      * @return          the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
      */
     @Contract(mutates = "param4")
-    @Nonnull
-    public static StringBuilder escapeText(@Nonnull CharSequence value, int fromIndex, int toIndex, @Nonnull StringBuilder builder) {
+    public static StringBuilder escapeText(CharSequence value, int fromIndex, int toIndex, StringBuilder builder) {
         builder.ensureCapacity(builder.length() + toIndex - fromIndex);
         for (int i = fromIndex; i < toIndex; i++) {
             char ch = value.charAt(i);
@@ -143,8 +137,7 @@ public class XmlStringUtil {
      * @param value an attribute value to escape.
      * @return      the attribute value with escapes.
      */
-    @Nonnull
-    public static String escapeAttr(@Nonnull CharSequence value, char quote) {
+    public static String escapeAttr(CharSequence value, char quote) {
         return escapeAttr(value, 0, value.length(), quote);
     }
 
@@ -165,8 +158,7 @@ public class XmlStringUtil {
      * @return          the attribute value with escapes.
      */
     @Contract(pure = true)
-    @Nonnull
-    public static String escapeAttr(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+    public static String escapeAttr(CharSequence value, int fromIndex, int toIndex, char quote) {
         if (!needsAttrEscapes(value, fromIndex, toIndex, quote)) {
             return value.subSequence(fromIndex, toIndex).toString();
         }
@@ -189,8 +181,7 @@ public class XmlStringUtil {
      * @return        the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
      */
     @Contract(mutates = "param3")
-    @Nonnull
-    public static StringBuilder escapeAttr(@Nonnull CharSequence value, char quote, @Nonnull StringBuilder builder) {
+    public static StringBuilder escapeAttr(CharSequence value, char quote, StringBuilder builder) {
         return escapeAttr(value, 0, value.length(), quote, builder);
     }
 
@@ -212,13 +203,12 @@ public class XmlStringUtil {
      * @return          the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
      */
     @Contract(mutates = "param5")
-    @Nonnull
     public static StringBuilder escapeAttr(
-        @Nonnull CharSequence value,
+        CharSequence value,
         int fromIndex,
         int toIndex,
         char quote,
-        @Nonnull StringBuilder builder
+        StringBuilder builder
     ) {
         builder.ensureCapacity(builder.length() + toIndex - fromIndex);
         if (quote == '\'') {
@@ -249,31 +239,37 @@ public class XmlStringUtil {
     }
 
     @Contract(pure = true)
-    private static boolean needsTextEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+    private static boolean needsTextEscapes(CharSequence value, int fromIndex, int toIndex) {
         return StringUtil.indexOfAny(value, "<>&", fromIndex, toIndex) >= 0;
     }
 
     @Contract(pure = true)
-    private static boolean needsAttrEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+    private static boolean needsAttrEscapes(CharSequence value, int fromIndex, int toIndex, char quote) {
         return StringUtil.indexOfAny(value, quote == '"' ? "\"\n\r&" : "'\n\r&", fromIndex, toIndex) >= 0;
     }
 
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @Nullable
     @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str) {
         return escapeString(str, false);
     }
 
+    @Contract(value = "null,_ -> null; !null,_ -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @Nullable
     @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
         return escapeString(str, escapeWhiteSpace, true);
     }
 
+    @Contract(value = "null,_,_ -> null; !null,_,_ -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
+    @Nullable
     @SuppressWarnings("deprecation")
     public static String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
         if (str == null) {
@@ -319,17 +315,15 @@ public class XmlStringUtil {
         return buffer == null ? str : buffer.toString();
     }
 
-    @Nonnull
-    public static String wrapInHtml(@Nonnull CharSequence result) {
+    public static String wrapInHtml(CharSequence result) {
         return HTML_START + result + HTML_END;
     }
 
-    public static boolean isWrappedInHtml(@Nonnull String tooltip) {
+    public static boolean isWrappedInHtml(String tooltip) {
         return StringUtil.startsWithIgnoreCase(tooltip, HTML_START) && StringUtil.endsWithIgnoreCase(tooltip, HTML_END);
     }
 
-    @Nonnull
-    public static String stripHtml(@Nonnull String toolTip) {
+    public static String stripHtml(String toolTip) {
         toolTip = StringUtil.trimStart(toolTip, HTML_START);
         toolTip = StringUtil.trimStart(toolTip, BODY_START);
         toolTip = StringUtil.trimEnd(toolTip, HTML_END);
@@ -341,8 +335,7 @@ public class XmlStringUtil {
      * Converts {@code text} to a string which can be used inside an HTML document: if it's already an HTML text the root html/body tags will
      * be stripped, if it's a plain text special characters will be escaped
      */
-    @Nonnull
-    public static String convertToHtmlContent(@Nonnull String text) {
+    public static String convertToHtmlContent(String text) {
         return isWrappedInHtml(text) ? stripHtml(text) : escapeText(text);
     }
 
@@ -354,8 +347,7 @@ public class XmlStringUtil {
      * @see <a href="https://www.w3.org/International/questions/qa-controls">https://www.w3.org/International/questions/qa-controls</a>
      * @see Verifier#isXMLCharacter(int)
      */
-    @Nonnull
-    public static String escapeIllegalXmlChars(@Nonnull String text) {
+    public static String escapeIllegalXmlChars(String text) {
         StringBuilder b = null;
         int lastPos = 0;
         for (int i = 0; i < text.length(); i++) {
@@ -382,8 +374,7 @@ public class XmlStringUtil {
     /**
      * @see XmlStringUtil#escapeIllegalXmlChars(String)
      */
-    @Nonnull
-    public static String unescapeIllegalXmlChars(@Nonnull String text) {
+    public static String unescapeIllegalXmlChars(String text) {
         StringBuilder b = null;
         int lastPos = 0;
         for (int i = 0; i < text.length(); i++) {

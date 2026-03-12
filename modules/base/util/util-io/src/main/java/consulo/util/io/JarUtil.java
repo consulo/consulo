@@ -18,8 +18,7 @@ package consulo.util.io;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -37,7 +36,7 @@ public class JarUtil {
    * or null if missing or a file does not contain a manifest.
    */
   @Nullable
-  public static String getJarAttribute(@Nonnull File file, @Nonnull Attributes.Name attribute) {
+  public static String getJarAttribute(File file, Attributes.Name attribute) {
     return getJarAttributeImpl(file, null, attribute);
   }
 
@@ -46,11 +45,12 @@ public class JarUtil {
    * or null if missing or a file does not contain a manifest.
    */
   @Nullable
-  public static String getJarAttribute(@Nonnull File file, @Nonnull String entryName, @Nonnull Attributes.Name attribute) {
+  public static String getJarAttribute(File file, String entryName, Attributes.Name attribute) {
     return getJarAttributeImpl(file, entryName, attribute);
   }
 
-  private static String getJarAttributeImpl(@Nonnull File file, @Nullable String entryName, @Nonnull Attributes.Name attribute) {
+  @Nullable
+  private static String getJarAttributeImpl(File file, @Nullable String entryName, Attributes.Name attribute) {
     if (file.canRead()) {
       try {
         try (JarFile jarFile = new JarFile(file)) {
@@ -74,7 +74,7 @@ public class JarUtil {
    * Returns loaded instance, or null if requested entry is missed or invalid.
    */
   @Nullable
-  public static Properties loadProperties(@Nonnull File file, @Nonnull String entryName) {
+  public static Properties loadProperties(File file, String entryName) {
     if (file.canRead()) {
       try {
         try (ZipFile zipFile = new ZipFile(file)) {

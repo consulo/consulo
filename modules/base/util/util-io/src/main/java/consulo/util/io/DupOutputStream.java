@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +26,7 @@ public class DupOutputStream extends OutputStream {
   private final OutputStream myStream1;
   private final OutputStream myStream2;
 
-  public DupOutputStream(@Nonnull OutputStream stream1, @Nonnull OutputStream stream2) {
+  public DupOutputStream(OutputStream stream1, OutputStream stream2) {
     myStream1 = stream1;
     myStream2 = stream2;
   }

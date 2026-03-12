@@ -19,27 +19,33 @@ import consulo.util.io.URLUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.util.Objects;
 
 public final class UrlImpl implements Url {
+  @Nullable
   private final String scheme;
+  @Nullable
   private final String authority;
 
   private final String path;
-  private String decodedPath;
+  @Nullable
+  private String decodedPath = null;
 
+  @Nullable
   private final String parameters;
 
-  private String externalForm;
-  private UrlImpl withoutParameters;
+  @Nullable
+  private String externalForm = null;
+  @Nullable
+  private UrlImpl withoutParameters = null;
 
   public UrlImpl(@Nullable String path) {
     this(null, null, path, null);
   }
 
-  public UrlImpl(@Nonnull String scheme, @Nullable String authority, @Nullable String path) {
+  public UrlImpl(String scheme, @Nullable String authority, @Nullable String path) {
     this(scheme, authority, path, null);
   }
 
@@ -50,7 +56,6 @@ public final class UrlImpl implements Url {
     this.parameters = StringUtil.nullize(parameters);
   }
 
-  @Nonnull
   @Override
   public String getPath() {
     if (decodedPath == null) {
@@ -65,8 +70,8 @@ public final class UrlImpl implements Url {
     return scheme;
   }
 
-  @Override
   @Nullable
+  @Override
   public String getAuthority() {
     return authority;
   }
@@ -106,7 +111,6 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @Nonnull
   public String toExternalForm() {
     if (externalForm != null) {
       return externalForm;
@@ -127,7 +131,6 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @Nonnull
   public Url trimParameters() {
     if (parameters == null) {
       return this;
@@ -153,7 +156,10 @@ public final class UrlImpl implements Url {
     }
 
     UrlImpl url = (UrlImpl)o;
-    return StringUtil.equals(scheme, url.scheme) && StringUtil.equals(authority, url.authority) && getPath().equals(url.getPath()) && StringUtil.equals(parameters, url.parameters);
+    return StringUtil.equals(scheme, url.scheme)
+        && StringUtil.equals(authority, url.authority)
+        && getPath().equals(url.getPath())
+        && StringUtil.equals(parameters, url.parameters);
   }
 
   @Override

@@ -22,6 +22,7 @@ import consulo.util.concurrent.coroutine.step.ChannelReceive;
 import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.dataholder.CopyableUserDataHolder;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -330,8 +331,12 @@ public class CoroutineTest {
      * @param rScope       run The coroutine scope
      * @param cr           The coroutine
      */
-    void assertBooleanInput(String sTrueResult, String sFalseResult,
-                            CoroutineScope rScope, Coroutine<Boolean, String> cr) {
+    void assertBooleanInput(
+        String sTrueResult,
+        @Nullable String sFalseResult,
+        CoroutineScope rScope,
+        Coroutine<Boolean, String> cr
+    ) {
         Continuation<String> cat = cr.runAsync(rScope, true);
         Continuation<String> caf = cr.runAsync(rScope, false);
         Continuation<String> cbt = cr.runBlocking(rScope, true);

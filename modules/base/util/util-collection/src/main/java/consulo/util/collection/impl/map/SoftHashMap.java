@@ -18,7 +18,6 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 
 /**
@@ -31,22 +30,20 @@ public abstract class SoftHashMap<K, V> extends RefHashMap<K, V> {
     super(initialCapacity);
   }
 
-  public SoftHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public SoftHashMap(HashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
   }
 
-  @Nonnull
   @Override
-  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull HashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+  protected <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
     return new SoftKey<>(k, strategy, q);
   }
 
   private static class SoftKey<T> extends SoftReference<T> implements Key<T> {
     private final int myHash;  /* Hash code of key, stored here since the key may be tossed by the GC */
-    @Nonnull
     private final HashingStrategy<? super T> myStrategy;
 
-    private SoftKey(@Nonnull T k, @Nonnull HashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+    private SoftKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = strategy.hashCode(k);

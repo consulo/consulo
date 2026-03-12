@@ -7,6 +7,8 @@ package consulo.util.collection.impl.map;
  * explained at http://creativecommons.org/publicdomain/zero/1.0/
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 
 @SuppressWarnings("ALL")
@@ -74,7 +76,7 @@ public class Helpers {
   /**
    * Optimized form of: key + "=" + val
    */
-  static String mapEntryToString(Object key, Object val) {
+  static String mapEntryToString(@Nullable Object key, @Nullable Object val) {
     final String k, v;
     final int klen, vlen;
     final char[] chars = new char[(klen = (k = objectToString(key)).length()) + (vlen = (v = objectToString(val)).length()) + 1];
@@ -84,7 +86,7 @@ public class Helpers {
     return new String(chars);
   }
 
-  private static String objectToString(Object x) {
+  private static String objectToString(@Nullable Object x) {
     // Extreme compatibility with StringBuilder.append(null)
     String s;
     return (x == null || (s = x.toString()) == null) ? "null" : s;

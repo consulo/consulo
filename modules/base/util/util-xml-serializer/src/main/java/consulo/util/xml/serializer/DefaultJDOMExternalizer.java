@@ -21,8 +21,7 @@ import org.jdom.Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -40,10 +39,10 @@ public class DefaultJDOMExternalizer {
   }
 
   public interface JDOMFilter {
-    boolean isAccept(@Nonnull Field field);
+    boolean isAccept(Field field);
   }
 
-  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode) throws WriteExternalException {
+  public static void writeExternal(Object data, Element parentNode) throws WriteExternalException {
     writeExternal(data, parentNode, null);
   }
 
@@ -53,7 +52,7 @@ public class DefaultJDOMExternalizer {
    * @param filter     null means all elements accepted
    * @throws WriteExternalException
    */
-  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode, @Nullable JDOMFilter filter) throws WriteExternalException {
+  public static void writeExternal(Object data, Element parentNode, @Nullable JDOMFilter filter) throws WriteExternalException {
     Field[] fields = data.getClass().getFields();
 
     for (Field field : fields) {
@@ -159,7 +158,7 @@ public class DefaultJDOMExternalizer {
     return value;
   }
 
-  public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException {
+  public static void readExternal(Object data, Element parentNode) throws InvalidDataException {
     if (parentNode == null) return;
 
     for (Element e : parentNode.getChildren("option")) {
@@ -290,32 +289,27 @@ public class DefaultJDOMExternalizer {
     }
   }
 
-  public static int toInt(@Nonnull String value) throws InvalidDataException {
-    int i;
+  public static int toInt(String value) throws InvalidDataException {
     try {
-      i = Integer.parseInt(value);
+      return Integer.parseInt(value);
     }
     catch (NumberFormatException ex) {
       throw new InvalidDataException(value, ex);
     }
-    return i;
   }
 
+  @Nullable
   public static Color toColor(@Nullable String value) throws InvalidDataException {
-    Color color;
     if (value == null) {
-      color = null;
+      return null;
     }
-    else {
-      try {
-        int rgb = Integer.parseInt(value, 16);
-        color = new Color(rgb);
-      }
-      catch (NumberFormatException ex) {
-        LOG.debug("Wrong color value: " + value, ex);
-        throw new InvalidDataException("Wrong color value: " + value, ex);
-      }
+    try {
+      int rgb = Integer.parseInt(value, 16);
+      return new Color(rgb);
     }
-    return color;
+    catch (NumberFormatException ex) {
+      LOG.debug("Wrong color value: " + value, ex);
+      throw new InvalidDataException("Wrong color value: " + value, ex);
+    }
   }
 }

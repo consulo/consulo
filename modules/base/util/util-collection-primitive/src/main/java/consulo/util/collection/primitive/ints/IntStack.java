@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
 import java.util.EmptyStackException;
 import java.util.PrimitiveIterator;
 
@@ -103,7 +102,6 @@ public class IntStack implements IntCollection {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfInt iterator() {
     throw new UnsupportedOperationException();

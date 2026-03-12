@@ -15,15 +15,14 @@
  */
 package consulo.util.xml.serializer;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 public interface Accessor {
-  Object read(@Nonnull Object o);
+  Object read(Object o);
 
-  <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass);
+  <T extends Annotation> T getAnnotation(Class<T> annotationClass);
 
   String getName();
 
