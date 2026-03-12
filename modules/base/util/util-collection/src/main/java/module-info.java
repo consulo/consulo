@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.util.collection {
     requires transitive consulo.annotation;
     requires transitive consulo.util.lang;

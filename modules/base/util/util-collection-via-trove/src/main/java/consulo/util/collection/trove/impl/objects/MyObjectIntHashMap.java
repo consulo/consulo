@@ -21,8 +21,8 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntIterator;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.PrimitiveIterator;
@@ -35,7 +35,6 @@ import java.util.function.ObjIntConsumer;
  */
 public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements ObjectIntMap<K> {
   private class MyEntrySet extends AbstractSet<Entry<K>> {
-    @Nonnull
     @Override
     public Iterator<Entry<K>> iterator() {
       return new EntryIter<>(MyObjectIntHashMap.this.iterator());
@@ -48,7 +47,6 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
   }
 
   private class MyKeySet extends AbstractSet<K> {
-    @Nonnull
     @Override
     public Iterator<K> iterator() {
       return new KeyIter<>(MyObjectIntHashMap.this.iterator());
@@ -62,7 +60,6 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
 
   private class MyValueCollection extends AbstractIntCollection {
 
-    @Nonnull
     @Override
     public PrimitiveIterator.OfInt iterator() {
       return new ValueIter<>(MyObjectIntHashMap.this.iterator());
@@ -145,9 +142,12 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
     }
   }
 
-  private MyEntrySet myEntrySet;
-  private MyKeySet myKeySet;
-  private MyValueCollection myValueCollection;
+  @Nullable
+  private MyEntrySet myEntrySet = null;
+  @Nullable
+  private MyKeySet myKeySet = null;
+  @Nullable
+  private MyValueCollection myValueCollection = null;
 
   public MyObjectIntHashMap() {
   }
@@ -201,7 +201,7 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
   }
 
   @Override
-  public void putAll(@Nonnull ObjectIntMap<? extends K> map) {
+  public void putAll(ObjectIntMap<? extends K> map) {
     ensureCapacity(size() + map.size());
     forEach(this::putInt);
   }
@@ -222,7 +222,6 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
     return myKeySet;
   }
 
-  @Nonnull
   @Override
   public IntCollection values() {
     if(myValueCollection == null) {

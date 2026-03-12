@@ -15,7 +15,8 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Enumeration;
 
@@ -31,30 +32,31 @@ public interface ConcurrentLongObjectMap<V> {
   /**
    * @return written value
    */
-  @Nonnull
-  V cacheOrGet(long key, @Nonnull V value);
+  V cacheOrGet(long key, V value);
 
-  boolean remove(long key, @Nonnull V value);
+  boolean remove(long key, V value);
 
-  boolean replace(long key, @Nonnull V oldValue, @Nonnull V newValue);
+  boolean replace(long key, V oldValue, V newValue);
 
-  V replace(long key, @Nonnull V value);
+  @Nullable
+  V replace(long key, V value);
 
   // regular Map methods
-  V put(long key, @Nonnull V value);
+  @Nullable
+  V put(long key, V value);
 
+  @Nullable
   V get(long key);
 
+  @Nullable
   V remove(long key);
 
   boolean containsKey(long key);
 
   void clear();
 
-  @Nonnull
   Iterable<LongEntry<V>> entries();
 
-  @Nonnull
   long[] keys();
 
   /**
@@ -68,20 +70,19 @@ public interface ConcurrentLongObjectMap<V> {
 
   boolean isEmpty();
 
-  @Nonnull
   public Enumeration<V> elements();
 
-  @Nonnull
   Collection<V> values();
 
-  boolean containsValue(@Nonnull V value);
+  boolean containsValue(V value);
 
-  V putIfAbsent(long key, @Nonnull V value);
+  @Nullable
+  V putIfAbsent(long key, V value);
 
   interface LongEntry<V> {
     long getKey();
 
-    @Nonnull
+    @Nullable
     V getValue();
   }
 }

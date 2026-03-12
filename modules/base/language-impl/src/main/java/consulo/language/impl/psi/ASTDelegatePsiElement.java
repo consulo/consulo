@@ -164,6 +164,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return getNode().textContains(c);
     }
 
+    @org.jspecify.annotations.Nullable
     @Override
     @RequiredReadAction
     public <T> T getCopyableUserData(Key<T> key) {

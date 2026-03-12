@@ -15,8 +15,7 @@
  */
 package consulo.util.rmi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.rmi.Remote;
@@ -25,24 +24,25 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RemoteObject implements Remote, Unreferenced {
   private final WeakReference<RemoteObject> myWeakRef;
   private RemoteObject myParent;
-  private final Map<RemoteObject, Remote> myChildren = new ConcurrentHashMap<RemoteObject, Remote>();
+  private final Map<RemoteObject, Remote> myChildren = new ConcurrentHashMap<>();
 
   public RemoteObject() {
-    myWeakRef = new WeakReference<RemoteObject>(this);
+    myWeakRef = new WeakReference<>(this);
   }
 
   public WeakReference<RemoteObject> getWeakRef() {
     return myWeakRef;
   }
 
-  @jakarta.annotation.Nullable
-  public synchronized <T extends Remote> T export(@jakarta.annotation.Nullable T child) throws RemoteException {
+  @Nullable
+  public synchronized <T extends Remote> T export(@Nullable T child) throws RemoteException {
     if (child == null) return null;
     @SuppressWarnings("unchecked") T result = (T)UnicastRemoteObject.exportObject(child, 0);
     myChildren.put((RemoteObject)child, result);
@@ -56,16 +56,16 @@ public class RemoteObject implements Remote, Unreferenced {
   }
 
   public synchronized void unexportChildren() throws RemoteException {
-    ArrayList<RemoteObject> childrenRefs = new ArrayList<RemoteObject>(myChildren.keySet());
+    List<RemoteObject> childrenRefs = new ArrayList<>(myChildren.keySet());
     myChildren.clear();
     for (RemoteObject child : childrenRefs) {
       child.unreferenced();
     }
   }
 
-  public synchronized void unexportChildren(@Nonnull Collection<WeakReference<RemoteObject>> children) throws RemoteException {
+  public synchronized void unexportChildren(Collection<WeakReference<RemoteObject>> children) throws RemoteException {
     if (children.isEmpty()) return;
-    ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
+    List<RemoteObject> list = new ArrayList<>(children.size());
     for (WeakReference<? extends RemoteObject> child : children) {
       RemoteObject remoteObject = child.get();
       if(remoteObject != null) {
@@ -78,6 +78,7 @@ public class RemoteObject implements Remote, Unreferenced {
     }
   }
 
+  @Override
   public synchronized void unreferenced() {
     if (myParent != null) {
       myParent.myChildren.remove(this);

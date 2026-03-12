@@ -16,8 +16,7 @@ package consulo.util.io;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -324,7 +323,7 @@ public final class HostAndPort implements Serializable {
     }
   }
 
-  private static void checkArgument(boolean expression, @Nonnull String errorMessage, Object... args) {
+  private static void checkArgument(boolean expression, String errorMessage, Object... args) {
     if (!expression) {
       throw new IllegalArgumentException(String.format(errorMessage, args));
     }

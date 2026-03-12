@@ -17,10 +17,12 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -32,7 +34,7 @@ import java.util.function.Predicate;
  * @author eso
  */
 public class Selection<T, V, R> extends Suspension<T> {
-
+	@Nullable
 	private final CoroutineStep<R, ?> resumeSelectionStep;
 
 	private final Predicate<Continuation<?>> checkSelect;
@@ -68,10 +70,14 @@ public class Selection<T, V, R> extends Suspension<T> {
 	 * @param singleValue    TRUE for the selection of a single value, FALSE for
 	 *                       a collection of values
 	 */
-	private Selection(CoroutineStep<?, T> suspendingStep,
-			CoroutineStep<R, ?> resumeStep, Continuation<?> continuation,
-			Predicate<Continuation<?>> checkComplete,
-			Predicate<Continuation<?>> checkSelect, boolean singleValue) {
+	private Selection(
+		CoroutineStep<?, T> suspendingStep,
+		@Nullable CoroutineStep<R, ?> resumeStep,
+		Continuation<?> continuation,
+		Predicate<Continuation<?>> checkComplete,
+		Predicate<Continuation<?>> checkSelect,
+		boolean singleValue
+	) {
 		super(suspendingStep, null, continuation);
 
 		this.resumeSelectionStep = resumeStep;
@@ -92,10 +98,12 @@ public class Selection<T, V, R> extends Suspension<T> {
 	 * @return The new instance
 	 */
 	public static <T, V> Selection<T, V, Collection<V>> ofMultipleValues(
-			CoroutineStep<?, T> suspendingStep,
-			CoroutineStep<Collection<V>, ?> resumeStep,
-			Continuation<?> rContinuation, Predicate<Continuation<?>> checkComplete,
-			Predicate<Continuation<?>> checkSelect) {
+		CoroutineStep<?, T> suspendingStep,
+		@Nullable CoroutineStep<Collection<V>, ?> resumeStep,
+		Continuation<?> rContinuation,
+		Predicate<Continuation<?>> checkComplete,
+		Predicate<Continuation<?>> checkSelect
+	) {
 		Selection<T, V, Collection<V>> aSelection = new Selection<>(suspendingStep, resumeStep, rContinuation,
 				checkComplete, checkSelect, false);
 
@@ -113,8 +121,11 @@ public class Selection<T, V, R> extends Suspension<T> {
 	 * @return The new instance
 	 */
 	public static <T> Selection<T, T, T> ofSingleValue(
-			CoroutineStep<?, T> suspendingStep, CoroutineStep<T, ?> resumeStep,
-			Continuation<?> continuation, Predicate<Continuation<?>> checkSelect) {
+		CoroutineStep<?, T> suspendingStep,
+		@Nullable CoroutineStep<T, ?> resumeStep,
+		Continuation<?> continuation,
+		Predicate<Continuation<?>> checkSelect
+	) {
 		return new Selection<>(suspendingStep, resumeStep, continuation,
 				c -> true, checkSelect, true);
 	}
@@ -195,7 +206,7 @@ public class Selection<T, V, R> extends Suspension<T> {
 		stateLock.runLocked(() -> {
 			continuations.remove(continuation);
 			finished = true;
-			finishAction = () -> fail(continuation.getError());
+			finishAction = () -> fail(Objects.requireNonNull(continuation.getError()));
 
 			checkComplete();
 		});

@@ -20,7 +20,6 @@ import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.IntConsumer;
 
@@ -219,7 +218,7 @@ public class IntArrayList implements Cloneable, IntList {
     Arrays.fill(elementData, fromIndex, toIndex, value);
   }
 
-  public void add(@Nonnull int[] values) {
+  public void add(int[] values) {
     int length = values.length;
     ensureCapacity(size + length);
     System.arraycopy(values, 0, elementData, size, length);
@@ -293,15 +292,13 @@ public class IntArrayList implements Cloneable, IntList {
   }
 
   @Override
-  @Nonnull
   public int[] toArray() {
     int[] result = new int[size];
     System.arraycopy(elementData, 0, result, 0, size);
     return result;
   }
 
-  @Nonnull
-  public int[] toArray(@Nonnull int[] a) {
+  public int[] toArray(int[] a) {
     if (a.length < size) {
       a = new int[size];
     }
@@ -311,7 +308,6 @@ public class IntArrayList implements Cloneable, IntList {
     return a;
   }
 
-  @Nonnull
   public int[] toArray(int startIndex, int length) {
     int[] result = new int[length];
     System.arraycopy(elementData, startIndex, result, 0, length);
@@ -501,7 +497,6 @@ public class IntArrayList implements Cloneable, IntList {
     return Arrays.toString(toArray());
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfInt iterator() {
     return new Itr();

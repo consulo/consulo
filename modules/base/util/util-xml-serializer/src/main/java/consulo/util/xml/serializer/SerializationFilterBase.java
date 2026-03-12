@@ -15,14 +15,13 @@
  */
 package consulo.util.xml.serializer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class SerializationFilterBase implements SerializationFilter {
   @Override
-  public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
+  public boolean accepts(Accessor accessor, Object bean) {
     return accepts(accessor, bean, accessor.read(bean));
   }
 
-  protected abstract boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue);
+  protected abstract boolean accepts(Accessor accessor, Object bean, @Nullable Object beanValue);
 }

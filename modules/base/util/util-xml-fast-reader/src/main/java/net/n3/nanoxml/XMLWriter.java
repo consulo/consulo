@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -78,17 +79,6 @@ public class XMLWriter
    public XMLWriter(OutputStream stream)
    {
       this.writer = new PrintWriter(stream);
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.writer = null;
-      super.finalize();
    }
 
 
@@ -174,7 +164,7 @@ public class XMLWriter
             if (xml.getName().equals(xml.getFullName())) {
                this.writer.print(" xmlns=\"" + xml.getNamespace() + '"');
             } else {
-               String prefix = xml.getFullName();
+               String prefix = Objects.requireNonNull(xml.getFullName());
                prefix = prefix.substring(0, prefix.indexOf(':'));
                nsprefixes.addElement(prefix);
                this.writer.print(" xmlns:" + prefix);
@@ -207,7 +197,7 @@ public class XMLWriter
 
          while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
-            String value = xml.getAttribute(key, null);
+            String value = Objects.requireNonNull(xml.getAttribute(key, null));
             this.writer.print(" " + key + "=\"");
             this.writeEncoded(value);
             this.writer.print('"');

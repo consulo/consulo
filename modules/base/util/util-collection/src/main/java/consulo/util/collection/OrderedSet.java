@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 // have to extend ArrayList because otherwise the spliterator() methods declared in Set and List are in conflict
@@ -26,18 +25,18 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
     this(HashingStrategy.canonical());
   }
 
-  public OrderedSet(@Nonnull Collection<T> set) {
+  public OrderedSet(Collection<T> set) {
     super(set.size());
 
     myHashSet = new HashSet<T>(set.size());
     addAll(set);
   }
 
-  public OrderedSet(@Nonnull HashingStrategy<T> hashingStrategy) {
+  public OrderedSet(HashingStrategy<T> hashingStrategy) {
     this(hashingStrategy, 4);
   }
 
-  public OrderedSet(@Nonnull HashingStrategy<T> hashingStrategy, int capacity) {
+  public OrderedSet(HashingStrategy<T> hashingStrategy, int capacity) {
     super(capacity);
     myHashSet = Sets.newHashSet(capacity, hashingStrategy);
   }
@@ -47,7 +46,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean removeAll(@Nonnull Collection<?> c) {
+  public boolean removeAll(Collection<?> c) {
     boolean removed = false;
     for (Object o : c) {
       removed |= remove(o);
@@ -56,7 +55,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean retainAll(@Nonnull Collection<?> c) {
+  public boolean retainAll(Collection<?> c) {
     boolean removed = false;
     for (int i = size() - 1; i >= 0; i--) {
       Object o = get(i);
@@ -67,7 +66,6 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
     return removed;
   }
 
-  @Nonnull
   @Override
   public List<T> subList(int fromIndex, int toIndex) {
     throw new UnsupportedOperationException();
@@ -79,7 +77,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean addAll(@Nonnull Collection<? extends T> c) {
+  public boolean addAll(Collection<? extends T> c) {
     boolean result = false;
     for (T t : c) {
       result |= add(t);
@@ -112,19 +110,19 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean addAll(int index, @Nonnull Collection<? extends T> c) {
+  public boolean addAll(int index, Collection<? extends T> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public T set(int index, @Nonnull T element) {
+  public T set(int index, T element) {
     T removed = remove(index);
     add(index, element);
     return removed;
   }
 
   @Override
-  public void add(int index, @Nonnull T element) {
+  public void add(int index, T element) {
     if (myHashSet.add(element)) {
       super.add(index, element);
     }

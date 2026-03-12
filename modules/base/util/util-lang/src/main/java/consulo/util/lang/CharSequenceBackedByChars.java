@@ -17,7 +17,6 @@ package consulo.util.lang;
 
 import consulo.util.lang.CharArrayCharSequence;
 
-import jakarta.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +27,6 @@ import java.nio.charset.StandardCharsets;
  */
 // we must return string on subSequence() - JsonReaderEx will call toString in any case
 public class CharSequenceBackedByChars extends CharArrayCharSequence {
-  @Nonnull
   public ByteBuffer getByteBuffer() {
     return StandardCharsets.UTF_8.encode(CharBuffer.wrap(myChars, myStart, length()));
   }
@@ -37,11 +35,11 @@ public class CharSequenceBackedByChars extends CharArrayCharSequence {
     super(charBuffer.array(), charBuffer.arrayOffset(), charBuffer.position());
   }
 
-  public CharSequenceBackedByChars(@Nonnull char... chars) {
+  public CharSequenceBackedByChars(char... chars) {
     super(chars);
   }
 
-  public CharSequenceBackedByChars(@Nonnull char[] chars, int start, int end) {
+  public CharSequenceBackedByChars(char[] chars, int start, int end) {
     super(chars, start, end);
   }
 

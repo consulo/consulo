@@ -18,8 +18,7 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.ReusableImmutableLinkedHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,20 +60,17 @@ import java.util.function.Consumer;
  * @since 2024-11-20
  */
 public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRange {
-    @Nonnull
     protected static final ReferenceQueue<ReusableLinkedHashtableUser> QUEUE = new ReferenceQueue<>();
 
     protected static final ReusableLinkedHashtable<Object, Object> EMPTY =
         new ReusableLinkedHashtable<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_INT_ARRAY, 0);
 
-    @Nonnull
     protected final HashingStrategy<K> myStrategy;
-    @Nonnull
     protected final Object[] myData;
-    @Nonnull
     protected final int[] myNextPosAndHash;
     private int mySize, myEndPos = -1;
 
+    @Nullable
     private Range myLargestRange = null;
 
     protected abstract class MyIterator<E> implements Iterator<E> {
@@ -173,20 +169,18 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
     }
 
-    private ReusableLinkedHashtable(@Nonnull HashingStrategy<K> strategy, @Nonnull Object[] data, @Nonnull int[] nextPosAndHash, int size) {
+    private ReusableLinkedHashtable(HashingStrategy<K> strategy, Object[] data, int[] nextPosAndHash, int size) {
         myStrategy = strategy;
         myData = data;
         myNextPosAndHash = nextPosAndHash;
         mySize = size;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     public static <K, V> ReusableLinkedHashtable<K, V> empty() {
         return (ReusableLinkedHashtable<K, V>)EMPTY;
     }
 
-    @Nonnull
     public static <K, V> ReusableLinkedHashtable<K, V> empty(HashingStrategy<K> strategy) {
         return strategy == HashingStrategy.canonical()
             ? empty()
@@ -237,12 +231,11 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return newTable;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     public ReusableLinkedHashtable<K, V> copyRangeWithout(
         int maxSize,
         ReusableLinkedHashtableRange range,
-        Set<? extends K> excludeKeys,
+        @Nullable Set<? extends K> excludeKeys,
         int excludePos
     ) {
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
@@ -274,7 +267,6 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return new Range(map, myLargestRange, size, startPos, endPos);
     }
 
-    @Nonnull
     public HashingStrategy<K> getStrategy() {
         return myStrategy;
     }
@@ -371,21 +363,21 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insert(int hashCode, @Nonnull K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insert(int hashCode, K key, @Nullable V value) {
         return insertAtPos(~getPos(hashCode, key), hashCode, key, value);
     }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertByIdentity(int hashCode, @Nonnull K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insertByIdentity(int hashCode, K key, @Nullable V value) {
         return insertAtPos(~getPosByIdentity(hashCode, key), hashCode, key, value);
     }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, int hashCode, @Nonnull K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, int hashCode, K key, @Nullable V value) {
         myData[insertPos] = key;
         myData[insertPos + 1] = value;
         if (myEndPos >= 0) {
@@ -407,7 +399,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
      *
      * <p>Must be called only from hash-table recreation!</p>
      */
-    public ReusableLinkedHashtable<K, V> setValueAtPos(int keyPos, V value) {
+    public ReusableLinkedHashtable<K, V> setValueAtPos(int keyPos, @Nullable V value) {
         myData[keyPos + 1] = value;
 
         if (mySize == 1 || myEndPos == keyPos) {
@@ -562,7 +554,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         protected Range myPrevious, myNext;
         public final int myStartPos, myEndPos, mySize;
 
-        protected Range(ReusableLinkedHashtableUser referent, Range next, int size, int startPos, int endPos) {
+        protected Range(ReusableLinkedHashtableUser referent, @Nullable Range next, int size, int startPos, int endPos) {
             super(referent, QUEUE);
 
             synchronized (ReusableLinkedHashtable.this) {
@@ -635,12 +627,10 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             return ReusableLinkedHashtable.this.isValueInList(this, value);
         }
 
-        @Nonnull
         public ReusableLinkedHashtable<K, V> copy() {
             return copyRangeWithout(mySize, this, null, -1);
         }
 
-        @Nonnull
         public ReusableLinkedHashtable<K, V> copyReversed() {
             if (isMasterRange()) {
                 return ReusableLinkedHashtable.this.copyReversed();
@@ -651,9 +641,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             return newTable;
         }
 
-        @Nonnull
         @SuppressWarnings("unchecked")
-        public ReusableLinkedHashtable<K, V> copyWithout(int maxSize, Set<? extends K> excludeKeys, int excludePos) {
+        public ReusableLinkedHashtable<K, V> copyWithout(int maxSize, @Nullable Set<? extends K> excludeKeys, int excludePos) {
             return copyRangeWithout(maxSize, this, excludeKeys, excludePos);
         }
 
@@ -672,17 +661,14 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             ReusableLinkedHashtable.this.forEachValue(this, action);
         }
 
-        @Nonnull
         public Iterator<Map.Entry<K, V>> entryIterator() {
             return new EntryIterator(this);
         }
 
-        @Nonnull
         public Iterator<K> keyIterator() {
             return new KeyIterator(this);
         }
 
-        @Nonnull
         public Iterator<V> valueIterator() {
             return new ValueIterator(this);
         }

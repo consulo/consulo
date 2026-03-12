@@ -5,8 +5,7 @@ import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.internal.InternalPromiseUtil.PromiseValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -19,13 +18,12 @@ import static consulo.util.concurrent.internal.InternalPromiseUtil.isHandlerObso
 public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   private final PromiseValue<T> value;
 
-  public DonePromise(@Nonnull PromiseValue<T> value) {
+  public DonePromise(PromiseValue<T> value) {
     this.value = value;
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onSuccess(Consumer<? super T> handler) {
     if (value.error != null) {
       return this;
     }
@@ -36,9 +34,8 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     return this;
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> processed(@Nonnull Promise<? super T> child) {
+  public CancellablePromise<T> processed(Promise<? super T> child) {
     if (child instanceof InternalPromiseUtil.PromiseImpl) {
       //noinspection unchecked
       ((InternalPromiseUtil.PromiseImpl<T>)child)._setValue(value);
@@ -50,9 +47,8 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     return this;
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onProcessed(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onProcessed(Consumer<? super T> handler) {
     if (value.error == null) {
       onSuccess(handler);
     }
@@ -62,18 +58,16 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     return this;
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onError(@Nonnull Consumer<Throwable> handler) {
+  public CancellablePromise<T> onError(Consumer<Throwable> handler) {
     if (value.error != null && !isHandlerObsolete(handler)) {
       handler.accept(value.error);
     }
     return this;
   }
 
-  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<? super T, ? extends SUB_RESULT> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> then(Function<? super T, ? extends SUB_RESULT> done) {
     if (value.error != null) {
       //noinspection unchecked
       return (Promise<SUB_RESULT>)this;
@@ -87,9 +81,8 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     }
   }
 
-  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull Function<? super T, Promise<SUB_RESULT>> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(Function<? super T, Promise<SUB_RESULT>> done) {
     if (value.error == null) {
       return done.apply(value.result);
     }
@@ -101,12 +94,12 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
 
   @Nullable
   @Override
-  public T blockingGet(int timeout, @Nonnull TimeUnit timeUnit) throws ExecutionException, TimeoutException {
+  public T blockingGet(int timeout, TimeUnit timeUnit) throws ExecutionException, TimeoutException {
     return value.getResultOrThrowError();
   }
 
   @Override
-  public void _setValue(@Nonnull PromiseValue<T> value) {
+  public void _setValue(PromiseValue<T> value) {
   }
 
   @Nullable

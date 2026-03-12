@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,7 +40,7 @@ public class UnsyncByteArrayOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(@Nonnull byte[] b, int off, int len) {
+  public void write(byte[] b, int off, int len) {
     if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
       throw new IndexOutOfBoundsException();
     }
@@ -82,12 +81,10 @@ public class UnsyncByteArrayOutputStream extends OutputStream {
     return new String(myBuffer, 0, myCount, StandardCharsets.UTF_8);
   }
 
-  @Nonnull
   public ByteArraySequence toByteArraySequence() {
     return new ByteArraySequence(myBuffer, 0, myCount);
   }
 
-  @Nonnull
   public InputStream toInputStream() {
     return new UnsyncByteArrayInputStream(myBuffer, 0, myCount);
   }

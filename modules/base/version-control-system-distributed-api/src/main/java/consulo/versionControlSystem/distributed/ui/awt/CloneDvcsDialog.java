@@ -221,10 +221,11 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             myTestResult = Boolean.TRUE;
         }
         else {
+            String errorMessage = assertNotNull(testResult.getError());
             Messages.showErrorDialog(
                 myProject,
-                assertNotNull(testResult.getError()),
-                DistributedVcsLocalize.cloneRepositoryUrlTestFailedMessage(XmlStringUtil.escapeString(testResult.getError())).get()
+                errorMessage,
+                DistributedVcsLocalize.cloneRepositoryUrlTestFailedMessage(XmlStringUtil.escapeText(errorMessage)).get()
             );
             myTestResult = Boolean.FALSE;
         }

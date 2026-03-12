@@ -3,8 +3,7 @@ package consulo.util.lang;
 
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -37,7 +36,7 @@ public class Comparing {
    * @deprecated same as {@link Arrays#equals(Object[], Object[])}
    */
   @Deprecated
-  public static <T> boolean equal(@Nullable T[] arr1, @Nullable T[] arr2) {
+  public static <T> boolean equal(@Nullable T @Nullable [] arr1, @Nullable T @Nullable [] arr2) {
     return Arrays.equals(arr1, arr2);
   }
 
@@ -75,7 +74,7 @@ public class Comparing {
     return equal(arg1 == null ? "" : arg1, arg2 == null ? "" : arg2, caseSensitive);
   }
 
-  public static <T> boolean haveEqualElements(@Nonnull Collection<? extends T> a, @Nonnull Collection<? extends T> b) {
+  public static <T> boolean haveEqualElements(Collection<? extends T> a, Collection<? extends T> b) {
     if (a.size() != b.size()) {
       return false;
     }
@@ -90,7 +89,7 @@ public class Comparing {
     return true;
   }
 
-  public static <T> boolean haveEqualElements(@Nullable T[] a, @Nullable T[] b) {
+  public static <T> boolean haveEqualElements(@Nullable T @Nullable [] a, @Nullable T @Nullable [] b) {
     if (a == null || b == null) {
       //noinspection ArrayEquality
       return a == b;
@@ -122,7 +121,7 @@ public class Comparing {
   /**
    * @see AbstractSet#hashCode()
    */
-  public static int unorderedHashcode(@Nonnull Collection<?> collection) {
+  public static int unorderedHashcode(Collection<?> collection) {
     int h = 0;
     for (Object obj : collection) {
       if (obj != null) {
@@ -152,7 +151,7 @@ public class Comparing {
     return Double.compare(o1, o2);
   }
 
-  public static int compare(@Nullable byte[] o1, @Nullable byte[] o2) {
+  public static int compare(byte @Nullable [] o1, byte @Nullable [] o2) {
     //noinspection ArrayEquality
     if (o1 == o2) return 0;
     if (o1 == null) return 1;
@@ -178,7 +177,7 @@ public class Comparing {
     return o1.compareTo(o2);
   }
 
-  public static <T> int compare(@Nullable T o1, @Nullable T o2, @Nonnull Comparator<? super T> notNullComparator) {
+  public static <T> int compare(@Nullable T o1, @Nullable T o2, Comparator<? super T> notNullComparator) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;

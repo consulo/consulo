@@ -28,6 +28,8 @@
 
 package net.n3.nanoxml;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
@@ -39,8 +41,7 @@ import java.io.PrintWriter;
  * @author Marc De Scheemaecker
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.4 $
  */
-public class XMLException
-   extends Exception
+public class XMLException extends Exception
 {
 
    /**
@@ -52,6 +53,7 @@ public class XMLException
    /**
     * The system ID of the XML data where the exception occurred.
     */
+   @Nullable
    private String systemID;
 
 
@@ -64,6 +66,7 @@ public class XMLException
    /**
     * Encapsulated exception.
     */
+   @Nullable
    private Exception encapsulatedException;
 
 
@@ -134,9 +137,9 @@ public class XMLException
     * @param reportParams true if the systemID, lineNr and e params need to be
     *                     appended to the message
     */
-   public XMLException(String    systemID,
+   public XMLException(@Nullable String systemID,
                        int       lineNr,
-                       Exception e,
+                       @Nullable Exception e,
                        String    msg,
                        boolean   reportParams)
    {
@@ -161,9 +164,9 @@ public class XMLException
     * @param reportParams true if the systemID, lineNr and e params need to be
     *                     appended to the message
     */
-   private static String buildMessage(String    systemID,
+   private static String buildMessage(@Nullable String systemID,
                                       int       lineNr,
-                                      Exception e,
+                                      @Nullable Exception e,
                                       String    msg,
                                       boolean   reportParams)
    {
@@ -188,21 +191,10 @@ public class XMLException
 
 
    /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.systemID = null;
-      this.encapsulatedException = null;
-      super.finalize();
-   }
-
-
-   /**
     * Returns the system ID of the XML data where the exception occurred.
     * If there is no system ID known, null is returned.
     */
+   @Nullable
    public String getSystemID()
    {
       return this.systemID;
@@ -223,6 +215,7 @@ public class XMLException
     * Returns the encapsulated exception, or null if no exception is
     * encapsulated.
     */
+   @Nullable
    public Exception getException()
    {
       return this.encapsulatedException;

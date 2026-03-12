@@ -15,8 +15,8 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -36,12 +36,15 @@ public final class CharSequenceHashingStrategy implements HashingStrategy<CharSe
   }
 
   @Override
-  public int hashCode(CharSequence chars) {
+  public int hashCode(@Nullable CharSequence chars) {
+    if (chars == null) {
+      return 0;
+    }
     return myCaseSensitive ? StringUtil.stringHashCode(chars) : StringUtil.stringHashCodeInsensitive(chars);
   }
 
   @Override
-  public boolean equals(CharSequence s1, CharSequence s2) {
-    return Comparing.equal(s1, s2, myCaseSensitive);
+  public boolean equals(@Nullable CharSequence s1, @Nullable CharSequence s2) {
+    return StringUtil.equal(s1, s2, myCaseSensitive);
   }
 }

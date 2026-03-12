@@ -17,26 +17,25 @@ package consulo.util.xml.serializer.internal;
 
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.Converter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
-public abstract class BasePrimitiveBinding extends Binding {
+public abstract class BasePrimitiveBinding extends NonNullAccessorBinding {
     protected final String myName;
 
     @Nullable
     protected final Converter<Object> myConverter;
 
     @Nullable
-    protected Binding myBinding;
+    protected Binding myBinding = null;
 
-    protected BasePrimitiveBinding(@Nonnull MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
+    protected BasePrimitiveBinding(MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
         super(accessor);
 
-        myName = StringUtil.isEmpty(suggestedName) ? myAccessor.getName() : suggestedName;
+        myName = StringUtil.isEmpty(suggestedName) ? accessor.getName() : suggestedName;
         if (converterClass == null || converterClass == Converter.class) {
             myConverter = null;
             if (!(this instanceof AttributeBinding)) {
-                myBinding = XmlSerializerImpl.getBinding(myAccessor);
+                myBinding = XmlSerializerImpl.getBinding(accessor);
             }
         }
         else {

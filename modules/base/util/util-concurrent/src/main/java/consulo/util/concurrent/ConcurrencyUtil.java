@@ -18,8 +18,8 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.SameThreadExecutorService;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +38,8 @@ public class ConcurrencyUtil {
    * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way
    * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
    */
-  public static <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks, ExecutorService executorService) throws Throwable {
+  @Nullable
+  public static <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, ExecutorService executorService) throws Throwable {
     if (executorService == null) {
       for (Callable<T> task : tasks) {
         task.call();
@@ -85,28 +86,23 @@ public class ConcurrencyUtil {
   /**
    * @return defaultValue if the reference contains null (in that case defaultValue is placed there), or reference value otherwise.
    */
-  @Nonnull
-  public static <T> T cacheOrGet(@Nonnull AtomicReference<T> ref, @Nonnull T defaultValue) {
+  public static <T> T cacheOrGet(AtomicReference<T> ref, T defaultValue) {
     return ref.updateAndGet(prev -> prev == null ? defaultValue : prev);
   }
 
-  @Nonnull
-  public static ThreadPoolExecutor newSingleThreadExecutor(@Nonnull String name) {
+  public static ThreadPoolExecutor newSingleThreadExecutor(String name) {
     return newSingleThreadExecutor(name, Thread.NORM_PRIORITY);
   }
 
-  @Nonnull
-  public static ThreadPoolExecutor newSingleThreadExecutor(@Nonnull String name, int priority) {
+  public static ThreadPoolExecutor newSingleThreadExecutor(String name, int priority) {
     return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), newNamedThreadFactory(name, true, priority));
   }
 
-  @Nonnull
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@Nonnull String name) {
+  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name) {
     return newSingleScheduledThreadExecutor(name, Thread.NORM_PRIORITY);
   }
 
-  @Nonnull
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@Nonnull String name, int priority) {
+  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(String name, int priority) {
     ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, newNamedThreadFactory(name, true, priority));
     executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
     executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
@@ -116,13 +112,11 @@ public class ConcurrencyUtil {
   /**
    * Service which executes tasks synchronously immediately after they submitted
    */
-  @Nonnull
   public static ExecutorService newSameThreadExecutorService() {
     return new SameThreadExecutorService();
   }
 
-  @Nonnull
-  public static ThreadFactory newNamedThreadFactory(@Nonnull String name, boolean isDaemon, int priority) {
+  public static ThreadFactory newNamedThreadFactory(String name, boolean isDaemon, int priority) {
     return r -> {
       Thread thread = new Thread(r, name);
       thread.setDaemon(isDaemon);
@@ -131,16 +125,14 @@ public class ConcurrencyUtil {
     };
   }
 
-  @Nonnull
-  public static ThreadFactory newNamedThreadFactory(@Nonnull String name) {
+  public static ThreadFactory newNamedThreadFactory(String name) {
     return r -> new Thread(r, name);
   }
 
   ///**
   // * Awaits for all tasks in the {@code executor} to finish for the specified {@code timeout}
   // */
-  //@TestOnly
-  //public static void awaitQuiescence(@Nonnull ThreadPoolExecutor executor, long timeout, @Nonnull TimeUnit unit) {
+  //public static void awaitQuiescence(ThreadPoolExecutor executor, long timeout, TimeUnit unit) {
   //  executor.setKeepAliveTime(1, TimeUnit.NANOSECONDS); // no need for zombies in tests
   //  executor.setCorePoolSize(0); // interrupt idle workers
   //  ReentrantLock mainLock = ReflectionUtil.getField(executor.getClass(), executor, ReentrantLock.class, "mainLock");
@@ -172,7 +164,7 @@ public class ConcurrencyUtil {
   //  }
   //}
 
-  public static void joinAll(@Nonnull Collection<? extends Thread> threads) throws RuntimeException {
+  public static void joinAll(Collection<? extends Thread> threads) throws RuntimeException {
     for (Thread thread : threads) {
       try {
         thread.join();
@@ -183,23 +175,22 @@ public class ConcurrencyUtil {
     }
   }
 
-  public static void joinAll(@Nonnull Thread... threads) throws RuntimeException {
+  public static void joinAll(Thread... threads) throws RuntimeException {
     joinAll(Arrays.asList(threads));
   }
 
-  public static void getAll(@Nonnull Collection<? extends Future<?>> futures) throws ExecutionException, InterruptedException {
+  public static void getAll(Collection<? extends Future<?>> futures) throws ExecutionException, InterruptedException {
     for (Future<?> future : futures) {
       future.get();
     }
   }
 
-  @Nonnull
   @Contract(pure = true)
-  public static Runnable underThreadNameRunnable(@Nonnull String name, @Nonnull Runnable runnable) {
+  public static Runnable underThreadNameRunnable(String name, Runnable runnable) {
     return () -> runUnderThreadName(name, runnable);
   }
 
-  public static void runUnderThreadName(@Nonnull String name, @Nonnull Runnable runnable) {
+  public static void runUnderThreadName(String name, Runnable runnable) {
     Thread currentThread = Thread.currentThread();
     String oldThreadName = currentThread.getName();
     if (name.equals(oldThreadName)) {
@@ -216,8 +207,7 @@ public class ConcurrencyUtil {
     }
   }
 
-  @Nonnull
-  public static Runnable once(@Nonnull Runnable delegate) {
+  public static Runnable once(Runnable delegate) {
     AtomicBoolean done = new AtomicBoolean(false);
     return () -> {
       if (done.compareAndSet(false, true)) {
@@ -226,7 +216,7 @@ public class ConcurrencyUtil {
     };
   }
 
-  public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableSupplier<T, E> runnable) throws E {
+  public static <T, E extends Throwable> T withLock(Lock lock, ThrowableSupplier<T, E> runnable) throws E {
     lock.lock();
     try {
       return runnable.get();
@@ -236,7 +226,7 @@ public class ConcurrencyUtil {
     }
   }
 
-  public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
+  public static <E extends Throwable> void withLock(Lock lock, ThrowableRunnable<E> runnable) throws E {
     lock.lock();
     try {
       runnable.run();

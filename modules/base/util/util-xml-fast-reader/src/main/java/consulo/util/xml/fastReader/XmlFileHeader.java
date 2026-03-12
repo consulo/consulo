@@ -15,36 +15,51 @@
  */
 package consulo.util.xml.fastReader;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author peter
  */
 public class XmlFileHeader {
   public static final XmlFileHeader EMPTY = new XmlFileHeader(null, null, null, null);
 
+  @Nullable
   private final String myRootTagLocalName;
+  @Nullable
   private final String myRootTagNamespace;
+  @Nullable
   private final String myPublicId;
+  @Nullable
   private final String mySystemId;
 
-  public XmlFileHeader(String rootTagLocalName, String rootTagNamespace, String publicId, String systemId) {
+  public XmlFileHeader(
+    @Nullable String rootTagLocalName,
+    @Nullable String rootTagNamespace,
+    @Nullable String publicId,
+    @Nullable String systemId
+  ) {
     myPublicId = publicId;
     myRootTagLocalName = rootTagLocalName;
     myRootTagNamespace = rootTagNamespace;
     mySystemId = systemId;
   }
 
+  @Nullable
   public String getPublicId() {
     return myPublicId;
   }
 
+  @Nullable
   public String getRootTagLocalName() {
     return myRootTagLocalName;
   }
 
+  @Nullable
   public String getRootTagNamespace() {
     return myRootTagNamespace;
   }
 
+  @Nullable
   public String getSystemId() {
     return mySystemId;
   }

@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 23-Apr-22
+ * @since 2022-04-23
  */
+@NullMarked
 module consulo.util.xml.fast.reader {
   requires static consulo.annotation;
   requires consulo.util.lang;

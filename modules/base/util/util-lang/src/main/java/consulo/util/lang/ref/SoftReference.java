@@ -15,7 +15,7 @@
  */
 package consulo.util.lang.ref;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.function.Supplier;

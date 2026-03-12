@@ -16,8 +16,8 @@
 package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 public class PairElementsFMap implements KeyFMap {
     private final Key key1;
@@ -25,7 +25,7 @@ public class PairElementsFMap implements KeyFMap {
     private final Object value1;
     private final Object value2;
 
-    PairElementsFMap(@Nonnull Key key1, @Nonnull Object value1, @Nonnull Key key2, @Nonnull Object value2) {
+    PairElementsFMap(Key key1, Object value1, Key key2, Object value2) {
         this.key1 = key1;
         this.value1 = value1;
         this.key2 = key2;
@@ -33,9 +33,8 @@ public class PairElementsFMap implements KeyFMap {
         assert key1 != key2;
     }
 
-    @Nonnull
     @Override
-    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+    public <V> KeyFMap plus(Key<V> key, V value) {
         if (key == key1) {
             return new PairElementsFMap(key, value, key2, value2);
         }
@@ -45,9 +44,8 @@ public class PairElementsFMap implements KeyFMap {
         return new ArrayBackedFMap(new int[]{key1.hashCode(), key2.hashCode(), key.hashCode()}, new Object[]{value1, value2, value});
     }
 
-    @Nonnull
     @Override
-    public KeyFMap minus(@Nonnull Key<?> key) {
+    public KeyFMap minus(Key<?> key) {
         if (key == key1) {
             return new OneElementFMap<>(key2, value2);
         }
@@ -57,13 +55,13 @@ public class PairElementsFMap implements KeyFMap {
         return this;
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V get(@Nonnull Key<V> key) {
+    public <V> V get(Key<V> key) {
         return key == key1 ? (V)value1 : key == key2 ? (V)value2 : null;
     }
 
-    @Nonnull
     @Override
     public Key[] getKeys() {
         return new Key[]{key1, key2};

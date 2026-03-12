@@ -16,8 +16,8 @@
 package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 class EmptyFMap implements KeyFMap {
     private static final Key[] EMPTY_KEYS_ARRAY = {};
@@ -25,24 +25,22 @@ class EmptyFMap implements KeyFMap {
     EmptyFMap() {
     }
 
-    @Nonnull
     @Override
-    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+    public <V> KeyFMap plus(Key<V> key, V value) {
         return new OneElementFMap<>(key, value);
     }
 
-    @Nonnull
     @Override
-    public KeyFMap minus(@Nonnull Key<?> key) {
+    public KeyFMap minus(Key<?> key) {
         return this;
     }
 
+    @Nullable
     @Override
-    public <V> V get(@Nonnull Key<V> key) {
+    public <V> V get(Key<V> key) {
         return null;
     }
 
-    @Nonnull
     @Override
     public Key[] getKeys() {
         return EMPTY_KEYS_ARRAY;

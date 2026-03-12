@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -36,7 +35,6 @@ public enum ThreeState {
    * @param other other value to combine with this value
    * @return a result of combination of two ThreeState values
    */
-  @Nonnull
   public ThreeState merge(ThreeState other) {
     return this == other ? this : UNSURE;
   }
@@ -51,8 +49,7 @@ public enum ThreeState {
   /**
    * @return {@code YES} if the given states contain {@code YES}, otherwise {@code UNSURE} if the given states contain {@code UNSURE}, otherwise {@code NO}
    */
-  @Nonnull
-  public static ThreeState mostPositive(@Nonnull Iterable<ThreeState> states) {
+  public static ThreeState mostPositive(Iterable<ThreeState> states) {
     ThreeState result = NO;
     for (ThreeState state : states) {
       switch (state) {
@@ -69,8 +66,7 @@ public enum ThreeState {
    * @return {@code UNSURE} if {@code states} contains different values, the single value otherwise
    * @throws IllegalArgumentException if {@code states} is empty
    */
-  @Nonnull
-  public static ThreeState merge(@Nonnull Iterable<ThreeState> states) {
+  public static ThreeState merge(Iterable<ThreeState> states) {
     ThreeState result = null;
     for (ThreeState state : states) {
       if (state == UNSURE) {

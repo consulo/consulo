@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +34,14 @@ public class ClassMap<T> {
     myMap = map; 
   }
 
-  public void put(Class aClass, T value) {
+  public void put(Class aClass, @Nullable T value) {
     myMap.put(aClass, value);
   }
   public void remove(Class aClass) {
     myMap.remove(aClass);
   }
 
+  @Nullable
   public T get(Class aClass) {
     T t = myMap.get(aClass);
     if (t != null) {

@@ -29,8 +29,11 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Objects;
 import java.util.Stack;
 
 
@@ -50,19 +53,21 @@ public class StdXMLBuilder
    /**
     * This stack contains the current element and its parents.
     */
-   private Stack stack;
+   @Nullable
+   private Stack stack = null;
 
 
    /**
     * The root element of the parsed XML tree.
     */
-   private IXMLElement root;
+   @Nullable
+   private IXMLElement root = null;
 
 
    /**
     * Prototype element for creating the tree.
     */
-   private IXMLElement prototype;
+   private final IXMLElement prototype;
 
 
    /**
@@ -81,23 +86,7 @@ public class StdXMLBuilder
     */
    public StdXMLBuilder(IXMLElement prototype)
    {
-      this.stack = null;
-      this.root = null;
       this.prototype = prototype;
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.prototype = null;
-      this.root = null;
-      this.stack.clear();
-      this.stack = null;
-      super.finalize();
    }
 
 
@@ -144,8 +133,8 @@ public class StdXMLBuilder
     * @param lineNr     the line in the source where the element starts.
     */
    public void startElement(String name,
-                            String nsPrefix,
-                            String nsURI,
+                            @Nullable String nsPrefix,
+                            @Nullable String nsURI,
                             String systemID,
                             int    lineNr)
    {
@@ -158,14 +147,15 @@ public class StdXMLBuilder
       IXMLElement elt = this.prototype.createElement(fullName, nsURI,
                                                      systemID, lineNr);
 
-      if (this.stack.empty()) {
+      Stack stack = Objects.requireNonNull(this.stack);
+      if (stack.empty()) {
          this.root = elt;
       } else {
-         IXMLElement top = (IXMLElement) this.stack.peek();
+         IXMLElement top = (IXMLElement) stack.peek();
          top.addChild(elt);
       }
 
-      this.stack.push(elt);
+      stack.push(elt);
    }
 
 
@@ -184,8 +174,8 @@ public class StdXMLBuilder
     *                   associated with nsPrefix, this parameter is null.
     */
    public void elementAttributesProcessed(String name,
-                                          String nsPrefix,
-                                          String nsURI)
+                                          @Nullable String nsPrefix,
+                                          @Nullable String nsURI)
    {
       // nothing to do
    }
@@ -204,10 +194,10 @@ public class StdXMLBuilder
     *                   associated with nsPrefix, this parameter is null.
     */
    public void endElement(String name,
-                          String nsPrefix,
-                          String nsURI)
+                          @Nullable String nsPrefix,
+                          @Nullable String nsURI)
    {
-      IXMLElement elt = (IXMLElement) this.stack.pop();
+      IXMLElement elt = (IXMLElement) Objects.requireNonNull(this.stack).pop();
 
       if (elt.getChildrenCount() == 1) {
          IXMLElement child = elt.getChildAtIndex(0);
@@ -238,8 +228,8 @@ public class StdXMLBuilder
     *     If an exception occurred while processing the event.
     */
    public void addAttribute(String key,
-                            String nsPrefix,
-                            String nsURI,
+                            @Nullable String nsPrefix,
+                            @Nullable String nsURI,
                             String value,
                             String type)
       throws Exception
@@ -250,7 +240,7 @@ public class StdXMLBuilder
          fullName = nsPrefix + ':' + key;
       }
 
-      IXMLElement top = (IXMLElement) this.stack.peek();
+      IXMLElement top = (IXMLElement) Objects.requireNonNull(this.stack).peek();
 
       if (top.hasAttribute(fullName)) {
          throw new XMLParseException(top.getSystemID(),
@@ -312,7 +302,7 @@ public class StdXMLBuilder
       IXMLElement elt = this.prototype.createElement(null, systemID, lineNr);
       elt.setContent(str.toString());
 
-      if (! this.stack.empty()) {
+      if (! Objects.requireNonNull(this.stack).empty()) {
          IXMLElement top = (IXMLElement) this.stack.peek();
          top.addChild(elt);
       }
@@ -327,6 +317,7 @@ public class StdXMLBuilder
     *
     * @return the result of the building process.
     */
+   @Nullable
    public Object getResult()
    {
       return this.root;

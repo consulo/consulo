@@ -29,8 +29,8 @@
 package net.n3.nanoxml;
 
 
-import java.io.Reader;
-import java.io.IOException;
+import org.jspecify.annotations.Nullable;
+
 import java.util.Properties;
 
 
@@ -56,6 +56,7 @@ public interface IXMLValidator
     *
     * @return the entity resolver.
     */
+   @Nullable
    public IXMLEntityResolver getParameterEntityResolver();
 
 

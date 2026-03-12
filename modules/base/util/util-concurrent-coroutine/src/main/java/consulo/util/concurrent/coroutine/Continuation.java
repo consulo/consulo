@@ -23,10 +23,12 @@ import consulo.util.concurrent.coroutine.internal.RunLock;
 import consulo.util.dataholder.CopyableUserDataHolder;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
@@ -57,10 +59,13 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
 
     private final RunLock stateLock = new RunLock();
 
+    @Nullable
     BiConsumer<Suspension<?>, Boolean> suspensionListener = null;
 
+    @Nullable
     BiConsumer<CoroutineStep<?, ?>, Continuation<?>> fStepListener = null;
 
+    @Nullable
     private T result = null;
 
     private boolean callChainComplete = false;
@@ -69,17 +74,23 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
 
     private boolean finished = false;
 
+    @Nullable
     private Throwable error = null;
 
+    @Nullable
     private CompletableFuture<?> currentExecution = null;
 
+    @Nullable
     private Suspension<?> currentSuspension = null;
 
-    private Consumer<Continuation<T>> runWhenDone;
+    @Nullable
+    private Consumer<Continuation<T>> runWhenDone = null;
 
-    private Consumer<Continuation<T>> runOnCancel;
+    @Nullable
+    private Consumer<Continuation<T>> runOnCancel = null;
 
-    private Consumer<Continuation<T>> runOnError;
+    @Nullable
+    private Consumer<Continuation<T>> runOnError = null;
 
     /**
      * Creates a new instance for the execution of the given {@link Coroutine}
@@ -212,8 +223,10 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param nextStep          The next step
      */
     public final <I, O> void continueApply(
-        CompletableFuture<I> previousExecution, Function<I, O> next,
-        CoroutineStep<O, ?> nextStep) {
+        CompletableFuture<I> previousExecution,
+        Function<I, O> next,
+        @Nullable CoroutineStep<O, ?> nextStep
+    ) {
         if (!cancelled) {
             CompletableFuture<O> rNextExecution =
                 previousExecution.thenApplyAsync(i -> {
@@ -280,13 +293,14 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * used directly as a functional argument to
      * {@link CompletableFuture#exceptionally(Function)}
      */
+    @Nullable
     public <O> O fail(Throwable error) {
         if (!finished) {
             this.error = error;
             scope.fail(this);
             cancel();
 
-            getConfiguration(EXCEPTION_HANDLER, DefaultExceptionHandler.INSTANCE).accept(error);
+            Objects.requireNonNull(getConfiguration(EXCEPTION_HANDLER, DefaultExceptionHandler.INSTANCE)).accept(error);
 
             if (runOnError != null) {
                 runOnError.accept(this);
@@ -309,6 +323,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @see #getConfiguration(RelationType, Object)
      */
+    @Nullable
     public <V> V getConfiguration(Key<V> configType) {
         return getConfiguration(configType, null);
     }
@@ -332,7 +347,8 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The configuration value (may be NULL)
      */
-    public <V> V getConfiguration(Key<V> configType, V defaultValue) {
+    @Nullable
+    public <V> V getConfiguration(Key<V> configType, @Nullable V defaultValue) {
         V data = getCopyableUserData(configType);
         if (data != null) {
             return data;
@@ -376,6 +392,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The current suspension or NULL for none
      */
+    @Nullable
     public final Suspension<?> getCurrentSuspension() {
         return currentSuspension;
     }
@@ -385,6 +402,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The error or NULL for none
      */
+    @Nullable
     public Throwable getError() {
         return error;
     }
@@ -396,6 +414,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
+    @Nullable
     public T getResult() {
         try {
             finishSignal.await();
@@ -419,6 +438,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *                               or an error occurred
      * @throws CancellationException If the coroutine had been cancelled
      */
+    @Nullable
     public T getResult(long timeout, TimeUnit unit) {
         try {
             if (!finishSignal.await(timeout, unit)) {
@@ -436,6 +456,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @see #getState(Key, Object)
      */
+    @Nullable
     public <V> V getState(Key<V> stateType) {
         return getState(stateType, null);
     }
@@ -452,7 +473,8 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The runtime state value (may be null)
      */
-    public <V> V getState(Key<V> stateType, V defaultValue) {
+    @Nullable
+    public <V> V getState(Key<V> stateType, @Nullable V defaultValue) {
         Coroutine<?, ?> coroutine = getCurrentCoroutine();
 
         V data = coroutine.getUserData(stateType);
@@ -591,8 +613,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param suspendedStep  The step to suspend
      * @return A new suspension object
      */
-    public <V> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep,
-                                     CoroutineStep<V, ?> suspendedStep) {
+    public <V> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep, @Nullable CoroutineStep<V, ?> suspendedStep) {
         return suspendTo(new Suspension<>(suspendingStep, suspendedStep, this));
     }
 
@@ -668,7 +689,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @param result The result of the coroutine execution
      */
-    void finish(T result) {
+    void finish(@Nullable T result) {
         if (finished) {
             return;
         }
@@ -702,7 +723,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param resumeStep The step to resume execution at
      * @param value      The value to resume the step with
      */
-    final <V> void resumeAsync(CoroutineStep<V, ?> resumeStep, V value) {
+    final <V> void resumeAsync(@Nullable CoroutineStep<V, ?> resumeStep, @Nullable V value) {
         if (!cancelled) {
             CompletableFuture<V> aResumeExecution =
                 CompletableFuture.supplyAsync(() -> value, this);
@@ -712,7 +733,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
             // the resume step is always either a StepChain which contains it's
             // own next step or the final step in a coroutine and therefore
             // rNextStep can be NULL
-            resumeStep.runAsync(aResumeExecution, null, this);
+            Objects.requireNonNull(resumeStep).runAsync(aResumeExecution, null, this);
         }
         else if (currentExecution != null) {
             currentExecution.cancel(false);
@@ -773,6 +794,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
+    @Nullable
     private T getResultImpl() {
         if (cancelled) {
             if (error != null) {

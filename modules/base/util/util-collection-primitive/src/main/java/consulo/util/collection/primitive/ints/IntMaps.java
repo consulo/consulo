@@ -22,7 +22,6 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeyWeakValue
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,35 +30,29 @@ import jakarta.annotation.Nonnull;
 public final class IntMaps {
   private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
 
-  @Nonnull
   public static <V> IntObjectMap<V> newIntObjectHashMap() {
     return newIntObjectHashMap(CollectionFactory.UNKNOWN_CAPACITY);
   }
 
-  @Nonnull
   public static <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
     return ourFactory.newIntObjectHashMap(capacity);
   }
 
-  @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {
     return new ConcurrentIntKeyWeakValueHashMap<>();
   }
 
-  @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap() {
     return new ConcurrentIntObjectHashMap<>();
   }
 
-  @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
     return new ConcurrentIntObjectHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
   }
 
-  @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectSoftValueHashMap() {
     return new ConcurrentIntKeySoftValueHashMap<>();

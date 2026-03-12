@@ -15,8 +15,7 @@
  */
 package consulo.util.xml.serializer;
 
-import jakarta.annotation.Nonnull;
 
 public interface SerializationFilter {
-  boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean);
+  boolean accepts(Accessor accessor, Object bean);
 }

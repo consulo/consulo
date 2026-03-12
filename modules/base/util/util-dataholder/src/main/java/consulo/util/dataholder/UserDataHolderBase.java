@@ -17,8 +17,7 @@ package consulo.util.dataholder;
 
 import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -40,7 +39,6 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
     /**
      * Concurrent writes to this field are via CASes only, using the {@link #updater}
      */
-    @Nonnull
     private volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
 
     @Override
@@ -69,18 +67,18 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         other.setUserMap(getUserMap());
     }
 
+    @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return getUserMap().get(key);
     }
 
-    @Nonnull
     protected KeyFMap getUserMap() {
         return myUserMap;
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         while (true) {
             KeyFMap map = getUserMap();
             KeyFMap newMap = value == null ? map.minus(key) : map.plus(key, value);
@@ -94,6 +92,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         return ourUpdaterVarHandle.compareAndSet(this, oldMap, newMap);
     }
 
+    @Nullable
     public <T> T getCopyableUserData(Key<T> key) {
         KeyFMap map = getUserData(COPYABLE_USER_MAP_KEY);
         //noinspection unchecked,ConstantConditions
@@ -117,7 +116,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
     }
 
     @Override
-    public <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+    public <T> boolean replace(Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
         while (true) {
             KeyFMap map = getUserMap();
             if (map.get(key) != oldValue) {
@@ -131,8 +130,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
     }
 
     @Override
-    @Nonnull
-    public <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
+    public <T> T putUserDataIfAbsent(Key<T> key, T value) {
         while (true) {
             KeyFMap map = getUserMap();
             T oldValue = map.get(key);
@@ -147,11 +145,11 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
     }
 
     @Override
-    public void copyCopyableDataTo(@Nonnull CopyableUserDataHolder clone) {
+    public void copyCopyableDataTo(CopyableUserDataHolder clone) {
         copyCopyableDataTo((UserDataHolderBase) clone);
     }
 
-    public void copyCopyableDataTo(@Nonnull UserDataHolderBase clone) {
+    public void copyCopyableDataTo(UserDataHolderBase clone) {
         clone.putUserData(COPYABLE_USER_MAP_KEY, getUserData(COPYABLE_USER_MAP_KEY));
     }
 
@@ -159,7 +157,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         setUserMap(KeyFMap.EMPTY_MAP);
     }
 
-    protected void setUserMap(@Nonnull KeyFMap map) {
+    protected void setUserMap(KeyFMap map) {
         myUserMap = map;
     }
 

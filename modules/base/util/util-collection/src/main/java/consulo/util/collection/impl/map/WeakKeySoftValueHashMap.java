@@ -17,7 +17,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.Maps;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Map;
@@ -28,24 +27,21 @@ public final class WeakKeySoftValueHashMap<K, V> extends RefKeyRefValueHashMap<K
   }
 
   private static class SoftValueReference<K, V> extends SoftReference<V> implements ValueReference<K, V> {
-    @Nonnull
     private final RefHashMap.Key<K> key;
 
-    private SoftValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+    private SoftValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
       super(referent, q);
       this.key = key;
     }
 
-    @Nonnull
     @Override
     public RefHashMap.Key<K> getKey() {
       return key;
     }
   }
 
-  @Nonnull
   @Override
-  protected ValueReference<K, V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
+  protected ValueReference<K, V> createValueReference(RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q) {
     return new SoftValueReference<>(key, referent, q);
   }
 }

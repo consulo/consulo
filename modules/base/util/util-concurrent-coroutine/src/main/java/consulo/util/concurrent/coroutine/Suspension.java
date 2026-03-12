@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -29,12 +30,14 @@ import java.util.Optional;
 public class Suspension<T> {
 	private final CoroutineStep<?, T> suspendingStep;
 
+	@Nullable
 	private final CoroutineStep<T, ?> resumeStep;
 
 	private final Continuation<?> continuation;
 
 	private final RunLock cancelLock = new RunLock();
 
+	@Nullable
 	private T value;
 
 	private boolean cancelled = false;
@@ -55,8 +58,7 @@ public class Suspension<T> {
 	 * @param resumeStep     The step to resume the execution with
 	 * @param continuation   The continuation of the execution
 	 */
-	protected Suspension(CoroutineStep<?, T> suspendingStep,
-		CoroutineStep<T, ?> resumeStep, Continuation<?> continuation) {
+	protected Suspension(CoroutineStep<?, T> suspendingStep, @Nullable CoroutineStep<T, ?> resumeStep, Continuation<?> continuation) {
 		this.suspendingStep = suspendingStep;
 		this.resumeStep = resumeStep;
 		this.continuation = continuation;
@@ -157,7 +159,7 @@ public class Suspension<T> {
 	 *
 	 * @param value The input value to the resumed step
 	 */
-	public void resume(T value) {
+	public void resume(@Nullable T value) {
 		if (!cancelled) {
 			this.value = value;
 			continuation.suspensionResumed(this);
@@ -190,6 +192,7 @@ public class Suspension<T> {
 	 *
 	 * @return The suspension value
 	 */
+	@Nullable
 	public final T value() {
 		return value;
 	}

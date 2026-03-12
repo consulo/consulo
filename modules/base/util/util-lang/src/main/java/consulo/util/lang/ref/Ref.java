@@ -17,7 +17,7 @@ package consulo.util.lang.ref;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ven
@@ -37,6 +37,7 @@ public class Ref<T> extends SimpleReference<T> {
     return super.isNull();
   }
 
+  @Nullable
   @Override
   public T get() {
     return super.get();

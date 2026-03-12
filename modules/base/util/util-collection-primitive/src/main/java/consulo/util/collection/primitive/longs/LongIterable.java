@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
@@ -26,7 +25,6 @@ import java.util.function.LongConsumer;
  * @since 17/05/2021
  */
 public interface LongIterable {
-  @Nonnull
   PrimitiveIterator.OfLong iterator();
 
   default void forEach(LongConsumer action) {

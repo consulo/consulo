@@ -34,9 +34,6 @@ public class UnmodifiableHashMapTest {
     public void testNull() {
         UnmodifiableHashMap<Object, Object> empty = UnmodifiableHashMap.empty();
 
-        assertThat(empty.containsKey(null))
-            .isFalse();
-
         assertThatThrownBy(() -> empty.withAll(Collections.singletonMap(null, null)))
             .isInstanceOf(IllegalArgumentException.class);
 
@@ -115,7 +112,6 @@ public class UnmodifiableHashMapTest {
     public void testWithAll() {
         for (int size : new int[]{0, 1, 2, 3, 4, 10, 11, 12}) {
             UnmodifiableHashMap<Integer, String> map = create(size);
-            assertThat(map.get(null)).isNull();
 
             UnmodifiableHashMap<Integer, String> map2 = map.withAll(Map.of());
             assertThat(map2)
@@ -147,7 +143,7 @@ public class UnmodifiableHashMapTest {
             UnmodifiableHashMap<Integer, String> map = create(size);
 
             int k0 = 0;
-            String v0 = map.get(0);
+            String v0 = Objects.requireNonNull(map.get(0));
 
             UnmodifiableHashMap<Integer, String> map2 = map.withAll(Map.of(k0, v0));
             assertThat(map2)
@@ -207,7 +203,7 @@ public class UnmodifiableHashMapTest {
     public void testGet() {
         for (int size : new int[]{0, 1, 2, 3, 4, 10, 11, 12}) {
             UnmodifiableHashMap<Integer, String> map = create(size);
-            assertThat(map.get(null)).isNull();
+            assertThat(map.get(-1)).isNull();
         }
     }
 

@@ -30,6 +30,7 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
@@ -668,7 +669,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
 
     private static String convertFragment(String fragment) {
-        return StringUtil.escapeXml(fragment).replaceAll("\\\\n", "<br>");
+        return XmlStringUtil.escapeText(fragment).replace("\n", "<br>");
     }
 
     private static void formatStyle(StringBuilder builder, SimpleTextAttributes attributes) {

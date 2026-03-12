@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 04/02/2022
+ * @since 2022-02-04
  */
+@NullMarked
 module consulo.util.collection.via.trove {
   requires static consulo.annotation;
   requires transitive consulo.util.collection;

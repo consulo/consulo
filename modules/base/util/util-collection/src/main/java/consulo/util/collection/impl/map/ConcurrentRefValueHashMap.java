@@ -18,8 +18,8 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.Maps;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +34,6 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   protected final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
   interface ValueReference<K, V> {
-    @Nonnull
     K getKey();
 
     V get();
@@ -53,25 +52,27 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return processed;
   }
 
+  @Nullable
   @Override
-  public V get(@Nonnull Object key) {
+  public V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
     if (ref == null) return null;
     return ref.get();
   }
 
+  @Nullable
   @Override
-  public V put(@Nonnull K key, @Nonnull V value) {
+  public V put(K key, V value) {
     processQueue();
     ValueReference<K, V> oldRef = myMap.put(key, createValueReference(key, value));
     return oldRef != null ? oldRef.get() : null;
   }
 
-  @Nonnull
-  public abstract ValueReference<K, V> createValueReference(@Nonnull K key, @Nonnull V value);
+  public abstract ValueReference<K, V> createValueReference(K key, V value);
 
+  @Nullable
   @Override
-  public V putIfAbsent(@Nonnull K key, @Nonnull V value) {
+  public V putIfAbsent(K key, V value) {
     ValueReference<K, V> newRef = createValueReference(key, value);
     while (true) {
       processQueue();
@@ -88,34 +89,37 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   }
 
   @Override
-  public boolean remove(@Nonnull Object key, @Nonnull Object value) {
+  public boolean remove(Object key, Object value) {
     processQueue();
     //noinspection unchecked
     return myMap.remove(key, createValueReference((K)key, (V)value));
   }
 
+  @Nullable
   @Override
-  public boolean replace(@Nonnull K key, @Nonnull V oldValue, @Nonnull V newValue) {
+  public boolean replace(K key, V oldValue, V newValue) {
     processQueue();
     return myMap.replace(key, createValueReference(key, oldValue), createValueReference(key, newValue));
   }
 
+  @Nullable
   @Override
-  public V replace(@Nonnull K key, @Nonnull V value) {
+  public V replace(K key, V value) {
     processQueue();
     ValueReference<K, V> ref = myMap.replace(key, createValueReference(key, value));
     return ref == null ? null : ref.get();
   }
 
+  @Nullable
   @Override
-  public V remove(@Nonnull Object key) {
+  public V remove(Object key) {
     processQueue();
     ValueReference<K, V> ref = myMap.remove(key);
     return ref == null ? null : ref.get();
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
+  public void putAll(Map<? extends K, ? extends V> t) {
     processQueue();
     for (Entry<? extends K, ? extends V> entry : t.entrySet()) {
       V v = entry.getValue();
@@ -145,22 +149,20 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   }
 
   @Override
-  public boolean containsKey(@Nonnull Object key) {
+  public boolean containsKey(Object key) {
     throw RefValueHashMap.pointlessContainsKey();
   }
 
   @Override
-  public boolean containsValue(@Nonnull Object value) {
+  public boolean containsValue(Object value) {
     throw RefValueHashMap.pointlessContainsValue();
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return myMap.keySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     Collection<V> result = new ArrayList<>();
@@ -174,7 +176,6 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return result;
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     Set<K> keys = keySet();
@@ -195,7 +196,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
           }
 
           @Override
-          public V setValue(@Nonnull V value) {
+          public V setValue(V value) {
             throw new UnsupportedOperationException("setValue is not implemented");
           }
 

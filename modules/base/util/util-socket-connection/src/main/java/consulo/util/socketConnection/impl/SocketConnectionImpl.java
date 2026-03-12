@@ -16,10 +16,10 @@
 package consulo.util.socketConnection.impl;
 
 import consulo.util.socketConnection.*;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -34,12 +34,13 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
   private static final Logger LOG = LoggerFactory.getLogger(SocketConnectionImpl.class);
   private static final int MAX_CONNECTION_ATTEMPTS = 60;
   private static final int CONNECTION_ATTEMPT_DELAY = 500;
+  @Nullable
   private final InetAddress myHost;
   private final int myInitialPort;
   private final int myPortsNumberToTry;
   private final Executor myExecutor;
 
-  public SocketConnectionImpl(@Nonnull ScheduledExecutorService executor, InetAddress host, int initialPort, int portsNumberToTry, @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
+  public SocketConnectionImpl(ScheduledExecutorService executor, @Nullable InetAddress host, int initialPort, int portsNumberToTry, RequestResponseExternalizerFactory<Request, Response> factory) {
     super(executor, factory);
     myExecutor = executor;
     myHost = host;
@@ -64,7 +65,6 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
     });
   }
 
-  @Nonnull
   private Socket createSocket() throws IOException {
     InetAddress host = myHost != null ? myHost : InetAddress.getLocalHost();
     IOException exc = null;

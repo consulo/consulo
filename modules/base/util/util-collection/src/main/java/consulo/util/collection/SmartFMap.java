@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -38,7 +37,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return EMPTY;
   }
 
-  public SmartFMap<K, V> plus(@Nonnull K key, V value) {
+  public SmartFMap<K, V> plus(K key, V value) {
     return new SmartFMap<K, V>(doPlus(myMap, key, value, false));
   }
 
@@ -76,7 +75,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return newArray;
   }
 
-  public SmartFMap<K, V> minus(@Nonnull K key) {
+  public SmartFMap<K, V> minus(K key) {
     if (myMap instanceof Map) {
       Map<K, V> newMap = new HashMap<K, V>((Map<K, V>)myMap);
       newMap.remove(key);
@@ -117,7 +116,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return result;
   }
 
-  public SmartFMap<K, V> minusAll(@Nonnull Collection<K> keys) {
+  public SmartFMap<K, V> minusAll(Collection<K> keys) {
     SmartFMap<K, V> result = this;
     for (K key : keys) {
       result = result.minus(key);

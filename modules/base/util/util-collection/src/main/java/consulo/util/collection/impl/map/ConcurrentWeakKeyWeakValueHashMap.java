@@ -18,8 +18,8 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
@@ -30,15 +30,15 @@ import java.lang.ref.WeakReference;
  * Use {@link ContainerUtil#createConcurrentWeakKeyWeakValueMap()} to create this
  */
 public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
-  public ConcurrentWeakKeyWeakValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakKeyWeakValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   private static class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    @Nonnull
-    private volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
+    @Nullable
+    private volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
-    private WeakValue(@Nonnull V value, @Nonnull ReferenceQueue<? super V> queue) {
+    private WeakValue(V value, ReferenceQueue<? super V> queue) {
       super(value, queue);
     }
 
@@ -54,7 +54,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
       return v != null && thatV != null && v.equals(thatV);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public KeyReference<K, V> getKeyReference() {
       return myKeyReference;
@@ -62,8 +62,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
   }
 
   @Override
-  @Nonnull
-  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull V v) {
+  public KeyReference<K, V> createKeyReference(K k, V v) {
     ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof WeakValue) {
@@ -73,8 +72,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
   }
 
   @Override
-  @Nonnull
-  protected ValueReference<K, V> createValueReference(@Nonnull V value, @Nonnull ReferenceQueue<? super V> queue) {
+  protected ValueReference<K, V> createValueReference(V value, ReferenceQueue<? super V> queue) {
     return new WeakValue<>(value, queue);
   }
 }

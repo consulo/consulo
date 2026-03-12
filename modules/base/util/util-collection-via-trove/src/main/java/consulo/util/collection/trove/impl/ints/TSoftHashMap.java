@@ -18,7 +18,6 @@ package consulo.util.collection.trove.impl.ints;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.SoftHashMap;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public class TSoftHashMap<K, V> extends SoftHashMap<K, V> {
     super(initialCapacity);
   }
 
-  public TSoftHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public TSoftHashMap(HashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
   }
 

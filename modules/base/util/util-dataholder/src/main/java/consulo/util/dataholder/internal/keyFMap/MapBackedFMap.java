@@ -20,8 +20,8 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.KeyRegistry;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 import static consulo.util.dataholder.internal.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
@@ -30,7 +30,7 @@ class MapBackedFMap implements KeyFMap {
 
     private final IntObjectMap<Object> myMap;
 
-    private MapBackedFMap(@Nonnull MapBackedFMap oldMap, int exclude) {
+    private MapBackedFMap(MapBackedFMap oldMap, int exclude) {
         myMap = IntMaps.newIntObjectHashMap(oldMap.size());
         oldMap.myMap.forEach((key, val) -> {
             if (key != exclude) {
@@ -41,7 +41,7 @@ class MapBackedFMap implements KeyFMap {
         assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
     }
 
-    MapBackedFMap(@Nonnull int[] keys, int newKey, @Nonnull Object[] values, @Nonnull Object newValue) {
+    MapBackedFMap(int[] keys, int newKey, Object[] values, Object newValue) {
         myMap = IntMaps.newIntObjectHashMap(keys.length + 1);
         for (int i = 0; i < keys.length; i++) {
             int key = keys[i];
@@ -54,9 +54,8 @@ class MapBackedFMap implements KeyFMap {
         assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
     }
 
-    @Nonnull
     @Override
-    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+    public <V> KeyFMap plus(Key<V> key, V value) {
         int keyCode = key.hashCode();
         assert keyCode >= 0 : key;
         @SuppressWarnings("unchecked") V oldValue = (V)myMap.get(keyCode);
@@ -68,9 +67,8 @@ class MapBackedFMap implements KeyFMap {
         return newMap;
     }
 
-    @Nonnull
     @Override
-    public KeyFMap minus(@Nonnull Key<?> key) {
+    public KeyFMap minus(Key<?> key) {
         int oldSize = size();
         int keyCode = key.hashCode();
         if (!myMap.containsKey(keyCode)) {
@@ -87,13 +85,13 @@ class MapBackedFMap implements KeyFMap {
         return new MapBackedFMap(this, keyCode);
     }
 
+    @Nullable
     @Override
-    public <V> V get(@Nonnull Key<V> key) {
+    public <V> V get(Key<V> key) {
         //noinspection unchecked
         return (V)myMap.get(key.hashCode());
     }
 
-    @Nonnull
     @Override
     public Key[] getKeys() {
         return getKeysByIndices(myMap.keys());

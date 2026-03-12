@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
+import consulo.util.io.PathUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.Comparing;

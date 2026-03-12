@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,6 +32,7 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use map#computeIfAbsent() method")
 public abstract class FactoryMap<K, V> implements Map<K, V> {
+  @Nullable
   private Map<K, V> myMap;
 
   /**
@@ -46,7 +46,6 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   private FactoryMap(boolean safe) {
   }
 
-  @Nonnull
   protected Map<K, V> createMap() {
     return new HashMap<>();
   }
@@ -54,6 +53,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   @Nullable
   protected abstract V create(K key);
 
+  @Nullable
   @Override
   public V get(Object key) {
     Map<K, V> map = getMap();
@@ -80,13 +80,13 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return (T)ObjectUtil.NULL;
   }
 
-  private static <T> T notNull(Object key) {
+  private static <T> T notNull(@Nullable Object key) {
     //noinspection unchecked
     return key == null ? FAKE_NULL() : (T)key;
   }
 
   @Nullable
-  private static <T> T nullize(T value) {
+  private static <T> T nullize(@Nullable T value) {
     return value == FAKE_NULL() ? null : value;
   }
 
@@ -95,6 +95,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return getMap().containsKey(notNull(key));
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     K k = notNull(key);
@@ -103,19 +104,19 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return nullize(v);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     V v = getMap().remove(key);
     return nullize(v);
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     Set<K> ts = getMap().keySet();
     K nullKey = FAKE_NULL();
     if (ts.contains(nullKey)) {
-      java.util.HashSet<K> hashSet = new HashSet<>(ts);
+      Set<K> hashSet = new HashSet<>(ts);
       hashSet.remove(nullKey);
       hashSet.add(null);
       return hashSet;
@@ -151,26 +152,23 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
+  public void putAll(Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     return ContainerUtil.map2Set(getMap().entrySet(), entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue())));
   }
 
-  @Nonnull
-  public static <K, V> Map<K, V> create(@Nonnull final Function<? super K, ? extends V> computeValue) {
+  public static <K, V> Map<K, V> create(final Function<? super K, ? extends V> computeValue) {
     return new FactoryMap<K, V>(true) {
       @Nullable
       @Override
@@ -180,8 +178,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     };
   }
 
-  @Nonnull
-  public static <K, V> Map<K, V> createMap(@Nonnull final Function<? super K, ? extends V> computeValue, @Nonnull final Supplier<? extends Map<K, V>> mapCreator) {
+  public static <K, V> Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
     return new FactoryMap<K, V>(true) {
       @Nullable
       @Override
@@ -189,7 +186,6 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
         return computeValue.apply(key);
       }
 
-      @Nonnull
       @Override
       protected Map<K, V> createMap() {
         return mapCreator.get();

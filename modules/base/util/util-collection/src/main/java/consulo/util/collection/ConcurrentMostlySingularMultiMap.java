@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiMap<K, V> {
-  @Nonnull
   @Override
   protected Map<K, Object> createMap() {
     return new ConcurrentHashMap<>();
   }
 
   @Override
-  public void add(@Nonnull K key, @Nonnull V value) {
+  public void add(K key, V value) {
     ConcurrentMap<K, Object> map = (ConcurrentMap<K, Object>)myMap;
     while (true) {
       Object current = map.get(key);
@@ -58,7 +56,7 @@ public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiM
     // not implemented
   }
 
-  public boolean replace(@Nonnull K key, @Nonnull Collection<V> expectedValue, @Nonnull Collection<V> newValue) {
+  public boolean replace(K key, Collection<V> expectedValue, Collection<V> newValue) {
     ConcurrentMap<K, Object> map = (ConcurrentMap<K, Object>)myMap;
     Object newValueToPut = newValue.isEmpty() ? null : newValue.size() == 1 ? newValue.iterator().next() : new ValueList<Object>(newValue);
 
@@ -81,7 +79,7 @@ public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiM
   }
 
   @Override
-  public boolean remove(@Nonnull K key, @Nonnull V value) {
+  public boolean remove(K key, V value) {
     throw new AbstractMethodError("Not yet re-implemented for concurrency");
   }
 }

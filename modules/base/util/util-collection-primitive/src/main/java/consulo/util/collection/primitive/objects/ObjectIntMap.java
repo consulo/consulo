@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.objects;
 
 import consulo.util.collection.primitive.ints.IntCollection;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
 
@@ -41,7 +40,7 @@ public interface ObjectIntMap<K> {
 
   void putInt(K key, int value);
 
-  void putAll(@Nonnull ObjectIntMap<? extends K> map);
+  void putAll(ObjectIntMap<? extends K> map);
 
   int size();
 
@@ -61,6 +60,5 @@ public interface ObjectIntMap<K> {
 
   Set<K> keySet();
 
-  @Nonnull
   IntCollection values();
 }

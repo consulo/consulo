@@ -18,6 +18,7 @@ package consulo.util.concurrent.coroutine.step.nio;
 
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -93,7 +94,7 @@ public class SocketReceive extends AsynchronousSocketStep {
 	/**
 	 * @see #receiveFrom(Function)
 	 */
-	public static SocketReceive receiveFrom(SocketAddress socketAddress) {
+	public static SocketReceive receiveFrom(@Nullable SocketAddress socketAddress) {
 		return receiveFrom(c -> socketAddress);
 	}
 

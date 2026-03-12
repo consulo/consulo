@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 
@@ -23,19 +22,20 @@ public class UnsyncByteArrayInputStream extends InputStream {
   protected byte[] myBuffer;
   private int myPosition;
   private int myCount;
-  private int myMarkedPosition;
+  private int myMarkedPosition = 0;
 
-  public UnsyncByteArrayInputStream(@Nonnull byte[] buf) {
+  public UnsyncByteArrayInputStream(byte[] buf) {
     this(buf, 0, buf.length);
   }
 
   public UnsyncByteArrayInputStream(byte[] buf, int offset, int length) {
+    myBuffer = buf;
     init(buf, offset, length);
   }
 
   public void init(byte[] buf, int offset, int length) {
     myBuffer = buf;
-    myPosition = offset;
+    myPosition = myMarkedPosition = offset;
     myCount = length;
   }
 
@@ -45,7 +45,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   }
 
   @Override
-  public int read(@Nonnull byte[] b, int off, int len) {
+  public int read(byte[] b, int off, int len) {
     if (off < 0 || len < 0 || len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }

@@ -30,8 +30,7 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +55,7 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <K, V> Map<K, V> newHashMapWithStrategy(int capacity, float loadFactor, @Nullable Map<? extends K, ? extends V> inner, @Nonnull HashingStrategy<K> hashingStrategy) {
+  public <K, V> Map<K, V> newHashMapWithStrategy(int capacity, float loadFactor, @Nullable Map<? extends K, ? extends V> inner, HashingStrategy<K> hashingStrategy) {
     if (capacity != UNKNOWN_CAPACITY) {
       return new THashMap<>(capacity, loadFactor, mapStrategy(hashingStrategy));
     }
@@ -69,12 +68,12 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
   }
 
   @Override
-  public <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+  public <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
     return new TWeakHashMap<>(initialCapacity, loadFactor, strategy);
   }
 
   @Override
-  public <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy) {
+  public <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy) {
     return new TSoftHashMap<>(strategy);
   }
 
@@ -99,7 +98,6 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
     };
   }
 
-  @Nonnull
   @Override
   public <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
     if (capacity == UNKNOWN_CAPACITY) {
@@ -109,7 +107,6 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
     return new MyIntObjectHashMap<>(capacity);
   }
 
-  @Nonnull
   @Override
   public <K> ObjectIntMap<K> newObjectIntHashMap(int capacity, HashingStrategy<K> strategy) {
     if (capacity == UNKNOWN_CAPACITY) {
@@ -119,14 +116,16 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
   }
 
   @Override
-  public IntSet newIntHashSet(int capacity, int[] array) {
-    if (array != null) {
-      return new MyIntHashSet(array);
-    }
+  public IntSet newIntHashSet(int capacity) {
     if (capacity == UNKNOWN_CAPACITY) {
       return new MyIntHashSet();
     }
     return new MyIntHashSet(capacity);
+  }
+
+  @Override
+  public IntSet newIntHashSet(int capacity, int[] array) {
+    return new MyIntHashSet(array);
   }
 
   @Override
@@ -137,7 +136,6 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
     return new MyIntIntMap(capacity);
   }
 
-  @Nonnull
   @Override
   public LongSet newLongHashSet(int capacity) {
     if(capacity != UNKNOWN_CAPACITY) {

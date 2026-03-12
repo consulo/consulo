@@ -15,7 +15,8 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -27,17 +28,22 @@ import java.util.Objects;
  * @author nik
  */
 public class FList<E> extends AbstractList<E> {
-  @SuppressWarnings("unchecked") private static final FList<?> EMPTY_LIST = new FList(null, null, 0);
+  @SuppressWarnings("unchecked")
+  private static final FList<?> EMPTY_LIST = new FList(null, null, 0);
+
+  @Nullable
   private final E myHead;
+  @Nullable
   private final FList<E> myTail;
   private final int mySize;
 
-  private FList(E head, FList<E> tail, int size) {
+  private FList(@Nullable E head, @Nullable FList<E> tail, int size) {
     myHead = head;
     myTail = tail;
     mySize = size;
   }
 
+  @Nullable
   @Override
   public E get(int index) {
     if (index < 0 || index >= mySize) {
@@ -46,12 +52,13 @@ public class FList<E> extends AbstractList<E> {
 
     FList<E> current = this;
     while (index > 0) {
-      current = current.myTail;
+      current = Objects.requireNonNull(current).myTail;
       index--;
     }
-    return current.myHead;
+    return Objects.requireNonNull(current).myHead;
   }
 
+  @Nullable
   public E getHead() {
     return myHead;
   }
@@ -60,27 +67,26 @@ public class FList<E> extends AbstractList<E> {
     return new FList<E>(elem, this, mySize + 1);
   }
 
-  public FList<E> without(E elem) {
+  public FList<E> without(@Nullable E elem) {
     FList<E> front = emptyList();
 
     FList<E> current = this;
-    while (!current.isEmpty()) {
-      if (elem == null ? current.myHead == null : current.myHead.equals(elem)) {
-        FList<E> result = current.myTail;
-        while (!front.isEmpty()) {
-          result = result.prepend(front.myHead);
+    while (!Objects.requireNonNull(current).isEmpty()) {
+      if (Objects.equals(elem, current.myHead)) {
+        FList<E> result = Objects.requireNonNull(current.myTail);
+        while (!Objects.requireNonNull(front).isEmpty()) {
+          result = result.prepend(Objects.requireNonNull(front.myHead));
           front = front.myTail;
         }
         return result;
       }
 
-      front = front.prepend(current.myHead);
+      front = front.prepend(Objects.requireNonNull(current.myHead));
       current = current.myTail;
     }
     return this;
   }
 
-  @Nonnull
   @Override
   public Iterator<E> iterator() {
     return new Iterator<E>() {
@@ -92,13 +98,13 @@ public class FList<E> extends AbstractList<E> {
         return list.size() > 0;
       }
 
+      @Nullable
       @Override
       public E next() {
         if (list.size() == 0) throw new NoSuchElementException();
 
         E res = list.myHead;
-        list = list.getTail();
-        assert list != null;
+        list = Objects.requireNonNull(list.getTail());
 
         return res;
       }
@@ -110,6 +116,7 @@ public class FList<E> extends AbstractList<E> {
     };
   }
 
+  @Nullable
   public FList<E> getTail() {
     return myTail;
   }
@@ -122,12 +129,12 @@ public class FList<E> extends AbstractList<E> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o instanceof FList) {
+    if (o instanceof FList that) {
       FList list1 = this;
-      FList list2 = (FList)o;
+      FList list2 = that;
       if (mySize != list2.mySize) return false;
       while (list1 != null) {
-        if (!Objects.equals(list1.myHead, list2.myHead)) return false;
+        if (!Objects.equals(list1.myHead, Objects.requireNonNull(list2).myHead)) return false;
         list1 = list1.getTail();
         list2 = list2.getTail();
         if (list1 == list2) return true;

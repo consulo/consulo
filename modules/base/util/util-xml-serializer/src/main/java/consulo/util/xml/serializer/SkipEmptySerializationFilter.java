@@ -17,14 +17,13 @@ package consulo.util.xml.serializer;
 
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
 public class SkipEmptySerializationFilter extends SerializationFilterBase {
   @Override
-  protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {
+  protected boolean accepts(Accessor accessor, Object bean, @Nullable Object beanValue) {
     if (beanValue == null) {
       return false;
     }
@@ -44,7 +43,7 @@ public class SkipEmptySerializationFilter extends SerializationFilterBase {
     return true;
   }
 
-  protected ThreeState accepts(@Nonnull String name, @Nonnull Object beanValue) {
+  protected ThreeState accepts(String name, Object beanValue) {
     return ThreeState.UNSURE;
   }
 }

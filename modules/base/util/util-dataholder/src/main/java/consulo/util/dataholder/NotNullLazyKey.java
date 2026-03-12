@@ -15,7 +15,6 @@
  */
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -26,13 +25,12 @@ public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
     private final Function<H, T> myFunction;
 
     @SuppressWarnings("deprecation")
-    private NotNullLazyKey(@Nonnull String name, @Nonnull Function<H, T> function) {
+    private NotNullLazyKey(String name, Function<H, T> function) {
         super(name);
         myFunction = function;
     }
 
-    @Nonnull
-    public final T getValue(@Nonnull H h) {
+    public final T getValue(H h) {
         T data = h.getUserData(this);
         if (data == null) {
             h.putUserData(this, data = myFunction.apply(h));
@@ -40,7 +38,7 @@ public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
         return data;
     }
 
-    public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@Nonnull String name, @Nonnull Function<H, T> function) {
+    public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(String name, Function<H, T> function) {
         return new NotNullLazyKey<>(name, function);
     }
 }

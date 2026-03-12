@@ -15,17 +15,18 @@
  */
 package consulo.util.xml.serializer.internal;
 
-import consulo.util.xml.serializer.*;
+import consulo.util.xml.serializer.SerializationFilter;
+import consulo.util.xml.serializer.XmlSerializationException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
-class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
+class AccessorBindingWrapper extends NonNullAccessorBinding implements MultiNodeBinding {
   private final Binding myBinding;
 
-  public AccessorBindingWrapper(@Nonnull MutableAccessor accessor, @Nonnull Binding binding) {
+  public AccessorBindingWrapper(MutableAccessor accessor, Binding binding) {
     super(accessor);
 
     myBinding = binding;
@@ -33,7 +34,7 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       throw new XmlSerializationException("Property " + myAccessor + " of object " + o + " (" + o.getClass() + ") must not be null");
@@ -43,10 +44,11 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    Objects.requireNonNull(context);
     Object currentValue = myAccessor.read(context);
-    if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeIntoObject(currentValue, element, null);
+    if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
+      beanBinding.deserializeIntoObject(currentValue, element, null);
     }
     else {
       Object deserializedValue = myBinding.deserialize(currentValue, element);
@@ -59,10 +61,10 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object deserializeList(Object context, @Nonnull List<Element> elements) {
+  public Object deserializeList(Object context, List<Element> elements) {
     Object currentValue = myAccessor.read(context);
-    if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeIntoObject(currentValue, elements.get(0), null);
+    if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
+      beanBinding.deserializeIntoObject(currentValue, elements.get(0), null);
     }
     else {
       Object deserializedValue = Binding.deserializeList(myBinding, currentValue, elements);
@@ -79,7 +81,7 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element element) {
+  public boolean isBoundTo(Element element) {
     return myBinding.isBoundTo(element);
   }
 }

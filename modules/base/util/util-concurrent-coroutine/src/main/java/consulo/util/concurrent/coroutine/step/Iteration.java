@@ -18,11 +18,9 @@ package consulo.util.concurrent.coroutine.step;
 
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -46,6 +44,7 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 
 	private final CoroutineStep<T, R> rProcessingStep;
 
+	@Nullable
 	private final Supplier<C> fCollectionFactory;
 
 	//~ Constructors -----------------------------------------------------------
@@ -59,7 +58,7 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	 * @param rProcessingStep    The step to be applied to each value returned
 	 *                           by the iterator
 	 */
-	public Iteration(Supplier<C> fCollectionFactory,
+	public Iteration(@Nullable Supplier<C> fCollectionFactory,
 		CoroutineStep<T, R> rProcessingStep) {
 		this.rProcessingStep = rProcessingStep;
 		this.fCollectionFactory = fCollectionFactory;
@@ -122,8 +121,11 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<I> previousExecution,
-		CoroutineStep<C, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<I> previousExecution,
+		@Nullable CoroutineStep<C, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		C aResults =
 			fCollectionFactory != null ? fCollectionFactory.get() : null;
 
@@ -134,12 +136,13 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected C execute(I input, Continuation<?> continuation) {
+	protected C execute(@Nullable I input, Continuation<?> continuation) {
 		C aResults =
 			fCollectionFactory != null ? fCollectionFactory.get() : null;
 
-		for (T rValue : input) {
+		for (T rValue : Objects.requireNonNull(input)) {
 			R aResult = rProcessingStep.runBlocking(rValue, continuation);
 
 			if (aResults != null) {
@@ -159,8 +162,12 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	 * @param rNextStep     The step to execute when the iteration is finished
 	 * @param rContinuation The current continuation
 	 */
-	private void iterateAsync(Iterator<T> rIterator, C rResults,
-		CoroutineStep<C, ?> rNextStep, Continuation<?> rContinuation) {
+	private void iterateAsync(
+		Iterator<T> rIterator,
+		@Nullable C rResults,
+		@Nullable CoroutineStep<C, ?> rNextStep,
+		Continuation<?> rContinuation
+	) {
 		if (rIterator.hasNext()) {
 			CompletableFuture<T> fNextIteration =
 				CompletableFuture.supplyAsync(() -> rIterator.next(),

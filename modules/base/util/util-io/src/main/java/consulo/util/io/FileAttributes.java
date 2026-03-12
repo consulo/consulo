@@ -18,8 +18,7 @@ package consulo.util.io;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @version 11.1
@@ -75,7 +74,6 @@ public final class FileAttributes {
     this.lastModified = lastModified;
   }
 
-  @Nonnull
   private static Type type(boolean isDirectory, boolean isSpecial) {
     return isDirectory ? Type.DIRECTORY : isSpecial ? Type.SPECIAL : Type.FILE;
   }
@@ -159,7 +157,6 @@ public final class FileAttributes {
     return sb.toString();
   }
 
-  @Nonnull
   public static FileAttributes createFrom(byte fileAttributesType, byte flags, long length, long lastModified) {
     Type type = fileAttributesType == -1 ? null : Type.values()[fileAttributesType];
     return new FileAttributes(type, flags, length, lastModified);

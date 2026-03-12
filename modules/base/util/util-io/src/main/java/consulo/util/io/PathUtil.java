@@ -17,10 +17,8 @@ package consulo.util.io;
 
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
@@ -32,34 +30,33 @@ import java.util.Set;
  */
 public class PathUtil {
   @Nullable
-  public static String getFileExtension(@Nonnull String name) {
+  public static String getFileExtension(String name) {
     int index = name.lastIndexOf('.');
     if (index < 0) return null;
     return name.substring(index + 1);
   }
 
-  public static String getCanonicalPath(@NonNls String path) {
+  public static String getCanonicalPath(String path) {
     return FileUtil.toCanonicalPath(path);
   }
 
   @Contract("null -> null; !null -> !null")
+  @Nullable
   public static String toSystemIndependentName(@Nullable String path) {
     return path == null ? null : FileUtil.toSystemIndependentName(path);
   }
 
-
   @Contract("null -> null; !null -> !null")
+  @Nullable
   public static String toSystemDependentName(@Nullable String path) {
     return path == null ? null : FileUtil.toSystemDependentName(path);
   }
 
-  @Nonnull
-  public static String makeFileName(@Nonnull String name, @Nullable String extension) {
+  public static String makeFileName(String name, @Nullable String extension) {
     return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
   }
 
-  @Nonnull
-  public static String getFileName(@Nonnull String path) {
+  public static String getFileName(String path) {
     if (StringUtil.isEmpty(path)) {
       return "";
     }
@@ -72,13 +69,12 @@ public class PathUtil {
     return path.substring(start + 1, end);
   }
 
-  private static int getEnd(@Nonnull String path) {
+  private static int getEnd(String path) {
     char c = path.charAt(path.length() - 1);
     return c == '/' || c == '\\' ? path.length() - 1 : path.length();
   }
 
-  @Nonnull
-  public static String getParentPath(@Nonnull String path) {
+  public static String getParentPath(String path) {
     if (path.length() == 0) return "";
     int end = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
     if (end == path.length() - 1) {
@@ -98,21 +94,19 @@ public class PathUtil {
     return path.substring(0, end);
   }
 
-  private static int getLastIndexOfPathSeparator(@Nonnull String path, int end) {
+  private static int getLastIndexOfPathSeparator(String path, int end) {
     return Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
   }
 
-  private static boolean isWindowsUNCRoot(@Nonnull String path, int lastPathSeparatorPosition) {
+  private static boolean isWindowsUNCRoot(String path, int lastPathSeparatorPosition) {
     return Target.CURRENT == Target.WINDOWS && (path.startsWith("//") || path.startsWith("\\\\")) && getLastIndexOfPathSeparator(path, lastPathSeparatorPosition) == 1;
   }
 
-  @Nonnull
-  public static String suggestFileName(@Nonnull String text) {
+  public static String suggestFileName(String text) {
     return suggestFileName(text, false, false);
   }
 
-  @Nonnull
-  public static String suggestFileName(@Nonnull String text, boolean allowDots, boolean allowSpaces) {
+  public static String suggestFileName(String text, boolean allowDots, boolean allowSpaces) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
@@ -131,11 +125,11 @@ public class PathUtil {
    *
    * @see #isValidFileName(String, Target, boolean, Charset)
    */
-  public static boolean isValidFileName(@Nonnull String fileName, boolean strict) {
+  public static boolean isValidFileName(String fileName, boolean strict) {
     return isValidFileName(fileName, Target.CURRENT, strict, FS_CHARSET);
   }
 
-  public static boolean isValidFileName(@Nonnull String fileName) {
+  public static boolean isValidFileName(String fileName) {
     return isValidFileName(fileName, true);
   }
 
@@ -158,7 +152,7 @@ public class PathUtil {
    * @param strict prohibits names containing any of characters {@code <>:"/\|?*;} and control characters (range 0..31).
    * @param cs     prohibits names which cannot be encoded by this charset (optional).
    */
-  public static boolean isValidFileName(@Nonnull String name, @Nonnull Target os, boolean strict, @Nullable Charset cs) {
+  public static boolean isValidFileName(String name, Target os, boolean strict, @Nullable Charset cs) {
     if (name.length() == 0 || name.equals(".") || name.equals("..")) {
       return false;
     }
@@ -191,8 +185,10 @@ public class PathUtil {
   private static final Set<String> WINDOWS_NAMES =
           Set.of("CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9");
 
+  @Nullable
   private static final Charset FS_CHARSET = fsCharset();
 
+  @Nullable
   private static Charset fsCharset() {
     if (!OSInfo.isWindows && !OSInfo.isMac) {
       String property = System.getProperty("sun.jnu.encoding");
@@ -212,7 +208,7 @@ public class PathUtil {
   /**
    * @return true when the path starts with a drive letter followed by colon, e.g., "C:"
    */
-  public static boolean startsWithWindowsDrive(@Nonnull String path) {
+  public static boolean startsWithWindowsDrive(String path) {
     return path.length() >= 2 && path.charAt(1) == ':' && isDriveLetter(path.charAt(0));
   }
 

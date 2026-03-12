@@ -60,6 +60,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
@@ -845,7 +846,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(EditorHintListener.class, listener);
         assert text != null;
-        HintManager.getInstance().showInformationHint(editor, StringUtil.escapeXmlEntities(text), HintManager.UNDER);
+        HintManager.getInstance().showInformationHint(editor, XmlStringUtil.escapeText(text), HintManager.UNDER);
         connection.disconnect();
         return result[0];
     }
