@@ -27,11 +27,11 @@ public class IntSets {
   private static final PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
 
   public static IntSet newHashSet() {
-    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, null);
+    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY);
   }
 
   public static IntSet newHashSet(int capacity) {
-    return ourFactory.newIntHashSet(capacity, null);
+    return ourFactory.newIntHashSet(capacity);
   }
 
   public static IntSet newHashSet(int[] array) {

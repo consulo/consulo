@@ -15,6 +15,8 @@
  */
 package consulo.util.concurrent;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +24,8 @@ import java.util.List;
 class ExecutionCallback {
   private int myCurrentCount;
   private final int myCountToExecution;
-  private List<Runnable> myRunnables;
+  @Nullable
+  private List<Runnable> myRunnables = null;
 
   ExecutionCallback() {
     this(1);

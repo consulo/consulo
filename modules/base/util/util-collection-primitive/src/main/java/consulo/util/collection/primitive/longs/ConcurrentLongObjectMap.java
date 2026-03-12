@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.primitive.longs;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Enumeration;
 
@@ -36,13 +38,17 @@ public interface ConcurrentLongObjectMap<V> {
 
   boolean replace(long key, V oldValue, V newValue);
 
+  @Nullable
   V replace(long key, V value);
 
   // regular Map methods
+  @Nullable
   V put(long key, V value);
 
+  @Nullable
   V get(long key);
 
+  @Nullable
   V remove(long key);
 
   boolean containsKey(long key);
@@ -70,11 +76,13 @@ public interface ConcurrentLongObjectMap<V> {
 
   boolean containsValue(V value);
 
+  @Nullable
   V putIfAbsent(long key, V value);
 
   interface LongEntry<V> {
     long getKey();
 
+    @Nullable
     V getValue();
   }
 }

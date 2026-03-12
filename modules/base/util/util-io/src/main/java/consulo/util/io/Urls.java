@@ -204,12 +204,12 @@ public final class Urls {
     private static final HashingStrategy<Url> INSTANCE = new CaseInsensitiveUrlHashingStrategy();
 
     @Override
-    public int hashCode(Url url) {
+    public int hashCode(@Nullable Url url) {
       return url == null ? 0 : url.hashCodeCaseInsensitive();
     }
 
     @Override
-    public boolean equals(Url url1, Url url2) {
+    public boolean equals(@Nullable Url url1, @Nullable Url url2) {
       return Urls.equals(url1, url2, false, false);
     }
   }

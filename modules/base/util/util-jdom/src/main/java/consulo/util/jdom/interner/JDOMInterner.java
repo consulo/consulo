@@ -17,6 +17,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Comparing;
 import org.jdom.*;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -68,7 +69,10 @@ public class JDOMInterner {
   private final Interner<String> myStrings = Interner.createStringInterner();
   private final Interner<Element> myElements = Interner.createHashInterner(new HashingStrategy<Element>() {
     @Override
-    public int hashCode(Element e) {
+    public int hashCode(@Nullable Element e) {
+      if (e == null) {
+        return 0;
+      }
       int result = e.getName().hashCode() * 31;
       result += computeAttributesHashCode(e);
       List<Content> content = e.getContent();
@@ -86,7 +90,13 @@ public class JDOMInterner {
     }
 
     @Override
-    public boolean equals(Element o1, Element o2) {
+    public boolean equals(@Nullable Element o1, @Nullable Element o2) {
+      if (o1 == o2) {
+        return true;
+      }
+      if (o1 == null || o2 == null) {
+        return false;
+      }
       if (!Comparing.strEqual(o1.getName(), o2.getName())) return false;
       if (!attributesEqual(o1, o2)) return false;
 
@@ -183,18 +193,24 @@ public class JDOMInterner {
 
   private final Interner<Text/*ImmutableText or ImmutableCDATA*/> myTexts = Interner.createHashInterner(new HashingStrategy<Text>() {
     @Override
-    public int hashCode(Text object) {
+    public int hashCode(@Nullable Text object) {
       return computeTextHashCode(object);
     }
 
     @Override
-    public boolean equals(Text o1, Text o2) {
+    public boolean equals(@Nullable Text o1, @Nullable Text o2) {
+      if (o1 == o2) {
+        return true;
+      }
+      if (o1 == null || o2 == null) {
+        return false;
+      }
       return Comparing.strEqual(o1.getValue(), o2.getValue());
     }
   });
 
-  private static int computeTextHashCode(Text object) {
-    return object.getValue().hashCode();
+  private static int computeTextHashCode(@Nullable Text object) {
+    return object == null ? 0 : object.getValue().hashCode();
   }
 
   public synchronized Element intern(Element element) {

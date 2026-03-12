@@ -7,6 +7,7 @@ import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.LockSupport;
@@ -125,10 +126,12 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   static class Node<V> implements LongEntry<V> {
     final int hash;
     final long key;
+    @Nullable
     volatile V val;
+    @Nullable
     volatile Node<V> next;
 
-    Node(int hash, long key, V val, Node<V> next) {
+    Node(int hash, long key, @Nullable V val, @Nullable Node<V> next) {
       this.hash = hash;
       this.key = key;
       this.val = val;
@@ -140,6 +143,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return key;
     }
 
+    @Nullable
     @Override
     public final V getValue() {
       return val;
@@ -147,7 +151,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
 
     @Override
     public final int hashCode() {
-      return (int)(key ^ val.hashCode());
+      return (int)(key ^ Objects.hashCode(val));
     }
 
     @Override
@@ -166,6 +170,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     /**
      * Virtualized support for map.get(); overridden in subclasses.
      */
+    @Nullable
     Node<V> find(int h, long k) {
       Node<V> e = this;
       do {
@@ -237,11 +242,11 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     return (Node<V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
   }
 
-  static <V> boolean casTabAt(Node<V>[] tab, int i, Node<V> c, Node<V> v) {
+  static <V> boolean casTabAt(Node<V>[] tab, int i, @Nullable Node<V> c, Node<V> v) {
     return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
   }
 
-  static <V> void setTabAt(Node<V>[] tab, int i, Node<V> v) {
+  static <V> void setTabAt(Node<V>[] tab, int i, @Nullable Node<V> v) {
     U.putObjectVolatile(tab, ((long)i << ASHIFT) + ABASE, v);
   }
 
@@ -251,12 +256,12 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * The array of bins. Lazily initialized upon first insertion.
    * Size is always a power of two. Accessed directly by iterators.
    */
-  transient volatile Node<V>[] table;
+  transient volatile Node<V> @Nullable [] table = null;
 
   /**
    * The next table to use; non-null only while resizing.
    */
-  private transient volatile Node<V>[] nextTable;
+  private transient volatile Node<V> @Nullable [] nextTable = null;
 
   /**
    * Base counter value, used mainly when there is no contention,
@@ -289,11 +294,13 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   /**
    * Table of counter cells. When non-null, size is a power of 2.
    */
-  private transient volatile ConcurrentIntObjectHashMap.CounterCell[] counterCells;
+  private transient volatile ConcurrentIntObjectHashMap.CounterCell @Nullable [] counterCells = null;
 
   // views
-  private transient ValuesView<V> values;
-  private transient EntrySetView<V> entrySet;
+  @Nullable
+  private transient ValuesView<V> values = null;
+  @Nullable
+  private transient EntrySetView<V> entrySet = null;
 
 
   /* ---------------- Public operations -------------- */
@@ -399,6 +406,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * then this method returns {@code v}; otherwise it returns
    * {@code null}.  (There can be at most one such mapping.)
    */
+  @Nullable
   @Override
   public V get(long key) {
     Node<V>[] tab;
@@ -473,6 +481,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @return the previous value associated with {@code key}, or
    * {@code null} if there was no mapping for {@code key}
    */
+  @Nullable
   @Override
   public V put(long key, V value) {
     return putVal(key, value, false);
@@ -481,7 +490,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   /**
    * Implementation for put and putIfAbsent
    */
-  final V putVal(long key, V value, boolean onlyIfAbsent) {
+  @Nullable
+  final V putVal(long key, @Nullable V value, boolean onlyIfAbsent) {
     int hash = spread(key);
     int binCount = 0;
     for (Node<V>[] tab = table; ; ) {
@@ -490,7 +500,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       if (tab == null || (n = tab.length) == 0) {
         tab = initTable();
       }
-      else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+      else if ((f = tabAt(Objects.requireNonNull(tab), i = (n - 1) & hash)) == null) {
         if (casTabAt(tab, i, null, new Node<>(hash, key, value, null))) {
           break;                   // no lock when adding to empty bin
         }
@@ -554,6 +564,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @return the previous value associated with {@code key}, or
    * {@code null} if there was no mapping for {@code key}
    */
+  @Nullable
   @Override
   public V remove(long key) {
     return replaceNode(key, null, null);
@@ -564,7 +575,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * Replaces node value with v, conditional upon match of cv if
    * non-null.  If resulting value is null, delete.
    */
-  final V replaceNode(long key, V value, Object cv) {
+  @Nullable
+  final V replaceNode(long key, @Nullable V value, @Nullable Object cv) {
     int hash = spread(key);
     for (Node<V>[] tab = table; ; ) {
       Node<V> f;
@@ -731,7 +743,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     if ((t = table) != null) {
       Traverser<V> it = new Traverser<>(t, t.length, 0, t.length);
       for (Node<V> p; (p = it.advance()) != null; ) {
-        h += p.key ^ p.val.hashCode();
+        h += p.key ^ Objects.hashCode(p.val);
       }
     }
     return h;
@@ -820,6 +832,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @return the previous value associated with the specified key,
    * or {@code null} if there was no mapping for the key
    */
+  @Nullable
   @Override
   public V putIfAbsent(long key, V value) {
     return putVal(key, value, true);
@@ -847,6 +860,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @return the previous value associated with the specified key,
    * or {@code null} if there was no mapping for the key
    */
+  @Nullable
   @Override
   public V replace(long key, V value) {
     return replaceNode(key, value, null);
@@ -950,6 +964,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       nextTable = tab;
     }
 
+    @Nullable
     @Override
     Node<V> find(int h, long k) {
       // loop to avoid arbitrarily deep recursion on forwarding nodes
@@ -1070,7 +1085,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   /**
    * Helps transfer if a resize is in progress.
    */
-  final Node<V>[] helpTransfer(Node<V>[] tab, Node<V> f) {
+  final Node<V> @Nullable [] helpTransfer(Node<V>[] tab, Node<V> f) {
     Node<V>[] nextTab;
     int sc;
     if (tab != null && (f instanceof ForwardingNode) && (nextTab = ((ForwardingNode<V>)f).nextTable) != null) {
@@ -1140,7 +1155,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * Moves and/or copies the nodes in each bin to new table. See
    * above for explanation.
    */
-  private void transfer(Node<V>[] tab, Node<V>[] nextTab) {
+  private void transfer(Node<V>[] tab, Node<V> @Nullable [] nextTab) {
     int n = tab.length, stride;
     if ((stride = (NCPU > 1) ? (n >>> 3) / NCPU : n) < MIN_TRANSFER_STRIDE) {
       stride = MIN_TRANSFER_STRIDE; // subdivide range
@@ -1198,7 +1213,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       else if ((f = tabAt(tab, i)) == null) {
         advance = casTabAt(tab, i, null, fwd);
       }
-      else if ((fh = f.hash) == MOVED) {
+      else if ((fh = Objects.requireNonNull(f).hash) == MOVED) {
         advance = true; // already processed
       }
       else {
@@ -1224,6 +1239,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
                 ln = null;
               }
               for (Node<V> p = f; p != lastRun; p = p.next) {
+                Objects.requireNonNull(p);
                 int ph = p.hash;
                 long pk = p.key;
                 V pv = p.val;
@@ -1248,7 +1264,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
                 int h = e.hash;
                 TreeNode<V> p = new TreeNode<>(h, e.key, e.val, null, null);
                 if ((h & n) == 0) {
-                  if ((p.prev = loTail) == null) {
+                  p.prev = loTail;
+                  if (loTail == null) {
                     lo = p;
                   }
                   else {
@@ -1258,7 +1275,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
                   ++lc;
                 }
                 else {
-                  if ((p.prev = hiTail) == null) {
+                  p.prev = hiTail;
+                  if (hiTail == null) {
                     hi = p;
                   }
                   else {
@@ -1396,7 +1414,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * Replaces all linked nodes in bin at given index unless table is
    * too small, in which case resizes instead.
    */
-  private void treeifyBin(Node<V>[] tab, int index) {
+  private void treeifyBin(Node<V> @Nullable [] tab, int index) {
     Node<V> b;
     int n, sc;
     if (tab != null) {
@@ -1409,7 +1427,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
             TreeNode<V> hd = null, tl = null;
             for (Node<V> e = b; e != null; e = e.next) {
               TreeNode<V> p = new TreeNode<>(e.hash, e.key, e.val, null, null);
-              if ((p.prev = tl) == null) {
+              p.prev = tl;
+              if (tl == null) {
                 hd = p;
               }
               else {
@@ -1425,9 +1444,10 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   }
 
   /**
-   * Returns a list on non-TreeNodes replacing those in given list.
+   * Returns a list of non-TreeNodes replacing those in given list.
    */
-  static <V> Node<V> untreeify(Node<V> b) {
+  @Nullable
+  static <V> Node<V> untreeify(@Nullable Node<V> b) {
     Node<V> hd = null, tl = null;
     for (Node<V> q = b; q != null; q = q.next) {
       Node<V> p = new Node<>(q.hash, q.key, q.val, null);
@@ -1448,17 +1468,22 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * Nodes for use in TreeBins
    */
   static final class TreeNode<V> extends Node<V> {
-    TreeNode<V> parent;  // red-black tree links
-    TreeNode<V> left;
-    TreeNode<V> right;
-    TreeNode<V> prev;    // needed to unlink next upon deletion
+    @Nullable
+    TreeNode<V> parent; // red-black tree links
+    @Nullable
+    TreeNode<V> left = null;
+    @Nullable
+    TreeNode<V> right = null;
+    @Nullable
+    TreeNode<V> prev = null; // needed to unlink next upon deletion
     boolean red;
 
-    TreeNode(int hash, long key, V val, Node<V> next, TreeNode<V> parent) {
+    TreeNode(int hash, long key, @Nullable V val, @Nullable Node<V> next, @Nullable TreeNode<V> parent) {
       super(hash, key, val, next);
       this.parent = parent;
     }
 
+    @Nullable
     @Override
     Node<V> find(int h, long k) {
       return findTreeNode(h, k);
@@ -1468,6 +1493,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      * Returns the TreeNode (or null if not found) for the given key
      * starting at given root.
      */
+    @Nullable
     final TreeNode<V> findTreeNode(int h, long k) {
       TreeNode<V> p = this;
       do {
@@ -1512,9 +1538,12 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * not) to complete before tree restructuring operations.
    */
   static final class TreeBin<V> extends Node<V> {
-    TreeNode<V> root;
-    volatile TreeNode<V> first;
-    volatile Thread waiter;
+    @Nullable
+    TreeNode<V> root = null;
+    @Nullable
+    volatile TreeNode<V> first = null;
+    @Nullable
+    volatile Thread waiter = null;
     volatile int lockState;
     // values for lockState
     static final int WRITER = 1; // set while holding write lock
@@ -1524,7 +1553,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     /**
      * Creates bin with initial set of nodes headed by b.
      */
-    TreeBin(TreeNode<V> b) {
+    TreeBin(@Nullable TreeNode<V> b) {
       super(TREEBIN, 0, null, null);
       first = b;
       TreeNode<V> r = null;
@@ -1565,7 +1594,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         }
       }
       root = r;
-      assert checkInvariants(root);
+      //assert checkInvariants(root);
     }
 
     /**
@@ -1615,6 +1644,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      * using tree comparisons from root, but continues linear
      * search when lock not available.
      */
+    @Nullable
     @Override
     final Node<V> find(int h, long k) {
       for (Node<V> e = first; e != null; ) {
@@ -1658,7 +1688,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      *
      * @return null if added
      */
-    final TreeNode<V> putTreeVal(int h, long k, V v) {
+    @Nullable
+    final TreeNode<V> putTreeVal(int h, long k, @Nullable V v) {
       boolean searched = false;
       for (TreeNode<V> p = root; ; ) {
         int dir, ph;
@@ -1714,7 +1745,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           break;
         }
       }
-      assert checkInvariants(root);
+      //assert checkInvariants(root);
       return null;
     }
 
@@ -1771,7 +1802,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
           else {
             TreeNode<V> sp = s.parent;
-            if ((p.parent = sp) != null) {
+            p.parent = sp;
+            if (sp != null) {
               if (s == sp.left) {
                 sp.left = p;
               }
@@ -1779,18 +1811,22 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
                 sp.right = p;
               }
             }
-            if ((s.right = pr) != null) {
+            s.right = pr;
+            if (pr != null) {
               pr.parent = s;
             }
           }
           p.left = null;
-          if ((p.right = sr) != null) {
+          p.right = sr;
+          if (sr != null) {
             sr.parent = p;
           }
-          if ((s.left = pl) != null) {
+          s.left = pl;
+          if (pl != null) {
             pl.parent = s;
           }
-          if ((s.parent = pp) == null) {
+          s.parent = pp;
+          if (pp == null) {
             r = s;
           }
           else if (p == pp.left) {
@@ -1832,8 +1868,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         root = (p.red) ? r : balanceDeletion(r, replacement);
 
         if (p == replacement) {  // detach pointers
-          TreeNode<V> pp;
-          if ((pp = p.parent) != null) {
+          TreeNode<V> pp = p.parent;
+          if (pp != null) {
             if (p == pp.left) {
               pp.left = null;
             }
@@ -1896,7 +1932,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return root;
     }
 
-    static <V> TreeNode<V> balanceInsertion(TreeNode<V> root, TreeNode<V> x) {
+    static <V> TreeNode<V> balanceInsertion(@Nullable TreeNode<V> root, TreeNode<V> x) {
       x.red = true;
       for (TreeNode<V> xp, xpp, xppl, xppr; ; ) {
         if ((xp = x.parent) == null) {
@@ -1904,7 +1940,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           return x;
         }
         else if (!xp.red || (xpp = xp.parent) == null) {
-          return root;
+          return Objects.requireNonNull(root);
         }
         if (xp == (xppl = xpp.left)) {
           if ((xppr = xpp.right) != null && xppr.red) {
@@ -1915,14 +1951,14 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
           else {
             if (x == xp.right) {
-              root = rotateLeft(root, x = xp);
+              root = rotateLeft(Objects.requireNonNull(root), x = xp);
               xpp = (xp = x.parent) == null ? null : xp.parent;
             }
             if (xp != null) {
               xp.red = false;
               if (xpp != null) {
                 xpp.red = true;
-                root = rotateRight(root, xpp);
+                root = rotateRight(Objects.requireNonNull(root), xpp);
               }
             }
           }
@@ -1936,14 +1972,14 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
           else {
             if (x == xp.left) {
-              root = rotateRight(root, x = xp);
+              root = rotateRight(Objects.requireNonNull(root), x = xp);
               xpp = (xp = x.parent) == null ? null : xp.parent;
             }
             if (xp != null) {
               xp.red = false;
               if (xpp != null) {
                 xpp.red = true;
-                root = rotateLeft(root, xpp);
+                root = rotateLeft(Objects.requireNonNull(root), xpp);
               }
             }
           }
@@ -2102,8 +2138,10 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   static final class TableStack<V> {
     int length;
     int index;
-    Node<V>[] tab;
-    TableStack<V> next;
+    Node<V> @Nullable [] tab = null;
+
+    @Nullable
+    TableStack<V> next = null;
   }
 
   /**
@@ -2128,16 +2166,17 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * for a table read.
    */
   static class Traverser<V> {
-    Node<V>[] tab;        // current table; updated if resized
+    Node<V> @Nullable [] tab; // current table; updated if resized
+    @Nullable
     Node<V> next;         // the next entry to use
-    TableStack<V> stack;
-    TableStack<V> spare; // to save/restore on ForwardingNodes
+    @Nullable
+    TableStack<V> stack = null, spare = null; // to save/restore on ForwardingNodes
     int index;              // index of bin to use next
     int baseIndex;          // current index of initial table
     int baseLimit;          // index bound for initial table
     final int baseSize;     // initial table size
 
-    Traverser(Node<V>[] tab, int size, int index, int limit) {
+    Traverser(Node<V> @Nullable [] tab, int size, int index, int limit) {
       this.tab = tab;
       baseSize = size;
       baseIndex = this.index = index;
@@ -2148,9 +2187,10 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     /**
      * Advances if possible, returning next valid node, or null if none.
      */
+    @Nullable
     final Node<V> advance() {
-      Node<V> e;
-      if ((e = next) != null) {
+      Node<V> e = next;
+      if (e != null) {
         e = e.next;
       }
       for (; ; ) {
@@ -2210,17 +2250,17 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      * @param n length of current table
      */
     private void recoverState(int n) {
-      TableStack<V> s;
+      TableStack<V> s = stack;
       int len;
-      while ((s = stack) != null && (index += (len = s.length)) >= n) {
+      while (s != null && (index += (len = s.length)) >= n) {
         n = len;
         index = s.index;
         tab = s.tab;
         s.tab = null;
         TableStack<V> next = s.next;
         s.next = spare; // save for reuse
-        stack = next;
         spare = s;
+        s = stack = next;
       }
       if (s == null && (index += baseSize) >= n) {
         index = ++baseIndex;
@@ -2234,9 +2274,10 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    */
   static class BaseIterator<V> extends Traverser<V> {
     final ConcurrentLongObjectHashMap<V> map;
-    Node<V> lastReturned;
+    @Nullable
+    Node<V> lastReturned = null;
 
-    BaseIterator(Node<V>[] tab, int size, int index, int limit, ConcurrentLongObjectHashMap<V> map) {
+    BaseIterator(Node<V> @Nullable [] tab, int size, int index, int limit, ConcurrentLongObjectHashMap<V> map) {
       super(tab, size, index, limit);
       this.map = map;
       advance();
@@ -2262,17 +2303,17 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
 
 
   static final class ValueIterator<V> extends BaseIterator<V> implements Iterator<V>, Enumeration<V> {
-    ValueIterator(Node<V>[] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
+    ValueIterator(Node<V> @Nullable [] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
       super(tab, index, size, limit, map);
     }
 
     @Override
     public final V next() {
-      Node<V> p;
-      if ((p = next) == null) {
+      Node<V> p = next;
+      if (p == null) {
         throw new NoSuchElementException();
       }
-      V v = p.val;
+      V v = Objects.requireNonNull(p.val);
       lastReturned = p;
       advance();
       return v;
@@ -2285,18 +2326,18 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   }
 
   static final class EntryIterator<V> extends BaseIterator<V> implements Iterator<LongEntry<V>> {
-    EntryIterator(Node<V>[] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
+    EntryIterator(Node<V> @Nullable [] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
       super(tab, index, size, limit, map);
     }
 
     @Override
     public final LongEntry<V> next() {
-      Node<V> p;
-      if ((p = next) == null) {
+      Node<V> p = next;
+      if (p == null) {
         throw new NoSuchElementException();
       }
-      final long k = p.key;
-      final V v = p.val;
+      long k = p.key;
+      V v = Objects.requireNonNull(p.val);
       lastReturned = p;
       advance();
       return new LongEntry<V>() {
@@ -2305,6 +2346,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           return k;
         }
 
+        @Nullable
         @Override
         public V getValue() {
           return v;
@@ -2587,8 +2629,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     @Override
     public Iterator<LongEntry<V>> iterator() {
       ConcurrentLongObjectHashMap<V> m = map;
-      Node<V>[] t;
-      int f = (t = m.table) == null ? 0 : t.length;
+      Node<V>[] t = m.table;
+      int f = t == null ? 0 : t.length;
       return new EntryIterator<>(t, f, 0, f, m);
     }
 

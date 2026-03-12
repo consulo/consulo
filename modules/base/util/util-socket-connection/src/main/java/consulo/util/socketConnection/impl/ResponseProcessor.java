@@ -139,7 +139,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
       long time = System.currentTimeMillis();
 
       myTimeoutHandlers.entrySet().forEach(e -> {
-        if (time > e.getValue().myLastTime) {
+        if (time > Objects.requireNonNull(e.getValue()).myLastTime) {
           timedOut.add(e);
         }
       });
@@ -149,7 +149,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
       }
     }
     for (IntObjectMap.IntObjectEntry<TimeoutHandler> entry : timedOut) {
-      TimeoutHandler handler = entry.getValue();
+      TimeoutHandler handler = Objects.requireNonNull(entry.getValue());
       LOG.debug("performing timeout action: " + handler.myAction);
       handler.myAction.run();
     }
@@ -161,7 +161,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
     synchronized (myLock) {
       if (myTimeoutHandlers.isEmpty()) return;
 
-      myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(Objects.requireNonNull(nextTime.get()), handler.myLastTime)));
+      myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(Objects.requireNonNull(nextTime.get()), Objects.requireNonNull(handler).myLastTime)));
     }
     int delay = (int)(Objects.requireNonNull(nextTime.get()) - System.currentTimeMillis() + 100);
     LOG.debug("schedule timeout check in " + delay + "ms");

@@ -21,6 +21,7 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntIterator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -141,9 +142,12 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
     }
   }
 
-  private MyEntrySet myEntrySet;
-  private MyKeySet myKeySet;
-  private MyValueCollection myValueCollection;
+  @Nullable
+  private MyEntrySet myEntrySet = null;
+  @Nullable
+  private MyKeySet myKeySet = null;
+  @Nullable
+  private MyValueCollection myValueCollection = null;
 
   public MyObjectIntHashMap() {
   }

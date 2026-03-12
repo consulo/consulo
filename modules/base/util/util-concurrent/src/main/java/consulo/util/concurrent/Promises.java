@@ -33,17 +33,18 @@ public class Promises {
 
   private static class CountDownConsumer<T> implements Consumer<Object> {
     private final AsyncPromise<T> myPromise;
+    @Nullable
     private final T myTotalResult;
     private AtomicInteger countDown;
 
-    private CountDownConsumer(int countDown, AsyncPromise<T> promise, T totalResult) {
+    private CountDownConsumer(int countDown, AsyncPromise<T> promise, @Nullable T totalResult) {
       myPromise = promise;
       myTotalResult = totalResult;
       this.countDown = new AtomicInteger(countDown);
     }
 
     @Override
-    public void accept(Object o) {
+    public void accept(@Nullable Object o) {
       if (countDown.decrementAndGet() == 0) {
         myPromise.setResult(myTotalResult);
       }
@@ -157,11 +158,11 @@ public class Promises {
     }
   }
 
-  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult) {
+  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, @Nullable T totalResult) {
     return all(promises, totalResult, false);
   }
 
-  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult, boolean ignoreErrors) {
+  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, @Nullable T totalResult, boolean ignoreErrors) {
     if (promises.isEmpty()) {
       return resolvedPromise();
     }

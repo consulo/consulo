@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
@@ -148,13 +149,13 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
   }
 
   @Override
-  public int hashCode(K value) {
-    return value.hashCode();
+  public int hashCode(@Nullable K value) {
+    return Objects.hashCode(value);
   }
 
   @Override
-  public boolean equals(K val1, K val2) {
-    return val1.equals(val2);
+  public boolean equals(@Nullable K val1, @Nullable K val2) {
+    return Objects.equals(val1, val2);
   }
 
   public static final class Handle<T> {

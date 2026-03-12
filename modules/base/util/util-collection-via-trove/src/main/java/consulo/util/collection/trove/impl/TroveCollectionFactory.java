@@ -116,14 +116,16 @@ public class TroveCollectionFactory extends PrimitiveCollectionFactory {
   }
 
   @Override
-  public IntSet newIntHashSet(int capacity, int[] array) {
-    if (array != null) {
-      return new MyIntHashSet(array);
-    }
+  public IntSet newIntHashSet(int capacity) {
     if (capacity == UNKNOWN_CAPACITY) {
       return new MyIntHashSet();
     }
     return new MyIntHashSet(capacity);
+  }
+
+  @Override
+  public IntSet newIntHashSet(int capacity, int[] array) {
+    return new MyIntHashSet(array);
   }
 
   @Override

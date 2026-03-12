@@ -26,7 +26,8 @@ public class InternalPromiseUtil {
 
   public static class LazyValue<T> implements Supplier<T> {
     private final Supplier<T> myFactory;
-    private T myValue;
+    @Nullable
+    private T myValue = null;
 
     public LazyValue(Supplier<T> factory) {
       myFactory = factory;
@@ -72,7 +73,9 @@ public class InternalPromiseUtil {
   }
 
   public static class PromiseValue<T> {
+    @Nullable
     public final T result;
+    @Nullable
     public final Throwable error;
 
     public static <T> PromiseValue<T> createFulfilled(@Nullable T result) {
@@ -158,6 +161,7 @@ public class InternalPromiseUtil {
       return value != null && value.isCancelled();
     }
 
+    @Nullable
     @Override
     public final T get() throws ExecutionException {
       try {
@@ -168,6 +172,7 @@ public class InternalPromiseUtil {
       }
     }
 
+    @Nullable
     @Override
     public final T get(long timeout, TimeUnit unit) throws ExecutionException, TimeoutException {
       return blockingGet((int)timeout, unit);
