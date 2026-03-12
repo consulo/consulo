@@ -52,12 +52,12 @@ public class FileUtil {
 
     public static final HashingStrategy<File> FILE_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<File>() {
         @Override
-        public int hashCode(File object) {
+        public int hashCode(@Nullable File object) {
             return fileHashCode(object);
         }
 
         @Override
-        public boolean equals(File o1, File o2) {
+        public boolean equals(@Nullable File o1, @Nullable File o2) {
             return filesEqual(o1, o2);
         }
     };

@@ -15,6 +15,7 @@
  */
 package consulo.util.concurrent;
 
+import consulo.util.lang.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,7 @@ public class AsyncResult<T> extends ActionCallback {
     return result;
   }
 
+  @Nullable
   protected T myResult;
 
   @Deprecated
@@ -104,13 +106,13 @@ public class AsyncResult<T> extends ActionCallback {
     myResult = result;
   }
 
-  public AsyncResult<T> setDone(T result) {
+  public AsyncResult<T> setDone(@Nullable T result) {
     myResult = result;
     setDone();
     return this;
   }
 
-  public AsyncResult<T> setRejected(T result) {
+  public AsyncResult<T> setRejected(@Nullable T result) {
     myResult = result;
     setRejected();
     return this;
@@ -184,10 +186,12 @@ public class AsyncResult<T> extends ActionCallback {
     return result;
   }
 
+  @Nullable
   public T getResult() {
     return myResult;
   }
 
+  @Nullable
   public T getResultSync() {
     return getResultSync(-1);
   }
@@ -231,7 +235,7 @@ public class AsyncResult<T> extends ActionCallback {
         v = doneHandler.apply(result);
       }
       catch (Throwable e) {
-        subResult.reject(e.getMessage());
+        subResult.reject(StringUtil.notNullize(e.getMessage()));
         LOG.error(e.getMessage(), e);
         return;
       }
@@ -254,7 +258,7 @@ public class AsyncResult<T> extends ActionCallback {
         doneHandler.accept(result);
       }
       catch (Throwable e) {
-        subResult.reject(e.getMessage());
+        subResult.reject(StringUtil.notNullize(e.getMessage()));
         LOG.error(e.getMessage(), e);
         return;
       }

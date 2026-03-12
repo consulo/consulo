@@ -15,6 +15,7 @@
  */
 package consulo.util.concurrent;
 
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,16 +35,19 @@ public class ActionCallback {
     private final ExecutionCallback myDone;
     private final ExecutionCallback myRejected;
 
-    protected String myError;
-    protected Throwable myThrowable;
+    @Nullable
+    protected String myError = null;
+    @Nullable
+    protected Throwable myThrowable = null;
 
+    @Nullable
     private final String myName;
 
     public ActionCallback() {
         this(null);
     }
 
-    public ActionCallback(String name) {
+    public ActionCallback(@Nullable String name) {
         myName = name;
         myDone = new ExecutionCallback();
         myRejected = new ExecutionCallback();
@@ -53,7 +57,7 @@ public class ActionCallback {
         this(null, countToDone);
     }
 
-    public ActionCallback(String name, int countToDone) {
+    public ActionCallback(@Nullable String name, int countToDone) {
         myName = name;
 
         assert countToDone >= 0 : "count=" + countToDone;
@@ -162,7 +166,7 @@ public class ActionCallback {
     }
 
     public final ActionCallback notifyWhenRejected(ActionCallback child) {
-        return doWhenRejected(() -> child.reject(myError));
+        return doWhenRejected(() -> child.reject(StringUtil.notNullize(myError)));
     }
 
     public ActionCallback notify(ActionCallback child) {
@@ -255,7 +259,7 @@ public class ActionCallback {
             }
         }
         catch (InterruptedException e) {
-            reject(e.getMessage());
+            reject(StringUtil.notNullize(e.getMessage()));
             return false;
         }
         return true;
