@@ -15,7 +15,7 @@
  */
 package consulo.util.rmi;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.*;
 import java.rmi.Remote;
