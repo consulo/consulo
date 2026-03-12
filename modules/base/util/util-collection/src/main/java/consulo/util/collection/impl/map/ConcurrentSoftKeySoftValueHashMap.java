@@ -19,7 +19,6 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 
@@ -30,17 +29,16 @@ import java.lang.ref.SoftReference;
  * To instantiate use {@link ContainerUtil#createConcurrentSoftKeySoftValueMap(int, float, int, TObjectHashingStrategy)}
  */
 public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
-  public ConcurrentSoftKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentSoftKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   private static class SoftKey<K, V> extends SoftReference<K> implements KeyReference<K, V> {
     private final int myHash; // Hash code of the key, stored here since the key may be tossed by the GC
     private final HashingStrategy<? super K> myStrategy;
-    @Nonnull
     private final ValueReference<K, V> myValueReference;
 
-    SoftKey(@Nonnull K k, @Nonnull ValueReference<K, V> valueReference, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<? super K> queue) {
+    SoftKey(K k, ValueReference<K, V> valueReference, HashingStrategy<? super K> strategy, ReferenceQueue<? super K> queue) {
       super(k, queue);
       myValueReference = valueReference;
       myHash = strategy.hashCode(k);
@@ -63,7 +61,6 @@ public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySo
       return myHash;
     }
 
-    @Nonnull
     @Override
     public ValueReference<K, V> getValueReference() {
       return myValueReference;
@@ -71,8 +68,7 @@ public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySo
   }
 
   @Override
-  @Nonnull
-  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull V v) {
+  public KeyReference<K, V> createKeyReference(K k, V v) {
     ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     SoftKey<K, V> keyReference = new SoftKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof SoftValue) {

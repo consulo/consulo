@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.internal.AutoClosableRegister;
 import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -104,8 +105,11 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
      * {@inheritDoc}
      */
     @Override
-    public void runAsync(CompletableFuture<Void> previousExecution,
-                         CoroutineStep<Void, ?> nextStep, Continuation<?> continuation) {
+    public void runAsync(
+        CompletableFuture<Void> previousExecution,
+        @Nullable CoroutineStep<Void, ?> nextStep,
+        Continuation<?> continuation
+    ) {
         continuation.continueAccept(previousExecution,
             v -> acceptAsync(continuation.suspend(this, nextStep)));
     }
@@ -113,8 +117,9 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    protected Void execute(Void input, Continuation<?> continuation) {
+    protected Void execute(@Nullable Void input, Continuation<?> continuation) {
         try {
             AsynchronousServerSocketChannel rChannel =
                 getServerSocketChannel(continuation);

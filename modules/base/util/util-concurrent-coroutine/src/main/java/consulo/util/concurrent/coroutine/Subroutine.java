@@ -1,5 +1,8 @@
 package consulo.util.concurrent.coroutine;
 
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -19,10 +22,8 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @param coroutine  The coroutine to invoke as a subroutine
 	 * @param returnStep The step to return to after the subroutine execution
 	 */
-	public Subroutine(Coroutine<I, T> coroutine,
-		CoroutineStep<T, O> returnStep) {
-		init(coroutine.getCode()
-			.withLastStep(new SubroutineReturn<>(returnStep)), null);
+	public Subroutine(Coroutine<I, T> coroutine, @Nullable CoroutineStep<T, O> returnStep) {
+		init(coroutine.getRequiredCode().withLastStep(new SubroutineReturn<>(Objects.requireNonNull(returnStep))), null);
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 		Continuation<?> continuation) {
 		continuation.subroutineStarted(this);
 
-		getCode().runAsync(execution, null, continuation);
+		getRequiredCode().runAsync(execution, null, continuation);
 	}
 
 	/**
@@ -46,10 +47,11 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @param continuation The continuation of the execution
 	 * @return The result of the execution
 	 */
-	public O runBlocking(I input, Continuation<?> continuation) {
+	@Nullable
+	public O runBlocking(@Nullable I input, Continuation<?> continuation) {
 		continuation.subroutineStarted(this);
 
-		return getCode().runBlocking(input, continuation);
+		return getRequiredCode().runBlocking(input, continuation);
 	}
 
 	/**
@@ -74,8 +76,11 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void runAsync(CompletableFuture<I> previousExecution,
-			CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+		public void runAsync(
+			CompletableFuture<I> previousExecution,
+			@Nullable CoroutineStep<O, ?> nextStep,
+			Continuation<?> continuation
+		) {
 			continuation.subroutineFinished();
 
 			returnStep.runAsync(previousExecution, nextStep, continuation);
@@ -84,8 +89,9 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Nullable
 		@Override
-		protected O execute(I input, Continuation<?> continuation) {
+		protected O execute(@Nullable I input, Continuation<?> continuation) {
 			continuation.subroutineFinished();
 
 			return returnStep.execute(input, continuation);

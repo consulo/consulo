@@ -20,7 +20,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.*;
 
@@ -39,7 +39,7 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
      *
      * @param code A binary function containing the code to be executed
      */
-    public CodeExecution(@Nonnull BiFunction<I, Continuation<?>, O> code) {
+    public CodeExecution(BiFunction<I, Continuation<?>, O> code) {
         this.code = code;
     }
 
@@ -217,8 +217,9 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    protected O execute(I input, Continuation<?> continuation) {
+    protected O execute(@Nullable I input, Continuation<?> continuation) {
         return code.apply(input, continuation);
     }
 }

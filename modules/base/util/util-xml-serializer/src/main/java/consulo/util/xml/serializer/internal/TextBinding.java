@@ -16,14 +16,13 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.SerializationFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Text;
 
-class TextBinding extends Binding {
+class TextBinding extends NonNullAccessorBinding {
   private final Class<?> valueClass;
 
-  public TextBinding(@Nonnull MutableAccessor accessor) {
+  public TextBinding(MutableAccessor accessor) {
     super(accessor);
 
     valueClass = XmlSerializerImpl.typeToClass(accessor.getGenericType());
@@ -31,12 +30,12 @@ class TextBinding extends Binding {
 
   @Nullable
   @Override
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     return value == null ? null : new Text(XmlSerializerImpl.convertToString(value));
   }
 
-  void set(@Nonnull Object context, @Nonnull String value) {
+  void set(Object context, String value) {
     XmlSerializerImpl.doSet(context, value, myAccessor, valueClass);
   }
 }

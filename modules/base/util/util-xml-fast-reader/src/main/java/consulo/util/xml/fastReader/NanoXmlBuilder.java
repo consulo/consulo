@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.xml.fastReader;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Reader;
 
 @SuppressWarnings("RedundantThrows")
@@ -34,6 +34,7 @@ public interface NanoXmlBuilder extends IXMLBuilder {
   default void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
   }
 
+  @Nullable
   @Override
   default Object getResult() throws Exception {
     return null;

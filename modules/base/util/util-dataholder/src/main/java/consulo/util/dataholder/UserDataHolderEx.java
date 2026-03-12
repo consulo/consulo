@@ -15,8 +15,7 @@
  */
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,9 +26,8 @@ public interface UserDataHolderEx extends UserDataHolder {
     /**
      * @return written value
      */
-    @Nonnull
     @Override
-    <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value);
+    <T> T putUserDataIfAbsent(Key<T> key, T value);
 
     /**
      * Replaces (atomically) old value in the map with the new one
@@ -38,5 +36,5 @@ public interface UserDataHolderEx extends UserDataHolder {
      * @see ConcurrentMap#replace(Object, Object, Object)
      */
     @Override
-    <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
+    <T> boolean replace(Key<T> key, @Nullable T oldValue, @Nullable T newValue);
 }

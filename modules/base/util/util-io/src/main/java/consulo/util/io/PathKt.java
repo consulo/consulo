@@ -15,8 +15,7 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,13 +30,12 @@ import java.util.function.Function;
  * from kotlin
  */
 public class PathKt {
-  @Nonnull
-  public static InputStream inputStream(@Nonnull Path path) throws IOException {
+  public static InputStream inputStream(Path path) throws IOException {
     return Files.newInputStream(path);
   }
 
   @Nullable
-  public static InputStream inputStreamIfExists(@Nonnull Path path) throws IOException {
+  public static InputStream inputStreamIfExists(Path path) throws IOException {
     try {
       return inputStream(path);
     }
@@ -46,11 +44,11 @@ public class PathKt {
     }
   }
 
-  public static boolean exists(@Nonnull Path path) {
+  public static boolean exists(Path path) {
     return Files.exists(path);
   }
 
-  public static Path createDirectories(@Nonnull Path path) throws IOException {
+  public static Path createDirectories(Path path) throws IOException {
     if (!Files.isDirectory(path)) {
       doCreateDirectories(path.toAbsolutePath());
     }

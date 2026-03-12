@@ -19,8 +19,8 @@ import consulo.util.lang.Comparing;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ class ImmutableElement extends Element {
   private static final Content[] EMPTY_CONTENT = new Content[0];
   private final List<Attribute> myAttributes;
 
-  ImmutableElement(@Nonnull Element origin, @Nonnull JDOMInterner interner) {
+  ImmutableElement(Element origin, JDOMInterner interner) {
     // FIXME [VISTALL] we can't do that 'content = null;'
 
     name = interner.internString(origin.getName());
@@ -38,7 +38,7 @@ class ImmutableElement extends Element {
     List<Attribute> originAttributes = origin.getAttributes();
     String[] nameValues = new String[originAttributes.size() * 2];
     AttributeType type = AttributeType.UNDECLARED;
-    Namespace namespace = null;
+    Namespace namespace = Namespace.NO_NAMESPACE;
     for (int i = 0; i < originAttributes.size(); i++) {
       Attribute origAttribute = originAttributes.get(i);
       if (type == AttributeType.UNDECLARED) {
@@ -59,9 +59,15 @@ class ImmutableElement extends Element {
       newAttributes = EMPTY_LIST;
     }
     else if (type == AttributeType.UNDECLARED) {
-      newAttributes = Collections.unmodifiableList(ContainerUtil.map(originAttributes,
-                                                                     attribute -> new ImmutableAttribute(interner.internString(attribute.getName()), interner.internString(attribute.getValue()),
-                                                                                                         attribute.getAttributeType(), attribute.getNamespace())));
+      newAttributes = Collections.unmodifiableList(ContainerUtil.map(
+        originAttributes,
+        attribute -> new ImmutableAttribute(
+          interner.internString(attribute.getName()),
+          interner.internString(attribute.getValue()),
+          attribute.getAttributeType(),
+          attribute.getNamespace()
+        )
+      ));
     }
     else {
       newAttributes = new ImmutableSameTypeAttributeList(nameValues, type, namespace);
@@ -100,7 +106,6 @@ class ImmutableElement extends Element {
     return myContent.length;
   }
 
-  @Nonnull
   @Override
   public List<Content> getContent() {
     return Arrays.asList(myContent);
@@ -126,18 +131,17 @@ class ImmutableElement extends Element {
     throw immutableError(this);
   }
 
-  @Nonnull
   @Override
   public List<Element> getChildren() {
     return getContent(new ElementFilter());
   }
 
-  @Nonnull
   @Override
   public List<Element> getChildren(String name, Namespace ns) {
     return getContent(new ElementFilter(name, ns));
   }
 
+  @Nullable
   @Override
   public Element getChild(String name, Namespace ns) {
     List<Element> children = getChildren(name, ns);
@@ -198,14 +202,14 @@ class ImmutableElement extends Element {
     return myAttributes;
   }
 
+  @Nullable
   @Override
   public Attribute getAttribute(String name, Namespace ns) {
     if (myAttributes instanceof ImmutableSameTypeAttributeList) {
       return ((ImmutableSameTypeAttributeList)myAttributes).get(name, ns);
     }
     String uri = namespace.getURI();
-    for (int i = 0; i < myAttributes.size(); i++) {
-      Attribute a = myAttributes.get(i);
+    for (Attribute a : myAttributes) {
       String oldURI = a.getNamespaceURI();
       String oldName = a.getName();
       if (oldURI.equals(uri) && oldName.equals(name)) {
@@ -274,7 +278,6 @@ class ImmutableElement extends Element {
     return a1.getName().equals(a2.getName()) && Comparing.equal(a1.getValue(), a2.getValue()) && a1.getAttributeType() == a2.getAttributeType() && a1.getNamespace().equals(a2.getNamespace());
   }
 
-  @Nonnull
   static UnsupportedOperationException immutableError(Object element) {
     return new UnsupportedOperationException("Can't change immutable element: " + element.getClass() + ". To obtain mutable Element call .clone()");
   }
@@ -381,17 +384,17 @@ class ImmutableElement extends Element {
   }
 
   @Override
-  public Element setAttribute(@Nonnull String name, @Nonnull String value) {
+  public Element setAttribute(String name, String value) {
     throw immutableError(this);
   }
 
   @Override
-  public Element setAttribute(@Nonnull String name, @Nonnull String value, Namespace ns) {
+  public Element setAttribute(String name, String value, Namespace ns) {
     throw immutableError(this);
   }
 
   @Override
-  public Element setAttribute(@Nonnull Attribute attribute) {
+  public Element setAttribute(Attribute attribute) {
     throw immutableError(this);
   }
 

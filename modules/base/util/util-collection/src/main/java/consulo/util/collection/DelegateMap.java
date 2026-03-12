@@ -15,7 +15,8 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -54,16 +55,19 @@ public class DelegateMap<K, V> implements Map<K, V> {
     return myDelegate.containsValue(value);
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
     return myDelegate.get(key);
   }
 
+  @Nullable
   @Override
   public V put(K key, V value) {
     return myDelegate.put(key, value);
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
     return myDelegate.remove(key);
@@ -79,19 +83,16 @@ public class DelegateMap<K, V> implements Map<K, V> {
     myDelegate.clear();
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return myDelegate.keySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     return myDelegate.values();
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     return myDelegate.entrySet();

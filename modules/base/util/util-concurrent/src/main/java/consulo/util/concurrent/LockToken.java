@@ -15,8 +15,7 @@
  */
 package consulo.util.concurrent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
@@ -36,14 +35,13 @@ public class LockToken implements AutoCloseable {
     myLock.unlock();
   }
 
-  @Nonnull
-  public static LockToken acquireLock(@Nonnull Lock lock) {
+  public static LockToken acquireLock(Lock lock) {
     lock.lock();
     return new LockToken(lock);
   }
 
   @Nullable
-  public static LockToken attemptLock(@Nonnull Lock lock, long time) throws InterruptedException {
+  public static LockToken attemptLock(Lock lock, long time) throws InterruptedException {
     if (lock.tryLock(time, TimeUnit.MILLISECONDS)) {
       return new LockToken(lock);
     }

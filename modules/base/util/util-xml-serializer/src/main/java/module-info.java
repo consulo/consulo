@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2020-10-23
  */
+@NullMarked
 module consulo.util.xml.serializer {
   requires transitive org.jdom;
 

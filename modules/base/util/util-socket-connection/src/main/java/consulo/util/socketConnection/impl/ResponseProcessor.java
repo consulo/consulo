@@ -6,14 +6,15 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.ref.Ref;
 import consulo.util.socketConnection.*;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,13 +29,15 @@ public class ResponseProcessor<R extends AbstractResponse> {
   private final IntObjectMap<TimeoutHandler> myTimeoutHandlers = IntMaps.newIntObjectHashMap();
   private boolean myStopped;
   private final Object myLock = new Object();
-  private Thread myThread;
+  @Nullable
+  private Thread myThread = null;
 
   private final ScheduledExecutorService myScheduledExecutorService;
 
-  private Future<?> myTimeoutTask;
+  @Nullable
+  private Future<?> myTimeoutTask = null;
 
-  public ResponseProcessor(@Nonnull ScheduledExecutorService executor, @Nonnull SocketConnection<?, R> connection) {
+  public ResponseProcessor(ScheduledExecutorService executor, SocketConnection<?, R> connection) {
     myScheduledExecutorService = executor;
   }
 
@@ -117,13 +120,13 @@ public class ResponseProcessor<R extends AbstractResponse> {
     }
   }
 
-  public <T extends R> void registerHandler(@Nonnull Class<T> responseClass, @Nonnull AbstractResponseHandler<T> handler) {
+  public <T extends R> void registerHandler(Class<T> responseClass, AbstractResponseHandler<T> handler) {
     synchronized (myLock) {
       myClassHandlers.put(responseClass, handler);
     }
   }
 
-  public void registerHandler(int id, @Nonnull AbstractResponseToRequestHandler<?> handler) {
+  public void registerHandler(int id, AbstractResponseToRequestHandler<?> handler) {
     synchronized (myLock) {
       myHandlers.put(id, handler);
     }
@@ -136,7 +139,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
       long time = System.currentTimeMillis();
 
       myTimeoutHandlers.entrySet().forEach(e -> {
-        if (time > e.getValue().myLastTime) {
+        if (time > Objects.requireNonNull(e.getValue()).myLastTime) {
           timedOut.add(e);
         }
       });
@@ -146,7 +149,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
       }
     }
     for (IntObjectMap.IntObjectEntry<TimeoutHandler> entry : timedOut) {
-      TimeoutHandler handler = entry.getValue();
+      TimeoutHandler handler = Objects.requireNonNull(entry.getValue());
       LOG.debug("performing timeout action: " + handler.myAction);
       handler.myAction.run();
     }
@@ -158,9 +161,9 @@ public class ResponseProcessor<R extends AbstractResponse> {
     synchronized (myLock) {
       if (myTimeoutHandlers.isEmpty()) return;
 
-      myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(nextTime.get(), handler.myLastTime)));
+      myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(Objects.requireNonNull(nextTime.get()), Objects.requireNonNull(handler).myLastTime)));
     }
-    int delay = (int)(nextTime.get() - System.currentTimeMillis() + 100);
+    int delay = (int)(Objects.requireNonNull(nextTime.get()) - System.currentTimeMillis() + 100);
     LOG.debug("schedule timeout check in " + delay + "ms");
     if (delay > 10) {
       if (myTimeoutTask != null) {

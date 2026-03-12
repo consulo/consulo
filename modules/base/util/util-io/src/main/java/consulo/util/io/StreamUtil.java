@@ -18,8 +18,7 @@ package consulo.util.io;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.nio.charset.Charset;
 
@@ -67,12 +66,12 @@ public final class StreamUtil {
     return new String(data);
   }
 
-  public static String readText(InputStream inputStream, @Nonnull String encoding) throws IOException {
+  public static String readText(InputStream inputStream, String encoding) throws IOException {
     byte[] data = loadFromStream(inputStream);
     return new String(data, encoding);
   }
 
-  public static String readText(InputStream inputStream, @Nonnull Charset encoding) throws IOException {
+  public static String readText(InputStream inputStream, Charset encoding) throws IOException {
     byte[] data = loadFromStream(inputStream);
     return new String(data, encoding);
   }

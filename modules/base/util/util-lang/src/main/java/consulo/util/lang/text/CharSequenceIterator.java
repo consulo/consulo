@@ -15,7 +15,6 @@
  */
 package consulo.util.lang.text;
 
-import jakarta.annotation.Nonnull;
 
 import java.text.CharacterIterator;
 
@@ -23,13 +22,12 @@ import java.text.CharacterIterator;
  * {@link CharacterIterator} implementation for a given fragment of a {@link CharSequence}.
  */
 public class CharSequenceIterator implements CharacterIterator {
-  @Nonnull
   private final CharSequence myText;
   private final int myStart;
   private final int myEnd;
   private int myIndex;
 
-  public CharSequenceIterator(@Nonnull CharSequence text, int start, int end) {
+  public CharSequenceIterator(CharSequence text, int start, int end) {
     myText = text;
     myStart = start;
     myEnd = end;

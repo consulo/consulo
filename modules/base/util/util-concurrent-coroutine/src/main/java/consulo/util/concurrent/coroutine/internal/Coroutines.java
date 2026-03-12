@@ -19,6 +19,7 @@ package consulo.util.concurrent.coroutine.internal;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -81,7 +82,7 @@ public class Coroutines {
      * @param errorHandler A consumer for exceptions that occur when closing a
      *                     resource
      */
-    public static void closeManagedResources(UserDataHolder state, Consumer<Throwable> errorHandler) {
+    public static void closeManagedResources(UserDataHolder state, @Nullable Consumer<Throwable> errorHandler) {
         AutoClosableRegister data = state.getUserData(AutoClosableRegister.KEY);
         if (data == null) {
             return;

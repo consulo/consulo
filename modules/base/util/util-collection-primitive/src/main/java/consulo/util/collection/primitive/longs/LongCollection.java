@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import jakarta.annotation.Nonnull;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.LongStream;
@@ -60,12 +59,10 @@ public interface LongCollection extends LongIterable {
 
   void clear();
 
-  @Nonnull
   default LongStream stream() {
     return StreamSupport.longStream(splitterator(), false);
   }
 
-  @Nonnull
   default Spliterator.OfLong splitterator() {
     return Spliterators.spliterator(iterator(), size(), 0);
   }

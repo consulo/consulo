@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,7 +46,7 @@ public interface IntIntMap {
   default void trimToSize() {
   }
 
-  void forEach(@Nonnull BiIntConsumer consumer);
+  void forEach(BiIntConsumer consumer);
 
   int[] keys();
 }

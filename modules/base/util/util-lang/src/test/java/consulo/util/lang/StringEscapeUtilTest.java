@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -88,13 +87,11 @@ public class StringEscapeUtilTest {
             .isEqualTo("\0\12\345%6\b\f\n\r \t\u007F\uFEFF\"'\\foo");
     }
 
-    @Nonnull
     private static StringBuilder sb() {
         return new StringBuilder();
     }
 
-    @Nonnull
-    private static StringBuilder sb(@Nonnull String text) {
+    private static StringBuilder sb(String text) {
         return new StringBuilder(text);
     }
 }

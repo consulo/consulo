@@ -18,7 +18,6 @@ package consulo.util.collection.trove.impl.ints;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.WeakHashMap;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public class TWeakHashMap<K, V> extends WeakHashMap<K, V> {
     super(initialCapacity);
   }
 
-  public TWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+  public TWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
     super(initialCapacity, loadFactor, strategy);
   }
 

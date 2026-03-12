@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -24,14 +23,12 @@ import org.jetbrains.annotations.Contract;
  */
 public class StringEscapeUtil {
     @Contract(pure = true)
-    @Nonnull
-    public static String quote(@Nonnull CharSequence value, char quote) {
+    public static String quote(CharSequence value, char quote) {
         return escape(value, quote, new StringBuilder(value.length() + 2).append(quote)).append(quote).toString();
     }
 
     @Contract(mutates = "param3")
-    @Nonnull
-    public static StringBuilder quote(@Nonnull CharSequence value, char quote, @Nonnull StringBuilder builder) {
+    public static StringBuilder quote(CharSequence value, char quote, StringBuilder builder) {
         builder.ensureCapacity(builder.length() + value.length() + 2);
         builder.append(quote);
         escape(value, quote, builder);
@@ -39,29 +36,27 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String escape(@Nonnull CharSequence value, char quote) {
+    public static String escape(CharSequence value, char quote) {
         return escape(value, 0, value.length(), quote);
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String escape(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+    public static String escape(CharSequence value, int fromIndex, int toIndex, char quote) {
         return escape(value, fromIndex, toIndex, quote, new StringBuilder(toIndex - fromIndex)).toString();
     }
 
     @Contract(mutates = "param3")
-    public static @Nonnull StringBuilder escape(@Nonnull CharSequence value, char quote, @Nonnull StringBuilder builder) {
+    public static StringBuilder escape(CharSequence value, char quote, StringBuilder builder) {
         return escape(value, 0, value.length(), quote, builder);
     }
 
     @Contract(mutates = "param5")
-    public static @Nonnull StringBuilder escape(
-        @Nonnull CharSequence value,
+    public static StringBuilder escape(
+        CharSequence value,
         int fromIndex,
         int toIndex,
         char quote,
-        @Nonnull StringBuilder builder
+        StringBuilder builder
     ) {
         for (int i = fromIndex; i < toIndex; i++) {
             char ch = value.charAt(i);
@@ -94,24 +89,22 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    public static boolean isQuoted(@Nonnull CharSequence value, char quote) {
+    public static boolean isQuoted(CharSequence value, char quote) {
         return isQuoted(value, 0, value.length(), quote);
     }
 
     @Contract(pure = true)
-    public static boolean isQuoted(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+    public static boolean isQuoted(CharSequence value, int fromIndex, int toIndex, char quote) {
         return toIndex - fromIndex >= 2 && value.charAt(fromIndex) == quote && value.charAt(toIndex - 1) == quote;
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String unquote(@Nonnull CharSequence value, char quote) {
+    public static String unquote(CharSequence value, char quote) {
         return unquote(value, 0, value.length(), quote);
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String unquote(@Nonnull CharSequence value, int fromIndex, int toIndex, char quote) {
+    public static String unquote(CharSequence value, int fromIndex, int toIndex, char quote) {
         if (isQuoted(value, fromIndex, toIndex, quote)) {
             return unescape(value, fromIndex + 1, toIndex - 1);
         }
@@ -119,19 +112,17 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder unquote(@Nonnull CharSequence value, char quote, @Nonnull StringBuilder builder) {
+    public static StringBuilder unquote(CharSequence value, char quote, StringBuilder builder) {
         return unquote(value, 0, value.length(), quote, builder);
     }
 
     @Contract(pure = true)
-    @Nonnull
     public static StringBuilder unquote(
-        @Nonnull CharSequence value,
+        CharSequence value,
         int fromIndex,
         int toIndex,
         char quote,
-        @Nonnull StringBuilder builder
+        StringBuilder builder
     ) {
         if (isQuoted(value, fromIndex, toIndex, quote)) {
             return unescape(value, fromIndex + 1, toIndex - 1, builder);
@@ -140,14 +131,12 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String unescape(@Nonnull CharSequence value) {
+    public static String unescape(CharSequence value) {
         return unescape(value, 0, value.length());
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static String unescape(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+    public static String unescape(CharSequence value, int fromIndex, int toIndex) {
         if (!hasEscapes(value, fromIndex, toIndex)) {
             return value.subSequence(fromIndex, toIndex).toString();
         }
@@ -155,13 +144,12 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    @Nonnull
-    public static StringBuilder unescape(@Nonnull CharSequence s, @Nonnull StringBuilder builder) {
+    public static StringBuilder unescape(CharSequence s, StringBuilder builder) {
         return unescape(s, 0, s.length(), builder);
     }
 
     @Contract(mutates = "param3")
-    public static StringBuilder unescape(@Nonnull CharSequence value, int fromIndex, int toIndex, @Nonnull StringBuilder builder) {
+    public static StringBuilder unescape(CharSequence value, int fromIndex, int toIndex, StringBuilder builder) {
         boolean escaped = false;
         for (int i = fromIndex; i < toIndex; i++) {
             char ch = value.charAt(i);
@@ -240,7 +228,7 @@ public class StringEscapeUtil {
     }
 
     @Contract(pure = true)
-    private static boolean hasEscapes(@Nonnull CharSequence value, int fromIndex, int toIndex) {
+    private static boolean hasEscapes(CharSequence value, int fromIndex, int toIndex) {
         if (value instanceof String strValue) {
             return strValue.indexOf('\\', fromIndex, toIndex) >= 0;
         }

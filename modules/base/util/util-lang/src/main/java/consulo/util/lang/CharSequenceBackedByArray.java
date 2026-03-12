@@ -16,7 +16,6 @@
 
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A char sequence base on a char array, Gives access to that array. May be used for performance optimizations
@@ -27,8 +26,7 @@ import jakarta.annotation.Nonnull;
  * @see CharArrayUtil#fromSequenceWithoutCopying(CharSequence)
  */
 public interface CharSequenceBackedByArray extends CharSequence {
-  @Nonnull
   char[] getChars();
 
-  void getChars(@Nonnull char[] dst, int dstOffset);
+  void getChars(char[] dst, int dstOffset);
 }

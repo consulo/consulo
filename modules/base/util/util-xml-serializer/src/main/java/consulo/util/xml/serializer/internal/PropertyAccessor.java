@@ -16,8 +16,7 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.XmlSerializationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +29,7 @@ class PropertyAccessor implements MutableAccessor {
   private final Method myWriteMethod;
   private final Type myGenericType;
 
-  public PropertyAccessor(String name, Class<?> type, @Nonnull Method readMethod, @Nonnull Method writeMethod) {
+  public PropertyAccessor(String name, Class<?> type, Method readMethod, Method writeMethod) {
     myName = name;
     myType = type;
     myReadMethod = readMethod;
@@ -45,7 +44,7 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public Object read(@Nonnull Object o) {
+  public Object read(Object o) {
     try {
       return myReadMethod.invoke(o);
     }
@@ -61,7 +60,7 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public void set(@Nonnull Object host, @Nullable Object value) {
+  public void set(Object host, @Nullable Object value) {
     try {
       myWriteMethod.invoke(host, value);
     }
@@ -71,37 +70,37 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setBoolean(@Nonnull Object host, boolean value) {
+  public void setBoolean(Object host, boolean value) {
     set(host, value);
   }
 
   @Override
-  public void setInt(@Nonnull Object host, int value) {
+  public void setInt(Object host, int value) {
     set(host, value);
   }
 
   @Override
-  public void setShort(@Nonnull Object host, short value) {
+  public void setShort(Object host, short value) {
     set(host, value);
   }
 
   @Override
-  public void setLong(@Nonnull Object host, long value) {
+  public void setLong(Object host, long value) {
     set(host, value);
   }
 
   @Override
-  public void setDouble(@Nonnull Object host, double value) {
+  public void setDouble(Object host, double value) {
     set(host, value);
   }
 
   @Override
-  public void setFloat(@Nonnull Object host, float value) {
+  public void setFloat(Object host, float value) {
     set(host, value);
   }
 
   @Override
-  public <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass) {
+  public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
     T annotation = myReadMethod.getAnnotation(annotationClass);
     if (annotation == null) annotation = myWriteMethod.getAnnotation(annotationClass);
     return annotation;

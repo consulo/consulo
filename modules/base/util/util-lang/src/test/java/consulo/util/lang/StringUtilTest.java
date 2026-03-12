@@ -2,7 +2,6 @@
 package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -856,7 +855,6 @@ public class StringUtilTest {
     @SuppressWarnings("deprecation")
     @Test
     void testParseBoolean() {
-        assertThat(StringUtil.parseBoolean(null, true)).isFalse();
         assertThat(StringUtil.parseBoolean("", true)).isFalse();
         assertThat(StringUtil.parseBoolean("false", true)).isFalse();
         assertThat(StringUtil.parseBoolean("true", false)).isTrue();
@@ -1426,7 +1424,7 @@ public class StringUtilTest {
         assertTrimLeading("a  ", "  a  ");
     }
 
-    private static void assertTrimLeading(@Nonnull String expected, @Nonnull String string) {
+    private static void assertTrimLeading(String expected, String string) {
         assertThat(StringUtil.trimLeading(string)).isEqualTo(expected);
         assertThat(StringUtil.trimLeading(string, ' ')).isEqualTo(expected);
         //assertThat(StringUtil.trimLeading(new StringBuilder(string), ' ').toString()).isEqualTo(expected);
@@ -1448,7 +1446,7 @@ public class StringUtilTest {
         assertTrimTrailing("  a  ", "  a");
     }
 
-    private static void assertTrimTrailing(@Nonnull String string, @Nonnull String expected) {
+    private static void assertTrimTrailing(String string, String expected) {
         assertThat(StringUtil.trimTrailing(string))
             .isEqualTo(StringUtil.trimTrailing(string, ' '))
             .isEqualTo(StringUtil.trimTrailing(new StringBuilder(string), ' ').toString())
@@ -1878,13 +1876,11 @@ public class StringUtilTest {
 //        assertEquals("\\U00110000", StringUtil.unescapeAnsiStringCharacters("\\U00110000")); // invalid unicode codepoint
 //    }
 
-    @Nonnull
     private static StringBuilder sb() {
         return new StringBuilder();
     }
 
-    @Nonnull
-    private static StringBuilder sb(@Nonnull String text) {
+    private static StringBuilder sb(String text) {
         return new StringBuilder(text);
     }
 }

@@ -21,15 +21,15 @@ import consulo.util.xml.serializer.annotation.Tag;
 import org.jdom.Element;
 import org.jdom.Text;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   private final String myTextIfEmpty;
 
-  public TagBinding(@Nonnull MutableAccessor accessor, @Nonnull Tag tagAnnotation) {
+  public TagBinding(MutableAccessor accessor, Tag tagAnnotation) {
     super(accessor, tagAnnotation.value(), null);
 
     myTextIfEmpty = tagAnnotation.textIfEmpty();
@@ -37,7 +37,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     Element serialized = new Element(myName);
     if (value == null) {
@@ -58,7 +58,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object deserializeList(Object context, @Nonnull List<Element> elements) {
+  public Object deserializeList(Object context, List<Element> elements) {
     List<Element> children;
     if (elements.size() == 1) {
       children = elements.get(0).getChildren();
@@ -83,7 +83,8 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, @Nonnull Element element) {
+  public Object deserialize(@Nullable Object context, Element element) {
+    Objects.requireNonNull(context);
     if (myBinding == null) {
       String value = XmlSerializerImpl.getTextValue(element, myTextIfEmpty);
       XmlSerializerImpl.doSet(context, value, myAccessor, XmlSerializerImpl.typeToClass(myAccessor.getGenericType()));
@@ -94,18 +95,17 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
     return context;
   }
 
-  private void deserialize(Object o, @Nonnull List<Element> children) {
-    assert myBinding != null;
-    if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeIntoObject(o, children.get(0), null);
+  private void deserialize(Object o, List<Element> children) {
+    if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
+      beanBinding.deserializeIntoObject(o, children.get(0), null);
     }
-    else {
+    else if (myBinding != null) {
       myAccessor.set(o, Binding.deserializeList(myBinding, myAccessor.read(o), children));
     }
   }
 
   @Override
-  public boolean isBoundTo(@Nonnull Element node) {
+  public boolean isBoundTo(Element node) {
     return node.getName().equals(myName);
   }
 }

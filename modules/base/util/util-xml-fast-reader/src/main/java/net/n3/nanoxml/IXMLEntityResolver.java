@@ -29,9 +29,9 @@
 package net.n3.nanoxml;
 
 
-import java.util.Hashtable;
+import org.jspecify.annotations.Nullable;
+
 import java.io.Reader;
-import java.io.StringReader;
 
 
 /**
@@ -76,6 +76,7 @@ public interface IXMLEntityResolver
     * @throws net.n3.nanoxml.XMLParseException
     *     If an exception occurred while resolving the entity.
     */
+   @Nullable
    public Reader getEntity(IXMLReader xmlReader,
                            String     name)
       throws XMLParseException;

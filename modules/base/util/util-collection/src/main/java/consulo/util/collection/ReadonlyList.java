@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +24,13 @@ import java.util.List;
  * @author irengrig
  */
 public interface ReadonlyList<T> {
+  @Nullable
   T get(int idx);
 
   int getSize();
 
   ReadonlyList EMPTY = new ReadonlyList() {
+    @Nullable
     @Override
     public Object get(int idx) {
       return null;
@@ -49,6 +53,7 @@ public interface ReadonlyList<T> {
       myDelegate = new ArrayList<T>();
     }
 
+    @Nullable
     @Override
     public T get(int idx) {
       return myDelegate.get(idx);

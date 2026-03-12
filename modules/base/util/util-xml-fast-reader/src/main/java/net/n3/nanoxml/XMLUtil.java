@@ -28,9 +28,12 @@
 
 package net.n3.nanoxml;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Objects;
 
 /**
  * Utility methods for NanoXML.
@@ -129,6 +132,7 @@ class XMLUtil
     * @throws java.io.IOException
     *		if an error occurred reading the data
     */
+   @Nullable
    static String scanPublicID(StringBuffer publicID,
                               IXMLReader   reader)
       throws IOException,
@@ -155,6 +159,7 @@ class XMLUtil
     * @throws java.io.IOException
     *		if an error occurred reading the data
     */
+   @Nullable
    static String scanSystemID(IXMLReader reader)
       throws IOException,
             XMLParseException
@@ -212,7 +217,7 @@ class XMLUtil
     */
    static String scanString(IXMLReader         reader,
                             char               entityChar,
-                            IXMLEntityResolver entityResolver)
+                            @Nullable IXMLEntityResolver entityResolver)
       throws IOException,
              XMLParseException
    {
@@ -234,7 +239,7 @@ class XMLUtil
             if (str.charAt(1) == '#') {
                result.append(XMLUtil.processCharLiteral(str));
             } else {
-               XMLUtil.processEntity(str, reader, entityResolver);
+               XMLUtil.processEntity(str, reader, Objects.requireNonNull(entityResolver));
             }
          } else if (ch == '&') {
             reader.unread(ch);
@@ -299,7 +304,7 @@ class XMLUtil
           externalEntity = entityResolver.isExternalEntity(entity);
       }
       
-      reader.startNewStream(entityReader, !externalEntity);
+      reader.startNewStream(Objects.requireNonNull(entityReader), !externalEntity);
    }
 
    /**
@@ -335,7 +340,7 @@ class XMLUtil
     *		if an error occurred reading the data
     */
    static void skipWhitespace(IXMLReader   reader,
-                              StringBuffer buffer)
+                              @Nullable StringBuffer buffer)
       throws IOException
    {
       char ch;

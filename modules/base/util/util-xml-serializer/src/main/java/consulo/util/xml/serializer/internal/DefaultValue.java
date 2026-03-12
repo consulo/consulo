@@ -15,7 +15,6 @@
  */
 package consulo.util.xml.serializer.internal;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.RecordComponent;
@@ -45,7 +44,7 @@ public class DefaultValue {
         ourDefaultValues.put(boolean.class, false);
     }
 
-    public static <T> T createDefaultInstance(@Nonnull Class<T> clazz) {
+    public static <T> T createDefaultInstance(Class<T> clazz) {
         if (clazz.isRecord()) {
             try {
                 Constructor<T> declaredConstructor = clazz.getDeclaredConstructor();

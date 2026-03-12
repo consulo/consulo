@@ -17,7 +17,6 @@ package consulo.util.xml.serializer;
 
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
@@ -34,7 +33,7 @@ public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter, 
   }
 
   @Override
-  public final boolean isAccept(@Nonnull Field field) {
+  public final boolean isAccept(Field field) {
     return test(field);
   }
 

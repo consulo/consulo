@@ -16,6 +16,7 @@
 package consulo.util.io.zip;
 
 import consulo.util.io.BufferExposingByteArrayOutputStream;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -57,6 +58,7 @@ class JBZipOutputStream {
    *
    * @since 1.3
    */
+  @Nullable
   private String encoding = null;
 
   /**
@@ -115,6 +117,7 @@ class JBZipOutputStream {
    * @return null if using the platform's default character encoding.
    * @since 1.3
    */
+  @Nullable
   public String getEncoding() {
     return encoding;
   }

@@ -15,7 +15,6 @@
  */
 package consulo.util.lang.text;
 
-import jakarta.annotation.Nonnull;
 
 import java.text.CharacterIterator;
 
@@ -23,13 +22,12 @@ import java.text.CharacterIterator;
  * {@link CharacterIterator} implementation for a given fragment of a {@code char} array.
  */
 public class CharArrayIterator implements CharacterIterator {
-  @Nonnull
   private final char[] myText;
   private final int myStart;
   private final int myEnd;
   private int myIndex;
 
-  public CharArrayIterator(@Nonnull char[] text, int start, int end) {
+  public CharArrayIterator(char[] text, int start, int end) {
     if (start < 0 || start > end || end > text.length) {
       throw new IllegalArgumentException("Text length: " + text.length + ", start: " + start + ", end: " + end);
     }

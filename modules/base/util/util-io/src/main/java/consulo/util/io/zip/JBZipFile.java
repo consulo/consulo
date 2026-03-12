@@ -16,6 +16,7 @@
 package consulo.util.io.zip;
 
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +92,8 @@ public class JBZipFile {
    */
   final RandomAccessFile archive;
 
-  private JBZipOutputStream myOutputStream;
+  @Nullable
+  private JBZipOutputStream myOutputStream = null;
   private long currentcfdfoffset = 0;
 
   /**
@@ -202,6 +204,7 @@ public class JBZipFile {
    * @return the ZipEntry corresponding to the given name - or
    *         <code>null</code> if not present.
    */
+  @Nullable
   public JBZipEntry getEntry(String name) {
     return nameMap.get(name);
   }

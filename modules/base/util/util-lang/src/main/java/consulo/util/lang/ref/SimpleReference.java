@@ -15,13 +15,14 @@
  */
 package consulo.util.lang.ref;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author ven
  */
 public class SimpleReference<T> implements Supplier<T> {
+  @Nullable
   private T myValue;
 
   public SimpleReference() {
@@ -35,6 +36,7 @@ public class SimpleReference<T> implements Supplier<T> {
     return myValue == null;
   }
 
+  @Nullable
   @Override
   public T get() {
     return myValue;

@@ -15,7 +15,6 @@
  */
 package consulo.util.concurrent;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
@@ -28,7 +27,7 @@ public class AsyncUtil {
   private static final AsyncFuture<Boolean> TRUE = createConst(true);
   private static final AsyncFuture<Boolean> FALSE = createConst(false);
 
-  public static <V> V get(@Nonnull Future<V> result) {
+  public static <V> V get(Future<V> result) {
     try {
       return result.get();
     }
@@ -49,7 +48,7 @@ public class AsyncUtil {
   private static AsyncFuture<Boolean> createConst(final boolean result) {
     return new AsyncFuture<Boolean>() {
       @Override
-      public void addConsumer(@Nonnull Executor executor, @Nonnull ResultConsumer<Boolean> consumer) {
+      public void addConsumer(Executor executor, ResultConsumer<Boolean> consumer) {
         consumer.onSuccess(result);
       }
 
@@ -74,13 +73,12 @@ public class AsyncUtil {
       }
 
       @Override
-      public Boolean get(long timeout, @Nonnull TimeUnit unit) {
+      public Boolean get(long timeout, TimeUnit unit) {
         return result;
       }
     };
   }
 
-  @Nonnull
   public static AsyncFuture<Boolean> wrapBoolean(boolean result) {
     return result ? TRUE : FALSE;
   }

@@ -18,7 +18,7 @@ package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -71,7 +71,7 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
         return name;
     }
 
-    public CoroutineStep<I, O> withName(@Nonnull String name) {
+    public CoroutineStep<I, O> withName(String name) {
         this.name = name;
         return this;
     }
@@ -101,8 +101,7 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param nextStep          The next step to execute or NULL for none
      * @param continuation      The continuation of the execution
      */
-    public void runAsync(CompletableFuture<I> previousExecution,
-                         CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+    public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
         continuation.continueApply(previousExecution,
             i -> execute(i, continuation), nextStep);
     }
@@ -115,7 +114,8 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      * @return The execution result
      */
-    public O runBlocking(I input, Continuation<?> continuation) {
+    @Nullable
+    public O runBlocking(@Nullable I input, Continuation<?> continuation) {
         return execute(input, continuation);
     }
 
@@ -135,7 +135,8 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      * @return The result of the execution
      */
-    protected abstract O execute(I input, Continuation<?> continuation);
+    @Nullable
+    protected abstract O execute(@Nullable I input, Continuation<?> continuation);
 
     /**
      * Allow subclasses to terminate the coroutine they currently run in.

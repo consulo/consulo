@@ -19,7 +19,6 @@ import consulo.util.collection.primitive.ints.IntSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIterator;
 
-import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**
@@ -94,7 +93,6 @@ public class MyIntHashSet implements IntSet {
     return myDelegate.hashCode();
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfInt iterator() {
     TIntIterator iterator = myDelegate.iterator();

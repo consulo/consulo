@@ -17,8 +17,7 @@ package consulo.util.dataholder;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.internal.KeyRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class Key<T> {
 
     @Deprecated
     @DeprecationInfo("Use #create(name)")
-    public Key(@Nonnull String name) {
+    public Key(String name) {
         myName = name;
         myIndex = ourRegistry.register(this);
     }
@@ -61,30 +60,27 @@ public class Key<T> {
         return myName;
     }
 
-    @Nonnull
     @SuppressWarnings("deprecation")
-    public static <T> Key<T> of(@Nonnull Class<? extends T> clazz) {
+    public static <T> Key<T> of(Class<? extends T> clazz) {
         return new Key<>(clazz.getName());
     }
 
-    @Nonnull
     @SuppressWarnings("deprecation")
-    public static <T> Key<T> create(@Nonnull Class<? extends T> clazz) {
+    public static <T> Key<T> create(Class<? extends T> clazz) {
         return of(clazz);
     }
 
-    @Nonnull
     @SuppressWarnings("deprecation")
-    public static <T> Key<T> of(@Nonnull String name) {
+    public static <T> Key<T> of(String name) {
         return new Key<>(name);
     }
 
-    @Nonnull
     @SuppressWarnings("deprecation")
-    public static <T> Key<T> create(@Nonnull String name) {
+    public static <T> Key<T> create(String name) {
         return of(name);
     }
 
+    @Nullable
     public T get(@Nullable UserDataHolder holder) {
         return holder == null ? null : holder.getUserData(this);
     }

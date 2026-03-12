@@ -17,7 +17,6 @@ package consulo.util.io;
 
 import consulo.util.lang.CharArrayUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.Reader;
 
 /**
@@ -25,8 +24,7 @@ import java.io.Reader;
  * @since 23-Apr-22
  */
 public class Readers {
-  @Nonnull
-  public static Reader readerFromCharSequence(@Nonnull CharSequence text) {
+  public static Reader readerFromCharSequence(CharSequence text) {
     char[] chars = CharArrayUtil.fromSequenceWithoutCopying(text);
     //noinspection IOResourceOpenedButNotSafelyClosed
     return chars == null ? new CharSequenceReader(text.toString()) : new UnsyncCharArrayReader(chars, 0, text.length());

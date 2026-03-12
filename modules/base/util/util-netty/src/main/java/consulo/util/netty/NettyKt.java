@@ -29,7 +29,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioServerSocketChannel;
 import io.netty.channel.socket.oio.OioSocketChannel;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -70,6 +70,7 @@ public class NettyKt {
     return buf.writeCharSequence(data, StandardCharsets.UTF_8);
   }
 
+  @Nullable
   public static Channel connect(Bootstrap bootstrap,
                                 InetSocketAddress remoteAddress,
                                 AsyncResult<?> promise,
@@ -86,6 +87,7 @@ public class NettyKt {
     }
   }
 
+  @Nullable
   private static Channel doConnect(Bootstrap bootstrap,
                                    InetSocketAddress remoteAddress,
                                    AsyncResult<?> asyncResult,
@@ -129,6 +131,7 @@ public class NettyKt {
     }
   }
 
+  @Nullable
   private static Channel connectNio(Bootstrap bootstrap,
                                     InetSocketAddress remoteAddress,
                                     AsyncResult<?> promise,

@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 26-Jul-22
+ * @since 2022-07-26
  */
+@NullMarked
 module consulo.util.netty {
   requires static consulo.annotation;
   requires transitive consulo.util.lang;

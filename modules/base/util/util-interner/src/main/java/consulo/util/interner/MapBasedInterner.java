@@ -15,8 +15,7 @@
  */
 package consulo.util.interner;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,13 +27,12 @@ import java.util.Set;
 public class MapBasedInterner<T> implements Interner<T> {
   private final Map<T, T> myMap;
 
-  public MapBasedInterner(@Nonnull Map<T, T> map) {
+  public MapBasedInterner(Map<T, T> map) {
     myMap = map;
   }
 
   @Override
-  @Nonnull
-  public T intern(@Nonnull T item) {
+  public T intern(T item) {
     T v = myMap.get(item);
     if (v != null) return v;
     T prev = myMap.putIfAbsent(item, item);
@@ -43,7 +41,7 @@ public class MapBasedInterner<T> implements Interner<T> {
 
   @Nullable
   @Override
-  public T get(@Nonnull T item) {
+  public T get(T item) {
     return myMap.get(item);
   }
 
@@ -53,7 +51,6 @@ public class MapBasedInterner<T> implements Interner<T> {
   }
 
   @Override
-  @Nonnull
   public Set<T> getValues() {
     return new HashSet<>(myMap.values());
   }

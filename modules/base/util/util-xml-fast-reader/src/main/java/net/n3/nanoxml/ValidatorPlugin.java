@@ -29,8 +29,9 @@
 package net.n3.nanoxml;
 
 
-import java.io.Reader;
-import java.io.IOException;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.Properties;
 
 
@@ -48,35 +49,26 @@ public class ValidatorPlugin
    /**
     * The delegate.
     */
-   private IXMLValidator delegate;
+   @Nullable
+   private IXMLValidator delegate = null;
 
 
    /**
-    * Initializes the plugin.
+    * Returns the delegate.
     */
-   public ValidatorPlugin()
+   @Nullable
+   public IXMLValidator getDelegate()
    {
-      this.delegate = null;
-   }
-
-
-   /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.delegate = null;
-      super.finalize();
+      return this.delegate;
    }
 
 
    /**
     * Returns the delegate.
     */
-   public IXMLValidator getDelegate()
+   public IXMLValidator getRequiredDelegate()
    {
-      return this.delegate;
+      return Objects.requireNonNull(this.delegate);
    }
 
 
@@ -98,7 +90,7 @@ public class ValidatorPlugin
     */
    public void setParameterEntityResolver(IXMLEntityResolver resolver)
    {
-      this.delegate.setParameterEntityResolver(resolver);
+      this.getRequiredDelegate().setParameterEntityResolver(resolver);
    }
 
 
@@ -107,9 +99,10 @@ public class ValidatorPlugin
     *
     * @return the entity resolver.
     */
+   @Nullable
    public IXMLEntityResolver getParameterEntityResolver()
    {
-      return this.delegate.getParameterEntityResolver();
+      return this.getRequiredDelegate().getParameterEntityResolver();
    }
 
 
@@ -131,7 +124,7 @@ public class ValidatorPlugin
                         boolean            external)
       throws Exception
    {
-      this.delegate.parseDTD(publicID, reader, entityResolver, external);
+      this.getRequiredDelegate().parseDTD(publicID, reader, entityResolver, external);
    }
 
 
@@ -150,7 +143,7 @@ public class ValidatorPlugin
                               int    lineNr)
       throws Exception
    {
-      this.delegate.elementStarted(name, systemId, lineNr);
+      this.getRequiredDelegate().elementStarted(name, systemId, lineNr);
    }
 
 
@@ -169,7 +162,7 @@ public class ValidatorPlugin
                             int    lineNr)
       throws Exception
    {
-      this.delegate.elementEnded(name,systemId, lineNr);
+      this.getRequiredDelegate().elementEnded(name,systemId, lineNr);
    }
 
 
@@ -190,8 +183,7 @@ public class ValidatorPlugin
                                           int        lineNr)
       throws Exception
    {
-      this.delegate.elementAttributesProcessed(name, extraAttributes,
-                                               systemId, lineNr);
+      this.getRequiredDelegate().elementAttributesProcessed(name, extraAttributes, systemId, lineNr);
    }
 
 
@@ -215,7 +207,7 @@ public class ValidatorPlugin
                               int    lineNr)
       throws Exception
    {
-      this.delegate.attributeAdded(key, value, systemId, lineNr);
+      this.getRequiredDelegate().attributeAdded(key, value, systemId, lineNr);
    }
 
 
@@ -232,7 +224,7 @@ public class ValidatorPlugin
                            int    lineNr)
       throws Exception
    {
-      this.delegate.PCDataAdded(systemId, lineNr);
+      this.getRequiredDelegate().PCDataAdded(systemId, lineNr);
    }
 
 

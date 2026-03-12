@@ -19,7 +19,6 @@ import consulo.util.lang.lazy.impl.ClearableAtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.ClearableDefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.ClearableNullableLazyValueImpl;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -27,18 +26,15 @@ import java.util.function.Supplier;
  * @since 31/01/2022
  */
 public interface ClearableLazyValue<T> extends LazyValue<T> {
-  @Nonnull
-  static <K> ClearableLazyValue<K> atomicNotNull(@Nonnull Supplier<K> factory) {
+  static <K> ClearableLazyValue<K> atomicNotNull(Supplier<K> factory) {
     return new ClearableAtomicLazyValueImpl<>(factory);
   }
 
-  @Nonnull
-  static <K> ClearableLazyValue<K> nullable(@Nonnull Supplier<K> factory) {
+  static <K> ClearableLazyValue<K> nullable(Supplier<K> factory) {
     return new ClearableNullableLazyValueImpl<>(factory);
   }
 
-  @Nonnull
-  static <K> ClearableLazyValue<K> notNull(@Nonnull Supplier<K> factory) {
+  static <K> ClearableLazyValue<K> notNull(Supplier<K> factory) {
     return new ClearableDefaultLazyValueImpl<>(factory);
   }
 

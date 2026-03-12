@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.concurrent.coroutine.Selection;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -161,9 +162,11 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<I> previousExecution,
-		CoroutineStep<Collection<O>, ?> nextStep,
-		Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<I> previousExecution,
+		@Nullable CoroutineStep<Collection<O>, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution,
 			rInput -> collectAsync(rInput, nextStep, continuation));
 	}
@@ -212,8 +215,9 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected Collection<O> execute(I input, Continuation<?> continuation) {
+	protected Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
 		// even if executed blocking the selection must happen asynchronously,
 		// so we just run this step as a new coroutine in the current scope
 		return new Coroutine<>(this).runAsync(continuation.scope(), input)
@@ -227,8 +231,7 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	 * @param rNextStep     The step to resume after the suspension
 	 * @param rContinuation the current continuation
 	 */
-	void collectAsync(I rInput, CoroutineStep<Collection<O>, ?> rNextStep,
-		Continuation<?> rContinuation) {
+	void collectAsync(I rInput, @Nullable CoroutineStep<Collection<O>, ?> rNextStep, Continuation<?> rContinuation) {
 		Selection<Collection<O>, O, Collection<O>> aSelection =
 			Selection.ofMultipleValues(this, rNextStep, rContinuation,
 				pCompletionCritiera, pCollectCritiera);

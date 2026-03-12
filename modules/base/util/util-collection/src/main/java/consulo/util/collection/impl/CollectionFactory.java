@@ -17,8 +17,7 @@ package consulo.util.collection.impl;
 
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -27,7 +26,8 @@ import java.util.*;
  * @since 2021-02-07
  */
 public abstract class CollectionFactory {
-    private static CollectionFactory ourFactory;
+    @Nullable
+    private static CollectionFactory ourFactory = null;
 
     public static CollectionFactory get() {
         if (ourFactory == null) {
@@ -46,12 +46,12 @@ public abstract class CollectionFactory {
         int capacity,
         float loadFactor,
         @Nullable Map<? extends K, ? extends V> inner,
-        @Nonnull HashingStrategy<K> hashingStrategy
+        HashingStrategy<K> hashingStrategy
     );
 
-    public abstract <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy);
+    public abstract <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy);
 
-    public abstract <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy);
+    public abstract <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy);
 
     public abstract void trimToSize(Map<?, ?> map);
 }

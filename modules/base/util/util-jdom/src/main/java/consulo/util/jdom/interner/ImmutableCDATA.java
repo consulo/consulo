@@ -18,10 +18,9 @@ import org.jdom.Element;
 import org.jdom.Parent;
 import org.jdom.Text;
 
-import jakarta.annotation.Nonnull;
 
 class ImmutableCDATA extends CDATA {
-  ImmutableCDATA(@Nonnull String str) {
+  ImmutableCDATA(String str) {
     super.setText(str);
   }
 

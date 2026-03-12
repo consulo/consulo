@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static consulo.util.concurrent.coroutine.ChannelId.stringChannel;
 import static consulo.util.concurrent.coroutine.CoroutineScope.launch;
@@ -103,7 +104,7 @@ public class SelectionTest {
                 ALL_CHANNELS.forEach(
                     id -> scope.getChannel(id).sendBlocking(id.toString()));
             }
-            Collection<String> rResult = c.getResult();
+            Collection<String> rResult = Objects.requireNonNull(c.getResult());
 
             ALL_CHANNELS.forEach(
                 id -> assertTrue(rResult.contains(id.toString())));

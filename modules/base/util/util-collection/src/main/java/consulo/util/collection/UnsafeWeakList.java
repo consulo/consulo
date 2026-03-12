@@ -16,10 +16,10 @@
 package consulo.util.collection;
 
 import consulo.util.lang.LoggerAssert;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -39,28 +39,29 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   }
 
   // For testing only
-  UnsafeWeakList(@Nonnull WeakReferenceArray<T> array) {
+  UnsafeWeakList(WeakReferenceArray<T> array) {
     myArray = array;
   }
 
+  @Nullable
   @Override
   public T get(int index) {
     return myArray.get(index);
   }
 
   @Override
-  public boolean add(T element) {
+  public boolean add(@Nullable T element) {
     tryReduceCapacity(-1);
     myArray.add(element);
     return true;
   }
 
   @Override
-  public boolean contains(Object o) {
+  public boolean contains(@Nullable Object o) {
     return super.contains(o);
   }
 
-  public boolean addIfAbsent(T element) {
+  public boolean addIfAbsent(@Nullable T element) {
     tryReduceCapacity(-1);
     if (contains(element)) return false;
     myArray.add(element);
@@ -68,11 +69,12 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   }
 
   @Override
-  public void add(int index, T element) {
+  public void add(int index, @Nullable T element) {
     tryReduceCapacity(-1);
     myArray.add(index, element);
   }
 
+  @Nullable
   @Override
   public T remove(int index) {
     tryReduceCapacity(-1);
@@ -87,7 +89,6 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     tryReduceCapacity(-1);
   }
 
-  @Nonnull
   @Override
   public Iterator<T> iterator() {
     return new MyIterator();
@@ -135,6 +136,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   protected class MyIterator implements Iterator<T> {
     private int myNextIndex = -1;
     private int myCurrentIndex = -1;
+    @Nullable
     private T myNextElement = null;
     private int myModCount = modCount;
 

@@ -16,8 +16,7 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.XmlSerializationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.RecordComponent;
@@ -37,42 +36,42 @@ public class RecordComponentAccessor implements MutableAccessor {
     }
 
     @Override
-    public void set(@Nonnull Object host, @Nullable Object value) {
+    public void set(Object host, @Nullable Object value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setBoolean(@Nonnull Object host, boolean value) {
+    public void setBoolean(Object host, boolean value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setInt(@Nonnull Object host, int value) {
+    public void setInt(Object host, int value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setShort(@Nonnull Object host, short value) {
+    public void setShort(Object host, short value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setLong(@Nonnull Object host, long value) {
+    public void setLong(Object host, long value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setDouble(@Nonnull Object host, double value) {
+    public void setDouble(Object host, double value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public void setFloat(@Nonnull Object host, float value) {
+    public void setFloat(Object host, float value) {
         ((Map) host).put(myRecordComponent.getName(), value);
     }
 
     @Override
-    public Object read(@Nonnull Object o) {
+    public Object read(Object o) {
         try {
             return myRecordComponent.getAccessor().invoke(o);
         }
@@ -82,7 +81,7 @@ public class RecordComponentAccessor implements MutableAccessor {
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass) {
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
         return myRecordComponent.getAnnotation(annotationClass);
     }
 

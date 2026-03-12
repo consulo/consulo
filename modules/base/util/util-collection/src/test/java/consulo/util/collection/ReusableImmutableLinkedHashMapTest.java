@@ -54,9 +54,6 @@ public class ReusableImmutableLinkedHashMapTest {
     public void testNull() {
         ReusableImmutableLinkedHashMap<Object, Object> empty = ReusableImmutableLinkedHashMap.empty();
 
-        assertThat(empty.containsKey(null))
-            .isFalse();
-
         assertThatThrownBy(() -> empty.withAll(Collections.singletonMap(null, null)))
             .isInstanceOf(IllegalArgumentException.class);
 
@@ -160,7 +157,6 @@ public class ReusableImmutableLinkedHashMapTest {
     public void testWithAll() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
             ReusableImmutableLinkedHashMap<Integer, String> map = create(size);
-            assertThat(map.get(null)).isNull();
 
             ReusableImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of());
             assertThat(map2)
@@ -192,7 +188,7 @@ public class ReusableImmutableLinkedHashMapTest {
             ReusableImmutableLinkedHashMap<Integer, String> map = create(size);
 
             int k0 = 0;
-            String v0 = map.get(0);
+            String v0 = Objects.requireNonNull(map.get(0));
 
             ReusableImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of(k0, v0));
             assertThat(map2)
@@ -214,7 +210,7 @@ public class ReusableImmutableLinkedHashMapTest {
     public void testWithAllDifferentValue() {
         ReusableImmutableLinkedHashMap<Integer, String> map = create(5);
 
-        assertThat(map.withAll(Map.of(0, map.get(0), 1, map.get(1))))
+        assertThat(map.withAll(Map.of(0, Objects.requireNonNull(map.get(0)), 1, Objects.requireNonNull(map.get(1)))))
             .isSameAs(map);
 
         LinkedHashMap<Integer, String> dupKeyMap = new LinkedHashMap<>();
@@ -295,8 +291,6 @@ public class ReusableImmutableLinkedHashMapTest {
     @Test
     public void testGet() {
         ReusableImmutableLinkedHashMap<Integer, String> map = create(10);
-        assertThat(map.get(null))
-            .isNull();
         assertThat(map.get(0))
             .isEqualTo("0");
 

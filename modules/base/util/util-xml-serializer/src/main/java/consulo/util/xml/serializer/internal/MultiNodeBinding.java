@@ -16,14 +16,13 @@
 package consulo.util.xml.serializer.internal;
 
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 interface MultiNodeBinding {
   @Nullable
-  Object deserializeList(Object context, @Nonnull List<Element> elements);
+  Object deserializeList(Object context, List<Element> elements);
 
   boolean isMulti();
 }

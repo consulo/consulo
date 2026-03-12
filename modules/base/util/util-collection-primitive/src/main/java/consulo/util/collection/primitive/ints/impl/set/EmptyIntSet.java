@@ -19,7 +19,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
-import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**
@@ -64,7 +63,6 @@ public class EmptyIntSet implements IntSet {
 
   }
 
-  @Nonnull
   @Override
   public PrimitiveIterator.OfInt iterator() {
     return new PrimitiveIterator.OfInt() {

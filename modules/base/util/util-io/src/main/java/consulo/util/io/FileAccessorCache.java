@@ -17,11 +17,12 @@ package consulo.util.io;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.SLRUMap;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
@@ -43,7 +44,6 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
 
   protected abstract void disposeAccessor(T fileAccessor) throws IOException;
 
-  @Nonnull
   public final Handle<T> get(K key) {
     Handle<T> cached = getIfCached(key);
     if (cached != null) return cached;
@@ -60,7 +60,6 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
   //private static final AtomicInteger myCreateRequests = new AtomicInteger();
   //private static final AtomicInteger myCloseRequests = new AtomicInteger();
   //private static final AtomicLong myCloseTime = new AtomicLong();
-  @Nonnull
   private Handle<T> createHandle(K key) {
     Handle<T> cached;
     try {
@@ -112,6 +111,7 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
     //}
   }
 
+  @Nullable
   public Handle<T> getIfCached(K key) {
     synchronized (myCacheLock) {
       Handle<T> value = myCache.get(key);
@@ -149,13 +149,13 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
   }
 
   @Override
-  public int hashCode(K value) {
-    return value.hashCode();
+  public int hashCode(@Nullable K value) {
+    return Objects.hashCode(value);
   }
 
   @Override
-  public boolean equals(K val1, K val2) {
-    return val1.equals(val2);
+  public boolean equals(@Nullable K val1, @Nullable K val2) {
+    return Objects.equals(val1, val2);
   }
 
   public static final class Handle<T> {

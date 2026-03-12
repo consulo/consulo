@@ -18,7 +18,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
@@ -30,10 +29,9 @@ import java.lang.ref.WeakReference;
 public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
   private static class WeakKey<K> extends WeakReference<K> implements KeyReference<K> {
     private final int myHash; /* Hashcode of key, stored here since the key may be tossed by the GC */
-    @Nonnull
     private final HashingStrategy<? super K> myStrategy;
 
-    private WeakKey(@Nonnull K k, int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
+    private WeakKey(K k, int hash, HashingStrategy<? super K> strategy, ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = hash;
@@ -56,9 +54,8 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
     }
   }
 
-  @Nonnull
   @Override
-  protected KeyReference<K> createKeyReference(@Nonnull K key, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  protected KeyReference<K> createKeyReference(K key, HashingStrategy<? super K> hashingStrategy) {
     return new WeakKey<>(key, hashingStrategy.hashCode(key), hashingStrategy, myReferenceQueue);
   }
 
@@ -66,11 +63,11 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
     this(ConcurrentRefHashMap.DEFAULT_CAPACITY, loadFactor, ConcurrentRefHashMap.DEFAULT_CONCURRENCY_LEVEL, HashingStrategy.canonical());
   }
 
-  public ConcurrentWeakHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
-  public ConcurrentWeakHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakHashMap(HashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
   }
 }
