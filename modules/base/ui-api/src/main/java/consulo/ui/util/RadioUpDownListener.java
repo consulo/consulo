@@ -23,6 +23,8 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.details.KeyCode;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 2024-09-14
@@ -30,7 +32,7 @@ import consulo.ui.event.details.KeyCode;
 public final class RadioUpDownListener {
     public static void registerListener(RadioButton... radioButtons) {
         ComponentEventListener<Component, KeyPressedEvent> listener = e -> {
-            KeyCode code = e.getInputDetails().getKeyCode();
+            KeyCode code = Objects.requireNonNull(e.getInputDetails()).getKeyCode();
 
             int selected = getSelected(radioButtons);
             if (selected != -1) {

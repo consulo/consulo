@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 public interface HasValidator<V> extends Component {
   static class ValidationInfo {
     private final String myMessage;
+    @Nullable
     private final Image myIcon;
     private final NotificationType myType;
 
@@ -40,6 +41,7 @@ public interface HasValidator<V> extends Component {
       myIcon = icon;
       myType = type;
     }
+
     public String getMessage() {
       return myMessage;
     }
@@ -48,6 +50,7 @@ public interface HasValidator<V> extends Component {
     public Image getIcon() {
       return myIcon;
     }
+
     public NotificationType getType() {
       return myType;
     }
@@ -57,6 +60,7 @@ public interface HasValidator<V> extends Component {
     @Nullable
     ValidationInfo validateValue(V value);
   }
+
   Disposable addValidator(Validator<V> validator);
 
   /**

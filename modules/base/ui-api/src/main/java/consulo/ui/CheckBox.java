@@ -19,28 +19,32 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic, HasComponentStyle<CheckBoxStyle> {
-    @RequiredUIAccess
     @Deprecated(forRemoval = true)
-    @DeprecationInfo("Please don't use not localize text")
+    @DeprecationInfo("Please don't use not localized text")
+    @RequiredUIAccess
     static CheckBox create(String label) {
         return create(LocalizeValue.of(label));
     }
-    @RequiredUIAccess
+
     @Deprecated(forRemoval = true)
-    @DeprecationInfo("Please don't use not localize text")
+    @DeprecationInfo("Please don't use not localized text")
+    @RequiredUIAccess
     static CheckBox create(String label, boolean selected) {
         return create(LocalizeValue.of(label), selected);
     }
+
     @RequiredUIAccess
     static CheckBox create(LocalizeValue label) {
         return create(label, false);
     }
+
     @RequiredUIAccess
     static CheckBox create(LocalizeValue label, boolean selected) {
         CheckBox box = UIInternal.get()._Components_checkBox();
@@ -48,17 +52,19 @@ public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic
         box.setValue(selected);
         return box;
     }
+
     @Override
     Boolean getValue();
 
     @Override
     @RequiredUIAccess
-    default void setValue(Boolean value) {
+    default void setValue(@Nullable Boolean value) {
         setValue(value, true);
     }
 
     @RequiredUIAccess
-    void setValue(Boolean value, boolean fireListeners);
+    void setValue(@Nullable Boolean value, boolean fireListeners);
+
     LocalizeValue getLabelText();
 
     @RequiredUIAccess

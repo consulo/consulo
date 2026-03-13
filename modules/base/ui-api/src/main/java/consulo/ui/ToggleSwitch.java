@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,18 +31,20 @@ public interface ToggleSwitch extends ValueComponent<Boolean> {
   static ToggleSwitch create() {
     return create(false);
   }
+
   static ToggleSwitch create(boolean enabled) {
     return UIInternal.get()._Components_toggleSwitch(enabled);
   }
+
   @Override
   Boolean getValue();
 
   @Override
   @RequiredUIAccess
-  default void setValue(Boolean value) {
+  default void setValue(@Nullable Boolean value) {
     setValue(value, true);
   }
 
   @RequiredUIAccess
-  void setValue(Boolean value, boolean fireListeners);
+  void setValue(@Nullable Boolean value, boolean fireListeners);
 }

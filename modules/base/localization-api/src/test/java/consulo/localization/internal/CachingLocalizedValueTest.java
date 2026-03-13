@@ -29,12 +29,14 @@ import static org.mockito.Mockito.when;
  */
 public class CachingLocalizedValueTest {
     class MyLocalizedValue implements LocalizedValue {
-        public String myValue;
+        public String myValue = "";
         public int myHashCode;
+
         @Override
         public String getId() {
             return "";
         }
+
         @Override
         public String getValue() {
             return myValue;
