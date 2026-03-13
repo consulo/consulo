@@ -1,4 +1,9 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.util.nodep {
+  requires static org.jspecify;
+
   requires java.xml;
 
   exports consulo.util.nodep;

@@ -1,4 +1,9 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.container.api {
+    requires static org.jspecify;
+
     requires consulo.util.nodep;
 
     // add temp dependency
