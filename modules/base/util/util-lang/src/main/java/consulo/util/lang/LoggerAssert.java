@@ -15,6 +15,7 @@
  */
 package consulo.util.lang;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -27,7 +28,7 @@ public class LoggerAssert {
     assertTrue(logger, value, null);
   }
 
-  public static void assertTrue(Logger logger, boolean value, String message) {
+  public static void assertTrue(Logger logger, boolean value, @Nullable String message) {
     if (!value) {
       String resultMessage = "Assertion failed";
       if (message != null) resultMessage += ": " + message;

@@ -16,6 +16,8 @@
 
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -40,16 +42,18 @@ public class MutualMap<Key, Value> {
     this(false);
   }
 
-  public void put(Key key, Value value) {
+  public void put(@Nullable Key key, @Nullable Value value) {
     myKey2Value.put(key, value);
     myValue2Key.put(value, key);
   }
 
-  public Value getValue(Key key) {
+  @Nullable
+  public Value getValue(@Nullable Key key) {
     return myKey2Value.get(key);
   }
 
-  public Key getKey(Value value) {
+  @Nullable
+  public Key getKey(@Nullable Value value) {
     return myValue2Key.get(value);
   }
 
@@ -57,11 +61,11 @@ public class MutualMap<Key, Value> {
     return myValue2Key.size();
   }
 
-  public boolean containsKey(Key key) {
+  public boolean containsKey(@Nullable Key key) {
     return myKey2Value.containsKey(key);
   }
 
-  public void remove(Key key) {
+  public void remove(@Nullable Key key) {
     Value value = myKey2Value.get(key);
     myKey2Value.remove(key);
     myValue2Key.remove(value);

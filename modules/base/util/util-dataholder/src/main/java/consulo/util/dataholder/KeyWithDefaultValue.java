@@ -15,7 +15,6 @@
  */
 package consulo.util.dataholder;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -23,21 +22,18 @@ import java.util.function.Supplier;
  * @author peter
  */
 public final class KeyWithDefaultValue<T> extends Key<T> {
-    @Nonnull
-    public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, T defValue) {
+    public static <T> KeyWithDefaultValue<T> create(String name, T defValue) {
         return new KeyWithDefaultValue<>(name, () -> defValue);
     }
 
-    @Nonnull
-    public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, Supplier<? extends T> supplier) {
+    public static <T> KeyWithDefaultValue<T> create(String name, Supplier<? extends T> supplier) {
         return new KeyWithDefaultValue<>(name, supplier);
     }
 
-    @Nonnull
     private final Supplier<? extends T> myValueGetter;
 
     @SuppressWarnings("deprecation")
-    private KeyWithDefaultValue(@Nonnull String name, @Nonnull Supplier<? extends T> valueGetter) {
+    private KeyWithDefaultValue(String name, Supplier<? extends T> valueGetter) {
         super(name);
         myValueGetter = valueGetter;
     }

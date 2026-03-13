@@ -16,7 +16,6 @@
 
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 
 /*
  * @author max
@@ -47,7 +46,7 @@ public class LimitedPool<T> {
     return result;
   }
 
-  public void recycle(@Nonnull T t) {
+  public void recycle(T t) {
     factory.cleanup(t);
 
     if (index >= capacity) return;

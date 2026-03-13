@@ -17,10 +17,8 @@ package consulo.util.io;
 
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -37,7 +35,7 @@ public class ClassPathUtil {
    * Attempts to detect classpath entry which contains given resource.
    */
   @Nullable
-  public static String getResourceRoot(@Nonnull Class context, String path) {
+  public static String getResourceRoot(Class context, String path) {
     URL url = context.getResource(path);
     if (url == null) {
       url = ClassLoader.getSystemResource(path.substring(1));
@@ -46,7 +44,7 @@ public class ClassPathUtil {
   }
 
   @Nullable
-  public static String getJarPathForClass(@Nonnull Class aClass) {
+  public static String getJarPathForClass(Class aClass) {
     String path = "/" + aClass.getName().replace('.', '/') + ".class";
     try {
       CodeSource codeSource = aClass.getProtectionDomain().getCodeSource();
@@ -75,7 +73,6 @@ public class ClassPathUtil {
    * Attempts to extract classpath entry part from passed URL.
    */
   @Nullable
-  @NonNls
   private static String extractRoot(URL resourceURL, String resourcePath) {
     if (!(StringUtil.startsWithChar(resourcePath, '/') || StringUtil.startsWithChar(resourcePath, '\\'))) {
       //noinspection HardCodedStringLiteral,UseOfSystemOutOrSystemErr

@@ -18,6 +18,7 @@ package consulo.util.concurrent.coroutine.step;
 
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -81,12 +82,13 @@ public class Delay<T> extends CoroutineStep<T, T> {
 		return new Delay<>(c -> Pair.create(duration, timeUnit));
 	}
 
+	@Nullable
 	@Override
-	public T execute(T input, Continuation<?> continuation) {
+	public T execute(@Nullable T input, Continuation<?> continuation) {
 		try {
 			Pair<Long, TimeUnit> duration = getDuration.apply(continuation);
 
-			duration.second.sleep(duration.first);
+			Objects.requireNonNull(duration.second).sleep(Objects.requireNonNull(duration.first));
 		} catch (Exception e) {
 			throw new CoroutineException(e);
 		}
@@ -94,8 +96,11 @@ public class Delay<T> extends CoroutineStep<T, T> {
 	}
 
 	@Override
-	public void runAsync(CompletableFuture<T> previousExecution,
-		CoroutineStep<T, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<T> previousExecution,
+		@Nullable CoroutineStep<T, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution, v -> {
 
 			Suspension<T> suspension = continuation.suspend(this, nextStep);
@@ -104,8 +109,7 @@ public class Delay<T> extends CoroutineStep<T, T> {
 
 			ScheduledFuture<?> delayedExecution = continuation.context()
 				.getScheduler()
-				.schedule(() -> suspension.resume(v), duration.first,
-					duration.second);
+				.schedule(() -> suspension.resume(v), Objects.requireNonNull(duration.first), duration.second);
 			suspension.onCancel(Optional.of(() -> delayedExecution.cancel(true)));
 		});
 	}

@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -26,10 +25,9 @@ public interface ConcurrentIntObjectMap<V> extends IntObjectMap<V> {
   /**
    * @return written value
    */
-  @Nonnull
-  V cacheOrGet(int key, @Nonnull V value);
+  V cacheOrGet(int key, V value);
 
-  boolean remove(int key, @Nonnull V value);
+  boolean remove(int key, V value);
 
-  boolean replace(int key, @Nonnull V oldValue, @Nonnull V newValue);
+  boolean replace(int key, V oldValue, V newValue);
 }

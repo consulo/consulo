@@ -17,14 +17,15 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
-  private Entry<K, V>[] table;
-  private Entry<K, V> top;
-  private Entry<K, V> back;
+  private Entry<K, V> @Nullable [] table = null;
+  @Nullable
+  private Entry<K, V> top = null;
+  @Nullable
+  private Entry<K, V> back = null;
   private int capacity;
   private int size;
   private final float loadFactor;
@@ -81,9 +82,10 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     clear(0);
   }
 
+  @Nullable
   @Override
   public V get(Object key) {
-    Entry<K, V>[] table = this.table;
+    Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
 
@@ -98,9 +100,10 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return null;
   }
 
+  @Nullable
   @Override
-  public V put(K key, @Nonnull V value) {
-    Entry<K, V>[] table = this.table;
+  public V put(K key, V value) {
+    Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
     for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
@@ -117,6 +120,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     e.next = top;
     if (top != null) {
       top.previous = e;
+      Objects.requireNonNull(back);
     }
     else {
       back = e;
@@ -133,7 +137,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   public void doRemoveEldestEntry() {
-    V val = remove(back.key);
+    V val = remove(Objects.requireNonNull(back).key);
     assert val != null : "LinkedHashMap.Entry was not removed. Possibly mutable key: " + back.key;
   }
 
@@ -142,9 +146,10 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return get(key) != null;
   }
 
+  @Nullable
   @Override
   public V remove(Object key) {
-    Entry<K, V>[] table = this.table;
+    Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
     Entry<K, V> e = table[index];
@@ -173,19 +178,16 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return e.value;
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return new KeySet();
   }
 
-  @Nonnull
   @Override
   public Collection<V> values() {
     return new Values();
   }
 
-  @Nonnull
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return new EntrySet();
@@ -230,7 +232,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
     Entry<K, V> top = this.top;
     if (top != e) {
-      Entry<K, V> prev = e.previous;
+      Entry<K, V> prev = Objects.requireNonNull(e.previous);
       Entry<K, V> next = e.next;
       prev.next = next;
       if (next != null) {
@@ -239,7 +241,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
       else {
         back = prev;
       }
-      top.previous = e;
+      Objects.requireNonNull(top).previous = e;
       e.next = top;
       e.previous = null;
       this.top = e;
@@ -284,9 +286,12 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     private final K key;
     private final int keyHash;
     private V value;
-    private Entry<K, V> next;
-    private Entry<K, V> previous;
-    private Entry<K, V> hashNext;
+    @Nullable
+    private Entry<K, V> next = null;
+    @Nullable
+    private Entry<K, V> previous = null;
+    @Nullable
+    private Entry<K, V> hashNext = null;
 
     public Entry(K key, V value, int hash) {
       this.key = key;
@@ -313,9 +318,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   private abstract class LinkedHashIterator<T> implements Iterator<T> {
-
-    private LinkedHashMap.Entry<K, V> e = back;
-    private LinkedHashMap.Entry<K, V> last;
+    private LinkedHashMap.@Nullable Entry<K, V> e = back;
+    private LinkedHashMap.@Nullable Entry<K, V> last = null;
 
     @Override
     public boolean hasNext() {
@@ -331,21 +335,20 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
       last = null;
     }
 
-    protected LinkedHashMap.Entry<K, V> nextEntry() {
+    protected LinkedHashMap.@Nullable Entry<K, V> nextEntry() {
       LinkedHashMap.Entry<K, V> result = last = e;
-      e = result.previous;
+      e = Objects.requireNonNull(result).previous;
       return result;
     }
   }
 
   private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
 
-    @Nonnull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new LinkedHashIterator<Map.Entry<K, V>>() {
         @Override
-        public Map.Entry<K, V> next() {
+        public Map.@Nullable Entry<K, V> next() {
           return nextEntry();
         }
       };
@@ -383,13 +386,12 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class KeySet extends AbstractSet<K> {
 
-    @Nonnull
     @Override
     public Iterator<K> iterator() {
       return new LinkedHashIterator<K>() {
         @Override
         public K next() {
-          return nextEntry().key;
+          return Objects.requireNonNull(nextEntry()).key;
         }
       };
     }
@@ -417,13 +419,12 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class Values extends AbstractCollection<V> {
 
-    @Nonnull
     @Override
     public Iterator<V> iterator() {
       return new LinkedHashIterator<V>() {
         @Override
         public V next() {
-          return nextEntry().value;
+          return Objects.requireNonNull(nextEntry()).value;
         }
       };
     }

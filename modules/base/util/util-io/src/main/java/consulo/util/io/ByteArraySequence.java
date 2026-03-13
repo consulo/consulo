@@ -13,7 +13,6 @@
 // limitations under the License.
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInputStream;
 
@@ -25,11 +24,11 @@ public class ByteArraySequence implements ByteSequence {
   private final int myOffset;
   private final int myLen;
 
-  public ByteArraySequence(@Nonnull byte[] bytes) {
+  public ByteArraySequence(byte[] bytes) {
     this(bytes, 0, bytes.length);
   }
 
-  public ByteArraySequence(@Nonnull byte[] bytes, int offset, int len) {
+  public ByteArraySequence(byte[] bytes, int offset, int len) {
     myBytes = bytes;
     myOffset = offset;
     myLen = len;
@@ -43,7 +42,6 @@ public class ByteArraySequence implements ByteSequence {
    *
    * @return Internal buffer, irrespective myOffset or myLen. May be larger than length().
    */
-  @Nonnull
   public byte[] getBytes() {
     return myBytes;
   }
@@ -108,13 +106,11 @@ public class ByteArraySequence implements ByteSequence {
     return myBytes[myOffset + index];
   }
 
-  @Nonnull
   @Override
   public ByteSequence subSequence(int start, int end) {
     return new ByteArraySequence(myBytes, myOffset + start, end - start);
   }
 
-  @Nonnull
   @Override
   public byte[] toBytes() {
     byte[] bytes = new byte[length()];
@@ -122,7 +118,6 @@ public class ByteArraySequence implements ByteSequence {
     return bytes;
   }
 
-  @Nonnull
   public DataInputStream toInputStream() {
     return new DataInputStream(new UnsyncByteArrayInputStream(myBytes, myOffset, length()));
   }

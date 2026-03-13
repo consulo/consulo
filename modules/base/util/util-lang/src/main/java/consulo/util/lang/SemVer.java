@@ -15,8 +15,7 @@
  */
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
@@ -34,11 +33,11 @@ public final class SemVer implements Comparable<SemVer> {
   @Nullable
   private final String myPreRelease;
 
-  public SemVer(@Nonnull String rawVersion, int major, int minor, int patch) {
+  public SemVer(String rawVersion, int major, int minor, int patch) {
     this(rawVersion, major, minor, patch, null);
   }
 
-  public SemVer(@Nonnull String rawVersion, int major, int minor, int patch, @Nullable String preRelease) {
+  public SemVer(String rawVersion, int major, int minor, int patch, @Nullable String preRelease) {
     myRawVersion = rawVersion;
     myMajor = major;
     myMinor = minor;
@@ -46,7 +45,6 @@ public final class SemVer implements Comparable<SemVer> {
     myPreRelease = preRelease;
   }
 
-  @Nonnull
   public String getRawVersion() {
     return myRawVersion;
   }
@@ -68,7 +66,6 @@ public final class SemVer implements Comparable<SemVer> {
     return myPreRelease;
   }
 
-  @Nonnull
   public String getParsedVersion() {
     return myMajor + "." + myMinor + "." + myPatch + (myPreRelease != null ? "-" + myPreRelease : "");
   }
@@ -93,7 +90,7 @@ public final class SemVer implements Comparable<SemVer> {
     return myPatch >= patch;
   }
 
-  public boolean isGreaterOrEqualThan(@Nonnull SemVer version) {
+  public boolean isGreaterOrEqualThan(SemVer version) {
     return compareTo(version) >= 0;
   }
 

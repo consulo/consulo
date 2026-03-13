@@ -18,8 +18,7 @@ package consulo.util.collection;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.collection.impl.set.WeakHashSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
@@ -33,7 +32,6 @@ import java.util.Set;
 public final class Sets {
     private static CollectionFactory ourFactory = CollectionFactory.get();
 
-    @Nonnull
     @Contract(pure = true)
     @SuppressWarnings("unchecked")
     public static <T> Set<T> notNullize(@Nullable Set<T> set) {
@@ -41,56 +39,47 @@ public final class Sets {
     }
 
     @Contract(value = " -> new", pure = true)
-    @Nonnull
     public static <T> Set<T> newWeakHashSet() {
         return new WeakHashSet<>();
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> Set<T> newHashSet(@Nonnull HashingStrategy<T> hashingStrategy) {
+    public static <T> Set<T> newHashSet(HashingStrategy<T> hashingStrategy) {
         return newHashSet(CollectionFactory.UNKNOWN_CAPACITY, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> Set<T> newHashSet(@Nonnull Collection<? extends T> items, @Nonnull HashingStrategy<T> hashingStrategy) {
+    public static <T> Set<T> newHashSet(Collection<? extends T> items, HashingStrategy<T> hashingStrategy) {
         return ourFactory.newHashSetWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, items, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <K> Set<K> newHashSet(int initialCapacity, @Nonnull HashingStrategy<K> hashingStrategy) {
+    public static <K> Set<K> newHashSet(int initialCapacity, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashSetWithStrategy(initialCapacity, null, hashingStrategy);
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> Set<T> newLinkedHashSet(@Nonnull HashingStrategy<T> hashingStrategy) {
+    public static <T> Set<T> newLinkedHashSet(HashingStrategy<T> hashingStrategy) {
         return Collections.newSetFromMap(Maps.newLinkedHashMap(hashingStrategy));
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K> Set<K> newIdentityHashSet() {
         return newHashSet(CollectionFactory.UNKNOWN_CAPACITY, HashingStrategy.identity());
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <K> Set<K> newIdentityHashSet(int initialCapacity) {
         return newHashSet(initialCapacity, HashingStrategy.identity());
     }
 
-    @Nonnull
     @Contract(pure = true)
     public static <T> Set<T> newConcurrentHashSet() {
         return ConcurrentHashMap.newKeySet();
     }
 
-    @Nonnull
     @Contract(pure = true)
-    public static <T> Set<T> newConcurrentHashSet(@Nonnull HashingStrategy<T> hashStrategy) {
+    public static <T> Set<T> newConcurrentHashSet(HashingStrategy<T> hashStrategy) {
         return Collections.newSetFromMap(Maps.newConcurrentHashMap(hashStrategy));
     }
 }

@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.util.collection.Lists;
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -87,7 +87,11 @@ public class HoverHyperlinkLabel extends JLabel {
     }
 
     private static String underlineTextInHtml(String text) {
-        return "<html><u>" + StringUtil.escapeXml(text) + "</u></html>";
+        StringBuilder builder = new StringBuilder(text.length() + 20);
+        builder.append("<html><u>");
+        XmlStringUtil.escapeText(text, builder);
+        builder.append("</u></html>");
+        return builder.toString();
     }
 
     public String getOriginalText() {

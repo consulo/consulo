@@ -16,26 +16,28 @@
 package consulo.util.xml.serializer.internal;
 
 import consulo.util.xml.serializer.Constants;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 class CollectionBinding extends AbstractCollectionBinding {
-  public CollectionBinding(@Nonnull ParameterizedType type, @Nullable MutableAccessor accessor) {
+  public CollectionBinding(ParameterizedType type, @Nullable MutableAccessor accessor) {
     super(XmlSerializerImpl.typeToClass(type.getActualTypeArguments()[0]), accessor);
   }
 
   @Override
-  Object processResult(Collection result, Object target) {
+  Object processResult(Collection result, @Nullable Object target) {
     if (myAccessor == null) {
       return result;
     }
 
-    assert target != null: "Null target in " + myAccessor;
-    assert target instanceof Collection : "Wrong target: " + target.getClass() + " in " + myAccessor;
-    Collection c = (Collection)target;
+    if (!(target instanceof Collection c)) {
+      if (target == null) {
+        throw new NullPointerException("Null target in " + myAccessor);
+      }
+      throw new IllegalArgumentException("Wrong target: " + target.getClass() + " in " + myAccessor);
+    }
     c.clear();
     //noinspection unchecked
     c.addAll(result);
@@ -43,9 +45,8 @@ class CollectionBinding extends AbstractCollectionBinding {
     return target;
   }
 
-  @Nonnull
   @Override
-  Collection<Object> getIterable(@Nonnull Object o) {
+  Collection<Object> getIterable(Object o) {
     //noinspection unchecked
     return o instanceof Set ? new TreeSet((Set)o) : (Collection<Object>)o;
   }
@@ -64,7 +65,7 @@ class CollectionBinding extends AbstractCollectionBinding {
   }
 
   @Override
-  protected Collection createCollection(@Nonnull String tagName) {
+  protected Collection createCollection(String tagName) {
     return tagName.equals(Constants.SET) ? new HashSet() : super.createCollection(tagName);
   }
 }

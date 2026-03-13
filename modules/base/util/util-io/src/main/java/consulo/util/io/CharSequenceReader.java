@@ -17,7 +17,6 @@ package consulo.util.io;
 
 import consulo.util.lang.CharArrayCharSequence;
 
-import jakarta.annotation.Nonnull;
 import java.io.Reader;
 
 /**
@@ -27,7 +26,7 @@ public class CharSequenceReader extends Reader {
   private final CharSequence myText;
   private int myCurPos;
 
-  public CharSequenceReader(@Nonnull CharSequence text) {
+  public CharSequenceReader(CharSequence text) {
     myText = text;
     myCurPos = 0;
   }

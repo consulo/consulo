@@ -22,14 +22,14 @@ import consulo.util.socketConnection.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
@@ -50,18 +50,18 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   private final IntObjectMap<TimeoutInfo> myTimeouts = IntMaps.newIntObjectHashMap();
   private final ResponseProcessor<Response> myResponseProcessor;
 
-  public SocketConnectionBase(@Nonnull ScheduledExecutorService executor, @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
+  public SocketConnectionBase(ScheduledExecutorService executor, RequestResponseExternalizerFactory<Request, Response> factory) {
     myResponseProcessor = new ResponseProcessor<>(executor, this);
     myExternalizerFactory = factory;
   }
 
   @Override
-  public void sendRequest(@Nonnull Request request) {
+  public void sendRequest(Request request) {
     sendRequest(request, null);
   }
 
   @Override
-  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler) {
+  public void sendRequest(Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler) {
     if (handler != null) {
       myResponseProcessor.registerHandler(request.getId(), handler);
     }
@@ -74,13 +74,13 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   }
 
   @Override
-  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, @Nonnull Runnable onTimeout) {
+  public void sendRequest(Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, Runnable onTimeout) {
     myTimeouts.put(request.getId(), new TimeoutInfo(timeout, onTimeout));
     sendRequest(request, handler);
   }
 
   @Override
-  public <R extends Response> void registerHandler(@Nonnull Class<R> responseClass, @Nonnull AbstractResponseHandler<R> handler) {
+  public <R extends Response> void registerHandler(Class<R> responseClass, AbstractResponseHandler<R> handler) {
     myResponseProcessor.registerHandler(responseClass, handler);
   }
 
@@ -127,7 +127,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     return myPort;
   }
 
-  protected void setStatus(@Nonnull ConnectionStatus status, @Nullable String message) {
+  protected void setStatus(ConnectionStatus status, @Nullable String message) {
     synchronized (myLock) {
       myState.set(new ConnectionState(status, message, null));
     }
@@ -143,16 +143,14 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   }
 
   @Override
-  @Nonnull
   public ConnectionState getState() {
     synchronized (myLock) {
-      return myState.get();
+      return Objects.requireNonNull(myState.get());
     }
   }
 
-  @Nonnull
   @Override
-  public Runnable addListener(@Nonnull SocketConnectionListener listener) {
+  public Runnable addListener(SocketConnectionListener listener) {
     myDispatcher.add(listener);
     return () -> myDispatcher.remove(listener);
   }

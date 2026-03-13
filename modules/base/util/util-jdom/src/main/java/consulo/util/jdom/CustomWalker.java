@@ -63,6 +63,7 @@ import org.jdom.output.EscapeStrategy;
 import org.jdom.output.Format;
 import org.jdom.output.support.FormatStack;
 import org.jdom.output.support.Walker;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -249,24 +250,13 @@ class CustomWalker implements Walker {
     public void appendCDATA(Trim trim, String text) {
       // this resets the mtbuffer too.
       closeText();
-      String toadd = null;
-      switch (trim) {
-        case NONE:
-          toadd = text;
-          break;
-        case BOTH:
-          toadd = Format.trimBoth(text);
-          break;
-        case LEFT:
-          toadd = Format.trimLeft(text);
-          break;
-        case RIGHT:
-          toadd = Format.trimRight(text);
-          break;
-        case COMPACT:
-          toadd = Format.compact(text);
-          break;
-      }
+      String toadd = switch (trim) {
+        case NONE -> text;
+        case BOTH -> Format.trimBoth(text);
+        case LEFT -> Format.trimLeft(text);
+        case RIGHT -> Format.trimRight(text);
+        case COMPACT -> Format.compact(text);
+      };
 
       toadd = escapeCDATA(toadd);
       ensurespace();
@@ -321,15 +311,17 @@ class CustomWalker implements Walker {
 
   }
 
-
+  @Nullable
   private Content pending = null;
   private final Iterator<? extends Content> content;
   private final boolean alltext;
   private final boolean allwhite;
   private final String newlineindent;
   private final String endofline;
+  @Nullable
   private final EscapeStrategy escape;
   private final FormatStack fstack;
+  @Nullable
   private boolean hasnext = true;
 
 
@@ -345,19 +337,21 @@ class CustomWalker implements Walker {
   // we use one set of variables to back up both of them. This is fast, and safe in a single
   // threaded environment (which the Walkers are guaranteed to be in).
   // all MultiText-specific variables have the names mt*
+  @Nullable
   private MultiText multitext = null;
+  @Nullable
   private MultiText pendingmt = null;
   private final MultiText holdingmt = new MultiText();
 
   private final StringBuilder mtbuffer = new StringBuilder();
   // if there should be indenting after this text.
-  private boolean mtpostpad;
+  private boolean mtpostpad = false;
   // indicate whether there is something actually added.
   private boolean mtgottext = false;
   // the number of mixed content values.
   private int mtsize = 0;
   private int mtsourcesize = 0;
-  private Content[] mtsource = new Content[8];
+  private @Nullable Content[] mtsource = new Content[8];
   // the location of the processed content.
   private Content[] mtdata = new Content[8];
   // whether the mixed content should be returned as raw JDOM objects
@@ -367,6 +361,7 @@ class CustomWalker implements Walker {
   private int mtpos = -1;
   // we cheat here by using Boolean as a three-state option...
   // we expect it to be null often.
+  @Nullable
   private Boolean mtwasescape;
 
   /**
@@ -414,6 +409,7 @@ class CustomWalker implements Walker {
     hasnext = pendingmt != null || pending != null;
   }
 
+  @Nullable
   @Override
   public final Content next() {
 
@@ -620,7 +616,7 @@ class CustomWalker implements Walker {
    * @param first
    * @return The updated MultiText containing the correct sequence of Text-like content
    */
-  private final MultiText buildMultiText(boolean first) {
+  private MultiText buildMultiText(boolean first) {
     // set up a sequence where the next bunch of stuff is text.
     if (!first && newlineindent != null) {
       mtbuffer.append(newlineindent);
@@ -640,6 +636,7 @@ class CustomWalker implements Walker {
     return holdingmt;
   }
 
+  @Nullable
   @Override
   public final String text() {
     if (multitext == null || mtpos >= mtsize) {

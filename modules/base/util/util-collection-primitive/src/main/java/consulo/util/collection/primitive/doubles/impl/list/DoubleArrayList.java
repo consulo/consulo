@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.doubles.impl.list;
 
 import consulo.util.collection.primitive.doubles.DoubleList;
 
-import jakarta.annotation.Nonnull;
 
 public class DoubleArrayList implements Cloneable, DoubleList {
   private double[] myData;
@@ -32,7 +31,7 @@ public class DoubleArrayList implements Cloneable, DoubleList {
     mySize = data.length;
   }
 
-  public DoubleArrayList(@Nonnull DoubleArrayList init) {
+  public DoubleArrayList(DoubleArrayList init) {
     myData = new double[init.myData.length];
     System.arraycopy(init.myData, 0, myData, 0, init.myData.length);
     mySize = init.mySize;

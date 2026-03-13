@@ -2,8 +2,7 @@
 package consulo.util.collection;
 
 import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -23,15 +22,17 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
     private static final UnmodifiableHashMap<Object, Object> EMPTY =
         new UnmodifiableHashMap<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
 
-    @Nonnull
     private final HashingStrategy<K> strategy;
-    @Nonnull
     private final Object[] data;
+    @Nullable
     private final K k1, k2, k3;
+    @Nullable
     private final V v1, v2, v3;
     private final int size;
-    private Set<K> keySet;
-    private Collection<V> values;
+    @Nullable
+    private transient Set<K> keySet = null;
+    @Nullable
+    private transient Collection<V> values = null;
 
     /**
      * Returns an empty {@code UnmodifiableHashMap} with canonical equals/hashCode strategy.
@@ -41,7 +42,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @return an empty {@code UnmodifiableHashMap}.
      * @see HashingStrategy#canonical()
      */
-    @Nonnull
     @SuppressWarnings("unchecked")
     public static <K, V> UnmodifiableHashMap<K, V> empty() {
         return (UnmodifiableHashMap<K, V>)EMPTY;
@@ -55,7 +55,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @param <V>      type of map values
      * @return an empty {@code UnmodifiableHashMap}.
      */
-    @Nonnull
     public static <K, V> UnmodifiableHashMap<K, V> empty(HashingStrategy<K> strategy) {
         return strategy == HashingStrategy.canonical()
             ? empty()
@@ -71,8 +70,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @return a pre-populated {@code UnmodifiableHashMap}. Map return the supplied map if
      * it's already an {@code UnmodifiableHashMap} which uses the same equals/hashCode strategy.
      */
-    @Nonnull
-    public static <K, V> UnmodifiableHashMap<K, V> fromMap(@Nonnull Map<? extends K, ? extends V> map) {
+    public static <K, V> UnmodifiableHashMap<K, V> fromMap(Map<? extends K, ? extends V> map) {
         return fromMap(HashingStrategy.canonical(), map);
     }
 
@@ -87,11 +85,10 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @return a pre-populated {@code UnmodifiableHashMap}. Map return the supplied map if
      * it's already an {@code UnmodifiableHashMap} which uses the same equals/hashCode strategy.
      */
-    @Nonnull
     @SuppressWarnings("unchecked")
     public static <K, V> UnmodifiableHashMap<K, V> fromMap(
-        @Nonnull HashingStrategy<K> strategy,
-        @Nonnull Map<? extends K, ? extends V> map
+        HashingStrategy<K> strategy,
+        Map<? extends K, ? extends V> map
     ) {
         if (map instanceof UnmodifiableHashMap uhm && uhm.strategy == strategy) {
             return (UnmodifiableHashMap<K, V>)uhm;
@@ -131,8 +128,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
     }
 
     private UnmodifiableHashMap(
-        @Nonnull HashingStrategy<K> strategy,
-        @Nonnull Object[] data,
+        HashingStrategy<K> strategy,
+        Object[] data,
         @Nullable K k1,
         @Nullable V v1,
         @Nullable K k2,
@@ -144,8 +141,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
     }
 
     private UnmodifiableHashMap(
-        @Nonnull HashingStrategy<K> strategy,
-        @Nonnull Object[] data,
+        HashingStrategy<K> strategy,
+        Object[] data,
         @Nullable K k1,
         @Nullable V v1,
         @Nullable K k2,
@@ -172,9 +169,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map except the supplied key
      */
     @Contract(pure = true)
-    @Nonnull
     @Override
-    public UnmodifiableHashMap<K, V> without(@Nonnull K key) {
+    public UnmodifiableHashMap<K, V> without(K key) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
         if (pos >= 0) {
             Object[] newData = new Object[(size - 1) << 2];
@@ -229,9 +225,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping.
      */
     @Contract(pure = true)
-    @Nonnull
     @Override
-    public UnmodifiableHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
+    public UnmodifiableHashMap<K, V> with(K key, @Nullable V value) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
         if (pos >= 0) {
             if (data[pos + 1] == value) {
@@ -286,9 +281,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
      * @param map to add entries from
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus all the mappings of the supplied map.
      */
-    @Nonnull
     @Override
-    public UnmodifiableHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
+    public UnmodifiableHashMap<K, V> withAll(Map<? extends K, ? extends V> map) {
         if (isEmpty()) {
             return fromMap(strategy, map);
         }
@@ -331,7 +325,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null, newSize);
     }
 
-    private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
+    private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         insertPos = ~insertPos;
         assert insertPos >= 0;
@@ -339,7 +333,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         data[insertPos + 1] = v;
     }
 
-    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
+    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         boolean replacing = insertPos >= 0;
         insertPos = replacing ? insertPos : ~insertPos;
@@ -348,7 +342,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return replacing;
     }
 
-    @Nonnull
     @Override
     public HashingStrategy<K> getStrategy() {
         return strategy;
@@ -366,9 +359,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     @Override
     public boolean containsKey(Object key) {
-        if (key == null) {
-            return false;
-        }
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (data.length > 0 && tablePos(strategy, data, typedKey) >= 0) {
             return true;
@@ -412,11 +402,9 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return false;
     }
 
+    @Nullable
     @Override
     public V getOrDefault(Object key, V defaultValue) {
-        if (key == null) {
-            return defaultValue;
-        }
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (k1 != null) {
             if (strategy.equals(k1, typedKey)) {
@@ -457,7 +445,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         }
     }
 
-    private static <K> K ensureKeyIsNotNull(K key) {
+    private static <K> K ensureKeyIsNotNull(@Nullable K key) {
         if (key == null) {
             throw new IllegalArgumentException("Null keys are not supported");
         }
@@ -552,6 +540,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             }
         }
 
+        @Nullable
         @Override
         public E next() {
             if (!hasNext()) {
@@ -567,23 +556,23 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             return tableElement(offset);
         }
 
+        @Nullable
         abstract E fieldElement(int offset);
 
+        @Nullable
         abstract E tableElement(int offset);
     }
 
-    @Nonnull
     @Override
     public Set<K> keySet() {
         if (keySet == null) {
             keySet = new AbstractSet<>() {
-                @Nonnull
                 @Override
                 public Iterator<K> iterator() {
                     return new MyIterator<K>() {
                         @Override
                         K fieldElement(int offset) {
-                            return offset == 0 ? k1 : offset == 1 ? k2 : k3;
+                            return Objects.requireNonNull(offset == 0 ? k1 : offset == 1 ? k2 : k3);
                         }
 
                         @Override
@@ -628,20 +617,20 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return keySet;
     }
 
-    @Nonnull
     @Override
     public Collection<V> values() {
         if (values == null) {
             values = new AbstractCollection<>() {
-                @Nonnull
                 @Override
                 public Iterator<V> iterator() {
                     return new MyIterator<V>() {
+                        @Nullable
                         @Override
                         V fieldElement(int offset) {
                             return offset == 0 ? v1 : offset == 1 ? v2 : v3;
                         }
 
+                        @Nullable
                         @Override
                         @SuppressWarnings("unchecked")
                         V tableElement(int offset) {
@@ -685,11 +674,9 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return values;
     }
 
-    @Nonnull
     @Override
     public Set<Entry<K, V>> entrySet() {
         return new AbstractSet<>() {
-            @Nonnull
             @Override
             public Iterator<Entry<K, V>> iterator() {
                 return new MyIterator<Entry<K, V>>() {

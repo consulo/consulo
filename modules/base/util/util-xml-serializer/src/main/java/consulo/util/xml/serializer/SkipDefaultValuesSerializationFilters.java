@@ -17,8 +17,7 @@ package consulo.util.xml.serializer;
 
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.internal.DefaultValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
   private final Map<Class<?>, Object> myDefaultBeans = new HashMap<>();
 
   @Override
-  protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {
+  protected boolean accepts(Accessor accessor, Object bean, @Nullable Object beanValue) {
     Object defValue = accessor.read(getDefaultBean(bean));
     if (defValue instanceof Element && beanValue instanceof Element) {
       return !JDOMUtil.areElementsEqual((Element)beanValue, (Element)defValue);
@@ -39,8 +38,7 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
     }
   }
 
-  @Nonnull
-  Object getDefaultBean(@Nonnull Object bean) {
+  Object getDefaultBean(Object bean) {
     Class<?> c = bean.getClass();
     Object o = myDefaultBeans.get(c);
     if (o == null) {
@@ -55,6 +53,6 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
   /**
    * Override to put your own default object configuration
    */
-  protected void configure(@Nonnull Object o) {
+  protected void configure(Object o) {
   }
 }

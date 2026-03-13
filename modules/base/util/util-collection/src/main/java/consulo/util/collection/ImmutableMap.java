@@ -15,8 +15,7 @@
  */
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param key a key to exclude from the result
      * @return an {@code ImmutableMap} which contains all the entries as this map except the supplied key.
      */
-    ImmutableMap<K, V> without(@Nonnull K key);
+    ImmutableMap<K, V> without(K key);
 
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map plus the supplied mapping.</p>
@@ -44,7 +43,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param value a value to associate with the key
      * @return an {@code ImmutableMap} which contains all the entries as this map plus the supplied mapping.
      */
-    ImmutableMap<K, V> with(@Nonnull K key, @Nullable V value);
+    ImmutableMap<K, V> with(K key, @Nullable V value);
 
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map plus all the mappings of the supplied map.</p>
@@ -56,11 +55,11 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param map to add entries from
      * @return an {@code ImmutableMap} which contains all the entries as this map plus all the mappings of the supplied map.
      */
-    ImmutableMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map);
+    ImmutableMap<K, V> withAll(Map<? extends K, ? extends V> map);
 
-    @Nonnull
     HashingStrategy<K> getStrategy();
 
+    @Nullable
     @Override
     default V get(Object key) {
         return getOrDefault(key, null);
@@ -71,8 +70,9 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * {@code ImmutableMap} with an additional element.
      */
     @Deprecated
+    @Nullable
     @Override
-    default V put(K key, V value) {
+    default V put(K key, @Nullable V value) {
         throw new UnsupportedOperationException();
     }
 
@@ -81,6 +81,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * {@code ImmutableMap} without some element.
      */
     @Deprecated
+    @Nullable
     @Override
     default V remove(Object key) {
         throw new UnsupportedOperationException();
@@ -92,7 +93,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      */
     @Deprecated
     @Override
-    default void putAll(@Nonnull Map<? extends K, ? extends V> m) {
+    default void putAll(Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
 

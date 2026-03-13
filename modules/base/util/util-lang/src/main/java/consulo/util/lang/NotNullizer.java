@@ -1,8 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -12,12 +11,11 @@ public final class NotNullizer {
   private final Object myNull;
 
   @Contract(pure = true)
-  public NotNullizer(@Nonnull String name) {
+  public NotNullizer(String name) {
     myNull = ObjectUtil.sentinel(name);
   }
 
   @Contract(pure = true)
-  @Nonnull
   private <T> T fakeNull() {
     //noinspection unchecked
     return (T)myNull;
@@ -39,7 +37,6 @@ public final class NotNullizer {
    * @see #nullize(Object)
    */
   @Contract(value = "!null -> param1", pure = true)
-  @Nonnull
   public <T> T notNullize(@Nullable T value) {
     if (value == null) {
       return fakeNull();
@@ -57,7 +54,7 @@ public final class NotNullizer {
    */
   @Contract(pure = true)
   @Nullable
-  public <T> T nullize(@Nonnull T value) {
+  public <T> T nullize(T value) {
     return value == myNull ? null : value;
   }
 }

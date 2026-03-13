@@ -21,6 +21,8 @@ import consulo.util.concurrent.coroutine.internal.Coroutines;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+
 import static consulo.util.concurrent.coroutine.ChannelId.stringChannel;
 import static consulo.util.concurrent.coroutine.CoroutineScope.launch;
 import static consulo.util.concurrent.coroutine.step.ChannelReceive.receive;
@@ -104,7 +106,7 @@ public class ChannelTest {
             }
             catch (ChannelClosedException e) {
                 // expected
-                result.errorHandled();
+                Objects.requireNonNull(result).errorHandled();
             }
         });
 
@@ -120,7 +122,7 @@ public class ChannelTest {
             }
             catch (ChannelClosedException e) {
                 // expected
-                result.errorHandled();
+                Objects.requireNonNull(result).errorHandled();
             }
         });
     }

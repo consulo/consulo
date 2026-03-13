@@ -15,12 +15,15 @@
  */
 package consulo.util.lang;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TreeItem <Data> {
   private Data myData;
-  private TreeItem<Data> myParent;
+  @Nullable
+  private TreeItem<Data> myParent = null;
   private final List<TreeItem<Data>> myChildren = new ArrayList<TreeItem<Data>>();
 
   public TreeItem(Data data) {
@@ -35,6 +38,7 @@ public class TreeItem <Data> {
     myData = data;
   }
 
+  @Nullable
   public TreeItem<Data> getParent() {
     return myParent;
   }

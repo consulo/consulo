@@ -3,13 +3,12 @@ package consulo.util.collection.primitive.ints.impl.map;
 
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
 
 class SimpleIntObjectEntry<V> implements IntObjectMap.IntObjectEntry<V> {
   private final int myKey;
   private final V myValue;
 
-  SimpleIntObjectEntry(int key, @Nonnull V value) {
+  SimpleIntObjectEntry(int key, V value) {
     myKey = key;
     myValue = value;
   }
@@ -19,7 +18,6 @@ class SimpleIntObjectEntry<V> implements IntObjectMap.IntObjectEntry<V> {
     return myKey;
   }
 
-  @Nonnull
   @Override
   public V getValue() {
     return myValue;

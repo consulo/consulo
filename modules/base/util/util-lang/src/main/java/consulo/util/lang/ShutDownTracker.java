@@ -15,10 +15,10 @@
  */
 package consulo.util.lang;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +39,6 @@ public class ShutDownTracker implements Runnable {
     private static final ShutDownTracker ourInstance = new ShutDownTracker();
   }
 
-  @Nonnull
   public static ShutDownTracker getInstance() {
     return ShutDownTrackerHolder.ourInstance;
   }
@@ -95,40 +94,40 @@ public class ShutDownTracker implements Runnable {
     }
   }
 
-  private synchronized boolean isRegistered(@Nonnull Thread thread) {
+  private synchronized boolean isRegistered(Thread thread) {
     return myThreads.contains(thread);
   }
 
-  @Nonnull
   private synchronized Thread[] getStopperThreads() {
     return myThreads.toArray(new Thread[myThreads.size()]);
   }
 
-  public synchronized void registerStopperThread(@Nonnull Thread thread) {
+  public synchronized void registerStopperThread(Thread thread) {
     myThreads.add(thread);
   }
 
-  public synchronized void unregisterStopperThread(@Nonnull Thread thread) {
+  public synchronized void unregisterStopperThread(Thread thread) {
     myThreads.remove(thread);
   }
 
-  public synchronized void registerShutdownThread(@Nonnull Thread thread) {
+  public synchronized void registerShutdownThread(Thread thread) {
     myShutdownThreads.addLast(thread);
   }
 
-  public synchronized void registerShutdownThread(int index, @Nonnull Thread thread) {
+  public synchronized void registerShutdownThread(int index, Thread thread) {
     myShutdownThreads.add(index, thread);
   }
 
-  public synchronized void registerShutdownTask(@Nonnull Runnable task) {
+  public synchronized void registerShutdownTask(Runnable task) {
     myShutdownTasks.addLast(task);
   }
 
-  public synchronized void unregisterShutdownTask(@Nonnull Runnable task) {
+  public synchronized void unregisterShutdownTask(Runnable task) {
     myShutdownTasks.remove(task);
   }
-  
-  private synchronized <T> T removeLast(@Nonnull LinkedList<T> list) {
-    return list.isEmpty()? null : list.removeLast();
+
+  @Nullable
+  private synchronized <T> T removeLast(LinkedList<T> list) {
+    return list.isEmpty() ? null : list.removeLast();
   }
 }

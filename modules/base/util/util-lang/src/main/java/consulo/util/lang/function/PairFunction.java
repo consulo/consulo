@@ -17,7 +17,7 @@ package consulo.util.lang.function;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -30,6 +30,7 @@ public interface PairFunction<Arg1, Arg2, ResultType> extends BiFunction<Arg1, A
   @Nullable
   ResultType fun(Arg1 t, Arg2 v);
 
+  @Nullable
   @Override
   default ResultType apply(Arg1 arg1, Arg2 arg2) {
     return fun(arg1, arg2);

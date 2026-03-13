@@ -15,11 +15,13 @@
  */
 package consulo.util.collection.primitive.ints;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
- * @since 09/02/2021
+ * @since 2021-02-09
  */
 @FunctionalInterface
 public interface IntObjConsumer<T> {
-  void accept(int param1, T param2);
+  void accept(int param1, @Nullable T param2);
 }

@@ -16,7 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,12 +33,14 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     private final Predicate<? super Dom> myCondition;
     private boolean myNextObtained;
     private boolean myCurrentIsValid;
-    private Dom myCurrent;
+    @Nullable
+    private Dom myCurrent = null;
+    @Nullable
     private Boolean myCurrentPassedFilter;
     @Deprecated
     public static final Predicate NOT_NULL = Predicates.notNull();
 
-    public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Predicate<? super Dom> condition) {
+    public FilteringIterator(Iterator<Dom> delegate, Predicate<? super Dom> condition) {
         myDelegate = delegate;
         myCondition = condition;
     }
@@ -69,7 +71,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         return value;
     }
 
-    private void setCurrent(Dom next) {
+    private void setCurrent(@Nullable Dom next) {
         myCurrent = next;
         myCurrentPassedFilter = null;
     }
@@ -83,6 +85,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         return passed;
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public E next() {
@@ -107,6 +110,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         myDelegate.remove();
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public E peek() {

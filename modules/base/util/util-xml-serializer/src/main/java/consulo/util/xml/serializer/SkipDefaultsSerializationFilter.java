@@ -21,13 +21,18 @@ import consulo.util.lang.ThreeState;
 import consulo.util.xml.serializer.internal.BasePrimitiveBinding;
 import consulo.util.xml.serializer.internal.BeanBinding;
 import consulo.util.xml.serializer.internal.Binding;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 public final class SkipDefaultsSerializationFilter extends SkipDefaultValuesSerializationFilters {
-    public boolean equal(@Nonnull Binding binding, @Nonnull Object bean) {
-        Accessor accessor = binding.getAccessor();
+    protected static final Logger LOG = LoggerFactory.getLogger(SkipDefaultsSerializationFilter.class);
+
+    public boolean equal(Binding binding, Object bean) {
+        Accessor accessor = Objects.requireNonNull(binding.getAccessor());
         return equal(binding, accessor.read(bean), accessor.read(getDefaultBean(bean)));
     }
 
@@ -57,7 +62,7 @@ public final class SkipDefaultsSerializationFilter extends SkipDefaultValuesSeri
                             compareByFields = ThreeState.YES;
                         }
                         catch (Exception e) {
-                            Binding.LOG.warn(e.getMessage(), e);
+                            LOG.warn(e.getMessage(), e);
                         }
 
                         classBinding.hasEqualMethod = compareByFields;

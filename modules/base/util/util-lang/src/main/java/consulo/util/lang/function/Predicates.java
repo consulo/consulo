@@ -203,13 +203,13 @@ public class Predicates {
         public final boolean test(T object) {
             int key = object.hashCode();
             Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
-            if (entry == null || entry.first.get() != object) {
+            if (entry == null || entry.first == null || entry.first.get() != object) {
                 boolean value = myCondition.test(object);
                 myCache.put(key, Pair.create(new SoftReference<>(object), value));
                 return value;
             }
             else {
-                return entry.second;
+                return entry.second == Boolean.TRUE;
             }
         }
     }

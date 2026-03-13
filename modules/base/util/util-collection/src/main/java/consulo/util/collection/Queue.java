@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -71,17 +70,14 @@ public class Queue<T> {
     return isWrapped ? myArray.length - myFirst + myLast : myLast - myFirst;
   }
 
-  @Nonnull
   public List<T> toList() {
     return Arrays.asList(normalize(size()));
   }
 
-  @Nonnull
   public Object[] toArray() {
     return normalize(size());
   }
 
-  @Nonnull
   public T[] toArray(T[] array) {
     if (array.length < size()) {
       array = ArrayUtil.newArray(ArrayUtil.getComponentType(array), size());
@@ -114,13 +110,11 @@ public class Queue<T> {
     return length;
   }
 
-  @Nonnull
   private T[] normalize(int capacity) {
     @SuppressWarnings("unchecked") T[] result = (T[])new Object[capacity];
     return normalize(result);
   }
 
-  @Nonnull
   private T[] normalize(T[] result) {
     if (isWrapped) {
       int tailLength = copyFromTo(myFirst, myArray.length, result, 0);
@@ -156,7 +150,7 @@ public class Queue<T> {
     return getRaw(arrayIndex);
   }
 
-  public boolean process(@Nonnull Predicate<? super T> processor) {
+  public boolean process(Predicate<? super T> processor) {
     if (isWrapped) {
       for (int i = myFirst; i < myArray.length; i++) {
         T t = getRaw(i);

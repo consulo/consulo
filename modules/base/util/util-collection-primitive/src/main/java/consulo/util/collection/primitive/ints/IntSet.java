@@ -17,14 +17,12 @@ package consulo.util.collection.primitive.ints;
 
 import consulo.util.collection.primitive.ints.impl.set.EmptyIntSet;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 08/02/2021
  */
 public interface IntSet extends IntCollection {
-  @Nonnull
   static IntSet of() {
     return EmptyIntSet.INSTANCE;
   }

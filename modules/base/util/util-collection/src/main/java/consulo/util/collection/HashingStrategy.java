@@ -2,8 +2,8 @@
 package consulo.util.collection;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -12,12 +12,12 @@ public interface HashingStrategy<T> {
         static final HashingStrategy<?> INSTANCE = new CanonicalHashingStrategy<>();
 
         @Override
-        public int hashCode(T value) {
+        public int hashCode(@Nullable T value) {
             return Objects.hashCode(value);
         }
 
         @Override
-        public boolean equals(T o1, T o2) {
+        public boolean equals(@Nullable T o1, @Nullable T o2) {
             return Objects.equals(o1, o2);
         }
     }
@@ -26,12 +26,12 @@ public interface HashingStrategy<T> {
         static final HashingStrategy<?> INSTANCE = new IdentityHashingStrategy<>();
 
         @Override
-        public int hashCode(T value) {
+        public int hashCode(@Nullable T value) {
             return System.identityHashCode(value);
         }
 
         @Override
-        public boolean equals(T o1, T o2) {
+        public boolean equals(@Nullable T o1, @Nullable T o2) {
             return o1 == o2;
         }
     }
@@ -40,38 +40,35 @@ public interface HashingStrategy<T> {
         public static final HashingStrategy<String> INSTANCE = new CaseInsensitiveStringHashingStrategy();
 
         @Override
-        public int hashCode(String s) {
-            return StringUtil.stringHashCodeInsensitive(s);
+        public int hashCode(@Nullable String s) {
+            return s == null ? 0 : StringUtil.stringHashCodeInsensitive(s);
         }
 
         @Override
-        public boolean equals(String s1, String s2) {
-            assert s1 != null;
-            return s1.equalsIgnoreCase(s2);
+        @SuppressWarnings("StringEquality")
+        public boolean equals(@Nullable String s1, @Nullable String s2) {
+            return s1 == s2 || s1 != null && s1.equalsIgnoreCase(s2);
         }
     }
 
-    default int hashCode(T object) {
+    default int hashCode(@Nullable T object) {
         return Objects.hashCode(object);
     }
 
-    default boolean equals(T o1, T o2) {
+    default boolean equals(@Nullable T o1, @Nullable T o2) {
         return Objects.equals(o1, o2);
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> canonical() {
         return (HashingStrategy<T>)CanonicalHashingStrategy.INSTANCE;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     static <T> HashingStrategy<T> identity() {
         return (HashingStrategy<T>)IdentityHashingStrategy.INSTANCE;
     }
 
-    @Nonnull
     static HashingStrategy<String> caseInsensitive() {
         return CaseInsensitiveStringHashingStrategy.INSTANCE;
     }

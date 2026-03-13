@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2020-10-24
  */
+@NullMarked
 module consulo.util.dataholder {
     requires consulo.annotation;
     requires consulo.util.concurrent;

@@ -19,10 +19,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,21 +30,21 @@ public class JDOMExternalizer {
   private JDOMExternalizer() {
   }
 
-  public static void write(Element root, @NonNls String name, String value) {
-    @NonNls Element element = new Element("setting");
+  public static void write(Element root, String name, String value) {
+    Element element = new Element("setting");
     element.setAttribute("name", name);
     element.setAttribute("value", value == null ? "" : value);
     root.addContent(element);
   }
 
-  public static void write(Element root, @NonNls String name, boolean value) {
+  public static void write(Element root, String name, boolean value) {
     write(root, name, Boolean.toString(value));
   }
   public static void write(Element root, String name, int value) {
     write(root, name, Integer.toString(value));
   }
 
-  public static boolean readBoolean(Element root, @NonNls String name) {
+  public static boolean readBoolean(Element root, String name) {
     return Boolean.valueOf(readString(root, name)).booleanValue();
   }
 
@@ -55,7 +53,7 @@ public class JDOMExternalizer {
   }
 
   @Nullable
-  public static String readString(@NonNls Element root, @NonNls String name) {
+  public static String readString(Element root, String name) {
     for (Element element : root.getChildren("setting")) {
       if (Comparing.strEqual(element.getAttributeValue("name"), name)) {
         return element.getAttributeValue("value");
@@ -64,7 +62,7 @@ public class JDOMExternalizer {
     return null;
   }
 
-  public static void writeMap(Element root, Map<String, String> map, @NonNls @Nullable String rootName, @NonNls String entryName) {
+  public static void writeMap(Element root, Map<String, String> map, @Nullable String rootName, String entryName) {
     Element mapRoot;
     if (StringUtil.isNotEmpty(rootName)) {
       mapRoot = new Element(rootName);
@@ -76,7 +74,7 @@ public class JDOMExternalizer {
     String[] names = ArrayUtil.toStringArray(map.keySet());
     Arrays.sort(names);
     for (String name : names) {
-      @NonNls Element element = new Element(entryName);
+      Element element = new Element(entryName);
       element.setAttribute("name", name);
       String value = map.get(name);
       if (value != null) {
@@ -86,7 +84,7 @@ public class JDOMExternalizer {
     }
   }
 
-  public static void readMap(Element root, Map<String, String> map, @NonNls @Nullable String rootName, @NonNls String entryName) {
+  public static void readMap(Element root, Map<String, String> map, @Nullable String rootName, String entryName) {
     Element mapRoot;
     if (StringUtil.isNotEmpty(rootName)) {
       mapRoot = root.getChild(rootName);
@@ -98,7 +96,7 @@ public class JDOMExternalizer {
       return;
     }
 
-    for (@NonNls Element element : mapRoot.getChildren(entryName)) {
+    for (Element element : mapRoot.getChildren(entryName)) {
       String name = element.getAttributeValue("name");
       if (name != null) {
         map.put(name, element.getAttributeValue("value"));
@@ -114,10 +112,10 @@ public class JDOMExternalizer {
    * @param values a pack of values to add
    * @see #loadStringsList(org.jdom.Element, String, String)
    */
-  public static void saveStringsList(@Nonnull Element parent,
-                                     @Nonnull String nodeName,
-                                     @Nonnull String attrName,
-                                     @Nonnull String... values) {
+  public static void saveStringsList(Element parent,
+                                     String nodeName,
+                                     String attrName,
+                                     String... values) {
     for (String value : values) {
       Element node = new Element(nodeName);
       node.setAttribute(attrName, value);
@@ -125,11 +123,10 @@ public class JDOMExternalizer {
     }
   }
 
-  @Nonnull
   public static List<String> loadStringsList(Element element, String rootName, String attrName) {
     List<String> paths = new LinkedList<String>();
     if (element != null) {
-      @Nonnull List list = element.getChildren(rootName);
+      List list = element.getChildren(rootName);
       for (Object o : list) {
         paths.add(((Element)o).getAttribute(attrName).getValue());
       }

@@ -19,7 +19,6 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.map.ConcurrentRefValueHashMap;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -34,12 +33,11 @@ public final class ConcurrentSoftValueHashMap<K, V> extends ConcurrentRefValueHa
   private static class MySoftReference<K, V> extends SoftReference<V> implements ValueReference<K, V> {
     private final K key;
 
-    private MySoftReference(@Nonnull K key, @Nonnull V referent, @Nonnull ReferenceQueue<V> q) {
+    private MySoftReference(K key, V referent, ReferenceQueue<V> q) {
       super(referent, q);
       this.key = key;
     }
 
-    @Nonnull
     @Override
     public K getKey() {
       return key;
@@ -60,9 +58,8 @@ public final class ConcurrentSoftValueHashMap<K, V> extends ConcurrentRefValueHa
     }
   }
 
-  @Nonnull
   @Override
-  public ValueReference<K, V> createValueReference(@Nonnull K key, @Nonnull V value) {
+  public ValueReference<K, V> createValueReference(K key, V value) {
     return new MySoftReference<>(key, value, myQueue);
   }
 }

@@ -29,10 +29,13 @@
 package net.n3.nanoxml;
 
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Stack;
 
 
@@ -54,14 +57,22 @@ public class StdXMLReader
     */
    private class StackedReader
    {
-   
+
+      @Nullable
       PushbackReader pbReader;
-   
+
+      @Nullable
       LineNumberReader lineReader;
-   
+
+      @Nullable
       URL systemId;
-   
+
+      @Nullable
       String publicId;
+
+      public PushbackReader getRequiredPbReader() {
+         return Objects.requireNonNull(pbReader);
+      }
    
    }
 
@@ -180,28 +191,13 @@ public class StdXMLReader
 
 
    /**
-    * Cleans up the object when it's destroyed.
-    */
-   protected void finalize()
-      throws Throwable
-   {
-      this.currentReader.lineReader = null;
-      this.currentReader.pbReader = null;
-      this.currentReader.systemId = null;
-      this.currentReader.publicId = null;
-      this.currentReader = null;
-      this.readers.clear();
-      super.finalize();
-   }
-
-
-   /**
     * Scans the encoding from an &lt;?xml...?&gt; tag.
     *
     * @param str the first tag in the XML data.
     *
     * @return the encoding, or null if no encoding has been specified.
     */
+   @Nullable
    protected String getEncoding(String str)
    {
       if (! str.startsWith("<?xml")) {
@@ -366,16 +362,16 @@ public class StdXMLReader
    public char read()
       throws IOException
    {
-      int ch = this.currentReader.pbReader.read();
+      int ch = this.currentReader.getRequiredPbReader().read();
 
       while (ch < 0) {
          if (this.readers.empty()) {
             throw new IOException("Unexpected EOF");
          }
 
-         this.currentReader.pbReader.close();
+         this.currentReader.getRequiredPbReader().close();
          this.currentReader = (StackedReader) this.readers.pop();
-         ch = this.currentReader.pbReader.read();
+         ch = this.currentReader.getRequiredPbReader().read();
       }
 
       return (char) ch;
@@ -392,12 +388,12 @@ public class StdXMLReader
    public boolean atEOFOfCurrentStream()
       throws IOException
    {
-      int ch = this.currentReader.pbReader.read();
+      int ch = this.currentReader.getRequiredPbReader().read();
 
       if (ch < 0) {
          return true;
       } else {
-         this.currentReader.pbReader.unread(ch);
+         this.currentReader.getRequiredPbReader().unread(ch);
          return false;
       }
    }
@@ -412,19 +408,19 @@ public class StdXMLReader
    public boolean atEOF()
       throws IOException
    {
-      int ch = this.currentReader.pbReader.read();
+      int ch = this.currentReader.getRequiredPbReader().read();
 
       while (ch < 0) {
          if (this.readers.empty()) {
             return true;
          }
 
-         this.currentReader.pbReader.close();
+         this.currentReader.getRequiredPbReader().close();
          this.currentReader = (StackedReader) this.readers.pop();
-         ch = this.currentReader.pbReader.read();
+         ch = this.currentReader.getRequiredPbReader().read();
       }
 
-      this.currentReader.pbReader.unread(ch);
+      this.currentReader.getRequiredPbReader().unread(ch);
       return false;
    }
 
@@ -440,7 +436,7 @@ public class StdXMLReader
    public void unread(char ch)
       throws IOException
    {
-      this.currentReader.pbReader.unread(ch);
+      this.currentReader.getRequiredPbReader().unread(ch);
    }
 
 
@@ -580,7 +576,7 @@ public class StdXMLReader
    public void setSystemID(String systemID)
       throws MalformedURLException
    {
-      this.currentReader.systemId = new URL(this.currentReader.systemId,
+      this.currentReader.systemId = new URL(Objects.requireNonNull(this.currentReader.systemId),
                                             systemID);
    }
 
@@ -601,7 +597,7 @@ public class StdXMLReader
     */
    public String getSystemID()
    {
-      return this.currentReader.systemId.toString();
+      return Objects.requireNonNull(this.currentReader.systemId).toString();
    }
 
 
@@ -610,7 +606,7 @@ public class StdXMLReader
     */
    public String getPublicID()
    {
-      return this.currentReader.publicId;
+      return Objects.requireNonNull(this.currentReader.publicId);
    }
 
 }

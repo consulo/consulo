@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.codeInspection.ex.ProjectInspectionProfilesVisibleT
 import consulo.ide.impl.idea.codeInspection.ex.VisibleTreeState;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.configurable.SearchableOptionsRegistrar;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.filter.InspectionFilterAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.filter.InspectionsFilter;
@@ -67,6 +66,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;

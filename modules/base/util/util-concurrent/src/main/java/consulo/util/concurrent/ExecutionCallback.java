@@ -15,7 +15,8 @@
  */
 package consulo.util.concurrent;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +24,8 @@ import java.util.List;
 class ExecutionCallback {
   private int myCurrentCount;
   private final int myCountToExecution;
-  private List<Runnable> myRunnables;
+  @Nullable
+  private List<Runnable> myRunnables = null;
 
   ExecutionCallback() {
     this(1);
@@ -58,7 +60,7 @@ class ExecutionCallback {
   }
 
   private static class CompositeRunnable extends ArrayList<Runnable> implements Runnable {
-    private CompositeRunnable(@Nonnull Collection<? extends Runnable> c) {
+    private CompositeRunnable(Collection<? extends Runnable> c) {
       super(c);
     }
 
@@ -70,7 +72,7 @@ class ExecutionCallback {
     }
   }
 
-  final void doWhenExecuted(@Nonnull Runnable runnable) {
+  final void doWhenExecuted(Runnable runnable) {
     Runnable toRun;
     synchronized (this) {
       if (isExecuted()) {

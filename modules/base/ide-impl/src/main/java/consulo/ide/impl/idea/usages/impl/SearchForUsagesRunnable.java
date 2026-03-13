@@ -68,6 +68,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -327,7 +328,7 @@ class SearchForUsagesRunnable implements Runnable {
         findUsagesStartedBalloon.addRequest(
             () -> {
                 notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
-                    Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation)))
+                    Collections.singletonList(XmlStringUtil.escapeText(UsageViewManagerImpl.getProgressTitle(myPresentation)))
                 );
                 findStartedBalloonShown.set(true);
             },
@@ -423,7 +424,7 @@ class SearchForUsagesRunnable implements Runnable {
 
                         if (notFoundActions.isEmpty()) {
                             List<String> lines = new ArrayList<>();
-                            lines.add(StringUtil.escapeXml(message.get()));
+                            lines.add(message.map((Function<String, String>) XmlStringUtil::escapeText).get());
                             if (myOutOfScopeUsages.get() != 0) {
                                 lines.add(UsageViewManagerImpl.outOfScopeMessage(
                                     myOutOfScopeUsages.get(),

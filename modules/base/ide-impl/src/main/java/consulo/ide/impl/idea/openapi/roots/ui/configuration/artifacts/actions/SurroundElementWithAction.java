@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,6 +35,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.io.PathUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;

@@ -17,7 +17,6 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -70,7 +69,7 @@ public class CoroutineScope extends CoroutineEnvironment {
      *
      * @param context The context to run the scope's coroutines in
      */
-    public CoroutineScope(@Nonnull CoroutineContext context) {
+    public CoroutineScope(CoroutineContext context) {
         this.context = Objects.requireNonNull(context, () -> "CoroutineContext required");
         this.context.scopeLaunched(this);
     }

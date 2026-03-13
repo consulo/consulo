@@ -5,6 +5,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.UnmodifiableHashMap;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
@@ -124,7 +125,9 @@ public interface HtmlChunk {
                 entry -> {
                     builder.append(' ').append(entry.getKey());
                     if (entry.getValue() != null) {
-                        builder.append("=\"").append(StringUtil.escapeXmlEntities(entry.getValue())).append('"');
+                        builder.append("=\"");
+                        XmlStringUtil.escapeAttr(entry.getValue(), '"', builder);
+                        builder.append('"');
                     }
                 }
             );
@@ -713,6 +716,6 @@ public interface HtmlChunk {
     }
 
     private static String textToRaw(@Nonnull String text) {
-        return StringUtil.escapeXmlEntities(text).replaceAll("\n", "<br/>");
+        return XmlStringUtil.escapeText(text).replaceAll("\n", "<br/>");
     }
 }

@@ -17,8 +17,7 @@ package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An immutable map optimized for storing few {@link Key} entries with relatively rare updates
@@ -29,16 +28,13 @@ import jakarta.annotation.Nullable;
 public interface KeyFMap {
     KeyFMap EMPTY_MAP = new EmptyFMap();
 
-    @Nonnull
-    <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value);
+    <V> KeyFMap plus(Key<V> key, V value);
 
-    @Nonnull
-    KeyFMap minus(@Nonnull Key<?> key);
+    KeyFMap minus(Key<?> key);
 
     @Nullable
-    <V> V get(@Nonnull Key<V> key);
+    <V> V get(Key<V> key);
 
-    @Nonnull
     Key[] getKeys();
 
     @Override

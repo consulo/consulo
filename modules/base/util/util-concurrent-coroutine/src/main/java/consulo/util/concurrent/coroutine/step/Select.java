@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.concurrent.coroutine.Selection;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -166,8 +167,11 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void runAsync(CompletableFuture<I> previousExecution,
-		CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+	public void runAsync(
+		CompletableFuture<I> previousExecution,
+		@Nullable CoroutineStep<O, ?> nextStep,
+		Continuation<?> continuation
+	) {
 		continuation.continueAccept(previousExecution,
 			rInput -> selectAsync(rInput, nextStep, continuation));
 	}
@@ -193,8 +197,9 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	@Override
-	protected O execute(I input, Continuation<?> continuation) {
+	protected O execute(@Nullable I input, Continuation<?> continuation) {
 		// even if executed blocking the selection must happen asynchronously,
 		// so we just run this step as a new coroutine in the current scope
 		return new Coroutine<>(this).runAsync(continuation.scope(), input)
@@ -208,8 +213,7 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	 * @param rNextStep     The step to resume after the suspension
 	 * @param rContinuation the current continuation
 	 */
-	void selectAsync(I rInput, CoroutineStep<O, ?> rNextStep,
-		Continuation<?> rContinuation) {
+	void selectAsync(I rInput, @Nullable CoroutineStep<O, ?> rNextStep, Continuation<?> rContinuation) {
 		Selection<O, O, O> aSelection =
 			Selection.ofSingleValue(this, rNextStep, rContinuation,
 				pSelectCritiera);

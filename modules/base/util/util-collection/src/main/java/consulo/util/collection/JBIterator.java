@@ -18,13 +18,9 @@ package consulo.util.collection;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -51,19 +47,17 @@ import java.util.function.Predicate;
  */
 public abstract class JBIterator<E> implements Iterator<E> {
 
-  @Nonnull
-  public static <E extends JBIterator<?>> JBIterable<E> cursor(@Nonnull E iterator) {
+  public static <E extends JBIterator<?>> JBIterable<E> cursor(E iterator) {
     return JBIterable.<E>generate(iterator, Functions.<E>id()).intercept(CURSOR_NEXT);
   }
 
-  @Nonnull
-  public static <E> JBIterator<E> from(@Nonnull Iterator<E> it) {
+  public static <E> JBIterator<E> from(Iterator<E> it) {
     return it instanceof JBIterator ? (JBIterator<E>)it : wrap(it);
   }
 
-  @Nonnull
-  static <E> JBIterator<E> wrap(@Nonnull final Iterator<E> it) {
+  static <E> JBIterator<E> wrap(final Iterator<E> it) {
     return new JBIterator<E>() {
+      @Nullable
       @Override
       protected E nextImpl() {
         return it.hasNext() ? it.next() : stop();
@@ -81,6 +75,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   /**
    * Returns the next element if any; otherwise calls stop() or skip().
    */
+  @Nullable
   protected abstract E nextImpl();
 
   /**
@@ -141,7 +136,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     if (myCurrent == Do.INIT) {
       throw new NoSuchElementException();
     }
-    return (E)myCurrent;
+    return (E) Objects.requireNonNull(myCurrent);
   }
 
   private void peekNext() {
@@ -154,49 +149,42 @@ public abstract class JBIterator<E> implements Iterator<E> {
         o = myNext = Do.INIT;
         if (op.impl == null) {
           // rollback all prepended takeWhile conditions if nextImpl() votes SKIP
-          for (Op op2 = myFirstOp; op2.impl instanceof CountDown; op2 = op2.nextOp) {
+          for (Op op2 = myFirstOp; op2 != null && op2.impl instanceof CountDown; op2 = op2.nextOp) {
             ((CountDown)op2.impl).cur ++;
           }
         }
         op = null;
       }
     }
-    myNext = o;
+    myNext = Objects.requireNonNull(o);
   }
 
-  @Nonnull
-  public final <T> JBIterator<T> map(@Nonnull Function<? super E, T> function) {
+  public final <T> JBIterator<T> map(Function<? super E, T> function) {
     return addOp(true, new TransformOp<E, T>(function));
   }
 
-  @Nonnull
-  public final JBIterator<E> filter(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> filter(Predicate<? super E> condition) {
     return addOp(true, new FilterOp<E>(condition));
   }
 
-  @Nonnull
   public final JBIterator<E> take(int count) {
     // add first so that the underlying iterator stay on 'count' position
     return addOp(!(myLastOp instanceof NextOp), new WhileOp<E>(new CountDown<E>(count)));
   }
 
-  @Nonnull
-  public final JBIterator<E> takeWhile(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> takeWhile(Predicate<? super E> condition) {
     return addOp(true, new WhileOp<E>(condition));
   }
 
-  @Nonnull
   public final JBIterator<E> skip(int count) {
     return skipWhile(new CountDown<E>(count));
   }
 
-  @Nonnull
-  public final JBIterator<E> skipWhile(@Nonnull Predicate<? super E> condition) {
+  public final JBIterator<E> skipWhile(Predicate<? super E> condition) {
     return addOp(true, new SkipOp<E>(condition));
   }
 
-  @Nonnull
-  private <T> T addOp(boolean last, @Nonnull Op op) {
+  private <T> T addOp(boolean last, Op op) {
     if (op.impl == null) {
       myFirstOp = myLastOp = op;
     }
@@ -216,7 +204,6 @@ public abstract class JBIterator<E> implements Iterator<E> {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
   public final List<E> toList() {
     return Collections.unmodifiableList(ContainerUtil.newArrayList(JBIterable.once(this)));
   }
@@ -227,18 +214,15 @@ public abstract class JBIterator<E> implements Iterator<E> {
     return "{cur=" + myCurrent + "; next=" + myNext + (ops.size() < 2 ? "" : "; ops=" + ops) + "}";
   }
 
-  @Nonnull
   public final JBIterable<Function<Object, Object>> getTransformations() {
     return (JBIterable<Function<Object, Object>>)(JBIterable)operationsImpl().map(op -> op.impl).filter(Function.class);
   }
 
-  @Nonnull
   private JBIterable<Op> operationsImpl() {
     return JBIterable.generate(myFirstOp, op -> op.nextOp);
   }
 
-  @Nonnull
-  static String toShortString(@Nonnull Object o) {
+  static String toShortString(Object o) {
     String name = o.getClass().getName();
     int idx = name.lastIndexOf('$');
     if (idx > 0 && idx < name.length() && StringUtil.isJavaIdentifierStart(name.charAt(idx + 1))) {
@@ -255,14 +239,18 @@ public abstract class JBIterator<E> implements Iterator<E> {
   };
 
   private static class Op<T> {
+    @Nullable
     final T impl;
-    Op nextOp;
 
-    public Op(T impl) {
+    @Nullable
+    Op nextOp = null;
+
+    public Op(@Nullable T impl) {
       this.impl = impl;
     }
 
-    Object apply(Object o) {
+    @Nullable
+    Object apply(@Nullable Object o) {
       throw new UnsupportedOperationException();
     }
 
@@ -290,9 +278,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(function);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.apply((E)o);
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).apply((E)o);
     }
   }
 
@@ -301,20 +290,22 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.test((E)o) ? o : skip();
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).test((E)o) ? o : skip();
     }
   }
 
   private class WhileOp<E> extends Op<Predicate<? super E>> {
-
     WhileOp(Predicate<? super E> condition) {
       super(condition);
     }
+
+    @Nullable
     @Override
-    Object apply(Object o) {
-      return impl.test((E)o) ? o : stop();
+    Object apply(@Nullable Object o) {
+      return Objects.requireNonNull(impl).test((E)o) ? o : stop();
     }
   }
 
@@ -325,9 +316,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      if (active && impl.test((E)o)) return skip();
+    Object apply(@Nullable Object o) {
+      if (active && Objects.requireNonNull(impl).test((E)o)) return skip();
       active = false;
       return o;
     }
@@ -338,8 +330,9 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
+    Object apply(@Nullable Object o) {
       return o;
     }
   }
@@ -351,9 +344,10 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
+    @Nullable
     @Override
-    Object apply(Object o) {
-      JBIterator<?> it = (JBIterator<?>)o;
+    Object apply(@Nullable Object o) {
+      JBIterator<?> it = (JBIterator<?>)Objects.requireNonNull(o);
       return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
     }
 

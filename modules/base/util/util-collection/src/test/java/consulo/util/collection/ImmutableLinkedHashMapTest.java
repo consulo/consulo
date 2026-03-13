@@ -52,9 +52,6 @@ public class ImmutableLinkedHashMapTest {
     public void testNull() {
         ImmutableLinkedHashMap<Object, Object> empty = ImmutableLinkedHashMap.empty();
 
-        assertThat(empty.containsKey(null))
-            .isFalse();
-
         assertThatThrownBy(() -> empty.withAll(Collections.singletonMap(null, null)))
             .isInstanceOf(IllegalArgumentException.class);
 
@@ -158,7 +155,6 @@ public class ImmutableLinkedHashMapTest {
     public void testWithAll() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
             ImmutableLinkedHashMap<Integer, String> map = create(size);
-            assertThat(map.get(null)).isNull();
 
             ImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of());
             assertThat(map2)
@@ -190,7 +186,7 @@ public class ImmutableLinkedHashMapTest {
             ImmutableLinkedHashMap<Integer, String> map = create(size);
 
             int k0 = 0;
-            String v0 = map.get(0);
+            String v0 = Objects.requireNonNull(map.get(0));
 
             ImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of(k0, v0));
             assertThat(map2)
@@ -212,7 +208,7 @@ public class ImmutableLinkedHashMapTest {
     public void testWithAllDifferentValue() {
         ImmutableLinkedHashMap<Integer, String> map = create(5);
 
-        assertThat(map.withAll(Map.of(0, map.get(0), 1, map.get(1))))
+        assertThat(map.withAll(Map.of(0, Objects.requireNonNull(map.get(0)), 1, Objects.requireNonNull(map.get(1)))))
             .isNotSameAs(map);
 
         LinkedHashMap<Integer, String> dupKeyMap = new LinkedHashMap<>();
@@ -293,8 +289,6 @@ public class ImmutableLinkedHashMapTest {
     @Test
     public void testGet() {
         ImmutableLinkedHashMap<Integer, String> map = create(10);
-        assertThat(map.get(null))
-            .isNull();
         assertThat(map.get(0))
             .isEqualTo("0");
 

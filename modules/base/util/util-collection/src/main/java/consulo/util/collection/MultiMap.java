@@ -2,8 +2,7 @@
 package consulo.util.collection;
 
 import consulo.util.collection.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -21,13 +20,15 @@ public class MultiMap<K, V> implements Serializable {
   private static final long serialVersionUID = -2632269270151455493L;
 
   protected final Map<K, Collection<V>> myMap;
-  private Collection<V> values;
+
+  @Nullable
+  private Collection<V> values = null;
 
   public MultiMap() {
     myMap = new HashMap<>();
   }
 
-  public MultiMap(@Nonnull Map<K, Collection<V>> map) {
+  public MultiMap(Map<K, Collection<V>> map) {
     myMap = map;
   }
 
@@ -36,12 +37,12 @@ public class MultiMap<K, V> implements Serializable {
   }
 
   @SuppressWarnings("CopyConstructorMissesField")
-  public MultiMap(@Nonnull MultiMap<? extends K, ? extends V> toCopy) {
+  public MultiMap(MultiMap<? extends K, ? extends V> toCopy) {
     this();
     putAllValues(toCopy);
   }
 
-  public @Nonnull MultiMap<K, V> copy() {
+  public MultiMap<K, V> copy() {
     return new MultiMap<>(this);
   }
 
@@ -49,21 +50,21 @@ public class MultiMap<K, V> implements Serializable {
     myMap = new HashMap<>(initialCapacity, loadFactor);
   }
 
-  protected @Nonnull Collection<V> createCollection() {
+  protected Collection<V> createCollection() {
     return new SmartList<>();
   }
 
-  protected @Nonnull Collection<V> createEmptyCollection() {
+  protected Collection<V> createEmptyCollection() {
     return Collections.emptyList();
   }
 
-  public final void putAllValues(@Nonnull MultiMap<? extends  K, ? extends V> from) {
+  public final void putAllValues(MultiMap<? extends  K, ? extends V> from) {
     for (Map.Entry<? extends K, ? extends Collection<? extends V>> entry : from.entrySet()) {
       putValues(entry.getKey(), entry.getValue());
     }
   }
 
-  public final @Nonnull Map<K, Collection<V>> toHashMap() {
+  public final Map<K, Collection<V>> toHashMap() {
     if (myMap instanceof HashMap) {
       //noinspection unchecked
       return (Map<K, Collection<V>>)((HashMap<K, Collection<V>>)myMap).clone();
@@ -73,13 +74,13 @@ public class MultiMap<K, V> implements Serializable {
     }
   }
 
-  public final void putAllValues(@Nonnull Map<? extends K, ? extends V> from) {
+  public final void putAllValues(Map<? extends K, ? extends V> from) {
     for (Map.Entry<? extends K, ? extends V> entry : from.entrySet()) {
       putValue(entry.getKey(), entry.getValue());
     }
   }
 
-  public final void putValues(K key, @Nonnull Collection<? extends V> values) {
+  public final void putValues(K key, Collection<? extends V> values) {
     getModifiable(key).addAll(values);
   }
 
@@ -87,14 +88,14 @@ public class MultiMap<K, V> implements Serializable {
     getModifiable(key).add(value);
   }
 
-  public final @Nonnull Set<Map.Entry<K, Collection<V>>> entrySet() {
+  public final Set<Map.Entry<K, Collection<V>>> entrySet() {
     return myMap.entrySet();
   }
 
   /**
    * Prohibits modification of collections for existing keys and returns view of this as a map.
    */
-  public final @Nonnull Map<K, Collection<V>> freezeValues() {
+  public final Map<K, Collection<V>> freezeValues() {
     if (isEmpty()) {
       return Collections.emptyMap();
     }
@@ -129,12 +130,12 @@ public class MultiMap<K, V> implements Serializable {
     return false;
   }
 
-  public final @Nonnull Collection<V> get(K key) {
+  public final Collection<V> get(K key) {
     Collection<V> collection = myMap.get(key);
     return collection == null ? createEmptyCollection() : collection;
   }
 
-  public final @Nonnull Collection<V> getOrPut(K key, Supplier<? extends V> defaultValue) {
+  public final Collection<V> getOrPut(K key, Supplier<? extends V> defaultValue) {
     Collection<V> collection = getModifiable(key);
     if (collection.isEmpty()) {
       collection.add(defaultValue.get());
@@ -142,11 +143,11 @@ public class MultiMap<K, V> implements Serializable {
     return collection;
   }
 
-  public final @Nonnull Collection<V> getModifiable(K key) {
+  public final Collection<V> getModifiable(@Nullable K key) {
     return myMap.computeIfAbsent(key, __ -> createCollection());
   }
 
-  public final @Nonnull Set<K> keySet() {
+  public final Set<K> keySet() {
     return myMap.keySet();
   }
 
@@ -179,14 +180,14 @@ public class MultiMap<K, V> implements Serializable {
     return removed;
   }
 
-  public final @Nonnull Collection<V> values() {
+  public final Collection<V> values() {
     if (values != null) {
       return values;
     }
 
     values = new AbstractCollection<V>() {
       @Override
-      public @Nonnull Iterator<V> iterator() {
+      public Iterator<V> iterator() {
         return new Iterator<V>() {
           private final Iterator<Collection<V>> mapIterator = myMap.values().iterator();
 
@@ -248,41 +249,41 @@ public class MultiMap<K, V> implements Serializable {
     return myMap.remove(key);
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> create() {
+  public static <K, V> MultiMap<K, V> create() {
     return new MultiMap<>();
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createIdentity() {
+  public static <K, V> MultiMap<K, V> createIdentity() {
     return new MultiMap<>(new IdentityHashMap<>());
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createLinked() {
+  public static <K, V> MultiMap<K, V> createLinked() {
     return new MultiMap<>(new LinkedHashMap<>());
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createLinkedSet() {
+  public static <K, V> MultiMap<K, V> createLinkedSet() {
     return new MultiMap<K, V>(new LinkedHashMap<>()) {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return new LinkedHashSet<>();
       }
 
       @Override
-      protected @Nonnull Collection<V> createEmptyCollection() {
+      protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
     };
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createOrderedSet() {
+  public static <K, V> MultiMap<K, V> createOrderedSet() {
     return new MultiMap<K, V>(new LinkedHashMap<>()) {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return new OrderedSet<>();
       }
 
       @Override
-      protected @Nonnull Collection<V> createEmptyCollection() {
+      protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
     };
@@ -292,62 +293,62 @@ public class MultiMap<K, V> implements Serializable {
    * @deprecated Use {@link #MultiMap()}.
    */
   @Deprecated(forRemoval = true)
-  public static @Nonnull <K, V> MultiMap<K, V> createSmart() {
+  public static <K, V> MultiMap<K, V> createSmart() {
     return new MultiMap<>();
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createConcurrent() {
+  public static <K, V> MultiMap<K, V> createConcurrent() {
     return new MultiMap<K, V>(new ConcurrentHashMap<>()) {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return Lists.newLockFreeCopyOnWriteList();
       }
     };
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createConcurrentSet() {
+  public static <K, V> MultiMap<K, V> createConcurrentSet() {
     return new MultiMap<K, V>(new ConcurrentHashMap<>()) {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return ContainerUtil.newConcurrentSet();
       }
 
       @Override
-      protected @Nonnull Collection<V> createEmptyCollection() {
+      protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
     };
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createSet() {
+  public static <K, V> MultiMap<K, V> createSet() {
     return new MultiMap<K, V>() {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return new SmartHashSet<>();
       }
 
       @Override
-      protected @Nonnull Collection<V> createEmptyCollection() {
+      protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
     };
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createSet(@Nonnull Map<K, Collection<V>> map) {
+  public static <K, V> MultiMap<K, V> createSet(Map<K, Collection<V>> map) {
     return new MultiMap<K, V>(map) {
       @Override
-      protected @Nonnull Collection<V> createCollection() {
+      protected Collection<V> createCollection() {
         return new SmartHashSet<>();
       }
 
       @Override
-      protected @Nonnull Collection<V> createEmptyCollection() {
+      protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
     };
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> createWeakKey() {
+  public static <K, V> MultiMap<K, V> createWeakKey() {
     return new MultiMap<>(new WeakHashMap<>());
   }
 
@@ -370,7 +371,7 @@ public class MultiMap<K, V> implements Serializable {
     return myMap.toString();
   }
 
-  public static @Nonnull <K, V> MultiMap<K, V> empty() {
+  public static <K, V> MultiMap<K, V> empty() {
     //noinspection unchecked
     return (MultiMap<K, V>)EMPTY;
   }

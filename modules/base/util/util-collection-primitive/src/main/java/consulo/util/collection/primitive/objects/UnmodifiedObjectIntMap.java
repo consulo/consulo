@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.objects;
 
 import consulo.util.collection.primitive.ints.IntCollection;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
@@ -49,7 +48,7 @@ class UnmodifiedObjectIntMap<K> implements ObjectIntMap<K> {
   }
 
   @Override
-  public void putAll(@Nonnull ObjectIntMap<? extends K> map) {
+  public void putAll(ObjectIntMap<? extends K> map) {
     throw new UnsupportedOperationException();
   }
 

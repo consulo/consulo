@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 17-Jul-22
+ * @since 2022-07-17
  */
+@NullMarked
 module consulo.util.socket.connection {
   requires org.slf4j;
   requires consulo.util.collection;

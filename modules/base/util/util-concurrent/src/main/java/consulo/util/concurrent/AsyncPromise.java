@@ -21,8 +21,7 @@ import consulo.util.lang.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -48,6 +47,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     return f.isDone();
   }
 
+  @Nullable
   @Override
   public T get() throws InterruptedException, ExecutionException {
     if (isCancelled()) {
@@ -62,8 +62,9 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }
   }
 
+  @Nullable
   @Override
-  public T get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     if (isCancelled()) {
       return null;
     }
@@ -91,7 +92,6 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     cancel(false);
   }
 
-  @Nonnull
   @Override
   public Promise.State getState() {
     if (!f.isDone()) {
@@ -105,9 +105,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onSuccess(Consumer<? super T> handler) {
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (exception == null && !InternalPromiseUtil.isHandlerObsolete(handler)) {
         try {
@@ -122,9 +121,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }), hasErrorHandler);
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onError(@Nonnull Consumer<Throwable> rejected) {
+  public CancellablePromise<T> onError(Consumer<Throwable> rejected) {
     hasErrorHandler.set(true);
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (exception != null) {
@@ -137,9 +135,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }), hasErrorHandler);
   }
 
-  @Nonnull
   @Override
-  public CancellablePromise<T> onProcessed(@Nonnull Consumer<? super T> processed) {
+  public CancellablePromise<T> onProcessed(Consumer<? super T> processed) {
     hasErrorHandler.set(true);
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (!InternalPromiseUtil.isHandlerObsolete(processed)) {
@@ -150,7 +147,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nullable
   @Override
-  public T blockingGet(int timeout, @Nonnull TimeUnit timeUnit) throws TimeoutException, ExecutionException {
+  public T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException {
     try {
       return get(timeout, timeUnit);
     }
@@ -167,15 +164,13 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }
   }
 
-  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<? super T, ? extends SUB_RESULT> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> then(Function<? super T, ? extends SUB_RESULT> done) {
     return new AsyncPromise<>(f.thenApply(done::apply), hasErrorHandler);
   }
 
-  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull Function<? super T, Promise<SUB_RESULT>> doneF) {
+  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(Function<? super T, Promise<SUB_RESULT>> doneF) {
     Function<T, CompletableFuture<SUB_RESULT>> convert = it -> {
       Promise<SUB_RESULT> promise = doneF.apply(it);
       CompletableFuture<SUB_RESULT> future = new CompletableFuture<>();
@@ -186,10 +181,9 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     return new AsyncPromise<>(f.thenCompose(convert), hasErrorHandler);
   }
 
-  @Nonnull
   @Override
   @SuppressWarnings("unchecked")
-  public Promise<T> processed(@Nonnull Promise<? super T> child) {
+  public Promise<T> processed(Promise<? super T> child) {
     if (!(child instanceof AsyncPromise)) {
       return this;
     }
@@ -202,7 +196,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
   }
 
   @Override
-  public boolean setError(@Nonnull Throwable error) {
+  public boolean setError(Throwable error) {
     if (!f.completeExceptionally(error)) {
       return false;
     }
@@ -213,7 +207,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     return true;
   }
 
-  public void setError(@Nonnull String error) {
+  public void setError(String error) {
     setError(Promises.createError(error));
   }
 

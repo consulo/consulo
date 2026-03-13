@@ -16,8 +16,6 @@
 
 package consulo.util.lang;
 
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.TestOnly;
 
 import java.util.Date;
 
@@ -29,32 +27,26 @@ public class Clock {
     return System.currentTimeMillis();
   }
 
-  @TestOnly
   public static void setTime(long time) {
     ourTime = time;
   }
 
-  @TestOnly
-  public static void setTime(@Nonnull Date date) {
+  public static void setTime(Date date) {
     setTime(date.getTime());
   }
 
-  @TestOnly
   public static void setTime(int year, int month, int day) {
     setTime(year, month, day, 0, 0);
   }
 
-  @TestOnly
   public static void setTime(int year, int month, int day, int hours, int minutes) {
     setTime(year, month, day, hours, minutes, 0);
   }
 
-  @TestOnly
   public static void setTime(int year, int month, int day, int hours, int minutes, int seconds) {
     setTime(new Date(year - 1900, month, day, hours, minutes, seconds));
   }
 
-  @TestOnly
   public static void reset() {
     ourTime = -1;
   }

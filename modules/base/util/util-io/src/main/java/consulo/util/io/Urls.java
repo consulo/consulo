@@ -23,8 +23,7 @@ import consulo.util.lang.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -37,18 +36,16 @@ public final class Urls {
   // about ";" see WEB-100359
   private static final Pattern URI_PATTERN = Pattern.compile("^([^:/?#]+):(//)?([^/?#]*)([^?#;]*)(.*)");
 
-  @Nonnull
-  public static Url newUri(@Nonnull String scheme, @Nonnull String path) {
+  public static Url newUri(String scheme, String path) {
     return new UrlImpl(scheme, null, path);
   }
 
-  @Nonnull
-  public static Url newLocalFileUrl(@Nonnull String path) {
+  public static Url newLocalFileUrl(String path) {
     return new LocalFileUrl(path);
   }
 
-  @Nonnull
-  public static Url newFromEncoded(@Nonnull String url) {
+  @Nullable
+  public static Url newFromEncoded(String url) {
     Url result = parseEncoded(url);
     if (result == null) {
       LOG.error(url, new IllegalAccessException(url));
@@ -57,34 +54,31 @@ public final class Urls {
   }
 
   @Nullable
-  public static Url parseEncoded(@Nonnull String url) {
+  public static Url parseEncoded(String url) {
     return parse(url, false);
   }
 
-  @Nonnull
   public static Url newPathUrl(@Nullable String path) {
     return new UrlImpl(path);
   }
 
-  @Nonnull
-  public static Url newHttpUrl(@Nonnull String authority, @Nullable String path) {
+  public static Url newHttpUrl(String authority, @Nullable String path) {
     return newUrl("http", authority, path);
   }
 
-  @Nonnull
-  public static Url newUrl(@Nonnull String scheme, @Nonnull String authority, @Nullable String path) {
+  public static Url newUrl(String scheme, String authority, @Nullable String path) {
     return new UrlImpl(scheme, authority, path);
   }
 
-  @Nonnull
   public static Url newUrl(@Nullable String scheme, @Nullable String authority, @Nullable String path, @Nullable String parameters) {
     return new UrlImpl(scheme, authority, path, parameters);
   }
 
-  @Nonnull
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
-   */ public static Url newFromIdea(@Nonnull String url) {
+   */
+  @Nullable
+  public static Url newFromIdea(String url) {
     Url result = parseFromIdea(url);
     if (result == null) {
       LOG.error(url, new IllegalAccessException(url));
@@ -94,12 +88,12 @@ public final class Urls {
 
   // java.net.URI.create cannot parse "file:///Test Stuff" - but you don't need to worry about it - this method is aware
   @Nullable
-  public static Url parseFromIdea(@Nonnull String url) {
+  public static Url parseFromIdea(String url) {
     return URLUtil.containsScheme(url) ? parseUrl(url) : newLocalFileUrl(url);
   }
 
   @Nullable
-  public static Url parse(@Nonnull String url, boolean asLocalIfNoScheme) {
+  public static Url parse(String url, boolean asLocalIfNoScheme) {
     if (url.isEmpty()) {
       return null;
     }
@@ -112,7 +106,7 @@ public final class Urls {
   }
 
   @Nullable
-  public static URI parseAsJavaUriWithoutParameters(@Nonnull String url) {
+  public static URI parseAsJavaUriWithoutParameters(String url) {
     Url asUrl = parseUrl(url);
     if (asUrl == null) {
       return null;
@@ -128,12 +122,12 @@ public final class Urls {
   }
 
   @Nullable
-  public static Url parseUrlUnsafe(@Nonnull String url) {
+  public static Url parseUrlUnsafe(String url) {
     return parseUrl(url);
   }
 
   @Nullable
-  private static Url parseUrl(@Nonnull String url) {
+  private static Url parseUrl(String url) {
     String urlToParse;
     if (url.startsWith("jar:file://")) {
       urlToParse = url.substring("jar:".length());
@@ -165,11 +159,11 @@ public final class Urls {
     return new UrlImpl(scheme, authority, path, matcher.group(5));
   }
 
-  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull Collection<Url> urls) {
+  public static boolean equalsIgnoreParameters(Url url, Collection<Url> urls) {
     return equalsIgnoreParameters(url, urls, true);
   }
 
-  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull Collection<Url> urls, boolean caseSensitive) {
+  public static boolean equalsIgnoreParameters(Url url, Collection<Url> urls, boolean caseSensitive) {
     for (Url otherUrl : urls) {
       if (equals(url, otherUrl, caseSensitive, true)) {
         return true;
@@ -188,8 +182,7 @@ public final class Urls {
     return caseSensitive ? o1.equals(o2) : o1.equalsIgnoreCase(o2);
   }
 
-  @Nonnull
-  public static URI toUriWithoutParameters(@Nonnull Url url) {
+  public static URI toUriWithoutParameters(Url url) {
     try {
       String externalPath = url.getPath();
       boolean inLocalFileSystem = url.isInLocalFileSystem();
@@ -211,12 +204,12 @@ public final class Urls {
     private static final HashingStrategy<Url> INSTANCE = new CaseInsensitiveUrlHashingStrategy();
 
     @Override
-    public int hashCode(Url url) {
+    public int hashCode(@Nullable Url url) {
       return url == null ? 0 : url.hashCodeCaseInsensitive();
     }
 
     @Override
-    public boolean equals(Url url1, Url url2) {
+    public boolean equals(@Nullable Url url1, @Nullable Url url2) {
       return Urls.equals(url1, url2, false, false);
     }
   }

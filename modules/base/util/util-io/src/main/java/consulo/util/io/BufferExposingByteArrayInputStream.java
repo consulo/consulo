@@ -15,18 +15,16 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 public class BufferExposingByteArrayInputStream extends UnsyncByteArrayInputStream {
-  public BufferExposingByteArrayInputStream(@Nonnull byte[] bytes) {
+  public BufferExposingByteArrayInputStream(byte[] bytes) {
     super(bytes);
   }
 
-  public BufferExposingByteArrayInputStream(@Nonnull byte[] buf, int length) {
+  public BufferExposingByteArrayInputStream(byte[] buf, int length) {
     super(buf, 0, length);
   }
 
-  @Nonnull
   public byte[] getInternalBuffer() {
     return myBuffer;
   }

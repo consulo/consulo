@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.impl.inspection.reference.SmartRefElementPointerImpl;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.jdom.JDOMUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.annotation.Nullable;

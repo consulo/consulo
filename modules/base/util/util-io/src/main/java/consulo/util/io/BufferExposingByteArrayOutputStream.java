@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-import jakarta.annotation.Nonnull;
 
 public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputStream {
   public BufferExposingByteArrayOutputStream() {
@@ -29,7 +28,6 @@ public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputSt
     super(buffer);
   }
 
-  @Nonnull
   public byte[] getInternalBuffer() {
     return myBuffer;
   }

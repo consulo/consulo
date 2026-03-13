@@ -20,6 +20,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.internal.AutoClosableRegister;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,8 +102,11 @@ public abstract class AsynchronousFileStep
      * {@inheritDoc}
      */
     @Override
-    public void runAsync(CompletableFuture<ByteBuffer> previousExecution,
-                         CoroutineStep<ByteBuffer, ?> nextStep, Continuation<?> continuation) {
+    public void runAsync(
+        CompletableFuture<ByteBuffer> previousExecution,
+        @Nullable CoroutineStep<ByteBuffer, ?> nextStep,
+        Continuation<?> continuation
+    ) {
         continuation.continueAccept(previousExecution,
             b -> transferAsync(b, continuation.suspend(this, nextStep)));
     }
@@ -110,13 +114,13 @@ public abstract class AsynchronousFileStep
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    protected ByteBuffer execute(ByteBuffer input,
-                                 Continuation<?> continuation) {
+    protected ByteBuffer execute(@Nullable ByteBuffer input, Continuation<?> continuation) {
         try {
             AsynchronousFileChannel rChannel = getFileChannel(continuation);
 
-            performBlockingOperation(rChannel, input);
+            performBlockingOperation(rChannel, Objects.requireNonNull(input));
         }
         catch (Exception e) {
             throw new CoroutineException(e);
