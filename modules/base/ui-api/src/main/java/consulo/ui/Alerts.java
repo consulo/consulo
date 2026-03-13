@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -28,50 +27,34 @@ import java.util.function.Function;
  */
 public final class Alerts {
   private static final Object ourStableNull = new Object();
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #okInfo(LocalizeValue)")
-  public static Alert<Object> okInfo(@Nonnull String text) {
+  public static Alert<Object> okInfo(String text) {
     return okTemplate(LocalizeValue.of(text), o -> o);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #okWarning(LocalizeValue)")
-  public static Alert<Object> okWarning(@Nonnull String text) {
+  public static Alert<Object> okWarning(String text) {
     return okTemplate(LocalizeValue.of(text), Alert::asWarning);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #okError(LocalizeValue)")
-  public static Alert<Object> okError(@Nonnull String text) {
+  public static Alert<Object> okError(String text) {
     return okTemplate(LocalizeValue.of(text), Alert::asError);
   }
-
-  @Nonnull
-  public static Alert<Object> okInfo(@Nonnull LocalizeValue textValue) {
+  public static Alert<Object> okInfo(LocalizeValue textValue) {
     return okTemplate(textValue, o -> o);
   }
-
-  @Nonnull
-  public static Alert<Object> okWarning(@Nonnull LocalizeValue textValue) {
+  public static Alert<Object> okWarning(LocalizeValue textValue) {
     return okTemplate(textValue, Alert::asWarning);
   }
-
-  @Nonnull
-  public static Alert<Object> okError(@Nonnull LocalizeValue textValue) {
+  public static Alert<Object> okError(LocalizeValue textValue) {
     return okTemplate(textValue, Alert::asError);
   }
-
-  @Nonnull
-  public static Alert<Object> okQuestion(@Nonnull LocalizeValue textValue) {
+  public static Alert<Object> okQuestion(LocalizeValue textValue) {
     return okTemplate(textValue, Alert::asQuestion);
   }
-
-  @Nonnull
-  private static Alert<Object> okTemplate(@Nonnull LocalizeValue text, Function<Alert<Object>, Alert<Object>> levelSet) {
+  private static Alert<Object> okTemplate(LocalizeValue text, Function<Alert<Object>, Alert<Object>> levelSet) {
     Alert<Object> builder = Alert.create();
     levelSet.apply(builder);
     builder.text(text);
@@ -81,8 +64,6 @@ public final class Alerts {
     builder.asExitButton();
     return builder;
   }
-
-  @Nonnull
   public static Alert<Boolean> okCancel() {
     Alert<Boolean> builder = Alert.<Boolean>create();
 
@@ -94,8 +75,6 @@ public final class Alerts {
 
     return builder;
   }
-
-  @Nonnull
   public static Alert<Boolean> yesNo() {
     Alert<Boolean> builder = Alert.<Boolean>create();
 
@@ -107,8 +86,6 @@ public final class Alerts {
 
     return builder;
   }
-
-  @Nonnull
   public static Alert<ThreeState> yesNoCancel() {
     Alert<ThreeState> builder = Alert.<ThreeState>create();
 

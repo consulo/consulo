@@ -18,7 +18,6 @@ package consulo.localize.internal;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -35,30 +34,24 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
 
     private final LocalizeKey myLocalizeKey;
 
-    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
+    public DefaultLocalizeValue(LocalizeKey localizeKey) {
         this(localizeKey, ourEmptyArgs);
     }
 
-    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
+    public DefaultLocalizeValue(LocalizeKey localizeKey, Object... args) {
         super(args);
         myLocalizeKey = localizeKey;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return myLocalizeKey.toString();
     }
-
-    @Nonnull
     @Override
     public Optional<LocalizeKey> getKey() {
         return Optional.of(myLocalizeKey);
     }
-
-    @Nonnull
     @Override
-    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    protected Map.Entry<Locale, String> getUnformattedText(LocalizeManager localizeManager) {
         return localizeManager.getUnformattedText(myLocalizeKey);
     }
 

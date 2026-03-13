@@ -18,8 +18,7 @@ package consulo.ui;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -32,11 +31,9 @@ import java.util.function.Function;
  * @since 2019-04-26
  */
 public interface TextBoxWithExpandAction extends TextBox {
-  @Nonnull
-  static TextBoxWithExpandAction create(@Nullable Image editButtonImage, @Nonnull String dialogTitle, @Nonnull Function<String, List<String>> parser, @Nonnull Function<List<String>, String> joiner) {
+  static TextBoxWithExpandAction create(@Nullable Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
     return UIInternal.get()._Components_textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
   }
 
-  @Nonnull
-  TextBoxWithExpandAction withDialogTitle(@Nonnull String text);
+  TextBoxWithExpandAction withDialogTitle(String text);
 }

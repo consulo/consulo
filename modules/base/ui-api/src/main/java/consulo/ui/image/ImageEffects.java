@@ -20,7 +20,6 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -29,8 +28,7 @@ import java.util.function.Consumer;
  * @since 2018-05-06
  */
 public final class ImageEffects {
-  @Nonnull
-  public static Image layered(@Nonnull Image... images) {
+  public static Image layered(Image... images) {
     if (images.length == 0) {
       throw new IllegalArgumentException("empty array");
     }
@@ -39,14 +37,10 @@ public final class ImageEffects {
     }
     return UIInternal.get()._ImageEffects_layered(images);
   }
-
-  @Nonnull
-  public static Image resize(@Nonnull Image original, int widthWithHeight) {
+  public static Image resize(Image original, int widthWithHeight) {
     return resize(original, widthWithHeight, widthWithHeight);
   }
-
-  @Nonnull
-  public static Image resize(@Nonnull Image original, int width, int height) {
+  public static Image resize(Image original, int width, int height) {
     if (original.getHeight() == height && original.getWidth() == width) {
       return original;
     }
@@ -56,23 +50,16 @@ public final class ImageEffects {
   /**
    * Return copy image with scaling. {@link Image#getHeight} and {@link Image#getWidth()} will return originalValue * scale
    */
-  @Nonnull
-  public static Image resize(@Nonnull Image original, float scale) {
+  public static Image resize(Image original, float scale) {
     return UIInternal.get()._ImageEffects_resize(original, scale);
   }
-
-  @Nonnull
-  public static Image transparent(@Nonnull Image original) {
+  public static Image transparent(Image original) {
     return transparent(original, .5f);
   }
-
-  @Nonnull
-  public static Image transparent(@Nonnull Image original, float alpha) {
+  public static Image transparent(Image original, float alpha) {
     return UIInternal.get()._ImageEffects_transparent(original, alpha);
   }
-
-  @Nonnull
-  public static Image grayed(@Nonnull Image original) {
+  public static Image grayed(Image original) {
     return UIInternal.get()._ImageEffects_grayed(original);
   }
 
@@ -80,27 +67,20 @@ public final class ImageEffects {
    * Return composize image, where height is max of i0&i1, and width is sum of both
    * Return will be displayed like [i0][i1]
    */
-  @Nonnull
-  public static Image appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+  public static Image appendRight(Image i0, Image i1) {
     return UIInternal.get()._ImageEffects_appendRight(i0, i1);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use Image#empty")
   public static Image empty(int widthAndHeight) {
     return Image.empty(widthAndHeight, widthAndHeight);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use Image#empty")
   public static Image empty(int width, int height) {
     return Image.empty(width, height);
   }
-
-  @Nonnull
-  public static Image canvas(int width, int height, @Nonnull Consumer<Canvas2D> consumer) {
+  public static Image canvas(int width, int height, Consumer<Canvas2D> consumer) {
     return UIInternal.get()._ImageEffects_canvas(width, height, consumer);
   }
 
@@ -108,26 +88,19 @@ public final class ImageEffects {
    * Create image, where text will paint in lower right corner.
    * FIXME [VISTALL] This is temporary method, since canvas method can't paint text good
    */
-  @Nonnull
-  public static Image withText(@Nonnull Image baseImage, @Nonnull String text) {
+  public static Image withText(Image baseImage, String text) {
     return UIInternal.get()._ImageEffects_withText(baseImage, text);
   }
-
-  @Nonnull
-  public static Image colorize(@Nonnull Image baseImage, @Nonnull ColorValue colorValue) {
+  public static Image colorize(Image baseImage, ColorValue colorValue) {
     return UIInternal.get()._ImageEffects_colorize(baseImage, colorValue);
   }
-
-  @Nonnull
-  public static Image colorFilled(int width, int heght, @Nonnull ColorValue colorValue) {
+  public static Image colorFilled(int width, int heght, ColorValue colorValue) {
     return canvas(width, heght, ctx -> {
       ctx.setFillStyle(colorValue);
       ctx.fillRect(0, 0, width, heght);
     });
   }
-
-  @Nonnull
-  public static Image twoColorFilled(int width, int heght, @Nonnull ColorValue colorValue1, @Nonnull ColorValue colorValue2) {
+  public static Image twoColorFilled(int width, int heght, ColorValue colorValue1, ColorValue colorValue2) {
     return canvas(width, heght, ctx -> {
       ctx.beginPath();
       ctx.setFillStyle(colorValue1);

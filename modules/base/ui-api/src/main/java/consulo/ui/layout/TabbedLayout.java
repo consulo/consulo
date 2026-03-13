@@ -20,14 +20,12 @@ import consulo.ui.PseudoComponent;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface TabbedLayout extends Layout<LayoutConstraint> {
-    @Nonnull
     static TabbedLayout create() {
         return UIInternal.get()._Layouts_tabbed();
     }
@@ -37,28 +35,19 @@ public interface TabbedLayout extends Layout<LayoutConstraint> {
      *
      * @return new tab
      */
-    @Nonnull
     Tab createTab();
-
-    @Nonnull
     @RequiredUIAccess
-    default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
+    default Tab addTab(Tab tab, PseudoComponent component) {
         return addTab(tab, component.getComponent());
     }
-
-    @Nonnull
     @RequiredUIAccess
-    default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
+    default Tab addTab(String tabName, PseudoComponent component) {
         return addTab(tabName, component.getComponent());
     }
-
-    @Nonnull
     @RequiredUIAccess
-    Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
-
-    @Nonnull
+    Tab addTab(Tab tab, Component component);
     @RequiredUIAccess
-    Tab addTab(@Nonnull String tabName, @Nonnull Component component);
+    Tab addTab(String tabName, Component component);
 
-    void removeTab(@Nonnull Tab tab);
+    void removeTab(Tab tab);
 }

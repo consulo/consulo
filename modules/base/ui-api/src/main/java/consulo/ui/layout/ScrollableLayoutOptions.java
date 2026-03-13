@@ -17,8 +17,6 @@ package consulo.ui.layout;
 
 import consulo.ui.ComponentOptions;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 30/10/2021
@@ -27,20 +25,14 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
   public static class Builder extends ComponentOptionsBuilder<Builder> {
     private ScrollPolicy myHorizontalScrollPolicy = ScrollPolicy.IF_NEED;
     private ScrollPolicy myVerticalScrollPolicy = ScrollPolicy.IF_NEED;
-
-    @Nonnull
-    public Builder horizontalScrollPolicy(@Nonnull ScrollPolicy horizontalScrollPolicy) {
+    public Builder horizontalScrollPolicy(ScrollPolicy horizontalScrollPolicy) {
       myHorizontalScrollPolicy = horizontalScrollPolicy;
       return this;
     }
-
-    @Nonnull
-    public Builder verticalScrollPolicy(@Nonnull ScrollPolicy verticalScrollPolicy) {
+    public Builder verticalScrollPolicy(ScrollPolicy verticalScrollPolicy) {
       myVerticalScrollPolicy = verticalScrollPolicy;
       return this;
     }
-
-    @Nonnull
     @Override
     public ScrollableLayoutOptions build() {
       return new ScrollableLayoutOptions(myBackgroundPaint, myHorizontalScrollPolicy, myVerticalScrollPolicy);
@@ -52,8 +44,6 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
     IF_NEED,
     NEVER
   }
-
-  @Nonnull
   public static Builder builder() {
     return new Builder();
   }
@@ -61,18 +51,14 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
   private final ScrollPolicy myHorizontalScrollPolicy;
   private final ScrollPolicy myVerticalScrollPolicy;
 
-  private ScrollableLayoutOptions(boolean backgroundPaint, @Nonnull ScrollPolicy horizontalScrollPolicy, @Nonnull ScrollPolicy verticalScrollPolicy) {
+  private ScrollableLayoutOptions(boolean backgroundPaint, ScrollPolicy horizontalScrollPolicy, ScrollPolicy verticalScrollPolicy) {
     super(backgroundPaint);
     myHorizontalScrollPolicy = horizontalScrollPolicy;
     myVerticalScrollPolicy = verticalScrollPolicy;
   }
-
-  @Nonnull
   public ScrollPolicy getHorizontalScrollPolicy() {
     return myHorizontalScrollPolicy;
   }
-
-  @Nonnull
   public ScrollPolicy getVerticalScrollPolicy() {
     return myVerticalScrollPolicy;
   }

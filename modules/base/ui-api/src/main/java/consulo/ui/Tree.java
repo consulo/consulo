@@ -19,32 +19,28 @@ import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
 public interface Tree<E> extends Component {
-  @Nonnull
-  static <E> Tree<E> create(@Nonnull TreeModel<E> model, @Nonnull Disposable disposable) {
+  static <E> Tree<E> create(TreeModel<E> model, Disposable disposable) {
     return create(null, model, disposable);
   }
 
-  @Nonnull
-  static <E> Tree<E> create(@Nullable E rootValue, @Nonnull TreeModel<E> model, @Nonnull Disposable disposable) {
+  static <E> Tree<E> create(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
     return UIInternal.get()._Components_tree(rootValue, model, disposable);
   }
 
   @Nullable
   TreeNode<E> getSelectedNode();
 
-  void expand(@Nonnull TreeNode<E> node);
+  void expand(TreeNode<E> node);
 
-  @Nonnull
   @SuppressWarnings("unchecked")
-  default Disposable addSelectListener(@Nonnull ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
+  default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
     return addListener((Class) TreeSelectEvent.class, listener);
   }
 }

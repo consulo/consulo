@@ -17,14 +17,12 @@ package consulo.ui.style;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
 public interface StyleColorValue extends ColorValue {
-  @Nonnull
   @Override
   default RGBColor toRGB() {
     return StyleManager.get().getCurrentStyle().getColorValue(this).toRGB();

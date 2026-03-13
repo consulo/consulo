@@ -17,14 +17,13 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.KeyboardInputDetails;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-09-10
  */
 public final class KeyPressedEvent extends KeyEvent {
-    public KeyPressedEvent(@Nonnull Component component, @Nonnull KeyboardInputDetails inputDetails) {
+    public KeyPressedEvent(Component component, KeyboardInputDetails inputDetails) {
         super(component, inputDetails);
     }
 }

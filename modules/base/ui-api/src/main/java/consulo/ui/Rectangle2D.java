@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 import java.io.Serializable;
 
 /**
@@ -24,7 +22,7 @@ import java.io.Serializable;
  * @author UNV
  * @since 2017-09-25
  */
-public record Rectangle2D(@Nonnull Point2D minPoint, @Nonnull Size2D size) implements Serializable {
+public record Rectangle2D(Point2D minPoint, Size2D size) implements Serializable {
     private static final long serialVersionUID = 4140523038283686399L;
 
     public Rectangle2D(int width, int height) {
@@ -35,7 +33,7 @@ public record Rectangle2D(@Nonnull Point2D minPoint, @Nonnull Size2D size) imple
         this(new Point2D(x, y), new Size2D(width, height));
     }
 
-    public Rectangle2D(@Nonnull Size2D size) {
+    public Rectangle2D(Size2D size) {
         this(new Point2D(), size);
     }
 

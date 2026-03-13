@@ -17,7 +17,6 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,25 +24,20 @@ import jakarta.annotation.Nonnull;
  * @since 2025-09-18
  */
 public final class SeparatorJoinedLocalizedValue2 extends AbstractJoinedLocalizedValue {
-    @Nonnull
     private final LocalizedValue mySeparator;
 
     public SeparatorJoinedLocalizedValue2(
-        @Nonnull LocalizationManager manager,
-        @Nonnull LocalizedValue separator,
-        @Nonnull LocalizedValue[] values
+        LocalizationManager manager,
+        LocalizedValue separator,
+        LocalizedValue[] values
     ) {
         super(manager, values);
         mySeparator = separator;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return super.getId() + '(' + mySeparator.getId() + ')';
     }
-
-    @Nonnull
     @Override
     protected String calcValue() {
         boolean needsSeparator = false;

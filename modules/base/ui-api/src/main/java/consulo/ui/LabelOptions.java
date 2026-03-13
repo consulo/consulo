@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 03/05/2021
@@ -24,33 +22,25 @@ import jakarta.annotation.Nonnull;
 public final class LabelOptions extends ComponentOptions {
   public static final class Builder extends ComponentOptionsBuilder<Builder> {
     private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
-
-    @Nonnull
-    public Builder horizontalAlignment(@Nonnull HorizontalAlignment alignment) {
+    public Builder horizontalAlignment(HorizontalAlignment alignment) {
       myHorizontalAlignment = alignment;
       return this;
     }
-
-    @Nonnull
     @Override
     public LabelOptions build() {
       return new LabelOptions(myBackgroundPaint, myHorizontalAlignment);
     }
   }
-
-  @Nonnull
   public static Builder builder() {
     return new Builder();
   }
 
   private final HorizontalAlignment myHorizontalAlignment;
 
-  private LabelOptions(boolean backgroundPaint, @Nonnull HorizontalAlignment horizontalAlignment) {
+  private LabelOptions(boolean backgroundPaint, HorizontalAlignment horizontalAlignment) {
     super(backgroundPaint);
     myHorizontalAlignment = horizontalAlignment;
   }
-
-  @Nonnull
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
   }

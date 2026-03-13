@@ -19,38 +19,35 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface ValueComponent<V> extends Component {
-    @Nonnull
     @SuppressWarnings("unchecked")
-    default Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
+    default Disposable addValueListener(ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
         return addListener((Class)ValueComponentEvent.class, valueListener);
     }
 
     @Nullable
     V getValue();
 
-    @Nonnull
     default V getValueOrError() {
         return Objects.requireNonNull(getValue(), "value required");
     }
 
     @RequiredUIAccess
-    default void setValue(V value) {
+    default void setValue(@Nullable V value) {
         setValue(value, true);
     }
 
     @RequiredUIAccess
-    void setValue(V value, boolean fireListeners);
+    void setValue(@Nullable V value, boolean fireListeners);
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")

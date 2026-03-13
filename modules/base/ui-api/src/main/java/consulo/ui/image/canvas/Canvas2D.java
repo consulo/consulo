@@ -4,8 +4,7 @@ import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Based on jgraphx, BSD license
@@ -25,7 +24,7 @@ public interface Canvas2D {
 
   void setGlobalAlpha(float value);
 
-  void setFont(@Nonnull Font font);
+  void setFont(Font font);
 
   void setFillStyle(@Nullable ColorValue value);
 
@@ -34,9 +33,9 @@ public interface Canvas2D {
    */
   void setStrokeStyle(@Nullable ColorValue value);
 
-  void setTextAlign(@Nonnull TextAlign textAlign);
+  void setTextAlign(TextAlign textAlign);
 
-  void setTextBaseline(@Nonnull TextBaseline baseline);
+  void setTextBaseline(TextBaseline baseline);
 
   /**
    * Saves the current state of the canvas.
@@ -84,14 +83,14 @@ public interface Canvas2D {
   /**
    * Draws the given image.
    */
-  default void drawImage(@Nonnull Image image, double x, double y) {
+  default void drawImage(Image image, double x, double y) {
     drawImage(image, x, y, image.getWidth(), image.getHeight());
   }
 
   /**
    * Draws the given image.
    */
-  void drawImage(@Nonnull Image image, double x, double y, double w, double h);
+  void drawImage(Image image, double x, double y, double w, double h);
 
   /**
    * Draws the given string.

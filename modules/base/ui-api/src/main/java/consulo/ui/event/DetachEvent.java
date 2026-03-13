@@ -17,14 +17,12 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 01/08/2021
  */
 public final class DetachEvent extends ComponentEvent<Component> {
-  public DetachEvent(@Nonnull Component component) {
+  public DetachEvent(Component component) {
     super(component);
   }
 }

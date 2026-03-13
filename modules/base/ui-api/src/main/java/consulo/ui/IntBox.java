@@ -18,28 +18,22 @@ package consulo.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-04-19
  */
 public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, HasFocus {
-    @Nonnull
     static IntBox create() {
         return create(0);
     }
-
-    @Nonnull
     static IntBox create(int value) {
         return UIInternal.get()._Components_intBox(value);
     }
 
-    void setPlaceholder(@Nonnull LocalizeValue text);
-
-    @Nonnull
-    default IntBox withPlaceholder(@Nonnull LocalizeValue text) {
+    void setPlaceholder(LocalizeValue text);
+    default IntBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
     }
@@ -47,16 +41,12 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
     default void setPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
     }
-
-    @Nonnull
     default IntBox withPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
         return this;
     }
 
     void setRange(int min, int max);
-
-    @Nonnull
     default IntBox withRange(int min, int max) {
         setRange(min, max);
         return this;

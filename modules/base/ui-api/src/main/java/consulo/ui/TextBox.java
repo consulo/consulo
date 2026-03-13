@@ -17,30 +17,24 @@ package consulo.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2016-11-19
  */
 public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent {
-    @Nonnull
     static TextBox create() {
         return create(null);
     }
-
-    @Nonnull
     static TextBox create(@Nullable String text) {
         return UIInternal.get()._Components_textBox(text == null ? "" : text);
     }
 
-    default void setPlaceholder(@Nonnull LocalizeValue text) {
+    default void setPlaceholder(LocalizeValue text) {
         // unwarranted action
     }
-
-    @Nonnull
-    default TextBox withPlaceholder(@Nonnull LocalizeValue text) {
+    default TextBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
     }
@@ -49,8 +43,6 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     default void setPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
     }
-
-    @Nonnull
     @Deprecated
     default TextBox withPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
@@ -60,8 +52,6 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     default void setVisibleLength(int columns) {
         // unwarranted action
     }
-
-    @Nonnull
     default TextBox withVisibleLength(int columns) {
         setVisibleLength(columns);
         return this;

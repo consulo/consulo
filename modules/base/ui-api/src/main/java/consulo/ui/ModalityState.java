@@ -17,24 +17,20 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/12/2021
  */
 public interface ModalityState {
-  @Nonnull
   static ModalityState any() {
     return UIInternal.get()._ModalityState_any();
   }
-
-  @Nonnull
   static ModalityState nonModal() {
     return UIInternal.get()._ModalityState_nonModal();
   }
 
   Key<ModalityState> KEY = Key.create(ModalityState.class);
 
-  boolean dominates(@Nonnull ModalityState anotherState);
+  boolean dominates(ModalityState anotherState);
 }

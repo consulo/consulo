@@ -16,7 +16,6 @@
 package consulo.ui.event.details;
 
 import consulo.ui.Point2D;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class InputDetails {
    */
   private final Point2D myPositionOnScreen;
 
-  public InputDetails(@Nonnull Point2D position, @Nonnull Point2D positionOnScreen) {
+  public InputDetails(Point2D position, Point2D positionOnScreen) {
     myPosition = position;
     myPositionOnScreen = positionOnScreen;
   }

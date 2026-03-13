@@ -19,15 +19,13 @@ import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
 public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
-    @Nonnull
-    static TwoComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
+    static TwoComponentSplitLayout create(SplitLayoutPosition position) {
         return UIInternal.get()._TwoComponentSplitLayout_create(position);
     }
 
@@ -37,22 +35,18 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     void setProportion(int percent);
 
     @RequiredUIAccess
-    @Nonnull
-    default TwoComponentSplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
+    default TwoComponentSplitLayout setFirstComponent(PseudoComponent component) {
         return setFirstComponent(component.getComponent());
     }
 
     @RequiredUIAccess
-    @Nonnull
-    TwoComponentSplitLayout setFirstComponent(@Nonnull Component component);
+    TwoComponentSplitLayout setFirstComponent(Component component);
 
     @RequiredUIAccess
-    @Nonnull
-    default TwoComponentSplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
+    default TwoComponentSplitLayout setSecondComponent(PseudoComponent component) {
         return setSecondComponent(component.getComponent());
     }
 
     @RequiredUIAccess
-    @Nonnull
-    TwoComponentSplitLayout setSecondComponent(@Nonnull Component component);
+    TwoComponentSplitLayout setSecondComponent(Component component);
 }

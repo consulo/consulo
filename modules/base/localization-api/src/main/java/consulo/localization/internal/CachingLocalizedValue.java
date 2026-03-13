@@ -16,22 +16,20 @@
 package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2025-11-18
  */
 public abstract class CachingLocalizedValue extends AbstractLocalizedValue {
-    @Nonnull
     protected final LocalizationManager myLocalizationManager;
 
-    private String myText;
+    private String myText = "";
     private int myHashCode = -1;
 
     private byte myModificationCount = -1;
 
-    protected CachingLocalizedValue(@Nonnull LocalizationManager manager) {
+    protected CachingLocalizedValue(LocalizationManager manager) {
         myLocalizationManager = manager;
     }
 
@@ -39,8 +37,6 @@ public abstract class CachingLocalizedValue extends AbstractLocalizedValue {
     public byte getModificationCount() {
         return myModificationCount;
     }
-
-    @Nonnull
     @Override
     public final String getValue() {
         if (myModificationCount == myLocalizationManager.getModificationCount()) {
@@ -54,7 +50,6 @@ public abstract class CachingLocalizedValue extends AbstractLocalizedValue {
         return newText;
     }
 
-    @Nonnull
     protected abstract String calcValue();
 
     @Override

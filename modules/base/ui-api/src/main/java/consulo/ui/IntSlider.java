@@ -17,31 +17,22 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 11/29/2020
  */
 public interface IntSlider extends ValueComponent<Integer>, HasFocus {
-  @Nonnull
   static IntSlider create() {
     return create(0);
   }
-
-  @Nonnull
   static IntSlider create(int value) {
     return UIInternal.get()._Components_intSlider(0, 100, value);
   }
-
-  @Nonnull
   static IntSlider create(int min, int max, int value) {
     return UIInternal.get()._Components_intSlider(min, max, value);
   }
 
   void setRange(int min, int max);
-
-  @Nonnull
   default IntSlider withRange(int min, int max) {
     setRange(min, max);
     return this;

@@ -17,7 +17,6 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,16 +29,14 @@ import static org.mockito.Mockito.when;
  */
 public class CachingLocalizedValueTest {
     class MyLocalizedValue implements LocalizedValue {
-        public String myValue;
+        public String myValue = "";
         public int myHashCode;
 
-        @Nonnull
         @Override
         public String getId() {
             return "";
         }
 
-        @Nonnull
         @Override
         public String getValue() {
             return myValue;

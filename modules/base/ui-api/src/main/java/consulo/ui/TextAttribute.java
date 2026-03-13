@@ -20,7 +20,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +45,9 @@ public final class TextAttribute {
   public static final TextAttribute GRAY = new TextAttribute(STYLE_PLAIN, StandardColors.GRAY);
 
   private final int myStyle;
+  @Nullable
   private final ColorValue myBackgroundColor;
+  @Nullable
   private final ColorValue myForegroundColor;
 
   public TextAttribute(int style, @Nullable ColorValue foregroundColor) {

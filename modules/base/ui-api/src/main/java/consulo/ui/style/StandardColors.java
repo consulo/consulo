@@ -17,7 +17,6 @@ package consulo.ui.style;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -48,8 +47,6 @@ public enum StandardColors implements StyleColorValue {
   StandardColors(ColorValue staticValue) {
     myStaticValue = staticValue;
   }
-
-  @Nonnull
   public ColorValue getStaticValue() {
     return myStaticValue;
   }

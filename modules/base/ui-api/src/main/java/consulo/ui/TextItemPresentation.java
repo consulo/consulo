@@ -19,45 +19,39 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface TextItemPresentation {
-  @Nonnull
   default TextItemPresentation withIcon(@Nullable Image image) {
     // unwarranted action
     return this;
   }
-
-  @Nonnull
-  default TextItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
+  default TextItemPresentation withAntialiasingType(AntialiasingType type) {
     // unwarranted action
     return this;
   }
-
-  @Nonnull
-  default TextItemPresentation withFont(@Nonnull Font font) {
+  default TextItemPresentation withFont(Font font) {
     // unwarranted action
     return this;
   }
 
   void clearText();
 
-  default void append(@Nonnull String text) {
+  default void append(String text) {
     append(text, TextAttribute.REGULAR);
   }
 
-  default void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+  default void append(String text, TextAttribute textAttribute) {
     append(LocalizeValue.of(text), textAttribute);
   }
 
-  default void append(@Nonnull LocalizeValue text) {
+  default void append(LocalizeValue text) {
     append(text, TextAttribute.REGULAR);
   }
 
-  void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute);
+  void append(LocalizeValue text, TextAttribute textAttribute);
 }

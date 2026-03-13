@@ -19,8 +19,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StyleManager;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 11/29/2020
@@ -33,8 +31,6 @@ public class LightDarkColorValue implements ColorValue {
     myLightColorValue = lightColorValue;
     myDarkColorValue = darkColorValue;
   }
-
-  @Nonnull
   @Override
   public RGBColor toRGB() {
     return StyleManager.get().getCurrentStyle().isDark() ? myDarkColorValue.toRGB() : myLightColorValue.toRGB();

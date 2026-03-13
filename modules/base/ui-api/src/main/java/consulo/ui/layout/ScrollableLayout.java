@@ -17,20 +17,16 @@ package consulo.ui.layout;
 
 import consulo.ui.Component;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-07-03
  */
 public interface ScrollableLayout extends Layout<LayoutConstraint> {
-    @Nonnull
-    static ScrollableLayout create(@Nonnull Component component) {
+    static ScrollableLayout create(Component component) {
         return create(component, ScrollableLayoutOptions.builder().build());
     }
-
-    @Nonnull
-    static ScrollableLayout create(@Nonnull Component component, @Nonnull ScrollableLayoutOptions options) {
+    static ScrollableLayout create(Component component, ScrollableLayoutOptions options) {
         return UIInternal.get()._ScrollLayout_create(component, options);
     }
 }

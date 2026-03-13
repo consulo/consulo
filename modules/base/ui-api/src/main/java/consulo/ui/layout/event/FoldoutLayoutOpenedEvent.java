@@ -18,8 +18,7 @@ package consulo.ui.layout.event;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.layout.FoldoutLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,11 +27,11 @@ import jakarta.annotation.Nullable;
 public final class FoldoutLayoutOpenedEvent extends ComponentEvent<FoldoutLayout> {
     private final boolean myOpened;
 
-    public FoldoutLayoutOpenedEvent(@Nonnull FoldoutLayout component, boolean opened) {
+    public FoldoutLayoutOpenedEvent(FoldoutLayout component, boolean opened) {
         this(component, null, opened);
     }
 
-    public FoldoutLayoutOpenedEvent(@Nonnull FoldoutLayout component, @Nullable InputDetails inputDetails, boolean opened) {
+    public FoldoutLayoutOpenedEvent(FoldoutLayout component, @Nullable InputDetails inputDetails, boolean opened) {
         super(component, inputDetails);
         myOpened = opened;
     }

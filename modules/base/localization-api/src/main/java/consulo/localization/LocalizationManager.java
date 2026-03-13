@@ -17,8 +17,7 @@ package consulo.localization;
 
 import consulo.disposer.Disposable;
 import consulo.localization.internal.LocalizationManagerHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
@@ -29,7 +28,6 @@ import java.util.Set;
  * @since 2019-04-11
  */
 public interface LocalizationManager {
-    @Nonnull
     static LocalizationManager get() {
         return LocalizationManagerHolder.get();
     }
@@ -40,41 +38,29 @@ public interface LocalizationManager {
      * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
      * @return localize value, if key not found, or parsing error return localize value like parameter
      */
-    @Nonnull
-    LocalizedValue fromStringKey(@Nonnull String localizeKeyInfo);
+    LocalizedValue fromStringKey(String localizeKeyInfo);
 
     /**
      * Return unformatted localize text
      *
      * @throws IllegalArgumentException if key is invalid
      */
-    @Nonnull
-    Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizationKey key);
-
-    @Nonnull
-    Locale parseLocale(@Nonnull String localeText);
+    Map.Entry<Locale, String> getUnformattedText(LocalizationKey key);
+    Locale parseLocale(String localeText);
 
     default void setLocale(@Nullable Locale locale) {
         setLocale(locale, true);
     }
 
     void setLocale(@Nullable Locale locale, boolean fireEvents);
-
-    @Nonnull
     Locale getLocale();
-
-    @Nonnull
     Locale getAutoDetectedLocale();
 
     boolean isDefaultLocale();
-
-    @Nonnull
     Set<Locale> getAvailableLocales();
 
-    void addListener(@Nonnull LocalizationManagerListener listener, @Nonnull Disposable disposable);
+    void addListener(LocalizationManagerListener listener, Disposable disposable);
 
     byte getModificationCount();
-
-    @Nonnull
     String formatText(String unformattedText, Locale locale, Object... args);
 }

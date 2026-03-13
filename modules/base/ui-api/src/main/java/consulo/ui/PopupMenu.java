@@ -17,15 +17,12 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 17/08/2021
  */
 public interface PopupMenu extends Menu {
-  @Nonnull
-  static PopupMenu create(@Nonnull Component target) {
+  static PopupMenu create(Component target) {
     return UIInternal.get()._PopupMenu_create(target);
   }
 

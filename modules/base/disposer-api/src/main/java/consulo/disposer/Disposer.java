@@ -17,8 +17,7 @@ package consulo.disposer;
 
 import consulo.disposer.internal.DisposerInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class Disposer {
   private static final DisposerInternal ourInternal = DisposerInternal.ourInstance;
@@ -28,38 +27,38 @@ public class Disposer {
   }
 
   @Nullable
-  public static Disposable get(@Nonnull String key) {
+  public static Disposable get(String key) {
     return ourInternal.get(key);
   }
 
   /**
    * @throws IllegalArgumentException if child already registered to parent
    */
-  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public static void register(Disposable parent, Disposable child) {
     register(parent, child, null);
   }
 
-  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key) {
+  public static void register(Disposable parent, Disposable child, @Nullable String key) {
     ourInternal.register(parent, child, key);
   }
 
-  public static boolean isDisposed(@Nonnull Disposable disposable) {
+  public static boolean isDisposed(Disposable disposable) {
     return ourInternal.isDisposed(disposable);
   }
 
-  public static Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+  public static Throwable getDisposalTrace(Disposable disposable) {
     return ourInternal.getDisposalTrace(disposable);
   }
 
-  public static boolean isDisposing(@Nonnull Disposable disposable) {
+  public static boolean isDisposing(Disposable disposable) {
     return ourInternal.isDisposing(disposable);
   }
 
-  public static void dispose(@Nonnull Disposable disposable) {
+  public static void dispose(Disposable disposable) {
     dispose(disposable, true);
   }
 
-  public static void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
+  public static void dispose(Disposable disposable, boolean processUnregistered) {
     ourInternal.dispose(disposable, processUnregistered);
   }
 
@@ -67,11 +66,11 @@ public class Disposer {
    * @return object registered on {@code parentDisposable} which is equal to object, or {@code null} if not found
    */
   @Nullable
-  public static <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
+  public static <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
     return ourInternal.findRegisteredObject(parentDisposable, object);
   }
 
-  public static boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public static boolean tryRegister(Disposable parent, Disposable child) {
     return ourInternal.tryRegister(parent, child);
   }
 

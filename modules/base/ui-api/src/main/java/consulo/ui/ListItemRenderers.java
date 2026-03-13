@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2016-06-12
@@ -26,7 +24,6 @@ public class ListItemRenderers {
         (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
 
     @SuppressWarnings("unchecked")
-    @Nonnull
     public static <E> TextItemRenderer<E> defaultRenderer() {
         return DEFAULT_RENDERER;
     }

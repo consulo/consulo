@@ -15,7 +15,7 @@
  */
 package consulo.localization;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 import java.util.Locale;

@@ -17,7 +17,6 @@ package consulo.ui.font;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -25,19 +24,12 @@ import java.util.Set;
  * @since 2020-06-04
  */
 public interface FontManager {
-  @Nonnull
   static FontManager get() {
     return UIInternal.get()._FontManager_get();
   }
-
-  @Nonnull
   Set<String> getAvailableFontNames();
-
-  @Nonnull
-  default Font createFont(@Nonnull String fontName, int fontSize) {
+  default Font createFont(String fontName, int fontSize) {
     return createFont(fontName, fontSize, 0);
   }
-
-  @Nonnull
-  Font createFont(@Nonnull String fontName, int fontSize, int fontStyle);
+  Font createFont(String fontName, int fontSize, int fontStyle);
 }

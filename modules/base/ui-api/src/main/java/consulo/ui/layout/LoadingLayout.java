@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
@@ -31,8 +30,7 @@ import java.util.function.Supplier;
  * @since 23/04/2023
  */
 public interface LoadingLayout<InnerLayout> extends Layout<LayoutConstraint> {
-    @Nonnull
-    static <L extends Layout> LoadingLayout<L> create(@Nonnull L innerLayout, @Nonnull Disposable parent) {
+    static <L extends Layout> LoadingLayout<L> create(L innerLayout, Disposable parent) {
         return UIInternal.get()._Layouts_LoadingLayout(innerLayout, parent);
     }
 
@@ -40,18 +38,18 @@ public interface LoadingLayout<InnerLayout> extends Layout<LayoutConstraint> {
      * Execute valueGetter in another thread, and when value is got - uiSetter will be invoked
      */
     @RequiredUIAccess
-    <Value> Future<Value> startLoading(@Nonnull Supplier<Value> valueGetter,
-                                       @RequiredUIAccess @Nonnull BiConsumer<InnerLayout, Value> uiSetter);
+    <Value> Future<Value> startLoading(Supplier<Value> valueGetter,
+                                       @RequiredUIAccess BiConsumer<InnerLayout, Value> uiSetter);
 
     @RequiredUIAccess
     void startLoading();
 
     @RequiredUIAccess
-    void startLoading(@Nonnull LocalizeValue loadingText);
+    void startLoading(LocalizeValue loadingText);
 
     @RequiredUIAccess
-    void stopLoading(@RequiredUIAccess @Nonnull Consumer<InnerLayout> consumer);
+    void stopLoading(@RequiredUIAccess Consumer<InnerLayout> consumer);
 
     @RequiredUIAccess
-    void setLoadingText(@Nonnull LocalizeValue loadingText);
+    void setLoadingText(LocalizeValue loadingText);
 }

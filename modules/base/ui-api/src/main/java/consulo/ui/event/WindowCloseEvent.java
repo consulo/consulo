@@ -17,19 +17,18 @@ package consulo.ui.event;
 
 import consulo.ui.Window;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-09-11
  */
 public final class WindowCloseEvent extends ComponentEvent<Window> {
-    public WindowCloseEvent(@Nonnull Window component) {
+    public WindowCloseEvent(Window component) {
         super(component);
     }
 
-    public WindowCloseEvent(@Nonnull Window component, @Nullable InputDetails inputDetails) {
+    public WindowCloseEvent(Window component, @Nullable InputDetails inputDetails) {
         super(component, inputDetails);
     }
 }

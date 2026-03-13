@@ -16,7 +16,6 @@
 package consulo.ui.event.details;
 
 import consulo.ui.Point2D;
-import jakarta.annotation.Nonnull;
 
 import java.util.EnumSet;
 
@@ -33,12 +32,10 @@ public class MouseInputDetails extends ModifiedInputDetails {
 
   private final MouseButton myButton;
 
-  public MouseInputDetails(@Nonnull Point2D position, @Nonnull Point2D positionOnScreen, @Nonnull EnumSet<Modifier> modifiers, @Nonnull MouseButton button) {
+  public MouseInputDetails(Point2D position, Point2D positionOnScreen, EnumSet<Modifier> modifiers, MouseButton button) {
     super(position, positionOnScreen, modifiers);
     myButton = button;
   }
-
-  @Nonnull
   public MouseButton getButton() {
     return myButton;
   }

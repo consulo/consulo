@@ -15,20 +15,16 @@
  */
 package consulo.disposer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2023-11-05
  */
 public interface AutoDisposable extends Disposable, AutoCloseable {
-  @Nonnull
   static AutoDisposable newAutoDisposable() {
     return newAutoDisposable(null);
   }
-
-  @Nonnull
   static AutoDisposable newAutoDisposable(@Nullable String debugName) {
     return new AutoDisposable() {
       @Override

@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.disposer;
 
-import jakarta.annotation.Nonnull;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -15,7 +13,7 @@ import java.lang.ref.WeakReference;
 public abstract class WeakReferenceDisposable<T> extends WeakReference<T> implements Disposable {
   private static final ReferenceQueue<Object> ourRefQueue = new ReferenceQueue<>();
 
-  public WeakReferenceDisposable(@Nonnull T referent) {
+  public WeakReferenceDisposable(T referent) {
     super(referent, ourRefQueue);
     reapCollectedRefs();
   }
@@ -28,7 +26,7 @@ public abstract class WeakReferenceDisposable<T> extends WeakReference<T> implem
     disposeReferent(referent);
   }
 
-  protected abstract void disposeReferent(@Nonnull T referent);
+  protected abstract void disposeReferent(T referent);
 
   private static void reapCollectedRefs() {
     while (true) {

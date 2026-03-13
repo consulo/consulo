@@ -18,8 +18,6 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.TableModel;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-09-15
@@ -27,8 +25,7 @@ import jakarta.annotation.Nonnull;
  * Table without scrolllable layout parent header can be not painted
  */
 public interface Table<E> extends Component {
-  @Nonnull
-  static <T> Table<T> create(@Nonnull Iterable<? extends TableColumn<?, T>> columns, @Nonnull TableModel<T> model) {
+  static <T> Table<T> create(Iterable<? extends TableColumn<?, T>> columns, TableModel<T> model) {
     return UIInternal.get()._Table_create(columns, model);
   }
 }

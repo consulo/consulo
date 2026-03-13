@@ -18,8 +18,6 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-10-06
@@ -30,33 +28,30 @@ public interface TaskBar {
   }
 
   interface ProgressScheme {
-    @Nonnull
     ColorValue getOkColor();
-
-    @Nonnull
     ColorValue getErrorColor();
   }
 
-  default void requestFocus(@Nonnull Window window) {
+  default void requestFocus(Window window) {
   }
 
-  default boolean setProgress(@Nonnull Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+  default boolean setProgress(Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
     return false;
   }
 
-  default boolean hideProgress(@Nonnull Window window, Object processId) {
+  default boolean hideProgress(Window window, Object processId) {
     return false;
   }
 
-  default void setTextBadge(@Nonnull Window window, String text) {
+  default void setTextBadge(Window window, String text) {
   }
 
-  default void setErrorBadge(@Nonnull Window window, String text) {
+  default void setErrorBadge(Window window, String text) {
   }
 
-  default void setOkBadge(@Nonnull Window window, boolean visible) {
+  default void setOkBadge(Window window, boolean visible) {
   }
 
-  default void requestAttention(@Nonnull Window window, boolean critical) {
+  default void requestAttention(Window window, boolean critical) {
   }
 }

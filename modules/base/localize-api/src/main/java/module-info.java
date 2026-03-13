@@ -2,6 +2,9 @@
  * @author VISTALL
  * @since 2020-10-19
  */
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.localize.api {
     requires transitive consulo.annotation;
     requires transitive consulo.disposer.api;
