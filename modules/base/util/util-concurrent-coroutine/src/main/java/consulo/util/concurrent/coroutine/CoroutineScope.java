@@ -111,7 +111,6 @@ public class CoroutineScope extends CoroutineEnvironment {
         aScope.checkThrowErrors();
     }
 
-    @Nonnull
     public static Continuation<?> launchAsync(CoroutineContext context, Supplier<Coroutine<?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 
