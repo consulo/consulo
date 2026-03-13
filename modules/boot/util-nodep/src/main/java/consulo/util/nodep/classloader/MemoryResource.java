@@ -4,6 +4,7 @@ package consulo.util.nodep.classloader;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.io.UnsyncByteArrayInputStream;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,7 @@ public class MemoryResource extends Resource {
     return myContent;
   }
 
+  @Nullable
   @Override
   public String getValue(Attribute key) {
     return myAttributes != null ? myAttributes.get(key) : null;

@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.DataInputOutputUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -66,21 +68,20 @@ class FileLoader extends Loader {
   }
 
   private static class DirEntry {
-    static final int[] empty = new int[0];
-    volatile int[] childrenNameHashes;
+    volatile int @Nullable [] myChildrenNameHashes = null;
+    volatile DirEntry @Nullable [] myChildDirectories = null;
+    final int myNameHash;
+    final String myName;
 
-    volatile DirEntry[] childrenDirectories;
-    final int nameHash;
-    final String name;
-
-    DirEntry(int _nameHash, String _name) {
-      nameHash = _nameHash;
-      name = _name;
+    DirEntry(int nameHash, String name) {
+      myNameHash = nameHash;
+      myName = name;
     }
   }
 
-  private final DirEntry root = new DirEntry(0, null);
+  private final DirEntry root = new DirEntry(0, "");
 
+  @Nullable
   @Override
   Resource getResource(String name) {
     try {
@@ -115,16 +116,15 @@ class FileLoader extends Loader {
     return null;
   }
 
-  
   private static DirEntry findOrCreateNextDirEntry(DirEntry lastEntry, String name, int prevIndex, int nameEnd, int nameHash) {
     DirEntry nextEntry = null;
-    DirEntry[] directories = lastEntry.childrenDirectories; // volatile read
+    DirEntry[] directories = lastEntry.myChildDirectories; // volatile read
 
     if (directories != null) {
       //noinspection ForLoopReplaceableByForEach
       for (int index = 0, len = directories.length; index < len; ++index) {
         DirEntry previouslyScannedDir = directories[index];
-        if (previouslyScannedDir.nameHash == nameHash && previouslyScannedDir.name.regionMatches(0, name, prevIndex, nameEnd - prevIndex)) {
+        if (previouslyScannedDir.myNameHash == nameHash && previouslyScannedDir.myName.regionMatches(0, name, prevIndex, nameEnd - prevIndex)) {
           nextEntry = previouslyScannedDir;
           break;
         }
@@ -142,7 +142,7 @@ class FileLoader extends Loader {
       else {
         newChildrenDirectories = new DirEntry[]{nextEntry};
       }
-      lastEntry.childrenDirectories = newChildrenDirectories; // volatile write with new copy of data
+      lastEntry.myChildDirectories = newChildrenDirectories; // volatile write with new copy of data
     }
 
     lastEntry = nextEntry;
@@ -150,7 +150,7 @@ class FileLoader extends Loader {
   }
 
   private boolean nameHashIsPresentInChildren(DirEntry lastEntry, String name, int prevIndex, int nameHash) {
-    int[] childrenNameHashes = lastEntry.childrenNameHashes; // volatile read
+    int[] childrenNameHashes = lastEntry.myChildrenNameHashes; // volatile read
 
     if (childrenNameHashes == null) {
       String[] list = (prevIndex != 0 ? new File(myRootDir, name.substring(0, prevIndex)) : myRootDir).list();
@@ -162,9 +162,9 @@ class FileLoader extends Loader {
         }
       }
       else {
-        childrenNameHashes = DirEntry.empty;
+        childrenNameHashes = ArrayUtilRt.EMPTY_INT_ARRAY;
       }
-      lastEntry.childrenNameHashes = childrenNameHashes; // volatile write
+      lastEntry.myChildrenNameHashes = childrenNameHashes; // volatile write
     }
 
     for (int childNameHash : childrenNameHashes) {
@@ -183,7 +183,7 @@ class FileLoader extends Loader {
   private static final Boolean doFsActivityLogging = false;
   private static final int ourVersion = 1;
 
-  private ClasspathCache.LoaderData tryReadFromIndex() {
+  private ClasspathCache.@Nullable LoaderData tryReadFromIndex() {
     if (!myConfiguration.myCanHavePersistentIndex) return null;
     long started = System.nanoTime();
 
@@ -248,12 +248,10 @@ class FileLoader extends Loader {
     }
   }
 
-  
   private File getIndexFileFile() {
     return new File(myRootDir, "classpath.index");
   }
 
-  
   @Override
   public ClasspathCache.LoaderData buildData() {
     ClasspathCache.LoaderData loaderData = tryReadFromIndex();
@@ -382,7 +380,7 @@ class FileLoader extends Loader {
     return h;
   }
 
-  private static class UnsyncDataOutputStream extends java.io.DataOutputStream {
+  private static class UnsyncDataOutputStream extends DataOutputStream {
     UnsyncDataOutputStream(OutputStream out) {
       super(out);
     }

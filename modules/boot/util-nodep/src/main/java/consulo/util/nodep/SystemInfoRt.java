@@ -24,18 +24,13 @@ package consulo.util.nodep;
 @SuppressWarnings({"HardCodedStringLiteral", "UtilityClassWithoutPrivateConstructor"})
 public class SystemInfoRt {
   public static final String OS_NAME = System.getProperty("os.name");
-  public static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
   public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
-  public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
   protected static final String _OS_NAME = OS_NAME.toLowerCase();
   public static final boolean isWindows = _OS_NAME.startsWith("windows");
   public static final boolean isMac = _OS_NAME.startsWith("mac");
   public static final boolean isLinux = _OS_NAME.startsWith("linux");
   public static final boolean isUnix = !isWindows;
-
-  public static final boolean isFileSystemCaseSensitive =
-    isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
 
   public static boolean isJavaVersionAtLeast(int major) {
     return JavaVersion.current().isAtLeast(major);

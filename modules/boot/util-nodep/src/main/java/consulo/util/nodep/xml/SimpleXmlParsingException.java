@@ -22,17 +22,6 @@ import java.io.IOException;
  * @since 2019-07-17
  */
 public class SimpleXmlParsingException extends IOException {
-  public SimpleXmlParsingException() {
-  }
-
-  public SimpleXmlParsingException(String message) {
-    super(message);
-  }
-
-  public SimpleXmlParsingException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
   public SimpleXmlParsingException(Throwable cause) {
     super(cause);
   }

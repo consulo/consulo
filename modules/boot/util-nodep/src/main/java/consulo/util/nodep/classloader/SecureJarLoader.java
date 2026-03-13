@@ -3,6 +3,7 @@ package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +20,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 class SecureJarLoader extends JarLoader {
-  private ProtectionDomain myProtectionDomain;
+  @Nullable
+  private ProtectionDomain myProtectionDomain = null;
   private final Object myProtectionDomainMonitor = new Object();
 
-  SecureJarLoader(URL url, int index, ClassPath configuration, Set<String> fullJarIndex) throws IOException {
+  SecureJarLoader(URL url, int index, ClassPath configuration, @Nullable Set<String> fullJarIndex) throws IOException {
     super(url, index, configuration, fullJarIndex);
   }
 
@@ -81,7 +83,7 @@ class SecureJarLoader extends JarLoader {
 
     @Override
     public byte[] getBytes() throws IOException {
-      JarFile file = (JarFile)getJarFile();
+      JarFile file = getJarFile();
       InputStream stream = null;
       byte[] result;
       try {
@@ -102,7 +104,7 @@ class SecureJarLoader extends JarLoader {
       return result;
     }
 
-
+    @Nullable
     @Override
     public ProtectionDomain getProtectionDomain() {
       synchronized (myProtectionDomainMonitor) {

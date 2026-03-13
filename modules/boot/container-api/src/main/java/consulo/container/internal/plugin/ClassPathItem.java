@@ -16,6 +16,7 @@
 package consulo.container.internal.plugin;
 
 import consulo.container.plugin.PluginId;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class ClassPathItem {
     private final Set<String> myIndex;
     private final File myPath;
 
-    public ClassPathItem(File path, List<ClassPathPluginSet> pluginSets, Set<String> index) {
+    public ClassPathItem(File path, List<ClassPathPluginSet> pluginSets, @Nullable Set<String> index) {
         myPath = path;
         mySets = pluginSets;
         myIndex = index == null ? Collections.emptySet() : index;

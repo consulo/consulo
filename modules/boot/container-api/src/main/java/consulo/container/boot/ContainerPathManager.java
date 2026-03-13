@@ -17,6 +17,7 @@ package consulo.container.boot;
 
 import consulo.container.internal.PathManagerHolder;
 import consulo.util.nodep.io.FileUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +64,7 @@ public abstract class ContainerPathManager {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
 
+  @Nullable
   public Path findIconInAppHomeDirectory() {
     File appHomeDirectory = getAppHomeDirectory();
     if (!appHomeDirectory.exists()) {
@@ -72,7 +74,6 @@ public abstract class ContainerPathManager {
     Path[] svgIcon = new Path[1];
     Path[] pngIcon = new Path[1];
     try {
-
       Files.walkFileTree(appHomeDirectory.toPath(), Set.of(), 1, new SimpleFileVisitor<>() {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -115,6 +116,7 @@ public abstract class ContainerPathManager {
    * @return first that exists, or {@code null} if nothing found.
    * @see #findBinFileWithException(String)
    */
+  @Nullable
   public File findBinFile(String fileName) {
     File file = new File(getBinPath(), fileName);
     if (file.isFile()) return file;

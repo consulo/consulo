@@ -37,7 +37,7 @@ public class BootstrapClassLoaderUtil {
   private static final String CONSULO_BASE = PluginIds.CONSULO_BASE.toString();
 
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
-    StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
+    StatCollector stat = (StatCollector) Objects.requireNonNull(args.get(ContainerStartup.STAT_COLLECTOR));
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 

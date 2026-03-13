@@ -3,6 +3,7 @@ package consulo.container.plugin;
 
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -24,26 +25,31 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     throw new UnsupportedOperationException();
   }
 
+  @Nullable
   @Override
   public File getPath() {
     return null;
   }
 
+  @Nullable
   @Override
   public Path getNioPath() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getDescription() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getChangeNotes() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getName() {
     return null;
@@ -60,32 +66,37 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public PluginId[] getIncompatibleWithPlugindIds() {
+  public PluginId[] getIncompatibleWithPluginIds() {
     return PluginId.EMPTY_ARRAY;
   }
 
+  @Nullable
   @Override
   public String getVendor() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getVersion() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getPlatformVersion() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getResourceBundleBaseName() {
     return null;
   }
 
+  @Nullable
   @Override
-  public String getLocalize() {
+  public String getLocalization() {
     return null;
   }
 
@@ -99,11 +110,13 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return Collections.emptyList();
   }
 
+  @Nullable
   @Override
   public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
     return null;
   }
 
+  @Nullable
   @Override
   public ModuleLayer getModuleLayer() {
     return null;
@@ -119,6 +132,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return ArrayUtilRt.EMPTY_BYTE_ARRAY;
   }
 
+  @Nullable
   @Override
   @SuppressWarnings("unchecked")
   public <K, V> V getUserData(K key) {
@@ -136,16 +150,19 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return value;
   }
 
+  @Nullable
   @Override
   public String getVendorEmail() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getVendorUrl() {
     return null;
   }
 
+  @Nullable
   @Override
   public String getUrl() {
     return null;
@@ -186,6 +203,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return false;
   }
 
+  @Nullable
   @Override
   public String getChecksumSHA3_256() {
     return null;

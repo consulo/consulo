@@ -15,14 +15,19 @@
  */
 package consulo.container.internal.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 //@Tag("vendor")
 public class PluginVendor {
   //@Attribute("url")
+  @Nullable
   public String url;
 
   //@Attribute("email")
+  @Nullable
   public String email;
 
   //@Text
+  @Nullable
   public String name;
 }

@@ -18,6 +18,7 @@ package consulo.container.internal.plugin;
 import consulo.container.internal.ContainerLogger;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -31,16 +32,18 @@ import java.util.zip.ZipFile;
 public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
-  public static PluginDescriptorImpl loadDescriptor(File pluginPath,
-                                                    boolean isPreInstalledPath,
-                                                    ContainerLogger containerLogger) {
+  @Nullable
+  public static PluginDescriptorImpl loadDescriptor(File pluginPath, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     return loadDescriptor(pluginPath, PLUGIN_XML, isPreInstalledPath, containerLogger);
   }
 
-  public static PluginDescriptorImpl loadDescriptor(File pluginPath,
-                                                    String fileName,
-                                                    boolean isPreInstalledPath,
-                                                    ContainerLogger containerLogger) {
+  @Nullable
+  public static PluginDescriptorImpl loadDescriptor(
+      File pluginPath,
+      String fileName,
+      boolean isPreInstalledPath,
+      ContainerLogger containerLogger
+  ) {
     if (!pluginPath.isDirectory()) {
       // single jar not supported
       return null;
@@ -87,12 +90,7 @@ public class PluginDescriptorLoader {
       return null;
     }
 
-    File[] markerFiles = libDir.listFiles(new FileFilter() {
-      @Override
-      public boolean accept(File pathname) {
-        return pathname.getName().endsWith(".jar.marker");
-      }
-    });
+    File[] markerFiles = libDir.listFiles(pathname -> pathname.getName().endsWith(".jar.marker"));
 
     if (markerFiles != null && markerFiles.length == 1) {
       String simpleJarFile = markerFiles[0].getName().replace(".jar.marker", ".jar");
@@ -117,11 +115,14 @@ public class PluginDescriptorLoader {
     return null;
   }
 
-  public static PluginDescriptorImpl loadDescriptorFromJar(File jarFile,
-                                                           File pluginPath,
-                                                           String fileName,
-                                                           boolean isPreInstalledPath,
-                                                           ContainerLogger logger) {
+  @Nullable
+  public static PluginDescriptorImpl loadDescriptorFromJar(
+    File jarFile,
+    File pluginPath,
+    String fileName,
+    boolean isPreInstalledPath,
+    ContainerLogger logger
+  ) {
     try {
       ZipFile zipFile = new ZipFile(jarFile.getPath());
       try {
