@@ -17,7 +17,7 @@ package consulo.webBrowser.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -41,6 +41,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.io.Url;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -71,36 +72,40 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     @Nullable
     protected abstract WebBrowser getBrowser(@Nonnull AnActionEvent event);
 
+    @Nonnull
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
-        WebBrowser browser = getBrowser(e);
-        if (browser == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
-        }
-
-        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = ReadAction.compute(() -> doUpdate(e));
-        if (result == null) {
-            return;
-        }
-
-        String description = getTemplatePresentation().getText();
-        if (ActionPlaces.CONTEXT_TOOLBAR.equals(e.getPlace())) {
-            StringBuilder builder = new StringBuilder(description);
-            builder.append(" (");
-            Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts("WebOpenInAction");
-            boolean exists = shortcuts.length > 0;
-            if (exists) {
-                builder.append(KeymapUtil.getShortcutText(shortcuts[0]));
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+        return ReadLock.apply(i -> {
+            WebBrowser browser = getBrowser(e);
+            if (browser == null) {
+                e.getPresentation().setEnabledAndVisible(false);
+                return null;
             }
 
-            if (WebFileFilter.isFileAllowed(result.first.getFile())) {
-                builder.append(exists ? ", " : "").append("hold Shift to open URL of local file");
+            Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = doUpdate(e);
+            if (result == null) {
+                return null;
             }
-            builder.append(')');
-            description = builder.toString();
-        }
-        e.getPresentation().setText(description);
+
+            String description = getTemplatePresentation().getText();
+            if (ActionPlaces.CONTEXT_TOOLBAR.equals(e.getPlace())) {
+                StringBuilder builder = new StringBuilder(description);
+                builder.append(" (");
+                Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts("WebOpenInAction");
+                boolean exists = shortcuts.length > 0;
+                if (exists) {
+                    builder.append(KeymapUtil.getShortcutText(shortcuts[0]));
+                }
+
+                if (WebFileFilter.isFileAllowed(result.first.getFile())) {
+                    builder.append(exists ? ", " : "").append("hold Shift to open URL of local file");
+                }
+                builder.append(')');
+                description = builder.toString();
+            }
+            e.getPresentation().setText(description);
+            return null;
+        }).toCoroutine();
     }
 
     @Override
@@ -113,14 +118,15 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Nullable
+    @RequiredReadAction
     public static OpenInBrowserRequest createRequest(@Nonnull DataContext context) {
         final Editor editor = context.getData(Editor.KEY);
         if (editor != null) {
             Project project = editor.getProject();
             if (project != null && project.isInitialized()) {
-                PsiFile psiFile = ReadAction.compute(() -> context.getData(PsiFile.KEY));
+                PsiFile psiFile = context.getData(PsiFile.KEY);
                 if (psiFile == null) {
-                    psiFile = ReadAction.compute(() -> PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()));
+                    psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
                 }
                 if (psiFile != null) {
                     return new OpenInBrowserRequest(psiFile) {
@@ -140,11 +146,11 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             }
         }
         else {
-            PsiFile psiFile = ReadAction.compute(() -> context.getData(PsiFile.KEY));
+            PsiFile psiFile =context.getData(PsiFile.KEY);
             VirtualFile virtualFile = context.getData(VirtualFile.KEY);
             Project project = context.getData(Project.KEY);
             if (virtualFile != null && !virtualFile.isDirectory() && virtualFile.isValid() && project != null && project.isInitialized()) {
-                psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(virtualFile));
+                psiFile = PsiManager.getInstance(project).findFile(virtualFile);
             }
 
             if (psiFile != null) {

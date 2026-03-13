@@ -22,6 +22,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -53,14 +54,15 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   }
 
   @Nullable
+  @RequiredUIAccess
   protected final Editor getEditor() {
     Project project = getProject();
     if (project.isDisposed()) return null;
 
     FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
     Editor result = null;
-    if (fileEditor instanceof TextEditor) {
-      Editor editor = ((TextEditor)fileEditor).getEditor();
+    if (fileEditor instanceof TextEditor textEditor) {
+      Editor editor = textEditor.getEditor();
       if (ensureValidEditorFile(editor)) {
         result = editor;
       }
@@ -125,8 +127,16 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   }
 
   @Nullable
+  @Deprecated
   protected VirtualFile getSelectedFile() {
     Editor editor = getEditor();
+    if (editor == null) return null;
+    Document document = editor.getDocument();
+    return FileDocumentManager.getInstance().getFile(document);
+  }
+
+  @Nullable
+  protected VirtualFile getSelectedFile(@Nullable Editor editor) {
     if (editor == null) return null;
     Document document = editor.getDocument();
     return FileDocumentManager.getInstance().getFile(document);

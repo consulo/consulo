@@ -17,20 +17,17 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.editor.impl.internal.markup.AnalyzerStatus;
 import consulo.language.editor.impl.internal.markup.DummyUIController;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
@@ -75,17 +72,11 @@ public class FontEditorPreview implements PreviewPanel {
     }
 
     private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
-        @Override
-        public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
-            Image icon = AllIcons.General.InspectionsOK;
-            TargetAWT.to(icon).paintIcon(c, g, r.x, r.y);
-        }
-
         @RequiredReadAction
         @Nonnull
         @Override
         public AnalyzerStatus getStatus(@Nonnull Editor editor) {
-            return new AnalyzerStatus(PlatformIconGroup.generalInspectionsok(), null, null, () -> DummyUIController.INSTANCE);
+            return new AnalyzerStatus(PlatformIconGroup.generalInspectionsok(), null, null, DummyUIController.INSTANCE);
         }
     }
 

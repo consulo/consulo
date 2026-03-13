@@ -48,7 +48,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
         LocalizeValue toolTipText = failReason == null
             ? IdeLocalize.statusBarTextFileEncoding(charsetName)
             : failReason.map(text -> StringUtil.capitalize(text) + ".");
-        return new WidgetState(toolTipText, charsetName, failReason == null);
+        return new WidgetState(file, toolTipText, charsetName, failReason == null);
     }
 
     @Nullable

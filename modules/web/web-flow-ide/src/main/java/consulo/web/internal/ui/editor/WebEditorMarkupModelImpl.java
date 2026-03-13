@@ -15,55 +15,24 @@
  */
 package consulo.web.internal.ui.editor;
 
-import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorMarkupModelImpl;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.codeEditor.internal.ErrorStripeListener;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.PopupHandler;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06/12/2020
  */
-public class WebEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
-  @Nonnull
-  private final WebEditorImpl myWebEditor;
-
+public class WebEditorMarkupModelImpl extends EditorMarkupModelImpl<WebEditorImpl> implements EditorMarkupModel {
   public WebEditorMarkupModelImpl(@Nonnull WebEditorImpl webEditor) {
-    super(webEditor.getDocument());
-    myWebEditor = webEditor;
-  }
-
-  @Nonnull
-  @Override
-  public Editor getEditor() {
-    return myWebEditor;
+    super(webEditor);
   }
 
   @Override
   public void setErrorStripeVisible(boolean val) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
-
-  }
-
-  @Override
-  public ErrorStripeRenderer getErrorStripeRenderer() {
-    return null;
-  }
-
-  @Override
-  public void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent) {
 
   }
 

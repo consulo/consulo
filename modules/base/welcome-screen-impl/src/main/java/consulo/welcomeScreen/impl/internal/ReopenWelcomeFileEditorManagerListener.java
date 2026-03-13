@@ -45,7 +45,7 @@ public class ReopenWelcomeFileEditorManagerListener implements FileEditorManager
     @Override
     public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (file instanceof ConfigurationEditorVirtualFile cev && cev.getProvider() instanceof WelcomeConfigurationFileEditorProvider) {
-            myProject.getUIAccess().give(() -> {
+            myProject.getUIAccess().execute(() -> {
                 ConfigurationFileEditorManager editorManager = myProject.getApplication().getInstance(ConfigurationFileEditorManager.class);
                 editorManager.open(myProject, WelcomeConfigurationFileEditorProvider.class, Map.of());
             });

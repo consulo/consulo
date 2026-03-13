@@ -17,6 +17,7 @@ package consulo.codeEditor.internal;
 
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -24,5 +25,10 @@ import jakarta.annotation.Nonnull;
  * @since 2025-08-05
  */
 public interface ErrorStripeMarkupModel extends MarkupModel {
+    @RequiredUIAccess
+    void setErrorStripeRenderer(ErrorStripeRenderer renderer);
+
+    ErrorStripeRenderer getErrorStripeRenderer();
+
     void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
 }

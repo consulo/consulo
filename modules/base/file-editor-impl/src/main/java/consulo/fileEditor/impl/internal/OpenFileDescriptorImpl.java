@@ -195,6 +195,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
 
                     FileEditorOpenOptions options = new FileEditorOpenOptions()
                         .withFocusEditor(requestFocus)
+                        .withCurrentTab(requestFocus)
                         .withSearchForSplitter(!myUseCurrentWindow);
 
                     return FileEditorManager.getInstance(myProject)

@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.markup;
+package consulo.codeEditor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import jakarta.annotation.Nonnull;
-import java.awt.*;
 
 public interface ErrorStripeRenderer {
-  void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r);
-
-  default int getSquareSize() {
-      return HighlightDisplayLevel.getEmptyIconDim();
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  default AnalyzerStatus getStatus(@Nonnull Editor editor) {
-    return AnalyzerStatus.DEFAULT.getValue();
-  }
+    @Nonnull
+    @RequiredReadAction
+    EditorAnalyzeStatus getStatus(@Nonnull Editor editor);
 }

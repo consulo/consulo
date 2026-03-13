@@ -28,11 +28,6 @@ public interface EditorMarkupModel extends ErrorStripeMarkupModel {
   void setErrorStripeVisible(boolean val);
 
   @RequiredUIAccess
-  void setErrorStripeRenderer(ErrorStripeRenderer renderer);
-
-  ErrorStripeRenderer getErrorStripeRenderer();
-
-  @RequiredUIAccess
   void setErrorPanelPopupHandler(@Nonnull PopupHandler handler);
 
   void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider);

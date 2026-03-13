@@ -38,7 +38,7 @@ public class WelcomeProjectStartupActivity implements PostStartupActivity, DumbA
             return;
         }
 
-        uiAccess.give(() -> {
+        uiAccess.execute(() -> {
             ConfigurationFileEditorManager editorManager =
                 project.getApplication().getInstance(ConfigurationFileEditorManager.class);
             editorManager.open(project, WelcomeConfigurationFileEditorProvider.class, Map.of());

@@ -16,6 +16,7 @@
 package consulo.language.editor.impl.internal.markup;
 
 import consulo.application.util.NotNullLazyValue;
+import consulo.codeEditor.internal.EditorAnalyzeStatus;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -23,14 +24,13 @@ import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * Container containing all necessary information for rendering TrafficLightRenderer.
  * Instance is created each time <code>ErrorStripeRenderer.getStatus</code> is called.
  */
-public class AnalyzerStatus {
-    public static final NotNullLazyValue<AnalyzerStatus> DEFAULT = NotNullLazyValue.createValue(() -> new AnalyzerStatus(consulo.ui.image.Image.empty(0), null, null, () -> DummyUIController.INSTANCE));
+public class AnalyzerStatus implements EditorAnalyzeStatus {
+    public static final NotNullLazyValue<AnalyzerStatus> DEFAULT = NotNullLazyValue.createValue(() -> new AnalyzerStatus(Image.empty(0), null, null, DummyUIController.INSTANCE));
 
     public static boolean equals(@Nullable AnalyzerStatus a, @Nullable AnalyzerStatus b) {
         if (a == null && b == null) {
@@ -49,7 +49,7 @@ public class AnalyzerStatus {
             Objects.equals(a.passes, b.passes);
     }
 
-    private final consulo.ui.image.Image myIcon;
+    private final Image myIcon;
     private final String myTitle;
     private final String myDetails;
 
@@ -62,19 +62,19 @@ public class AnalyzerStatus {
 
     private boolean myShowNavigation;
 
-    private NotNullLazyValue<UIController> myControllerValue;
+    private UIController myControllerValue;
 
-    public AnalyzerStatus(consulo.ui.image.Image icon, String title, String details, Supplier<UIController> controllerCreator) {
+    public AnalyzerStatus(Image icon, String title, String details, UIController uiController) {
         myIcon = icon;
         myTitle = title;
         myDetails = details;
 
-        myControllerValue = NotNullLazyValue.createValue(controllerCreator);
+        myControllerValue = uiController;
     }
 
     @Nonnull
     public UIController getController() {
-        return myControllerValue.getValue();
+        return myControllerValue;
     }
 
     public List<StatusItem> getExpandedStatus() {
@@ -123,6 +123,7 @@ public class AnalyzerStatus {
         return this;
     }
 
+    @Override
     public Image getIcon() {
         return myIcon;
     }

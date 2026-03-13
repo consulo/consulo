@@ -475,7 +475,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         if (editor != null) {
             int index = findFileIndex(editor.getFile());
             if (index != -1) {
-                UIUtil.invokeLaterIfNeeded(() -> myTabbedPane.setSelectedIndex(index, focusEditor));
+                myTabbedPane.setSelectedIndex(index, focusEditor);
             }
         }
     }

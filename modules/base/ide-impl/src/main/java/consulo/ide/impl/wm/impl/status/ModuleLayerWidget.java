@@ -24,7 +24,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootLayerListener;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -72,7 +71,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
         }
 
         String currentLayerName = moduleRootManager.getCurrentLayerName();
-        return new WidgetState("Module Layer: " + currentLayerName, currentLayerName, true);
+        return new WidgetState(file, "Module Layer: " + currentLayerName, currentLayerName, true);
     }
 
     @Nonnull

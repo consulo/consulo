@@ -30,7 +30,8 @@ import consulo.document.util.ProperTextRange;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.hint.HintHint;
@@ -225,7 +226,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         ErrorStripeRenderer renderer = myMarkupModel.getErrorStripeRenderer();
 
         // 2px - top diff and bottom
-        return renderer != null ? renderer.getSquareSize() + JBUIScale.scale(2) * 2 : 0;
+        return renderer != null ? HighlightDisplayLevel.getEmptyIconDim() + JBUIScale.scale(2) * 2 : 0;
     }
 
     public DesktopEditorMarkupModelImpl getMarkupModel() {

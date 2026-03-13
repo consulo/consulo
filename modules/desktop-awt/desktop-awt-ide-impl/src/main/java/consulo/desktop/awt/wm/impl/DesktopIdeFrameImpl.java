@@ -442,22 +442,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
             String applicationName = FrameTitleUtil.buildTitle();
+
             TitleBuilder titleBuilder = new TitleBuilder();
-            if (Platform.current().os().isMac()) {
-                boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
-                titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
-            }
-            else {
-                titleBuilder.append(title).append(fileTitle);
 
-                // set title without app name to custom title panel
-                frame.getRootPane().putClientProperty(ClientProperties.CUSTOM_WINDOW_TITLE, titleBuilder.sb.toString());
+            boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
 
-                // only append if title not equal app name
-                if (!Objects.equals(title, applicationName)) {
-                    titleBuilder.append(applicationName);
-                }
-            }
+            titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
 
             frame.setTitle(titleBuilder.sb.toString());
         }

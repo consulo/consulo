@@ -19,10 +19,13 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -33,17 +36,21 @@ public abstract class SplitterActionBase extends AnAction implements DumbAware {
         super(text, description);
     }
 
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
-        Presentation presentation = event.getPresentation();
-        boolean enabled = project != null && isActionEnabled(project);
-        if (ActionPlaces.isPopupPlace(event.getPlace())) {
-            presentation.setVisible(enabled);
-        }
-        else {
-            presentation.setEnabled(enabled);
-        }
+    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+        return UIAction.apply((i, continuation) -> {
+            Project project = event.getData(Project.KEY);
+            Presentation presentation = event.getPresentation();
+            boolean enabled = project != null && isActionEnabled(project);
+            if (ActionPlaces.isPopupPlace(event.getPlace())) {
+                presentation.setVisible(enabled);
+            }
+            else {
+                presentation.setEnabled(enabled);
+            }
+            return null;
+        }).toCoroutine();
     }
 
     protected boolean isActionEnabled(Project project) {

@@ -27,7 +27,7 @@ import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.impl.internal.daemon.DaemonEditorPopup;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
 import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

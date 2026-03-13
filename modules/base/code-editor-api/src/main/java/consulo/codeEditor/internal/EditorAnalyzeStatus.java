@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.configuration.editor.internal;
+package consulo.codeEditor.internal;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
-import consulo.ui.util.LightDarkColorValue;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
- * @since 2025-01-12
+ * @since 2026-03-12
  */
-public interface ConfigurationEditorColor {
-    ColorValue DEFAULT_COLOR = new LightDarkColorValue(new RGBColor(228, 229, 255), new RGBColor(48, 42, 84));
+public interface EditorAnalyzeStatus {
+    Image getIcon();
 }

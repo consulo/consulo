@@ -15,22 +15,22 @@
  */
 package consulo.desktop.awt.editor.impl;
 
+import consulo.codeEditor.internal.EditorAnalyzeStatus;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.MarkupIterator;
 import consulo.document.util.ProperTextRange;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -161,10 +161,11 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     UIUtil.drawImage(g, myCachedTrack, null, 0, 0);
 
     if (myPanel.isSmallIconVisible()) {
-      ErrorStripeRenderer errorStripeRenderer = myPanel.getMarkupModel().getErrorStripeRenderer();
+      EditorAnalyzeStatus status = myPanel.getMarkupModel().getLastEditorStatus();
 
-      if (errorStripeRenderer != null) {
-        errorStripeRenderer.paint(c, g, new Rectangle(JBUI.scale(2), JBUI.scale(2), errorStripeRenderer.getSquareSize(), errorStripeRenderer.getSquareSize()));
+      if (status != null) {
+        Icon icon = TargetAWT.to(status.getIcon());
+        icon.paintIcon(c, g, JBUI.scale(2), JBUI.scale(2));
       }
     }
   }

@@ -2,12 +2,13 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
-import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
@@ -36,7 +37,6 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.language.editor.localize.DaemonLocalize;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
@@ -50,6 +50,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -65,6 +66,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -175,7 +177,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     }
 
     public boolean isValid() {
-        return getPsiFile() != null;
+        SimpleReference<Boolean> ref = new SimpleReference<>();
+        Application.get().tryRunReadAction(ref, () -> getPsiFile() != null);
+        return Boolean.TRUE.equals(ref.get());
     }
 
     protected static final class DaemonCodeAnalyzerStatus {
@@ -299,13 +303,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         return myProject;
     }
 
-    @Override
-    public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
-        DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
-        Icon icon = TargetAWT.to(getIcon(status));
-        icon.paintIcon(c, g, r.x, r.y);
-    }
-
     @Nonnull
     private Image getIcon(@Nonnull DaemonCodeAnalyzerStatus status) {
         updatePanel(status);
@@ -424,12 +421,14 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     @Override
     @Nonnull
     public AnalyzerStatus getStatus(@Nonnull Editor editor) {
+        UIAccess.assetIsNotUIThread();
+
         if (PowerSaveMode.isEnabled()) {
             return new AnalyzerStatus(
                 PlatformIconGroup.generalInspectionspowersavemode(),
                 "Code analysis is disabled in power save mode",
                 "",
-                () -> createUIController(editor)
+                createUIController(editor)
             );
         }
         else {
@@ -473,7 +472,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 if (mainIcon == null) {
                     mainIcon = PlatformIconGroup.generalInspectionsok();
                 }
-                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", () -> createUIController(editor)).
+                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", createUIController(editor)).
                     withNavigation().
                     withExpandedStatus(statusItems);
 
@@ -489,7 +488,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionstrafficoff(),
                     DaemonLocalize.noAnalysisPerformed().get(),
                     status.reasonWhyDisabled,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(DaemonLocalize.iwStatusOff().get());
             }
             if (StringUtil.isNotEmpty(status.reasonWhySuspended)) {
@@ -497,7 +496,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionspause(),
                     DaemonLocalize.analysisSuspended().get(),
                     status.reasonWhySuspended,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(
                     status.heavyProcessType != null ? status.heavyProcessType.toString() : DaemonLocalize.iwStatusPaused().get()
                 );
@@ -508,18 +507,18 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionspause(),
                     title,
                     details,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
                     : new AnalyzerStatus(
                     PlatformIconGroup.generalInspectionsok(),
                     DaemonLocalize.noErrorsOrWarningsFound().get(),
                     details,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 );
             }
 
             //noinspection ConstantConditions
-            return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, () -> createUIController(editor))
+            return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, createUIController(editor))
                 .withTextStatus(DaemonLocalize.iwStatusAnalyzing().get())
                 .withAnalyzingType(AnalyzingType.EMPTY)
                 .withPasses(ContainerUtil.map(
