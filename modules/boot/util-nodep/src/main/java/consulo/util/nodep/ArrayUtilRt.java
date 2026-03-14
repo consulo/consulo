@@ -17,6 +17,9 @@ package consulo.util.nodep;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
+import java.util.Collection;
+
 /**
  * Stripped-down version of {@code consulo.ide.impl.idea.util.ArrayUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
@@ -25,8 +28,18 @@ import org.jspecify.annotations.Nullable;
  */
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "SSBasedInspection"})
 public class ArrayUtilRt {
+    public static final short[] EMPTY_SHORT_ARRAY = new short[0];
+    public static final char[] EMPTY_CHAR_ARRAY = new char[0];
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final int[] EMPTY_INT_ARRAY = new int[0];
+    public static final boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
+    public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    public static final long[] EMPTY_LONG_ARRAY = new long[0];
+    public static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
+    public static final File[] EMPTY_FILE_ARRAY = new File[0];
+    public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
 
     /**
      * @param src source array.
