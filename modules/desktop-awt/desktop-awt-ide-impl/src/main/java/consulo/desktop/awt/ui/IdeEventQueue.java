@@ -42,7 +42,6 @@ import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.desktop.awt.ui.dnd.DnDManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
-import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -60,6 +59,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

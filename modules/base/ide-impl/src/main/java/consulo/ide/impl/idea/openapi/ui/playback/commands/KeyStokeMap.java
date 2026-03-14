@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.ui.playback.commands;
 
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -73,7 +73,7 @@ public class KeyStokeMap {
       }
 
       if (symbol.length() > 1) {
-        Integer code = (Integer)ReflectionUtil.getField(KeyEvent.class, null, int.class, "VK_" + StringUtil.toUpperCase(symbol));
+        Integer code = ReflectionUtil.getField(KeyEvent.class, null, int.class, "VK_" + StringUtil.toUpperCase(symbol));
         if (code == null) {
           return throwUnrecognized(symbol);
         }

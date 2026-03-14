@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
