@@ -166,7 +166,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                             );
                         }
                         else {
-                            myCategory.setText(pluginDescriptor.getVersion());
+                            myCategory.setText(StringUtil.notNullize(pluginDescriptor.getVersion()));
                         }
 
                         FileStatus status = FileStatus.MODIFIED;

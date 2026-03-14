@@ -1,6 +1,7 @@
 package consulo.container.internal.plugin.classloader;
 
 import consulo.container.internal.ContainerLogger;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.lang.module.Configuration;
@@ -21,7 +22,8 @@ import java.util.*;
  * @since 2019-11-19
  */
 public class Java9ModuleInitializer {
-    private static Method ourAddExportsImpl;
+    @Nullable
+    private static Method ourAddExportsImpl = null;
 
     static {
         try {

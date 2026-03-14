@@ -22,6 +22,7 @@ import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -37,16 +38,27 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
     public static final PluginDescriptorImpl[] EMPTY_ARRAY = new PluginDescriptorImpl[0];
 
+    @Nullable
     private String myName;
+    @Nullable
     private PluginId myId;
+    @Nullable
     private String myResourceBundleBaseName;
-    private String myLocalize;
+    @Nullable
+    private String myLocalization;
+    @Nullable
     private String myChangeNotes;
+    @Nullable
     private String myVersion;
+    @Nullable
     private String myPlatformVersion;
+    @Nullable
     private String myVendor;
+    @Nullable
     private String myVendorEmail;
+    @Nullable
     private String myVendorUrl;
+    @Nullable
     private String url;
     private final File myPath;
     private final byte[] myIconBytes;
@@ -54,22 +66,26 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     private final boolean myIsPreInstalled;
     private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
     private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
-    private PluginId[] myIncompatibleWithPluginds = PluginId.EMPTY_ARRAY;
+    private PluginId[] myIncompatibleWithPlugins = PluginId.EMPTY_ARRAY;
 
     private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
 
     private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissionDescriptors = Collections.emptyMap();
 
     private boolean myDeleted = false;
+    @Nullable
     private ClassLoader myLoader;
+    @Nullable
     private ModuleLayer myModuleLayer;
 
     private Set<String> myTags = Collections.emptySet();
 
+    @Nullable
     private String myDescriptionChildText;
     private PluginDescriptorStatus myStatus = PluginDescriptorStatus.OK;
     private boolean myExperimental;
 
+    @Nullable
     private List<ClassPathItem> myClassPathItems;
     private boolean myEnabledIndex;
 
@@ -101,12 +117,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         url = pluginBean.url;
         myName = pluginBean.name;
         String idString = pluginBean.id;
-        if (idString == null || idString.isEmpty()) {
+        if (StringUtilRt.isEmpty(idString)) {
             idString = myName;
         }
         myId = idString == null ? null : PluginId.getId(idString);
         myResourceBundleBaseName = StringUtilRt.isEmpty(pluginBean.resourceBundle) ? null : pluginBean.resourceBundle;
-        myLocalize = StringUtilRt.isEmpty(pluginBean.localize) ? null : pluginBean.localize;
+        myLocalization = StringUtilRt.nullize(pluginBean.localize);
 
         myDescriptionChildText = pluginBean.description;
         myChangeNotes = pluginBean.changeNotes;
@@ -121,17 +137,17 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         }
 
         // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
-        Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
+        Set<PluginId> dependentPlugins = new LinkedHashSet<>();
         // we always depend to core plugin, but prevent recursion
         if (!PluginIds.CONSULO_BASE.equals(myId)) {
             dependentPlugins.add(PluginIds.CONSULO_BASE);
         }
-        Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
+        Set<PluginId> optionalDependentPlugins = new LinkedHashSet<>();
         if (pluginBean.dependencies != null) {
             for (PluginDependency dependency : pluginBean.dependencies) {
                 String text = dependency.pluginId;
                 if (!StringUtilRt.isEmpty(text)) {
-                    PluginId id = PluginId.getId(text);
+                    PluginId id = PluginId.getId(Objects.requireNonNull(text));
                     dependentPlugins.add(id);
                     if (dependency.optional) {
                         optionalDependentPlugins.add(id);
@@ -140,13 +156,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             }
         }
 
-        Set<PluginId> incompatibleWithPluginds = new LinkedHashSet<PluginId>();
+        Set<PluginId> incompatibleWithPlugins = new LinkedHashSet<>();
         for (String pluginId : pluginBean.incompatibleWith) {
             if (!StringUtilRt.isEmpty(pluginId)) {
-                incompatibleWithPluginds.add(PluginId.getId(pluginId));
+                incompatibleWithPlugins.add(PluginId.getId(pluginId));
             }
         }
-        myIncompatibleWithPluginds = incompatibleWithPluginds.isEmpty() ? PluginId.EMPTY_ARRAY : incompatibleWithPluginds.toArray(new PluginId[incompatibleWithPluginds.size()]);
+        myIncompatibleWithPlugins = incompatibleWithPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : incompatibleWithPlugins.toArray(new PluginId[incompatibleWithPlugins.size()]);
 
         myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
         myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
@@ -156,7 +172,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         }
 
         if (pluginBean.experimental) {
-            Set<String> oldTags = new TreeSet<String>(myTags);
+            Set<String> oldTags = new TreeSet<>(myTags);
             oldTags.add(EXPERIMENTAL_TAG);
 
             myTags = Collections.unmodifiableSet(oldTags);
@@ -166,7 +182,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             try {
                 PluginPermissionType permissionType = PluginPermissionType.valueOf(permissionEntry.getKey());
                 if (myPermissionDescriptors.isEmpty()) {
-                    myPermissionDescriptors = new HashMap<PluginPermissionType, PluginPermissionDescriptor>();
+                    myPermissionDescriptors = new HashMap<>();
                 }
 
                 myPermissionDescriptors.put(permissionType, new PluginPermissionDescriptor(permissionType, permissionEntry.getValue()));
@@ -186,7 +202,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
         List<T> result = original;
         if (original.isEmpty()) {
-            result = new ArrayList<T>(additional);
+            result = new ArrayList<>(additional);
         }
         else {
             result.addAll(additional);
@@ -200,11 +216,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myTags;
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return myDescriptionChildText;
     }
 
+    @Nullable
     @Override
     public String getChangeNotes() {
         return myChangeNotes;
@@ -218,6 +236,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myIconBytes;
     }
 
+    @Nullable
     @Override
     public String getName() {
         return myName;
@@ -234,33 +253,38 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     @Override
-    public PluginId[] getIncompatibleWithPlugindIds() {
-        return myIncompatibleWithPluginds;
+    public PluginId[] getIncompatibleWithPluginIds() {
+        return myIncompatibleWithPlugins;
     }
 
+    @Nullable
     @Override
     public String getVendor() {
         return myVendor;
     }
 
+    @Nullable
     @Override
     public String getVersion() {
         return myVersion;
     }
 
+    @Nullable
     @Override
     public String getPlatformVersion() {
         return myPlatformVersion;
     }
 
+    @Nullable
     @Override
     public String getResourceBundleBaseName() {
         return myResourceBundleBaseName;
     }
 
+    @Nullable
     @Override
-    public String getLocalize() {
-        return myLocalize;
+    public String getLocalization() {
+        return myLocalization;
     }
 
     public List<ClassPathItem> getClassPathItems(Set<PluginId> enabledPluginIds) {
@@ -363,7 +387,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
                     if (requiresFile.exists()) {
                         List<ClassPathPluginSet> pluginSets = readRequires(requiresFile);
                         result.add(new ClassPathItem(f, pluginSets, index));
-
                     }
                     else {
                         result.add(new ClassPathItem(f, Collections.emptyList(), index));
@@ -396,21 +419,25 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myActionsElements;
     }
 
+    @Nullable
     @Override
     public String getVendorEmail() {
         return myVendorEmail;
     }
 
+    @Nullable
     @Override
     public String getVendorUrl() {
         return myVendorUrl;
     }
 
+    @Nullable
     @Override
     public String getUrl() {
         return url;
     }
 
+    @Nullable
     @Override
     public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
         return myPermissionDescriptors.get(permissionType);
@@ -438,6 +465,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         myModuleLayer = moduleLayer;
     }
 
+    @Nullable
     @Override
     public ModuleLayer getModuleLayer() {
         return myModuleLayer;
@@ -464,7 +492,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
     @Override
     public PluginId getPluginId() {
-        return myId;
+        return Objects.requireNonNull(myId);
     }
 
     @Override

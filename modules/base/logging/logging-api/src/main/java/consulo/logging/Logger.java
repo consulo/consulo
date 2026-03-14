@@ -17,7 +17,6 @@ package consulo.logging;
 
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
-import consulo.util.nodep.ArrayUtilRt;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,6 +25,8 @@ import jakarta.annotation.Nullable;
  * @since 2019-08-10
  */
 public interface Logger {
+    static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     @Nonnull
     public static Logger getInstance(@Nonnull String category) {
         return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
@@ -90,7 +91,7 @@ public interface Logger {
     public abstract void warn(String message, @Nullable Throwable t);
 
     default void error(String message) {
-        error(message, new Throwable(), ArrayUtilRt.EMPTY_STRING_ARRAY);
+        error(message, new Throwable(), EMPTY_STRING_ARRAY);
     }
 
     default void error(Object message) {
@@ -114,11 +115,11 @@ public interface Logger {
     }
 
     default void error(String message, @Nullable Throwable e) {
-        error(message, e, ArrayUtilRt.EMPTY_STRING_ARRAY);
+        error(message, e, EMPTY_STRING_ARRAY);
     }
 
     default void error(@Nonnull Throwable t) {
-        error(t.getMessage(), t, ArrayUtilRt.EMPTY_STRING_ARRAY);
+        error(t.getMessage(), t, EMPTY_STRING_ARRAY);
     }
 
     public abstract void error(String message, @Nullable Throwable t, @Nonnull String... details);

@@ -16,6 +16,7 @@
 package consulo.container.plugin;
 
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -39,49 +40,64 @@ public interface PluginDescriptor {
 
     ClassLoader getPluginClassLoader();
 
+    @Nullable
     File getPath();
 
+    @Nullable
     Path getNioPath();
 
+    @Nullable
     String getDescription();
 
+    @Nullable
     String getChangeNotes();
 
+    @Nullable
     String getName();
 
     PluginId[] getDependentPluginIds();
 
     PluginId[] getOptionalDependentPluginIds();
 
-    PluginId[] getIncompatibleWithPlugindIds();
+    PluginId[] getIncompatibleWithPluginIds();
 
+    @Nullable
     String getVendor();
 
+    @Nullable
     String getVersion();
 
+    @Nullable
     String getPlatformVersion();
 
+    @Nullable
     String getResourceBundleBaseName();
 
-    String getLocalize();
+    @Nullable
+    String getLocalization();
 
     Set<String> getTags();
 
     List<SimpleXmlElement> getActionsDescriptionElements();
 
+    @Nullable
     String getVendorEmail();
 
+    @Nullable
     String getVendorUrl();
 
+    @Nullable
     String getUrl();
 
     int getDownloads();
 
+    @Nullable
     PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
     /**
      * If return not null, plugin loaded in module mode.
      */
+    @Nullable
     ModuleLayer getModuleLayer();
 
     @Deprecated
@@ -106,8 +122,10 @@ public interface PluginDescriptor {
 
     boolean isExperimental();
 
+    @Nullable
     String getChecksumSHA3_256();
 
+    @Nullable
     <K, V> V getUserData(K key);
 
     /**

@@ -16,6 +16,7 @@
 package consulo.container.plugin;
 
 import consulo.container.internal.PluginManagerInternal;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Iterator;
@@ -60,6 +61,7 @@ public final class PluginManager {
         return getPlugins().size();
     }
 
+    @Nullable
     public static PluginDescriptor findPlugin(PluginId pluginId) {
         for (PluginDescriptor descriptor : getPlugins()) {
             if (descriptor.getPluginId().equals(pluginId)) {
@@ -69,15 +71,18 @@ public final class PluginManager {
         return null;
     }
 
+    @Nullable
     public static PluginDescriptor getPlugin(Class<?> pluginClass) {
         return ourInternal.getPlugin(pluginClass);
     }
 
+    @Nullable
     public static PluginId getPluginId(Class<?> pluginClass) {
         PluginDescriptor plugin = getPlugin(pluginClass);
         return plugin == null ? null : plugin.getPluginId();
     }
 
+    @Nullable
     public static File getPluginPath(Class<?> pluginClass) {
         return ourInternal.getPluginPath(pluginClass);
     }

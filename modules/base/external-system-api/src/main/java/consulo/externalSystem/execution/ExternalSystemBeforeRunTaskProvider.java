@@ -47,9 +47,9 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.nodep.collection.ContainerUtilRt;
 import jakarta.annotation.Nonnull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,7 +105,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     public boolean canExecuteTask(RunConfiguration configuration, ExternalSystemBeforeRunTask beforeRunTask) {
         ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
-        List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
+        List<ExternalTaskPojo> tasks = new ArrayList<>();
         for (String taskName : executionSettings.getTaskNames()) {
             tasks.add(new ExternalTaskPojo(taskName, executionSettings.getExternalProjectPath(), null));
         }
@@ -135,7 +135,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
                                               ExternalSystemBeforeRunTask beforeRunTask) {
         ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
-        List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
+        List<ExternalTaskPojo> tasks = new ArrayList<>();
         for (String taskName : executionSettings.getTaskNames()) {
             tasks.add(new ExternalTaskPojo(taskName, executionSettings.getExternalProjectPath(), null));
         }

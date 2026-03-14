@@ -21,17 +21,13 @@ public class UnsyncByteArrayInputStream extends InputStream {
   protected byte[] myBuffer;
   private int myPosition;
   private int myCount;
-  private int myMarkedPosition;
+  private int myMarkedPosition = 0;
 
   public UnsyncByteArrayInputStream(byte[] buf) {
     this(buf, 0, buf.length);
   }
 
   public UnsyncByteArrayInputStream(byte[] buf, int offset, int length) {
-    init(buf, offset, length);
-  }
-
-  public void init(byte[] buf, int offset, int length) {
     myBuffer = buf;
     myPosition = offset;
     myCount = length;
@@ -84,7 +80,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   }
 
   @Override
-  public void mark(int readlimit) {
+  public void mark(int readLimit) {
     myMarkedPosition = myPosition;
   }
 

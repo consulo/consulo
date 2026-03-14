@@ -16,6 +16,7 @@
 package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.LoggerRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class ClassPath {
     public static final String CLASSPATH_JAR_FILE_NAME_PREFIX = "classpath";
 
     private final Deque<URL> myUrls = new ArrayDeque<>();
-    private final List<Loader> myLoaders = new ArrayList<>();
+    private final List<@Nullable Loader> myLoaders = new ArrayList<>();
 
     private volatile boolean myAllUrlsWereProcessed;
 
@@ -47,28 +48,33 @@ public class ClassPath {
     private final boolean myAcceptUnescapedUrls;
     final boolean myPreloadJarContents;
     final boolean myCanHavePersistentIndex;
+    @Nullable
     private final Map<URL, Set<String>> myUrlsIndex;
     final boolean myLazyClassloadingCaches;
     final boolean myEnableJarIndex;
+    @Nullable
     private final CachePoolImpl myCachePool;
-    private final UrlClassLoader.CachingCondition myCachingCondition;
+    private final UrlClassLoader.@Nullable CachingCondition myCachingCondition;
     final boolean myLogErrorOnMissingJar;
 
+    @Nullable
     private final Set<String> myFullJarIndex;
 
-    public ClassPath(List<URL> urls,
-                     Map<URL, Set<String>> urlsIndex,
-                     boolean canLockJars,
-                     boolean canUseCache,
-                     boolean acceptUnescapedUrls,
-                     boolean preloadJarContents,
-                     boolean canHavePersistentIndex,
-                     boolean enableJarIndex,
-                     CachePoolImpl cachePool,
-                     UrlClassLoader.CachingCondition cachingCondition,
-                     boolean logErrorOnMissingJar,
-                     boolean lazyClassloadingCaches,
-                     Set<URL> urlsWithProtectionDomain) {
+    public ClassPath(
+        List<URL> urls,
+        @Nullable Map<URL, Set<String>> urlsIndex,
+        boolean canLockJars,
+        boolean canUseCache,
+        boolean acceptUnescapedUrls,
+        boolean preloadJarContents,
+        boolean canHavePersistentIndex,
+        boolean enableJarIndex,
+        @Nullable CachePoolImpl cachePool,
+        UrlClassLoader.@Nullable CachingCondition cachingCondition,
+        boolean logErrorOnMissingJar,
+        boolean lazyClassloadingCaches,
+        Set<URL> urlsWithProtectionDomain
+    ) {
         myUrlsIndex = urlsIndex;
         myLazyClassloadingCaches = lazyClassloadingCaches;
         myCanLockJars = canLockJars;
@@ -98,8 +104,7 @@ public class ClassPath {
 
     public void close() throws Exception {
         synchronized (myLoaders) {
-            for (int i = 0; i < myLoaders.size(); i++) {
-                Loader loader = myLoaders.get(i);
+            for (Loader loader : myLoaders) {
                 if (loader == null) {
                     continue;
                 }
@@ -128,6 +133,7 @@ public class ClassPath {
         }
     }
 
+    @Nullable
     public Resource getResource(String resourcePath) {
         long started = startTiming();
         try {
@@ -158,10 +164,8 @@ public class ClassPath {
                     continue;
                 }
 
-                if (myCanUseCache) {
-                    if (!loader.containsName(resourcePath, shortName)) {
-                        continue;
-                    }
+                if (myCanUseCache && !loader.containsName(resourcePath, shortName)) {
+                    continue;
                 }
                 Resource resource = loader.getResource(resourcePath);
                 if (resource != null) {
@@ -180,6 +184,7 @@ public class ClassPath {
         return new MyEnumeration(name);
     }
 
+    @Nullable
     private Loader getLoader(int i) {
         if (i < myLastLoaderProcessed.get()) { // volatile read
             return myLoaders.get(i);
@@ -188,6 +193,7 @@ public class ClassPath {
         return getLoaderSlowPath(i);
     }
 
+    @Nullable
     private synchronized Loader getLoaderSlowPath(int i) {
         while (myLoaders.size() < i + 1) {
             URL url;
@@ -254,6 +260,7 @@ public class ClassPath {
         }
     }
 
+    @Nullable
     private Loader createLoader(URL url, int index, File file, boolean processRecursively) throws IOException {
         if (file.isDirectory()) {
             return new FileLoader(url, index, this);
@@ -321,6 +328,7 @@ public class ClassPath {
         myLastLoaderProcessed.incrementAndGet(); // volatile write
     }
 
+    @Nullable
     Attributes getManifestData(URL url) {
         return myCanUseCache && myCachePool != null ? myCachePool.getManifestData(url) : null;
     }
@@ -339,7 +347,8 @@ public class ClassPath {
         private int myType = DEFAULT_IMPL;
 
         private int myIndex;
-        private Resource myRes;
+        @Nullable
+        private Resource myRes = null;
         private final String myName;
         private final String myShortName;
         private final List<Loader> myLoaders;
@@ -347,7 +356,7 @@ public class ClassPath {
         MyEnumeration(String name) {
             myName = name;
             myShortName = ClasspathCache.transformName(name);
-            List<Loader> loaders = null;
+            List<Loader> loaders = List.of();
 
             if (myCanUseCache && myAllUrlsWereProcessed) {
                 myType = CACHE;
@@ -448,7 +457,7 @@ public class ClassPath {
                 throw new NoSuchElementException();
             }
             else {
-                Resource resource = myRes;
+                Resource resource = Objects.requireNonNull(myRes);
                 myRes = null;
                 return resource.getURL();
             }
@@ -456,6 +465,7 @@ public class ClassPath {
     }
 
     private static class ResourceStringLoaderIterator extends ClasspathCache.LoaderIterator<Resource, String, ClassPath> {
+        @Nullable
         @Override
         Resource process(Loader loader, String s, ClassPath classPath, String shortName) {
             if (!loader.containsName(s, shortName)) {
@@ -477,6 +487,7 @@ public class ClassPath {
     }
 
     private static class LoaderCollector extends ClasspathCache.LoaderIterator<Object, Collection<Loader>, Object> {
+        @Nullable
         @Override
         Object process(Loader loader, Collection<Loader> parameter, Object parameter2, String shortName) {
             parameter.add(loader);
@@ -488,6 +499,7 @@ public class ClassPath {
         void logResource(String url, URL baseLoaderURL, long resourceSize);
     }
 
+    @Nullable
     private static final ResourceLoadingLogger ourResourceLoadingLogger;
 
     static {
@@ -543,17 +555,19 @@ public class ClassPath {
 
     static {
         if (ourLogTiming) {
-            Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook for tracing classloading information") {
+            Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook for tracing class-loading information") {
                 @Override
                 public void run() {
-                    System.out.println("Classloading requests:" + ClassPath.class.getClassLoader() + "," + ourTotalRequests + ", time:" + (ourTotalTime
-                        .get() / 1000000) + "ms");
+                    System.out.println(
+                        "Class-loading requests: " + ClassPath.class.getClassLoader() + ", " + ourTotalRequests +
+                            ", time:" + (ourTotalTime.get() / 1000000) + "ms"
+                    );
                 }
             });
         }
     }
 
-    private static String[] loadManifestClasspath(JarLoader loader) {
+    private static String @Nullable [] loadManifestClasspath(JarLoader loader) {
         try {
             String classPath = loader.getClassPathManifestAttribute();
 

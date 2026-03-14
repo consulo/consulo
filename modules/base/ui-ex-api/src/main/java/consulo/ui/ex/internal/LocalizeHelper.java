@@ -38,7 +38,7 @@ public interface LocalizeHelper {
             return DisabledLocalizeHelper.INSTANCE;
         }
 
-        String localize = plugin.getLocalize();
+        String localize = plugin.getLocalization();
         if (!StringUtil.isEmpty(localize)) {
             return new DefaultLocalizeHelper(localize);
         }

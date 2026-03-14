@@ -15,6 +15,8 @@
  */
 package consulo.util.nodep.text;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author lesya
  */
@@ -133,7 +135,7 @@ public class StringHash {
    * @param arg string to calculate hash value upon
    * @return calculated hash value
    */
-  public static long calc(String arg) {
+  public static long calc(@Nullable String arg) {
     if (arg == null) return 0;
     long h = initialHash;
     for (int i = 0; i < arg.length(); ++i) {
@@ -142,7 +144,7 @@ public class StringHash {
     return h;
   }
 
-  public static long calc(byte[] arg) {
+  public static long calc(byte @Nullable [] arg) {
     if (arg == null) return 0;
     long h = initialHash;
     for (byte anArg : arg) {

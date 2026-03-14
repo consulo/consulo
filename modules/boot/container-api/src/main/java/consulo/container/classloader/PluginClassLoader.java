@@ -17,6 +17,7 @@ package consulo.container.classloader;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,5 +38,6 @@ public interface PluginClassLoader {
 
     Enumeration<URL> findOwnResources(String name) throws IOException;
 
+    @Nullable
     Map<URL, Set<String>> getUrlsIndex();
 }
