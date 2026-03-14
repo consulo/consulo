@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.navigation.NavigatableWithText;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
@@ -31,6 +30,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -87,7 +87,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
             testee = file;
         }
         for (VirtualFile root : ModuleRootManager.getInstance(module).getContentRoots()) {
-            if (VfsUtilCore.isAncestor(root, testee, false)) {
+            if (VirtualFileUtil.isAncestor(root, testee, false)) {
                 return true;
             }
         }

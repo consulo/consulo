@@ -17,7 +17,6 @@ import consulo.find.FindModel;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
 import consulo.language.file.FileTypeManager;
@@ -51,6 +50,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -361,7 +361,7 @@ class FindInProjectTask {
             boolean checkExcluded =
                 !ProjectFileIndex.SERVICE.getInstance(myProject).isExcluded(myDirectory) && !Registry.is("find.search.in.excluded.dirs");
             VirtualFileVisitor.Option limit = VirtualFileVisitor.limit(myFindModel.isWithSubdirectories() ? -1 : 1);
-            VfsUtilCore.visitChildrenRecursively(myDirectory, new VirtualFileVisitor<Void>(limit) {
+            VirtualFileUtil.visitChildrenRecursively(myDirectory, new VirtualFileVisitor<Void>(limit) {
                 @Override
                 public boolean visitFile(@Nonnull VirtualFile file) {
                     if (checkExcluded && myProjectFileIndex.isExcluded(file)) {
@@ -396,7 +396,7 @@ class FindInProjectTask {
             file -> file.isDirectory()
                 || !fileTypeManager.isFileIgnored(file) && !file.getFileType().isBinary() && searchScope.contains(file);
         for (VirtualFile file : files) {
-            if (!VfsUtilCore.iterateChildrenRecursively(file, contentFilter, iterator)) {
+            if (!VirtualFileUtil.iterateChildrenRecursively(file, contentFilter, iterator)) {
                 break;
             }
         }

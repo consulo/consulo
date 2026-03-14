@@ -2,17 +2,17 @@
 package consulo.ide.impl.idea.ui.tree.project;
 
 import consulo.component.ComponentManager;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import static consulo.application.util.registry.Registry.is;
-import static consulo.ide.impl.idea.openapi.vfs.VfsUtilCore.isAncestor;
 
 public interface ProjectFileNode {
   /**
@@ -32,7 +32,7 @@ public interface ProjectFileNode {
   default boolean contains(@Nonnull VirtualFile file, @Nonnull ComponentManager area, boolean strict) {
     Object id = getRootID();
     if (id instanceof ComponentManager && !id.equals(area)) return false;
-    return isAncestor(getVirtualFile(), file, strict);
+    return VirtualFileUtil.isAncestor(getVirtualFile(), file, strict);
   }
 
   /**
@@ -48,7 +48,7 @@ public interface ProjectFileNode {
     if (!is("projectView.show.base.dir")) return null;
     VirtualFile ancestor = findBaseDir(project);
     // file does not belong to any content root, but it is located under the project directory and not ignored
-    return ancestor == null || FileTypeRegistry.getInstance().isFileIgnored(file) || !isAncestor(ancestor, file, false) ? null : project;
+    return ancestor == null || FileTypeRegistry.getInstance().isFileIgnored(file) || !VirtualFileUtil.isAncestor(ancestor, file, false) ? null : project;
   }
 
   /**

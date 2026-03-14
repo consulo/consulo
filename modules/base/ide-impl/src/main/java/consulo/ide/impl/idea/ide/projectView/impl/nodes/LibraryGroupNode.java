@@ -24,7 +24,6 @@ import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
@@ -45,6 +44,7 @@ import consulo.project.ui.view.tree.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -182,6 +182,6 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         for (OrderRootType rootType : rootTypes) {
             files.addAll(Arrays.asList(library.getFiles(rootType)));
         }
-        return VfsUtilCore.toVirtualFileArray(files);
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
 }

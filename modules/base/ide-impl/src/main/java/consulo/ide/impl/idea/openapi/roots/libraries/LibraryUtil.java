@@ -20,7 +20,6 @@ import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.OrderEnumerator;
@@ -30,6 +29,7 @@ import consulo.project.Project;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -143,7 +143,7 @@ public class LibraryUtil {
     }
     String[] urls = library.getUrls(BinariesOrderRootType.getInstance());
     if (urls.length > 0) {
-      return PathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
+      return PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
     }
     return "Empty Library";
   }

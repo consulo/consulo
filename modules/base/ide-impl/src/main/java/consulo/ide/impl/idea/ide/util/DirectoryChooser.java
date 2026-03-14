@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -52,6 +51,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -377,7 +377,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
                     if (file == null) {
                         continue;
                     }
-                    if (VfsUtil.isAncestor(file, virtualFile, false)) {
+                    if (VirtualFileUtil.isAncestor(file, virtualFile, false)) {
                         return ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
                     }
                 }

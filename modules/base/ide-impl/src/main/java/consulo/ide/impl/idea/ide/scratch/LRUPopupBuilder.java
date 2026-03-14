@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
@@ -26,6 +25,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -61,7 +61,7 @@ public abstract class LRUPopupBuilder<T> {
         @Nonnull Iterable<? extends VirtualFile> files,
         @Nonnull PerFileMappings<Language> mappings
     ) {
-        VirtualFile[] filesCopy = VfsUtilCore.toVirtualFileArray(JBIterable.from(files).toList());
+        VirtualFile[] filesCopy = VirtualFileUtil.toVirtualFileArray(JBIterable.from(files).toList());
         Arrays.sort(filesCopy, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), !o1.getFileSystem().isCaseSensitive()));
         return forFileLanguages(
             project,

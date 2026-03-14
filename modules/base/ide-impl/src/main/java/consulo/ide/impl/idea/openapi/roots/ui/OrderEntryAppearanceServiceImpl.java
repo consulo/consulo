@@ -25,7 +25,6 @@ import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;
 import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
@@ -50,6 +49,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -180,7 +180,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       textAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
     }
     else {
-      relativePath = VfsUtilCore.getRelativePath(folderFileFile, file, File.separatorChar);
+      relativePath = VirtualFileUtil.getRelativePath(folderFileFile, file, File.separatorChar);
       textAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
     }
 

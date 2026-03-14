@@ -20,7 +20,6 @@ import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.module.Module;
@@ -34,6 +33,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -173,7 +173,7 @@ class DirectoryPathMatcher {
         Set<VirtualFile> visited = new HashSet<>(roots.size());
         GlobalSearchScope scope = GlobalSearchScope.allScope(myModel.getProject());
         for (VirtualFile root : roots) {
-            VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
+            VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
                 @Override
                 public boolean visitFile(@Nonnull VirtualFile file) {
                     return visited.add(file) && scope.contains(file) && predicate.test(file);

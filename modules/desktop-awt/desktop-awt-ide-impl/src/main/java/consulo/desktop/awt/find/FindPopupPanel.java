@@ -29,8 +29,6 @@ import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
@@ -92,6 +90,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import net.miginfocom.swing.MigLayout;
@@ -769,7 +768,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myUsagePreviewTitle.clear();
             if (myUsagePreviewPanel.getCannotPreviewMessage(selection) == null && file != null) {
                 myUsagePreviewTitle.append(PathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                VirtualFile virtualFile = VfsUtil.findFileByIoFile(new File(file), true);
+                VirtualFile virtualFile = VirtualFileUtil.findFileByIoFile(new File(file), true);
                 String locationPath = virtualFile == null ? null : getPresentablePath(myProject, virtualFile.getParent(), 120);
                 if (locationPath != null) {
                     myUsagePreviewTitle.append(
@@ -925,8 +924,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
         String path = ScratchUtil.isScratch(virtualFile)
             ? ScratchUtil.getRelativePath(project, virtualFile)
-            : VfsUtilCore.isAncestor(project.getBaseDir(), virtualFile, true)
-            ? VfsUtilCore.getRelativeLocation(virtualFile, project.getBaseDir())
+            : VirtualFileUtil.isAncestor(project.getBaseDir(), virtualFile, true)
+            ? VirtualFileUtil.getRelativeLocation(virtualFile, project.getBaseDir())
             : UserHomeFileUtil.getLocationRelativeToUserHome(virtualFile.getPath());
         return path == null ? null : maxChars < 0 ? path : StringUtil.trimMiddle(path, maxChars);
     }

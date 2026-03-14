@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.ui.tree;
 
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiPredicate;
 
-import static consulo.ide.impl.idea.openapi.vfs.VfsUtilCore.isAncestor;
 import static consulo.util.collection.ArrayUtil.isEmpty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -73,7 +73,8 @@ public final class TreeCollector<T> {
     }
 
     public static final class VirtualFileLeafs {
-        private static final BiPredicate<VirtualFile, VirtualFile> PREDICATE = (child, parent) -> isAncestor(parent, child, false);
+        private static final BiPredicate<VirtualFile, VirtualFile> PREDICATE =
+            (child, parent) -> VirtualFileUtil.isAncestor(parent, child, false);
 
         @Nonnull
         public static TreeCollector<VirtualFile> create() {
@@ -92,7 +93,8 @@ public final class TreeCollector<T> {
     }
 
     public static final class VirtualFileRoots {
-        private static final BiPredicate<VirtualFile, VirtualFile> PREDICATE = (parent, child) -> isAncestor(parent, child, false);
+        private static final BiPredicate<VirtualFile, VirtualFile> PREDICATE =
+            (parent, child) -> VirtualFileUtil.isAncestor(parent, child, false);
 
         @Nonnull
         public static TreeCollector<VirtualFile> create() {

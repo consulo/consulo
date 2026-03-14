@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -32,6 +31,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -92,7 +92,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
       files.add(virtualFile);
     }
     if (!files.isEmpty()) {
-      VirtualFile[] virtualFiles = VfsUtilCore.toVirtualFileArray(files);
+      VirtualFile[] virtualFiles = VirtualFileUtil.toVirtualFileArray(files);
       ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(virtualFiles);
       return !status.hasReadonlyFiles();
     }

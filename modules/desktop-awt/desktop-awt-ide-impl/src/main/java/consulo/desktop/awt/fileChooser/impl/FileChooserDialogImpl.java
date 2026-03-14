@@ -33,7 +33,6 @@ import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -56,6 +55,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -421,7 +421,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
 
         List<VirtualFile> selectedFiles = Arrays.asList(getSelectedFilesInt());
-        VirtualFile[] files = VfsUtilCore.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
+        VirtualFile[] files = VirtualFileUtil.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
         if (files.length == 0) {
             myChosenFiles = VirtualFile.EMPTY_ARRAY;
             close(CANCEL_EXIT_CODE);
@@ -483,7 +483,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                     selectInTree(new VirtualFile[]{files.get(0)}, true);
                 }
                 else {
-                    selectInTree(VfsUtilCore.toVirtualFileArray(files), true);
+                    selectInTree(VirtualFileUtil.toVirtualFileArray(files), true);
                 }
             }
         });

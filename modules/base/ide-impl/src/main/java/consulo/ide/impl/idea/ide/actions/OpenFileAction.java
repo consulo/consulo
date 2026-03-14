@@ -21,14 +21,13 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.fileChooser.node.FileElement;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.fileChooser.node.FileElement;
-import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -45,6 +44,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -94,7 +94,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
         descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-        FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).doWhenDone(files -> {
             for (VirtualFile file : files) {
                 if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
                     Messages.showInfoMessage(

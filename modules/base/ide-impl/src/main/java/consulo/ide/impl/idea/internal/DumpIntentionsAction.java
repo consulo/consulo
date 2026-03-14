@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.internal;
 import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.language.editor.internal.intention.IntentionManagerSettings;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -28,6 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -54,7 +54,7 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
             IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null);
         if (file != null) {
             List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
-            File root = VfsUtil.virtualToIoFile(file);
+            File root = VirtualFileUtil.virtualToIoFile(file);
             Element el = new Element("root");
             Map<String, Element> categoryMap = new HashMap<>();
             for (IntentionActionMetaData metaData : list) {

@@ -19,12 +19,12 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -85,7 +85,7 @@ public final class FileChooserUtil {
             }
         }
         else if (Platform.current().os().isUnix()) {
-            result = VfsUtil.getUserHomeDir();
+            result = VirtualFileUtil.getUserHomeDir();
         }
 
         return result;

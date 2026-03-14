@@ -21,7 +21,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -40,6 +39,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -536,7 +536,7 @@ public class FileTreeModelBuilder {
                 DirectoryNode parentDirectoryNode = myModuleDirNodes.get(directory);
                 if (parentDirectoryNode != null
                     || !myCompactEmptyMiddlePackages
-                    || (sourceRoot != null && VfsUtil.isAncestor(directory, sourceRoot, false) && fileIndex.getSourceRootForFile(directory) != null)
+                    || (sourceRoot != null && VirtualFileUtil.isAncestor(directory, sourceRoot, false) && fileIndex.getSourceRootForFile(directory) != null)
                     || Objects.equals(directory, contentRoot)) {
                     getModuleDirNode(directory, module, (DirectoryNode) directoryNode).add(directoryNode);
                 }

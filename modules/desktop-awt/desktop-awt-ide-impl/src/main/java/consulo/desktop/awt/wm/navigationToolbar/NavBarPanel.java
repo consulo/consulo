@@ -13,13 +13,11 @@ import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
@@ -28,6 +26,7 @@ import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
+import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -66,6 +65,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -750,7 +750,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
                 .filter(e -> e != null && e.isValid())
                 .filterMap(PsiUtilCore::getVirtualFile)
                 .toSet();
-            return !files.isEmpty() ? VfsUtilCore.toVirtualFileArray(files) : null;
+            return !files.isEmpty() ? VirtualFileUtil.toVirtualFileArray(files) : null;
         }
 
         if (Navigatable.KEY_OF_ARRAY == dataId) {

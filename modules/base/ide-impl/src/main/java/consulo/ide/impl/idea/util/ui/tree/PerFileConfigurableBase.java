@@ -9,12 +9,11 @@ import consulo.dataContext.DataContext;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.Setter;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.language.LangBundle;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.util.LanguagePerFileMappings;
@@ -43,14 +42,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.Trinity;
+import consulo.util.lang.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TIntArrayList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -355,7 +351,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             return key == null;
         }
         if (key instanceof VirtualFile virtualFile) {
-            return VfsUtilCore.isAncestor(virtualFile, file, strict);
+            return VirtualFileUtil.isAncestor(virtualFile, file, strict);
         }
         // todo also patterns
         return key == null;

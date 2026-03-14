@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 
@@ -53,7 +53,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
     }
 
     private static void pruneEmptiesIn(VirtualFile file, FileTypeManager ftManager) throws IOException {
-        VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
+        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
             @RequiredUIAccess
             public boolean visitFile(@Nonnull VirtualFile file) {

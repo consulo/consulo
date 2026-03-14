@@ -20,9 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
-import consulo.ui.ex.awt.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
@@ -42,6 +40,7 @@ import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -383,12 +382,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
                     if (contentEntryFile.equals(file)) {
                         throw new Exception(ProjectLocalize.modulePathsAddContentAlreadyExistsError(file.getPresentableUrl()).get());
                     }
-                    if (VfsUtilCore.isAncestor(contentEntryFile, file, true)) {
+                    if (VirtualFileUtil.isAncestor(contentEntryFile, file, true)) {
                         // intersection not allowed
                         throw new Exception(
                             ProjectLocalize.modulePathsAddContentIntersectError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());
                     }
-                    if (VfsUtilCore.isAncestor(file, contentEntryFile, true)) {
+                    if (VirtualFileUtil.isAncestor(file, contentEntryFile, true)) {
                         // intersection not allowed
                         throw new Exception(
                             ProjectLocalize.modulePathsAddContentDominateError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());

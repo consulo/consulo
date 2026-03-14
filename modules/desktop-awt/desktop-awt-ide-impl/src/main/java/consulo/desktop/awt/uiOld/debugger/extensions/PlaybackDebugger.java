@@ -57,6 +57,7 @@ import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.project.ui.wm.IdeFrameUtil;
 
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -281,7 +282,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
             VirtualFile file = pathToFile();
             String toWrite = myCodeEditor.getText();
             String text = toWrite != null ? toWrite : "";
-            VfsUtil.saveText(file, text);
+            VirtualFileUtil.saveText(file, text);
             myChanged = false;
         }
         catch (IOException e) {

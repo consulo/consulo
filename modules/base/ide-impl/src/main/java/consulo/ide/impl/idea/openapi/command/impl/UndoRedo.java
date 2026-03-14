@@ -22,7 +22,6 @@ import consulo.document.impl.DocumentReferenceByDocument;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,6 +31,7 @@ import consulo.undoRedo.UndoableAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -123,7 +123,7 @@ abstract class UndoRedo {
         Collection<VirtualFile> readOnlyFiles = collectReadOnlyAffectedFiles();
         if (!readOnlyFiles.isEmpty()) {
             Project project = myManager.getProject();
-            VirtualFile[] files = VfsUtil.toVirtualFileArray(readOnlyFiles);
+            VirtualFile[] files = VirtualFileUtil.toVirtualFileArray(readOnlyFiles);
 
             if (project == null) {
                 return false;

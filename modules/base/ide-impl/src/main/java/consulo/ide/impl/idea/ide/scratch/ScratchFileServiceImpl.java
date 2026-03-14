@@ -53,6 +53,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -216,7 +217,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     String fileNameExt = PathUtil.getFileName(pathName);
     String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
     return WriteAction.compute(() -> {
-      VirtualFile dir = VfsUtil.createDirectories(PathUtil.getParentPath(fullPath));
+      VirtualFile dir = VirtualFileUtil.createDirectories(PathUtil.getParentPath(fullPath));
       if (option == Option.create_new_always) {
         return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
       }

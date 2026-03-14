@@ -9,8 +9,6 @@ import consulo.fileChooser.FileSystemTree;
 import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -310,7 +309,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                         ? newFileName
                         : newFileName + '.' + fileType.getDefaultExtension();
                     VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
-                    VfsUtil.saveText(file, initialContent != null ? initialContent : "");
+                    VirtualFileUtil.saveText(file, initialContent != null ? initialContent : "");
                     updateTree();
                     select(file, null);
                     return null;
@@ -368,7 +367,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                 files.add(file);
             }
         }
-        return VfsUtilCore.toVirtualFileArray(files);
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
 
     private boolean isLeaf(TreePath path) {
@@ -399,7 +398,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         }
 
         for (VirtualFile root : roots) {
-            if (root != null && VfsUtilCore.isAncestor(root, file, false)) {
+            if (root != null && VirtualFileUtil.isAncestor(root, file, false)) {
                 return true;
             }
         }

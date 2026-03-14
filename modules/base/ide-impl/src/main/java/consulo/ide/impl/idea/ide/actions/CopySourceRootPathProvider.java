@@ -17,13 +17,12 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
-
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nullable;
 
 // from kotlin
@@ -43,7 +42,7 @@ public class CopySourceRootPathProvider extends DumbAwareCopyPathProvider {
                 if (sourceRootForFile == null) {
                     return null;
                 }
-                return VfsUtilCore.getRelativePath(file, sourceRootForFile);
+                return VirtualFileUtil.getRelativePath(file, sourceRootForFile);
             }
         );
     }

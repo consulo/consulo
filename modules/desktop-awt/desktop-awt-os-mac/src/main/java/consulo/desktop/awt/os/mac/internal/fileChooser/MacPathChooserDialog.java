@@ -24,20 +24,20 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -273,7 +273,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 }
 
                 if (!ArrayUtil.isEmpty(files)) {
-                    result.setDone(VfsUtil.toVirtualFileArray(virtualFileList));
+                    result.setDone(VirtualFileUtil.toVirtualFileArray(virtualFileList));
                 }
                 else {
                     result.setRejected();

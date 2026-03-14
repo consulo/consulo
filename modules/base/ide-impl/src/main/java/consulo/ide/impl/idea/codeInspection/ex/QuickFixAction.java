@@ -19,11 +19,10 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.application.progress.SequentialModalProgressTask;
 import consulo.application.progress.SequentialTask;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
@@ -49,6 +48,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -317,7 +317,7 @@ public class QuickFixAction extends AnAction {
         if (!readOnlyFiles.isEmpty()) {
             Project project = refElements[0].getRefManager().getProject();
             ReadonlyStatusHandler.OperationStatus operationStatus = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(
-                VfsUtilCore.toVirtualFileArray(readOnlyFiles));
+                VirtualFileUtil.toVirtualFileArray(readOnlyFiles));
             if (operationStatus.hasReadonlyFiles()) {
                 return false;
             }

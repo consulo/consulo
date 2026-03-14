@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.Language;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
@@ -32,6 +31,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -92,7 +92,7 @@ public final class ScratchRootType extends RootType {
                     ScratchFileService fileService = ScratchFileService.getInstance();
                     VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
                     fileService.getScratchesMapping().setMapping(file, language);
-                    VfsUtil.saveText(file, text);
+                    VirtualFileUtil.saveText(file, text);
                     return file;
                 });
         }

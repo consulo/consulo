@@ -5,20 +5,20 @@ import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.io.URLUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.TriConsumer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -118,7 +118,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
       }
       result.add(file);
     }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return VirtualFileUtil.toVirtualFileArray(result);
   }
 
   @Nonnull
@@ -173,7 +173,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
 
   private boolean isUnderRoots(@Nonnull String url) {
     for (LightFilePointer pointer : myRoots.values()) {
-      if (VfsUtilCore.isEqualOrAncestor(pointer.getUrl(), url)) {
+      if (VirtualFileUtil.isEqualOrAncestor(pointer.getUrl(), url)) {
         return true;
       }
     }
@@ -254,7 +254,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   private static void collectJarFiles(@Nonnull VirtualFile dir, @Nonnull List<? super VirtualFile> container, final boolean recursively) {
-    VfsUtilCore.visitChildrenRecursively(dir, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT, recursively ? null : VirtualFileVisitor.ONE_LEVEL_DEEP) {
+    VirtualFileUtil.visitChildrenRecursively(dir, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT, recursively ? null : VirtualFileVisitor.ONE_LEVEL_DEEP) {
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {
         FileType type;

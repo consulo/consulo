@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
@@ -51,13 +51,13 @@ class VirtualFileDataImpl extends VirtualFileImpl {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return VfsUtilCore.byteStreamSkippingBOM(myContents, this);
+        return VirtualFileUtil.byteStreamSkippingBOM(myContents, this);
     }
 
     @Override
     @Nonnull
     public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
-        return VfsUtilCore.outputStreamAddingBOM(
+        return VirtualFileUtil.outputStreamAddingBOM(
             new ByteArrayOutputStream() {
                 @Override
                 public void close() {
