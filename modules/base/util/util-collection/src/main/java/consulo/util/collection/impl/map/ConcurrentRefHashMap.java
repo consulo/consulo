@@ -299,10 +299,10 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
         @Override
         public Map.@Nullable Entry<K, V> next() {
-          RefEntry<K, V> e = next;
-          if (e == null && !hasNext()) {
+          if (next == null && !hasNext()) {
             throw new NoSuchElementException();
           }
+          RefEntry<K, V> e = next;
           next = null;
           return e;
         }
