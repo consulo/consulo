@@ -747,23 +747,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             return;
         }
 
-        MouseShortcut mouseShortcut = shortcut instanceof MouseShortcut ? (MouseShortcut)shortcut : null;
-
-        MouseShortcutDialog dialog = new MouseShortcutDialog(
-            myRootPanel,
-            mouseShortcut,
-            mySelectedKeymap,
-            actionId,
-            myActionsTree.getMainGroup(),
-            restrictions
-        );
-        dialog.show();
-        if (!dialog.isOK()) {
-            return;
-        }
-
-        mouseShortcut = dialog.getMouseShortcut();
-
+        MouseShortcutDialog dialog = new MouseShortcutDialog(myRootPanel, restrictions.allowMouseDoubleClick);
+        MouseShortcut mouseShortcut = dialog.showAndGet(actionId, mySelectedKeymap, myQuickLists);
         if (mouseShortcut == null) {
             return;
         }

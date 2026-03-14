@@ -278,12 +278,13 @@ public class KeymapGroupImpl implements KeymapGroup {
         }
     }
 
-    public String getActionQualifiedPath(String id) {
+    @Override
+    public String getActionQualifiedPath(String id, boolean presentable) {
         KeymapGroupImpl cur = myParent;
         StringBuilder answer = new StringBuilder();
 
         while (cur != null && !cur.isRoot()) {
-            answer.insert(0, cur.getName() + " | ");
+            answer.insert(0, (presentable ? cur.getName() : cur.getId()) + " | ");
 
             cur = cur.myParent;
         }

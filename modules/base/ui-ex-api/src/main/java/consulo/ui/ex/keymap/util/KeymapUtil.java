@@ -149,6 +149,11 @@ public class KeymapUtil {
         };
     }
 
+    @Nonnull
+    public static LocalizeValue getMouseShortcutText(MouseShortcut mouseShortcut) {
+        return getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
+    }
+
     /**
      * @param button     target mouse button
      * @param modifiers  modifiers used within the target click

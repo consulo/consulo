@@ -32,7 +32,7 @@ import org.jetbrains.annotations.PropertyKey;
 public class KeyMapBundle extends AbstractBundle {
   private static KeyMapBundle ourInstance = new KeyMapBundle();
 
-  protected static final String PATH_TO_BUNDLE = "consulo.ui.ex.keymap.KeyMapBundle";
+  public static final String PATH_TO_BUNDLE = "consulo.ui.ex.keymap.KeyMapBundle";
 
   private KeyMapBundle() {
     super(PATH_TO_BUNDLE);

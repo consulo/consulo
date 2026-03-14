@@ -64,6 +64,12 @@ public interface KeymapGroup {
 
     void addSeparator();
 
+    default String getActionQualifiedPath(String id) {
+        return getActionQualifiedPath(id, true);
+    }
+
+    String getActionQualifiedPath(String id, boolean presentable);
+
     default void normalizeSeparators() {
     }
 
