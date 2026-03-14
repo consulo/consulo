@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
