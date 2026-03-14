@@ -26,7 +26,6 @@ import consulo.find.FindModel;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindUIHelper;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -40,6 +39,7 @@ import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -88,7 +88,7 @@ public class FindPopupDirectoryChooser {
                 descriptor,
                 myProject,
                 null,
-                VfsUtil.findFileByIoFile(new File(getDirectory()), true),
+                VirtualFileUtil.findFileByIoFile(new File(getDirectory()), true),
                 new IdeaFileChooser.FileChooserConsumer() {
                     @Override
                     public void accept(List<VirtualFile> files) {

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
 import consulo.ide.impl.idea.ui.roots.FilePathClipper;
 import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
@@ -38,6 +37,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -166,7 +166,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         String properties = "";
         if (folderFile != null && contentEntryFile != null) {
             String path =
-                folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
+                folderFile.equals(contentEntryFile) ? "." : VirtualFileUtil.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
             HoverHyperlinkLabel hyperlinkLabel = new HoverHyperlinkLabel(path + properties, foreground);
             hyperlinkLabel.setMinimumSize(new Dimension(0, 0));
             hyperlinkLabel.addHyperlinkListener(e -> myCallback.navigateFolder(getContentEntry(), folder));

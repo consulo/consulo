@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.impl.inspection.reference.SmartRefElementPointerImpl;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
@@ -49,7 +49,7 @@ public class OfflineViewParseUtil {
         TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<>();
         Map<String, Set<OfflineProblemDescriptor>> package2Result = new HashMap<>();
         try {
-            Element rootElement = JDOMUtil.load(VfsUtil.virtualToIoFile(file));
+            Element rootElement = JDOMUtil.load(VirtualFileUtil.virtualToIoFile(file));
             for (Element problemElement : rootElement.getChildren()) {
                 OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
                 boolean added = false;
@@ -144,7 +144,7 @@ public class OfflineViewParseUtil {
     @Nullable
     public static String parseProfileName(VirtualFile virtualFile) {
         try {
-            return JDOMUtil.load(VfsUtil.virtualToIoFile(virtualFile)).getAttributeValue(InspectionApplication.PROFILE);
+            return JDOMUtil.load(VirtualFileUtil.virtualToIoFile(virtualFile)).getAttributeValue(InspectionApplication.PROFILE);
         }
         catch (Exception e) {
             return null;

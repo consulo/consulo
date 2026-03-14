@@ -24,7 +24,6 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.actions.SuppressActionWrapper;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.*;
@@ -46,6 +45,7 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -265,7 +265,7 @@ class Browser extends JPanel {
                 fileURL = fileURL.substring(0, fileURL.indexOf('#'));
                 VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(fileURL);
                 if (vFile == null) {
-                    vFile = VfsUtil.findFileByURL(url);
+                    vFile = VirtualFileUtil.findFileByURL(url);
                 }
                 if (vFile != null) {
                     fireClickEvent(vFile, offset, offset);

@@ -15,7 +15,6 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.impl.internal.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.localize.LocalizeValue;
@@ -42,6 +41,7 @@ import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -367,7 +367,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
                         continue;
                     }
                     for (VirtualFile processedFile : processed) {
-                        if (VfsUtilCore.isAncestor(processedFile, changedFile, false)) {
+                        if (VirtualFileUtil.isAncestor(processedFile, changedFile, false)) {
                             continue next;
                         }
                     }
@@ -417,7 +417,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             return true;
         }
 
-        return VirtualFileVisitor.CONTINUE == VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
+        return VirtualFileVisitor.CONTINUE == VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
                 return processor.test(file);

@@ -34,7 +34,6 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -56,6 +55,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -540,7 +540,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         for (OrderRootType type : OrderRootType.getAllTypes()) {
             VirtualFile[] files = getLibraryEditor().getFiles(type);
             for (VirtualFile file : files) {
-                if (!VfsUtilCore.isUnder(file, excludedRoots)) {
+                if (!VirtualFileUtil.isUnder(file, excludedRoots)) {
                     roots.add(VirtualFilePathUtil.getLocalFile(file));
                 }
             }

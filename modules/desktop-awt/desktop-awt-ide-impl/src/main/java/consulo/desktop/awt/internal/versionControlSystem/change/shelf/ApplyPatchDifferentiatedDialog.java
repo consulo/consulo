@@ -31,7 +31,6 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -77,6 +76,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -494,7 +494,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         @Nullable
         public VirtualFile getVf() {
             if (myVf == null) {
-                VirtualFile file = VfsUtil.findFileByIoFile(new File(myPath), true);
+                VirtualFile file = VirtualFileUtil.findFileByIoFile(new File(myPath), true);
                 myVf = file != null && !file.isDirectory() ? file : null;
             }
             return myVf;

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -35,6 +34,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -77,7 +77,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
             navigateToFile(myProject, ContainerUtil.getFirstItem(files, null));
         }
         else {
-            JList<VirtualFile> list = new JBList<>(VfsUtilCore.toVirtualFileArray(files));
+            JList<VirtualFile> list = new JBList<>(VirtualFileUtil.toVirtualFileArray(files));
             list.setCellRenderer(new ColoredListCellRenderer<>() {
                 @Override
                 protected void customizeCellRenderer(

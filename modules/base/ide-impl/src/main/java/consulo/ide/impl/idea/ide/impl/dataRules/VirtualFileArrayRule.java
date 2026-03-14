@@ -17,25 +17,25 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.GetDataRule;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.GetDataRule;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.usage.Usage;
-import consulo.usage.internal.UsageDataUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
+import consulo.usage.internal.UsageDataUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -143,7 +143,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
                 }
             }
         }
-        VirtualFile[] result = VfsUtil.toVirtualFileArray(files);
+        VirtualFile[] result = VirtualFileUtil.toVirtualFileArray(files);
         files.clear();
         return result;
     }
@@ -153,6 +153,6 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
         for (Module selectedModule : selectedModules) {
             ContainerUtil.addAll(result, ModuleRootManager.getInstance(selectedModule).getContentRoots());
         }
-        return VfsUtil.toVirtualFileArray(result);
+        return VirtualFileUtil.toVirtualFileArray(result);
     }
 }

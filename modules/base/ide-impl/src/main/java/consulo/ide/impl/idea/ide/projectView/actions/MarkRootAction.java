@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -32,6 +31,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -83,7 +83,7 @@ public class MarkRootAction extends DumbAwareAction {
         ContentEntry[] contentEntries = model.getContentEntries();
         for (ContentEntry contentEntry : contentEntries) {
             VirtualFile contentEntryFile = contentEntry.getFile();
-            if (contentEntryFile != null && VfsUtilCore.isAncestor(contentEntryFile, vFile, false)) {
+            if (contentEntryFile != null && VirtualFileUtil.isAncestor(contentEntryFile, vFile, false)) {
                 return contentEntry;
             }
         }

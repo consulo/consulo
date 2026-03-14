@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -31,6 +30,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -60,7 +60,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
                 filesList.add(file);
             }
         }
-        return VfsUtil.toVirtualFileArray(filesList);
+        return VirtualFileUtil.toVirtualFileArray(filesList);
     }
 
     @Override

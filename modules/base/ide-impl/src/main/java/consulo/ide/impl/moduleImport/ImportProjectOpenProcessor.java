@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.moduleImport;
 
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProcessor;
@@ -37,6 +36,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -57,7 +57,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   @Nullable
   @Override
   public Image getIcon(@Nonnull VirtualFile file) {
-    File ioFile = VfsUtil.virtualToIoFile(file);
+    File ioFile = VirtualFileUtil.virtualToIoFile(file);
     for (ModuleImportProvider provider : myProviders) {
       if (provider.canImport(ioFile)) {
         return provider.getIcon();
@@ -80,7 +80,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   @Nonnull
   @Override
   public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext openContext) {
-    File ioPath = VfsUtil.virtualToIoFile(virtualFile);
+    File ioPath = VirtualFileUtil.virtualToIoFile(virtualFile);
 
     List<ModuleImportProvider> targetProviders =
       ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));

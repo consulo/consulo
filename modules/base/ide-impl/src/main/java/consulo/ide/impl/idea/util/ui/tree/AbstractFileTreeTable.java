@@ -16,34 +16,36 @@
 
 package consulo.ide.impl.idea.util.ui.tree;
 
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.project.Project;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.TreeTableSpeedSearch;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
-
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileFilter;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -161,7 +163,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         Map<VirtualFile, T> mappings = myModel.myCurrentMapping;
         Map<VirtualFile, T> subdirectoryMappings = new HashMap<>();
         for (VirtualFile file : mappings.keySet()) {
-            if (file != null && (parent == null || VfsUtilCore.isAncestor(parent, file, true))) {
+            if (file != null && (parent == null || VirtualFileUtil.isAncestor(parent, file, true))) {
                 subdirectoryMappings.put(file, mappings.get(file));
             }
         }
@@ -219,7 +221,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         for (int i = 0; i < root.getChildCount(); i++) {
             TreeNode child = root.getChildAt(i);
             VirtualFile file = ((FileNode) child).getObject();
-            if (VfsUtilCore.isAncestor(file, toSelect, false)) {
+            if (VirtualFileUtil.isAncestor(file, toSelect, false)) {
                 if (Comparing.equal(file, toSelect)) {
                     TreeUtil.selectNode(getTree(), child);
                     getSelectionModel().clearSelection();
@@ -363,7 +365,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
             NextRoot:
             for (VirtualFile root : roots) {
                 for (VirtualFile candidate : roots) {
-                    if (VfsUtilCore.isAncestor(candidate, root, true)) {
+                    if (VirtualFileUtil.isAncestor(candidate, root, true)) {
                         continue NextRoot;
                     }
                 }

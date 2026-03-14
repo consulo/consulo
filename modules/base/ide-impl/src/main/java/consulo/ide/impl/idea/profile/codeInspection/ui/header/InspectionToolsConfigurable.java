@@ -27,12 +27,11 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import consulo.language.Language;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
@@ -55,6 +54,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Document;
@@ -354,7 +354,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
           InspectionProfileImpl profile =
             new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.fromApplication(Application.get()), myProfileManager);
           try {
-            Element rootElement = JDOMUtil.loadDocument(VfsUtilCore.virtualToIoFile(file)).getRootElement();
+            Element rootElement = JDOMUtil.loadDocument(VirtualFileUtil.virtualToIoFile(file)).getRootElement();
             if (Comparing.strEqual(rootElement.getName(), "component")) {//import right from .idea/inspectProfiles/xxx.xml
               rootElement = rootElement.getChildren().get(0);
             }

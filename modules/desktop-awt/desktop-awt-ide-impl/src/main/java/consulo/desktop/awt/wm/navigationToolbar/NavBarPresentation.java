@@ -19,7 +19,6 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.content.bundle.SdkUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.content.ProjectRootsUtil;
@@ -45,6 +44,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -174,7 +174,7 @@ public class NavBarPresentation {
     public static boolean wolfHasProblemFilesBeneath(PsiElement scope) {
         return WolfTheProblemSolver.getInstance(scope.getProject()).hasProblemFilesBeneath(virtualFile -> {
             if (scope instanceof PsiDirectory directory) {
-                if (!VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
+                if (!VirtualFileUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
                     return false;
                 }
                 return ModuleContentUtil.findModuleForFile(virtualFile, scope.getProject()) == scope.getModule();
@@ -182,7 +182,7 @@ public class NavBarPresentation {
             else if (scope instanceof PsiDirectoryContainer directoryContainer) {
                 // TODO: remove. It doesn't look like we'll have packages in navbar ever again
                 for (PsiDirectory directory : directoryContainer.getDirectories()) {
-                    if (VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
+                    if (VirtualFileUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
                         return true;
                     }
                 }

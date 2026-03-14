@@ -17,6 +17,7 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -32,10 +33,7 @@ import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -68,6 +66,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -93,11 +92,11 @@ import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
-import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
+import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.util.lang.ObjectUtil.chooseNotNull;
 import static consulo.util.lang.StringUtil.isEmpty;
 
@@ -636,7 +635,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         Navigatable failureNavigatable = failure.getNavigatable();
         FilePosition filePosition = null;
         if (failureNavigatable instanceof OpenFileDescriptorImpl fileDescriptor) {
-            File file = VfsUtilCore.virtualToIoFile(fileDescriptor.getFile());
+            File file = VirtualFileUtil.virtualToIoFile(fileDescriptor.getFile());
             filePosition = new FilePosition(file, fileDescriptor.getLine(), fileDescriptor.getColumn());
             parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);
         }
@@ -855,7 +854,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
             nodeName,
             pathHint,
             () -> {
-                VirtualFile file = VfsUtil.findFileByIoFile(filePosition.getFile(), false);
+                VirtualFile file = VirtualFileUtil.findFileByIoFile(filePosition.getFile(), false);
                 if (file != null) {
                     return file.getFileType().getIcon();
                 }

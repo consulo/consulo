@@ -28,11 +28,9 @@ import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -58,6 +56,7 @@ import consulo.util.io.PathUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
@@ -473,7 +472,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                             // migrate content
                             AccessToken token = Application.get().acquireWriteActionLock(getClass());
                             try {
-                                VfsUtil.saveText(consoleFile, myContent);
+                                VirtualFileUtil.saveText(consoleFile, myContent);
                             }
                             finally {
                                 token.finish();
@@ -549,7 +548,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                 try {
                     VirtualFile file = HistoryRootType.getInstance()
                         .findFile(null, getHistoryName(myRootType, myId), ScratchFileService.Option.create_if_missing);
-                    VfsUtil.saveText(file, StringUtil.join(getModel().getEntries(), myRootType.getEntrySeparator()));
+                    VirtualFileUtil.saveText(file, StringUtil.join(getModel().getEntries(), myRootType.getEntrySeparator()));
                 }
                 catch (IOException e) {
                     LOG.error(e);

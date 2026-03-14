@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,6 +25,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 
@@ -52,7 +52,7 @@ public class FixLineSeparatorsAction extends AnAction {
     }
 
     private static void fixSeparators(VirtualFile vFile) {
-        VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
+        VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
             @RequiredUIAccess
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {

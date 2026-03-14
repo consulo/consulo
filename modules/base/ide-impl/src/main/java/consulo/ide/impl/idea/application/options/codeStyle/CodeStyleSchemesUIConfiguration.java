@@ -23,13 +23,13 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -68,7 +68,7 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
         if (fileLocation == null || fileLocation.trim().isEmpty()) return null;
         try {
           URL url = new URL(fileLocation);
-          return VfsUtil.findFileByURL(url);
+          return VirtualFileUtil.findFileByURL(url);
         }
         catch (MalformedURLException e) {
           // Ignore
@@ -80,7 +80,7 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
     public static void setRecentImportFile(@Nonnull VirtualFile recentFile) {
       CodeStyleSchemesUIConfiguration configuration = getInstance();
       if (configuration != null) {
-        URL url = VfsUtil.convertToURL(recentFile.getUrl());
+        URL url = VirtualFileUtil.convertToURL(recentFile.getUrl());
         if (url != null) {
           configuration.RECENT_IMPORT_FILE_LOCATION = url.toString();
         }

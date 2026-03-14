@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.fileChooser.FileSystemTree;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.fileChooser.FileSystemTree;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -40,7 +40,7 @@ public final class GotoHomeAction extends FileChooserAction {
 
     @Override
     protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-        VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+        VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
         if (userHomeDir != null) {
             fileSystemTree.select(userHomeDir, () -> fileSystemTree.expand(userHomeDir, null));
         }
@@ -53,7 +53,7 @@ public final class GotoHomeAction extends FileChooserAction {
             return;
         }
 
-        VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+        VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
         presentation.setEnabled(userHomeDir != null && fileSystemTree.isUnderRoots(userHomeDir));
     }
 }

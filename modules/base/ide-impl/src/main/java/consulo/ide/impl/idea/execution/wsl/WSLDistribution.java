@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -17,6 +16,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -406,7 +406,7 @@ public class WSLDistribution {
    * @implNote there is a hack in {@link NewVirtualFileSystem#getAttributes(VirtualFile)} which causes all network
    * virtual files to exists all the time. So we need to check explicitly that root exists. After implementing proper non-blocking check
    * for the network resource availability, this method may be simplified to findFileByIoFile
-   * @see VfsUtil#findFileByIoFile(java.io.File, boolean)
+   * @see VirtualFileUtil#findFileByIoFile(java.io.File, boolean)
    */
   //@ApiStatus.Experimental
   @Nullable
@@ -415,6 +415,6 @@ public class WSLDistribution {
       return null;
     }
     File uncRoot = getUNCRoot();
-    return uncRoot.exists() ? VfsUtil.findFileByIoFile(uncRoot, refreshIfNeed) : null;
+    return uncRoot.exists() ? VirtualFileUtil.findFileByIoFile(uncRoot, refreshIfNeed) : null;
   }
 }

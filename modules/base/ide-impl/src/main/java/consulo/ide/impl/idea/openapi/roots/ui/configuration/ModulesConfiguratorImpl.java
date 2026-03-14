@@ -27,7 +27,6 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.newProject.ui.NewProjectDialog;
 import consulo.ide.impl.newProject.ui.NewProjectPanel;
 import consulo.ide.moduleImport.ModuleImportContext;
@@ -60,6 +59,7 @@ import consulo.util.concurrent.Promises;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -229,7 +229,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                     if (anotherContentRoot != null) {
                         String problematicModule;
                         String correctModule;
-                        if (VfsUtilCore.isAncestor(anotherContentRoot, contentRoot, true)) {
+                        if (VirtualFileUtil.isAncestor(anotherContentRoot, contentRoot, true)) {
                             problematicModule = contentRootToModuleNameMap.get(anotherContentRoot);
                             correctModule = contentRootToModuleNameMap.get(contentRoot);
                         }

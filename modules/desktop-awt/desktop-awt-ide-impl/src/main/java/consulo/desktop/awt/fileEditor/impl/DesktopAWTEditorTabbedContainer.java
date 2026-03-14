@@ -29,15 +29,12 @@ import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
+import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ui.UIAccess;
-import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
-import consulo.fileEditor.impl.internal.text.FileDropHandler;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
@@ -52,6 +49,7 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -70,6 +68,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -146,7 +145,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                     }
 
                     if (GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-                        VfsUtil.markDirtyAndRefresh(true, false, false, newFile);
+                        VirtualFileUtil.markDirtyAndRefresh(true, false, false, newFile);
                     }
                 }
             })

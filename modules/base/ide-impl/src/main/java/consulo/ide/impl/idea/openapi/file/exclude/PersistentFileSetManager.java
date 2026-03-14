@@ -5,17 +5,17 @@ import com.google.common.collect.Sets;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.plain.PlainTextFileType;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.CachedFileType;
-import consulo.document.util.FileContentUtilCore;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -77,7 +77,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
     sorted.sort(Comparator.comparing(e -> e.getKey().getPath()));
     for (Map.Entry<VirtualFile, String> e : sorted) {
       Element element = new Element(FILE_ELEMENT);
-      element.setAttribute(URL_ATTR, VfsUtilCore.pathToUrl(e.getKey().getPath()));
+      element.setAttribute(URL_ATTR, VirtualFileUtil.pathToUrl(e.getKey().getPath()));
       String fileTypeName = e.getValue();
       if (fileTypeName != null && !PlainTextFileType.INSTANCE.getId().equals(fileTypeName)) {
         element.setAttribute(VALUE_ATTR, fileTypeName);

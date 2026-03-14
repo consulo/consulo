@@ -17,17 +17,17 @@ package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.find.FindManager;
 import consulo.find.FindSettings;
-import consulo.ide.impl.idea.find.impl.FindManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.collection.ContainerUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageInfoToUsageConverter;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Set;
@@ -67,7 +67,7 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
     @RequiredUIAccess
     public VirtualFile[] getFiles() {
         Set<VirtualFile> files = ContainerUtil.map2Set(myDescriptor.getAllElements(), PsiUtilCore::getVirtualFile);
-        return VfsUtilCore.toVirtualFileArray(files);
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
 
     @Nonnull

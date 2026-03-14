@@ -16,17 +16,16 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.localize.IdeLocalize;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.logging.Logger;
-
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -115,7 +114,7 @@ public class RemoveBomAction extends AnAction implements DumbAware {
     }
 
     private static void getFilesWithBom(@Nonnull VirtualFile root, @Nonnull final List<VirtualFile> result, final boolean all) {
-        VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
+        VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
                 if (file.isDirectory()) {

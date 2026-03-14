@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
-import consulo.content.scope.PatternBasedPackageSet;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.content.scope.PatternBasedPackageSet;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.regex.Pattern;
 
@@ -198,13 +198,13 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
                                        VirtualFile projectBaseDir) {
     VirtualFile contentRootForFile = index.getContentRootForFile(virtualFile);
     if (contentRootForFile != null) {
-      return VfsUtilCore.getRelativePath(virtualFile, contentRootForFile, '/');
+      return VirtualFileUtil.getRelativePath(virtualFile, contentRootForFile, '/');
     }
     Module module = index.getModuleForFile(virtualFile);
     if (module != null) {
       if (projectBaseDir != null) {
-        if (VfsUtilCore.isAncestor(projectBaseDir, virtualFile, false)){
-          String projectRelativePath = VfsUtilCore.getRelativePath(virtualFile, projectBaseDir, '/');
+        if (VirtualFileUtil.isAncestor(projectBaseDir, virtualFile, false)){
+          String projectRelativePath = VirtualFileUtil.getRelativePath(virtualFile, projectBaseDir, '/');
           return useFQName ? projectRelativePath : projectRelativePath.substring(projectRelativePath.indexOf('/') + 1);
         }
       }

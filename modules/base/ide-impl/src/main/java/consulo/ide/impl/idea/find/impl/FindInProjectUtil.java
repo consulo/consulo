@@ -30,8 +30,6 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.project.impl.internal.DumbServiceImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -47,6 +45,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.content.Content;
@@ -62,6 +61,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -635,7 +635,7 @@ public class FindInProjectUtil {
         if (classRoot == null) {
             return;
         }
-        String relativePath = VfsUtilCore.getRelativePath(directory, classRoot);
+        String relativePath = VirtualFileUtil.getRelativePath(directory, classRoot);
         if (relativePath == null) {
             return;
         }
@@ -654,7 +654,7 @@ public class FindInProjectUtil {
                 // note: getUrls() returns jar directories too
                 String[] sourceUrls = library.getUrls(SourcesOrderRootType.getInstance());
                 for (String sourceUrl : sourceUrls) {
-                    if (VfsUtilCore.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
+                    if (VirtualFileUtil.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
                         // already in this library sources, no need to look for another source root
                         otherSourceRoots.clear();
                         break searchForOtherSourceDirs;

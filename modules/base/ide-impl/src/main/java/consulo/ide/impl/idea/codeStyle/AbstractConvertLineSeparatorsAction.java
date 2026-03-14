@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeStyle;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -26,11 +25,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -87,7 +86,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
 
         FileTypeRegistry fileTypeManager = FileTypeRegistry.getInstance();
         for (VirtualFile file : virtualFiles) {
-            VfsUtilCore.processFilesRecursively(
+            VirtualFileUtil.processFilesRecursively(
                 file,
                 file1 -> {
                     if (shouldProcess(file1, project)) {

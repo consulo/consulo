@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.content.scope.PackageSet;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.ide.localize.IdeLocalize;
@@ -34,6 +33,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -126,7 +126,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
             if (contentRoot == null) {
                 return null;
             }
-            String fqName = VfsUtilCore.getRelativePath(virtualFile, contentRoot, '/');
+            String fqName = VirtualFileUtil.getRelativePath(virtualFile, contentRoot, '/');
             if (fqName != null) {
                 return new FilePatternPackageSet(getModulePattern(node), fqName);
             }

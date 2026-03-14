@@ -16,15 +16,15 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.HectorComponentPanel;
 import consulo.configurable.ConfigurationException;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.HectorComponentPanel;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.include.FileIncludeManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -110,7 +110,7 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
           root = fileIndex.getContentRootForFile(file);
         }
         if (root != null) {
-          return VfsUtilCore.getRelativePath(file, root, '/');
+          return VirtualFileUtil.getRelativePath(file, root, '/');
         }
       }
       return null;

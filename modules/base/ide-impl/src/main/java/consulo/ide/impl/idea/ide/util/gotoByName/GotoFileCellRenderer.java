@@ -2,26 +2,26 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
-import consulo.ui.ex.JBColor;
-import consulo.component.util.Iconable;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.component.util.Iconable;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
+import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -85,7 +85,7 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
 
   @Nonnull
   static String getRelativePathFromRoot(@Nonnull VirtualFile file, @Nonnull VirtualFile root) {
-    return root.getName() + File.separatorChar + VfsUtilCore.getRelativePath(file, root, File.separatorChar);
+    return root.getName() + File.separatorChar + VirtualFileUtil.getRelativePath(file, root, File.separatorChar);
   }
 
   @Override
