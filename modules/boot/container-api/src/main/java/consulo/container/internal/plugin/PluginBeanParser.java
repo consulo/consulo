@@ -17,6 +17,7 @@ package consulo.container.internal.plugin;
 
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -25,9 +26,10 @@ import java.util.*;
  * @since 2019-03-24
  */
 public class PluginBeanParser {
-  private static Set<String> ourAllowedRootTags = new HashSet<String>(Arrays.asList("consulo-plugin"));
+  private static Set<String> ourAllowedRootTags = new HashSet<>(Arrays.asList("consulo-plugin"));
 
-  public static PluginBean parseBean(SimpleXmlElement rootTag, String pluginId) {
+  @Nullable
+  public static PluginBean parseBean(SimpleXmlElement rootTag, @Nullable String pluginId) {
     String rootTagName = rootTag.getName();
     if (!ourAllowedRootTags.contains(rootTagName)) {
       return null;
@@ -60,7 +62,7 @@ public class PluginBeanParser {
       pluginBean.vendor = vendor;
     }
 
-    List<PluginDependency> pluginDependencies = new ArrayList<PluginDependency>();
+    List<PluginDependency> pluginDependencies = new ArrayList<>();
     for (SimpleXmlElement dependsElement : rootTag.getChildren("depends")) {
       PluginDependency pluginDependency = new PluginDependency();
       pluginDependencies.add(pluginDependency);
@@ -73,12 +75,12 @@ public class PluginBeanParser {
       pluginBean.dependencies = pluginDependencies;
     }
 
-    Map<String, Set<String>> permissions = new HashMap<String, Set<String>>();
+    Map<String, Set<String>> permissions = new HashMap<>();
     for (SimpleXmlElement permissionsElement : rootTag.getChildren("permissions")) {
       for (SimpleXmlElement permissionElement : permissionsElement.getChildren("permission")) {
         String permissionType = permissionElement.getAttributeValue("type", "NOT_SET");
 
-        Set<String> options = new LinkedHashSet<String>();
+        Set<String> options = new LinkedHashSet<>();
 
         for (SimpleXmlElement permissionOption : permissionElement.getChildren("permission-option")) {
           options.add(permissionOption.getText());
@@ -92,7 +94,7 @@ public class PluginBeanParser {
       pluginBean.permissions = permissions;
     }
 
-    Set<String> tags = new TreeSet<String>();
+    Set<String> tags = new TreeSet<>();
     for (SimpleXmlElement tagsElement : rootTag.getChildren("tags")) {
       for (SimpleXmlElement tagElement : tagsElement.getChildren("tag")) {
         tags.add(tagElement.getText());
@@ -103,7 +105,7 @@ public class PluginBeanParser {
       pluginBean.tags = tags;
     }
 
-    List<String> incompatibleWith = new ArrayList<String>();
+    List<String> incompatibleWith = new ArrayList<>();
     for (SimpleXmlElement incompatibleWithElement : rootTag.getChildren("incompatible-with")) {
       incompatibleWith.add(incompatibleWithElement.getText());
     }
@@ -122,7 +124,7 @@ public class PluginBeanParser {
       List<SimpleXmlElement> children = child.getChildren();
       if (!children.isEmpty()) {
         if (list.isEmpty()) {
-          list = new ArrayList<SimpleXmlElement>();
+          list = new ArrayList<>();
         }
 
         list.addAll(children);

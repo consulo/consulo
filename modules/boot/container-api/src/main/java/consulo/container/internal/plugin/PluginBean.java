@@ -16,6 +16,7 @@
 package consulo.container.internal.plugin;
 
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,21 +25,27 @@ import java.util.Set;
 
 public class PluginBean {
   //@Tag("name")
+  @Nullable
   public String name;
 
   //@Tag("id")
+  @Nullable
   public String id;
 
   //@Tag("description")
+  @Nullable
   public String description;
 
   //@Tag("version")
+  @Nullable
   public String pluginVersion;
 
   //@Tag("platformVersion")
+  @Nullable
   public String platformVersion;
 
   //@Property(surroundWithTag = false)
+  @Nullable
   public PluginVendor vendor;
 
   //@Tag("actions")
@@ -51,14 +58,18 @@ public class PluginBean {
   public List<String> incompatibleWith = Collections.emptyList();
 
   //@Tag("resource-bundle")
+  @Nullable
   public String resourceBundle;
 
+  @Nullable
   public String localize;
 
   //@Tag("change-notes")
+  @Nullable
   public String changeNotes;
 
   //@Attribute("url")
+  @Nullable
   public String url;
 
   public boolean experimental;

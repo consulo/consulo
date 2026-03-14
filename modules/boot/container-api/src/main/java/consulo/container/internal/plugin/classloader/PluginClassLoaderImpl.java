@@ -6,7 +6,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.util.nodep.classloader.UrlClassLoader;
-import consulo.util.nodep.collection.ContainerUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         }
     }
 
+    @Nullable
     private final Map<URL, Set<String>> myUrlsIndex;
     private final ClassLoader[] myParents;
     private final PluginDescriptor myPluginDescriptor;
@@ -35,14 +36,16 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
 
     private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<>();
 
-    public PluginClassLoaderImpl(List<URL> urls, Map<URL, Set<String>> urlsIndex, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
-        super(pluginDescriptor.getPluginId().getIdString(),
+    public PluginClassLoaderImpl(List<URL> urls, @Nullable Map<URL, Set<String>> urlsIndex, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
+        super(
+            pluginDescriptor.getPluginId().getIdString(),
             urlsIndex,
             build()
                 .urls(urls)
                 .urlsWithProtectionDomain(new HashSet<>(urls))
                 .allowLock()
-                .noPreload());
+                .noPreload()
+        );
         myUrlsIndex = urlsIndex;
         myParents = parents;
         myPluginDescriptor = pluginDescriptor;
@@ -50,6 +53,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         myNativeDirectory = new File(myPluginDescriptor.getPath(), "native");
     }
 
+    @Nullable
     @Override
     public Map<URL, Set<String>> getUrlsIndex() {
         return myUrlsIndex;
@@ -65,16 +69,20 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     }
 
     public interface ActionWithClassloader<Result, ParameterType> {
-        Result execute(String name, ClassLoader classloader, ParameterType parameter);
+        @Nullable
+        Result execute(String name, ClassLoader classloader, @Nullable ParameterType parameter);
     }
 
     public interface ActionWithPluginClassLoader<Result, ParameterType> {
-        default Result execute(String name,
-                               PluginClassLoaderImpl classloader,
-                               Set<ClassLoader> visited,
-                               ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
-                               ActionWithClassloader<Result, ParameterType> actionWithClassloader,
-                               ParameterType parameter) {
+        @Nullable
+        default Result execute(
+            String name,
+            PluginClassLoaderImpl classloader,
+            Set<ClassLoader> visited,
+            ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
+            ActionWithClassloader<Result, ParameterType> actionWithClassloader,
+            @Nullable ParameterType parameter
+        ) {
             Result resource = doExecute(name, classloader, parameter);
             if (resource != null) {
                 return resource;
@@ -82,29 +90,36 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             return classloader.processResourcesInParents(name, actionWithPluginClassLoader, actionWithClassloader, visited, parameter);
         }
 
-        Result doExecute(String name, PluginClassLoaderImpl classloader, ParameterType parameter);
+        @Nullable
+        Result doExecute(String name, PluginClassLoaderImpl classloader, @Nullable ParameterType parameter);
     }
 
-    public <Result, ParameterType> Result processResourcesInParents(String name,
-                                                                    ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
-                                                                    ActionWithClassloader<Result, ParameterType> actionWithClassloader,
-                                                                    Set<ClassLoader> visited,
-                                                                    ParameterType parameter) {
+    @Nullable
+    public <Result, ParameterType> Result processResourcesInParents(
+        String name,
+        ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
+        ActionWithClassloader<Result, ParameterType> actionWithClassloader,
+        @Nullable Set<ClassLoader> visited,
+        @Nullable ParameterType parameter
+    ) {
         for (ClassLoader parent : myParents) {
             if (visited == null) {
-                visited = ContainerUtilRt.<ClassLoader>newHashSet(this);
+                visited = new HashSet<>();
+                visited.add(this);
             }
             if (!visited.add(parent)) {
                 continue;
             }
 
             if (parent instanceof PluginClassLoaderImpl) {
-                Result resource = actionWithPluginClassLoader.execute(name,
+                Result resource = actionWithPluginClassLoader.execute(
+                    name,
                     (PluginClassLoaderImpl) parent,
                     visited,
                     actionWithPluginClassLoader,
                     actionWithClassloader,
-                    parameter);
+                    parameter
+                );
                 if (resource != null) {
                     return resource;
                 }
@@ -120,46 +135,48 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
-    public static final ActionWithPluginClassLoader<Class, Void> loadClassInPluginCL = new ActionWithPluginClassLoader<>() {
+    public static final ActionWithPluginClassLoader<Class, Void> LOAD_CLASS_IN_PLUGIN_CL = new ActionWithPluginClassLoader<>() {
+        @Nullable
         @Override
-        public Class execute(String name,
-                             PluginClassLoaderImpl classloader,
-                             Set<ClassLoader> visited,
-                             ActionWithPluginClassLoader<Class, Void> actionWithPluginClassLoader,
-                             ActionWithClassloader<Class, Void> actionWithClassloader,
-                             Void parameter) {
+        public Class execute(
+            String name,
+            PluginClassLoaderImpl classloader,
+            Set<ClassLoader> visited,
+            ActionWithPluginClassLoader<Class, Void> actionWithPluginClassLoader,
+            ActionWithClassloader<Class, Void> actionWithClassloader,
+            @Nullable Void parameter
+        ) {
             return classloader.tryLoadingClass(name, false, visited);
         }
 
+        @Nullable
         @Override
-        public Class doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
+        public Class doExecute(String name, PluginClassLoaderImpl classloader, @Nullable Void parameter) {
             return null;
         }
     };
 
-    public static final ActionWithClassloader<Class, Void> loadClassInCl = new ActionWithClassloader<>() {
-        @Override
-        public Class execute(String name, ClassLoader classloader, Void parameter) {
-            try {
-                return classloader.loadClass(name);
-            }
-            catch (ClassNotFoundException ignoreAndContinue) {
-                // Ignore and continue
-            }
-            return null;
+    public static final ActionWithClassloader<Class, Void> LOAD_CLASS_IN_CL = (name, classloader, parameter) -> {
+        try {
+            return classloader.loadClass(name);
         }
+        catch (ClassNotFoundException ignoreAndContinue) {
+            // Ignore and continue
+        }
+        return null;
     };
 
     // Changed sequence in which classes are searched, this is essential if plugin uses library,
     // a different version of which is used in IDEA.
-    private Class tryLoadingClass(String name, boolean resolve, Set<ClassLoader> visited) {
+    @Nullable
+    private Class tryLoadingClass(String name, boolean resolve, @Nullable Set<ClassLoader> visited) {
         Class c = null;
         if (!mustBeLoadedByPlatform(name)) {
             c = loadClassInsideSelf(name);
         }
 
         if (c == null) {
-            c = processResourcesInParents(name, loadClassInPluginCL, loadClassInCl, visited, null);
+            c = processResourcesInParents(name, LOAD_CLASS_IN_PLUGIN_CL, LOAD_CLASS_IN_CL, visited, null);
         }
 
         if (c != null) {
@@ -180,6 +197,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return false;
     }
 
+    @Nullable
     private Class loadClassInsideSelf(String name) {
         synchronized (getClassLoadingLock(name)) {
             Class c = findLoadedClass(name);
@@ -197,20 +215,13 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         }
     }
 
-    public static final ActionWithPluginClassLoader<URL, Void> findResourceInPluginCL = new ActionWithPluginClassLoader<>() {
-        @Override
-        public URL doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
-            return classloader.findOwnResource(name);
-        }
-    };
+    public static final ActionWithPluginClassLoader<URL, Void> FIND_RESOURCE_IN_PLUGIN_CL =
+        (name, classloader, parameter) -> classloader.findOwnResource(name);
 
-    public static final ActionWithClassloader<URL, Void> findResourceInCl = new ActionWithClassloader<>() {
-        @Override
-        public URL execute(String name, ClassLoader classloader, Void parameter) {
-            return classloader.getResource(name);
-        }
-    };
+    public static final ActionWithClassloader<URL, Void> FIND_RESOURCE_IN_CL =
+        (name, classloader, parameter) -> classloader.getResource(name);
 
+    @Nullable
     @Override
     public URL findResource(String name) {
         URL resource = findOwnResource(name);
@@ -218,9 +229,10 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             return resource;
         }
 
-        return processResourcesInParents(name, findResourceInPluginCL, findResourceInCl, null, null);
+        return processResourcesInParents(name, FIND_RESOURCE_IN_PLUGIN_CL, FIND_RESOURCE_IN_CL, null, null);
     }
 
+    @Nullable
     private URL findOwnResource(String name) {
         URL resource = super.findResource(name);
         if (resource != null) {
@@ -229,20 +241,13 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
-    public static final ActionWithPluginClassLoader<InputStream, Void> getResourceAsStreamInPluginCL = new ActionWithPluginClassLoader<>() {
-        @Override
-        public InputStream doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
-            return classloader.getOwnResourceAsStream(name);
-        }
-    };
+    public static final ActionWithPluginClassLoader<InputStream, Void> GET_RESOURCE_AS_STREAM_IN_PLUGIN_CL =
+        (name, classloader, parameter) -> classloader.getOwnResourceAsStream(name);
 
-    public static final ActionWithClassloader<InputStream, Void> getResourceAsStreamInCl = new ActionWithClassloader<>() {
-        @Override
-        public InputStream execute(String name, ClassLoader classloader, Void parameter) {
-            return classloader.getResourceAsStream(name);
-        }
-    };
+    public static final ActionWithClassloader<InputStream, Void> GET_RESOURCE_AS_STREAM_IN_CL =
+        (name, classloader, parameter) -> classloader.getResourceAsStream(name);
 
+    @Nullable
     @Override
     public InputStream getResourceAsStream(String name) {
         InputStream stream = getOwnResourceAsStream(name);
@@ -250,9 +255,10 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             return stream;
         }
 
-        return processResourcesInParents(name, getResourceAsStreamInPluginCL, getResourceAsStreamInCl, null, null);
+        return processResourcesInParents(name, GET_RESOURCE_AS_STREAM_IN_PLUGIN_CL, GET_RESOURCE_AS_STREAM_IN_CL, null, null);
     }
 
+    @Nullable
     public InputStream getOwnResourceAsStream(String name) {
         InputStream stream = super.getResourceAsStream(name);
         if (stream != null) {
@@ -261,29 +267,31 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
-    public static final ActionWithPluginClassLoader<Void, List<Enumeration<URL>>> findResourcesInPluginCL = (name, classloader, enumerations) -> {
-        try {
-            enumerations.add(classloader.findOwnResources(name));
-        }
-        catch (IOException ignore) {
-        }
-        return null;
-    };
+    public static final ActionWithPluginClassLoader<Void, List<Enumeration<URL>>> FIND_RESOURCES_IN_PLUGIN_CL =
+        (name, classloader, enumerations) -> {
+            try {
+                Objects.requireNonNull(enumerations).add(classloader.findOwnResources(name));
+            }
+            catch (IOException ignore) {
+            }
+            return null;
+        };
 
-    public static final ActionWithClassloader<Void, List<Enumeration<URL>>> findResourcesInCl = (name, classloader, enumerations) -> {
-        try {
-            enumerations.add(classloader.getResources(name));
-        }
-        catch (IOException ignore) {
-        }
-        return null;
-    };
+    public static final ActionWithClassloader<Void, List<Enumeration<URL>>> FIND_RESOURCES_IN_CL =
+        (name, classloader, enumerations) -> {
+            try {
+                Objects.requireNonNull(enumerations).add(classloader.getResources(name));
+            }
+            catch (IOException ignore) {
+            }
+            return null;
+        };
 
     @Override
     public Enumeration<URL> findResources(String name) throws IOException {
         @SuppressWarnings("unchecked") List<Enumeration<URL>> resources = new ArrayList<>();
         resources.add(findOwnResources(name));
-        processResourcesInParents(name, findResourcesInPluginCL, findResourcesInCl, null, resources);
+        processResourcesInParents(name, FIND_RESOURCES_IN_PLUGIN_CL, FIND_RESOURCES_IN_CL, null, resources);
         return new DeepEnumeration(resources.toArray(new Enumeration[resources.size()]));
     }
 
@@ -292,6 +300,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return super.findResources(name);
     }
 
+    @Nullable
     @Override
     protected String findLibrary(String libName) {
         String libraryInPath = findLibraryInPath(myLibDirectory, libName);
@@ -307,6 +316,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
+    @Nullable
     private String findLibraryInPath(File path, String libName) {
         if (!path.exists()) {
             return null;

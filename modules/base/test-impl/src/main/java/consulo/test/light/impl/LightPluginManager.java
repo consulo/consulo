@@ -20,10 +20,10 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStub;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author VISTALL
@@ -59,6 +59,7 @@ public class LightPluginManager implements PluginManagerInternal {
     return null;
   }
 
+  @Nullable
   @Override
   public PluginDescriptor getPlugin(Class<?> pluginClass) {
     return myTestPlugin;

@@ -2,6 +2,7 @@
 package consulo.util.nodep;
 
 import consulo.util.nodep.text.StringUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +128,8 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return compose(feature, 0, 0, 0, false);
   }
 
-  private static JavaVersion current;
+  @Nullable
+  private static JavaVersion current = null;
 
   /**
    * Returns the version of a Java runtime the class is loaded into.
@@ -151,6 +153,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return current;
   }
 
+  @Nullable
   private static JavaVersion rtVersion() {
     try {
       Runtime.Version version = Runtime.version();
@@ -193,8 +196,8 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     }
 
     // partitioning
-    List<String> separators = new ArrayList<String>();
-    List<String> numbers = new ArrayList<String>();
+    List<String> separators = new ArrayList<>();
+    List<String> numbers = new ArrayList<>();
     int length = str.length(), p = 0;
     boolean number = false;
     while (p < length) {
@@ -273,7 +276,8 @@ public final class JavaVersion implements Comparable<JavaVersion> {
   /**
    * A safe version of {@link #parse(String)} - returns {@code null} if can't parse a version string.
    */
-  public static JavaVersion tryParse(String versionString) {
+  @Nullable
+  public static JavaVersion tryParse(@Nullable String versionString) {
     if (versionString != null) {
       try {
         return parse(versionString);

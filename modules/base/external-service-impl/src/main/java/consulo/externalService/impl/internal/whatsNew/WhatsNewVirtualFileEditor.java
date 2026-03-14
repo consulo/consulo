@@ -221,7 +221,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                 nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
                 StringBuilder versionHistorySpan = new StringBuilder();
-                String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
+                String historyVersion = myUpdateHistory.getHistoryVersion(key, StringUtil.notNullize(pluginVersion, "N/A"));
                 if (!historyVersion.equals(pluginVersion)) {
                     versionHistorySpan.append("#");
                     versionHistorySpan.append(historyVersion);

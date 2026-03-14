@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.nodep.function;
+package consulo.util.nodep.annotation;
 
-public interface Getter<A> {
-  A get();
+/**
+ * Reproduction of org.jetbrains.annotations.Contract for Nullaway.
+ *
+ * @author UNV
+ * @since 2026-03-13
+ */
+public @interface Contract {
+    /**
+     * Contains the contract clauses describing causal relations between call arguments and the returned value
+     */
+    String value() default "";
 }

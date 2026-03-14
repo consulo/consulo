@@ -15,6 +15,8 @@
  */
 package consulo.util.nodep;
 
+import consulo.util.nodep.text.StringUtilRt;
+import org.jspecify.annotations.Nullable;
 
 // See ContainerLogger
 @Deprecated
@@ -23,7 +25,8 @@ public abstract class LoggerRt {
     LoggerRt getInstance(String category);
   }
 
-  private static Factory ourFactory;
+  @Nullable
+  private static Factory ourFactory = null;
 
   private synchronized static Factory getFactory() {
     if (ourFactory == null) {
@@ -46,7 +49,7 @@ public abstract class LoggerRt {
   }
 
   public void info(Throwable t) {
-    info(t.getMessage(), t);
+    info(StringUtilRt.notNullize(t.getMessage()), t);
   }
 
   public void warn(String message) {
@@ -54,7 +57,7 @@ public abstract class LoggerRt {
   }
 
   public void warn(Throwable t) {
-    warn(t.getMessage(), t);
+    warn(StringUtilRt.notNullize(t.getMessage()), t);
   }
 
   public void error(String message) {
@@ -62,21 +65,21 @@ public abstract class LoggerRt {
   }
 
   public void error(Throwable t) {
-    error(t.getMessage(), t);
+    error(StringUtilRt.notNullize(t.getMessage()), t);
   }
 
-  public abstract void info(String message, Throwable t);
+  public abstract void info(String message, @Nullable Throwable t);
 
-  public abstract void warn(String message, Throwable t);
+  public abstract void warn(String message, @Nullable Throwable t);
 
-  public abstract void error(String message, Throwable t);
+  public abstract void error(String message, @Nullable Throwable t);
 
   private static class SystemFactory implements Factory {
     @Override
     public LoggerRt getInstance(String category) {
       return new LoggerRt() {
         @Override
-        public void info(String message, Throwable t) {
+        public void info(String message, @Nullable Throwable t) {
           System.out.println("[INFO] " + message);
           if (t != null) {
             t.printStackTrace(System.out);
@@ -84,7 +87,7 @@ public abstract class LoggerRt {
         }
 
         @Override
-        public void warn(String message, Throwable t) {
+        public void warn(String message, @Nullable Throwable t) {
           System.out.println("[WARN] " + message);
           if (t != null) {
             t.printStackTrace(System.out);
@@ -92,7 +95,7 @@ public abstract class LoggerRt {
         }
 
         @Override
-        public void error(String message, Throwable t) {
+        public void error(String message, @Nullable Throwable t) {
           System.err.println("[ERROR] " + message);
           if (t != null) {
             t.printStackTrace(System.err);

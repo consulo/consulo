@@ -15,6 +15,8 @@
  */
 package consulo.container.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ import java.util.Map;
 public class PluginId implements Comparable<PluginId> {
   public static final PluginId[] EMPTY_ARRAY = new PluginId[0];
 
-  private static final Map<String, PluginId> ourRegisteredIds = new HashMap<String, PluginId>();
+  private static final Map<String, PluginId> ourRegisteredIds = new HashMap<>();
 
   private final String myIdString;
 
@@ -46,6 +48,7 @@ public class PluginId implements Comparable<PluginId> {
     return pluginId;
   }
 
+  @Nullable
   public static synchronized PluginId findId(String... idStrings) {
     for (String idString : idStrings) {
       PluginId pluginId = ourRegisteredIds.get(idString);
@@ -66,6 +69,6 @@ public class PluginId implements Comparable<PluginId> {
   }
 
   public static synchronized Map<String, PluginId> getRegisteredIds() {
-    return new HashMap<String, PluginId>(ourRegisteredIds);
+    return new HashMap<>(ourRegisteredIds);
   }
 }

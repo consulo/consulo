@@ -20,9 +20,11 @@ import consulo.container.internal.PluginManagerInternal;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -39,17 +41,18 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return PluginHolderModificator.isInitialized();
   }
 
+  @Nullable
   @Override
   public File getPluginPath(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not a plugin";
     PluginClassLoader classLoader = (PluginClassLoader)temp;
     PluginId pluginId = classLoader.getPluginId();
-    PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
-    assert plugin != null : "plugin is not found";
+    PluginDescriptor plugin = Objects.requireNonNull(PluginManager.findPlugin(pluginId), "plugin is not found");
     return plugin.getPath();
   }
 
+  @Nullable
   @Override
   public PluginDescriptor getPlugin(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
