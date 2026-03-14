@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util.containers;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
@@ -25,6 +24,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import gnu.trove.TIntArrayList;
